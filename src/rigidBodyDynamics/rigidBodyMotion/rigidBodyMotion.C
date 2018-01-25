@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,7 +149,7 @@ void Foam::RBD::rigidBodyMotion::solve
     motionState_.t() = t;
     motionState_.deltaT() = deltaT;
 
-    if (motionState0_.deltaT() < SMALL)
+    if (motionState0_.deltaT() < small)
     {
         motionState0_.t() = t;
         motionState0_.deltaT() = deltaT;
@@ -224,10 +224,10 @@ Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
     forAll(points, i)
     {
         // Move non-stationary points
-        if (weight[i] > SMALL)
+        if (weight[i] > small)
         {
             // Use solid-body motion where weight = 1
-            if (weight[i] > 1 - SMALL)
+            if (weight[i] > 1 - small)
             {
                 points[i] = X.transformPoint(initialPoints[i]);
             }
@@ -280,7 +280,7 @@ Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
         forAll(bodyIDs, bi)
         {
             w[bi] = (*(weights[bi]))[i];
-            sum1mw += w[bi]/(1 + SMALL - w[bi]);
+            sum1mw += w[bi]/(1 + small - w[bi]);
         }
 
         // Calculate the limiter for wi/(1 - wi) to ensure the sum(wi) = 1
@@ -290,7 +290,7 @@ Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
         scalar sumw = 0;
         forAll(bodyIDs, bi)
         {
-            w[bi] = lambda*w[bi]/(1 + SMALL - w[bi]);
+            w[bi] = lambda*w[bi]/(1 + small - w[bi]);
             sumw += w[bi];
         }
 

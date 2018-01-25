@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::face::calcEdges(const pointField& points) const
         point nextPt = points[operator[](ni)];
 
         vector vec(nextPt - thisPt);
-        vec /= Foam::mag(vec) + VSMALL;
+        vec /= Foam::mag(vec) + vSmall;
 
         edges[i] = vec;
     }
@@ -84,7 +84,7 @@ Foam::label Foam::face::mostConcaveAngle
     vector n(normal(points));
 
     label index = 0;
-    maxAngle = -GREAT;
+    maxAngle = -great;
 
     forAll(edges, i)
     {
@@ -220,7 +220,7 @@ Foam::label Foam::face::split
                 points[operator[](index)]
               - points[operator[](startIndex)]
             );
-            splitEdge /= Foam::mag(splitEdge) + VSMALL;
+            splitEdge /= Foam::mag(splitEdge) + vSmall;
 
             const scalar splitCos = splitEdge & rightEdge;
             const scalar splitAngle = acos(max(-1.0, min(1.0, splitCos)));
@@ -538,7 +538,7 @@ Foam::point Foam::face::centre(const pointField& points) const
         sumAc += ta*ttc;
     }
 
-    if (sumA > VSMALL)
+    if (sumA > vSmall)
     {
         return sumAc/(3.0*sumA);
     }
@@ -871,7 +871,7 @@ Foam::label Foam::longestEdge(const face& f, const pointField& pts)
     const edgeList& eds = f.edges();
 
     label longestEdgeI = -1;
-    scalar longestEdgeLength = -SMALL;
+    scalar longestEdgeLength = -small;
 
     forAll(eds, edI)
     {

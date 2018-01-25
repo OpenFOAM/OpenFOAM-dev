@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ bool Foam::PilchErdman<CloudType>::update
             else
             {
                 // no break-up
-                taubBar = GREAT;
+                taubBar = great;
             }
         }
 
@@ -140,7 +140,7 @@ bool Foam::PilchErdman<CloudType>::update
 
         // maximum stable diameter - eq (33)
         scalar Vd1 = sqr(1.0 - Vd/Urmag);
-        Vd1 = max(Vd1, SMALL);
+        Vd1 = max(Vd1, small);
         scalar dStable = Wec*sigma/(Vd1*rhoc*sqr(Urmag));
 
         if (d < dStable)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,7 @@ void Foam::DelaunayMesh<Triangulation>::printInfo(Ostream& os) const
     triInfoTable.add("Faces", Triangulation::number_of_finite_facets());
     triInfoTable.add("Cells", Triangulation::number_of_finite_cells());
 
-    scalar minSize = GREAT;
+    scalar minSize = great;
     scalar maxSize = 0;
 
     for

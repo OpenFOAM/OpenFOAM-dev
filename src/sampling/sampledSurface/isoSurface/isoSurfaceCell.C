@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::scalar Foam::isoSurfaceCell::isoFraction
 {
     scalar d = s1-s0;
 
-    if (mag(d) > VSMALL)
+    if (mag(d) > vSmall)
     {
         return (iso_-s0)/d;
     }
@@ -330,7 +330,7 @@ Foam::pointIndexHit Foam::isoSurfaceCell::collapseSurface
         if (nZones == 1)
         {
             // Check that all normals make a decent angle
-            scalar minCos = GREAT;
+            scalar minCos = great;
             const vector& n0 = surf.faceNormals()[0];
             for (label i = 1; i < surf.size(); i++)
             {
@@ -714,7 +714,7 @@ void Foam::isoSurfaceCell::calcSnappedPoint
     }
 
 
-    const point greatPoint(GREAT, GREAT, GREAT);
+    const point greatPoint(great, great, great);
 
     pointField collapsedPoint(mesh_.nPoints(), greatPoint);
 
@@ -855,7 +855,7 @@ void Foam::isoSurfaceCell::calcSnappedPoint
             if (nZones == 1)
             {
                 // Check that all normals make a decent angle
-                scalar minCos = GREAT;
+                scalar minCos = great;
                 const vector& n0 = surf.faceNormals()[0];
                 for (label i = 1; i < surf.size(); i++)
                 {

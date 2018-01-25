@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,7 +248,7 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
 
     // add zones, culling empty ones
     this->addZones(sizes, names, true);
-    this->stitchFaces(SMALL);
+    this->stitchFaces(small);
     return true;
 }
 

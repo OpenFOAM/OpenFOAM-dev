@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,9 +74,9 @@ tmp<volScalarField> WALE<BasicTurbulenceModel>::k
                    )
                  + dimensionedScalar
                    (
-                       "SMALL",
+                       "small",
                        dimensionSet(0, 0, -10, 0, 0),
-                       SMALL
+                       small
                    )
                )
             )

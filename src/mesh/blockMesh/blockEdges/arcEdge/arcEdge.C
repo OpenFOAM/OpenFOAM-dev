@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::cylindricalCS Foam::blockEdges::arcEdge::calcAngle()
 
     scalar denom = asqr*bsqr - adotb*adotb;
 
-    if (mag(denom) < VSMALL)
+    if (mag(denom) < vSmall)
     {
         FatalErrorInFunction
             << denom
@@ -142,18 +142,18 @@ Foam::blockEdges::arcEdge::arcEdge
 
 Foam::point Foam::blockEdges::arcEdge::position(const scalar lambda) const
 {
-    if (lambda < -SMALL || lambda > 1 + SMALL)
+    if (lambda < -small || lambda > 1 + small)
     {
         FatalErrorInFunction
             << "Parameter out of range, lambda = " << lambda
             << abort(FatalError);
     }
 
-    if (lambda < SMALL)
+    if (lambda < small)
     {
         return p1_;
     }
-    else if (lambda > 1 - SMALL)
+    else if (lambda > 1 - small)
     {
         return p3_;
     }

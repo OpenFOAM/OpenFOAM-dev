@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,9 @@ void Foam::WallSpringSliderDashpot<CloudType>::findMinMaxProperties
     scalar& UMagMax
 ) const
 {
-    rMin = VGREAT;
-    rhoMax = -VGREAT;
-    UMagMax = -VGREAT;
+    rMin = vGreat;
+    rhoMax = -vGreat;
+    UMagMax = -vGreat;
 
     forAllConstIter(typename CloudType, this->owner(), iter)
     {
@@ -89,7 +89,7 @@ void Foam::WallSpringSliderDashpot<CloudType>::evaluateWall
 
     scalar normalOverlapMag = max(pREff - r_PW_mag, 0.0);
 
-    vector rHat_PW = r_PW/(r_PW_mag + VSMALL);
+    vector rHat_PW = r_PW/(r_PW_mag + vSmall);
 
     scalar etaN = alpha_*sqrt(p.mass()*kN)*pow025(normalOverlapMag);
 
@@ -122,7 +122,7 @@ void Foam::WallSpringSliderDashpot<CloudType>::evaluateWall
 
     scalar tangentialOverlapMag = mag(tangentialOverlap_PW);
 
-    if (tangentialOverlapMag > VSMALL)
+    if (tangentialOverlapMag > vSmall)
     {
         scalar kT = 8.0*sqrt(pREff*normalOverlapMag)*Gstar_;
 
@@ -199,7 +199,7 @@ Foam::WallSpringSliderDashpot<CloudType>::WallSpringSliderDashpot
 
     Gstar_ = 1/(2*((2 + pNu - sqr(pNu))/pE + (2 + nu - sqr(nu))/E));
 
-    cohesion_ = (mag(cohesionEnergyDensity_) > VSMALL);
+    cohesion_ = (mag(cohesionEnergyDensity_) > vSmall);
 }
 
 
@@ -254,7 +254,7 @@ Foam::label Foam::WallSpringSliderDashpot<CloudType>::nSubCycles() const
     scalar minCollisionDeltaT =
         5.429675
        *rMin
-       *pow(rhoMax/(Estar_*sqrt(UMagMax) + VSMALL), 0.4)
+       *pow(rhoMax/(Estar_*sqrt(UMagMax) + vSmall), 0.4)
        /collisionResolutionSteps_;
 
     return ceil(this->owner().time().deltaTValue()/minCollisionDeltaT);

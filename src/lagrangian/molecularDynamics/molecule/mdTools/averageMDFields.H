@@ -80,7 +80,7 @@ if (runTime.writeTime())
 
     forAll(itotalVelocity, tV)
     {
-        if (totalMass_sum[tV] > VSMALL)
+        if (totalMass_sum[tV] > vSmall)
         {
             itotalVelocity[tV] = totalMomentum_sum[tV]/totalMass_sum[tV];
         }

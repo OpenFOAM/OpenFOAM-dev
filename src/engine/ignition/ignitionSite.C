@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ void Foam::ignitionSite::findIgnitionCells(const fvMesh& mesh)
     cells_[0] = ignCell;
     cellVolumes_[0] = vols[ignCell];
 
-    scalar minDist = GREAT;
+    scalar minDist = great;
     label nIgnCells = 1;
 
     forAll(centres, celli)
@@ -104,7 +104,7 @@ bool Foam::ignitionSite::igniting() const
     (
         (curTime - deltaT >= time_)
         &&
-        (curTime - deltaT < time_ + max(duration_, deltaT) + SMALL)
+        (curTime - deltaT < time_ + max(duration_, deltaT) + small)
     );
 }
 

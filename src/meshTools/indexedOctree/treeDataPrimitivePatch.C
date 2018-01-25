@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,7 +165,7 @@ Foam::volumeType Foam::treeDataPrimitivePatch<PatchType>::getVolumeType
 
 
     // Find nearest face to sample
-    pointIndexHit info = oc.findNearest(sample, sqr(GREAT));
+    pointIndexHit info = oc.findNearest(sample, sqr(great));
 
     if (info.index() == -1)
     {
@@ -223,7 +223,7 @@ Foam::volumeType Foam::treeDataPrimitivePatch<PatchType>::getVolumeType
     //    face centre
     //
 
-    const scalar typDimSqr = mag(area) + VSMALL;
+    const scalar typDimSqr = mag(area) + vSmall;
 
 
     forAll(f, fp)
@@ -333,10 +333,10 @@ Foam::volumeType Foam::treeDataPrimitivePatch<PatchType>::getVolumeType
             vector eNext = points[f[f.fcIndex(fp)]] - fc;
 
             vector nLeft = ePrev ^ e;
-            nLeft /= mag(nLeft) + VSMALL;
+            nLeft /= mag(nLeft) + vSmall;
 
             vector nRight = e ^ eNext;
-            nRight /= mag(nRight) + VSMALL;
+            nRight /= mag(nRight) + vSmall;
 
             if (debug & 2)
             {

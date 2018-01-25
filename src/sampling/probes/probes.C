@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ void Foam::probes::findElements(const fvMesh& mesh)
         {
             const labelList& cellFaces = mesh.cells()[celli];
             const vector& cellCentre = mesh.cellCentres()[celli];
-            scalar minDistance = GREAT;
+            scalar minDistance = great;
             label minFaceID = -1;
             forAll(cellFaces, i)
             {

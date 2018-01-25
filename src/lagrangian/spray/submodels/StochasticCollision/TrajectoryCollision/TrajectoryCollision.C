@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ bool Foam::TrajectoryCollision<CloudType>::collideParcels
     vector d = pos2 - pos1;
     scalar magd = mag(d);
 
-    scalar vAlign = URel & (d/(magd + ROOTVSMALL));
+    scalar vAlign = URel & (d/(magd + rootVSmall));
 
     if (vAlign > 0)
     {
@@ -72,8 +72,8 @@ bool Foam::TrajectoryCollision<CloudType>::collideParcels
 
         if (vAlign*dt > magd - 0.5*sumD)
         {
-            scalar magU1 = mag(U1) + ROOTVSMALL;
-            scalar magU2 = mag(U2) + ROOTVSMALL;
+            scalar magU1 = mag(U1) + rootVSmall;
+            scalar magU2 = mag(U2) + rootVSmall;
             vector n1 = U1/magU1;
             vector n2 = U2/magU2;
 
@@ -83,8 +83,8 @@ bool Foam::TrajectoryCollision<CloudType>::collideParcels
 
             scalar det = 1.0 - sqr(n1n2);
 
-            scalar alpha = GREAT;
-            scalar beta = GREAT;
+            scalar alpha = great;
+            scalar beta = great;
 
             if (mag(det) > 1.0e-4)
             {

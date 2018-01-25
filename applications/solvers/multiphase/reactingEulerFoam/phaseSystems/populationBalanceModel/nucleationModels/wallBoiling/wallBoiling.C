@@ -178,7 +178,7 @@ nucleationRate
 
             forAll(alphatw, facei)
             {
-                if (dmdt[facei] > SMALL)
+                if (dmdt[facei] > small)
                 {
                     const label faceCelli = faceCells[facei];
 

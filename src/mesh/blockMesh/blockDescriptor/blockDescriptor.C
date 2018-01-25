@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ void Foam::blockDescriptor::check(const Istream& is)
     {
         point faceCentre(faces[i].centre(vertices_));
         vector faceNormal(faces[i].normal(vertices_));
-        if (mag(faceNormal) > SMALL)
+        if (mag(faceNormal) > small)
         {
             if (((faceCentre - blockCentre) & faceNormal) > 0)
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -304,7 +304,7 @@ void Foam::chemkinReader::addPressureDependentReaction
             if (TroeCoeffs.size() == 3)
             {
                 TroeCoeffs.setSize(4);
-                TroeCoeffs[3] = GREAT;
+                TroeCoeffs[3] = great;
             }
 
             addReactionType
@@ -841,7 +841,7 @@ Foam::chemkinReader::chemkinReader
     speciesTable_(species),
     reactions_(speciesTable_, speciesThermo_),
     newFormat_(newFormat),
-    imbalanceTol_(ROOTSMALL)
+    imbalanceTol_(rootSmall)
 {
     read(CHEMKINFileName, thermoFileName, transportFileName);
 }
@@ -858,7 +858,7 @@ Foam::chemkinReader::chemkinReader
     speciesTable_(species),
     reactions_(speciesTable_, speciesThermo_),
     newFormat_(thermoDict.lookupOrDefault("newFormat", false)),
-    imbalanceTol_(thermoDict.lookupOrDefault("imbalanceTolerance", ROOTSMALL))
+    imbalanceTol_(thermoDict.lookupOrDefault("imbalanceTolerance", rootSmall))
 {
     if (newFormat_)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ bool Foam::primitiveMesh::checkClosedBoundary
     reduce(sumClosed, sumOp<vector>());
     reduce(sumMagClosedBoundary, sumOp<scalar>());
 
-    vector openness = sumClosed/(sumMagClosedBoundary + VSMALL);
+    vector openness = sumClosed/(sumMagClosedBoundary + vSmall);
 
     if (cmptMax(cmptMag(openness)) > closedThreshold_)
     {
@@ -246,12 +246,12 @@ bool Foam::primitiveMesh::checkFaceAreas
 
     const scalarField magFaceAreas(mag(faceAreas));
 
-    scalar minArea = GREAT;
-    scalar maxArea = -GREAT;
+    scalar minArea = great;
+    scalar maxArea = -great;
 
     forAll(magFaceAreas, facei)
     {
-        if (magFaceAreas[facei] < VSMALL)
+        if (magFaceAreas[facei] < vSmall)
         {
             if (setPtr)
             {
@@ -285,7 +285,7 @@ bool Foam::primitiveMesh::checkFaceAreas
     reduce(minArea, minOp<scalar>());
     reduce(maxArea, maxOp<scalar>());
 
-    if (minArea < VSMALL)
+    if (minArea < vSmall)
     {
         if (debug || report)
         {
@@ -322,14 +322,14 @@ bool Foam::primitiveMesh::checkCellVolumes
         InfoInFunction << "Checking cell volumes" << endl;
     }
 
-    scalar minVolume = GREAT;
-    scalar maxVolume = -GREAT;
+    scalar minVolume = great;
+    scalar maxVolume = -great;
 
     label nNegVolCells = 0;
 
     forAll(vols, celli)
     {
-        if (vols[celli] < VSMALL)
+        if (vols[celli] < vSmall)
         {
             if (setPtr)
             {
@@ -352,7 +352,7 @@ bool Foam::primitiveMesh::checkCellVolumes
     reduce(maxVolume, maxOp<scalar>());
     reduce(nNegVolCells, sumOp<label>());
 
-    if (minVolume < VSMALL)
+    if (minVolume < vSmall)
     {
         if (debug || report)
         {
@@ -418,7 +418,7 @@ bool Foam::primitiveMesh::checkFaceOrthogonality
     {
         if (ortho[facei] < severeNonorthogonalityThreshold)
         {
-            if (ortho[facei] > SMALL)
+            if (ortho[facei] > small)
             {
                 if (setPtr)
                 {
@@ -678,7 +678,7 @@ bool Foam::primitiveMesh::checkFaceAngles
         InfoInFunction << "Checking face angles" << endl;
     }
 
-    if (maxDeg < -SMALL || maxDeg > 180+SMALL)
+    if (maxDeg < -small || maxDeg > 180+small)
     {
         FatalErrorInFunction
             << "maxDeg should be [0..180] but is now " << maxDeg
@@ -703,7 +703,7 @@ bool Foam::primitiveMesh::checkFaceAngles
 
     forAll(faceAngles, facei)
     {
-        if (faceAngles[facei] > SMALL)
+        if (faceAngles[facei] > small)
         {
             nConcave++;
 
@@ -779,14 +779,14 @@ bool Foam::primitiveMesh::checkFaceFlatness
 
     scalarField magAreas(mag(faceAreas));
 
-    scalar minFlatness = GREAT;
+    scalar minFlatness = great;
     scalar sumFlatness = 0;
     label nSummed = 0;
     label nWarped = 0;
 
     forAll(faceFlatness, facei)
     {
-        if (fcs[facei].size() > 3 && magAreas[facei] > VSMALL)
+        if (fcs[facei].size() > 3 && magAreas[facei] > vSmall)
         {
             sumFlatness += faceFlatness[facei];
             nSummed++;
@@ -886,7 +886,7 @@ bool Foam::primitiveMesh::checkConcaveCells
 
             vector fN = fAreas[fI];
 
-            fN /= max(mag(fN), VSMALL);
+            fN /= max(mag(fN), vSmall);
 
             // Flip normal if required so that it is always pointing out of
             // the cell
@@ -914,7 +914,7 @@ bool Foam::primitiveMesh::checkConcaveCells
 
                     vector pC = (pt - fC);
 
-                    pC /= max(mag(pC), VSMALL);
+                    pC /= max(mag(pC), vSmall);
 
                     if ((pC & fN) > -planarCosAngle_)
                     {

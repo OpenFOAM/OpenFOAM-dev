@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::angle
 
 bool Foam::waveModels::Airy::deep() const
 {
-    return k()*depth() > log(GREAT);
+    return k()*depth() > log(great);
 }
 
 
@@ -117,7 +117,7 @@ Foam::waveModels::Airy::Airy
     waveModel(db, dict),
     length_(readScalar(dict.lookup("length"))),
     phase_(readScalar(dict.lookup("phase"))),
-    depth_(dict.lookupOrDefault<scalar>("depth", log(2*GREAT)/k()))
+    depth_(dict.lookupOrDefault<scalar>("depth", log(2*great)/k()))
 {}
 
 

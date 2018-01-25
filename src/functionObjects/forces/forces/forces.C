@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -548,7 +548,7 @@ Foam::functionObjects::forces::forces
     rhoName_(word::null),
     directForceDensity_(false),
     fDName_(""),
-    rhoRef_(VGREAT),
+    rhoRef_(vGreat),
     pRef_(0),
     coordSys_(),
     localSystem_(false),
@@ -556,7 +556,7 @@ Foam::functionObjects::forces::forces
     nBin_(1),
     binDir_(Zero),
     binDx_(0.0),
-    binMin_(GREAT),
+    binMin_(great),
     binPoints_(),
     binCumulative_(true),
     initialised_(false)
@@ -583,7 +583,7 @@ Foam::functionObjects::forces::forces
     rhoName_(word::null),
     directForceDensity_(false),
     fDName_(""),
-    rhoRef_(VGREAT),
+    rhoRef_(vGreat),
     pRef_(0),
     coordSys_(),
     localSystem_(false),
@@ -591,7 +591,7 @@ Foam::functionObjects::forces::forces
     nBin_(1),
     binDir_(Zero),
     binDx_(0.0),
-    binMin_(GREAT),
+    binMin_(great),
     binPoints_(),
     binCumulative_(true),
     initialised_(false)
@@ -691,8 +691,8 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
             binDict.lookup("direction") >> binDir_;
             binDir_ /= mag(binDir_);
 
-            binMin_ = GREAT;
-            scalar binMax = -GREAT;
+            binMin_ = great;
+            scalar binMax = -great;
             forAllConstIter(labelHashSet, patchSet_, iter)
             {
                 label patchi = iter.key();

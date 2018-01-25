@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,7 +171,7 @@ void Foam::meshRefinement::calcNeighbourData
             {
                 // Extrapolate the face centre.
                 vector fn = faceAreas[i];
-                fn /= mag(fn)+VSMALL;
+                fn /= mag(fn)+vSmall;
 
                 label own = faceCells[i];
                 label ownLevel = cellLevel[own];
@@ -269,7 +269,7 @@ void Foam::meshRefinement::updateIntersections(const labelList& changedFaces)
 
     // Extend segments a bit
     {
-        const vectorField smallVec(ROOTSMALL*(end-start));
+        const vectorField smallVec(rootSmall*(end-start));
         start -= smallVec;
         end += smallVec;
     }
@@ -331,7 +331,7 @@ void Foam::meshRefinement::testSyncPointList
         mesh,
         minFld,
         minEqOp<scalar>(),
-        GREAT
+        great
     );
     scalarField maxFld(fld);
     syncTools::syncPointList
@@ -339,13 +339,13 @@ void Foam::meshRefinement::testSyncPointList
         mesh,
         maxFld,
         maxEqOp<scalar>(),
-        -GREAT
+        -great
     );
     forAll(minFld, pointi)
     {
         const scalar& minVal = minFld[pointi];
         const scalar& maxVal = maxFld[pointi];
-        if (mag(minVal-maxVal) > SMALL)
+        if (mag(minVal-maxVal) > small)
         {
             Pout<< msg << " at:" << mesh.points()[pointi] << nl
                 << "    minFld:" << minVal << nl
@@ -378,7 +378,7 @@ void Foam::meshRefinement::testSyncPointList
         mesh,
         minFld,
         minMagSqrEqOp<point>(),
-        point(GREAT, GREAT, GREAT)
+        point(great, great, great)
     );
     pointField maxFld(fld);
     syncTools::syncPointList
@@ -392,7 +392,7 @@ void Foam::meshRefinement::testSyncPointList
     {
         const point& minVal = minFld[pointi];
         const point& maxVal = maxFld[pointi];
-        if (mag(minVal-maxVal) > SMALL)
+        if (mag(minVal-maxVal) > small)
         {
             Pout<< msg << " at:" << mesh.points()[pointi] << nl
                 << "    minFld:" << minVal << nl
@@ -474,7 +474,7 @@ void Foam::meshRefinement::checkData()
 
         // Extend segments a bit
         {
-            const vectorField smallVec(ROOTSMALL*(end-start));
+            const vectorField smallVec(rootSmall*(end-start));
             start -= smallVec;
             end += smallVec;
         }
@@ -1944,7 +1944,7 @@ void Foam::meshRefinement::calculateEdgeWeights
         const edge& e = edges[edgeI];
         scalar eMag = max
         (
-            SMALL,
+            small,
             mag
             (
                 pts[meshPoints[e[1]]]
@@ -2856,7 +2856,7 @@ void Foam::meshRefinement::dumpIntersections(const fileName& prefix) const
 
         // Extend segments a bit
         {
-            const vectorField smallVec(ROOTSMALL*(end-start));
+            const vectorField smallVec(rootSmall*(end-start));
             start -= smallVec;
             end += smallVec;
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ void Foam::primitiveMesh::makeFaceCentresAndAreas
 
             // This is to deal with zero-area faces. Mark very small faces
             // to be detected in e.g., processorPolyPatch.
-            if (sumA < ROOTVSMALL)
+            if (sumA < rootVSmall)
             {
                 fCtrs[facei] = fCentre;
                 fAreas[facei] = Zero;

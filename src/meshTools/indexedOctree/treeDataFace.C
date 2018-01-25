@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,7 +196,7 @@ Foam::volumeType Foam::treeDataFace::getVolumeType
 
 
     // Find nearest face to sample
-    pointIndexHit info = oc.findNearest(sample, sqr(GREAT));
+    pointIndexHit info = oc.findNearest(sample, sqr(great));
 
     if (info.index() == -1)
     {
@@ -253,7 +253,7 @@ Foam::volumeType Foam::treeDataFace::getVolumeType
     //    face centre
     //
 
-    const scalar typDimSqr = mag(area) + VSMALL;
+    const scalar typDimSqr = mag(area) + vSmall;
 
     forAll(f, fp)
     {
@@ -272,7 +272,7 @@ Foam::volumeType Foam::treeDataFace::getVolumeType
                 if (isTreeFace_.get(pFaces[i]) == 1)
                 {
                     vector n = mesh_.faceAreas()[pFaces[i]];
-                    n /= mag(n) + VSMALL;
+                    n /= mag(n) + vSmall;
 
                     pointNormal += n;
                 }
@@ -341,7 +341,7 @@ Foam::volumeType Foam::treeDataFace::getVolumeType
                 if (isTreeFace_.get(eFaces[i]) == 1)
                 {
                     vector n = mesh_.faceAreas()[eFaces[i]];
-                    n /= mag(n) + VSMALL;
+                    n /= mag(n) + vSmall;
 
                     edgeNormal += n;
                 }
@@ -387,10 +387,10 @@ Foam::volumeType Foam::treeDataFace::getVolumeType
             vector eNext = points[f[f.fcIndex(fp)]] - fc;
 
             vector nLeft = ePrev ^ e;
-            nLeft /= mag(nLeft) + VSMALL;
+            nLeft /= mag(nLeft) + vSmall;
 
             vector nRight = e ^ eNext;
-            nRight /= mag(nRight) + VSMALL;
+            nRight /= mag(nRight) + vSmall;
 
             if (debug & 2)
             {

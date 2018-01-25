@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,7 +279,7 @@ Foam::scalar Foam::solution::fieldRelaxationFactor(const word& name) const
     {
         return readScalar(fieldRelaxDict_.lookup(name));
     }
-    else if (fieldRelaxDefault_ > SMALL)
+    else if (fieldRelaxDefault_ > small)
     {
         return fieldRelaxDefault_;
     }
@@ -308,7 +308,7 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
     {
         return readScalar(eqnRelaxDict_.lookup(name));
     }
-    else if (eqnRelaxDefault_ > SMALL)
+    else if (eqnRelaxDefault_ > small)
     {
         return eqnRelaxDefault_;
     }

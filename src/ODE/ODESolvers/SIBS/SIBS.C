@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ void Foam::SIBS::solve
 
     if (relTol_[0] != epsOld_)
     {
-        dxTry = xNew_ = -GREAT;
+        dxTry = xNew_ = -great;
         scalar eps1 = safe1*relTol_[0];
         a_[0] = nSeq_[0] + 1;
 
@@ -153,7 +153,7 @@ void Foam::SIBS::solve
 
     label km=0;
     label reduct=0;
-    scalar maxErr = SMALL;
+    scalar maxErr = small;
 
     for (;;)
     {
@@ -177,7 +177,7 @@ void Foam::SIBS::solve
 
             if (k != 0)
             {
-                maxErr = SMALL;
+                maxErr = small;
                 for (label i=0; i<n_; i++)
                 {
                     maxErr = max
@@ -234,7 +234,7 @@ void Foam::SIBS::solve
 
     x = xNew_;
     first_ = 0;
-    scalar wrkmin = GREAT;
+    scalar wrkmin = great;
     scalar scale = 1.0;
 
     for (label kk=0; kk<=km; kk++)

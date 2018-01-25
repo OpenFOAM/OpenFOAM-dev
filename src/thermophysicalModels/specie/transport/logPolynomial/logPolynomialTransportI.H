@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,7 +135,7 @@ inline void Foam::logPolynomialTransport<Thermo, PolySize>::operator+=
 
     Thermo::operator+=(pt);
 
-    if (mag(this->Y()) > SMALL)
+    if (mag(this->Y()) > small)
     {
         Y1 /= this->Y();
         scalar Y2 = pt.Y()/this->Y();
@@ -170,7 +170,7 @@ inline Foam::logPolynomialTransport<Thermo, PolySize> Foam::operator+
         static_cast<const Thermo&>(pt1) + static_cast<const Thermo&>(pt2)
     );
 
-    if (mag(t.Y()) < SMALL)
+    if (mag(t.Y()) < small)
     {
         return logPolynomialTransport<Thermo>
         (

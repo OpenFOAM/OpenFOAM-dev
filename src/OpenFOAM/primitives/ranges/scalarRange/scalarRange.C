@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ Foam::scalar Foam::scalarRange::lower() const
 {
     if (type_ == UPPER)
     {
-        return -Foam::GREAT;
+        return -Foam::great;
     }
     else
     {
@@ -114,7 +114,7 @@ Foam::scalar Foam::scalarRange::upper() const
     switch (type_)
     {
         case LOWER:
-            return Foam::GREAT;
+            return Foam::great;
             break;
 
         case RANGE:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::Function1Types::Polynomial<Type>::Polynomial
 
     forAll(coeffs_, i)
     {
-        if (mag(coeffs_[i].second() + pTraits<Type>::one) < ROOTVSMALL)
+        if (mag(coeffs_[i].second() + pTraits<Type>::one) < rootVSmall)
         {
             canIntegrate_ = false;
             break;
@@ -91,7 +91,7 @@ Foam::Function1Types::Polynomial<Type>::Polynomial
 
     forAll(coeffs_, i)
     {
-        if (mag(coeffs_[i].second() + 1) < ROOTVSMALL)
+        if (mag(coeffs_[i].second() + 1) < rootVSmall)
         {
             canIntegrate_ = false;
             break;

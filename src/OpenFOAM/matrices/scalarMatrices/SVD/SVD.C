@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,7 +150,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         anorm = max(anorm, mag(S_[i]) + mag(rv1[i]));
     }
 
-    anorm *= SMALL;
+    anorm *= small;
 
     for (label i=Un-1; i >= 0; i--)
     {

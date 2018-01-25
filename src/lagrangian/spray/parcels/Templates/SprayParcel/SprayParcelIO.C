@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::SprayParcel<ParcelType>::SprayParcel
     tc_(0.0),
     ms_(0.0),
     injector_(1.0),
-    tMom_(GREAT),
+    tMom_(great),
     user_(0.0)
 {
     if (readFields)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,8 +152,8 @@ Foam::triSurfaceRegionSearch::treeByRegion() const
                 // on symmetric geometry there are fewer face/edge
                 // aligned items.
                 bb = bb.extend(rndGen, 1e-4);
-                bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-                bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+                bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+                bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
             }
 
             treeByRegion_.set

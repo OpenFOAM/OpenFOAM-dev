@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,10 +105,10 @@ public:
         //- The great value used for greatBox and invertedBox
         static const scalar great;
 
-        //- As per boundBox::greatBox, but with GREAT instead of VGREAT
+        //- As per boundBox::greatBox, but with great instead of vGreat
         static const treeBoundBox greatBox;
 
-        //- As per boundBox::invertedBox, but with GREAT instead of VGREAT
+        //- As per boundBox::invertedBox, but with great instead of vGreat
         static const treeBoundBox invertedBox;
 
         //- Bits used for octant/point coding.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,9 +113,9 @@ Foam::label Foam::patchWave::getValues(const MeshWave<wallPoint>& waveInfo)
 
             if (faceInfo[meshFacei].valid(waveInfo.data()))
             {
-                // Adding SMALL to avoid problems with /0 in the turbulence
+                // Adding small to avoid problems with /0 in the turbulence
                 // models
-                patchField[patchFacei] = Foam::sqrt(dist) + SMALL;
+                patchField[patchFacei] = Foam::sqrt(dist) + small;
             }
             else
             {

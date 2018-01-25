@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,32 +63,6 @@ inline bool equal(const T& s1, const T& s2)
 {
     return s1 == s2;
 }
-
-
-#define MAXMINPOW(retType, type1, type2)          \
-                                                  \
-MAXMIN(retType, type1, type2)                     \
-                                                  \
-inline double pow(const type1 s, const type2 e)   \
-{                                                 \
-    return ::pow(double(s), double(e));           \
-}
-
-
-MAXMINPOW(double, double, double)
-MAXMINPOW(double, double, float)
-MAXMINPOW(double, float, double)
-MAXMINPOW(float, float, float)
-MAXMINPOW(double, double, int)
-MAXMINPOW(double, int, double)
-MAXMINPOW(double, double, long)
-MAXMINPOW(double, long, double)
-MAXMINPOW(float, float, int)
-MAXMINPOW(float, int, float)
-MAXMINPOW(float, float, long)
-MAXMINPOW(float, long, float)
-
-#undef MAXMINPOW
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

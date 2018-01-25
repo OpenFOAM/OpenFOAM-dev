@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,7 +193,7 @@ Foam::boolList Foam::cellClassification::markFaces
         const scalar edgeMag = mag(edgeNormal);
         const vector smallVec = 1e-9*edgeNormal;
 
-        edgeNormal /= edgeMag+VSMALL;
+        edgeNormal /= edgeMag+vSmall;
 
         // Current start of pierce test
         point pt = start;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,12 +221,12 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
 
         // Calculate master point
         vector masterPtVec(normalDir + nextNormalDir);
-        masterPtVec /= mag(masterPtVec) + SMALL;
+        masterPtVec /= mag(masterPtVec) + small;
 
         if
         (
-            ((normalDir ^ nextNormalDir) & edDir) < SMALL
-         || mag(masterPtVec) < SMALL
+            ((normalDir ^ nextNormalDir) & edDir) < small
+         || mag(masterPtVec) < small
         )
         {
 //            Info<< "    IGNORE REGION" << endl;
@@ -235,7 +235,7 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
             if
             (
                 circ.size() == 2
-             && mag((normal & nextNormal) - 1) < SMALL
+             && mag((normal & nextNormal) - 1) < small
             )
             {
                 const vector n = 0.5*(normal + nextNormal);
@@ -278,7 +278,7 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
             );
 
         // Specialise for size = 1 && baffle
-        if (mag((normalDir & nextNormalDir) - 1) < SMALL)
+        if (mag((normalDir & nextNormalDir) - 1) < small)
         {
             if (inside)
             {

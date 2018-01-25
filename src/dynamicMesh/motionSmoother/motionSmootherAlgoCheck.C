@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     Info<< "Checking faces in error :" << endl;
     //Pout.setf(ios_base::left);
 
-    if (maxNonOrtho < 180.0-SMALL)
+    if (maxNonOrtho < 180.0-small)
     {
         polyMeshGeometry::checkFaceDotProduct
         (
@@ -139,7 +139,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (minVol > -GREAT)
+    if (minVol > -great)
     {
         polyMeshGeometry::checkFacePyramids
         (
@@ -162,7 +162,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (minTetQuality > -GREAT)
+    if (minTetQuality > -great)
     {
         polyMeshGeometry::checkFaceTets
         (
@@ -186,7 +186,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (maxConcave < 180.0-SMALL)
+    if (maxConcave < 180.0-small)
     {
         polyMeshGeometry::checkFaceAngles
         (
@@ -209,7 +209,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (minArea > -SMALL)
+    if (minArea > -small)
     {
         polyMeshGeometry::checkFaceArea
         (
@@ -359,7 +359,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (minFaceFlatness > -SMALL)
+    if (minFaceFlatness > -small)
     {
         polyMeshGeometry::checkFaceFlatness
         (
@@ -518,7 +518,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     Info<< "Checking faces in error :" << endl;
     //Pout.setf(ios_base::left);
 
-    if (maxNonOrtho < 180.0-SMALL)
+    if (maxNonOrtho < 180.0-small)
     {
         meshGeom.checkFaceDotProduct
         (
@@ -539,7 +539,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (minVol > -GREAT)
+    if (minVol > -great)
     {
         meshGeom.checkFacePyramids
         (
@@ -560,7 +560,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (minTetQuality > -GREAT)
+    if (minTetQuality > -great)
     {
         meshGeom.checkFaceTets
         (
@@ -581,7 +581,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (maxConcave < 180.0-SMALL)
+    if (maxConcave < 180.0-small)
     {
         meshGeom.checkFaceAngles
         (
@@ -602,7 +602,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (minArea > -SMALL)
+    if (minArea > -small)
     {
         meshGeom.checkFaceArea(report, minArea, checkFaces, &wrongFaces);
 

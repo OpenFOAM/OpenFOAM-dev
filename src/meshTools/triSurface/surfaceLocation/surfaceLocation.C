@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::vector Foam::surfaceLocation::normal(const triSurface& s) const
             {
                 edgeNormal += n[eFaces[i]];
             }
-            return edgeNormal/(mag(edgeNormal) + VSMALL);
+            return edgeNormal/(mag(edgeNormal) + vSmall);
         }
     }
     else

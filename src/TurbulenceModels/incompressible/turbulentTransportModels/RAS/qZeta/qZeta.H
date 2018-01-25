@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,13 +141,13 @@ public:
         //- Read RASProperties dictionary
         virtual bool read();
 
-        //- Return the lower allowable limit for q (default: SMALL)
+        //- Return the lower allowable limit for q (default: small)
         const dimensionedScalar& qMin() const
         {
             return qMin_;
         }
 
-        //- Return the lower allowable limit for zeta (default: SMALL)
+        //- Return the lower allowable limit for zeta (default: small)
         const dimensionedScalar& zetaMin() const
         {
             return zetaMin_;

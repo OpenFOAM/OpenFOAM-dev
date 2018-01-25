@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ Foam::label Foam::oldCyclicPolyPatch::findMaxArea
 )
 {
     label maxI = -1;
-    scalar maxAreaSqr = -GREAT;
+    scalar maxAreaSqr = -great;
 
     forAll(faces, facei)
     {
@@ -310,8 +310,8 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
 
             vector n0 = ((half0Ctrs[face0] - rotationCentre_) ^ rotationAxis_);
             vector n1 = ((half1Ctrs[face1] - rotationCentre_) ^ -rotationAxis_);
-            n0 /= mag(n0) + VSMALL;
-            n1 /= mag(n1) + VSMALL;
+            n0 /= mag(n0) + vSmall;
+            n1 /= mag(n1) + vSmall;
 
             if (debug)
             {
@@ -360,11 +360,11 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
             // two faces are used to determine the transformation tensors
             label max0I = findMaxArea(pp.points(), half0Faces);
             vector n0 = half0Faces[max0I].normal(pp.points());
-            n0 /= mag(n0) + VSMALL;
+            n0 /= mag(n0) + vSmall;
 
             label max1I = findMaxArea(pp.points(), half1Faces);
             vector n1 = half1Faces[max1I].normal(pp.points());
-            n1 /= mag(n1) + VSMALL;
+            n1 /= mag(n1) + vSmall;
 
             if (mag(n0 & n1) < 1-matchTolerance())
             {
@@ -530,8 +530,8 @@ Foam::label Foam::oldCyclicPolyPatch::getConsistentRotationFace
     );
 
     label rotFace = -1;
-    scalar maxMagLenSqr = -GREAT;
-    scalar maxMagRadSqr = -GREAT;
+    scalar maxMagLenSqr = -great;
+    scalar maxMagRadSqr = -great;
     forAll(faceCentres, i)
     {
         if (magLenSqr[i] >= maxMagLenSqr)

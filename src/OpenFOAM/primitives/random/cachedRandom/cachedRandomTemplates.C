@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::cachedRandom::randomise01(Type& value)
 template<class Type>
 Type Foam::cachedRandom::globalSample01()
 {
-    Type value = -GREAT*pTraits<Type>::one;
+    Type value = -great*pTraits<Type>::one;
 
     if (Pstream::master())
     {
@@ -94,7 +94,7 @@ Type Foam::cachedRandom::globalSample01()
 template<class Type>
 Type Foam::cachedRandom::globalGaussNormal()
 {
-    Type value = -GREAT*pTraits<Type>::one;
+    Type value = -great*pTraits<Type>::one;
 
     if (Pstream::master())
     {
@@ -110,7 +110,7 @@ Type Foam::cachedRandom::globalGaussNormal()
 template<class Type>
 Type Foam::cachedRandom::globalPosition(const Type& start, const Type& end)
 {
-    Type value = -GREAT*pTraits<Type>::one;
+    Type value = -great*pTraits<Type>::one;
 
     if (Pstream::master())
     {
@@ -126,7 +126,7 @@ Type Foam::cachedRandom::globalPosition(const Type& start, const Type& end)
 template<class Type>
 void Foam::cachedRandom::globalRandomise01(Type& value)
 {
-    value = -GREAT*pTraits<Type>::one;
+    value = -great*pTraits<Type>::one;
 
     if (Pstream::master())
     {

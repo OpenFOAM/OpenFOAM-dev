@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::updateMassFractions
     scalar massSolid =
         this->updateMassFraction(mass0*YMix[SLD], dMassSolid, YSolid_);
 
-    scalar massNew = max(massGas + massLiquid + massSolid, ROOTVSMALL);
+    scalar massNew = max(massGas + massLiquid + massSolid, rootVSmall);
 
     YMix[GAS] = massGas/massNew;
     YMix[LIQ] = massLiquid/massNew;
@@ -567,7 +567,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     if (cloud.heatTransfer().BirdCorrection())
     {
         // Molar average molecular weight of carrier mix
-        const scalar Wc = max(SMALL, td.rhoc()*RR*td.Tc()/td.pc());
+        const scalar Wc = max(small, td.rhoc()*RR*td.Tc()/td.pc());
 
         // Note: hardcoded gaseous diffusivities for now
         // TODO: add to carrier thermo

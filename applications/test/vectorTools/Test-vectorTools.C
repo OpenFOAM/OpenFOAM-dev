@@ -35,8 +35,8 @@ int main()
     vector b(2.0, 2.0, 2.0);
 
     test(a, b, 0.0);
-    test(a, b, VSMALL);
-    test(a, b, SMALL);
+    test(a, b, vSmall);
+    test(a, b, small);
     test(a, b, 1e-3);
     test(a, b, 1e-1);
 
@@ -44,8 +44,8 @@ int main()
     b = vector(0,2,0);
 
     test(a, b, 0.0);
-    test(a, b, VSMALL);
-    test(a, b, SMALL);
+    test(a, b, vSmall);
+    test(a, b, small);
     test(a, b, 1e-3);
     test(a, b, 1e-1);
 
@@ -53,8 +53,8 @@ int main()
     b = vector(-1,0,0);
 
     test(a, b, 0.0);
-    test(a, b, VSMALL);
-    test(a, b, SMALL);
+    test(a, b, vSmall);
+    test(a, b, small);
     test(a, b, 1e-3);
     test(a, b, 1e-1);
 
@@ -62,8 +62,8 @@ int main()
     b = vector(-1,2,0);
 
     test(a, b, 0.0);
-    test(a, b, VSMALL);
-    test(a, b, SMALL);
+    test(a, b, vSmall);
+    test(a, b, small);
     test(a, b, 1e-3);
     test(a, b, 1e-1);
 

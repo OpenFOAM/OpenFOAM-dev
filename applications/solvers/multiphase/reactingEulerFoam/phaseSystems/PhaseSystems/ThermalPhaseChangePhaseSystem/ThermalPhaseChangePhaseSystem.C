@@ -553,8 +553,8 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
             );
 
             // Limit the H[12] to avoid /0
-            H1.max(SMALL);
-            H2.max(SMALL);
+            H1.max(small);
+            H2.max(small);
 
             Tf = (H1*T1 + H2*T2 + iDmdtNew*L)/(H1 + H2);
 

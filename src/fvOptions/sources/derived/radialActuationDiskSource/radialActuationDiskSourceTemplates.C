@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,8 +62,8 @@ addRadialActuationDiskAxialInertialResistance
       + radialCoeffs_[1]*sqr(maxR)/2.0
       + radialCoeffs_[2]*pow4(maxR)/3.0;
 
-    vector upU = vector(VGREAT, VGREAT, VGREAT);
-    scalar upRho = VGREAT;
+    vector upU = vector(vGreat, vGreat, vGreat);
+    scalar upRho = vGreat;
     if (upstreamCellId_ != -1)
     {
         upU =  U[upstreamCellId_];

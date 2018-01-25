@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ Foam::tmp<Foam::pointScalarField> Foam::functionObjects::streamFunction::calc
                 {
                     if
                     (
-                        magSqr(phi.boundaryField()[patchi][facei]) < SMALL
+                        magSqr(phi.boundaryField()[patchi][facei]) < small
                     )
                     {
                         const labelList& zeroPoints = bouFaces[facei];
@@ -270,7 +270,7 @@ Foam::tmp<Foam::pointScalarField> Foam::functionObjects::streamFunction::calc
 
                                 vector nHat = unitAreas[facei];
 
-                                if (edgeHat.y() > VSMALL)
+                                if (edgeHat.y() > vSmall)
                                 {
                                     visitedPoint[curBPoints[pointi]] = 1;
                                     nVisited++;
@@ -280,7 +280,7 @@ Foam::tmp<Foam::pointScalarField> Foam::functionObjects::streamFunction::calc
                                       + phi.boundaryField()[patchNo][faceNo]
                                        *sign(nHat.x());
                                 }
-                                else if (edgeHat.y() < -VSMALL)
+                                else if (edgeHat.y() < -vSmall)
                                 {
                                     visitedPoint[curBPoints[pointi]] = 1;
                                     nVisited++;
@@ -292,7 +292,7 @@ Foam::tmp<Foam::pointScalarField> Foam::functionObjects::streamFunction::calc
                                 }
                                 else
                                 {
-                                    if (edgeHat.x() > VSMALL)
+                                    if (edgeHat.x() > vSmall)
                                     {
                                         visitedPoint[curBPoints[pointi]] = 1;
                                         nVisited++;
@@ -302,7 +302,7 @@ Foam::tmp<Foam::pointScalarField> Foam::functionObjects::streamFunction::calc
                                           + phi.boundaryField()[patchNo][faceNo]
                                            *sign(nHat.y());
                                     }
-                                    else if (edgeHat.x() < -VSMALL)
+                                    else if (edgeHat.x() < -vSmall)
                                     {
                                         visitedPoint[curBPoints[pointi]] = 1;
                                         nVisited++;
@@ -363,7 +363,7 @@ Foam::tmp<Foam::pointScalarField> Foam::functionObjects::streamFunction::calc
 
                             vector nHat = unitAreas[facei];
 
-                            if (edgeHat.y() > VSMALL)
+                            if (edgeHat.y() > vSmall)
                             {
                                 visitedPoint[curPoints[pointi]] = 1;
                                 nVisited++;
@@ -372,7 +372,7 @@ Foam::tmp<Foam::pointScalarField> Foam::functionObjects::streamFunction::calc
                                   currentStream
                                 + phi[facei]*sign(nHat.x());
                             }
-                            else if (edgeHat.y() < -VSMALL)
+                            else if (edgeHat.y() < -vSmall)
                             {
                                 visitedPoint[curPoints[pointi]] = 1;
                                 nVisited++;

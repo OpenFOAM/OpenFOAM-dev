@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void Foam::tabulatedWallFunctions::SpaldingsLaw::invertFunction()
 
         // Newton iterations to determine u+
         label iter = 0;
-        scalar error = GREAT;
+        scalar error = great;
         do
         {
             scalar kUPlus = min(kappa_*uPlus, 50);
@@ -97,7 +97,7 @@ void Foam::tabulatedWallFunctions::SpaldingsLaw::invertFunction()
                   - 1
                 )/E_;
 
-            scalar uPlusNew = uPlus - f/(df + ROOTVSMALL);
+            scalar uPlusNew = uPlus - f/(df + rootVSmall);
             error = mag((uPlus - uPlusNew)/uPlusNew);
             uPlus = uPlusNew;
         } while (error > tolerance_ && ++iter < maxIters_);

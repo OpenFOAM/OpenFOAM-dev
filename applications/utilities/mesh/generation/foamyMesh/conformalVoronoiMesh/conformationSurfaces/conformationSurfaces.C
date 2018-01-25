@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,8 +120,8 @@ void Foam::conformationSurfaces::hasBoundedVolume
     Info<< "    Sum of all the surface normals (if near zero, surface is"
         << " probably closed):" << nl
         << "    Note: Does not include baffle surfaces in calculation" << nl
-        << "        Sum = " << sum/(totalTriangles + SMALL) << nl
-        << "        mag(Sum) = " << mag(sum)/(totalTriangles + SMALL)
+        << "        Sum = " << sum/(totalTriangles + small) << nl
+        << "        mag(Sum) = " << mag(sum)/(totalTriangles + small)
         << endl;
 }
 
@@ -738,13 +738,13 @@ Foam::Field<bool> Foam::conformationSurfaces::wellInOutSide
             )
             {
                 pointField sample(1, samplePts[i]);
-                scalarField nearestDistSqr(1, GREAT);
+                scalarField nearestDistSqr(1, great);
                 List<pointIndexHit> info;
 
                 surface.findNearest(sample, nearestDistSqr, info);
 
                 vector hitDir = info[0].rawPoint() - samplePts[i];
-                hitDir /= mag(hitDir) + SMALL;
+                hitDir /= mag(hitDir) + small;
 
                 pointIndexHit surfHit;
                 label hitSurface;
@@ -1264,7 +1264,7 @@ Foam::label Foam::conformationSurfaces::findPatch(const point& pt) const
     pointIndexHit surfHit;
     label hitSurface;
 
-    findSurfaceNearest(pt, sqr(GREAT), surfHit, hitSurface);
+    findSurfaceNearest(pt, sqr(great), surfHit, hitSurface);
 
     return getPatchID(hitSurface, surfHit);
 }

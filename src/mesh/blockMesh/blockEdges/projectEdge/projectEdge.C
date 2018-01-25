@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ Foam::point Foam::projectEdge::position(const scalar lambda) const
 
     point near(start);
 
-    if (lambda >= SMALL && lambda < 1.0-SMALL)
+    if (lambda >= small && lambda < 1.0-small)
     {
         pointConstraint constraint;
         findNearest(start, near, constraint);
@@ -182,11 +182,11 @@ Foam::projectEdge::position(const scalarList& lambdas) const
             );
 
             // Reset start and end point
-            if (lambdas[0] < SMALL)
+            if (lambdas[0] < small)
             {
                 points[0] = startPt;
             }
-            if (lambdas.last() > 1.0-SMALL)
+            if (lambdas.last() > 1.0-small)
             {
                 points.last() = endPt;
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,7 +155,7 @@ JohnsonJacksonSchaeffer::nu
                 0.5*pf[celli]*sin(phi_.value())
                /(
                     sqrt((1.0/3.0)*sqr(tr(D[celli])) - invariantII(D[celli]))
-                  + SMALL
+                  + small
                 );
         }
     }
@@ -174,7 +174,7 @@ JohnsonJacksonSchaeffer::nu
                     pf.boundaryField()[patchi]*sin(phi_.value())
                    /(
                         mag(U.boundaryField()[patchi].snGrad())
-                      + SMALL
+                      + small
                     )
                 );
         }

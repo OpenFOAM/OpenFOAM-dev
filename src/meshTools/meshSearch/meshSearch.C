@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ Foam::label Foam::meshSearch::findNearestCellTree(const point& location) const
 
     if (!info.hit())
     {
-        info = tree.findNearest(location, Foam::sqr(GREAT));
+        info = tree.findNearest(location, Foam::sqr(great));
     }
     return info.index();
 }
@@ -187,7 +187,7 @@ Foam::label Foam::meshSearch::findNearestFaceTree(const point& location) const
     if (!info.hit())
     {
         // Search with desparate span
-        info = tree.findNearest(location, Foam::sqr(GREAT));
+        info = tree.findNearest(location, Foam::sqr(great));
     }
 
 
@@ -561,8 +561,8 @@ Foam::meshSearch::boundaryTree() const
             treeBoundBox& overallBb = overallBbPtr_();
             // Extend slightly and make 3D
             overallBb = overallBb.extend(rndGen, 1e-4);
-            overallBb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-            overallBb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+            overallBb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+            overallBb.max() += point(rootVSmall, rootVSmall, rootVSmall);
         }
 
         // all boundary faces (not just walls)
@@ -614,8 +614,8 @@ Foam::meshSearch::cellTree() const
             treeBoundBox& overallBb = overallBbPtr_();
             // Extend slightly and make 3D
             overallBb = overallBb.extend(rndGen, 1e-4);
-            overallBb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-            overallBb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+            overallBb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+            overallBb.max() += point(rootVSmall, rootVSmall, rootVSmall);
         }
 
         cellTreePtr_.reset
@@ -740,7 +740,7 @@ Foam::label Foam::meshSearch::findNearestBoundaryFace
                 info = boundaryTree().findNearest
                 (
                     location,
-                    Foam::sqr(GREAT)
+                    Foam::sqr(great)
                 );
             }
 
@@ -748,7 +748,7 @@ Foam::label Foam::meshSearch::findNearestBoundaryFace
         }
         else
         {
-            scalar minDist = GREAT;
+            scalar minDist = great;
 
             label minFacei = -1;
 
@@ -827,7 +827,7 @@ Foam::List<Foam::pointIndexHit> Foam::meshSearch::intersections
 
             scalar typDim = Foam::sqrt(mag(area));
 
-            if ((mag(bHit.hitPoint() - pEnd)/typDim) < SMALL)
+            if ((mag(bHit.hitPoint() - pEnd)/typDim) < small)
             {
                 break;
             }

@@ -74,7 +74,7 @@ Foam::diameterModels::velocityGroup::secondMoment() const
         const sizeGroup& fi = sizeGroups_[i];
 
         m2 += sqr(fi.d())*formFactor()*fi
-           *max(fi.phase(), SMALL)/fi.x();
+           *max(fi.phase(), small)/fi.x();
     }
 
     return tm2;
@@ -106,7 +106,7 @@ Foam::diameterModels::velocityGroup::thirdMoment() const
         const sizeGroup& fi = sizeGroups_[i];
 
         m3 += pow3(fi.d())*formFactor()*fi
-           *max(fi.phase(), SMALL)/fi.x();
+           *max(fi.phase(), small)/fi.x();
     }
 
     return tm3;

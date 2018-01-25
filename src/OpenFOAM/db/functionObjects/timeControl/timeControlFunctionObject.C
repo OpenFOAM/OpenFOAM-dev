@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,8 +69,8 @@ Foam::functionObjects::timeControl::timeControl
     functionObject(name),
     time_(t),
     dict_(dict),
-    timeStart_(-VGREAT),
-    timeEnd_(VGREAT),
+    timeStart_(-vGreat),
+    timeEnd_(vGreat),
     nStepsToStartTimeChange_
     (
         dict.lookupOrDefault("nStepsToStartTimeChange", 3)
@@ -140,7 +140,7 @@ bool Foam::functionObjects::timeControl::adjustTimeStep()
 
         scalar deltaT = time_.deltaTValue();
 
-        scalar nSteps = timeToNextWrite/deltaT - SMALL;
+        scalar nSteps = timeToNextWrite/deltaT - small;
 
         // functionObjects modify deltaT within nStepsToStartTimeChange
         // NOTE: Potential problems arise if two function objects dump within

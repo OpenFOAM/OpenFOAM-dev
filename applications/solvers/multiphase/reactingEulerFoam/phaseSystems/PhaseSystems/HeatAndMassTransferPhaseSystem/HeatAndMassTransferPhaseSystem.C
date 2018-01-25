@@ -108,7 +108,7 @@ HeatAndMassTransferPhaseSystem
                         (
                             "small",
                             heatTransferModel::dimK,
-                            SMALL
+                            small
                         )
                     ),
                     zeroGradientFvPatchScalarField::typeName
@@ -258,7 +258,7 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
                /max
                 (
                     K1 + K2,
-                    dimensionedScalar("small", heatTransferModel::dimK, SMALL)
+                    dimensionedScalar("small", heatTransferModel::dimK, small)
                 )
             );
 
@@ -360,8 +360,8 @@ void Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::correctThermo()
             );
 
             // Limit the H[12] to avoid /0
-            H1.max(SMALL);
-            H2.max(SMALL);
+            H1.max(small);
+            H2.max(small);
 
             Tf = (H1*T1 + H2*T2)/(H1 + H2);
 

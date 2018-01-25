@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ void Foam::ThermoParcel<ParcelType>::calcSurfaceValues
     kappas = td.kappaInterp().interpolate(this->coordinates(), tetIs)/TRatio;
 
     Pr = td.Cpc()*mus/kappas;
-    Pr = max(ROOTVSMALL, Pr);
+    Pr = max(rootVSmall, Pr);
 }
 
 

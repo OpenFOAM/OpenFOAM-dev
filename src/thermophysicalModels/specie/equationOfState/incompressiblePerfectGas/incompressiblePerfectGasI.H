@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ inline void Foam::incompressiblePerfectGas<Specie>::operator+=
     scalar Y1 = this->Y();
     Specie::operator+=(ipg);
 
-    if (mag(this->Y()) > SMALL)
+    if (mag(this->Y()) > small)
     {
         Y1 /= this->Y();
         const scalar Y2 = ipg.Y()/this->Y();
@@ -209,7 +209,7 @@ inline Foam::incompressiblePerfectGas<Specie> Foam::operator+
       + static_cast<const Specie&>(ipg2)
     );
 
-    if (mag(sp.Y()) < SMALL)
+    if (mag(sp.Y()) < small)
     {
         return incompressiblePerfectGas<Specie>
         (

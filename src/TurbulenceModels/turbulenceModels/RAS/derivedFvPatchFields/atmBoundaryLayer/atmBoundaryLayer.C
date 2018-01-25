@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ atmBoundaryLayer::atmBoundaryLayer(const vectorField& p, const dictionary& dict)
     zGround_("zGround", dict, p.size()),
     Ustar_(p.size())
 {
-    if (mag(flowDir_) < SMALL || mag(zDir_) < SMALL)
+    if (mag(flowDir_) < small || mag(zDir_) < small)
     {
         FatalErrorInFunction
             << "magnitude of n or z must be greater than zero"

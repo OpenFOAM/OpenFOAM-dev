@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::pointIndexHit Foam::searchableDisk::findNearest
     v -= parallel*normal_;
     scalar magV = mag(v);
 
-    if (magV < ROOTVSMALL)
+    if (magV < rootVSmall)
     {
         v = Zero;
     }
@@ -101,7 +101,7 @@ void Foam::searchableDisk::findLine
     v -= parallel*normal_;
     scalar magV = mag(v);
 
-    if (magV < ROOTVSMALL)
+    if (magV < rootVSmall)
     {
         v = Zero;
     }
@@ -215,7 +215,7 @@ void Foam::searchableDisk::boundingSpheres
     radiusSqr[0] = sqr(radius_);
 
     // Add a bit to make sure all points are tested inside
-    radiusSqr += Foam::sqr(SMALL);
+    radiusSqr += Foam::sqr(small);
 }
 
 

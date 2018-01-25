@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,13 +125,13 @@ inline bool Foam::pointEdgeStructuredWalk::sameGeometry
 {
     scalar diff = Foam::mag(dist() - w2.dist());
 
-    if (diff < SMALL)
+    if (diff < small)
     {
         return true;
     }
     else
     {
-        if ((dist() > SMALL) && ((diff/dist()) < tol))
+        if ((dist() > small) && ((diff/dist()) < tol))
         {
             return true;
         }

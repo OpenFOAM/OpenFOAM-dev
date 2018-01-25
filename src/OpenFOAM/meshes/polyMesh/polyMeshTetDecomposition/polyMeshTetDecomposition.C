@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 // Note: the use of this tolerance is ad-hoc, there may be extreme
 // cases where the resulting tetrahedra still have particle tracking
 // problems, or tets with lower quality may track OK.
-const Foam::scalar Foam::polyMeshTetDecomposition::minTetQuality = sqr(SMALL);
+const Foam::scalar Foam::polyMeshTetDecomposition::minTetQuality = sqr(small);
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -59,7 +59,7 @@ Foam::label Foam::polyMeshTetDecomposition::findSharedBasePoint
 
     forAll(f, faceBasePtI)
     {
-        scalar thisBaseMinTetQuality = VGREAT;
+        scalar thisBaseMinTetQuality = vGreat;
 
         const point& tetBasePt = pPts[f[faceBasePtI]];
 
@@ -154,7 +154,7 @@ Foam::label Foam::polyMeshTetDecomposition::findBasePoint
 
     forAll(f, faceBasePtI)
     {
-        scalar thisBaseMinTetQuality = VGREAT;
+        scalar thisBaseMinTetQuality = vGreat;
 
         const point& tetBasePt = pPts[f[faceBasePtI]];
 

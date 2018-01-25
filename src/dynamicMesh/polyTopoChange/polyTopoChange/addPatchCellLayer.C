@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -948,7 +948,7 @@ void Foam::addPatchCellLayer::setRefinement
             {
                 label meshPointi = meshPoints[i];
 
-                if (mag(d[meshPointi] - firstLayerDisp[i]) > SMALL)
+                if (mag(d[meshPointi] - firstLayerDisp[i]) > small)
                 {
                     FatalErrorInFunction
                         << "At mesh point:" << meshPointi

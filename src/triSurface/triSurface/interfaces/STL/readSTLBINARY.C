@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ bool Foam::triSurface::readSTLBINARY(const fileName& STLfileName)
     label nUniquePoints = mergePoints
     (
         STLpoints,
-        10*SMALL,               // merge distance
+        10*small,               // merge distance
         false,                  // verbose
         pointMap                // old to new
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcNut() const
     {
         if (yPlus[facei] > yPlusLam_)
         {
-            const scalar Re = magUp[facei]*y[facei]/nuw[facei] + ROOTVSMALL;
+            const scalar Re = magUp[facei]*y[facei]/nuw[facei] + rootVSmall;
             nutw[facei] = nuw[facei]*(sqr(yPlus[facei])/Re - 1);
         }
     }
@@ -155,7 +155,7 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcYPlus
                     }
 
                     scalar denom = 1.0 + log(E_*yp) - G - yPlusGPrime;
-                    if (mag(denom) > VSMALL)
+                    if (mag(denom) > vSmall)
                     {
                         yp = (kappaRe + yp*(1 - yPlusGPrime))/denom;
                     }
@@ -163,7 +163,7 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcYPlus
                 (
                     mag(ryPlusLam*(yp - yPlusLast)) > 0.0001
                  && ++iter < 10
-                 && yp > VSMALL
+                 && yp > vSmall
                 );
 
                 yPlus[facei] = max(0.0, yp);

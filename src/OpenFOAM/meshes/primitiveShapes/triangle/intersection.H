@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ public:
         //- Set the planar tolerance, returning the previous value
         static scalar setPlanarTol(const scalar t)
         {
-            if (t < -VSMALL)
+            if (t < -vSmall)
             {
                 FatalErrorInFunction
                     << abort(FatalError);

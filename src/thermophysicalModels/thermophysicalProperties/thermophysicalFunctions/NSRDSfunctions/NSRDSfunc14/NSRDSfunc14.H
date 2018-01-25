@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,11 +102,11 @@ public:
         //- Evaluate the function and return the result
         scalar f(scalar, scalar T) const
         {
-            scalar Tdash = min(T, Tc_ - ROOTVSMALL);
+            scalar Tdash = min(T, Tc_ - rootVSmall);
 
             scalar t = 1.0 - Tdash/Tc_;
             return
-                a_*a_/(t + ROOTVSMALL) + b_ - t
+                a_*a_/(t + rootVSmall) + b_ - t
                *(
                    2.0*a_*c_
                  + t*(a_*d_ + t*(c_*c_/3.0 + t*(0.5*c_*d_ + 0.2*d_*d_*t)))

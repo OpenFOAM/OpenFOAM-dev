@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,8 +81,8 @@ Foam::sixDoFRigidBodyMotion::sixDoFRigidBodyMotion()
     initialCentreOfMass_(Zero),
     initialCentreOfRotation_(Zero),
     initialQ_(I),
-    mass_(VSMALL),
-    momentOfInertia_(diagTensor::one*VSMALL),
+    mass_(vSmall),
+    momentOfInertia_(diagTensor::one*vSmall),
     aRelax_(1.0),
     aDamp_(1.0),
     report_(false),
@@ -134,7 +134,7 @@ Foam::sixDoFRigidBodyMotion::sixDoFRigidBodyMotion
 
     // If the centres of mass and rotation are different ...
     vector R(initialCentreOfMass_ - initialCentreOfRotation_);
-    if (magSqr(R) > VSMALL)
+    if (magSqr(R) > vSmall)
     {
         // ... correct the moment of inertia tensor using parallel axes theorem
         momentOfInertia_ += mass_*diag(I*magSqr(R) - sqr(R));
@@ -363,10 +363,10 @@ Foam::tmp<Foam::pointField> Foam::sixDoFRigidBodyMotion::transform
     forAll(points, pointi)
     {
         // Move non-stationary points
-        if (scale[pointi] > SMALL)
+        if (scale[pointi] > small)
         {
             // Use solid-body motion where scale = 1
-            if (scale[pointi] > 1 - SMALL)
+            if (scale[pointi] > 1 - small)
             {
                 points[pointi] = transform(initialPoints[pointi]);
             }

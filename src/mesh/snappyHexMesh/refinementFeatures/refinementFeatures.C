@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -259,8 +259,8 @@ void Foam::refinementFeatures::buildTrees(const label featI)
     // Slightly extended bb. Slightly off-centred just so on symmetric
     // geometry there are less face/edge aligned items.
     bb = bb.extend(rndGen, 1e-4);
-    bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-    bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+    bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+    bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
     edgeTrees_.set
     (
@@ -400,8 +400,8 @@ Foam::refinementFeatures::regionEdgeTrees() const
             // Slightly extended bb. Slightly off-centred just so on symmetric
             // geometry there are less face/edge aligned items.
             bb = bb.extend(rndGen, 1e-4);
-            bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-            bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+            bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+            bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
             trees.set
             (
@@ -502,8 +502,8 @@ Foam::refinementFeatures::refinementFeatures
 //
 //                if
 //                (
-//                    v0Mag > SMALL
-//                 && v1Mag > SMALL
+//                    v0Mag > small
+//                 && v1Mag > small
 //                 && ((v0/v0Mag & v1/v1Mag) < minCos)
 //                )
 //                {
@@ -575,7 +575,7 @@ void Foam::refinementFeatures::findNearestEdge
                     const treeDataEdge& td = tree.shapes();
                     const edge& e = td.edges()[nearInfo[sampleI].index()];
                     nearNormal[sampleI] =  e.vec(td.points());
-                    nearNormal[sampleI] /= mag(nearNormal[sampleI])+VSMALL;
+                    nearNormal[sampleI] /= mag(nearNormal[sampleI])+vSmall;
                 }
             }
         }
@@ -638,7 +638,7 @@ void Foam::refinementFeatures::findNearestRegionEdge
 
                 const edge& e = td.edges()[nearInfo[sampleI].index()];
                 nearNormal[sampleI] =  e.vec(td.points());
-                nearNormal[sampleI] /= mag(nearNormal[sampleI])+VSMALL;
+                nearNormal[sampleI] /= mag(nearNormal[sampleI])+vSmall;
             }
         }
     }
@@ -768,7 +768,7 @@ void Foam::refinementFeatures::findHigherLevel
 
 Foam::scalar Foam::refinementFeatures::maxDistance() const
 {
-    scalar overallMax = -GREAT;
+    scalar overallMax = -great;
     forAll(distances_, featI)
     {
         overallMax = max(overallMax, max(distances_[featI]));

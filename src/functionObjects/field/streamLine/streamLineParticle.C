@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ bool Foam::streamLineParticle::move
 
             scalar magU = mag(U);
 
-            if (magU < SMALL)
+            if (magU < small)
             {
                 // Stagnant particle. Might as well stop
                 lifeTime_ = 0;
@@ -187,7 +187,7 @@ bool Foam::streamLineParticle::move
 
             U /= magU;
 
-            if (td.trackLength_ < GREAT)
+            if (td.trackLength_ < great)
             {
                 // No sub-cycling. Track a set length on each step.
                 dt = td.trackLength_;

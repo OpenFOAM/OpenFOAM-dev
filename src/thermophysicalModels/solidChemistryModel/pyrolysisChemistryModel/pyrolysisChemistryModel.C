@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -387,9 +387,9 @@ jacobian
                 {
                     if (exp < 1.0)
                     {
-                        if (c2[si]>SMALL)
+                        if (c2[si]>small)
                         {
-                            kf *= exp*pow(c2[si] + VSMALL, exp - 1.0);
+                            kf *= exp*pow(c2[si] + vSmall, exp - 1.0);
                         }
                         else
                         {
@@ -518,7 +518,7 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::solve
     const scalar deltaT
 )
 {
-    scalar deltaTMin = GREAT;
+    scalar deltaTMin = great;
 
     if (!this->chemistry_)
     {
@@ -577,7 +577,7 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::solve
             scalar timeLeft = deltaT;
 
             // calculate the chemical source terms
-            while (timeLeft > SMALL)
+            while (timeLeft > small)
             {
                 scalar dt = timeLeft;
                 this->solve(c, Ti, pi, dt, this->deltaTChem_[celli]);

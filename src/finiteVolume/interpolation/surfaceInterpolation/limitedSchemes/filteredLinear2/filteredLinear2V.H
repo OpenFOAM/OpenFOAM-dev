@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,13 +131,13 @@ public:
         {
             limiter = l_
                 - k_*min(max(df - tdcP, 0), max(df - tdcN, 0))
-                /(max(mag(df), max(mag(tdcP), mag(tdcN))) + VSMALL);
+                /(max(mag(df), max(mag(tdcP), mag(tdcN))) + vSmall);
         }
         else
         {
             limiter = l_
                 - k_*min(max(tdcP - df, 0), max(tdcN - df, 0))
-                /(max(mag(df), max(mag(tdcP), mag(tdcN))) + VSMALL);
+                /(max(mag(df), max(mag(tdcP), mag(tdcN))) + vSmall);
         }
 
         // Limit the limiter between linear and upwind

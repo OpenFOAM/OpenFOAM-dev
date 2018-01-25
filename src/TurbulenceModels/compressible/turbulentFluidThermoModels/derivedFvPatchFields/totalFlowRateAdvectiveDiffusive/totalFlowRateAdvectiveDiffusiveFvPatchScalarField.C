@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,7 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
         /
         (
             1.0 +
-            alphap*patch().deltaCoeffs()*patch().magSf()/max(mag(phip), SMALL)
+            alphap*patch().deltaCoeffs()*patch().magSf()/max(mag(phip), small)
         );
 
     mixedFvPatchField<scalar>::updateCoeffs();

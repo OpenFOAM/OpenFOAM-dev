@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -281,7 +281,7 @@ Foam::species::thermo<Thermo, Type>::K(const scalar p, const scalar T) const
     }
     else
     {
-        return VGREAT;
+        return vGreat;
     }
 }
 
@@ -300,7 +300,7 @@ Foam::species::thermo<Thermo, Type>::Kc(const scalar p, const scalar T) const
 {
     const scalar nm = this->Y()/this->W();
 
-    if (equal(nm, SMALL))
+    if (equal(nm, small))
     {
         return Kp(p, T);
     }
@@ -320,7 +320,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::Kx
 {
     const scalar nm = this->Y()/this->W();
 
-    if (equal(nm, SMALL))
+    if (equal(nm, small))
     {
         return Kp(p, T);
     }
@@ -341,7 +341,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::Kn
 {
     const scalar nm = this->Y()/this->W();
 
-    if (equal(nm, SMALL))
+    if (equal(nm, small))
     {
         return Kp(p, T);
     }

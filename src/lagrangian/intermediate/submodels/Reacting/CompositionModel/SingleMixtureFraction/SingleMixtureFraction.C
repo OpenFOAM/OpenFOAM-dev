@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ Foam::SingleMixtureFraction<CloudType>::SingleMixtureFraction
     this->coeffDict().lookup("YLiquidTot0") >> YMixture0_[idLiquid_];
     this->coeffDict().lookup("YSolidTot0") >> YMixture0_[idSolid_];
 
-    if (mag(sum(YMixture0_) - 1.0) > SMALL)
+    if (mag(sum(YMixture0_) - 1.0) > small)
     {
         FatalErrorInFunction
             << "Sum of phases should be 1. Phase fractions:" << nl

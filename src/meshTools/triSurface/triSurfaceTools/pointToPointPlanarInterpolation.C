@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::pointToPointPlanarInterpolation::calcCoordinateSystem
     // Find furthest away point
     vector e1;
     label index1 = -1;
-    scalar maxDist = -GREAT;
+    scalar maxDist = -great;
 
     for (label i = 1; i < points.size(); i++)
     {
@@ -81,7 +81,7 @@ Foam::pointToPointPlanarInterpolation::calcCoordinateSystem
     const point& p1 = points[index1];
 
     label index2 = -1;
-    maxDist = -GREAT;
+    maxDist = -great;
     for (label i = 1; i < points.size(); i++)
     {
         if (i != index1)
@@ -141,7 +141,7 @@ void Foam::pointToPointPlanarInterpolation::calcWeights
         (
             destPoints,
             sourcePoints,
-            scalarField(destPoints.size(), GREAT),
+            scalarField(destPoints.size(), great),
             true,       // verbose
             destToSource
         );

@@ -21,7 +21,7 @@ dict.add
         distributedTriSurfaceMesh::FROZEN
     ]
 );
-dict.add("mergeDistance", SMALL);
+dict.add("mergeDistance", small);
 
 labelHashSet includePatches;
 forAll(patches, patchi)

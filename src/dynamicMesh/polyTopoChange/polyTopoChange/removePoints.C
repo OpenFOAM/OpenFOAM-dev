@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -214,10 +214,10 @@ Foam::label Foam::removePoints::countPointUsage
             label vRight = e1.otherVertex(common);
 
             vector e0Vec = points[common] - points[vLeft];
-            e0Vec /= mag(e0Vec) + VSMALL;
+            e0Vec /= mag(e0Vec) + vSmall;
 
             vector e1Vec = points[vRight] - points[common];
-            e1Vec /= mag(e1Vec) + VSMALL;
+            e1Vec /= mag(e1Vec) + vSmall;
 
             if ((e0Vec & e1Vec) > minCos)
             {

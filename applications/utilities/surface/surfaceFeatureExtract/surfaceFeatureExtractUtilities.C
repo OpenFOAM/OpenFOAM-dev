@@ -75,7 +75,7 @@ Foam::scalar Foam::calcVertexNormalWeight
     const vector e1 = points[f[index]] - points[f[f.fcIndex(index)]];
     const vector e2 = points[f[index]] - points[f[f.rcIndex(index)]];
 
-    return mag(fN)/(magSqr(e1)*magSqr(e2) + VSMALL);
+    return mag(fN)/(magSqr(e1)*magSqr(e2) + vSmall);
 }
 
 
@@ -91,9 +91,9 @@ Foam::point Foam::randomPointInPlane(const plane& p)
     const scalar perturbY = refPt.y() + 1e-3;
     const scalar perturbZ = refPt.z() + 1e-3;
 
-    if (mag(planeCoeffs[2]) < SMALL)
+    if (mag(planeCoeffs[2]) < small)
     {
-        if (mag(planeCoeffs[1]) < SMALL)
+        if (mag(planeCoeffs[1]) < small)
         {
             const scalar x =
                 -1.0
@@ -162,7 +162,7 @@ Foam::triadField Foam::calcVertexCoordSys
         const point& pt = points[pI];
         const vector& normal = pointNormals[meshPointMap[pI]];
 
-        if (mag(normal) < SMALL)
+        if (mag(normal) < small)
         {
             pointCoordSys[meshPointMap[pI]] = triad::unset;
             continue;
@@ -219,7 +219,7 @@ Foam::vectorField Foam::calcVertexNormals(const triSurface& surf)
             pointNormals[pI] += weight*fN;
         }
 
-        pointNormals[pI] /= mag(pointNormals[pI]) + VSMALL;
+        pointNormals[pI] /= mag(pointNormals[pI]) + vSmall;
     }
 
     return pointNormals;
@@ -289,7 +289,7 @@ Foam::triSurfacePointScalarField Foam::calcCurvature
         const vector eN = f.normal(points);
         const vector e1 = (e0 ^ eN);
 
-        if (magSqr(eN) < ROOTVSMALL)
+        if (magSqr(eN) < rootVSmall)
         {
             continue;
         }
@@ -405,7 +405,7 @@ Foam::triSurfacePointScalarField Foam::calcCurvature
 
     forAll(curvaturePointField, pI)
     {
-        pointFundamentalTensors[pI] /= (accumulatedWeights[pI] + SMALL);
+        pointFundamentalTensors[pI] /= (accumulatedWeights[pI] + small);
 
         vector2D principalCurvatures = eigenValues(pointFundamentalTensors[pI]);
 

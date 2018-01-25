@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -273,12 +273,12 @@ void Foam::MPPICCloud<CloudType>::info()
     Info<< "    Min cell volume fraction        = " << alphaMin << endl;
     Info<< "    Max cell volume fraction        = " << alphaMax << endl;
 
-    if (alphaMax < SMALL)
+    if (alphaMax < small)
     {
         return;
     }
 
-    scalar nMin = GREAT;
+    scalar nMin = great;
 
     forAll(this->mesh().cells(), celli)
     {

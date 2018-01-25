@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,25 +53,25 @@ const Foam::symmTensor Foam::symmTensor::vsType::one
 template<>
 const Foam::symmTensor Foam::symmTensor::vsType::max
 (
-    symmTensor::uniform(VGREAT)
+    symmTensor::uniform(vGreat)
 );
 
 template<>
 const Foam::symmTensor Foam::symmTensor::vsType::min
 (
-    symmTensor::uniform(-VGREAT)
+    symmTensor::uniform(-vGreat)
 );
 
 template<>
 const Foam::symmTensor Foam::symmTensor::vsType::rootMax
 (
-    symmTensor::uniform(ROOTVGREAT)
+    symmTensor::uniform(rootVGreat)
 );
 
 template<>
 const Foam::symmTensor Foam::symmTensor::vsType::rootMin
 (
-    symmTensor::uniform(-ROOTVGREAT)
+    symmTensor::uniform(-rootVGreat)
 );
 
 template<>

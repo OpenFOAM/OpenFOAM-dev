@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -865,14 +865,14 @@ Foam::distributedTriSurfaceMesh::independentlyDistributedBbs
 
     // Find bounding box for all triangles on new distribution.
 
-    // Initialise to inverted box (VGREAT, -VGREAT)
+    // Initialise to inverted box (vGreat, -vGreat)
     List<List<treeBoundBox>> bbs(Pstream::nProcs());
     forAll(bbs, proci)
     {
         bbs[proci].setSize(1);
         //bbs[proci][0] = boundBox::invertedBox;
-        bbs[proci][0].min() = point( VGREAT,  VGREAT,  VGREAT);
-        bbs[proci][0].max() = point(-VGREAT, -VGREAT, -VGREAT);
+        bbs[proci][0].min() = point( vGreat,  vGreat,  vGreat);
+        bbs[proci][0].max() = point(-vGreat, -vGreat, -vGreat);
     }
 
     forAll(s, triI)
@@ -1738,15 +1738,15 @@ void Foam::distributedTriSurfaceMesh::findLineAll
     // Tolerances:
     // To find all intersections we add a small vector to the last intersection
     // This is chosen such that
-    // - it is significant (SMALL is smallest representative relative tolerance;
+    // - it is significant (small is smallest representative relative tolerance;
     //   we need something bigger since we're doing calculations)
     // - if the start-end vector is zero we still progress
     const vectorField dirVec(end-start);
     const scalarField magSqrDirVec(magSqr(dirVec));
     const vectorField smallVec
     (
-        ROOTSMALL*dirVec
-      + vector(ROOTVSMALL,ROOTVSMALL,ROOTVSMALL)
+        rootSmall*dirVec
+      + vector(rootVSmall,rootVSmall,rootVSmall)
     );
 
     // Copy to input and compact any hits
@@ -1925,7 +1925,7 @@ void Foam::distributedTriSurfaceMesh::getNormal
     {
         label triI = triangleIndex[i];
         normal[i] = s[triI].normal(s.points());
-        normal[i] /= mag(normal[i]) + VSMALL;
+        normal[i] /= mag(normal[i]) + vSmall;
     }
 
 

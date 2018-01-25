@@ -17,8 +17,8 @@ if (ign.ignited())
 
     dimensionedScalar dMgb = 1.0e-3*
         (b*c*mgb)().weightedAverage(mesh.V())
-       /((b*c)().weightedAverage(mesh.V()) + SMALL)
-      + dimensionedScalar("ddMgb", mgb.dimensions(), SMALL);
+       /((b*c)().weightedAverage(mesh.V()) + small)
+      + dimensionedScalar("ddMgb", mgb.dimensions(), small);
 
     mgb += dMgb;
 

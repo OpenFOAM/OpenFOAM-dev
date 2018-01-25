@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
     const scalar Ychar = YMixture[idSolid]*YSolid[CsLocalId_];
 
     // Surface combustion until combustible fraction is consumed
-    if (Ychar < SMALL)
+    if (Ychar < small)
     {
         return 0.0;
     }
@@ -136,7 +136,7 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
     const scalar YO2 = thermo.carrier().Y(O2GlobalId_)[celli];
 
     // No combustion if no oxygen present
-    if (YO2 < SMALL)
+    if (YO2 < small)
     {
         return 0.0;
     }
@@ -155,7 +155,7 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
     }
 
     // Char percentage
-    const scalar charPrc = max(0, min(Ychar/(Ydaf + ROOTVSMALL)*100.0, 100));
+    const scalar charPrc = max(0, min(Ychar/(Ydaf + rootVSmall)*100.0, 100));
 
     // Particle surface area
     const scalar Ap = constant::mathematical::pi*sqr(d);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,13 +106,13 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
 
     const scalar k = this->kPtr_->primitiveField()[celli];
     const scalar epsilon =
-        this->epsilonPtr_->primitiveField()[celli] + ROOTVSMALL;
+        this->epsilonPtr_->primitiveField()[celli] + rootVSmall;
     const vector& gradk = this->gradkPtr_->primitiveField()[celli];
 
     const scalar UrelMag = mag(U - Uc - UTurb);
 
     const scalar tTurbLoc =
-        min(k/epsilon, cps*pow(k, 1.5)/epsilon/(UrelMag + SMALL));
+        min(k/epsilon, cps*pow(k, 1.5)/epsilon/(UrelMag + small));
 
 
     // Parcel is perturbed by the turbulence
@@ -125,7 +125,7 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
             tTurb = 0.0;
 
             const scalar sigma = sqrt(2.0*k/3.0);
-            const vector dir = -gradk/(mag(gradk) + SMALL);
+            const vector dir = -gradk/(mag(gradk) + small);
 
             scalar fac = 0.0;
 
@@ -147,7 +147,7 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
     }
     else
     {
-        tTurb = GREAT;
+        tTurb = great;
         UTurb = Zero;
     }
 

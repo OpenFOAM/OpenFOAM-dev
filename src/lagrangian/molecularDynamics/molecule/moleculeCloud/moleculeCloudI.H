@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,14 +202,14 @@ inline bool Foam::moleculeCloud::evaluatePotentialLimit
                     scalar rsIsJMag = mag(rsIsJ);
 
                     // Guard against pairPot.energy being evaluated
-                    // if rIJMag < SMALL. A floating point exception will
+                    // if rIJMag < small. A floating point exception will
                     // happen otherwise.
 
-                    if (rsIsJMag < SMALL)
+                    if (rsIsJMag < small)
                     {
                         WarningInFunction
                             << "Molecule site pair closer than "
-                            << SMALL
+                            << small
                             << ": mag separation = " << rsIsJMag
                             << ". These may have been placed on top of each"
                             << " other by a rounding error in mdInitialise in"
@@ -251,14 +251,14 @@ inline bool Foam::moleculeCloud::evaluatePotentialLimit
                     scalar rsIsJMag = mag(rsIsJ);
 
                     // Guard against pairPot.energy being evaluated
-                    // if rIJMag < SMALL. A floating point exception will
+                    // if rIJMag < small. A floating point exception will
                     // happen otherwise.
 
-                    if (rsIsJMag < SMALL)
+                    if (rsIsJMag < small)
                     {
                         WarningInFunction
                             << "Molecule site pair closer than "
-                            << SMALL
+                            << small
                             << ": mag separation = " << rsIsJMag
                             << ". These may have been placed on top of each"
                             << " other by a rounding error in mdInitialise in"

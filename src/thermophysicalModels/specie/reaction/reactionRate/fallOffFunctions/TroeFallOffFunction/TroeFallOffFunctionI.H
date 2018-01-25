@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ inline Foam::scalar Foam::TroeFallOffFunction::operator()
         max
         (
             (1 - alpha_)*exp(-T/Tsss_) + alpha_*exp(-T/Ts_) + exp(-Tss_/T),
-            SMALL
+            small
         )
     );
 
@@ -70,7 +70,7 @@ inline Foam::scalar Foam::TroeFallOffFunction::operator()
     static const scalar d = 0.14;
     scalar n = 0.75 - 1.27*logFcent;
 
-    scalar logPr = log10(max(Pr, SMALL));
+    scalar logPr = log10(max(Pr, small));
     return pow(10.0, logFcent/(1.0 + sqr((logPr + c)/(n - d*(logPr + c)))));
 }
 

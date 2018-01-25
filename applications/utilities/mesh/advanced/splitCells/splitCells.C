@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ bool largerAngle
     // which quadrant angle is. (Is correct for unwarped faces only!)
     // Correct for non-outwards pointing normal.
     vector c1c0(mesh.faceCentres()[f1] - mesh.faceCentres()[f0]);
-    c1c0 /= mag(c1c0) + VSMALL;
+    c1c0 /= mag(c1c0) + vSmall;
 
     scalar fcCosAngle = n0 & c1c0;
 
@@ -282,10 +282,10 @@ bool splitHex
     loop[3] = ev.vertToEVert(e[1]);
 
     scalarField loopWeights(4);
-    loopWeights[0] = -GREAT;
-    loopWeights[1] = -GREAT;
-    loopWeights[2] = -GREAT;
-    loopWeights[3] = -GREAT;
+    loopWeights[0] = -great;
+    loopWeights[1] = -great;
+    loopWeights[2] = -great;
+    loopWeights[3] = -great;
 
     cutCells.append(celli);
     cellLoops.append(loop);
@@ -393,7 +393,7 @@ void collectCuts
     // Cut information per mesh entity
     boolList vertIsCut(mesh.nPoints(), false);
     boolList edgeIsCut(mesh.nEdges(), false);
-    scalarField edgeWeight(mesh.nEdges(), -GREAT);
+    scalarField edgeWeight(mesh.nEdges(), -great);
 
     forAllConstIter(cellSet, cellsToCut, iter)
     {

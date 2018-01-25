@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,7 +186,7 @@ Foam::tmp<Foam::pointField> buildPointField(const T& mesh)
 {
     tmp<pointField> tPoints
     (
-        new pointField(mesh.vertexCount(), point(GREAT, GREAT, GREAT))
+        new pointField(mesh.vertexCount(), point(great, great, great))
     );
     pointField& points = tPoints.ref();
 
@@ -543,7 +543,7 @@ int main(int argc, char *argv[])
 
                 scalar dist = mag(points[pI] - points[adjPointIndex]);
 
-//                dist = max(dist, SMALL);
+//                dist = max(dist, small);
 
                 triad tmpTriad = alignments[adjPointIndex];
 

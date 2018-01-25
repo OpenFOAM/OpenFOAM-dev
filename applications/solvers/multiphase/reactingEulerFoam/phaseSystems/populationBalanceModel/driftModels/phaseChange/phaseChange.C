@@ -103,7 +103,7 @@ void Foam::diameterModels::driftModels::phaseChange::correct()
     {
         const sizeGroup& fi = *popBal_.sizeGroups()[i];
 
-        N_ += fi*max(fi.phase(), SMALL)/fi.x();
+        N_ += fi*max(fi.phase(), small)/fi.x();
     }
 }
 

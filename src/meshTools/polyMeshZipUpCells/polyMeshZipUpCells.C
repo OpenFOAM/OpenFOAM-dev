@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -461,7 +461,7 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                 forAll(orderedEdge, epI)
                 {
                     label nextPoint = -1;
-                    scalar minDist = GREAT;
+                    scalar minDist = great;
 
                     forAll(dist, i)
                     {

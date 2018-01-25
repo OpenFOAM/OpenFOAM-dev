@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,7 +248,7 @@ Foam::label Foam::topoCellLooper::getAlignedNonFeatureEdge
     const point& ctr = mesh().cellCentres()[celli];
 
     label cutEdgeI = -1;
-    scalar maxCos = -GREAT;
+    scalar maxCos = -great;
 
     forAll(cEdges, cEdgeI)
     {
@@ -499,7 +499,7 @@ void Foam::topoCellLooper::walkSplitHex
             // On vertex.
 
             loop.append(vertToEVert(vertI));
-            loopWeights.append(-GREAT);
+            loopWeights.append(-great);
 
             if (edgeI == -1)
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,9 +77,9 @@ Foam::vector Foam::targetCoeffTrim::calcCoeffs
             scalar coeff2 = rho[celli]*coeff1*pow4(radius);
 
             // add to coefficient vector
-            cf[0] += (fc & yawAxis)/(coeff2 + ROOTVSMALL);
-            cf[1] += (mc & pitchAxis)/(coeff2*radius + ROOTVSMALL);
-            cf[2] += (mc & rollAxis)/(coeff2*radius + ROOTVSMALL);
+            cf[0] += (fc & yawAxis)/(coeff2 + rootVSmall);
+            cf[1] += (mc & pitchAxis)/(coeff2*radius + rootVSmall);
+            cf[2] += (mc & rollAxis)/(coeff2*radius + rootVSmall);
         }
         else
         {
@@ -117,7 +117,7 @@ void Foam::targetCoeffTrim::correctTrim
         const scalar rhoRef = rotor_.rhoRef();
 
         // iterate to find new pitch angles to achieve target force
-        scalar err = GREAT;
+        scalar err = great;
         label iter = 0;
         tensor J(Zero);
 

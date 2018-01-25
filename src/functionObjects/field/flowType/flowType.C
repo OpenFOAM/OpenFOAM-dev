@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ bool Foam::functionObjects::flowType::calc()
 
         volScalarField magD(mag(symm(gradU)));
         volScalarField magOmega (mag(skew(gradU)));
-        dimensionedScalar smallMagD("smallMagD", magD.dimensions(), SMALL);
+        dimensionedScalar smallMagD("smallMagD", magD.dimensions(), small);
 
         const volTensorField SSplusWW
         (

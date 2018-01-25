@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -382,7 +382,7 @@ Foam::graph Foam::noiseFFT::Pdelta
     scalar fl = f1/sqrt(fratio);
     scalar fu = fratio*fl;
 
-    label istart = label(fl/deltaf + 1.0 - SMALL);
+    label istart = label(fl/deltaf + 1.0 - small);
     label j = 0;
 
     for (label i = istart; i<Pf.size(); i++)

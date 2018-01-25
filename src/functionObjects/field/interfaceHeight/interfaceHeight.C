@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ void Foam::functionObjects::interfaceHeight::writePositions()
         );
 
         // Find the height of the location above the boundary
-        scalar hLB = set.size() ? - gHat & (locations_[li] - set[0]) : - VGREAT;
+        scalar hLB = set.size() ? - gHat & (locations_[li] - set[0]) : - vGreat;
         reduce(hLB, maxOp<scalar>());
 
         // Calculate the integrals of length and length*alpha along the sampling

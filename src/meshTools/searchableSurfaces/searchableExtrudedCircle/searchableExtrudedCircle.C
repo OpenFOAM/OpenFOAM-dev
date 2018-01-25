@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,8 +90,8 @@ Foam::searchableExtrudedCircle::searchableExtrudedCircle
 
     // Slightly extended bb. Slightly off-centred just so on symmetric
     // geometry there are less face/edge aligned items.
-    bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-    bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+    bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+    bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
     edgeTree_.reset
     (
@@ -154,7 +154,7 @@ void Foam::searchableExtrudedCircle::boundingSpheres
     radiusSqr.setSize(centres.size());
     radiusSqr = Foam::sqr(radius_);
     // Add a bit to make sure all points are tested inside
-    radiusSqr += Foam::sqr(SMALL);
+    radiusSqr += Foam::sqr(small);
 }
 
 

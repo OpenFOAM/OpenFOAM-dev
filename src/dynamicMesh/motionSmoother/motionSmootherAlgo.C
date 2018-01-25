@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ void Foam::motionSmootherAlgo::testSyncPositions
         mesh_,
         syncedFld,
         minEqOp<point>(),           // combine op
-        point(GREAT,GREAT,GREAT)    // null
+        point(great,great,great)    // null
     );
 
     forAll(syncedFld, i)
@@ -78,7 +78,7 @@ void Foam::motionSmootherAlgo::checkFld(const pointScalarField& fld)
     {
         const scalar val = fld[pointi];
 
-        if ((val > -GREAT) && (val < GREAT))
+        if ((val > -great) && (val < great))
         {}
         else
         {
@@ -123,7 +123,7 @@ Foam::tmp<Foam::scalarField> Foam::motionSmootherAlgo::calcEdgeWeights
 
     forAll(edges, edgeI)
     {
-        wght[edgeI] = 1.0/(edges[edgeI].mag(points)+SMALL);
+        wght[edgeI] = 1.0/(edges[edgeI].mag(points)+small);
     }
     return twght;
 }
@@ -545,7 +545,7 @@ void Foam::motionSmootherAlgo::setDisplacement
         {
             const vector& newDisp = displacement[ppMeshPoints[patchPointi]];
 
-            if (mag(newDisp-patchDisp[patchPointi]) > SMALL)
+            if (mag(newDisp-patchDisp[patchPointi]) > small)
             {
                 const point& pt = mesh.points()[ppMeshPoints[patchPointi]];
 
@@ -915,7 +915,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
         // if errorReduction is set to zero, extend wrongFaces
         // to face-Cell-faces to ensure quick return to previously valid mesh
 
-        if (mag(errorReduction) < SMALL)
+        if (mag(errorReduction) < small)
         {
             labelHashSet newWrongFaces(wrongFaces);
             forAllConstIter(labelHashSet, wrongFaces, iter)
@@ -1016,7 +1016,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
             mesh_,
             scale_,
             maxEqOp<scalar>(),
-            -GREAT              // null value
+            -great              // null value
         );
 
 

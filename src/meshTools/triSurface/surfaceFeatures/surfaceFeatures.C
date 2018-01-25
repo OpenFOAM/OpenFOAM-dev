@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,7 +249,7 @@ void Foam::surfaceFeatures::classifyFeatureAngles
     const pointField& points = surf_.points();
 
     // Special case: minCos=1
-    bool selectAll = (mag(minCos-1.0) < SMALL);
+    bool selectAll = (mag(minCos-1.0) < small);
 
     forAll(edgeFaces, edgeI)
     {
@@ -433,7 +433,7 @@ Foam::surfaceFeatures::labelScalar Foam::surfaceFeatures::walkSegment
                 << " vertex:" << startPointi << nl
                 << "Returning with large length" << endl;
 
-            return labelScalar(nVisited, GREAT);
+            return labelScalar(nVisited, great);
         }
     }
     while (true);
@@ -590,7 +590,7 @@ Foam::surfaceFeatures::surfaceFeatures
     (
         dynFeatureEdgeFaces,
         edgeStat,
-        GREAT,
+        great,
         geometricTestOnly
     );
 
@@ -611,7 +611,7 @@ Foam::surfaceFeatures::surfaceFeatures
     edgeStat.clear();
     dynFeatEdges.clear();
 
-    setFromStatus(allEdgeStat, GREAT);
+    setFromStatus(allEdgeStat, great);
 }
 
 

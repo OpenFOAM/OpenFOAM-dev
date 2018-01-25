@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,8 +47,8 @@ Foam::boundBox::boundBox
         if (doReduce && Pstream::parRun())
         {
             // Use values that get overwritten by reduce minOp, maxOp below
-            min_ = point(VGREAT, VGREAT, VGREAT);
-            max_ = point(-VGREAT, -VGREAT, -VGREAT);
+            min_ = point(vGreat, vGreat, vGreat);
+            max_ = point(-vGreat, -vGreat, -vGreat);
         }
     }
     else

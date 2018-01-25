@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,7 +176,7 @@ void Foam::perfectInterface::setRefinement
 
     // Get local dimension as fraction of minimum edge length
 
-    scalar minLen = GREAT;
+    scalar minLen = great;
 
     forAll(edges0, edgeI)
     {

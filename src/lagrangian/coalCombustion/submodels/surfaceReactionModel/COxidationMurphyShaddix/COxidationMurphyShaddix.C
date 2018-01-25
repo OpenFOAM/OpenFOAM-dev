@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,7 +137,7 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
     const scalar fComb = YMixture[idSolid]*YSolid[CsLocalId_];
 
     // Surface combustion until combustible fraction is consumed
-    if (fComb < SMALL)
+    if (fComb < small)
     {
         return 0.0;
     }
@@ -147,7 +147,7 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
     // Cell carrier phase O2 species density [kg/m^3]
     const scalar rhoO2 = rhoc*thermo.carrier().Y(O2GlobalId_)[celli];
 
-    if (rhoO2 < SMALL)
+    if (rhoO2 < small)
     {
         return 0.0;
     }

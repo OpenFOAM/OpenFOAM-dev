@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -189,7 +189,7 @@ Foam::label Foam::cachedRandom::position(const label& start, const label& end)
 template<>
 Foam::scalar Foam::cachedRandom::globalSample01()
 {
-    scalar value = -GREAT;
+    scalar value = -great;
 
     if (Pstream::master())
     {
@@ -205,7 +205,7 @@ Foam::scalar Foam::cachedRandom::globalSample01()
 template<>
 Foam::label Foam::cachedRandom::globalSample01()
 {
-    scalar value = -GREAT;
+    scalar value = -great;
 
     if (Pstream::master())
     {
@@ -221,7 +221,7 @@ Foam::label Foam::cachedRandom::globalSample01()
 template<>
 Foam::scalar Foam::cachedRandom::globalGaussNormal()
 {
-    scalar value = -GREAT;
+    scalar value = -great;
 
     if (Pstream::master())
     {
@@ -237,7 +237,7 @@ Foam::scalar Foam::cachedRandom::globalGaussNormal()
 template<>
 Foam::label Foam::cachedRandom::globalGaussNormal()
 {
-    scalar value = -GREAT;
+    scalar value = -great;
 
     if (Pstream::master())
     {
@@ -257,7 +257,7 @@ Foam::scalar Foam::cachedRandom::globalPosition
     const scalar& end
 )
 {
-    scalar value = -GREAT;
+    scalar value = -great;
 
     if (Pstream::master())
     {

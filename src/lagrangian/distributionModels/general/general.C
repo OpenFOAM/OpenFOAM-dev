@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ Foam::scalar Foam::distributionModels::general::sample() const
     scalar x = 0.0;
 
     // if k is small it is a linear equation, otherwise it is of second order
-    if (mag(k) > SMALL)
+    if (mag(k) > small)
     {
         scalar p = 2.0*d/k;
         scalar q = -2.0*alpha/k;

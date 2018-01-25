@@ -470,7 +470,7 @@ correctThermo()
 
         volScalarField H1(this->heatTransferModels_[pair][pair.first()]->K());
         volScalarField H2(this->heatTransferModels_[pair][pair.second()]->K());
-        dimensionedScalar HSmall("small", heatTransferModel::dimK, SMALL);
+        dimensionedScalar HSmall("small", heatTransferModel::dimK, small);
 
         volScalarField mDotL
         (

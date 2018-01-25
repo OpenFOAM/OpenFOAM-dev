@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ inline bool Foam::LESModels::smoothDelta::deltaData::update
     TrackingData& td
 )
 {
-    if (!valid(td) || (delta_ < VSMALL))
+    if (!valid(td) || (delta_ < vSmall))
     {
         // My delta not set. Take over neighbour.
         delta_ = w2.delta()/scale;
@@ -63,7 +63,7 @@ inline bool Foam::LESModels::smoothDelta::deltaData::update
 
 inline Foam::LESModels::smoothDelta::deltaData::deltaData()
 :
-    delta_(-GREAT)
+    delta_(-great)
 {}
 
 
@@ -81,7 +81,7 @@ inline bool Foam::LESModels::smoothDelta::deltaData::valid
     TrackingData& td
 ) const
 {
-    return delta_ > -SMALL;
+    return delta_ > -small;
 }
 
 

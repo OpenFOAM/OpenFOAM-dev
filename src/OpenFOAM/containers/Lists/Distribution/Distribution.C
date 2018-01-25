@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -291,7 +291,7 @@ Type Foam::Distribution<Type>::median() const
 
                         break;
                     }
-                    else if (mag(normDist[nD].second()) > VSMALL)
+                    else if (mag(normDist[nD].second()) > vSmall)
                     {
                         cumulative +=
                             normDist[nD].second()*component(binWidth_, cmpt);

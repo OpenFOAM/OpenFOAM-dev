@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                 const vector transformedAreaPos = gSum(half1Areas & revTPos);
                 const vector transformedAreaNeg = gSum(half1Areas & revTNeg);
                 const vector area0 = gSum(half0Areas);
-                const scalar magArea0 = mag(area0) + ROOTVSMALL;
+                const scalar magArea0 = mag(area0) + rootVSmall;
 
                 // Areas have opposite sign, so sum should be zero when correct
                 // rotation applied
@@ -193,8 +193,8 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                 reduce(n0, maxMagSqrOp<point>());
                 reduce(n1, maxMagSqrOp<point>());
 
-                n0 /= mag(n0) + VSMALL;
-                n1 /= mag(n1) + VSMALL;
+                n0 /= mag(n0) + vSmall;
+                n1 /= mag(n1) + vSmall;
 
                 // Extended tensor from two local coordinate systems calculated
                 // using normal and rotation axis
@@ -574,7 +574,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
             }
 
             scalar magRot = mag(rotationAxis_);
-            if (magRot < SMALL)
+            if (magRot < small)
             {
                 FatalIOErrorInFunction
                 (

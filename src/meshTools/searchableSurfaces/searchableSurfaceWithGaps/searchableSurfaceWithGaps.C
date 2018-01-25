@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,13 +53,13 @@ Foam::Pair<Foam::vector> Foam::searchableSurfaceWithGaps::offsetVecs
 
     scalar magN = mag(n);
 
-    if (magN > SMALL)
+    if (magN > small)
     {
         n /= magN;
 
         // Do first offset vector. Is the coordinate axes with the smallest
         // component along the vector n.
-        scalar minMag = GREAT;
+        scalar minMag = great;
         direction minCmpt = 0;
 
         for (direction cmpt = 0; cmpt < vector::nComponents; cmpt++)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ inline void specie::operator=(const specie& st)
 inline void specie::operator+=(const specie& st)
 {
     const scalar sumY = Y_ + st.Y_;
-    if (mag(sumY) > SMALL)
+    if (mag(sumY) > small)
     {
         molWeight_ = sumY/(Y_/molWeight_ + st.Y_/st.molWeight_);
     }
@@ -124,9 +124,9 @@ inline void specie::operator*=(const scalar s)
 
 inline specie operator+(const specie& st1, const specie& st2)
 {
-    const scalar sumY = max(st1.Y_ + st2.Y_, SMALL);
+    const scalar sumY = max(st1.Y_ + st2.Y_, small);
 
-    if (mag(sumY) > SMALL)
+    if (mag(sumY) > small)
     {
         return specie
         (
@@ -154,16 +154,16 @@ inline specie operator*(const scalar s, const specie& st)
 inline specie operator==(const specie& st1, const specie& st2)
 {
     scalar diffY = st2.Y_ - st1.Y_;
-    if (mag(diffY) < SMALL)
+    if (mag(diffY) < small)
     {
-        diffY = SMALL;
+        diffY = small;
     }
 
     const scalar diffRW =
         st2.Y_/st2.molWeight_ - st1.Y_/st1.molWeight_;
 
-    scalar molWeight = GREAT;
-    if (mag(diffRW) > SMALL)
+    scalar molWeight = great;
+    if (mag(diffRW) > small)
     {
         molWeight = diffY/diffRW;
     }

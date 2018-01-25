@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,14 +64,14 @@ inline Foam::scalar Foam::JanevReactionRate::operator()
 {
     scalar lta = A_;
 
-    if (mag(beta_) > VSMALL)
+    if (mag(beta_) > vSmall)
     {
         lta *= pow(T, beta_);
     }
 
     scalar expArg = 0.0;
 
-    if (mag(Ta_) > VSMALL)
+    if (mag(Ta_) > vSmall)
     {
         expArg -= Ta_/T;
     }

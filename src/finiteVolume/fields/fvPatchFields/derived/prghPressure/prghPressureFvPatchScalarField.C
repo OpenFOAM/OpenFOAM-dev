@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,7 +157,7 @@ void Foam::prghPressureFvPatchScalarField::updateCoeffs()
 
     dimensionedScalar ghRef
     (
-        mag(g.value()) > SMALL
+        mag(g.value()) > small
       ? g & (cmptMag(g.value())/mag(g.value()))*hRef
       : dimensionedScalar("ghRef", g.dimensions()*dimLength, 0)
     );

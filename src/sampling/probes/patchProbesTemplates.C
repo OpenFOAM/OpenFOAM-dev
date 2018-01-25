@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,7 +195,7 @@ Foam::patchProbes::sample
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
-    const Type unsetVal(-VGREAT*pTraits<Type>::one);
+    const Type unsetVal(-vGreat*pTraits<Type>::one);
 
     tmp<Field<Type>> tValues
     (
@@ -246,7 +246,7 @@ Foam::patchProbes::sample
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
 ) const
 {
-    const Type unsetVal(-VGREAT*pTraits<Type>::one);
+    const Type unsetVal(-vGreat*pTraits<Type>::one);
 
     tmp<Field<Type>> tValues
     (

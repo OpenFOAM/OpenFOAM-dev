@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -454,7 +454,7 @@ Foam::tmp<Foam::labelField> Foam::pairPatchAgglomeration::agglomerateOneLevel
         {
             label matchFaceNo = -1;
             label matchFaceNeibNo = -1;
-            scalar maxFaceWeight = -GREAT;
+            scalar maxFaceWeight = -great;
 
             // Check faces to find ungrouped neighbour with largest face weight
             forAll(fFaces, i)
@@ -487,7 +487,7 @@ Foam::tmp<Foam::labelField> Foam::pairPatchAgglomeration::agglomerateOneLevel
                 // No match. Find the best neighbouring cluster and
                 // put the cell there
                 label clusterMatchFaceNo = -1;
-                scalar clusterMaxFaceCoeff = -GREAT;
+                scalar clusterMaxFaceCoeff = -great;
 
                 forAll(fFaces, i)
                 {

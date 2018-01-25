@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
 */
 
     // method 2
-    dimensionedScalar smallU("smallU", dimVelocity, ROOTVSMALL);
+    dimensionedScalar smallU("smallU", dimVelocity, rootVSmall);
     volVectorField UHat(U/(mag(U) + smallU));
     tmp<volScalarField> tinvR1
     (
@@ -120,7 +120,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
     const unallocLabelList& own = mesh.owner();
     const unallocLabelList& nbr = mesh.neighbour();
 
-    scalarField phiMax(mesh.nCells(), -GREAT);
+    scalarField phiMax(mesh.nCells(), -great);
     scalarField cosAngle(mesh.nCells(), 0.0);
     forAll(nbr, facei)
     {
@@ -231,7 +231,7 @@ curvatureSeparation::curvatureSeparation
     magG_(mag(film.g().value())),
     gHat_(Zero)
 {
-    if (magG_ < ROOTVSMALL)
+    if (magG_ < rootVSmall)
     {
         FatalErrorInFunction
             << "Acceleration due to gravity must be non-zero"
@@ -305,7 +305,7 @@ void curvatureSeparation::correct
     {
         if ((invR1[i] > 0) && (delta[i]*invR1[i] > deltaByR1Min_))
         {
-            scalar R1 = 1.0/(invR1[i] + ROOTVSMALL);
+            scalar R1 = 1.0/(invR1[i] + rootVSmall);
             scalar R2 = R1 + delta[i];
 
             // inertial force

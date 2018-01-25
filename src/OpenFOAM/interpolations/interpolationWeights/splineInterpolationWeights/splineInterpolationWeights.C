@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ splineInterpolationWeights::splineInterpolationWeights
         {
             scalar d = samples_[i]-samples[i-1];
 
-            if (mag(d-interval) > SMALL)
+            if (mag(d-interval) > small)
             {
                 WarningInFunction
                     << "Spline interpolation only valid for constant intervals."

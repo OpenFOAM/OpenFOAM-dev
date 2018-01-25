@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,8 @@ tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::calcNut() const
         max
         (
             scalar(0),
-            sqr(magUp/(calcUPlus(magUp*y/nuw) + ROOTVSMALL))
-           /(magGradU + ROOTVSMALL)
+            sqr(magUp/(calcUPlus(magUp*y/nuw) + rootVSmall))
+           /(magGradU + rootVSmall)
           - nuw
         );
 }
@@ -197,7 +197,7 @@ tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::yPlus() const
     const scalarField& nuw = tnuw();
     const scalarField Rey(magUp*y/nuw);
 
-    return Rey/(calcUPlus(Rey) + ROOTVSMALL);
+    return Rey/(calcUPlus(Rey) + rootVSmall);
 }
 
 

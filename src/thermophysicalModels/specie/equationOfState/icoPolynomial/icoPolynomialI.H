@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ inline void Foam::icoPolynomial<Specie, PolySize>::operator+=
     scalar Y1 = this->Y();
     Specie::operator+=(ip);
 
-    if (mag(this->Y()) > SMALL)
+    if (mag(this->Y()) > small)
     {
         Y1 /= this->Y();
         const scalar Y2 = ip.Y()/this->Y();
@@ -209,7 +209,7 @@ Foam::icoPolynomial<Specie, PolySize> Foam::operator+
       + static_cast<const Specie&>(ip2)
     );
 
-    if (mag(sp.Y()) < SMALL)
+    if (mag(sp.Y()) < small)
     {
         return icoPolynomial<Specie, PolySize>
         (

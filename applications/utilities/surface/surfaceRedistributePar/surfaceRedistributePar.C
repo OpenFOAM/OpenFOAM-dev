@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
         dictionary dict;
         dict.add("bounds", meshBb[Pstream::myProcNo()]);
         dict.add("distributionType", distType);
-        dict.add("mergeDistance", SMALL);
+        dict.add("mergeDistance", small);
 
         localIOdictionary ioDict
         (

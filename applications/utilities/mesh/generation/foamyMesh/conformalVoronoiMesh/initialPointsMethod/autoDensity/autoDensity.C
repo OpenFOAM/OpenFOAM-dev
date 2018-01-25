@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,9 +301,9 @@ bool Foam::autoDensity::fillBox
 
     label initialSize = initialPoints.size();
 
-    scalar maxCellSize = -GREAT;
+    scalar maxCellSize = -great;
 
-    scalar minCellSize = GREAT;
+    scalar minCellSize = great;
 
     scalar maxDensity = 1/pow3(minCellSize);
 
@@ -639,7 +639,7 @@ bool Foam::autoDensity::fillBox
         // randomly shuffled, but unfiormly sampling space and have wellInside
         // and size data already
 
-        maxDensity = 1/pow3(max(minCellSize, SMALL));
+        maxDensity = 1/pow3(max(minCellSize, small));
 
         forAll(insidePoints, i)
         {
@@ -723,7 +723,7 @@ bool Foam::autoDensity::fillBox
                 << endl;
         }
 
-        maxDensity = 1/pow3(max(minCellSize, SMALL));
+        maxDensity = 1/pow3(max(minCellSize, small));
 
         while (true)
         {
@@ -760,7 +760,7 @@ bool Foam::autoDensity::fillBox
 
                     // 1/(minimum cell size)^3, gives the maximum permissible
                     // point density
-                    maxDensity = 1/pow3(max(minCellSize, SMALL));
+                    maxDensity = 1/pow3(max(minCellSize, small));
                 }
 
                 if (maxCellSize/minCellSize > maxSizeRatio_)
@@ -781,7 +781,7 @@ bool Foam::autoDensity::fillBox
                     return false;
                 }
 
-                scalar localDensity = 1/pow3(max(localSize, SMALL));
+                scalar localDensity = 1/pow3(max(localSize, small));
 
                 // Accept possible placements proportional to the relative local
                 // density

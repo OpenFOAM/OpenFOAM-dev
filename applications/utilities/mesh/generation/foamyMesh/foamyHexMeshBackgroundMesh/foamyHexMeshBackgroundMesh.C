@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2012-2017 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2012-2018 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -310,7 +310,7 @@ tmp<scalarField> signedDistance
     const labelList& surfaces
 )
 {
-    tmp<scalarField> tfld(new scalarField(points.size(), Foam::sqr(GREAT)));
+    tmp<scalarField> tfld(new scalarField(points.size(), Foam::sqr(great)));
     scalarField& fld = tfld.ref();
 
     // Find nearest
@@ -321,7 +321,7 @@ tmp<scalarField> signedDistance
         geometry,
         surfaces,
         points,
-        scalarField(points.size(), Foam::sqr(GREAT)),//distSqr
+        scalarField(points.size(), Foam::sqr(great)),//distSqr
         nearestSurfaces,
         nearest
     );
@@ -682,7 +682,7 @@ int main(int argc, char *argv[])
             dimensionedScalar("zero", dimLength, 0)
         );
         {
-            scalarField pointDistSqr(fvm.nPoints(), -sqr(GREAT));
+            scalarField pointDistSqr(fvm.nPoints(), -sqr(great));
             for (label facei = 0; facei < fvm.nInternalFaces(); facei++)
             {
                 label own = fvm.faceOwner()[facei];
@@ -699,7 +699,7 @@ int main(int argc, char *argv[])
                 fvm,
                 pointDistSqr,
                 maxEqOp<scalar>(),
-                -sqr(GREAT)             // null value
+                -sqr(great)             // null value
             );
 
             pointDistance.primitiveFieldRef() = signedDistance

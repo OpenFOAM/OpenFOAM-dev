@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -545,7 +545,7 @@ void Foam::moleculeCloud::initialiseMolecules
                         zoneDict.lookup("numberDensity")
                     );
 
-                    if (numberDensity < VSMALL)
+                    if (numberDensity < vSmall)
                     {
                         WarningInFunction
                             << "numberDensity too small, not filling zone "
@@ -578,7 +578,7 @@ void Foam::moleculeCloud::initialiseMolecules
                         zoneDict.lookup("massDensity")
                     );
 
-                    if (massDensity < VSMALL)
+                    if (massDensity < vSmall)
                     {
                         WarningInFunction
                             << "massDensity too small, not filling zone "
@@ -643,9 +643,9 @@ void Foam::moleculeCloud::initialiseMolecules
                 // mid-point of the zone of cells and snapping to the nearest
                 // lattice location.
 
-                vector zoneMin = VGREAT*vector::one;
+                vector zoneMin = vGreat*vector::one;
 
-                vector zoneMax = -VGREAT*vector::one;
+                vector zoneMax = -vGreat*vector::one;
 
                 forAll(zone, cell)
                 {
@@ -1163,7 +1163,7 @@ void Foam::moleculeCloud::applyConstraintsAndThermostats
 )
 {
     scalar temperatureCorrectionFactor =
-        sqrt(targetTemperature/max(VSMALL, measuredTemperature));
+        sqrt(targetTemperature/max(vSmall, measuredTemperature));
 
     Info<< "----------------------------------------" << nl
         << "Temperature equilibration" << nl

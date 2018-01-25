@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,11 +132,11 @@ labelList countBins
 
         label index = -1;
 
-        if (Foam::mag(val - min) < SMALL)
+        if (Foam::mag(val - min) < small)
         {
             index = 0;
         }
-        else if (val >= max - SMALL)
+        else if (val >= max - small)
         {
             index = nBins - 1;
         }
@@ -366,7 +366,7 @@ int main(int argc, char *argv[])
             << endl;
 
 
-        if (triQ[minIndex] < SMALL)
+        if (triQ[minIndex] < small)
         {
             WarningInFunction
                 << triQ[minIndex] << ". This might give problems in"

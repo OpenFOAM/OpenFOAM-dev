@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::Pair<Foam::scalar> linearInterpolationWeights::integrationWeights
 
     scalar s = (t-samples_[i])/(samples_[i+1]-samples_[i]);
 
-    if (s < -SMALL || s > 1+SMALL)
+    if (s < -small || s > 1+small)
     {
         FatalErrorInFunction
             << "Value " << t << " outside range " << samples_[i]
@@ -159,7 +159,7 @@ bool linearInterpolationWeights::integrationWeights
     scalarField& weights
 ) const
 {
-    if (t2 < t1-VSMALL)
+    if (t2 < t1-vSmall)
     {
         FatalErrorInFunction
             << "Integration should be in positive direction."

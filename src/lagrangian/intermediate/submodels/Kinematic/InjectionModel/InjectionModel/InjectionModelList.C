@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ Foam::InjectionModelList<CloudType>::~InjectionModelList()
 template<class CloudType>
 Foam::scalar Foam::InjectionModelList<CloudType>::timeStart() const
 {
-    scalar minTime = GREAT;
+    scalar minTime = great;
     forAll(*this, i)
     {
         minTime = min(minTime, this->operator[](i).timeStart());
@@ -125,7 +125,7 @@ Foam::scalar Foam::InjectionModelList<CloudType>::timeStart() const
 template<class CloudType>
 Foam::scalar Foam::InjectionModelList<CloudType>::timeEnd() const
 {
-    scalar maxTime = -GREAT;
+    scalar maxTime = -great;
     forAll(*this, i)
     {
         maxTime = max(maxTime, this->operator[](i).timeEnd());

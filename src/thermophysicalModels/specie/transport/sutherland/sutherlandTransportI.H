@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,7 +173,7 @@ inline void Foam::sutherlandTransport<Thermo>::operator+=
 
     Thermo::operator+=(st);
 
-    if (mag(this->Y()) > SMALL)
+    if (mag(this->Y()) > small)
     {
         Y1 /= this->Y();
         scalar Y2 = st.Y()/this->Y();
@@ -208,7 +208,7 @@ inline Foam::sutherlandTransport<Thermo> Foam::operator+
         static_cast<const Thermo&>(st1) + static_cast<const Thermo&>(st2)
     );
 
-    if (mag(t.Y()) < SMALL)
+    if (mag(t.Y()) < small)
     {
         return sutherlandTransport<Thermo>
         (

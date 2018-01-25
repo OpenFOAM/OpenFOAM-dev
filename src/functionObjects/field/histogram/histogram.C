@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ bool Foam::functionObjects::histogram::write()
     {
         const scalar sumVol = sum(volFrac);
 
-        if (sumVol > SMALL)
+        if (sumVol > small)
         {
             volFrac /= sumVol;
 

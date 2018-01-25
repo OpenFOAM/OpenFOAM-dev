@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ void Foam::polyMeshGeometry::updateFaceCentresAndAreas
                 sumAc += a*c;
             }
 
-            faceCentres_[facei] = (1.0/3.0)*sumAc/(sumA + VSMALL);
+            faceCentres_[facei] = (1.0/3.0)*sumAc/(sumA + vSmall);
             faceAreas_[facei] = 0.5*sumN;
         }
     }
@@ -142,7 +142,7 @@ void Foam::polyMeshGeometry::updateCellCentresAndVols
         scalar pyr3Vol = max
         (
             faceAreas_[facei] & (faceCentres_[facei] - cEst[own[facei]]),
-            VSMALL
+            vSmall
         );
 
         // Calculate face-pyramid centre
@@ -160,7 +160,7 @@ void Foam::polyMeshGeometry::updateCellCentresAndVols
             scalar pyr3Vol = max
             (
                 faceAreas_[facei] & (cEst[nei[facei]] - faceCentres_[facei]),
-                VSMALL
+                vSmall
             );
 
             // Calculate face-pyramid centre
@@ -180,7 +180,7 @@ void Foam::polyMeshGeometry::updateCellCentresAndVols
     {
         label celli = changedCells[i];
 
-        cellCentres_[celli] /= cellVolumes_[celli] + VSMALL;
+        cellCentres_[celli] /= cellVolumes_[celli] + vSmall;
         cellVolumes_[celli] *= (1.0/3.0);
     }
 }
@@ -226,7 +226,7 @@ Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
     labelHashSet* setPtr
 )
 {
-    scalar dDotS = (d & s)/(mag(d)*mag(s) + VSMALL);
+    scalar dDotS = (d & s)/(mag(d)*mag(s) + vSmall);
 
     if (dDotS < severeNonorthogonalityThreshold)
     {
@@ -237,7 +237,7 @@ Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
             nei = mesh.faceNeighbour()[facei];
         }
 
-        if (dDotS > SMALL)
+        if (dDotS > small)
         {
             if (report)
             {
@@ -399,7 +399,7 @@ bool Foam::polyMeshGeometry::checkFaceDotProduct
 
     syncTools::swapBoundaryFacePositions(mesh, neiCc);
 
-    scalar minDDotS = GREAT;
+    scalar minDDotS = great;
 
     scalar sumDDotS = 0;
     label nDDotS = 0;
@@ -1201,7 +1201,7 @@ bool Foam::polyMeshGeometry::checkFaceWeights
     syncTools::swapBoundaryFacePositions(mesh, neiCc);
 
 
-    scalar minWeight = GREAT;
+    scalar minWeight = great;
 
     label nWarnWeight = 0;
 
@@ -1217,7 +1217,7 @@ bool Foam::polyMeshGeometry::checkFaceWeights
         if (mesh.isInternalFace(facei))
         {
             scalar dNei = mag(fa & (cellCentres[nei[facei]]-fc));
-            scalar weight = min(dNei,dOwn)/(dNei+dOwn+VSMALL);
+            scalar weight = min(dNei,dOwn)/(dNei+dOwn+vSmall);
 
             if (weight < warnWeight)
             {
@@ -1244,7 +1244,7 @@ bool Foam::polyMeshGeometry::checkFaceWeights
             if (patches[patchi].coupled())
             {
                 scalar dNei = mag(fa & (neiCc[facei-mesh.nInternalFaces()]-fc));
-                scalar weight = min(dNei,dOwn)/(dNei+dOwn+VSMALL);
+                scalar weight = min(dNei,dOwn)/(dNei+dOwn+vSmall);
 
                 if (weight < warnWeight)
                 {
@@ -1278,7 +1278,7 @@ bool Foam::polyMeshGeometry::checkFaceWeights
 
         scalar dOwn = mag(fa & (fc-ownCc));
         scalar dNei = mag(fa & (cellCentres[own[face1]]-fc));
-        scalar weight = min(dNei,dOwn)/(dNei+dOwn+VSMALL);
+        scalar weight = min(dNei,dOwn)/(dNei+dOwn+vSmall);
 
         if (weight < warnWeight)
         {
@@ -1354,7 +1354,7 @@ bool Foam::polyMeshGeometry::checkVolRatio
     syncTools::swapBoundaryFaceList(mesh, neiVols);
 
 
-    scalar minRatio = GREAT;
+    scalar minRatio = great;
 
     label nWarnRatio = 0;
 
@@ -1364,7 +1364,7 @@ bool Foam::polyMeshGeometry::checkVolRatio
 
         scalar ownVol = mag(cellVolumes[own[facei]]);
 
-        scalar neiVol = -GREAT;
+        scalar neiVol = -great;
 
         if (mesh.isInternalFace(facei))
         {
@@ -1382,7 +1382,7 @@ bool Foam::polyMeshGeometry::checkVolRatio
 
         if (neiVol >= 0)
         {
-            scalar ratio = min(ownVol, neiVol) / (max(ownVol, neiVol) + VSMALL);
+            scalar ratio = min(ownVol, neiVol) / (max(ownVol, neiVol) + vSmall);
 
             if (ratio < warnRatio)
             {
@@ -1415,7 +1415,7 @@ bool Foam::polyMeshGeometry::checkVolRatio
 
         if (neiVol >= 0)
         {
-            scalar ratio = min(ownVol, neiVol) / (max(ownVol, neiVol) + VSMALL);
+            scalar ratio = min(ownVol, neiVol) / (max(ownVol, neiVol) + vSmall);
 
             if (ratio < warnRatio)
             {
@@ -1480,7 +1480,7 @@ bool Foam::polyMeshGeometry::checkFaceAngles
     labelHashSet* setPtr
 )
 {
-    if (maxDeg < -SMALL || maxDeg > 180+SMALL)
+    if (maxDeg < -small || maxDeg > 180+small)
     {
         FatalErrorInFunction
             << "maxDeg should be [0..180] but is now " << maxDeg
@@ -1504,12 +1504,12 @@ bool Foam::polyMeshGeometry::checkFaceAngles
         const face& f = fcs[facei];
 
         vector faceNormal = faceAreas[facei];
-        faceNormal /= mag(faceNormal) + VSMALL;
+        faceNormal /= mag(faceNormal) + vSmall;
 
         // Get edge from f[0] to f[size-1];
         vector ePrev(p[f.first()] - p[f.last()]);
         scalar magEPrev = mag(ePrev);
-        ePrev /= magEPrev + VSMALL;
+        ePrev /= magEPrev + vSmall;
 
         forAll(f, fp0)
         {
@@ -1519,9 +1519,9 @@ bool Foam::polyMeshGeometry::checkFaceAngles
             // Normalized vector between two consecutive points
             vector e10(p[f[fp1]] - p[f[fp0]]);
             scalar magE10 = mag(e10);
-            e10 /= magE10 + VSMALL;
+            e10 /= magE10 + vSmall;
 
-            if (magEPrev > SMALL && magE10 > SMALL)
+            if (magEPrev > small && magE10 > small)
             {
                 vector edgeNormal = ePrev ^ e10;
                 scalar magEdgeNormal = mag(edgeNormal);
@@ -1535,7 +1535,7 @@ bool Foam::polyMeshGeometry::checkFaceAngles
                     // Check normal
                     edgeNormal /= magEdgeNormal;
 
-                    if ((edgeNormal & faceNormal) < SMALL)
+                    if ((edgeNormal & faceNormal) < small)
                     {
                         if (facei != errorFacei)
                         {
@@ -1564,7 +1564,7 @@ bool Foam::polyMeshGeometry::checkFaceAngles
 
     if (report)
     {
-        if (maxEdgeSin > SMALL)
+        if (maxEdgeSin > small)
         {
             scalar maxConcaveDegr =
                 radToDeg(Foam::asin(Foam::min(1.0, maxEdgeSin)));
@@ -1615,7 +1615,7 @@ bool Foam::polyMeshGeometry::checkFaceTwist
     labelHashSet* setPtr
 )
 {
-    if (minTwist < -1-SMALL || minTwist > 1+SMALL)
+    if (minTwist < -1-small || minTwist > 1+small)
     {
         FatalErrorInFunction
             << "minTwist should be [-1..1] but is now " << minTwist
@@ -1636,7 +1636,7 @@ bool Foam::polyMeshGeometry::checkFaceTwist
 //
 //        scalar magArea = mag(faceAreas[facei]);
 //
-//        if (f.size() > 3 && magArea > VSMALL)
+//        if (f.size() > 3 && magArea > vSmall)
 //        {
 //            const vector nf = faceAreas[facei] / magArea;
 //
@@ -1656,7 +1656,7 @@ bool Foam::polyMeshGeometry::checkFaceTwist
 //
 //                scalar magTri = mag(triArea);
 //
-//                if (magTri > VSMALL && ((nf & triArea/magTri) < minTwist))
+//                if (magTri > vSmall && ((nf & triArea/magTri) < minTwist))
 //                {
 //                    nWarped++;
 //
@@ -1698,19 +1698,19 @@ bool Foam::polyMeshGeometry::checkFaceTwist
             if (mesh.isInternalFace(facei))
             {
                 nf = cellCentres[nei[facei]] - cellCentres[own[facei]];
-                nf /= mag(nf) + VSMALL;
+                nf /= mag(nf) + vSmall;
             }
             else if (patches[patches.whichPatch(facei)].coupled())
             {
                 nf =
                     neiCc[facei-mesh.nInternalFaces()]
                   - cellCentres[own[facei]];
-                nf /= mag(nf) + VSMALL;
+                nf /= mag(nf) + vSmall;
             }
             else
             {
                 nf = faceCentres[facei] - cellCentres[own[facei]];
-                nf /= mag(nf) + VSMALL;
+                nf /= mag(nf) + vSmall;
             }
 
             if (nf != vector::zero)
@@ -1731,7 +1731,7 @@ bool Foam::polyMeshGeometry::checkFaceTwist
 
                     scalar magTri = mag(triArea);
 
-                    if (magTri > VSMALL && ((nf & triArea/magTri) < minTwist))
+                    if (magTri > vSmall && ((nf & triArea/magTri) < minTwist))
                     {
                         nWarped++;
 
@@ -1799,7 +1799,7 @@ bool Foam::polyMeshGeometry::checkTriangleTwist
     labelHashSet* setPtr
 )
 {
-    if (minTwist < -1-SMALL || minTwist > 1+SMALL)
+    if (minTwist < -1-small || minTwist > 1+small)
     {
         FatalErrorInFunction
             << "minTwist should be [-1..1] but is now " << minTwist
@@ -1835,7 +1835,7 @@ bool Foam::polyMeshGeometry::checkTriangleTwist
 
                 scalar magTri = mag(prevN);
 
-                if (magTri > VSMALL)
+                if (magTri > vSmall)
                 {
                     startFp = fp;
                     prevN /= magTri;
@@ -1862,7 +1862,7 @@ bool Foam::polyMeshGeometry::checkTriangleTwist
                     );
                     scalar magTri = mag(triN);
 
-                    if (magTri > VSMALL)
+                    if (magTri > vSmall)
                     {
                         triN /= magTri;
 
@@ -1949,7 +1949,7 @@ bool Foam::polyMeshGeometry::checkFaceFlatness
     labelHashSet* setPtr
 )
 {
-    if (minFlatness < -SMALL || minFlatness > 1+SMALL)
+    if (minFlatness < -small || minFlatness > 1+small)
     {
         FatalErrorInFunction
             << "minFlatness should be [0..1] but is now " << minFlatness
@@ -2109,7 +2109,7 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
 {
     const cellList& cells = mesh.cells();
 
-    scalar minDet = GREAT;
+    scalar minDet = great;
     scalar sumDet = 0.0;
     label nSumDet = 0;
     label nWarnDet = 0;
@@ -2128,10 +2128,10 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
             scalar magArea = mag(faceAreas[facei]);
 
             magAreaSum += magArea;
-            areaSum += faceAreas[facei]*(faceAreas[facei]/(magArea+VSMALL));
+            areaSum += faceAreas[facei]*(faceAreas[facei]/(magArea+vSmall));
         }
 
-        scalar scaledDet = det(areaSum/(magAreaSum+VSMALL))/0.037037037037037;
+        scalar scaledDet = det(areaSum/(magAreaSum+vSmall))/0.037037037037037;
 
         minDet = min(minDet, scaledDet);
         sumDet += scaledDet;

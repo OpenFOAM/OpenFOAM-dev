@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -584,7 +584,7 @@ Foam::particle::particle
 )
 :
     mesh_(mesh),
-    coordinates_(- VGREAT, - VGREAT, - VGREAT, - VGREAT),
+    coordinates_(- vGreat, - vGreat, - vGreat, - vGreat),
     celli_(celli),
     tetFacei_(-1),
     tetPti_(-1),
@@ -735,7 +735,7 @@ Foam::scalar Foam::particle::trackToStationaryTri
 
     // Calculate the hit fraction
     label iH = -1;
-    scalar muH = std::isnormal(detA) && detA <= 0 ? VGREAT : 1/detA;
+    scalar muH = std::isnormal(detA) && detA <= 0 ? vGreat : 1/detA;
     for (label i = 0; i < 4; ++ i)
     {
         if (std::isnormal(Tx1[i]) && Tx1[i] < 0)
@@ -848,7 +848,7 @@ Foam::scalar Foam::particle::trackToMovingTri
 
     // Calculate the hit fraction
     label iH = -1;
-    scalar muH = std::isnormal(detA[0]) && detA[0] <= 0 ? VGREAT : 1/detA[0];
+    scalar muH = std::isnormal(detA[0]) && detA[0] <= 0 ? vGreat : 1/detA[0];
     for (label i = 0; i < 4; ++ i)
     {
         const Roots<3> mu = hitEqn[i].roots();

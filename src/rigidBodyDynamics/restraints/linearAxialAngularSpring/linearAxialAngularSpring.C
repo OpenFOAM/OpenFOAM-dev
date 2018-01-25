@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,10 +92,10 @@ void Foam::RBD::restraints::linearAxialAngularSpring::restrain
 
     // Removing axis component from oldDir and newDir and normalising
     oldDir -= (axis_ & oldDir)*axis_;
-    oldDir /= (mag(oldDir) + VSMALL);
+    oldDir /= (mag(oldDir) + vSmall);
 
     newDir -= (axis_ & newDir)*axis_;
-    newDir /= (mag(newDir) + VSMALL);
+    newDir /= (mag(newDir) + vSmall);
 
     scalar theta = mag(acos(min(oldDir & newDir, 1.0)));
 
@@ -107,7 +107,7 @@ void Foam::RBD::restraints::linearAxialAngularSpring::restrain
 
     scalar magA = mag(a);
 
-    if (magA > VSMALL)
+    if (magA > vSmall)
     {
         a /= magA;
     }
@@ -159,7 +159,7 @@ bool Foam::RBD::restraints::linearAxialAngularSpring::read
 
     scalar magAxis(mag(axis_));
 
-    if (magAxis > VSMALL)
+    if (magAxis > vSmall)
     {
         axis_ /= magAxis;
     }

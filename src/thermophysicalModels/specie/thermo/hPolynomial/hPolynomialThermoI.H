@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,7 @@ inline void Foam::hPolynomialThermo<EquationOfState, PolySize>::operator+=
 
     EquationOfState::operator+=(pt);
 
-    if (mag(this->Y()) > SMALL)
+    if (mag(this->Y()) > small)
     {
         Y1 /= this->Y();
         const scalar Y2 = pt.Y()/this->Y();
@@ -190,7 +190,7 @@ inline Foam::hPolynomialThermo<EquationOfState, PolySize> Foam::operator+
     EquationOfState eofs = pt1;
     eofs += pt2;
 
-    if (mag(eofs.Y()) < SMALL)
+    if (mag(eofs.Y()) < small)
     {
         return hPolynomialThermo<EquationOfState, PolySize>
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ Foam::List<bool> Foam::scalarRanges::selected
             scalar target = operator[](rangeI).value();
 
             int nearestIndex = -1;
-            scalar nearestDiff = Foam::GREAT;
+            scalar nearestDiff = Foam::great;
 
             forAll(values, timeIndex)
             {

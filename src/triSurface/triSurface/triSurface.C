@@ -820,7 +820,7 @@ void Foam::triSurface::scalePoints(const scalar scaleFactor)
 void Foam::triSurface::cleanup(const bool verbose)
 {
     // Merge points (already done for STL, TRI)
-    stitchTriangles(SMALL, verbose);
+    stitchTriangles(small, verbose);
 
     // Merging points might have changed geometric factors
     clearOut();

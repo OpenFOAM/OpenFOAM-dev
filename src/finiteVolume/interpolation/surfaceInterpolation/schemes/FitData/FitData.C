@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::FitData<Form, ExtendedStencil, Polynomial>::FitData
     minSize_(Polynomial::nTerms(dim_))
 {
     // Check input
-    if (linearLimitFactor <= SMALL || linearLimitFactor > 3)
+    if (linearLimitFactor <= small || linearLimitFactor > 3)
     {
         FatalErrorInFunction
             << "linearLimitFactor requested = " << linearLimitFactor
@@ -112,7 +112,7 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::findFaceDirs
 
         scalar magk = mag(kdir);
 
-        if (magk < SMALL)
+        if (magk < small)
         {
             FatalErrorInFunction
                 << exit(FatalError);
@@ -207,7 +207,7 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::calcFit
     bool goodFit = false;
     for (int iIt = 0; iIt < 8 && !goodFit; iIt++)
     {
-        SVD svd(B, SMALL);
+        SVD svd(B, small);
         scalarRectangularMatrix invB(svd.VSinvUt());
 
         scalar maxCoeff = 0;

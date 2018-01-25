@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ scalar rampHoldFall::relaxation()
     scalar tEnd = runTime_.time().endTime().value();
     scalar tSpan = tEnd - tStart;
 
-    if (tSpan < VSMALL)
+    if (tSpan < vSmall)
     {
         return rampStartRelaxation_;
     }

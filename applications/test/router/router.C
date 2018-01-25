@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ void Foam::router::fixWeights
         // to choose one. Here: smallest angle to vector end-start
         vector n(coords_[endNodeI] - coords_[startNodeI]);
 
-        scalar maxCosAngle = -GREAT;
+        scalar maxCosAngle = -great;
 
         forAll(myNeighbours, neighbourI)
         {
@@ -159,7 +159,7 @@ void Foam::router::fixWeights
 
                 scalar magN2 = mag(n2);
 
-                if (magN2 > SMALL)
+                if (magN2 > small)
                 {
                     n2 /= mag(n2);
 

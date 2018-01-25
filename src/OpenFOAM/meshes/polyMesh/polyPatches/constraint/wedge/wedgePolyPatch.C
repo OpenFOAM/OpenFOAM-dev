@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
         // Check the wedge is planar
         forAll(nf, facei)
         {
-            if (magSqr(n_ - nf[facei]) > SMALL)
+            if (magSqr(n_ - nf[facei]) > small)
             {
                 // only issue warning instead of error so that the case can
                 // still be read for post-processing
@@ -93,7 +93,7 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
         const scalar cnCmptSum =
             centreNormal_.x() + centreNormal_.y() + centreNormal_.z();
 
-        if (mag(cnCmptSum) < (1 - SMALL))
+        if (mag(cnCmptSum) < (1 - small))
         {
             FatalErrorInFunction
                 << "wedge " << name()
@@ -105,7 +105,7 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
         axis_ = centreNormal_ ^ n_;
         scalar magAxis = mag(axis_);
 
-        if (magAxis < SMALL)
+        if (magAxis < small)
         {
             FatalErrorInFunction
                 << "wedge " << name()

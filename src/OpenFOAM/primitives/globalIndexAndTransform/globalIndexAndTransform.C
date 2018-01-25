@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
 
         scalar vectorDiff =
             mag(refTransform.t() - testTransform.t())
-           /(maxVectorMag + VSMALL)
+           /(maxVectorMag + vSmall)
            /tolerance;
 
         // Test the difference between tensor parts to see if it is
@@ -98,7 +98,7 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
 
             vectorDiff =
                 mag(refTransform.t() + testTransform.t())
-               /(maxVectorMag + VSMALL)
+               /(maxVectorMag + vSmall)
                /tolerance;
 
             tensorDiff = 0;
@@ -165,7 +165,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
                 {
                     const vector& sepVec = sepVecs[sVI];
 
-                    if (mag(sepVec) > SMALL)
+                    if (mag(sepVec) > small)
                     {
                         vectorTensorTransform transform(sepVec);
 
@@ -195,7 +195,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
                 {
                     const tensor& transT = transTensors[tTI];
 
-                    if (mag(transT - I) > SMALL)
+                    if (mag(transT - I) > small)
                     {
                         vectorTensorTransform transform(transT);
 
@@ -244,7 +244,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
             {
                 const vectorTensorTransform& transform = procTransVecs[pSVI];
 
-                if (mag(transform.t()) > SMALL || transform.hasR())
+                if (mag(transform.t()) > small || transform.hasR())
                 {
                     if
                     (
@@ -351,7 +351,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                 {
                     const vector& sepVec = sepVecs[sVI];
 
-                    if (mag(sepVec) > SMALL)
+                    if (mag(sepVec) > small)
                     {
                         vectorTensorTransform t(sepVec);
 
@@ -380,7 +380,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                 {
                     const tensor& transT = transTensors[tTI];
 
-                    if (mag(transT - I) > SMALL)
+                    if (mag(transT - I) > small)
                     {
                         vectorTensorTransform t(transT);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,19 +50,19 @@ namespace fv
 
 void Foam::fv::actuationDiskSource::checkData() const
 {
-    if (magSqr(diskArea_) <= VSMALL)
+    if (magSqr(diskArea_) <= vSmall)
     {
         FatalErrorInFunction
            << "diskArea is approximately zero"
            << exit(FatalIOError);
     }
-    if (Cp_ <= VSMALL || Ct_ <= VSMALL)
+    if (Cp_ <= vSmall || Ct_ <= vSmall)
     {
         FatalErrorInFunction
            << "Cp and Ct must be greater than zero"
            << exit(FatalIOError);
     }
-    if (mag(diskDir_) < VSMALL)
+    if (mag(diskDir_) < vSmall)
     {
         FatalErrorInFunction
            << "disk direction vector is approximately zero"
@@ -119,7 +119,7 @@ void Foam::fv::actuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (V() > VSMALL)
+    if (V() > vSmall)
     {
         addActuationDiskAxialInertialResistance
         (
@@ -144,7 +144,7 @@ void Foam::fv::actuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (V() > VSMALL)
+    if (V() > vSmall)
     {
         addActuationDiskAxialInertialResistance
         (

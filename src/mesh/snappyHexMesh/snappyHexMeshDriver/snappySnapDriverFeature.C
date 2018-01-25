@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,8 @@ bool Foam::snappySnapDriver::isFeaturePoint
 
                     if
                     (
-                        vIMag > SMALL
-                     && vJMag > SMALL
+                        vIMag > small
+                     && vJMag > small
                      && ((vI/vIMag & vJ/vJMag) < featureCos)
                     )
                     {
@@ -855,7 +855,7 @@ void Foam::snappySnapDriver::featureAttractionUsingReconstruction
         const vector& fDisp = pfDisp[i];
 
         // What to do with very far attraction? For now just ignore the face
-        if (magSqr(fDisp) < sqr(snapDist[pointi]) && mag(fSNormal) > VSMALL)
+        if (magSqr(fDisp) < sqr(snapDist[pointi]) && mag(fSNormal) > vSmall)
         {
             const point pt = fc + fDisp;
 
@@ -1187,9 +1187,9 @@ void Foam::snappySnapDriver::stringFeatureEdges
 
                     // No string. Assign best choice on either side
                     label bestPosPointi = -1;
-                    scalar minPosDistSqr = GREAT;
+                    scalar minPosDistSqr = great;
                     label bestNegPointi = -1;
-                    scalar minNegDistSqr = GREAT;
+                    scalar minNegDistSqr = great;
 
                     forAll(pEdges, pEdgeI)
                     {
@@ -1538,7 +1538,7 @@ void Foam::snappySnapDriver::avoidDiagonalAttraction
                 // Add the nearest of the other two points as
                 // attractor
                 label minFp = -1;
-                scalar minDistSqr = GREAT;
+                scalar minDistSqr = great;
                 forAll(f, fp)
                 {
                     label pointi = f[fp];
@@ -2473,8 +2473,8 @@ void Foam::snappySnapDriver::reverseAttractMeshPoints
         // Slightly extended bb. Slightly off-centred just so on symmetric
         // geometry there are less face/edge aligned items.
         bb = bb.extend(rndGen, 1e-4);
-        bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-        bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
     }
 
     // Collect candidate points for attraction
@@ -2590,7 +2590,7 @@ void Foam::snappySnapDriver::reverseAttractMeshPoints
                 pointIndexHit nearInfo = ppTree.findNearest
                 (
                     featPt,
-                    sqr(GREAT)
+                    sqr(great)
                 );
 
                 if (nearInfo.hit())
@@ -2649,7 +2649,7 @@ void Foam::snappySnapDriver::reverseAttractMeshPoints
                 pointIndexHit nearInfo = ppTree.findNearest
                 (
                     featPt,
-                    sqr(GREAT)
+                    sqr(great)
                 );
 
                 if (nearInfo.hit())
@@ -3065,7 +3065,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurfaceFeature
     {
         // Calculate attraction distance per face (from the attraction distance
         // per point)
-        scalarField faceSnapDist(pp.size(), -GREAT);
+        scalarField faceSnapDist(pp.size(), -great);
         forAll(pp.localFaces(), facei)
         {
             const face& f = pp.localFaces()[facei];
@@ -3391,7 +3391,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurfaceFeature
         pp.meshPoints(),
         patchDisp,
         minMagSqrEqOp<point>(),         // combine op
-        vector(GREAT, GREAT, GREAT)     // null value (note: cant use VGREAT)
+        vector(great, great, great)     // null value (note: cant use vGreat)
     );
 
     return patchDisp;

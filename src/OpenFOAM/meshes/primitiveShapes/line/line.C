@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,15 +46,15 @@ scalar line<point2D, const point2D&>::nearestDist
 
     scalar d = u.perp(v);
 
-    if (Foam::mag(d) > VSMALL)
+    if (Foam::mag(d) > vSmall)
     {
         scalar s = v.perp(w) / d;
 
-        if (s <= SMALL)
+        if (s <= small)
         {
             thisPt = start();
         }
-        else if (s >= (1-SMALL))
+        else if (s >= (1-small))
         {
             thisPt = end();
         }
@@ -66,11 +66,11 @@ scalar line<point2D, const point2D&>::nearestDist
 
         scalar t = u.perp(w) / d;
 
-        if (t <= SMALL)
+        if (t <= small)
         {
             edgePt = e.start();
         }
-        else if (t >= (1-SMALL))
+        else if (t >= (1-small))
         {
             edgePt = e.end();
         }

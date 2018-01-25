@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -189,7 +189,7 @@ inline Point Foam::tetrahedron<Point, PointRef>::circumCentre() const
     vector num = lambda*ba - mu*ca;
     scalar denom = (c & ba);
 
-    if (Foam::mag(denom) < ROOTVSMALL)
+    if (Foam::mag(denom) < rootVSmall)
     {
         // Degenerate tetrahedron, returning centre instead of circumCentre.
 
@@ -216,10 +216,10 @@ inline Foam::scalar Foam::tetrahedron<Point, PointRef>::circumRadius() const
     vector num = lambda*ba - mu*ca;
     scalar denom = (c & ba);
 
-    if (Foam::mag(denom) < ROOTVSMALL)
+    if (Foam::mag(denom) < rootVSmall)
     {
-        // Degenerate tetrahedron, returning GREAT for circumRadius.
-        return GREAT;
+        // Degenerate tetrahedron, returning great for circumRadius.
+        return great;
     }
 
     return Foam::mag(0.5*(a + num/denom));
@@ -233,8 +233,8 @@ inline Foam::scalar Foam::tetrahedron<Point, PointRef>::quality() const
         mag()
        /(
             8.0/(9.0*sqrt(3.0))
-           *pow3(min(circumRadius(), GREAT))
-          + ROOTVSMALL
+           *pow3(min(circumRadius(), great))
+          + rootVSmall
         );
 }
 
@@ -304,7 +304,7 @@ inline Foam::scalar Foam::tetrahedron<Point, PointRef>::pointToBarycentric
 
     scalar detT = det(t);
 
-    if (Foam::mag(detT) < SMALL)
+    if (Foam::mag(detT) < small)
     {
         // Degenerate tetrahedron, returning 1/4 barycentric coordinates
 
@@ -338,7 +338,7 @@ inline Foam::pointHit Foam::tetrahedron<Point, PointRef>::nearestPoint
 
     point closestPt = p;
 
-    scalar minOutsideDistance = VGREAT;
+    scalar minOutsideDistance = vGreat;
 
     bool inside = true;
 
@@ -424,7 +424,7 @@ bool Foam::tetrahedron<Point, PointRef>::inside(const point& pt) const
 {
     // For robustness, assuming that the point is in the tet unless
     // "definitively" shown otherwise by obtaining a positive dot
-    // product greater than a tolerance of SMALL.
+    // product greater than a tolerance of small.
 
     // The tet is defined: tet(Cc, tetBasePt, pA, pB) where the normal
     // vectors and base points for the half-space planes are:
@@ -444,9 +444,9 @@ bool Foam::tetrahedron<Point, PointRef>::inside(const point& pt) const
         const point& basePt = b_;
 
         n = Sa();
-        n /= (Foam::mag(n) + VSMALL);
+        n /= (Foam::mag(n) + vSmall);
 
-        if (((pt - basePt) & n) > SMALL)
+        if (((pt - basePt) & n) > small)
         {
             return false;
         }
@@ -457,9 +457,9 @@ bool Foam::tetrahedron<Point, PointRef>::inside(const point& pt) const
         const point& basePt = c_;
 
         n = Sb();
-        n /= (Foam::mag(n) + VSMALL);
+        n /= (Foam::mag(n) + vSmall);
 
-        if (((pt - basePt) & n) > SMALL)
+        if (((pt - basePt) & n) > small)
         {
             return false;
         }
@@ -470,9 +470,9 @@ bool Foam::tetrahedron<Point, PointRef>::inside(const point& pt) const
         const point& basePt = b_;
 
         n = Sc();
-        n /= (Foam::mag(n) + VSMALL);
+        n /= (Foam::mag(n) + vSmall);
 
-        if (((pt - basePt) & n) > SMALL)
+        if (((pt - basePt) & n) > small)
         {
             return false;
         }
@@ -483,9 +483,9 @@ bool Foam::tetrahedron<Point, PointRef>::inside(const point& pt) const
         const point& basePt = b_;
 
         n = Sd();
-        n /= (Foam::mag(n) + VSMALL);
+        n /= (Foam::mag(n) + vSmall);
 
-        if (((pt - basePt) & n) > SMALL)
+        if (((pt - basePt) & n) > small)
         {
             return false;
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -244,7 +244,7 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
     // Reset boundary heat flux to zero
     qr_.boundaryFieldRef() = 0.0;
 
-    scalar maxResidual = -GREAT;
+    scalar maxResidual = -great;
 
     const surfaceScalarField Ji(dAve_ & mesh_.Sf());
 

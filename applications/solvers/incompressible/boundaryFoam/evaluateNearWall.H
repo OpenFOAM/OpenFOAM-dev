@@ -13,17 +13,17 @@
 
     scalar uTau = ::sqrt(mag(tauw));
 
-    scalar yPlus = uTau*y[cellId]/(nu + ROOTVSMALL);
+    scalar yPlus = uTau*y[cellId]/(nu + rootVSmall);
 
-    scalar uPlus = magUp/(uTau + ROOTVSMALL);
+    scalar uPlus = magUp/(uTau + rootVSmall);
 
     scalar nutPlus = nut/nu;
 
-    scalar kPlus = k/(sqr(uTau) + ROOTVSMALL);
+    scalar kPlus = k/(sqr(uTau) + rootVSmall);
 
-    scalar epsilonPlus = epsilon*nu/(pow4(uTau) + ROOTVSMALL);
+    scalar epsilonPlus = epsilon*nu/(pow4(uTau) + rootVSmall);
 
-//    scalar omegaPlus = omega*nu/(sqr(uTau) + ROOTVSMALL);
+//    scalar omegaPlus = omega*nu/(sqr(uTau) + rootVSmall);
 
     scalar Rey = magUp*y[cellId]/nu;
 

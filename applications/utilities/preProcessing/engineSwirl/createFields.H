@@ -67,7 +67,7 @@ vector xT = vector
 );
 
 // if swirl is around (1, 0, 0) we have to find another transformation
-if (mag(yT) < SMALL)
+if (mag(yT) < small)
 {
     yT = vector(zT.y(), -zT.x(), 0);
     xT = vector(-zT.x()*zT.z(), -zT.y()*zT.z(), zT.x()*zT.x() + zT.y()*zT.y());

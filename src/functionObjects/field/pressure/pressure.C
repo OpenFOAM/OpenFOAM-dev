@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ Foam::functionObjects::pressure::coeff
 
         pCoeff -= dimensionedScalar("pInf", dimPressure, pInf_);
 
-        const dimensionedScalar pSmall("pSmall", dimPressure, SMALL);
+        const dimensionedScalar pSmall("pSmall", dimPressure, small);
         const dimensionedVector U("U", dimVelocity, UInf_);
         const dimensionedScalar rho("rho", dimDensity, rhoInf_);
 
@@ -243,7 +243,7 @@ bool Foam::functionObjects::pressure::read(const dictionary& dict)
 
         scalar zeroCheck = 0.5*rhoInf_*magSqr(UInf_) + pInf_;
 
-        if (mag(zeroCheck) < ROOTVSMALL)
+        if (mag(zeroCheck) < rootVSmall)
         {
             WarningInFunction
                 << type() << " " << name() << ": "

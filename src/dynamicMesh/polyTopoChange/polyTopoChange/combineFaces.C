@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ bool Foam::combineFaces::convexFace
     // Get edge from f[0] to f[size-1];
     vector ePrev(points[f.first()] - points[f.last()]);
     scalar magEPrev = mag(ePrev);
-    ePrev /= magEPrev + VSMALL;
+    ePrev /= magEPrev + vSmall;
 
     forAll(f, fp0)
     {
@@ -72,9 +72,9 @@ bool Foam::combineFaces::convexFace
         // Normalized vector between two consecutive points
         vector e10(points[f[fp1]] - points[f[fp0]]);
         scalar magE10 = mag(e10);
-        e10 /= magE10 + VSMALL;
+        e10 /= magE10 + vSmall;
 
-        if (magEPrev > SMALL && magE10 > SMALL)
+        if (magEPrev > small && magE10 > small)
         {
             vector edgeNormal = ePrev ^ e10;
 

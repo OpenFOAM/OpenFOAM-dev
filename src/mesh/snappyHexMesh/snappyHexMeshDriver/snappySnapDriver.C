@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
     PackedBoolList nonManifoldPoint(pp.nPoints());
     label nNonManifoldPoints = getCollocatedPoints
     (
-        SMALL,
+        small,
         pp.localPoints(),
         nonManifoldPoint
     );
@@ -538,7 +538,7 @@ bool Foam::snappySnapDriver::outwardsDisplacement
 
         scalar magDisp = mag(disp);
 
-        if (magDisp > SMALL)
+        if (magDisp > small)
         {
             disp /= magDisp;
 
@@ -619,7 +619,7 @@ Foam::scalarField Foam::snappySnapDriver::calcSnapDistance
     const labelListList& pointEdges = pp.pointEdges();
     const pointField& localPoints = pp.localPoints();
 
-    scalarField maxEdgeLen(localPoints.size(), -GREAT);
+    scalarField maxEdgeLen(localPoints.size(), -great);
 
     forAll(pointEdges, pointi)
     {
@@ -641,7 +641,7 @@ Foam::scalarField Foam::snappySnapDriver::calcSnapDistance
         pp.meshPoints(),
         maxEdgeLen,
         maxEqOp<scalar>(),  // combine op
-        -GREAT              // null value
+        -great              // null value
     );
 
     return scalarField(snapParams.snapTol()*maxEdgeLen);
@@ -1690,7 +1690,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
         pp.meshPoints(),
         patchDisp,
         minMagSqrEqOp<point>(),         // combine op
-        vector(GREAT, GREAT, GREAT)     // null value (note: cannot use VGREAT)
+        vector(great, great, great)     // null value (note: cannot use vGreat)
     );
 
     return patchDisp;
@@ -1709,7 +1709,7 @@ void Foam::snappySnapDriver::smoothDisplacement
     Info<< "Smoothing displacement ..." << endl;
 
     // Set edge diffusivity as inverse of distance to patch
-    scalarField edgeGamma(1.0/(edgePatchDist(meshMover.pMesh(), pp) + SMALL));
+    scalarField edgeGamma(1.0/(edgePatchDist(meshMover.pMesh(), pp) + small));
     //scalarField edgeGamma(mesh.nEdges(), 1.0);
     //scalarField edgeGamma(wallGamma(mesh, pp, 10, 1));
 
@@ -1893,7 +1893,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::repatchToSurface
     labelList closestPatch(pp.size(), -1);
     {
         // face snap distance as max of point snap distance
-        scalarField faceSnapDist(pp.size(), -GREAT);
+        scalarField faceSnapDist(pp.size(), -great);
         {
             // Distance to attract to nearest feature on surface
             const scalarField snapDist
@@ -2032,7 +2032,7 @@ void Foam::snappySnapDriver::detectWarpedFaces
             // biggish normal angle
 
             labelPair minDiag(-1, -1);
-            scalar minCos(GREAT);
+            scalar minCos(great);
 
             for (label startFp = 0; startFp < f.size()-2; startFp++)
             {
@@ -2068,7 +2068,7 @@ void Foam::snappySnapDriver::detectWarpedFaces
                     vector n1 = f1.normal(localPoints);
                     scalar n1Mag = mag(n1);
 
-                    if (n0Mag > ROOTVSMALL && n1Mag > ROOTVSMALL)
+                    if (n0Mag > rootVSmall && n1Mag > rootVSmall)
                     {
                         scalar cosAngle = (n0/n0Mag) & (n1/n1Mag);
                         if (cosAngle < minCos)

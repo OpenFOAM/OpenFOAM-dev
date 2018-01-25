@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,7 +226,7 @@ static bool insertSorted
     {
         scalar w = sortedWeights[sortedI];
 
-        if (mag(w - weight) < SMALL)
+        if (mag(w - weight) < small)
         {
             WarningInFunction
                 << "Trying to insert weight " << weight << " which is close to"
@@ -585,7 +585,7 @@ static labelPair getSpanPoints
 {
     const pointField& localPoints = surf.localPoints();
 
-    scalar maxDist = -GREAT;
+    scalar maxDist = -great;
     labelPair maxPair;
 
     forAll(outsideVerts, i)

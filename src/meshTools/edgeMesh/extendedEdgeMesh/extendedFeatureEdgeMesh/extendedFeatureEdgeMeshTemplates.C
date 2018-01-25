@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,8 +157,8 @@ void Foam::extendedFeatureEdgeMesh::sortPointsAndEdges
             normalDirections[i][j] =
                 (
                     (
-                        (cross/(mag(cross) + VSMALL))
-                      & (fC0tofE0/(mag(fC0tofE0)+ VSMALL))
+                        (cross/(mag(cross) + vSmall))
+                      & (fC0tofE0/(mag(fC0tofE0)+ vSmall))
                     )
                   > 0.0
                     ? 1
@@ -284,7 +284,7 @@ void Foam::extendedFeatureEdgeMesh::sortPointsAndEdges
     edgeMesh::operator=(edgeMesh(pts, eds));
 
     // Initialise sorted edge related data
-    edgeDirections_ = edgeDirections/(mag(edgeDirections) + VSMALL);
+    edgeDirections_ = edgeDirections/(mag(edgeDirections) + vSmall);
     edgeNormals_ = edgeNormals;
     normalDirections_ = normalDirections;
     regionEdges_ = regionEdges;

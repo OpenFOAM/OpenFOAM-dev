@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class backwardDdtScheme
         //- Return the previous time-step
         scalar deltaT0_() const;
 
-        //- Return the previous time-step or GREAT if the old timestep field
+        //- Return the previous time-step or great if the old timestep field
         //  wasn't available in which case Euler ddt is used
         template<class GeoField>
         scalar deltaT0_(const GeoField&) const;

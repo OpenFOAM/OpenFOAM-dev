@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -438,7 +438,7 @@ kOmegaSSTLM<BasicTurbulenceModel>::kOmegaSSTLM
     (
         this->coeffDict_.lookupOrDefault("maxLambdaIter", 10)
     ),
-    deltaU_("deltaU", dimVelocity, SMALL),
+    deltaU_("deltaU", dimVelocity, small),
 
     ReThetat_
     (

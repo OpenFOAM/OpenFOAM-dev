@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,7 @@ void Foam::regionToFace::combine(topoSet& set, const bool add) const
         pointIndexHit(false, Zero, -1),
         Tuple2<scalar, label>
         (
-            sqr(GREAT),
+            sqr(great),
             Pstream::myProcNo()
         )
     );

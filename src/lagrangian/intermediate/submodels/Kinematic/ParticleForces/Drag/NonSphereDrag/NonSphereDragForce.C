@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 template<class CloudType>
 Foam::scalar Foam::NonSphereDragForce<CloudType>::CdRe(const scalar Re) const
 {
-    return 24.0*(1.0 + a_*pow(Re, b_)) + Re*c_/(1 + d_/(Re + ROOTVSMALL));
+    return 24.0*(1.0 + a_*pow(Re, b_)) + Re*c_/(1 + d_/(Re + rootVSmall));
 }
 
 

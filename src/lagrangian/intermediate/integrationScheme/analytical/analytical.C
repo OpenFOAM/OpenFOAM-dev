@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ Foam::scalar Foam::integrationSchemes::analytical::dtEff
 ) const
 {
     return
-        mag(Beta*dt) > SMALL
+        mag(Beta*dt) > small
       ? (1 - exp(- Beta*dt))/Beta
       : dt;
 }
@@ -71,7 +71,7 @@ Foam::scalar Foam::integrationSchemes::analytical::sumDtEff
 ) const
 {
     return
-        mag(Beta*dt) > SMALL
+        mag(Beta*dt) > small
       ? dt/Beta - (1 - exp(- Beta*dt))/sqr(Beta)
       : sqr(dt);
 }

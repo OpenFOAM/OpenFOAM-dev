@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1000,7 +1000,7 @@ Foam::labelList Foam::boundaryMesh::getNearest
         scalar area = mag(n);
         n /= area;
 
-        scalar typDim = -GREAT;
+        scalar typDim = -great;
         const face& f = pMesh.faces()[meshFacei];
 
         forAll(f, fp)

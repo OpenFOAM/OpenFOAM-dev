@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -334,7 +334,7 @@ void Foam::MULES::limiter
     psiMaxn = min(psiMaxn + extremaCoeff*(psiMax - psiMin), psiMax);
     psiMinn = max(psiMinn - extremaCoeff*(psiMax - psiMin), psiMin);
 
-    if (smoothLimiter > SMALL)
+    if (smoothLimiter > small)
     {
         psiMaxn =
             min(smoothLimiter*psiIf + (1.0 - smoothLimiter)*psiMaxn, psiMax);
@@ -442,7 +442,7 @@ void Foam::MULES::limiter
                 max(min
                 (
                     (sumlPhip[celli] + psiMaxn[celli])
-                   /(mSumPhim[celli] + ROOTVSMALL),
+                   /(mSumPhim[celli] + rootVSmall),
                     1.0), 0.0
                 );
 
@@ -450,7 +450,7 @@ void Foam::MULES::limiter
                 max(min
                 (
                     (mSumlPhim[celli] + psiMinn[celli])
-                   /(sumPhip[celli] + ROOTVSMALL),
+                   /(sumPhip[celli] + rootVSmall),
                     1.0), 0.0
                 );
         }

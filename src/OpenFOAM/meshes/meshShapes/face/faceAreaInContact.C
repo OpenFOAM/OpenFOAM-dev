@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,7 @@ Foam::scalar Foam::face::areaInContact
     }
 
     // Calculate relative area
-    return face(sfl).mag(newFacePoints)/(mag(meshPoints) + VSMALL);
+    return face(sfl).mag(newFacePoints)/(mag(meshPoints) + vSmall);
 }
 
 

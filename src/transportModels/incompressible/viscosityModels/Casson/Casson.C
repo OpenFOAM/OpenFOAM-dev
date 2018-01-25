@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::viscosityModels::Casson::calcNu() const
                    /max
                     (
                         strainRate(),
-                        dimensionedScalar("VSMALL", dimless/dimTime, VSMALL)
+                        dimensionedScalar("vSmall", dimless/dimTime, vSmall)
                     )
                 ) + sqrt(m_)
             )

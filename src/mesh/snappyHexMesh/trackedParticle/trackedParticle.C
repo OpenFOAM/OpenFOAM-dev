@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ bool Foam::trackedParticle::move
 
     scalar tEnd = (1.0 - stepFraction())*trackTime;
 
-    if (tEnd <= SMALL && onBoundaryFace())
+    if (tEnd <= small && onBoundaryFace())
     {
         // This is a hack to handle particles reaching their endpoint
         // on a processor boundary. If the endpoint is on a processor face

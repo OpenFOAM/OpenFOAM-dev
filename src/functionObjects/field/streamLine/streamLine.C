@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -267,9 +267,9 @@ void Foam::functionObjects::streamLine::track()
     );
 
 
-    // Set very large dt. Note: cannot use GREAT since 1/GREAT is SMALL
+    // Set very large dt. Note: cannot use great since 1/great is small
     // which is a trigger value for the tracking...
-    const scalar trackTime = Foam::sqrt(GREAT);
+    const scalar trackTime = Foam::sqrt(great);
 
     // Track
     particles.move(particles, td, trackTime);
@@ -348,7 +348,7 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
     nSubCycle_ = 1;
     if (dict.readIfPresent("nSubCycle", nSubCycle_))
     {
-        trackLength_ = VGREAT;
+        trackLength_ = vGreat;
         if (nSubCycle_ < 1)
         {
             nSubCycle_ = 1;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ public:
         }
 
         // Avoid the /0 when k_ = 0
-        twoByk_ = 2.0/max(k_, SMALL);
+        twoByk_ = 2.0/max(k_, small);
     }
 
     scalar limiter
@@ -111,7 +111,7 @@ public:
         scalar phiCD = cdWeight*phiP + (1 - cdWeight)*phiN;
 
         // Calculate the effective limiter for the cubic interpolation
-        scalar cubicLimiter = (phif - phiU)/stabilise(phiCD - phiU, SMALL);
+        scalar cubicLimiter = (phif - phiU)/stabilise(phiCD - phiU, small);
 
         /*
         if (twor < 0.05)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
     dir_(dict.lookup("direction")),
     origin_(readScalar(dict.lookup("origin")))
 {
-    if (mag(dir_) < SMALL)
+    if (mag(dir_) < small)
     {
         FatalErrorInFunction
             << "magnitude Direction must be greater than zero"

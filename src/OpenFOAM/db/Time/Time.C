@@ -74,7 +74,7 @@ Foam::Time::fmtflags Foam::Time::format_(Foam::Time::general);
 
 int Foam::Time::precision_(6);
 
-const int Foam::Time::maxPrecision_(3 - log10(SMALL));
+const int Foam::Time::maxPrecision_(3 - log10(small));
 
 Foam::word Foam::Time::controlDictName("controlDict");
 
@@ -84,7 +84,7 @@ Foam::word Foam::Time::controlDictName("controlDict");
 void Foam::Time::adjustDeltaT()
 {
     bool adjustTime = false;
-    scalar timeToNextWrite = VGREAT;
+    scalar timeToNextWrite = vGreat;
 
     if (writeControl_ == wcAdjustableRunTime)
     {
@@ -98,7 +98,7 @@ void Foam::Time::adjustDeltaT()
 
     if (adjustTime)
     {
-        scalar nSteps = timeToNextWrite/deltaT_ - SMALL;
+        scalar nSteps = timeToNextWrite/deltaT_ - small;
 
         // For tiny deltaT the label can overflow!
         if (nSteps < labelMax)
@@ -370,7 +370,7 @@ Foam::Time::Time
 
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
-    writeInterval_(GREAT),
+    writeInterval_(great),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -446,7 +446,7 @@ Foam::Time::Time
 
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
-    writeInterval_(GREAT),
+    writeInterval_(great),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -529,7 +529,7 @@ Foam::Time::Time
 
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
-    writeInterval_(GREAT),
+    writeInterval_(great),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -608,7 +608,7 @@ Foam::Time::Time
 
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
-    writeInterval_(GREAT),
+    writeInterval_(great),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -718,7 +718,7 @@ Foam::instant Foam::Time::findClosestTime(const scalar t) const
     }
 
     label nearestIndex = -1;
-    scalar deltaT = GREAT;
+    scalar deltaT = great;
 
     for (label timei=1; timei < timeDirs.size(); ++timei)
     {
@@ -742,7 +742,7 @@ Foam::label Foam::Time::findClosestTimeIndex
 )
 {
     label nearestIndex = -1;
-    scalar deltaT = GREAT;
+    scalar deltaT = great;
 
     forAll(timeDirs, timei)
     {
@@ -850,7 +850,7 @@ bool Foam::Time::stopAt(const stopAtControls sa) const
     }
     else
     {
-        endTime_ = GREAT;
+        endTime_ = great;
     }
     return changed;
 }
@@ -996,7 +996,7 @@ Foam::Time& Foam::Time::operator++()
     if (!subCycling_)
     {
         // If the time is very close to zero reset to zero
-        if (mag(value()) < 10*SMALL*deltaT_)
+        if (mag(value()) < 10*small*deltaT_)
         {
             setTime(0.0, timeIndex_);
         }
@@ -1114,13 +1114,13 @@ Foam::Time& Foam::Time::operator++()
         {
             // Tolerance used when testing time equivalence
             const scalar timeTol =
-                max(min(pow(10.0, -precision_), 0.1*deltaT_), SMALL);
+                max(min(pow(10.0, -precision_), 0.1*deltaT_), small);
 
             // User-time equivalent of deltaT
             const scalar userDeltaT = timeToUserTime(deltaT_);
 
             // Time value obtained by reading timeName
-            scalar timeNameValue = -VGREAT;
+            scalar timeNameValue = -vGreat;
 
             // Check that new time representation differs from old one
             // reinterpretation of the word
@@ -1164,7 +1164,7 @@ Foam::Time& Foam::Time::operator++()
                     }
 
                     // Check if round-off error caused time-reversal
-                    scalar oldTimeNameValue = -VGREAT;
+                    scalar oldTimeNameValue = -vGreat;
                     if
                     (
                         readScalar(oldTimeName.c_str(), oldTimeNameValue)

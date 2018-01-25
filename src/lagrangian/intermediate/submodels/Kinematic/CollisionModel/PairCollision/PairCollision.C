@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,11 +30,11 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::scalar Foam::PairCollision<CloudType>::cosPhiMinFlatWall = 1 - SMALL;
+Foam::scalar Foam::PairCollision<CloudType>::cosPhiMinFlatWall = 1 - small;
 
 template<class CloudType>
 Foam::scalar Foam::PairCollision<CloudType>::flatWallDuplicateExclusion =
-    sqrt(3*SMALL);
+    sqrt(3*small);
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -246,7 +246,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
 
                     vector pW = nearPt - pos;
 
-                    scalar normalAlignment = normal & pW/(mag(pW) + SMALL);
+                    scalar normalAlignment = normal & pW/(mag(pW) + small);
 
                     // Find the patchIndex and wallData for WallSiteData object
                     label patchi = patchID[realFacei - mesh.nInternalFaces()];

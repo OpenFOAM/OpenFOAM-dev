@@ -1,6 +1,6 @@
 bool closedVolume = p_rgh.needReference();
 dimensionedScalar compressibility = fvc::domainIntegrate(psi);
-bool compressible = (compressibility.value() > SMALL);
+bool compressible = (compressibility.value() > small);
 
 rho = thermo.rho();
 

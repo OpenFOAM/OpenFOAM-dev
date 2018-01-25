@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ void Foam::starMesh::createCoupleMatches()
              mag
              (
                  -(masterFace.normal(points_) & slaveFace.normal(points_))/
-                 (masterFace.mag(points_)*slaveFace.mag(points_) + VSMALL)
+                 (masterFace.mag(points_)*slaveFace.mag(points_) + vSmall)
              );
 
          if (faceAreaAngle < 0.94)
@@ -163,7 +163,7 @@ void Foam::starMesh::createCoupleMatches()
 
             // Find common plane
             vector n = masterFace.normal(points_);
-            n /= mag(n) + VSMALL;
+            n /= mag(n) + vSmall;
 
             // Loop through all edges of the master face. For every edge,
             // intersect it with all edges of the cutting face.
@@ -202,7 +202,7 @@ void Foam::starMesh::createCoupleMatches()
                         << "e: " << e << endl;
                     #endif
 
-                    if (mag(det) > SMALL)
+                    if (mag(det) > small)
                     {
                         // non-singular matrix. Look for intersection
                         scalar beta = ((S - P) & (n ^ d))/det;
@@ -345,7 +345,7 @@ void Foam::starMesh::createCoupleMatches()
 
                         bool colinear = false;
 
-                        if (mag(ps) < SMALL)
+                        if (mag(ps) < small)
                         {
                             // colinear because P and S are the same point
                             colinear = true;
@@ -548,7 +548,7 @@ void Foam::starMesh::createCoupleMatches()
                 {
                     label nextPointLabel = -1;
                     label usedI = -1;
-                    scalar minAlpha = GREAT;
+                    scalar minAlpha = great;
 
                     label i = 0;
 
@@ -742,7 +742,7 @@ void Foam::starMesh::createCoupleMatches()
                 {
                     label nextPointLabel = -1;
                     label usedI = -1;
-                    scalar minAlpha = GREAT;
+                    scalar minAlpha = great;
 
                     label i = 0;
 
@@ -1000,7 +1000,7 @@ void Foam::starMesh::createCoupleMatches()
                 // and exit.
 
                 vector planeNormal = newMasterFace.normal(points_);
-                planeNormal /= mag(planeNormal) + VSMALL;
+                planeNormal /= mag(planeNormal) + vSmall;
 
                 #ifdef DEBUG_RIGHT_HAND_WALK
                 Info<< "planeNormal: " << planeNormal << endl;
@@ -1117,17 +1117,17 @@ void Foam::starMesh::createCoupleMatches()
                     // vector along the edge
                     vector ahead = curEdge.vec(points_);
                     ahead -= planeNormal*(planeNormal & ahead);
-                    ahead /= mag(ahead) + VSMALL;
+                    ahead /= mag(ahead) + vSmall;
 
                     // vector pointing right
                     vector right = ahead ^ planeNormal;
-                    right /= mag(right) + VSMALL;
+                    right /= mag(right) + vSmall;
 
                     // first edge taken for reference
                     edge nextEdge = edgesToConsider.first();
                     vector nextEdgeVec = nextEdge.vec(points_);
                     nextEdgeVec -= planeNormal*(planeNormal & nextEdgeVec);
-                    nextEdgeVec /= mag(nextEdgeVec) + VSMALL;
+                    nextEdgeVec /= mag(nextEdgeVec) + vSmall;
 
                     scalar rightTurn = nextEdgeVec & right;
                     scalar goStraight = nextEdgeVec & ahead;
@@ -1148,7 +1148,7 @@ void Foam::starMesh::createCoupleMatches()
                         // right-hand walk rule
                         vector newDir = etcIter().vec(points_);
                         newDir -= planeNormal*(planeNormal & newDir);
-                        newDir /= mag(newDir) + VSMALL;
+                        newDir /= mag(newDir) + vSmall;
 
                         scalar curRightTurn = newDir & right;
                         scalar curGoStraight = newDir & ahead;
@@ -1345,7 +1345,7 @@ void Foam::starMesh::createCoupleMatches()
                 (
                     masterFace.normal(points_)
                   & intersectedFace.normal(points_)
-                ) < VSMALL
+                ) < vSmall
             )
             {
                 intersectedFace.flip();

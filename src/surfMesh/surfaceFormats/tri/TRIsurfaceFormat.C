@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ bool Foam::fileFormats::TRIsurfaceFormat<Face>::read
     this->storedFaces().transfer(faceLst);
 
     this->addZones(sizes);
-    this->stitchFaces(SMALL);
+    this->stitchFaces(small);
     return true;
 }
 

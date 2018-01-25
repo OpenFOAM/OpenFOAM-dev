@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ Foam::scalar Foam::sampledSet::calcSign
 
     scalar magVec = mag(vec);
 
-    if (magVec < VSMALL)
+    if (magVec < vSmall)
     {
         // Sample on face centre. Regard as inside
         return -1;
@@ -152,7 +152,7 @@ Foam::scalar Foam::sampledSet::calcSign
 
     vector n = mesh().faceAreas()[facei];
 
-    n /= mag(n) + VSMALL;
+    n /= mag(n) + vSmall;
 
     return n & vec;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,8 +217,8 @@ void fWallFunctionFvPatchScalarField::updateCoeffs()
             scalar epsc = epsilon[celli];
             scalar kc = k[celli];
 
-            f[facei] = N*v2c*epsc/(sqr(kc) + ROOTVSMALL);
-            f[facei] /= sqr(uTau) + ROOTVSMALL;
+            f[facei] = N*v2c*epsc/(sqr(kc) + rootVSmall);
+            f[facei] /= sqr(uTau) + rootVSmall;
         }
         else
         {

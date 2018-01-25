@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,7 +186,7 @@ void Foam::hierarchGeomDecomp::findBinary
     label high = values.size();
 
     // Safeguards to avoid infinite loop.
-    scalar midValuePrev = VGREAT;
+    scalar midValuePrev = vGreat;
 
     while (true)
     {
@@ -221,7 +221,7 @@ void Foam::hierarchGeomDecomp::findBinary
         mid = findLower(values, midValue, low, high);
 
         // Safeguard if same as previous.
-        bool hasNotChanged = (mag(midValue-midValuePrev) < SMALL);
+        bool hasNotChanged = (mag(midValue-midValuePrev) < small);
 
         if (returnReduce(hasNotChanged, andOp<bool>()))
         {
@@ -261,7 +261,7 @@ void Foam::hierarchGeomDecomp::findBinary
     label high = values.size();
 
     // Safeguards to avoid infinite loop.
-    scalar midValuePrev = VGREAT;
+    scalar midValuePrev = vGreat;
 
     while (true)
     {
@@ -301,7 +301,7 @@ void Foam::hierarchGeomDecomp::findBinary
         mid = findLower(values, midValue, low, high);
 
         // Safeguard if same as previous.
-        bool hasNotChanged = (mag(midValue-midValuePrev) < SMALL);
+        bool hasNotChanged = (mag(midValue-midValuePrev) < small);
 
         if (returnReduce(hasNotChanged, andOp<bool>()))
         {
@@ -354,7 +354,7 @@ void Foam::hierarchGeomDecomp::sortComponent
         (
             sortedCoord.size()
           ? sortedCoord[0]
-          : GREAT
+          : great
         ),
         minOp<scalar>()
     );
@@ -364,7 +364,7 @@ void Foam::hierarchGeomDecomp::sortComponent
         (
             sortedCoord.size()
           ? sortedCoord.last()
-          : -GREAT
+          : -great
         ),
         maxOp<scalar>()
     );
@@ -392,7 +392,7 @@ void Foam::hierarchGeomDecomp::sortComponent
         label localSize = -1;     // offset from leftOffset
 
         // Value at right of bin (leftIndex+localSize-1)
-        scalar rightCoord = -GREAT;
+        scalar rightCoord = -great;
 
         if (bin == n_[compI]-1)
         {
@@ -541,7 +541,7 @@ void Foam::hierarchGeomDecomp::sortComponent
         (
             sortedCoord.size()
           ? sortedCoord[0]
-          : GREAT
+          : great
         ),
         minOp<scalar>()
     );
@@ -551,7 +551,7 @@ void Foam::hierarchGeomDecomp::sortComponent
         (
             sortedCoord.size()
           ? sortedCoord.last()
-          : -GREAT
+          : -great
         ),
         maxOp<scalar>()
     );
@@ -579,7 +579,7 @@ void Foam::hierarchGeomDecomp::sortComponent
         label localSize = -1;     // offset from leftOffset
 
         // Value at right of bin (leftIndex+localSize-1)
-        scalar rightCoord = -GREAT;
+        scalar rightCoord = -great;
 
         if (bin == n_[compI]-1)
         {

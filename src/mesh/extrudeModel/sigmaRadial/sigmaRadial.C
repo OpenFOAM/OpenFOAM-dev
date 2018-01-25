@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ sigmaRadial::sigmaRadial(const dictionary& dict)
     pRef_(readScalar(coeffDict_.lookup("pRef"))),
     pStrat_(readScalar(coeffDict_.lookup("pStrat")))
 {
-    if (mag(expansionRatio() - 1.0) > SMALL)
+    if (mag(expansionRatio() - 1.0) > small)
     {
         WarningInFunction
             << "Ignoring expansionRatio setting." << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,7 +176,7 @@ inline void Foam::Boussinesq<Specie>::operator+=
     scalar Y1 = this->Y();
     Specie::operator+=(b);
 
-    if (mag(this->Y()) > SMALL)
+    if (mag(this->Y()) > small)
     {
         Y1 /= this->Y();
         const scalar Y2 = b.Y()/this->Y();
@@ -206,7 +206,7 @@ inline Foam::Boussinesq<Specie> Foam::operator+
 {
     Specie sp(static_cast<const Specie&>(b1) + static_cast<const Specie&>(b2));
 
-    if (mag(sp.Y()) < SMALL)
+    if (mag(sp.Y()) < small)
     {
         return Boussinesq<Specie>
         (

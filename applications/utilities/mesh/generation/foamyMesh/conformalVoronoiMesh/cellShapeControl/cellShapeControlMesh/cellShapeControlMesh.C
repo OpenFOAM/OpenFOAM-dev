@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ word cellShapeControlMesh::meshSubDir = "cellShapeControlMesh";
 //    geometryToConformTo.findSurfaceNearest
 //    (
 //        pt,
-//        sqr(GREAT),
+//        sqr(great),
 //        surfHit,
 //        hitSurface
 //    );
@@ -92,7 +92,7 @@ word cellShapeControlMesh::meshSubDir = "cellShapeControlMesh";
 //
 //    const label s = 36;//foamyHexMeshControls().alignmentSearchSpokes();
 //
-//    scalar closestSpokeHitDistance = GREAT;
+//    scalar closestSpokeHitDistance = great;
 //
 //    pointIndexHit closestSpokeHit;
 //
@@ -194,7 +194,7 @@ word cellShapeControlMesh::meshSubDir = "cellShapeControlMesh";
 //    // Secondary alignment
 //    vector ns = np ^ na;
 //
-//    if (mag(ns) < SMALL)
+//    if (mag(ns) < small)
 //    {
 //        FatalErrorInFunction
 //            << "Parallel normals detected in spoke search." << nl
@@ -781,7 +781,7 @@ Foam::label Foam::cellShapeControlMesh::estimateCellCount
             averagedPointCellSize /= 4;
             //averagedPointCellSize = ::sqrt(averagedPointCellSize);
 
-//            if (averagedPointCellSize < SMALL)
+//            if (averagedPointCellSize < small)
 //            {
 //                Pout<< "Volume = " << volume << endl;
 //

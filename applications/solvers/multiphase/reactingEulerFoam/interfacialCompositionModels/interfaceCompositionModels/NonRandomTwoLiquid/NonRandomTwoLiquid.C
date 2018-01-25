@@ -185,8 +185,8 @@ update
         (
             sqr(X2)
            *(
-                tau21*sqr(G21)/max(sqr(X1 + X2*G21), SMALL)
-              + tau12*G12/max(sqr(X2 + X1*G12), SMALL)
+                tau21*sqr(G21)/max(sqr(X1 + X2*G21), small)
+              + tau12*G12/max(sqr(X2 + X1*G12), small)
             )
         );
     gamma2_ =
@@ -194,8 +194,8 @@ update
         (
             sqr(X1)
            *(
-                tau12*sqr(G12)/max(sqr(X2 + X1*G12), SMALL)
-              + tau21*G21/max(sqr(X1 + X2*G21), SMALL)
+                tau12*sqr(G12)/max(sqr(X2 + X1*G12), small)
+              + tau21*G21/max(sqr(X1 + X2*G21), small)
             )
         );
 }

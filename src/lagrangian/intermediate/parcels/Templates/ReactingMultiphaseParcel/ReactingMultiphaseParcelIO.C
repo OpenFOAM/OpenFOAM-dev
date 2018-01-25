@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,9 +69,9 @@ Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 
         // scale the mass fractions
         const scalarField& YMix = this->Y_;
-        YGas_ /= YMix[GAS] + ROOTVSMALL;
-        YLiquid_ /= YMix[LIQ] + ROOTVSMALL;
-        YSolid_ /= YMix[SLD] + ROOTVSMALL;
+        YGas_ /= YMix[GAS] + rootVSmall;
+        YLiquid_ /= YMix[LIQ] + rootVSmall;
+        YSolid_ /= YMix[SLD] + rootVSmall;
     }
 
     // Check state of Istream
@@ -147,7 +147,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         )
         {
             ReactingMultiphaseParcel<ParcelType>& p = iter();
-            p.YGas_[j] = YGas[i++]/(p.Y()[GAS] + ROOTVSMALL);
+            p.YGas_[j] = YGas[i++]/(p.Y()[GAS] + rootVSmall);
         }
     }
     // Populate YLiquid for each parcel
@@ -172,7 +172,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         )
         {
             ReactingMultiphaseParcel<ParcelType>& p = iter();
-            p.YLiquid_[j] = YLiquid[i++]/(p.Y()[LIQ] + ROOTVSMALL);
+            p.YLiquid_[j] = YLiquid[i++]/(p.Y()[LIQ] + rootVSmall);
         }
     }
     // Populate YSolid for each parcel
@@ -197,7 +197,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         )
         {
             ReactingMultiphaseParcel<ParcelType>& p = iter();
-            p.YSolid_[j] = YSolid[i++]/(p.Y()[SLD] + ROOTVSMALL);
+            p.YSolid_[j] = YSolid[i++]/(p.Y()[SLD] + rootVSmall);
         }
     }
 }

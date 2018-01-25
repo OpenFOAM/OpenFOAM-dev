@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::axesRotation::calcTransform
 
     b = b - (b & a)*a;
 
-    if (mag(b) < SMALL)
+    if (mag(b) < small)
     {
         FatalErrorInFunction
             << "axis1, axis2 appear co-linear: "

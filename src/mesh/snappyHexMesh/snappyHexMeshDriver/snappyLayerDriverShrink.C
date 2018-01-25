@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ void Foam::snappyLayerDriver::sumWeights
 
             scalar eMag = max
             (
-                VSMALL,
+                vSmall,
                 mag
                 (
                     pts[meshPoints[e[1]]]
@@ -330,7 +330,7 @@ void Foam::snappyLayerDriver::smoothPatchNormals
             // full smoothing neighbours + point value
             average[pointi] = 0.5*(normals[pointi]+average[pointi]);
             normals[pointi] = average[pointi];
-            normals[pointi] /= mag(normals[pointi]) + VSMALL;
+            normals[pointi] /= mag(normals[pointi]) + vSmall;
         }
     }
 }
@@ -419,7 +419,7 @@ void Foam::snappyLayerDriver::smoothNormals
                 //full smoothing neighbours + point value
                 average[pointi] = 0.5*(normals[pointi]+average[pointi]);
                 normals[pointi] = average[pointi];
-                normals[pointi] /= mag(normals[pointi]) + VSMALL;
+                normals[pointi] /= mag(normals[pointi]) + vSmall;
             }
         }
     }
@@ -445,7 +445,7 @@ bool Foam::snappyLayerDriver::isMaxEdge
     vector v0(points[e[0]] - pointWallDist[e[0]].origin());
     scalar magV0(mag(v0));
 
-    if (magV0 < SMALL)
+    if (magV0 < small)
     {
         return false;
     }
@@ -453,7 +453,7 @@ bool Foam::snappyLayerDriver::isMaxEdge
     vector v1(points[e[1]] - pointWallDist[e[1]].origin());
     scalar magV1(mag(v1));
 
-    if (magV1 < SMALL)
+    if (magV1 < small)
     {
         return false;
     }
@@ -1058,7 +1058,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
                 //const point medialAxisPt = e.centre(points);
                 vector eVec = e.vec(points);
                 scalar eMag = mag(eVec);
-                if (eMag > VSMALL)
+                if (eMag > vSmall)
                 {
                     eVec /= eMag;
 
@@ -1290,7 +1290,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
             scalar wDist2 = pointWallDist[pointi].distSqr();
             scalar mDist = medialDist[pointi];
 
-            if (wDist2 < sqr(SMALL) && mDist < SMALL)
+            if (wDist2 < sqr(small) && mDist < small)
             //- Note: maybe less strict:
             //(
             //    wDist2 < sqr(meshRefiner_.mergeDistance())
@@ -1452,15 +1452,15 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
             //- Option 1: look only at extrusion thickness v.s. distance
             //  to nearest (medial axis or static) point.
             scalar mDist = medialDist[pointi];
-            scalar thicknessRatio = thickness[patchPointi]/(mDist+VSMALL);
+            scalar thicknessRatio = thickness[patchPointi]/(mDist+vSmall);
 
             //- Option 2: Look at component in the direction
             //  of nearest (medial axis or static) point.
             vector n =
                 patchDisp[patchPointi]
-              / (mag(patchDisp[patchPointi]) + VSMALL);
+              / (mag(patchDisp[patchPointi]) + vSmall);
             vector mVec = mesh.points()[pointi]-medialVec[pointi];
-            mVec /= mag(mVec)+VSMALL;
+            mVec /= mag(mVec)+vSmall;
             thicknessRatio *= (n&mVec);
 
             if (thicknessRatio > maxThicknessToMedialRatio)
@@ -1664,7 +1664,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
 
             forAll(displacement, i)
             {
-                if (medialRatio[i] > SMALL && medialRatio[i] < 1-SMALL)
+                if (medialRatio[i] > small && medialRatio[i] < 1-small)
                 {
                     displacement[i] =
                         (1-lambda)*displacement[i]
@@ -1688,7 +1688,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
 
             forAll(displacement, i)
             {
-                if (medialRatio[i] > SMALL && medialRatio[i] < 1-SMALL)
+                if (medialRatio[i] > small && medialRatio[i] < 1-small)
                 {
                     displacement[i] = (1-mu)*displacement[i]+mu*average[i];
                 }

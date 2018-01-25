@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ Foam::scalarField Foam::cellCuts::expand
     const scalarField& weights
 )
 {
-    scalarField result(size, -GREAT);
+    scalarField result(size, -great);
 
     forAll(labels, labelI)
     {
@@ -136,7 +136,7 @@ void Foam::cellCuts::syncProc()
 
     syncTools::syncPointList(mesh(), pointIsCut_, orEqOp<bool>(), false);
     syncTools::syncEdgeList(mesh(), edgeIsCut_, orEqOp<bool>(), false);
-    syncTools::syncEdgeList(mesh(), edgeWeight_, maxEqOp<scalar>(), -GREAT);
+    syncTools::syncEdgeList(mesh(), edgeWeight_, maxEqOp<scalar>(), -great);
 
     {
         const label nBnd = mesh().nFaces()-mesh().nInternalFaces();
@@ -1761,7 +1761,7 @@ Foam::scalarField Foam::cellCuts::loopWeights(const labelList& loop) const
         }
         else
         {
-            weights[fp] = -GREAT;
+            weights[fp] = -great;
         }
     }
     return weights;
@@ -2194,7 +2194,7 @@ void Foam::cellCuts::setFromCellLoops()
         if (!edgeIsCut_[edgeI])
         {
             // Weight not used. Set to illegal value to make any use fall over.
-            edgeWeight_[edgeI] = -GREAT;
+            edgeWeight_[edgeI] = -great;
         }
     }
 }
@@ -2648,7 +2648,7 @@ void Foam::cellCuts::calcLoopsAndAddressing(const labelList& cutCells)
         else
         {
             // Weight not used. Set to illegal value to make any use fall over.
-            edgeWeight_[edgeI] = -GREAT;
+            edgeWeight_[edgeI] = -great;
         }
     }
 
@@ -2929,7 +2929,7 @@ Foam::cellCuts::cellCuts
     edgeVertex(mesh),
     pointIsCut_(mesh.nPoints(), false),
     edgeIsCut_(mesh.nEdges(), false),
-    edgeWeight_(mesh.nEdges(), -GREAT),
+    edgeWeight_(mesh.nEdges(), -great),
     faceSplitCut_(cellLabels.size()),
     cellLoops_(mesh.nCells()),
     nLoops_(-1),
@@ -2974,7 +2974,7 @@ Foam::cellCuts::cellCuts
     edgeVertex(mesh),
     pointIsCut_(mesh.nPoints(), false),
     edgeIsCut_(mesh.nEdges(), false),
-    edgeWeight_(mesh.nEdges(), -GREAT),
+    edgeWeight_(mesh.nEdges(), -great),
     faceSplitCut_(refCells.size()),
     cellLoops_(mesh.nCells()),
     nLoops_(-1),
@@ -3020,7 +3020,7 @@ Foam::cellCuts::cellCuts
     edgeVertex(mesh),
     pointIsCut_(mesh.nPoints(), false),
     edgeIsCut_(mesh.nEdges(), false),
-    edgeWeight_(mesh.nEdges(), -GREAT),
+    edgeWeight_(mesh.nEdges(), -great),
     faceSplitCut_(cellLabels.size()),
     cellLoops_(mesh.nCells()),
     nLoops_(-1),
@@ -3120,7 +3120,7 @@ Foam::pointField Foam::cellCuts::loopPoints(const label celli) const
         }
         else
         {
-            loopPts[fp] = coord(cut, -GREAT);
+            loopPts[fp] = coord(cut, -great);
         }
     }
     return loopPts;

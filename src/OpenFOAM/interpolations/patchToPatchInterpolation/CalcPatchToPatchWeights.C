@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
     pointWeightsPtr_ = new FieldField<Field, scalar>(toPatch_.nPoints());
     FieldField<Field, scalar>& pointWeights = *pointWeightsPtr_;
 
-    pointDistancePtr_ = new scalarField(toPatch_.nPoints(), GREAT);
+    pointDistancePtr_ = new scalarField(toPatch_.nPoints(), great);
     scalarField& pointDistance = *pointDistancePtr_;
 
     const pointField& fromPatchPoints = fromPatch_.localPoints();
@@ -118,7 +118,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
             // Grab hit point
             hitPoint = curHit.hitPoint();
         }
-        else if (projectionTol_ > SMALL)
+        else if (projectionTol_ > small)
         {
             // Check for a near miss
             pointHit ph =
@@ -140,7 +140,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                 );
 
             // Calculate the local tolerance
-            scalar minEdgeLength = GREAT;
+            scalar minEdgeLength = great;
 
             // Do shortest edge of hit object
             edgeList hitFaceEdges =
@@ -218,7 +218,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                             hitFacePoints[masterPointi]
                           - hitPoint
                         )
-                      + VSMALL
+                      + vSmall
                     );
             }
 
@@ -238,7 +238,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcFaceAddressing() const
     faceWeightsPtr_ = new FieldField<Field, scalar>(toPatch_.size());
     FieldField<Field, scalar>& faceWeights = *faceWeightsPtr_;
 
-    faceDistancePtr_ = new scalarField(toPatch_.size(), GREAT);
+    faceDistancePtr_ = new scalarField(toPatch_.size(), great);
     scalarField& faceDistance = *faceDistancePtr_;
 
     if (debug)
@@ -337,7 +337,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcFaceAddressing() const
                             fromPatchFaceCentres[neighbours[nI]]
                           - curHit.hitPoint()
                         )
-                      + VSMALL
+                      + vSmall
                     );
                 }
             }

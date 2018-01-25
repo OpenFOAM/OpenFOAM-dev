@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,22 +175,22 @@ void Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::reduceMechanism
                         nbPairs++;
                         rABOtherSpec(A, otherS) = B;
                     }
-                    if (NCi>VSMALL)
+                    if (NCi>vSmall)
                     {
                         CFluxAB(A, otherS) +=
                             fr*Acoeff*sC_[A]*Bcoeff*sC_[B]/NCi;
                     }
-                    if (NHi>VSMALL)
+                    if (NHi>vSmall)
                     {
                         HFluxAB(A, otherS) +=
                             fr*Acoeff*sH_[A]*Bcoeff*sH_[B]/NHi;
                     }
-                    if (NOi>VSMALL)
+                    if (NOi>vSmall)
                     {
                         OFluxAB(A, otherS) +=
                             fr*Acoeff*sO_[A]*Bcoeff*sO_[B]/NOi;
                     }
-                    if (NNi>VSMALL)
+                    if (NNi>vSmall)
                     {
                         NFluxAB(A, otherS) +=
                             fr*Acoeff*sN_[A]*Bcoeff*sN_[B]/NNi;
@@ -201,40 +201,40 @@ void Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::reduceMechanism
                 else
                 {
                     label otherS = rABPos(B, A);
-                    if (NCi>VSMALL)
+                    if (NCi>vSmall)
                     {
                         CFluxAB(B, otherS) +=
                             fr*Acoeff*sC_[A]*Bcoeff*sC_[B]/NCi;
                     }
-                    if (NHi>VSMALL)
+                    if (NHi>vSmall)
                     {
                         HFluxAB(B, otherS) +=
                             fr*Acoeff*sH_[A]*Bcoeff*sH_[B]/NHi;
                     }
-                    if (NOi>VSMALL)
+                    if (NOi>vSmall)
                     {
                         OFluxAB(B, otherS) +=
                             fr*Acoeff*sO_[A]*Bcoeff*sO_[B]/NOi;
                     }
-                    if (NNi>VSMALL)
+                    if (NNi>vSmall)
                     {
                         NFluxAB(B, otherS) +=
                             fr*Acoeff*sN_[A]*Bcoeff*sN_[B]/NNi;
                     }
                 }
-                if (NCi>VSMALL)
+                if (NCi>vSmall)
                 {
                     CFlux += fr*Acoeff*sC_[A]*Bcoeff*sC_[B]/NCi;
                 }
-                if (NHi>VSMALL)
+                if (NHi>vSmall)
                 {
                     HFlux += fr*Acoeff*sH_[A]*Bcoeff*sH_[B]/NHi;
                 }
-                if (NOi>VSMALL)
+                if (NOi>vSmall)
                 {
                     OFlux += fr*Acoeff*sO_[A]*Bcoeff*sO_[B]/NOi;
                 }
-                if (NNi>VSMALL)
+                if (NNi>vSmall)
                 {
                     NFlux += fr*Acoeff*sN_[A]*Bcoeff*sN_[B]/NNi;
                 }
@@ -250,7 +250,7 @@ void Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::reduceMechanism
         this->activeSpecies_[i] = false;
     }
 
-    if (CFlux > VSMALL)
+    if (CFlux > vSmall)
     {
         SortableListEFA<scalar> pairsFlux(nbPairs);
         labelList source(nbPairs);
@@ -316,7 +316,7 @@ void Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::reduceMechanism
         }
     }
 
-    if (HFlux > VSMALL)
+    if (HFlux > vSmall)
     {
         SortableListEFA<scalar> pairsFlux(nbPairs);
         labelList source(nbPairs);
@@ -379,7 +379,7 @@ void Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::reduceMechanism
         }
     }
 
-    if (OFlux > VSMALL)
+    if (OFlux > vSmall)
     {
         SortableListEFA<scalar> pairsFlux(nbPairs);
         labelList source(nbPairs);
@@ -441,7 +441,7 @@ void Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::reduceMechanism
         }
     }
 
-    if (NFlux > VSMALL)
+    if (NFlux > vSmall)
     {
         SortableListEFA<scalar> pairsFlux(nbPairs);
         labelList source(nbPairs);

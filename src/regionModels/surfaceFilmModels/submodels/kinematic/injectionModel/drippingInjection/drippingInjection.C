@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ void drippingInjection::correct
 
     forAll(gNorm, i)
     {
-        if (gNorm[i] > SMALL)
+        if (gNorm[i] > small)
         {
             const scalar ddelta = max(0.0, delta[i] - deltaStable_);
             massDrip[i] +=

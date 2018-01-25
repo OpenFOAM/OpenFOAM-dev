@@ -9,7 +9,7 @@
 
     scalar range = maxValue - minValue;
 
-    if (maxValue - minValue < SMALL)
+    if (maxValue - minValue < small)
     {
         minValue = d/20.0;
         maxValue = d;

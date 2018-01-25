@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -338,7 +338,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::combineMeshGeometry
     bool hasMerged = mergePoints
     (
         points,
-        SMALL,
+        small,
         false,
         oldToNew,
         newPoints
@@ -614,7 +614,7 @@ processValues
         case opSumDirection:
         {
             vector n(dict_.lookup("direction"));
-            n /= mag(n) + ROOTVSMALL;
+            n /= mag(n) + rootVSmall;
             const scalarField nv(n & values);
 
             return sum(pos0(nv)*n*(nv));
@@ -622,7 +622,7 @@ processValues
         case opSumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
-            n /= mag(n) + ROOTVSMALL;
+            n /= mag(n) + rootVSmall;
             const scalarField nv(n & values);
 
             return sum(pos0(nv)*n*(nv));

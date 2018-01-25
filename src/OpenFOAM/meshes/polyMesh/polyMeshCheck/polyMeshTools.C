@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,7 +195,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceWeights
         scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
         scalar dNei = mag(fa & (cellCtrs[nei[facei]]-fc));
 
-        weight[facei] = min(dNei,dOwn)/(dNei+dOwn+VSMALL);
+        weight[facei] = min(dNei,dOwn)/(dNei+dOwn+vSmall);
     }
 
 
@@ -220,7 +220,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceWeights
                 scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
                 scalar dNei = mag(fa & (neiCc[bFacei]-fc));
 
-                weight[facei] = min(dNei,dOwn)/(dNei+dOwn+VSMALL);
+                weight[facei] = min(dNei,dOwn)/(dNei+dOwn+vSmall);
             }
         }
     }
@@ -248,7 +248,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::volRatio
         scalar volOwn = vol[own[facei]];
         scalar volNei = vol[nei[facei]];
 
-        ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+VSMALL);
+        ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+vSmall);
     }
 
 
@@ -270,7 +270,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::volRatio
                 scalar volOwn = vol[own[facei]];
                 scalar volNei = neiVol[bFacei];
 
-                ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+VSMALL);
+                ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+vSmall);
             }
         }
     }

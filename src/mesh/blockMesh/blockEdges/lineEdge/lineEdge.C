@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ Foam::blockEdges::lineEdge::~lineEdge()
 
 Foam::point Foam::blockEdges::lineEdge::position(const scalar lambda) const
 {
-    if (lambda < -SMALL || lambda > 1+SMALL)
+    if (lambda < -small || lambda > 1+small)
     {
         FatalErrorInFunction
             << "Parameter out of range, lambda = " << lambda

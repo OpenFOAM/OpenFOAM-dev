@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcNut() const
     return max
     (
         scalar(0),
-        sqr(calcUTau(magGradU))/(magGradU + ROOTVSMALL) - nuw
+        sqr(calcUTau(magGradU))/(magGradU + rootVSmall) - nuw
     );
 }
 
@@ -93,10 +93,10 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcUTau
     {
         scalar ut = sqrt((nutw[facei] + nuw[facei])*magGradU[facei]);
 
-        if (ut > ROOTVSMALL)
+        if (ut > rootVSmall)
         {
             int iter = 0;
-            scalar err = GREAT;
+            scalar err = great;
 
             do
             {
@@ -117,7 +117,7 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcUTau
                 err = mag((ut - uTauNew)/ut);
                 ut = uTauNew;
 
-            } while (ut > ROOTVSMALL && err > 0.01 && ++iter < 10);
+            } while (ut > rootVSmall && err > 0.01 && ++iter < 10);
 
             uTau[facei] = max(0.0, ut);
         }

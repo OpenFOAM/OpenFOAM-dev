@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,12 +153,12 @@ void Foam::solidReaction<ReactionThermo>::solidReactionStrLeft
         {
             reaction << " + ";
         }
-        if (mag(glhs()[i].stoichCoeff - 1) > SMALL)
+        if (mag(glhs()[i].stoichCoeff - 1) > small)
         {
             reaction << glhs()[i].stoichCoeff;
         }
         reaction << gasSpecies()[glhs()[i].index];
-        if (mag(glhs()[i].exponent - glhs()[i].stoichCoeff) > SMALL)
+        if (mag(glhs()[i].exponent - glhs()[i].stoichCoeff) > small)
         {
             reaction << "^" << glhs()[i].exponent;
         }
@@ -179,12 +179,12 @@ void Foam::solidReaction<ReactionThermo>::solidReactionStrRight
         {
             reaction << " + ";
         }
-        if (mag(grhs()[i].stoichCoeff - 1) > SMALL)
+        if (mag(grhs()[i].stoichCoeff - 1) > small)
         {
             reaction << grhs()[i].stoichCoeff;
         }
         reaction << gasSpecies()[grhs()[i].index];
-        if (mag(grhs()[i].exponent - grhs()[i].stoichCoeff) > SMALL)
+        if (mag(grhs()[i].exponent - grhs()[i].stoichCoeff) > small)
         {
             reaction << "^" << grhs()[i].exponent;
         }

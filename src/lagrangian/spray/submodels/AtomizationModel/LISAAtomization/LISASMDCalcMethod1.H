@@ -4,7 +4,7 @@
     scalar minValue = min(d, dD/10.0);
     scalar maxValue = dD;
 
-    if (maxValue - minValue < SMALL)
+    if (maxValue - minValue < small)
     {
         minValue = d/10.0;
     }

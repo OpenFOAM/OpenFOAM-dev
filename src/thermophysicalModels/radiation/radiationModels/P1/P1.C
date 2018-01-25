@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,7 +217,7 @@ void Foam::radiation::P1::calculate()
     E_ = absorptionEmission_->E();
     const volScalarField sigmaEff(scatter_->sigmaEff());
 
-    const dimensionedScalar a0 ("a0", a_.dimensions(), ROOTVSMALL);
+    const dimensionedScalar a0 ("a0", a_.dimensions(), rootVSmall);
 
     // Construct diffusion
     const volScalarField gamma

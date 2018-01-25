@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ void Foam::searchableCylinder::boundingSpheres
     radiusSqr[0] = Foam::magSqr(point1_-centres[0]) + Foam::sqr(radius_);
 
     // Add a bit to make sure all points are tested inside
-    radiusSqr += Foam::sqr(SMALL);
+    radiusSqr += Foam::sqr(small);
 }
 
 
@@ -91,7 +91,7 @@ Foam::pointIndexHit Foam::searchableCylinder::findNearest
     v -= parallel*unitDir_;
     scalar magV = mag(v);
 
-    if (magV < ROOTVSMALL)
+    if (magV < rootVSmall)
     {
         v = Zero;
     }
@@ -119,12 +119,12 @@ Foam::pointIndexHit Foam::searchableCylinder::findNearest
 
         // Nearest cylinder point
         point cylPt;
-        if (magV < ROOTVSMALL)
+        if (magV < rootVSmall)
         {
             // Point exactly on centre line. Take any point on wall.
             vector e1 = point(1,0,0) ^ unitDir_;
             scalar magE1 = mag(e1);
-            if (magE1 < SMALL)
+            if (magE1 < small)
             {
                 e1 = point(0,1,0) ^ unitDir_;
                 magE1 = mag(e1);
@@ -213,7 +213,7 @@ void Foam::searchableCylinder::findLineAll
     // Line as P = start+t*V  where V is unit vector and t=[0..mag(end-start)]
     vector V(end-start);
     scalar magV = mag(V);
-    if (magV < ROOTVSMALL)
+    if (magV < rootVSmall)
     {
         return;
     }
@@ -229,12 +229,12 @@ void Foam::searchableCylinder::findLineAll
     scalar tPoint2;
 
     // Maintain the two intersections with the endcaps
-    scalar tNear = VGREAT;
-    scalar tFar = VGREAT;
+    scalar tNear = vGreat;
+    scalar tFar = vGreat;
 
     {
         scalar s = (V&unitDir_);
-        if (mag(s) > VSMALL)
+        if (mag(s) > vSmall)
         {
             tPoint1 = -s1/s;
             tPoint2 = -(point2Start&unitDir_)/s;
@@ -275,8 +275,8 @@ void Foam::searchableCylinder::findLineAll
         {
             // Vector perpendicular to cylinder. Check for outside already done
             // above so just set tpoint to allow all.
-            tPoint1 = -VGREAT;
-            tPoint2 = VGREAT;
+            tPoint1 = -vGreat;
+            tPoint2 = vGreat;
         }
     }
 
@@ -292,18 +292,18 @@ void Foam::searchableCylinder::findLineAll
 
     const scalar disc = b*b-4*a*c;
 
-    scalar t1 = -VGREAT;
-    scalar t2 = VGREAT;
+    scalar t1 = -vGreat;
+    scalar t2 = vGreat;
 
     if (disc < 0)
     {
         // Fully outside
         return;
     }
-    else if (disc < ROOTVSMALL)
+    else if (disc < rootVSmall)
     {
         // Single solution
-        if (mag(a) > ROOTVSMALL)
+        if (mag(a) > rootVSmall)
         {
             t1 = -b/(2*a);
 
@@ -344,7 +344,7 @@ void Foam::searchableCylinder::findLineAll
     }
     else
     {
-        if (mag(a) > ROOTVSMALL)
+        if (mag(a) > rootVSmall)
         {
             scalar sqrtDisc = sqrt(disc);
 

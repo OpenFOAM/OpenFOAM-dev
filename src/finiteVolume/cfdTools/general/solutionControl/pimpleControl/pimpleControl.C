@@ -96,7 +96,7 @@ bool Foam::pimpleControl::criteriaSatisfied()
             {
                 const scalar iniRes =
                     residualControl_[fieldi].initialResidual
-                  + ROOTVSMALL;
+                  + rootVSmall;
 
                 relative = residual/iniRes;
                 relCheck = relative < residualControl_[fieldi].relTol;

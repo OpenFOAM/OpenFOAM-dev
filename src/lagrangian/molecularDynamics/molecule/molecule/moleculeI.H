@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,7 +149,7 @@ inline Foam::molecule::constantProperties::constantProperties
             );
         }
 
-        if (eigenValues(momOfInertia).x() < VSMALL)
+        if (eigenValues(momOfInertia).x() < vSmall)
         {
             FatalErrorInFunction
                 << "An eigenvalue of the inertia tensor is zero, the molecule "
@@ -157,7 +157,7 @@ inline Foam::molecule::constantProperties::constantProperties
                 << nl << abort(FatalError);
         }
 
-        // Normalise the inertia tensor magnitude to avoid SMALL numbers in the
+        // Normalise the inertia tensor magnitude to avoid small numbers in the
         // components causing problems
 
         momOfInertia /= eigenValues(momOfInertia).x();
@@ -323,7 +323,7 @@ inline void Foam::molecule::constantProperties::setInteracionSiteBools
 
         pairPotentialSites_[i] = (findIndex(pairPotSiteIds, id) > -1);
 
-        electrostaticSites_[i] = (mag(siteCharges_[i]) > VSMALL);
+        electrostaticSites_[i] = (mag(siteCharges_[i]) > vSmall);
     }
 }
 
@@ -350,7 +350,7 @@ inline bool Foam::molecule::constantProperties::linearMoleculeTest() const
 
         dir /= mag(dir);
 
-        if (mag(refDir & dir) < 1 - SMALL)
+        if (mag(refDir & dir) < 1 - small)
         {
             return false;
         }

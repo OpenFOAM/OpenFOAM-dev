@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,7 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
 
     vector Ut = U_ - U_dot_nw*nw;
 
-    scalar invMagUnfA = 1/max(mag(U_dot_nw)*fA, VSMALL);
+    scalar invMagUnfA = 1/max(mag(U_dot_nw)*fA, vSmall);
 
     cloud.rhoNBF()[wppIndex][wppLocalFace] += invMagUnfA;
 
@@ -151,7 +151,7 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
 
     Ut = U_ - U_dot_nw*nw;
 
-    invMagUnfA = 1/max(mag(U_dot_nw)*fA, VSMALL);
+    invMagUnfA = 1/max(mag(U_dot_nw)*fA, vSmall);
 
     cloud.rhoNBF()[wppIndex][wppLocalFace] += invMagUnfA;
 

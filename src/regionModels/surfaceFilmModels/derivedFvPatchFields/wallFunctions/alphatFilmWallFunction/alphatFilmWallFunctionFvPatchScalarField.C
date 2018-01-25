@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,12 +203,12 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
             scalar yPlusRatio = yPlus/yPlusCrit_;
             scalar powTerm = mStar*Prt_/kappa_;
             factor =
-                mStar/(expTerm*(pow(yPlusRatio, powTerm)) - 1.0 + ROOTVSMALL);
+                mStar/(expTerm*(pow(yPlusRatio, powTerm)) - 1.0 + rootVSmall);
         }
         else
         {
             scalar expTerm = exp(min(50.0, yPlus*mStar*Pr));
-            factor = mStar/(expTerm - 1.0 + ROOTVSMALL);
+            factor = mStar/(expTerm - 1.0 + rootVSmall);
         }
 
         scalar dx = patch().deltaCoeffs()[facei];

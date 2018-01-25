@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1981,8 +1981,8 @@ void Foam::conformalVoronoiMesh::buildEdgeLocationTree
         geometryToConformTo_.globalBounds().extend(rndGen_, 1e-4)
     );
 
-    overallBb.min() -= Foam::point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-    overallBb.max() += Foam::point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+    overallBb.min() -= Foam::point(rootVSmall, rootVSmall, rootVSmall);
+    overallBb.max() += Foam::point(rootVSmall, rootVSmall, rootVSmall);
 
     edgeLocationTreePtr_.reset
     (
@@ -2008,8 +2008,8 @@ void Foam::conformalVoronoiMesh::buildSurfacePtLocationTree
         geometryToConformTo_.globalBounds().extend(rndGen_, 1e-4)
     );
 
-    overallBb.min() -= Foam::point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-    overallBb.max() += Foam::point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+    overallBb.min() -= Foam::point(rootVSmall, rootVSmall, rootVSmall);
+    overallBb.max() += Foam::point(rootVSmall, rootVSmall, rootVSmall);
 
     surfacePtLocationTreePtr_.reset
     (

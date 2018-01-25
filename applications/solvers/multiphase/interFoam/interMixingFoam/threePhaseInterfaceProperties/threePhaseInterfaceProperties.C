@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ void Foam::threePhaseInterfaceProperties::correctContactAngle
 
             scalarField sumTwoPhaseAlpha
             (
-                twoPhaseAlpha2 + twoPhaseAlpha3 + SMALL
+                twoPhaseAlpha2 + twoPhaseAlpha3 + small
             );
 
             twoPhaseAlpha2 /= sumTwoPhaseAlpha;

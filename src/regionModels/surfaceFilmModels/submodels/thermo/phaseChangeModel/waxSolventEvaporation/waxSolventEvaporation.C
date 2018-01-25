@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -278,13 +278,13 @@ void waxSolventEvaporation::correctModel
             const scalar Dab = filmThermo.D(pc, Tloc);
 
             // Schmidt number
-            const scalar Sc = muInfc/(rhoInfc*(Dab + ROOTVSMALL));
+            const scalar Sc = muInfc/(rhoInfc*(Dab + rootVSmall));
 
             // Sherwood number
             const scalar Sh = this->Sh(Re, Sc);
 
             // Mass transfer coefficient [m/s]
-            evapRateCoeff[celli] = rhoInfc*Sh*Dab/(L_ + ROOTVSMALL);
+            evapRateCoeff[celli] = rhoInfc*Sh*Dab/(L_ + rootVSmall);
 
             // Solvent mass transfer
             const scalar dm
@@ -313,7 +313,7 @@ void waxSolventEvaporation::correctModel
     (
         "deltaRho0",
         deltaRho.dimensions()/dimTime,
-        ROOTVSMALL/dt
+        rootVSmall/dt
     );
 
     volScalarField::Internal impingementRate

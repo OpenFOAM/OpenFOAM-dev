@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,8 +84,8 @@ Foam::blockVertices::projectVertex::operator point() const
     //       span of surfaces themselves. Make sure to limit in case
     //       of e.g. searchablePlane which has infinite bb.
     boundBox bb(searchableSurfacesQueries::bounds(geometry_, surfaces_));
-    bb.min() = max(bb.min(), point(-GREAT, -GREAT, -GREAT));
-    bb.max() = min(bb.max(), point(GREAT, GREAT, GREAT));
+    bb.min() = max(bb.min(), point(-great, -great, -great));
+    bb.max() = min(bb.max(), point(great, great, great));
 
     searchableSurfacesQueries::findNearest
     (

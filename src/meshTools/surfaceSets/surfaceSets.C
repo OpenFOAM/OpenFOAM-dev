@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ License
 //
 //    const labelList& pEdges = mesh.pointEdges()[pointi];
 //
-//    scalar minLen = GREAT;
+//    scalar minLen = great;
 //
 //    forAll(pEdges, i)
 //    {
@@ -471,8 +471,8 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
 //        false,          // includeCut
 //        false,          // includeInside
 //        true,           // includeOutside
-//        -GREAT,         // nearDist
-//        -GREAT          // curvature
+//        -great,         // nearDist
+//        -great          // curvature
 //    );
 //
 //    outsideSource.applyToSet(topoSetSource::NEW, rawOutside);

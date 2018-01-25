@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ Foam::scalar Foam::line<Point, PointRef>::nearestDist
     Point crossab = a ^ b;
     scalar magCrossSqr = magSqr(crossab);
 
-    if (magCrossSqr > VSMALL)
+    if (magCrossSqr > vSmall)
     {
         scalar s = ((c ^ b) & crossab)/magCrossSqr;
         scalar t = ((c ^ a) & crossab)/magCrossSqr;

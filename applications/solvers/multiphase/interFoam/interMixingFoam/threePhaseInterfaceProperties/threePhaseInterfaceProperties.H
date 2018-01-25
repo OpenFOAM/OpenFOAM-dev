@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ public:
 
             return
                 (limitedAlpha2*sigma12_ + limitedAlpha3*sigma13_)
-               /(limitedAlpha2 + limitedAlpha3 + SMALL);
+               /(limitedAlpha2 + limitedAlpha3 + small);
         }
 
         tmp<volScalarField> sigmaK() const

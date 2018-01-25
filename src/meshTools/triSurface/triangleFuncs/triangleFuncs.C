@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ bool Foam::triangleFuncs::intersectAxesBundle
     //          V10:(-1.285715 8.99165e-16 -1.142858)
     //          V20:(0 0 -1.678573)
     //          i0:0
-    if (localScale < VSMALL || Foam::mag(det)/localScale < SMALL)
+    if (localScale < vSmall || Foam::mag(det)/localScale < small)
     {
         // Triangle parallel to dir
         return false;
@@ -131,7 +131,7 @@ bool Foam::triangleFuncs::intersectAxesBundle
         scalar beta = 0;
         bool inter = false;
 
-        if (Foam::mag(u1) < ROOTVSMALL)
+        if (Foam::mag(u1) < rootVSmall)
         {
             beta = u0/u2;
             if ((beta >= 0) && (beta <= 1))
@@ -540,7 +540,7 @@ bool Foam::triangleFuncs::intersect
     scalar magArea = mag(na);
     na/magArea;
 
-    if (mag(na & normal) > (1 - SMALL))
+    if (mag(na & normal) > (1 - small))
     {
         // Parallel
         return false;
@@ -615,7 +615,7 @@ bool Foam::triangleFuncs::intersect
         }
     }
 
-    scalar tol = SMALL*Foam::sqrt(magArea);
+    scalar tol = small*Foam::sqrt(magArea);
 
     if (oppositeVertex == 0)
     {

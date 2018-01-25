@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,11 +66,11 @@ Foam::tmp<Foam::scalarField> Foam::movingConeTopoFvMesh::vertexMarkup
 
     forAll(p, pI)
     {
-        if (p[pI].x() < curLeft - SMALL)
+        if (p[pI].x() < curLeft - small)
         {
             vertexMarkup[pI] = -1;
         }
-        else if (p[pI].x() > curRight + SMALL)
+        else if (p[pI].x() > curRight + small)
         {
             vertexMarkup[pI] = 1;
         }
@@ -287,7 +287,7 @@ Foam::movingConeTopoFvMesh::movingConeTopoFvMesh(const IOobject& io)
         [
             faceZones().findZoneID("leftExtrusionFaces")
         ]().localPoints()
-    ).x() - SMALL;
+    ).x() - small;
 
     curRight_ = average
     (
@@ -295,7 +295,7 @@ Foam::movingConeTopoFvMesh::movingConeTopoFvMesh(const IOobject& io)
         [
             faceZones().findZoneID("rightExtrusionFaces")
         ]().localPoints()
-    ).x() + SMALL;
+    ).x() + small;
 
     motionMask_ = vertexMarkup
     (
@@ -396,7 +396,7 @@ bool Foam::movingConeTopoFvMesh::update()
         [
             faceZones().findZoneID("leftExtrusionFaces")
         ]().localPoints()
-    ).x() - SMALL;
+    ).x() - small;
 
     curRight_ = average
     (
@@ -404,7 +404,7 @@ bool Foam::movingConeTopoFvMesh::update()
         [
             faceZones().findZoneID("rightExtrusionFaces")
         ]().localPoints()
-    ).x() + SMALL;
+    ).x() + small;
 
     return true;
 }

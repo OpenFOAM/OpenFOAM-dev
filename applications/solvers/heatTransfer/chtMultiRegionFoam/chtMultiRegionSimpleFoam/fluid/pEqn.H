@@ -27,7 +27,7 @@
     constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
 
     dimensionedScalar compressibility = fvc::domainIntegrate(psi);
-    bool compressible = (compressibility.value() > SMALL);
+    bool compressible = (compressibility.value() > small);
 
     // Solve pressure
     for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)

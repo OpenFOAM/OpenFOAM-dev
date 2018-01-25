@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,12 +47,12 @@ void Foam::fv::rotorDiskSource::calculate
     // Logging info
     scalar dragEff = 0.0;
     scalar liftEff = 0.0;
-    scalar AOAmin = GREAT;
-    scalar AOAmax = -GREAT;
+    scalar AOAmin = great;
+    scalar AOAmax = -great;
 
     forAll(cells_, i)
     {
-        if (area_[i] > ROOTVSMALL)
+        if (area_[i] > rootVSmall)
         {
             const label celli = cells_[i];
 

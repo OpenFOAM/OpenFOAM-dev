@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 int Foam::cellPointWeight::debug(debug::debugSwitch("cellPointWeight", 0));
 
-Foam::scalar Foam::cellPointWeight::tol(SMALL);
+Foam::scalar Foam::cellPointWeight::tol(small);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -89,7 +89,7 @@ void Foam::cellPointWeight::findTetrahedron
     // A suitable point in a tetrahedron was not found, find the
     // nearest.
 
-    scalar minNearDist = VGREAT;
+    scalar minNearDist = vGreat;
 
     label nearestTetI = -1;
 
@@ -188,7 +188,7 @@ void Foam::cellPointWeight::findTriangle
 
     // A suitable point in a triangle was not found, find the nearest.
 
-    scalar minNearDist = VGREAT;
+    scalar minNearDist = vGreat;
 
     label nearestTetI = -1;
 

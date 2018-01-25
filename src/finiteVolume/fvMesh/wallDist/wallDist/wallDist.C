@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
             mesh
         ),
         mesh,
-        dimensionedScalar("y" & patchTypeName_, dimLength, SMALL),
+        dimensionedScalar("y" & patchTypeName_, dimLength, small),
         patchDistMethod::patchTypes<scalar>(mesh, patchIDs_)
     ),
     nRequired_
@@ -140,7 +140,7 @@ Foam::wallDist::wallDist
             mesh
         ),
         mesh,
-        dimensionedScalar("y" & patchTypeName_, dimLength, SMALL),
+        dimensionedScalar("y" & patchTypeName_, dimLength, small),
         patchDistMethod::patchTypes<scalar>(mesh, patchIDs_)
     ),
     nRequired_

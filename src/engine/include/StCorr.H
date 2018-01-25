@@ -6,7 +6,7 @@
         dimensionedScalar Vk("Vk", dimVolume, gSum(c*mesh.V().field()));
         dimensionedScalar Ak("Ak", dimArea, 0.0);
 
-        if (Vk.value() > SMALL)
+        if (Vk.value() > small)
         {
             // Calculate kernel area from its volume
             // and the dimensionality of the case

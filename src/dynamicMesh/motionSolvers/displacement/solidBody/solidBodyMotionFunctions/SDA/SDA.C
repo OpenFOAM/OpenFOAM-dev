@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,7 @@ bool Foam::solidBodyMotionFunctions::SDA::read(const dictionary& SBMFCoeffs)
     SBMFCoeffs_.lookup("dTp") >> dTp_;
 
     // Rescale parameters according to the given scale parameter
-    if (lamda_ > 1 + SMALL)
+    if (lamda_ > 1 + small)
     {
         heaveA_ /= lamda_;
         swayA_ /= lamda_;

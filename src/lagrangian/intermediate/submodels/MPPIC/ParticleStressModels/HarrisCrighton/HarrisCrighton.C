@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ Foam::ParticleStressModels::HarrisCrighton::denominator
         max
         (
             alphaPacked_ - alpha,
-            max(eps_*(1.0 - alpha), SMALL)
+            max(eps_*(1.0 - alpha), small)
         );
 }
 

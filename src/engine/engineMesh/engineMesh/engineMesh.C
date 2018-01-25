@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,8 +44,8 @@ Foam::engineMesh::engineMesh(const IOobject& io)
     pistonIndex_(-1),
     linerIndex_(-1),
     cylinderHeadIndex_(-1),
-    deckHeight_("deckHeight", dimLength, GREAT),
-    pistonPosition_("pistonPosition", dimLength, -GREAT)
+    deckHeight_("deckHeight", dimLength, great),
+    pistonPosition_("pistonPosition", dimLength, -great)
 {
     bool foundPiston = false;
     bool foundLiner = false;
@@ -98,7 +98,7 @@ Foam::engineMesh::engineMesh(const IOobject& io)
     {
         if (pistonIndex_ != -1)
         {
-            pistonPosition_.value() = -GREAT;
+            pistonPosition_.value() = -great;
             if (boundary()[pistonIndex_].patch().localPoints().size())
             {
                 pistonPosition_.value() =
@@ -109,7 +109,7 @@ Foam::engineMesh::engineMesh(const IOobject& io)
 
         if (cylinderHeadIndex_ != -1)
         {
-            deckHeight_.value() = GREAT;
+            deckHeight_.value() = great;
             if (boundary()[cylinderHeadIndex_].patch().localPoints().size())
             {
                 deckHeight_.value() = min

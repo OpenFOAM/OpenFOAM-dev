@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void hexBlock::setHandedness()
                 vector y = p[vtxLabel(i, j+1, k)] - p[vtxLabel(i, j, k)];
                 vector z = p[vtxLabel(i, j, k+1)] - p[vtxLabel(i, j, k)];
 
-                if (mag(x) > SMALL && mag(y) > SMALL && mag(z) > SMALL)
+                if (mag(x) > small && mag(y) > small && mag(z) > small)
                 {
                     Info<< "Looking at cell "
                         << i << ' ' << j << ' ' << k

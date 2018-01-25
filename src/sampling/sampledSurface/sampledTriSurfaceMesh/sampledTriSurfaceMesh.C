@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,8 +111,8 @@ Foam::sampledTriSurfaceMesh::nonCoupledboundaryTree() const
         treeBoundBox overallBb(mesh().points());
         Random rndGen(123456);
         overallBb = overallBb.extend(rndGen, 1e-4);
-        overallBb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-        overallBb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+        overallBb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+        overallBb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
         boundaryTreePtr_.reset
         (
@@ -155,7 +155,7 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
 
     forAll(nearest, i)
     {
-        nearest[i].first() = GREAT;
+        nearest[i].first() = great;
         nearest[i].second() = labelMax;
     }
 
@@ -170,7 +170,7 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             pointIndexHit nearInfo = cellTree.findNearest
             (
                 fc[triI],
-                sqr(GREAT)
+                sqr(great)
             );
             if (nearInfo.hit())
             {
@@ -212,7 +212,7 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             pointIndexHit nearInfo = bTree.findNearest
             (
                 fc[triI],
-                sqr(GREAT)
+                sqr(great)
             );
             if (nearInfo.hit())
             {
@@ -369,7 +369,7 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                     // Find nearest point on faces of cell
                     const cell& cFaces = mesh().cells()[celli];
 
-                    scalar minDistSqr = VGREAT;
+                    scalar minDistSqr = vGreat;
 
                     forAll(cFaces, i)
                     {

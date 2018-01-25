@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,9 +58,9 @@ void inv(Field<symmTensor>& tf, const UList<symmTensor>& tf1)
     scalar scale = magSqr(tf1[0]);
     Vector<bool> removeCmpts
     (
-        magSqr(tf1[0].xx())/scale < SMALL,
-        magSqr(tf1[0].yy())/scale < SMALL,
-        magSqr(tf1[0].zz())/scale < SMALL
+        magSqr(tf1[0].xx())/scale < small,
+        magSqr(tf1[0].yy())/scale < small,
+        magSqr(tf1[0].zz())/scale < small
     );
 
     if (removeCmpts.x() || removeCmpts.y() || removeCmpts.z())

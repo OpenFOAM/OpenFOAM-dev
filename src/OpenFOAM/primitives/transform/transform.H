@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ inline tensor rotationTensor
     const scalar magSqrN3 = magSqr(n3);
 
     // n1 and n2 define a plane n3
-    if (magSqrN3 > SMALL)
+    if (magSqrN3 > small)
     {
         // Return rotational transformation tensor in the n3-plane
         return
@@ -282,7 +282,7 @@ inline symmTensor transformMask<symmTensor>(const tensor& t)
 //  Calculates scalar which increases with angle going from e0 to vec in
 //  the coordinate system e0, e1, e0^e1
 //
-//  Jumps from 2*pi -> 0 at -SMALL so hopefully parallel vectors with small
+//  Jumps from 2*pi -> 0 at -small so hopefully parallel vectors with small
 //  rounding errors should still get the same quadrant.
 //
 inline scalar pseudoAngle
@@ -295,7 +295,7 @@ inline scalar pseudoAngle
     scalar cos = vec & e0;
     scalar sin = vec & e1;
 
-    if (sin < -SMALL)
+    if (sin < -small)
     {
         return (3.0 + cos)*constant::mathematical::piByTwo;
     }

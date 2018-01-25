@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -250,7 +250,7 @@ scalar minEdgeLen(const triSurface& surf, const label pointi)
 
     const labelList& pEdges = surf.pointEdges()[pointi];
 
-    scalar minLen = GREAT;
+    scalar minLen = great;
 
     forAll(pEdges, i)
     {
@@ -578,7 +578,7 @@ void calcPointVecs
 
             scalar magMidVec = mag(midVec);
 
-            if (magMidVec > SMALL)
+            if (magMidVec > small)
             {
                 midVec /= magMidVec;
 
@@ -876,7 +876,7 @@ int main(int argc, char *argv[])
         // the edge and then interpolate this to the (border)point.
         //
 
-        vectorField borderPointVec(surf.nPoints(), vector(GREAT, GREAT, GREAT));
+        vectorField borderPointVec(surf.nPoints(), vector(great, great, great));
 
         calcPointVecs(surf, faceToEdge, faceToPoint, borderPointVec);
 
@@ -929,7 +929,7 @@ int main(int argc, char *argv[])
             {
                 const point& pt = newPoints[f[fp]];
 
-                if (mag(pt) >= GREAT/2)
+                if (mag(pt) >= great/2)
                 {
                     Info<< "newTri:" << facei << " verts:" << f
                         << " vert:" << f[fp] << " point:" << pt << endl;

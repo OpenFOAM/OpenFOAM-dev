@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ inline bool Foam::pointEdgeCollapse::update
 // Null constructor
 inline Foam::pointEdgeCollapse::pointEdgeCollapse()
 :
-    collapsePoint_(GREAT, GREAT, GREAT),
+    collapsePoint_(great, great, great),
     collapseIndex_(-2),
     collapsePriority_(-2)
 {}
@@ -145,12 +145,12 @@ inline Foam::label Foam::pointEdgeCollapse::collapsePriority() const
 
 inline bool Foam::pointEdgeCollapse::samePoint(const point& pt) const
 {
-    bool isLegal1 = (cmptMin(collapsePoint_) < 0.5*GREAT);
-    bool isLegal2 = (cmptMin(pt) < 0.5*GREAT);
+    bool isLegal1 = (cmptMin(collapsePoint_) < 0.5*great);
+    bool isLegal2 = (cmptMin(pt) < 0.5*great);
 
     if (isLegal1 && isLegal2)
     {
-        return mag(collapsePoint_ - pt) < 1e-9;//SMALL;
+        return mag(collapsePoint_ - pt) < 1e-9;//small;
     }
     else
     {

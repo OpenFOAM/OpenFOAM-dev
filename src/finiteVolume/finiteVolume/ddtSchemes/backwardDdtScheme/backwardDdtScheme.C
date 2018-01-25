@@ -60,7 +60,7 @@ scalar backwardDdtScheme<Type>::deltaT0_(const GeoField& vf) const
 {
     if (vf.nOldTimes() < 2)
     {
-        return GREAT;
+        return great;
     }
     else
     {

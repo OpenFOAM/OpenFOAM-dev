@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ Foam::scalar Foam::cellDistFuncs::smallestDist
 {
     const pointField& points = patch.points();
 
-    scalar minDist = GREAT;
+    scalar minDist = great;
     minFacei = -1;
 
     for (label wallFacei = 0; wallFacei < nWallFaces; wallFacei++)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,7 +146,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
 ) const
 {
     // immediately evaporate mass that has reached critical condition
-    if ((liquids_.Tc(X) - T) < SMALL)
+    if ((liquids_.Tc(X) - T) < small)
     {
         if (debug)
         {
@@ -158,7 +158,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
         forAll(activeLiquids_, i)
         {
             const label lid = liqToLiqMap_[i];
-            dMassPC[lid] = GREAT;
+            dMassPC[lid] = great;
         }
 
         return;
@@ -216,7 +216,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
             const scalar Dab = liquids_.properties()[lid].D(ps, Ts);
 
             // Schmidt number
-            const scalar Sc = nu/(Dab + ROOTVSMALL);
+            const scalar Sc = nu/(Dab + rootVSmall);
 
             // Sherwood number
             const scalar Sh = this->Sh(Re, Sc);
@@ -285,7 +285,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
                 const scalar Xs = X[lid]*pSat/pc;
 
                 // molar ratio
-                const scalar Xr = (Xs - Xc)/max(SMALL, 1.0 - Xs);
+                const scalar Xr = (Xs - Xc)/max(small, 1.0 - Xs);
 
                 if (Xr > 0)
                 {

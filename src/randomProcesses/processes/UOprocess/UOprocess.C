@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ UOprocess::UOprocess
     const vectorField& K = Mesh;
 
     scalar sqrKupper = sqr(Kupper);
-    scalar sqrKlower = sqr(Klower) + SMALL;
+    scalar sqrKlower = sqr(Klower) + small;
     scalar sqrK;
 
     forAll(UOfield, i)
@@ -102,7 +102,7 @@ const complexVectorField& UOprocess::newField()
 
     label count = 0;
     scalar sqrKupper = sqr(Kupper);
-    scalar sqrKlower = sqr(Klower) + SMALL;
+    scalar sqrKlower = sqr(Klower) + small;
     scalar sqrK;
 
     forAll(UOfield, i)

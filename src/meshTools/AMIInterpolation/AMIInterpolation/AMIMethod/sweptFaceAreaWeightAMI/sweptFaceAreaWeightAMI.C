@@ -32,7 +32,7 @@ License
 
 template<class SourcePatch, class TargetPatch>
 const Foam::scalar Foam::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::
-minCutRatio_ = 10*SMALL;
+minCutRatio_ = 10*small;
 
 template<class SourcePatch, class TargetPatch>
 const Foam::scalar Foam::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::
@@ -318,7 +318,7 @@ Foam::plane Foam::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::getCutPlane
             if (us.type(j) == roots::real)
             {
                 const vector den = ca + da*us[j];
-                if (magSqr(den) > VSMALL)
+                if (magSqr(den) > vSmall)
                 {
                     const vector vNum = ka - ba*us[j];
                     const vector wNum = (- k + b*us[j]) ^ (c + d*us[j]);
@@ -580,7 +580,7 @@ template<class SourcePatch, class TargetPatch>
 Foam::scalar
 Foam::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::minWeight() const
 {
-    return SMALL;
+    return small;
 }
 
 

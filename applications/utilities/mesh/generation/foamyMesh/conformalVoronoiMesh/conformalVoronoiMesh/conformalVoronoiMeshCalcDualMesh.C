@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -479,7 +479,7 @@ Foam::label Foam::conformalVoronoiMesh::mergeIdenticalDualVertices
 ////                geometryToConformTo_.findSurfaceNearest
 ////                (
 ////                    pt,
-////                    sqr(GREAT),
+////                    sqr(great),
 ////                    surfHit,
 ////                    hitSurface
 ////                );
@@ -643,7 +643,7 @@ Foam::label Foam::conformalVoronoiMesh::mergeIdenticalDualVertices
 //                scalar targetFaceSize = averageAnyCellSize(vA, vB);
 //
 //                // Selecting faces to collapse based on angle to
-//                // surface, so set collapseSizeLimitCoeff to GREAT to
+//                // surface, so set collapseSizeLimitCoeff to great to
 //                // allow collapse of all faces
 //
 //                faceCollapseMode mode = collapseFace
@@ -653,7 +653,7 @@ Foam::label Foam::conformalVoronoiMesh::mergeIdenticalDualVertices
 //                    boundaryPts,
 //                    dualPtIndexMap,
 //                    targetFaceSize,
-//                    GREAT,
+//                    great,
 //                    maxFC
 //                );
 //
@@ -844,7 +844,7 @@ void Foam::conformalVoronoiMesh::checkCellSizing()
 
     label nWrongFaces = 0;
 
-    if (maxNonOrtho < 180.0 - SMALL)
+    if (maxNonOrtho < 180.0 - small)
     {
         polyMeshGeometry::checkFaceDotProduct
         (
@@ -1011,7 +1011,7 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::checkPolyMeshQuality
 
     const vectorField& fAreas = pMesh.faceAreas();
 
-    scalar faceAreaLimit = SMALL;
+    scalar faceAreaLimit = small;
 
     forAll(fAreas, fI)
     {
@@ -1443,7 +1443,7 @@ void Foam::conformalVoronoiMesh::indexDualVertices
 //                        );
 //
 //                        vector snapDir = nearestPointOnTet - dual;
-//                        snapDir /= mag(snapDir) + SMALL;
+//                        snapDir /= mag(snapDir) + small;
 //
 //                        drawDelaunayCell(tetToSnapTo, cit, offset);
 //                        offset += 1;
@@ -1454,7 +1454,7 @@ void Foam::conformalVoronoiMesh::indexDualVertices
 //                            List<pointIndexHit>(1, hitInfo),
 //                            norm
 //                        );
-//                        norm[0] /= mag(norm[0]) + SMALL;
+//                        norm[0] /= mag(norm[0]) + small;
 //
 //                        if
 //                        (
@@ -1868,7 +1868,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
 
                         vector fN = f.normal(pts);
 
-                        if (mag(fN) < SMALL)
+                        if (mag(fN) < small)
                         {
                             nextCell = vc2;
                             continue;

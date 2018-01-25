@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ tmp<volScalarField> realizableKE<BasicTurbulenceModel>::rCmu
         (2*sqrt(2.0))*((S&S)&&S)
        /(
             magS*S2
-          + dimensionedScalar("small", dimensionSet(0, 0, -3, 0, 0), SMALL)
+          + dimensionedScalar("small", dimensionSet(0, 0, -3, 0, 0), small)
         )
     );
 

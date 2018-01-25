@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,7 @@ bool Foam::SHF<CloudType>::update
 
     // correct the Reynolds number. Reitz is using radius instead of diameter
     scalar reLiquid   = 0.5*Urmag*d/mu;
-    scalar ohnesorge  = sqrt(weLiquid)/(reLiquid + VSMALL);
+    scalar ohnesorge  = sqrt(weLiquid)/(reLiquid + vSmall);
 
     scalar weGasCorr = weGas/(1.0 + weCorrCoeff_*ohnesorge);
 

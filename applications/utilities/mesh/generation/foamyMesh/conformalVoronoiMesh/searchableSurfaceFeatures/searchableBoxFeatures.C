@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,8 +125,8 @@ Foam::searchableBoxFeatures::features() const
             normalDirections[eI][j] =
                 (
                     (
-                        (cross/(mag(cross) + VSMALL))
-                      & (fC0tofE0/(mag(fC0tofE0)+ VSMALL))
+                        (cross/(mag(cross) + vSmall))
+                      & (fC0tofE0/(mag(fC0tofE0)+ vSmall))
                     )
                   > 0.0
                     ? 1

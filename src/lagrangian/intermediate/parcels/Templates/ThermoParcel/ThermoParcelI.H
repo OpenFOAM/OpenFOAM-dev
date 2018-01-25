@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ inline Foam::ThermoParcel<ParcelType>::constantProperties::constantProperties()
     ParcelType::constantProperties(),
     T0_(this->dict_, 0.0),
     TMin_(this->dict_, 0.0),
-    TMax_(this->dict_, VGREAT),
+    TMax_(this->dict_, vGreat),
     Cp0_(this->dict_, 0.0),
     epsilon0_(this->dict_, 0.0),
     f0_(this->dict_, 0.0)

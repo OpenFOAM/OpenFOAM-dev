@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,20 +127,20 @@ Foam::scalar Foam::edgeStats::minLen(Ostream& os) const
     label nY = 0;
     label nZ = 0;
 
-    scalar minX = GREAT;
-    scalar maxX = -GREAT;
+    scalar minX = great;
+    scalar maxX = -great;
     vector x(1, 0, 0);
 
-    scalar minY = GREAT;
-    scalar maxY = -GREAT;
+    scalar minY = great;
+    scalar maxY = -great;
     vector y(0, 1, 0);
 
-    scalar minZ = GREAT;
-    scalar maxZ = -GREAT;
+    scalar minZ = great;
+    scalar maxZ = -great;
     vector z(0, 0, 1);
 
-    scalar minOther = GREAT;
-    scalar maxOther = -GREAT;
+    scalar minOther = great;
+    scalar maxOther = -great;
 
     const edgeList& edges = mesh_.edges();
 

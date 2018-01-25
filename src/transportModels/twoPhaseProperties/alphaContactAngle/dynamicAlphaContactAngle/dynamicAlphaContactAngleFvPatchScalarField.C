@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ Foam::dynamicAlphaContactAngleFvPatchScalarField::theta
     const fvsPatchVectorField& nHat
 ) const
 {
-    if (uTheta_ < SMALL)
+    if (uTheta_ < small)
     {
         return tmp<scalarField>(new scalarField(size(), theta0_));
     }
@@ -133,7 +133,7 @@ Foam::dynamicAlphaContactAngleFvPatchScalarField::theta
     vectorField nWall(nHat - (nf & nHat)*nf);
 
     // Normalise nWall
-    nWall /= (mag(nWall) + SMALL);
+    nWall /= (mag(nWall) + small);
 
     // Calculate Uwall resolved normal to the interface parallel to
     // the interface

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,16 +31,16 @@ Description
 
 if (adjustTimeStep)
 {
-    if ((runTime.timeIndex() == 0) && ((CoNum > SMALL) || (DiNum > SMALL)))
+    if ((runTime.timeIndex() == 0) && ((CoNum > small) || (DiNum > small)))
     {
-        if (CoNum < SMALL)
+        if (CoNum < small)
         {
-            CoNum = SMALL;
+            CoNum = small;
         }
 
-        if (DiNum < SMALL)
+        if (DiNum < small)
         {
-            DiNum = SMALL;
+            DiNum = small;
         }
 
         runTime.setDeltaT

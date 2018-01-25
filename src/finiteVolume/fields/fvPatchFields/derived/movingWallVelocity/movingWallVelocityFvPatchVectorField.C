@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ void Foam::movingWallVelocityFvPatchVectorField::updateCoeffs()
 
         const vectorField n(p.nf());
         const scalarField& magSf = p.magSf();
-        tmp<scalarField> Un = phip/(magSf + VSMALL);
+        tmp<scalarField> Un = phip/(magSf + vSmall);
 
 
         vectorField::operator=(Up + n*(Un - (n & Up)));

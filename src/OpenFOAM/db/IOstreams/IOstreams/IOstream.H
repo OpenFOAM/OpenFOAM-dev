@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ public:
                 //- Convert a version number into an index
                 int numberToIndex(const scalar num) const
                 {
-                    return int(10*num + SMALL);
+                    return int(10*num + small);
                 }
 
                 //- Return major version

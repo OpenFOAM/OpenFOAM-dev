@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ namespace Foam
     defineDebugSwitchWithName(pointMVCWeight, "pointMVCWeight", 0);
 }
 
-Foam::scalar Foam::pointMVCWeight::tol(SMALL);
+Foam::scalar Foam::pointMVCWeight::tol(small);
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -122,7 +122,7 @@ void Foam::pointMVCWeight::calcWeights
 
             scalar magTemp = mag(temp);
 
-            if (magTemp < VSMALL)
+            if (magTemp < vSmall)
             {
                 continue;
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,7 +207,7 @@ Foam::scalar Foam::engineValve::curVelocity() const
                  lift(engineDB_.theta() - engineDB_.deltaTheta()),
                  minLift_
              )
-        )/(engineDB_.deltaTValue() + VSMALL);
+        )/(engineDB_.deltaTValue() + vSmall);
 }
 
 

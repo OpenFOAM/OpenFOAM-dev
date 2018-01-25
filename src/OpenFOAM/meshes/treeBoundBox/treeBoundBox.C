@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,19 +28,19 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::scalar Foam::treeBoundBox::great(GREAT);
+const Foam::scalar Foam::treeBoundBox::great(great);
 
 const Foam::treeBoundBox Foam::treeBoundBox::greatBox
 (
-    vector(-GREAT, -GREAT, -GREAT),
-    vector(GREAT, GREAT, GREAT)
+    vector(-great, -great, -great),
+    vector(great, great, great)
 );
 
 
 const Foam::treeBoundBox Foam::treeBoundBox::invertedBox
 (
-    vector(GREAT, GREAT, GREAT),
-    vector(-GREAT, -GREAT, -GREAT)
+    vector(great, great, great),
+    vector(-great, -great, -great)
 );
 
 
@@ -282,7 +282,7 @@ bool Foam::treeBoundBox::intersects
         if (ptBits & LEFTBIT)
         {
             // Intersect with plane V=min, n=-1,0,0
-            if (Foam::mag(overallVec.x()) > VSMALL)
+            if (Foam::mag(overallVec.x()) > vSmall)
             {
                 scalar s = (min().x() - overallStart.x())/overallVec.x();
                 pt.x() = min().x();
@@ -299,7 +299,7 @@ bool Foam::treeBoundBox::intersects
         else if (ptBits & RIGHTBIT)
         {
             // Intersect with plane V=max, n=1,0,0
-            if (Foam::mag(overallVec.x()) > VSMALL)
+            if (Foam::mag(overallVec.x()) > vSmall)
             {
                 scalar s = (max().x() - overallStart.x())/overallVec.x();
                 pt.x() = max().x();
@@ -314,7 +314,7 @@ bool Foam::treeBoundBox::intersects
         else if (ptBits & BOTTOMBIT)
         {
             // Intersect with plane V=min, n=0,-1,0
-            if (Foam::mag(overallVec.y()) > VSMALL)
+            if (Foam::mag(overallVec.y()) > vSmall)
             {
                 scalar s = (min().y() - overallStart.y())/overallVec.y();
                 pt.x() = overallStart.x() + overallVec.x()*s;
@@ -329,7 +329,7 @@ bool Foam::treeBoundBox::intersects
         else if (ptBits & TOPBIT)
         {
             // Intersect with plane V=max, n=0,1,0
-            if (Foam::mag(overallVec.y()) > VSMALL)
+            if (Foam::mag(overallVec.y()) > vSmall)
             {
                 scalar s = (max().y() - overallStart.y())/overallVec.y();
                 pt.x() = overallStart.x() + overallVec.x()*s;
@@ -344,7 +344,7 @@ bool Foam::treeBoundBox::intersects
         else if (ptBits & BACKBIT)
         {
             // Intersect with plane V=min, n=0,0,-1
-            if (Foam::mag(overallVec.z()) > VSMALL)
+            if (Foam::mag(overallVec.z()) > vSmall)
             {
                 scalar s = (min().z() - overallStart.z())/overallVec.z();
                 pt.x() = overallStart.x() + overallVec.x()*s;
@@ -359,7 +359,7 @@ bool Foam::treeBoundBox::intersects
         else if (ptBits & FRONTBIT)
         {
             // Intersect with plane V=max, n=0,0,1
-            if (Foam::mag(overallVec.z()) > VSMALL)
+            if (Foam::mag(overallVec.z()) > vSmall)
             {
                 scalar s = (max().z() - overallStart.z())/overallVec.z();
                 pt.x() = overallStart.x() + overallVec.x()*s;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ void Foam::fvMesh::makeMagSf() const
             IOobject::NO_WRITE,
             false
         ),
-        mag(Sf()) + dimensionedScalar("vs", dimArea, VSMALL)
+        mag(Sf()) + dimensionedScalar("vs", dimArea, vSmall)
     );
 }
 
@@ -284,7 +284,7 @@ Foam::fvMesh::Vsc() const
             ts.value() - (ts0.value() - ts0.deltaTValue())
         )/ts0.deltaTValue();
 
-        if (tFrac < (1 - SMALL))
+        if (tFrac < (1 - small))
         {
             return V0() + tFrac*(V() - V0());
         }
@@ -314,7 +314,7 @@ Foam::fvMesh::Vsc0() const
           - (ts0.value() - ts0.deltaTValue())
         )/ts0.deltaTValue();
 
-        if (t0Frac > SMALL)
+        if (t0Frac > small)
         {
             return V0() + t0Frac*(V() - V0());
         }

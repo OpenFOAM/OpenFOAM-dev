@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ tmp<volScalarField> LienCubicKE::fMu() const
 
     return
         (scalar(1) - exp(-Anu_*yStar))
-       *(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + SMALL)));
+       *(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + small)));
 }
 
 
@@ -67,7 +67,7 @@ tmp<volScalarField> LienCubicKE::E(const volScalarField& f2) const
     const volScalarField yStar(sqrt(k_)*y_/nu());
     const volScalarField le
     (
-        kappa_*y_/(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + SMALL)))
+        kappa_*y_/(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + small)))
     );
 
     return

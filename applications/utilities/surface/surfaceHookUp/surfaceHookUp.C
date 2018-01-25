@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ void greenRefine
 //    const edge& e = surf.edges()[edgeIndex];
 
 //    vector eVec = e.vec(surf.localPoints());
-//    eVec /= mag(eVec) + SMALL;
+//    eVec /= mag(eVec) + small;
 
 //    const labelList& pEdges = surf.pointEdges()[pointIndex];
 //
@@ -134,7 +134,7 @@ void greenRefine
 //        const edge& nearE = surf.edges()[pEdges[eI]];
 
 //        vector nearEVec = nearE.vec(surf.localPoints());
-//        nearEVec /= mag(nearEVec) + SMALL;
+//        nearEVec /= mag(nearEVec) + small;
 
 //        const scalar dot = eVec & nearEVec;
 //        const scalar minCos = degToRad(angle);
@@ -177,8 +177,8 @@ void createBoundaryEdgeTrees
             treeBoundBox(UList<point>(surf.localPoints())).extend(rndGen, 1e-4)
         );
 
-        bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-        bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
         bEdgeTrees.set
         (
@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
     const IOdictionary dict(dictIO);
 
     const scalar dist(args.argRead<scalar>(1));
-    const scalar matchTolerance(max(1e-6*dist, SMALL));
+    const scalar matchTolerance(max(1e-6*dist, small));
     const label maxIters = 100;
 
     Info<< "Hooking distance = " << dist << endl;

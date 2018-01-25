@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ dynamicLagrangian<BasicTurbulenceModel>::dynamicLagrangian
     filter_(filterPtr_()),
 
     flm0_("flm0", flm_.dimensions(), 0.0),
-    fmm0_("fmm0", fmm_.dimensions(), VSMALL)
+    fmm0_("fmm0", fmm_.dimensions(), vSmall)
 {
     if (type == typeName)
     {

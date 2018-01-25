@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,20 +33,20 @@ Description
 
 if (adjustTimeStep)
 {
-    if (CoNum == -GREAT)
+    if (CoNum == -great)
     {
-        CoNum = SMALL;
+        CoNum = small;
     }
 
-    if (DiNum == -GREAT)
+    if (DiNum == -great)
     {
-        DiNum = SMALL;
+        DiNum = small;
     }
 
 
-    const scalar TFactorFluid = maxCo/(CoNum + SMALL);
-    const scalar TFactorSolid = maxDi/(DiNum + SMALL);
-    const scalar TFactorFilm = maxCo/(surfaceFilm.CourantNumber() + SMALL);
+    const scalar TFactorFluid = maxCo/(CoNum + small);
+    const scalar TFactorSolid = maxDi/(DiNum + small);
+    const scalar TFactorFilm = maxCo/(surfaceFilm.CourantNumber() + small);
 
     const scalar dt0 = runTime.deltaTValue();
 

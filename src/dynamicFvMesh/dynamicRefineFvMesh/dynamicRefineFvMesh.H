@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
         // Refine field inbetween lower..upper
         lowerRefineLevel 0.001;
         upperRefineLevel 0.999;
-        // If value < unrefineLevel (default=GREAT) unrefine
+        // If value < unrefineLevel (default=great) unrefine
         //unrefineLevel   10;
         // Have slower than 2:1 refinement
         nBufferLayers   1;

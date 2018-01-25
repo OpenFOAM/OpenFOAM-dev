@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,12 +85,12 @@ Foam::label Foam::polyLine::nSegments() const
 Foam::label Foam::polyLine::localParameter(scalar& lambda) const
 {
     // Check endpoints
-    if (lambda < SMALL)
+    if (lambda < small)
     {
         lambda = 0;
         return 0;
     }
-    else if (lambda > 1 - SMALL)
+    else if (lambda > 1 - small)
     {
         lambda = 1;
         return nSegments();
@@ -118,11 +118,11 @@ Foam::label Foam::polyLine::localParameter(scalar& lambda) const
 Foam::point Foam::polyLine::position(const scalar mu) const
 {
     // Check end-points
-    if (mu < SMALL)
+    if (mu < small)
     {
         return points_.first();
     }
-    else if (mu > 1 - SMALL)
+    else if (mu > 1 - small)
     {
         return points_.last();
     }

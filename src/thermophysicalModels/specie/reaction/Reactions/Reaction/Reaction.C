@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,12 +45,12 @@ void Foam::Reaction<ReactionThermo>::reactionStrLeft
         {
             reaction << " + ";
         }
-        if (mag(lhs_[i].stoichCoeff - 1) > SMALL)
+        if (mag(lhs_[i].stoichCoeff - 1) > small)
         {
             reaction << lhs_[i].stoichCoeff;
         }
         reaction << species_[lhs_[i].index];
-        if (mag(lhs_[i].exponent - lhs_[i].stoichCoeff) > SMALL)
+        if (mag(lhs_[i].exponent - lhs_[i].stoichCoeff) > small)
         {
             reaction << "^" << lhs_[i].exponent;
         }
@@ -70,12 +70,12 @@ void Foam::Reaction<ReactionThermo>::reactionStrRight
         {
             reaction << " + ";
         }
-        if (mag(rhs_[i].stoichCoeff - 1) > SMALL)
+        if (mag(rhs_[i].stoichCoeff - 1) > small)
         {
             reaction << rhs_[i].stoichCoeff;
         }
         reaction << species_[rhs_[i].index];
-        if (mag(rhs_[i].exponent - rhs_[i].stoichCoeff) > SMALL)
+        if (mag(rhs_[i].exponent - rhs_[i].stoichCoeff) > small)
         {
             reaction << "^" << rhs_[i].exponent;
         }

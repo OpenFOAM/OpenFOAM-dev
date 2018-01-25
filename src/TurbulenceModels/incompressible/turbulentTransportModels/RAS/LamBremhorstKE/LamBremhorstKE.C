@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,13 +53,13 @@ tmp<volScalarField> LamBremhorstKE::Rt() const
 tmp<volScalarField> LamBremhorstKE::fMu(const volScalarField& Rt) const
 {
     tmp<volScalarField> Ry(sqrt(k_)*y_/nu());
-    return sqr(scalar(1) - exp(-0.0165*Ry))*(scalar(1) + 20.5/(Rt + SMALL));
+    return sqr(scalar(1) - exp(-0.0165*Ry))*(scalar(1) + 20.5/(Rt + small));
 }
 
 
 tmp<volScalarField> LamBremhorstKE::f1(const volScalarField& fMu) const
 {
-    return scalar(1) + pow3(0.05/(fMu + SMALL));
+    return scalar(1) + pow3(0.05/(fMu + small));
 }
 
 

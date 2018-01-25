@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ public:
         scalar limiter =
             2
           - 0.5*min(mag(df - dcP), mag(df - dcN))
-           /(max(mag(dcP), mag(dcN)) + SMALL);
+           /(max(mag(dcP), mag(dcN)) + small);
 
         // Limit the limiter between linear and 20% upwind
         return max(min(limiter, 1), 0.8);

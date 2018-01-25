@@ -85,6 +85,26 @@ inline Scalar mag(const Scalar s)
     return ::fabs(s);
 }
 
+
+#define MAXMINPOW(retType, type1, type2)          \
+                                                  \
+MAXMIN(retType, type1, type2)                     \
+                                                  \
+inline double pow(const type1 s, const type2 e)   \
+{                                                 \
+    return ::pow(Scalar(s), Scalar(e));           \
+}
+
+MAXMINPOW(Scalar, Scalar, Scalar)
+MAXMINPOW(Scalar, Scalar, int)
+MAXMINPOW(Scalar, int, Scalar)
+MAXMINPOW(Scalar, Scalar, long)
+MAXMINPOW(Scalar, long, Scalar)
+MAXMINPOW(Scalar, Scalar, float)
+MAXMINPOW(Scalar, float, Scalar)
+
+#undef MAXMINPOW
+
 #define transFunc(func)            \
 inline Scalar func(const Scalar s) \
 {                                  \

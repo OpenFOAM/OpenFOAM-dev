@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ void Foam::fixedMeanFvPatchField<Type>::updateCoeffs()
         gSum(this->patch().magSf()*newValues)
        /gSum(this->patch().magSf());
 
-    if (mag(meanValue) > SMALL && mag(meanValuePsi)/mag(meanValue) > 0.5)
+    if (mag(meanValue) > small && mag(meanValuePsi)/mag(meanValue) > 0.5)
     {
         newValues *= mag(meanValue)/mag(meanValuePsi);
     }

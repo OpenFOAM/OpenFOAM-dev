@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ inline Foam::scalar Foam::powerSeriesReactionRate::operator()
 {
     scalar lta = A_;
 
-    if (mag(beta_) > VSMALL)
+    if (mag(beta_) > vSmall)
     {
         lta *= pow(T, beta_);
     }

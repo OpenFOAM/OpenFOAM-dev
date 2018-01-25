@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,12 +108,12 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
         {
             scalar expTerm = exp(min(50.0, B_*mStar));
             scalar powTerm = pow(yPlus, mStar/kappa_);
-            factor = mStar/(expTerm*powTerm - 1.0 + ROOTVSMALL);
+            factor = mStar/(expTerm*powTerm - 1.0 + rootVSmall);
         }
         else
         {
             scalar expTerm = exp(min(50.0, mStar));
-            factor = mStar/(expTerm*yPlus - 1.0 + ROOTVSMALL);
+            factor = mStar/(expTerm*yPlus - 1.0 + rootVSmall);
         }
 
         uTau[facei] = sqrt(max(0, magGradU[facei]*ut*factor));
@@ -144,7 +144,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcNut() const
     return max
     (
         scalar(0),
-        sqr(calcUTau(magGradU))/(magGradU + ROOTVSMALL) - nuw
+        sqr(calcUTau(magGradU))/(magGradU + rootVSmall) - nuw
     );
 }
 

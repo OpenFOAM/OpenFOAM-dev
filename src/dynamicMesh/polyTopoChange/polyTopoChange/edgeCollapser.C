@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::HashSet<Foam::label> Foam::edgeCollapser::checkBadFaces
 
     const vectorField& fAreas = mesh.faceAreas();
 
-    scalar faceAreaLimit = SMALL;
+    scalar faceAreaLimit = small;
 
     forAll(fAreas, fI)
     {
@@ -184,7 +184,7 @@ void Foam::edgeCollapser::collapseToEdge
 {
     // Negative half
 
-    Foam::point collapseToPtA(GREAT, GREAT, GREAT);
+    Foam::point collapseToPtA(great, great, great);
         //collapseAxis*(sum(dNeg)/dNeg.size() - dShift) + fC;
 
     label maxPriority = labelMin;
@@ -237,7 +237,7 @@ void Foam::edgeCollapser::collapseToEdge
 
 
     // Positive half
-    Foam::point collapseToPtB(GREAT, GREAT, GREAT);
+    Foam::point collapseToPtB(great, great, great);
 //        = collapseAxis*(sum(dPos)/dPos.size() - dShift) + fC;
 
     forAll(facePtsPos, fPtI)
@@ -405,20 +405,20 @@ void Foam::edgeCollapser::faceCollapseAxisAndAspectRatio
 
     scalar magJ = mag(J);
 
-    scalar detJ = SMALL;
+    scalar detJ = small;
 
-    if (magJ > VSMALL)
+    if (magJ > vSmall)
     {
         // Normalise inertia tensor to remove problems with small values
 
         J /= mag(J);
         // J /= cmptMax(J);
-        // J /= max(eigenValues(J).x(), SMALL);
+        // J /= max(eigenValues(J).x(), small);
 
         // Calculating determinant, including stabilisation for zero or
         // small negative values
 
-        detJ = max(det(J), SMALL);
+        detJ = max(det(J), small);
     }
 
     if (detJ < 1e-5)
@@ -426,7 +426,7 @@ void Foam::edgeCollapser::faceCollapseAxisAndAspectRatio
         collapseAxis = f.edges()[longestEdge(f, pts)].vec(pts);
 
         // It is possible that all the points of a face are the same
-        if (magSqr(collapseAxis) > VSMALL)
+        if (magSqr(collapseAxis) > vSmall)
         {
             collapseAxis /= mag(collapseAxis);
         }
@@ -439,7 +439,7 @@ void Foam::edgeCollapser::faceCollapseAxisAndAspectRatio
     {
         vector eVals = eigenValues(J);
 
-        if (mag(eVals.y() - eVals.x()) < 100*SMALL)
+        if (mag(eVals.y() - eVals.x()) < 100*small)
         {
             // First two eigenvalues are the same: i.e. a square face
 
@@ -465,7 +465,7 @@ void Foam::edgeCollapser::faceCollapseAxisAndAspectRatio
             // the ratio of face-plane moments gives a good indication of the
             // aspect ratio.
 
-            aspectRatio = Foam::sqrt(eVals.y()/max(eVals.x(), SMALL));
+            aspectRatio = Foam::sqrt(eVals.y()/max(eVals.x(), small));
         }
     }
 }
@@ -673,7 +673,7 @@ Foam::edgeCollapser::collapseType Foam::edgeCollapser::collapseFace
 
     collapseType typeOfCollapse = noCollapse;
 
-    if (magSqr(collapseAxis) < VSMALL)
+    if (magSqr(collapseAxis) < vSmall)
     {
         typeOfCollapse = toPoint;
     }
@@ -1284,7 +1284,7 @@ bool Foam::edgeCollapser::setRefinement
 //        if
 //        (
 //            mesh_.points()[ptI] != pec.collapsePoint()
-//         && pec.collapsePoint() != vector(GREAT, GREAT, GREAT)
+//         && pec.collapsePoint() != vector(great, great, great)
 //        )
 //        {
 //            meshTools::writeOBJ

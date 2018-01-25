@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ addToRunTimeSelectionTable(cellLooper, geomCellLooper, word);
 
 Foam::scalar Foam::geomCellLooper::minEdgeLen(const label vertI) const
 {
-    scalar minLen = GREAT;
+    scalar minLen = great;
 
     const labelList& pEdges = mesh().pointEdges()[vertI];
 
@@ -99,7 +99,7 @@ bool Foam::geomCellLooper::cutEdge
     else
     {
         // Make sure we don't use this value
-        weight = -GREAT;
+        weight = -great;
 
         return false;
     }
@@ -161,7 +161,7 @@ void Foam::geomCellLooper::getBase(const vector& n, vector& e0, vector& e1)
     // Use component normal to n as base vector.
     e0 = base - nComp*n;
 
-    e0 /= mag(e0) + VSMALL;
+    e0 /= mag(e0) + vSmall;
 
     e1 = n ^ e0;
 
@@ -313,7 +313,7 @@ bool Foam::geomCellLooper::cut
             {
                 // Use point.
                 localLoop.append(vertToEVert(e.start()));
-                localLoopWeights.append(-GREAT);
+                localLoopWeights.append(-great);
 
                 useStart = true;
             }
@@ -329,7 +329,7 @@ bool Foam::geomCellLooper::cut
             {
                 // Use point.
                 localLoop.append(vertToEVert(e.end()));
-                localLoopWeights.append(-GREAT);
+                localLoopWeights.append(-great);
 
                 useEnd = true;
             }
@@ -366,7 +366,7 @@ bool Foam::geomCellLooper::cut
                     if (findIndex(localLoop, cut) == -1)
                     {
                         localLoop.append(vertToEVert(cutVertI));
-                        localLoopWeights.append(-GREAT);
+                        localLoopWeights.append(-great);
                     }
                 }
             }

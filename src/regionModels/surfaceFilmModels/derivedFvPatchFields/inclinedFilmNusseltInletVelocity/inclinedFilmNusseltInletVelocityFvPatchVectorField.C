@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::updateCoeffs()
     // TODO: currently re-evaluating the entire gTan field to return this patch
     const scalarField gTan(film.gTan()().boundaryField()[patchi] & n);
 
-    if (patch().size() && (max(mag(gTan)) < SMALL))
+    if (patch().size() && (max(mag(gTan)) < small))
     {
         WarningInFunction
             << "is designed to operate on patches inclined with respect to "
@@ -147,7 +147,7 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::updateCoeffs()
     const vectorField nHatp(nHat.boundaryField()[patchi].patchInternalField());
 
     vectorField nTan(nHatp ^ n);
-    nTan /= mag(nTan) + ROOTVSMALL;
+    nTan /= mag(nTan) + rootVSmall;
 
     // calculate distance in patch tangential direction
 

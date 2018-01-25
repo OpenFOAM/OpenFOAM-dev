@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,9 +101,9 @@ tmp<volScalarField> kkLOmega::fTaul
                     lambdaEff*Omega
                   + dimensionedScalar
                     (
-                        "ROOTVSMALL",
+                        "rootVSmall",
                         dimLength*inv(dimTime),
-                        ROOTVSMALL
+                        rootVSmall
                     )
                 )
             )
@@ -142,9 +142,9 @@ tmp<volScalarField> kkLOmega::fOmega
                     lambdaT
                   + dimensionedScalar
                     (
-                        "ROTVSMALL",
+                        "ROTvSmall",
                         lambdaT.dimensions(),
-                        ROOTVSMALL
+                        rootVSmall
                     )
                 )
             )
@@ -166,9 +166,9 @@ tmp<volScalarField> kkLOmega::phiBP(const volScalarField& Omega) const
                     Omega
                   + dimensionedScalar
                     (
-                        "ROTVSMALL",
+                        "ROTvSmall",
                         Omega.dimensions(),
-                        ROOTVSMALL
+                        rootVSmall
                     )
                 )
               - CbpCrit_,
@@ -193,7 +193,7 @@ tmp<volScalarField> kkLOmega::phiNAT
             ReOmega
           - CnatCrit_
           / (
-                fNatCrit + dimensionedScalar("ROTVSMALL", dimless, ROOTVSMALL)
+                fNatCrit + dimensionedScalar("ROTvSmall", dimless, rootVSmall)
             ),
             scalar(0)
         )
@@ -615,7 +615,7 @@ void kkLOmega::correct()
         pow
         (
             lambdaEff
-           /(lambdaT + dimensionedScalar("SMALL", dimLength, ROOTVSMALL)),
+           /(lambdaT + dimensionedScalar("small", dimLength, rootVSmall)),
             2.0/3.0
         )
     );
@@ -660,7 +660,7 @@ void kkLOmega::correct()
 
     // By pass source term divided by kl_
 
-    const dimensionedScalar fwMin("SMALL", dimless, ROOTVSMALL);
+    const dimensionedScalar fwMin("small", dimless, rootVSmall);
 
     const volScalarField Rbp
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::scalar Foam::indexedOctree<Type>::perturbTol_ = 10*SMALL;
+Foam::scalar Foam::indexedOctree<Type>::perturbTol_ = 10*small;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -678,13 +678,13 @@ Foam::point Foam::indexedOctree<Type>::pushPoint
             if (mag(pt[dir]-bb.min()[dir]) < mag(perturbVec[dir]))
             {
                 // Close to 'left' side. Push well beyond left side.
-                scalar perturbDist = perturbVec[dir] + ROOTVSMALL;
+                scalar perturbDist = perturbVec[dir] + rootVSmall;
                 perturbedPt[dir] = bb.min()[dir] + perturbDist;
             }
             else if (mag(pt[dir]-bb.max()[dir]) < mag(perturbVec[dir]))
             {
                 // Close to 'right' side. Push well beyond right side.
-                scalar perturbDist = perturbVec[dir] + ROOTVSMALL;
+                scalar perturbDist = perturbVec[dir] + rootVSmall;
                 perturbedPt[dir] = bb.max()[dir] - perturbDist;
             }
         }
@@ -695,12 +695,12 @@ Foam::point Foam::indexedOctree<Type>::pushPoint
         {
             if (mag(pt[dir]-bb.min()[dir]) < mag(perturbVec[dir]))
             {
-                scalar perturbDist = perturbVec[dir] + ROOTVSMALL;
+                scalar perturbDist = perturbVec[dir] + rootVSmall;
                 perturbedPt[dir] = bb.min()[dir] - perturbDist;
             }
             else if (mag(pt[dir]-bb.max()[dir]) < mag(perturbVec[dir]))
             {
-                scalar perturbDist = perturbVec[dir] + ROOTVSMALL;
+                scalar perturbDist = perturbVec[dir] + rootVSmall;
                 perturbedPt[dir] = bb.max()[dir] + perturbDist;
             }
         }
@@ -751,22 +751,22 @@ Foam::point Foam::indexedOctree<Type>::pushPoint
     {
         if (pushInside)
         {
-            perturbedPt[0] = bb.min()[0] + (perturbVec[0] + ROOTVSMALL);
+            perturbedPt[0] = bb.min()[0] + (perturbVec[0] + rootVSmall);
         }
         else
         {
-            perturbedPt[0] = bb.min()[0] - (perturbVec[0] + ROOTVSMALL);
+            perturbedPt[0] = bb.min()[0] - (perturbVec[0] + rootVSmall);
         }
     }
     else if (faceID & treeBoundBox::RIGHTBIT)
     {
         if (pushInside)
         {
-            perturbedPt[0] = bb.max()[0] - (perturbVec[0] + ROOTVSMALL);
+            perturbedPt[0] = bb.max()[0] - (perturbVec[0] + rootVSmall);
         }
         else
         {
-            perturbedPt[0] = bb.max()[0] + (perturbVec[0] + ROOTVSMALL);
+            perturbedPt[0] = bb.max()[0] + (perturbVec[0] + rootVSmall);
         }
     }
 
@@ -774,22 +774,22 @@ Foam::point Foam::indexedOctree<Type>::pushPoint
     {
         if (pushInside)
         {
-            perturbedPt[1] = bb.min()[1] + (perturbVec[1] + ROOTVSMALL);
+            perturbedPt[1] = bb.min()[1] + (perturbVec[1] + rootVSmall);
         }
         else
         {
-            perturbedPt[1] = bb.min()[1] - (perturbVec[1] + ROOTVSMALL);
+            perturbedPt[1] = bb.min()[1] - (perturbVec[1] + rootVSmall);
         }
     }
     else if (faceID & treeBoundBox::TOPBIT)
     {
         if (pushInside)
         {
-            perturbedPt[1] = bb.max()[1] - (perturbVec[1] + ROOTVSMALL);
+            perturbedPt[1] = bb.max()[1] - (perturbVec[1] + rootVSmall);
         }
         else
         {
-            perturbedPt[1] = bb.max()[1] + (perturbVec[1] + ROOTVSMALL);
+            perturbedPt[1] = bb.max()[1] + (perturbVec[1] + rootVSmall);
         }
     }
 
@@ -797,22 +797,22 @@ Foam::point Foam::indexedOctree<Type>::pushPoint
     {
         if (pushInside)
         {
-            perturbedPt[2] = bb.min()[2] + (perturbVec[2] + ROOTVSMALL);
+            perturbedPt[2] = bb.min()[2] + (perturbVec[2] + rootVSmall);
         }
         else
         {
-            perturbedPt[2] = bb.min()[2] - (perturbVec[2] + ROOTVSMALL);
+            perturbedPt[2] = bb.min()[2] - (perturbVec[2] + rootVSmall);
         }
     }
     else if (faceID & treeBoundBox::FRONTBIT)
     {
         if (pushInside)
         {
-            perturbedPt[2] = bb.max()[2] - (perturbVec[2] + ROOTVSMALL);
+            perturbedPt[2] = bb.max()[2] - (perturbVec[2] + rootVSmall);
         }
         else
         {
-            perturbedPt[2] = bb.max()[2] + (perturbVec[2] + ROOTVSMALL);
+            perturbedPt[2] = bb.max()[2] + (perturbVec[2] + rootVSmall);
         }
     }
 

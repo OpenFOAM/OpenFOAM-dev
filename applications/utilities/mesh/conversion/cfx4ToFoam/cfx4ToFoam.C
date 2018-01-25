@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
         // N^2 algorithm, sorry but I cannot quickly come up with
         // something better.
 
-        scalar sqrMergeTol = GREAT;
+        scalar sqrMergeTol = great;
 
         forAll(blockPFaces, blockPFaceLabel)
         {
@@ -533,7 +533,7 @@ int main(int argc, char *argv[])
     }
 
     // Scale the points
-    if (scaleFactor > 1.0 + SMALL || scaleFactor < 1.0 - SMALL)
+    if (scaleFactor > 1.0 + small || scaleFactor < 1.0 - small)
     {
         points *= scaleFactor;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ scalar alphatJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
         scalar df = 1.0 - 1.0/(ypt*kappa_*Prat);
         scalar yptNew = ypt - f/df;
 
-        if (yptNew < VSMALL)
+        if (yptNew < vSmall)
         {
             return 0;
         }
@@ -262,7 +262,7 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
             scalar A = qDot[facei]*rhow[facei]*uTau*y[facei];
             scalar B = qDot[facei]*Pr*yPlus;
             scalar C = Pr*0.5*rhow[facei]*uTau*sqr(magUp[facei]);
-            alphaEff = A/(B + C + VSMALL);
+            alphaEff = A/(B + C + vSmall);
         }
         else
         {
@@ -272,7 +272,7 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
             scalar C =
                 0.5*rhow[facei]*uTau
                *(Prt_*sqr(magUp[facei]) + (Pr - Prt_)*sqr(magUc));
-            alphaEff = A/(B + C + VSMALL);
+            alphaEff = A/(B + C + vSmall);
         }
 
         // Update turbulent thermal diffusivity

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,13 +64,13 @@ Foam::PatchTools::sortedEdgeFaces
             const point& edgePt = localPoints[e.start()];
 
             vector e2 = e.vec(localPoints);
-            e2 /= mag(e2) + VSMALL;
+            e2 /= mag(e2) + vSmall;
 
             // Get the vertex on 0th face that forms a vector with the first
             // edge point that has the largest angle with the edge
             const Face& f0 = localFaces[faceNbs[0]];
 
-            scalar maxAngle = GREAT;
+            scalar maxAngle = great;
             vector maxAngleEdgeDir(vector::max);
 
             forAll(f0, fpI)
@@ -78,7 +78,7 @@ Foam::PatchTools::sortedEdgeFaces
                 if (f0[fpI] != e.start())
                 {
                     vector faceEdgeDir = localPoints[f0[fpI]] - edgePt;
-                    faceEdgeDir /= mag(faceEdgeDir) + VSMALL;
+                    faceEdgeDir /= mag(faceEdgeDir) + vSmall;
 
                     const scalar angle = e2 & faceEdgeDir;
 
@@ -93,7 +93,7 @@ Foam::PatchTools::sortedEdgeFaces
             // Get vector normal both to e2 and to edge from opposite vertex
             // to edge (will be x-axis of our coordinate system)
             vector e0 = e2 ^ maxAngleEdgeDir;
-            e0 /= mag(e0) + VSMALL;
+            e0 /= mag(e0) + vSmall;
 
             // Get y-axis of coordinate system
             vector e1 = e2 ^ e0;
@@ -109,7 +109,7 @@ Foam::PatchTools::sortedEdgeFaces
                 // edge point that has the largest angle with the edge
                 const Face& f = localFaces[faceNbs[nbI]];
 
-                maxAngle = GREAT;
+                maxAngle = great;
                 maxAngleEdgeDir = vector::max;
 
                 forAll(f, fpI)
@@ -117,7 +117,7 @@ Foam::PatchTools::sortedEdgeFaces
                     if (f[fpI] != e.start())
                     {
                         vector faceEdgeDir = localPoints[f[fpI]] - edgePt;
-                        faceEdgeDir /= mag(faceEdgeDir) + VSMALL;
+                        faceEdgeDir /= mag(faceEdgeDir) + vSmall;
 
                         const scalar angle = e2 & faceEdgeDir;
 
@@ -130,7 +130,7 @@ Foam::PatchTools::sortedEdgeFaces
                 }
 
                 vector vec = e2 ^ maxAngleEdgeDir;
-                vec /= mag(vec) + VSMALL;
+                vec /= mag(vec) + vSmall;
 
                 faceAngles[nbI] = pseudoAngle
                 (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ inline bool Foam::patchEdgeFaceInfo::update
         return false;
     }
 
-    if ((diff < SMALL) || ((distSqr_ > SMALL) && (diff/distSqr_ < tol)))
+    if ((diff < small) || ((distSqr_ > small) && (diff/distSqr_ < tol)))
     {
         // don't propagate small changes
         return false;
@@ -99,7 +99,7 @@ inline bool Foam::patchEdgeFaceInfo::update
         return false;
     }
 
-    if ((diff < SMALL) || ((distSqr_ > SMALL) && (diff/distSqr_ < tol)))
+    if ((diff < small) || ((distSqr_ > small) && (diff/distSqr_ < tol)))
     {
         // don't propagate small changes
         return false;
@@ -121,7 +121,7 @@ inline bool Foam::patchEdgeFaceInfo::update
 inline Foam::patchEdgeFaceInfo::patchEdgeFaceInfo()
 :
     origin_(point::max),
-    distSqr_(sqr(GREAT))
+    distSqr_(sqr(great))
 {}
 
 

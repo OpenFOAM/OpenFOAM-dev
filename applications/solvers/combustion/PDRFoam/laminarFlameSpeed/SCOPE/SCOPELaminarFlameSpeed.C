@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,14 +91,14 @@ Foam::laminarFlameSpeedModels::SCOPE::SCOPE
     MaPolyL_(coeffsDict_.subDict("lowerMaPolynomial")),
     MaPolyU_(coeffsDict_.subDict("upperMaPolynomial"))
 {
-    SuPolyL_.ll = max(SuPolyL_.ll, LFL_) + SMALL;
-    SuPolyU_.ul = min(SuPolyU_.ul, UFL_) - SMALL;
+    SuPolyL_.ll = max(SuPolyL_.ll, LFL_) + small;
+    SuPolyU_.ul = min(SuPolyU_.ul, UFL_) - small;
 
     SuPolyL_.lu = 0.5*(SuPolyL_.ul + SuPolyU_.ll);
-    SuPolyU_.lu = SuPolyL_.lu - SMALL;
+    SuPolyU_.lu = SuPolyL_.lu - small;
 
     MaPolyL_.lu = 0.5*(MaPolyL_.ul + MaPolyU_.ll);
-    MaPolyU_.lu = MaPolyL_.lu - SMALL;
+    MaPolyU_.lu = MaPolyL_.lu - small;
 
     if (debug)
     {

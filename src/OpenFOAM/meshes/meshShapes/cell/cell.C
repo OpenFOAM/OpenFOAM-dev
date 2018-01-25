@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,7 @@ Foam::point Foam::cell::centre
         sumArea += a;
     }
 
-    cEst /= sumArea + VSMALL;
+    cEst /= sumArea + vSmall;
 
     // Calculate the centre by breaking the cell into pyramids and
     // volume-weighted averaging their centres
@@ -231,7 +231,7 @@ Foam::point Foam::cell::centre
         sumV += pyrVol;
     }
 
-    return sumVc/(sumV + VSMALL);
+    return sumVc/(sumV + vSmall);
 }
 
 

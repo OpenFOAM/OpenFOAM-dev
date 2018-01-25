@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
     const scalar Ychar = YMixture[idSolid]*YSolid[CsLocalId_];
 
     // Surface combustion until combustible fraction is consumed
-    if (Ychar < SMALL)
+    if (Ychar < small)
     {
         return 0.0;
     }
@@ -149,7 +149,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
     const scalar YO2 = thermo.carrier().Y(O2GlobalId_)[celli];
 
     // Quick exit if oxidant not present
-    if (YO2 < ROOTVSMALL)
+    if (YO2 < rootVSmall)
     {
         return 0.0;
     }
@@ -177,7 +177,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
 
     // Thiele modulus []
     const scalar phi =
-        max(0.5*d*sqrt(Sb_*rhop*Ag_*ki*ppO2/(De*rhoO2)), ROOTVSMALL);
+        max(0.5*d*sqrt(Sb_*rhop*Ag_*ki*ppO2/(De*rhoO2)), rootVSmall);
 
     // Effectiveness factor []
     const scalar eta = max(3.0*sqr(phi)*(phi/tanh(phi) - 1.0), 0.0);

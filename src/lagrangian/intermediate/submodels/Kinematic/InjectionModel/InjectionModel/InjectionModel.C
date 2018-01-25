@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ bool Foam::InjectionModel<CloudType>::prepareForNextTimeStep
     // Volume of parcels to inject
     newVolumeFraction =
         this->volumeToInject(t0, t1)
-       /(volumeTotal_ + ROOTVSMALL);
+       /(volumeTotal_ + rootVSmall);
 
     if (newVolumeFraction > 0)
     {
@@ -136,7 +136,7 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
 
         if (celli >= 0)
         {
-            position += SMALL*(cellCentres[celli] - position);
+            position += small*(cellCentres[celli] - position);
 
             this->owner().mesh().findCellFacePt
             (

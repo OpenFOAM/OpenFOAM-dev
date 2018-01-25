@@ -143,7 +143,7 @@ bool Foam::checkWedges
                 const point& pt = p[pp.meshPoints()[i]];
                 scalar d = mag((pt - p0) & pp.n());
 
-                if (d > ROOTSMALL)
+                if (d > rootSmall)
                 {
                     if (report)
                     {
@@ -176,7 +176,7 @@ bool Foam::checkWedges
                 vector d(p[p1]-p[p0]);
                 scalar magD = mag(d);
 
-                if (magD > ROOTVSMALL)
+                if (magD > rootVSmall)
                 {
                     d /= magD;
 
@@ -666,7 +666,7 @@ Foam::label Foam::checkGeometry
 
     {
         faceSet faces(mesh, "wrongOrientedFaces", mesh.nFaces()/100 + 1);
-        if (mesh.checkFacePyramids(true, -SMALL, &faces))
+        if (mesh.checkFacePyramids(true, -small, &faces))
         {
             noFailedChecks++;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     phiName_("phi"),
     rhoName_("rho"),
     fieldInf_(Zero),
-    lInf_(-GREAT)
+    lInf_(-great)
 {
     this->refValue() = Zero;
     this->refGrad() = Zero;
@@ -83,7 +83,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     fieldInf_(Zero),
-    lInf_(-GREAT)
+    lInf_(-great)
 {
     if (dict.found("value"))
     {

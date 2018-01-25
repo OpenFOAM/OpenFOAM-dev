@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ void Foam::enrichedPatch::calcEnrichedFaces
 
                 scalar magSqrE = magSqr(e);
 
-                if (magSqrE > SMALL)
+                if (magSqrE > small)
                 {
                     e /= magSqrE;
                 }
@@ -201,7 +201,7 @@ void Foam::enrichedPatch::calcEnrichedFaces
                     // Insert the next point and reset its weight to exclude it
                     // from future picks
                     newFace.append(slavePointsOnEdge[nextPoint]);
-                    edgePointWeights[nextPoint] = GREAT;
+                    edgePointWeights[nextPoint] = great;
 
                     // Add the point into patch support
                     pointMap().insert
@@ -278,7 +278,7 @@ void Foam::enrichedPatch::calcEnrichedFaces
 
                 scalar magSqrE = magSqr(e);
 
-                if (magSqrE > SMALL)
+                if (magSqrE > small)
                 {
                     e /= magSqrE;
                 }
@@ -337,7 +337,7 @@ void Foam::enrichedPatch::calcEnrichedFaces
                     // Insert the next point and reset its weight to exclude it
                     // from future picks
                     newFace.append(masterPointsOnEdge[nextPoint]);
-                    edgePointWeights[nextPoint] = GREAT;
+                    edgePointWeights[nextPoint] = great;
 
                     // Add the point into patch support
                     pointMap().insert

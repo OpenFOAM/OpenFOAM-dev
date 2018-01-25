@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,8 @@ vector pitchForkRing::force(const vector r) const
 
     return vector
     (
-        (mu_ - sqr(pMinusR)) * pMinusR * r.x()/(p + VSMALL),
-        (mu_ - sqr(pMinusR)) * pMinusR * r.y()/(p + VSMALL),
+        (mu_ - sqr(pMinusR)) * pMinusR * r.x()/(p + vSmall),
+        (mu_ - sqr(pMinusR)) * pMinusR * r.y()/(p + vSmall),
       - alpha_ * r.z()
     );
 }

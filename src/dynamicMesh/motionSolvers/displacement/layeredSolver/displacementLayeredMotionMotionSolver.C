@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -432,7 +432,7 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
         {
             scalar d1 = patchDist[0][pointi];
             scalar d2 = patchDist[1][pointi];
-            if (d1 + d2 > SMALL)
+            if (d1 + d2 > small)
             {
                 scalar s = d1/(d1 + d2);
                 distance[pointi] = s;
@@ -466,7 +466,7 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
             {
                 scalar d1 = patchDist[0][pointi];
                 scalar d2 = patchDist[1][pointi];
-                scalar s = d1/(d1 + d2 + VSMALL);
+                scalar s = d1/(d1 + d2 + vSmall);
 
                 const vector& pd1 = patchDisp[0][pointi];
                 const vector& pd2 = patchDisp[1][pointi];

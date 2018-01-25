@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,7 +233,7 @@ void Foam::enrichedPatch::calcCutFaces() const
                 //     << " right: " << right
                 //     << endl;
 
-                scalar atanTurn = -GREAT;
+                scalar atanTurn = -great;
                 label bestAtanPoint = -1;
 
                 forAll(nextPoints, nextI)
@@ -254,7 +254,7 @@ void Foam::enrichedPatch::calcCutFaces() const
                         // Pout<< " corrected: " << newDir
                         //     << " mag: " << mag(newDir) << flush;
 
-                        if (magNewDir < SMALL)
+                        if (magNewDir < small)
                         {
                             FatalErrorInFunction
                                 << "projection error: slave patch probably "

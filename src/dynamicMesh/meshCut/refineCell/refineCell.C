@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,13 +42,13 @@ Foam::refineCell::refineCell(const label celli, const vector& direction)
 {
     scalar magDir = mag(direction_);
 
-    if (magDir < SMALL)
+    if (magDir < small)
     {
         FatalErrorInFunction
             << "(almost)zero vector as direction for cell " << cellNo_
             << abort(FatalError);
     }
-    else if (mag(magDir - 1) > SMALL)
+    else if (mag(magDir - 1) > small)
     {
         // Normalize
         direction_ /= mag(direction_);
@@ -63,13 +63,13 @@ Foam::refineCell::refineCell(Istream& is)
 {
     scalar magDir = mag(direction_);
 
-    if (magDir < SMALL)
+    if (magDir < small)
     {
         FatalErrorInFunction
             << "(almost)zero vector as direction for cell " << cellNo_
             << abort(FatalError);
     }
-    else if (mag(magDir - 1) > SMALL)
+    else if (mag(magDir - 1) > small)
     {
         // Normalize
         direction_ /= mag(direction_);

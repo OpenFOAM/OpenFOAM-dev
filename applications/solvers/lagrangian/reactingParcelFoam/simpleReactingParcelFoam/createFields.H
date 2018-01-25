@@ -59,7 +59,7 @@ dimensionedScalar rhoMax
         "rhoMax",
         simple.dict(),
         dimDensity,
-        GREAT
+        great
     )
 );
 

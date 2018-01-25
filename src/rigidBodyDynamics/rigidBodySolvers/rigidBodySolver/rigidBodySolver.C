@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ void Foam::RBD::rigidBodySolver::correctQuaternionJoints()
                 vector dv((q().block<vector>(qi) - q0().block<vector>(qi)));
                 scalar magDv = mag(dv);
 
-                if (magDv > SMALL)
+                if (magDv > small)
                 {
                     // Calculate the unit quaternion corresponding to the change
                     quaternion dQuat(dv/magDv, cos(magDv), true);

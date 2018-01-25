@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ void Foam::polyLineSet::calcSamples
     point oldPoint = sampleCoords_[0];
     for (label sampleI = 1; sampleI < sampleCoords_.size(); sampleI++)
     {
-        if (mag(sampleCoords_[sampleI] - oldPoint) < SMALL)
+        if (mag(sampleCoords_[sampleI] - oldPoint) < small)
         {
             FatalErrorInFunction
                 << "Incorrect sample specification."
@@ -156,7 +156,7 @@ void Foam::polyLineSet::calcSamples
 
     label sampleI = 0;
 
-    point lastSample(GREAT, GREAT, GREAT);
+    point lastSample(great, great, great);
     while (true)
     {
         // Get boundary intersection
@@ -178,7 +178,7 @@ void Foam::polyLineSet::calcSamples
                 sampleCoords_[sampleI+1]
             );
 
-            point bPoint(GREAT, GREAT, GREAT);
+            point bPoint(great, great, great);
             label bFacei = -1;
 
             if (bHits.size())

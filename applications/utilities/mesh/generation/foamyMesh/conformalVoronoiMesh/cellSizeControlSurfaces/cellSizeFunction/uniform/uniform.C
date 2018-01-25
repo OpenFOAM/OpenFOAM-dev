@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ bool uniform::cellSize
     surface_.findNearest
     (
         pointField(1, pt),
-        scalarField(1, sqr(GREAT)),
+        scalarField(1, sqr(great)),
         regionIndices_,
         hits
     );
@@ -179,7 +179,7 @@ bool uniform::setCellSize
 //        surface_.findNearest
 //        (
 //            pointField(1, pt),
-//            scalarField(1, sqr(GREAT)),
+//            scalarField(1, sqr(great)),
 //            hits
 //        );
 //

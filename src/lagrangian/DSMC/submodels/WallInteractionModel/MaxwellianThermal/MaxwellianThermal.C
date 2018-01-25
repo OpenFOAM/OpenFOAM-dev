@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ void Foam::MaxwellianThermal<CloudType>::correct
 
     Random& rndGen(cloud.rndGen());
 
-    while (mag(Ut) < SMALL)
+    while (mag(Ut) < small)
     {
         // If the incident velocity is parallel to the face normal, no
         // tangential direction can be chosen.  Add a perturbation to the
@@ -116,7 +116,7 @@ void Foam::MaxwellianThermal<CloudType>::correct
        *(
             rndGen.GaussNormal()*tw1
           + rndGen.GaussNormal()*tw2
-          - sqrt(-2.0*log(max(1 - rndGen.scalar01(), VSMALL)))*nw
+          - sqrt(-2.0*log(max(1 - rndGen.scalar01(), vSmall)))*nw
         );
 
     U += cloud.boundaryU().boundaryField()[wppIndex][wppLocalFace];

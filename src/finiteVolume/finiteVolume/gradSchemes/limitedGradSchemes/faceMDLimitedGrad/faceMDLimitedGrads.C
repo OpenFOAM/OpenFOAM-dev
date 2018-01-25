@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::fv::faceMDLimitedGrad<Foam::scalar>::calcGrad
 
     tmp<volVectorField> tGrad = basicGradScheme_().calcGrad(vsf, name);
 
-    if (k_ < SMALL)
+    if (k_ < small)
     {
         return tGrad;
     }
@@ -190,7 +190,7 @@ Foam::fv::faceMDLimitedGrad<Foam::vector>::calcGrad
 
     tmp<volTensorField> tGrad = basicGradScheme_().calcGrad(vvf, name);
 
-    if (k_ < SMALL)
+    if (k_ < small)
     {
         return tGrad;
     }

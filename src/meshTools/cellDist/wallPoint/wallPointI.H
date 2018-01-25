@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ inline bool Foam::wallPoint::update
         return false;
     }
 
-    if ((diff < SMALL) || ((distSqr_ > SMALL) && (diff/distSqr_ < tol)))
+    if ((diff < small) || ((distSqr_ > small) && (diff/distSqr_ < tol)))
     {
         // don't propagate small changes
         return false;
@@ -85,7 +85,7 @@ inline bool Foam::wallPoint::update
 inline Foam::wallPoint::wallPoint()
 :
     origin_(point::max),
-    distSqr_(-GREAT)
+    distSqr_(-great)
 {}
 
 
@@ -132,7 +132,7 @@ inline Foam::scalar& Foam::wallPoint::distSqr()
 template<class TrackingData>
 inline bool Foam::wallPoint::valid(TrackingData& td) const
 {
-    return distSqr_ > -SMALL;
+    return distSqr_ > -small;
 }
 
 
@@ -148,13 +148,13 @@ inline bool Foam::wallPoint::sameGeometry
 {
     scalar diff = mag(distSqr() - w2.distSqr());
 
-    if (diff < SMALL)
+    if (diff < small)
     {
         return true;
     }
     else
     {
-        if ((distSqr() > SMALL) && ((diff/distSqr()) < tol))
+        if ((distSqr() > small) && ((diff/distSqr()) < tol))
         {
             return true;
         }

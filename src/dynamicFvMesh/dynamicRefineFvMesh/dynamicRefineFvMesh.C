@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -645,7 +645,7 @@ Foam::dynamicRefineFvMesh::unrefine
 Foam::scalarField
 Foam::dynamicRefineFvMesh::maxPointField(const scalarField& pFld) const
 {
-    scalarField vFld(nCells(), -GREAT);
+    scalarField vFld(nCells(), -great);
 
     forAll(pointCells(), pointi)
     {
@@ -663,7 +663,7 @@ Foam::dynamicRefineFvMesh::maxPointField(const scalarField& pFld) const
 Foam::scalarField
 Foam::dynamicRefineFvMesh::maxCellField(const volScalarField& vFld) const
 {
-    scalarField pFld(nPoints(), -GREAT);
+    scalarField pFld(nPoints(), -great);
 
     forAll(pointCells(), pointi)
     {
@@ -1265,7 +1265,7 @@ bool Foam::dynamicRefineFvMesh::update()
         const scalar unrefineLevel = refineDict.lookupOrDefault<scalar>
         (
             "unrefineLevel",
-            GREAT
+            great
         );
         const label nBufferLayers =
             readLabel(refineDict.lookup("nBufferLayers"));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -310,7 +310,7 @@ Foam::scalar Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
     // quick reject if either face has zero area
     // Note: do not use stored face areas for target patch
     const scalar tgtMag = tgt.mag(tgtPoints);
-    if ((this->srcMagSf_[srcFacei] < ROOTVSMALL) || (tgtMag < ROOTVSMALL))
+    if ((this->srcMagSf_[srcFacei] < rootVSmall) || (tgtMag < rootVSmall))
     {
         return area;
     }
@@ -330,7 +330,7 @@ Foam::scalar Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
     }
     scalar magN = mag(n);
 
-    if (magN > ROOTVSMALL)
+    if (magN > rootVSmall)
     {
         area = inter.calc(src, tgt, n/magN, this->triMode_);
     }

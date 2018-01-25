@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::Pi
     const scalarField& x
 ) const
 {
-    const scalar clip = log(GREAT);
+    const scalar clip = log(great);
 
     return 1/sqr(cosh(max(- clip, min(clip, parameter(t, u, x)))));
 }

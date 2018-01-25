@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
         scalar magTangent = 0.0;
 
         Random rnd(1234);
-        while (magTangent < SMALL)
+        while (magTangent < small)
         {
             vector v = rnd.vector01();
 
@@ -575,7 +575,7 @@ Foam::ParticleCollector<CloudType>::ParticleCollector
         {
             polygons[polyI] = polygonAndNormal[polyI].first();
             normal_[polyI] = polygonAndNormal[polyI].second();
-            normal_[polyI] /= mag(normal_[polyI]) + ROOTVSMALL;
+            normal_[polyI] /= mag(normal_[polyI]) + rootVSmall;
         }
 
         initPolygons(polygons);
@@ -700,7 +700,7 @@ void Foam::ParticleCollector<CloudType>::postMove
                 {}
             }
 
-            Uhat /= mag(Uhat) + ROOTVSMALL;
+            Uhat /= mag(Uhat) + rootVSmall;
 
             if (Unormal < 0)
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::InflationInjection<CloudType>::InflationInjection
     volumeAccumulator_(0.0),
     fraction_(1.0),
     selfSeed_(this->coeffDict().lookupOrDefault("selfSeed", false)),
-    dSeed_(SMALL),
+    dSeed_(small),
     sizeDistribution_
     (
         distributionModel::New

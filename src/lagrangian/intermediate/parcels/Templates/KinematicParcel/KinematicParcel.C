@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -313,7 +313,7 @@ bool Foam::KinematicParcel<ParcelType>::move
         // maxCo times the total value.
         scalar f = 1 - p.stepFraction();
         f = min(f, maxCo);
-        f = min(f, maxCo*l/max(SMALL*l, mag(s)));
+        f = min(f, maxCo*l/max(small*l, mag(s)));
         if (p.active())
         {
             // Track to the next face
@@ -332,7 +332,7 @@ bool Foam::KinematicParcel<ParcelType>::move
         const scalar dt = (p.stepFraction() - sfrac)*trackTime;
 
         // Avoid problems with extremely small timesteps
-        if (dt > ROOTVSMALL)
+        if (dt > rootVSmall)
         {
             // Update cell based properties
             p.setCellValues(cloud, ttd);

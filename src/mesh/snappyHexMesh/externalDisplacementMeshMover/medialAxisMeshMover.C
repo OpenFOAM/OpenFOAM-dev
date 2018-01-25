@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,7 +186,7 @@ void Foam::medialAxisMeshMover::smoothPatchNormals
             // full smoothing neighbours + point value
             average[pointi] = 0.5*(normals[pointi]+average[pointi]);
             normals[pointi] = average[pointi];
-            normals[pointi] /= mag(normals[pointi]) + VSMALL;
+            normals[pointi] /= mag(normals[pointi]) + vSmall;
         }
     }
 }
@@ -275,7 +275,7 @@ void Foam::medialAxisMeshMover::smoothNormals
                 //full smoothing neighbours + point value
                 average[pointi] = 0.5*(normals[pointi]+average[pointi]);
                 normals[pointi] = average[pointi];
-                normals[pointi] /= mag(normals[pointi]) + VSMALL;
+                normals[pointi] /= mag(normals[pointi]) + vSmall;
             }
         }
     }
@@ -300,7 +300,7 @@ bool Foam::medialAxisMeshMover::isMaxEdge
     vector v0(points[e[0]] - pointWallDist[e[0]].origin());
     scalar magV0(mag(v0));
 
-    if (magV0 < SMALL)
+    if (magV0 < small)
     {
         return false;
     }
@@ -308,7 +308,7 @@ bool Foam::medialAxisMeshMover::isMaxEdge
     vector v1(points[e[1]] - pointWallDist[e[1]].origin());
     scalar magV1(mag(v1));
 
-    if (magV1 < SMALL)
+    if (magV1 < small)
     {
         return false;
     }
@@ -575,7 +575,7 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
                 //const point medialAxisPt = e.centre(points);
                 vector eVec = e.vec(points);
                 scalar eMag = mag(eVec);
-                if (eMag > VSMALL)
+                if (eMag > vSmall)
                 {
                     eVec /= eMag;
 
@@ -817,7 +817,7 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
             scalar wDist2 = pointWallDist[pointi].distSqr();
             scalar mDist = medialDist_[pointi];
 
-            if (wDist2 < sqr(SMALL) && mDist < SMALL)
+            if (wDist2 < sqr(small) && mDist < small)
             //- Note: maybe less strict:
             //(
             //    wDist2 < sqr(meshRefiner_.mergeDistance())
@@ -1548,7 +1548,7 @@ void Foam::medialAxisMeshMover::smoothLambdaMuDisplacement
 
         forAll(displacement, i)
         {
-            if (medialRatio_[i] > SMALL && medialRatio_[i] < 1-SMALL)
+            if (medialRatio_[i] > small && medialRatio_[i] < 1-small)
             {
                 displacement[i] = (1-lambda)*displacement[i]+lambda*average[i];
             }
@@ -1569,7 +1569,7 @@ void Foam::medialAxisMeshMover::smoothLambdaMuDisplacement
 
         forAll(displacement, i)
         {
-            if (medialRatio_[i] > SMALL && medialRatio_[i] < 1-SMALL)
+            if (medialRatio_[i] > small && medialRatio_[i] < 1-small)
             {
                 displacement[i] = (1-mu)*displacement[i]+mu*average[i];
             }
@@ -1850,15 +1850,15 @@ void Foam::medialAxisMeshMover::calculateDisplacement
             //- Option 1: look only at extrusion thickness v.s. distance
             //  to nearest (medial axis or static) point.
             scalar mDist = medialDist_[pointi];
-            scalar thicknessRatio = thickness[patchPointi]/(mDist+VSMALL);
+            scalar thicknessRatio = thickness[patchPointi]/(mDist+vSmall);
 
             //- Option 2: Look at component in the direction
             //  of nearest (medial axis or static) point.
             vector n =
                 patchDisp[patchPointi]
-              / (mag(patchDisp[patchPointi]) + VSMALL);
+              / (mag(patchDisp[patchPointi]) + vSmall);
             vector mVec = mesh().points()[pointi]-medialVec_[pointi];
-            mVec /= mag(mVec)+VSMALL;
+            mVec /= mag(mVec)+vSmall;
             thicknessRatio *= (n&mVec);
 
             if (thicknessRatio > maxThicknessToMedialRatio)
@@ -2153,7 +2153,7 @@ bool Foam::medialAxisMeshMover::move
     );
     forAll(extrudeStatus, pointi)
     {
-        if (mag(patchDisp[pointi]) <= minThickness[pointi]+SMALL)
+        if (mag(patchDisp[pointi]) <= minThickness[pointi]+small)
         {
             extrudeStatus[pointi] = snappyLayerDriver::NOEXTRUDE;
         }

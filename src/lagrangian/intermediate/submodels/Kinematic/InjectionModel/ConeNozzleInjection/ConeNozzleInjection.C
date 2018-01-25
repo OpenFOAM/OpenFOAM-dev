@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,7 +182,7 @@ Foam::ConeNozzleInjection<CloudType>::ConeNozzleInjection
     vector tangent = Zero;
     scalar magTangent = 0.0;
 
-    while(magTangent < SMALL)
+    while(magTangent < small)
     {
         vector v = rndGen.sample01<vector>();
 

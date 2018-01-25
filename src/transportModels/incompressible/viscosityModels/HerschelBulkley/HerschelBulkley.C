@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Foam::viscosityModels::HerschelBulkley::calcNu() const
         (
             nu0_,
             (tau0_ + k_*rtone*pow(tone*sr(), n_))
-           /(max(sr(), dimensionedScalar ("VSMALL", dimless/dimTime, VSMALL)))
+           /(max(sr(), dimensionedScalar ("vSmall", dimless/dimTime, vSmall)))
         )
     );
 }

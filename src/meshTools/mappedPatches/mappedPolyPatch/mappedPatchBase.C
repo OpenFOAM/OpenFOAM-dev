@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,7 +224,7 @@ void Foam::mappedPatchBase::findSamples
 
                 if (celli == -1)
                 {
-                    nearest[sampleI].second().first() = Foam::sqr(GREAT);
+                    nearest[sampleI].second().first() = Foam::sqr(great);
                     nearest[sampleI].second().second() = Pstream::myProcNo();
                 }
                 else
@@ -260,7 +260,7 @@ void Foam::mappedPatchBase::findSamples
             {
                 const point& sample = samples[sampleI];
 
-                nearest[sampleI].first() = tree.findNearest(sample, sqr(GREAT));
+                nearest[sampleI].first() = tree.findNearest(sample, sqr(great));
                 nearest[sampleI].second().first() = magSqr
                 (
                     nearest[sampleI].first().hitPoint()
@@ -281,7 +281,7 @@ void Foam::mappedPatchBase::findSamples
             {
                 forAll(samples, sampleI)
                 {
-                    nearest[sampleI].second().first() = Foam::sqr(GREAT);
+                    nearest[sampleI].second().first() = Foam::sqr(great);
                     nearest[sampleI].second().second() = Pstream::myProcNo();
                 }
             }
@@ -298,8 +298,8 @@ void Foam::mappedPatchBase::findSamples
                         1e-4
                     )
                 );
-                patchBb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-                patchBb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+                patchBb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+                patchBb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
                 indexedOctree<treeDataFace> boundaryTree
                 (
@@ -328,7 +328,7 @@ void Foam::mappedPatchBase::findSamples
 
                     if (!nearInfo.hit())
                     {
-                        nearest[sampleI].second().first() = Foam::sqr(GREAT);
+                        nearest[sampleI].second().first() = Foam::sqr(great);
                         nearest[sampleI].second().second() =
                             Pstream::myProcNo();
                     }
@@ -355,7 +355,7 @@ void Foam::mappedPatchBase::findSamples
             {
                 forAll(samples, sampleI)
                 {
-                    nearest[sampleI].second().first() = Foam::sqr(GREAT);
+                    nearest[sampleI].second().first() = Foam::sqr(great);
                     nearest[sampleI].second().second() = Pstream::myProcNo();
                 }
             }
@@ -370,8 +370,8 @@ void Foam::mappedPatchBase::findSamples
                         1e-4
                     )
                 );
-                patchBb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-                patchBb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+                patchBb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+                patchBb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
                 indexedOctree<treeDataPoint> boundaryTree
                 (
@@ -399,7 +399,7 @@ void Foam::mappedPatchBase::findSamples
 
                     if (!nearInfo.hit())
                     {
-                        nearest[sampleI].second().first() = Foam::sqr(GREAT);
+                        nearest[sampleI].second().first() = Foam::sqr(great);
                         nearest[sampleI].second().second() =
                             Pstream::myProcNo();
                     }
@@ -437,7 +437,7 @@ void Foam::mappedPatchBase::findSamples
 
                 if (facei == -1)
                 {
-                    nearest[sampleI].second().first() = Foam::sqr(GREAT);
+                    nearest[sampleI].second().first() = Foam::sqr(great);
                     nearest[sampleI].second().second() = Pstream::myProcNo();
                 }
                 else
@@ -544,7 +544,7 @@ void Foam::mappedPatchBase::calcMapping() const
 
     // Check offset
     vectorField d(offsettedPoints-patchPoints());
-    bool coincident = (gAverage(mag(d)) <= ROOTVSMALL);
+    bool coincident = (gAverage(mag(d)) <= rootVSmall);
 
     if (sampleMyself && coincident)
     {

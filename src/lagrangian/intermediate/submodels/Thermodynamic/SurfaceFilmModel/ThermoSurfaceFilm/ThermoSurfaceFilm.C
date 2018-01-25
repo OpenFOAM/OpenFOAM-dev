@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ Foam::vector Foam::ThermoSurfaceFilm<CloudType>::tangentVector
     vector tangent = Zero;
     scalar magTangent = 0.0;
 
-    while (magTangent < SMALL)
+    while (magTangent < small)
     {
         vector vTest = rndGen_.sample01<vector>();
         tangent = vTest - (vTest & v)*v;
@@ -378,7 +378,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
     const scalar Ns = 5.0*(We/Wec - 1.0);
 
     // Average diameter of splashed particles
-    const scalar dBarSplash = 1/cbrt(6.0)*cbrt(mRatio/Ns)*d + ROOTVSMALL;
+    const scalar dBarSplash = 1/cbrt(6.0)*cbrt(mRatio/Ns)*d + rootVSmall;
 
     // Cumulative diameter splash distribution
     const scalar dMax = 0.9*cbrt(mRatio)*d;
@@ -420,7 +420,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
 
     // Helper variables to calculate magUns0
     const scalar logD = log(d);
-    const scalar coeff2 = log(dNew[0]) - logD + ROOTVSMALL;
+    const scalar coeff2 = log(dNew[0]) - logD + rootVSmall;
     scalar coeff1 = 0.0;
     forAll(dNew, i)
     {

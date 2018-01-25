@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,13 +177,13 @@ void standardPhaseChange::correctModel
                 const scalar Dab = filmThermo.D(pc, Tloc);
 
                 // Schmidt number
-                const scalar Sc = muInfc/(rhoInfc*(Dab + ROOTVSMALL));
+                const scalar Sc = muInfc/(rhoInfc*(Dab + rootVSmall));
 
                 // Sherwood number
                 const scalar Sh = this->Sh(Re, Sc);
 
                 // Mass transfer coefficient [m/s]
-                const scalar hm = Sh*Dab/(L_ + ROOTVSMALL);
+                const scalar hm = Sh*Dab/(L_ + rootVSmall);
 
                 // Add mass contribution to source
                 dm = dt*magSf[celli]*rhoInfc*hm*(Ys - YInf[celli])/(1.0 - Ys);

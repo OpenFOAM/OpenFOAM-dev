@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,7 +249,7 @@ inline void Foam::janafThermo<EquationOfState>::operator+=
 
     EquationOfState::operator+=(jt);
 
-    if (mag(this->Y()) > SMALL)
+    if (mag(this->Y()) > small)
     {
         Y1 /= this->Y();
         const scalar Y2 = jt.Y()/this->Y();
@@ -302,7 +302,7 @@ inline Foam::janafThermo<EquationOfState> Foam::operator+
     EquationOfState eofs = jt1;
     eofs += jt2;
 
-    if (mag(eofs.Y()) < SMALL)
+    if (mag(eofs.Y()) < small)
     {
         return janafThermo<EquationOfState>
         (

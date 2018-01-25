@@ -69,9 +69,9 @@ void Foam::automatic::smoothField(triSurfaceScalarField& surf)
                 const scalar faceValue = surf[faceLabel];
                 const scalar distance = mag(faceCentre - fC);
 
-                newValue += faceValue/(distance + SMALL);
+                newValue += faceValue/(distance + small);
 
-                totalDist += 1.0/(distance + SMALL);
+                totalDist += 1.0/(distance + small);
 
                 if (value < faceValue)
                 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ bool interpolationCellPointFace<Type>::findTet
                 faceNormal = -faceNormal;
             }
 
-            vector v1 = position - referencePoint + SMALL*faceNormal;
+            vector v1 = position - referencePoint + small*faceNormal;
             scalar rightSide = v1 & faceNormal;
 
             // since normal is inwards, inside the tet
@@ -104,7 +104,7 @@ bool interpolationCellPointFace<Type>::findTet
             scalar phiLength = (position - referencePoint) & faceNormal;
 
             scalar maxLength =
-                max(VSMALL, (tetPoints[n] - referencePoint) & faceNormal);
+                max(vSmall, (tetPoints[n] - referencePoint) & faceNormal);
 
             phi[n] = phiLength/maxLength;
 

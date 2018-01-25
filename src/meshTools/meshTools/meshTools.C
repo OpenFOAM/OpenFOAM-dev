@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ bool Foam::meshTools::visNormal
 {
     forAll(faceLabels, i)
     {
-        if ((faceNormals[faceLabels[i]] & n) < SMALL)
+        if ((faceNormals[faceLabels[i]] & n) < small)
         {
             // Found normal in different direction from n.
             return false;
@@ -99,7 +99,7 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
             {
                 const vector& n = faceNormals[pFaces[i]];
 
-                if (n.x() > SMALL)
+                if (n.x() > small)
                 {
                     // All -x octants become invisible
                     visOctant &= ~mXmYmZMask;
@@ -107,7 +107,7 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
                     visOctant &= ~mXpYmZMask;
                     visOctant &= ~mXpYpZMask;
                 }
-                else if (n.x() < -SMALL)
+                else if (n.x() < -small)
                 {
                     // All +x octants become invisible
                     visOctant &= ~pXmYmZMask;
@@ -116,14 +116,14 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
                     visOctant &= ~pXpYpZMask;
                 }
 
-                if (n.y() > SMALL)
+                if (n.y() > small)
                 {
                     visOctant &= ~mXmYmZMask;
                     visOctant &= ~mXmYpZMask;
                     visOctant &= ~pXmYmZMask;
                     visOctant &= ~pXmYpZMask;
                 }
-                else if (n.y() < -SMALL)
+                else if (n.y() < -small)
                 {
                     visOctant &= ~mXpYmZMask;
                     visOctant &= ~mXpYpZMask;
@@ -131,14 +131,14 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
                     visOctant &= ~pXpYpZMask;
                 }
 
-                if (n.z() > SMALL)
+                if (n.z() > small)
                 {
                     visOctant &= ~mXmYmZMask;
                     visOctant &= ~mXpYmZMask;
                     visOctant &= ~pXmYmZMask;
                     visOctant &= ~pXpYmZMask;
                 }
-                else if (n.z() < -SMALL)
+                else if (n.z() < -small)
                 {
                     visOctant &= ~mXmYpZMask;
                     visOctant &= ~mXpYpZMask;
@@ -784,7 +784,7 @@ Foam::vector Foam::meshTools::edgeToCutDir
         edgeI = meshTools::walkFace(mesh, facei, edgeI, vertI, 2);
     }
 
-    avgVec /= mag(avgVec) + VSMALL;
+    avgVec /= mag(avgVec) + vSmall;
 
     return avgVec;
 }
@@ -808,7 +808,7 @@ Foam::label Foam::meshTools::cutDirToEdge
 
     labelHashSet doneEdges(2*cEdges.size());
 
-    scalar maxCos = -GREAT;
+    scalar maxCos = -great;
     label maxEdgeI = -1;
 
     for (label i = 0; i < 4; i++)

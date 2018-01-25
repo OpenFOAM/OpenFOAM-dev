@@ -547,7 +547,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 const scalarField Al
                 (
-                    fLiquid*4.8*exp( min(-Ja/80, log(VGREAT)))
+                    fLiquid*4.8*exp( min(-Ja/80, log(vGreat)))
                 );
 
                 const scalarField A2(min(pi*sqr(dDep_)*N*Al/4, scalar(1)));

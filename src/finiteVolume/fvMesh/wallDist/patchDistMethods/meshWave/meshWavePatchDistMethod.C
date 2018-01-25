@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::patchDistMethods::meshWave::meshWave
 
 bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
 {
-    y = dimensionedScalar("yWall", dimLength, GREAT);
+    y = dimensionedScalar("yWall", dimLength, great);
 
     // Calculate distance starting from patch faces
     patchWave wave(mesh_, patchIDs_, correctWalls_);
@@ -109,7 +109,7 @@ bool Foam::patchDistMethods::meshWave::correct
     volVectorField& n
 )
 {
-    y = dimensionedScalar("yWall", dimLength, GREAT);
+    y = dimensionedScalar("yWall", dimLength, great);
 
     // Collect pointers to data on patches
     UPtrList<vectorField> patchData(mesh_.boundaryMesh().size());

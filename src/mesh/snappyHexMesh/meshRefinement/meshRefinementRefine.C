@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -954,7 +954,7 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
 
     // Extend segments a bit
     {
-        const vectorField smallVec(ROOTSMALL*(end-start));
+        const vectorField smallVec(rootSmall*(end-start));
         start -= smallVec;
         end += smallVec;
     }
@@ -1148,7 +1148,7 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
 
     // Extend segments a bit
     {
-        const vectorField smallVec(ROOTSMALL*(end-start));
+        const vectorField smallVec(rootSmall*(end-start));
         start -= smallVec;
         end += smallVec;
     }
@@ -1751,7 +1751,7 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 
     // Extend segments a bit
     {
-        const vectorField smallVec(ROOTSMALL*(end-start));
+        const vectorField smallVec(rootSmall*(end-start));
         start -= smallVec;
         end += smallVec;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
         if (omegaHeader.typeHeaderOk<volScalarField>(true))
         {
             volScalarField omega(omegaHeader, mesh);
-            dimensionedScalar k0("VSMALL", k.dimensions(), VSMALL);
+            dimensionedScalar k0("vSmall", k.dimensions(), vSmall);
             omega = (1 - mask)*omega + mask*epsilon/(Cmu*k + k0);
 
             // Do not correct BC - wall functions will use non-updated k from

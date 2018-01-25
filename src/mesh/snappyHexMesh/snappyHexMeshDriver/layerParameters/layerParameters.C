@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -389,7 +389,7 @@ Foam::scalar Foam::layerParameters::layerThickness
 
         case FIRST_AND_EXPANSION:
         {
-            if (mag(expansionRatio-1) < SMALL)
+            if (mag(expansionRatio-1) < small)
             {
                 return firstLayerThickess * nLayers;
             }
@@ -404,7 +404,7 @@ Foam::scalar Foam::layerParameters::layerThickness
 
         case FINAL_AND_EXPANSION:
         {
-            if (mag(expansionRatio-1) < SMALL)
+            if (mag(expansionRatio-1) < small)
             {
                 return finalLayerThickess * nLayers;
             }
@@ -422,7 +422,7 @@ Foam::scalar Foam::layerParameters::layerThickness
         {
             FatalErrorInFunction
                 << exit(FatalError);
-            return -VGREAT;
+            return -vGreat;
         }
     }
 }
@@ -473,7 +473,7 @@ Foam::scalar Foam::layerParameters::layerExpansionRatio
         {
             FatalErrorInFunction
                 << "Illegal thickness specification" << exit(FatalError);
-            return -VGREAT;
+            return -vGreat;
         }
     }
 }
@@ -532,7 +532,7 @@ Foam::scalar Foam::layerParameters::firstLayerThickness
         {
             FatalErrorInFunction
                 << "Illegal thickness specification" << exit(FatalError);
-            return -VGREAT;
+            return -vGreat;
         }
     }
 }
@@ -546,7 +546,7 @@ Foam::scalar Foam::layerParameters::finalLayerThicknessRatio
 {
     if (nLayers > 0)
     {
-        if (mag(expansionRatio-1) < SMALL)
+        if (mag(expansionRatio-1) < small)
         {
             return 1.0/nLayers;
         }

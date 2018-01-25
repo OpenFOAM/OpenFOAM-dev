@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Description
         - no item can be removed more than once.
     - removed cell: cell set to 0 faces.
     - removed face: face set to 0 vertices.
-    - removed point: coordinate set to vector::max (VGREAT,VGREAT,VGREAT).
+    - removed point: coordinate set to vector::max (vGreat,vGreat,vGreat).
     Note that this might give problems if this value is used already.
     To see if point is equal to above value we don't use == (which might give
     problems with roundoff error) but instead compare the individual component

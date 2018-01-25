@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ public:
         scalar dN = 2*(d & gradcN);
 
         // Calculate the limiter
-        scalar limiter = 1 - k_*(dN - df)*(dP - df)/max(sqr(dN + dP), SMALL);
+        scalar limiter = 1 - k_*(dN - df)*(dP - df)/max(sqr(dN + dP), small);
 
         // Limit the limiter between linear and upwind
         return max(min(limiter, 1), 0);

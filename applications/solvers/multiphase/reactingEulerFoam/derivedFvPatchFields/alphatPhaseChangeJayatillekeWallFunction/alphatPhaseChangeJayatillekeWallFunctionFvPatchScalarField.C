@@ -93,7 +93,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
             scalar df = 1 - 1.0/(ypt*kappa_*Prat[facei]);
             scalar yptNew = ypt - f/df;
 
-            if (yptNew < VSMALL)
+            if (yptNew < vSmall)
             {
                 ypsf[facei] = 0;
             }
@@ -194,7 +194,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::calcAlphat
             scalar A = qDot[facei]*rhow[facei]*uTau[facei]*y[facei];
             scalar B = qDot[facei]*Pr[facei]*yPlus[facei];
             scalar C = Pr[facei]*0.5*rhow[facei]*uTau[facei]*sqr(magUp[facei]);
-            alphaEff = A/(B + C + VSMALL);
+            alphaEff = A/(B + C + vSmall);
         }
         else
         {
@@ -206,7 +206,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::calcAlphat
             scalar C =
                 0.5*rhow[facei]*uTau[facei]
                *(Prt_*sqr(magUp[facei]) + (Pr[facei] - Prt_)*sqr(magUc));
-            alphaEff = A/(B + C + VSMALL);
+            alphaEff = A/(B + C + vSmall);
         }
 
         // Update convective heat transfer turbulent thermal diffusivity

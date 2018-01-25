@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -272,7 +272,7 @@ void Foam::orientedSurface::findZoneSide
             const scalar magD = mag(d);
 
             // Check if normal different enough to decide upon
-            if (magD > SMALL && (mag(n & d/magD) > 1e-6))
+            if (magD > small && (mag(n & d/magD) > 1e-6))
             {
                 pointField end(1, fc + d);
 
@@ -466,7 +466,7 @@ bool Foam::orientedSurface::orient
     {
         // Linear search for nearest unvisited point on surface.
 
-        scalar minDist = GREAT;
+        scalar minDist = great;
         point minPoint;
         label minFacei = -1;
 

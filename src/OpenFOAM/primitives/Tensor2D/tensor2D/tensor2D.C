@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,25 +53,25 @@ const Foam::tensor2D Foam::tensor2D::vsType::one
 template<>
 const Foam::tensor2D Foam::tensor2D::vsType::max
 (
-    tensor2D::uniform(VGREAT)
+    tensor2D::uniform(vGreat)
 );
 
 template<>
 const Foam::tensor2D Foam::tensor2D::vsType::min
 (
-    tensor2D::uniform(-VGREAT)
+    tensor2D::uniform(-vGreat)
 );
 
 template<>
 const Foam::tensor2D Foam::tensor2D::vsType::rootMax
 (
-    tensor2D::uniform(ROOTVGREAT)
+    tensor2D::uniform(rootVGreat)
 );
 
 template<>
 const Foam::tensor2D Foam::tensor2D::vsType::rootMin
 (
-    tensor2D::uniform(-ROOTVGREAT)
+    tensor2D::uniform(-rootVGreat)
 );
 
 template<>
@@ -109,10 +109,10 @@ Foam::vector2D Foam::eigenValues(const tensor2D& t)
                 lambda[i] = 0;
                 break;
             case roots::posInf:
-                lambda[i] = VGREAT;
+                lambda[i] = vGreat;
                 break;
             case roots::negInf:
-                lambda[i] = - VGREAT;
+                lambda[i] = - vGreat;
                 break;
             case roots::nan:
                 FatalErrorInFunction
@@ -142,13 +142,13 @@ Foam::vector2D Foam::eigenVector
     tensor2D A(T - lambda*tensor2D::I);
 
     // Evaluate the eigenvector using the largest divisor
-    if (mag(A.yy()) > mag(A.xx()) && mag(A.yy()) > SMALL)
+    if (mag(A.yy()) > mag(A.xx()) && mag(A.yy()) > small)
     {
         vector2D ev(1, - A.yx()/A.yy());
 
         return ev/mag(ev);
     }
-    else if (mag(A.xx()) > SMALL)
+    else if (mag(A.xx()) > small)
     {
         vector2D ev(- A.xy()/A.xx(), 1);
 

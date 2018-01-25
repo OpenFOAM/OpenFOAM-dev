@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Foam::ODESolver::ODESolver(const ODESystem& ode, const dictionary& dict)
     odes_(ode),
     maxN_(ode.nEqns()),
     n_(ode.nEqns()),
-    absTol_(n_, dict.lookupOrDefault<scalar>("absTol", SMALL)),
+    absTol_(n_, dict.lookupOrDefault<scalar>("absTol", small)),
     relTol_(n_, dict.lookupOrDefault<scalar>("relTol", 1e-4)),
     maxSteps_(dict.lookupOrDefault<scalar>("maxSteps", 10000))
 {}

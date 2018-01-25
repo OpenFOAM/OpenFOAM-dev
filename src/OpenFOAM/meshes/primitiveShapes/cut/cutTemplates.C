@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::tetCut
 {
     // Get the min and max over all four vertices and quick return if there is
     // no change of sign
-    scalar levelMin = VGREAT, levelMax = - VGREAT;
+    scalar levelMin = vGreat, levelMax = - vGreat;
     for (label i = 0; i < 4; ++ i)
     {
         levelMin = min(levelMin, level[i]);

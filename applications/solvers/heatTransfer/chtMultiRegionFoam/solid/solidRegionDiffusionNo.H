@@ -1,4 +1,4 @@
-scalar DiNum = -GREAT;
+scalar DiNum = -great;
 
 forAll(solidRegions, i)
 {

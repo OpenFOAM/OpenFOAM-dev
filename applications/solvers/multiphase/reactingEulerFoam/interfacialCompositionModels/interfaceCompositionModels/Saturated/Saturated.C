@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,7 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Yf
         return
             this->thermo_.Y()[speciesIndex]
            *(scalar(1) - wRatioByP()*saturationModel_->pSat(Tf))
-           /max(scalar(1) - this->thermo_.Y()[saturatedIndex_], SMALL);
+           /max(scalar(1) - this->thermo_.Y()[saturatedIndex_], small);
     }
 }
 
@@ -143,7 +143,7 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::YfPrime
         return
           - this->thermo_.Y()[speciesIndex]
            *wRatioByP()*saturationModel_->pSatPrime(Tf)
-           /max(scalar(1) - this->thermo_.Y()[saturatedIndex_], SMALL);
+           /max(scalar(1) - this->thermo_.Y()[saturatedIndex_], small);
     }
 }
 

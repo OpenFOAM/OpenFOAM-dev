@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ inline Foam::scalar Foam::SVD::minNonZeroS() const
     for (label i=1; i<S_.size(); i++)
     {
         scalar s = S_[i];
-        if (s > VSMALL && s < minS) minS = s;
+        if (s > vSmall && s < minS) minS = s;
     }
     return minS;
 }

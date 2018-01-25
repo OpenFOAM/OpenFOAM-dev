@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,13 +47,13 @@ Foam::scalar Foam::primitiveMeshTools::faceSkewness
     // Skewness vector
     vector sv =
         Cpf
-      - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + ROOTVSMALL))*d;
-    vector svHat = sv/(mag(sv) + ROOTVSMALL);
+      - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + rootVSmall))*d;
+    vector svHat = sv/(mag(sv) + rootVSmall);
 
     // Normalisation distance calculated as the approximate distance
     // from the face centre to the edge of the face in the direction
     // of the skewness
-    scalar fd = 0.2*mag(d) + ROOTVSMALL;
+    scalar fd = 0.2*mag(d) + rootVSmall;
     const face& f = mesh.faces()[facei];
     forAll(f, pi)
     {
@@ -79,20 +79,20 @@ Foam::scalar Foam::primitiveMeshTools::boundaryFaceSkewness
     vector Cpf = fCtrs[facei] - ownCc;
 
     vector normal = fAreas[facei];
-    normal /= mag(normal) + ROOTVSMALL;
+    normal /= mag(normal) + rootVSmall;
     vector d = normal*(normal & Cpf);
 
 
     // Skewness vector
     vector sv =
         Cpf
-      - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + ROOTVSMALL))*d;
-    vector svHat = sv/(mag(sv) + ROOTVSMALL);
+      - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + rootVSmall))*d;
+    vector svHat = sv/(mag(sv) + rootVSmall);
 
     // Normalisation distance calculated as the approximate distance
     // from the face centre to the edge of the face in the direction
     // of the skewness
-    scalar fd = 0.4*mag(d) + ROOTVSMALL;
+    scalar fd = 0.4*mag(d) + rootVSmall;
     const face& f = mesh.faces()[facei];
     forAll(f, pi)
     {
@@ -113,7 +113,7 @@ Foam::scalar Foam::primitiveMeshTools::faceOrthogonality
 {
     vector d = neiCc - ownCc;
 
-    return (d & s)/(mag(d)*mag(s) + ROOTVSMALL);
+    return (d & s)/(mag(d)*mag(s) + rootVSmall);
 }
 
 
@@ -296,15 +296,15 @@ void Foam::primitiveMeshTools::cellClosedness
             (
                 maxOpenness,
                 mag(sumClosed[celli][cmpt])
-               /(sumMagClosed[celli][cmpt] + ROOTVSMALL)
+               /(sumMagClosed[celli][cmpt] + rootVSmall)
             );
         }
         openness[celli] = maxOpenness;
 
         // Calculate the aspect ration as the maximum of Cartesian component
         // aspect ratio to the total area hydraulic area aspect ratio
-        scalar minCmpt = VGREAT;
-        scalar maxCmpt = -VGREAT;
+        scalar minCmpt = vGreat;
+        scalar maxCmpt = -vGreat;
         for (direction dir = 0; dir < vector::nComponents; dir++)
         {
             if (meshD[dir] == 1)
@@ -314,10 +314,10 @@ void Foam::primitiveMeshTools::cellClosedness
             }
         }
 
-        scalar aspectRatio = maxCmpt/(minCmpt + ROOTVSMALL);
+        scalar aspectRatio = maxCmpt/(minCmpt + rootVSmall);
         if (nDims == 3)
         {
-            scalar v = max(ROOTVSMALL, vols[celli]);
+            scalar v = max(rootVSmall, vols[celli]);
 
             aspectRatio = max
             (
@@ -342,7 +342,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
     const faceList& fcs = mesh.faces();
 
     vectorField faceNormals(faceAreas);
-    faceNormals /= mag(faceNormals) + ROOTVSMALL;
+    faceNormals /= mag(faceNormals) + rootVSmall;
 
     tmp<scalarField> tfaceAngles(new scalarField(mesh.nFaces()));
     scalarField& faceAngles = tfaceAngles.ref();
@@ -355,7 +355,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
         // Get edge from f[0] to f[size-1];
         vector ePrev(p[f.first()] - p[f.last()]);
         scalar magEPrev = mag(ePrev);
-        ePrev /= magEPrev + ROOTVSMALL;
+        ePrev /= magEPrev + rootVSmall;
 
         scalar maxEdgeSin = 0.0;
 
@@ -367,9 +367,9 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
             // Normalized vector between two consecutive points
             vector e10(p[f[fp1]] - p[f[fp0]]);
             scalar magE10 = mag(e10);
-            e10 /= magE10 + ROOTVSMALL;
+            e10 /= magE10 + rootVSmall;
 
-            if (magEPrev > SMALL && magE10 > SMALL)
+            if (magEPrev > small && magE10 > small)
             {
                 vector edgeNormal = ePrev ^ e10;
                 scalar magEdgeNormal = mag(edgeNormal);
@@ -383,7 +383,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
                     // Check normal
                     edgeNormal /= magEdgeNormal;
 
-                    if ((edgeNormal & faceNormals[facei]) < SMALL)
+                    if ((edgeNormal & faceNormals[facei]) < small)
                     {
                         maxEdgeSin = max(maxEdgeSin, magEdgeNormal);
                     }
@@ -423,7 +423,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
     {
         const face& f = fcs[facei];
 
-        if (f.size() > 3 && magAreas[facei] > ROOTVSMALL)
+        if (f.size() > 3 && magAreas[facei] > rootVSmall)
         {
             const point& fc = fCtrs[facei];
 
@@ -442,7 +442,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
                 sumA += mag(n);
             }
 
-            faceFlatness[facei] = magAreas[facei]/(sumA + ROOTVSMALL);
+            faceFlatness[facei] = magAreas[facei]/(sumA + rootVSmall);
         }
     }
 

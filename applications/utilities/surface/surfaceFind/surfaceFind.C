@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     const pointField& localPoints = surf1.localPoints();
 
     label minIndex = -1;
-    scalar minDist = GREAT;
+    scalar minDist = great;
 
     forAll(localPoints, pointi)
     {
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     const pointField& points = surf1.points();
 
     minIndex = -1;
-    minDist = GREAT;
+    minDist = great;
 
     forAll(surf1, facei)
     {

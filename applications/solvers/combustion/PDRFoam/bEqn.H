@@ -35,14 +35,14 @@ if (ign.ignited())
 
     volScalarField mgb("mgb", mag(n));
 
-    dimensionedScalar dMgb("dMgb", mgb.dimensions(), SMALL);
+    dimensionedScalar dMgb("dMgb", mgb.dimensions(), small);
 
     {
         volScalarField bc(b*c);
 
         dMgb += 1.0e-3*
             (bc*mgb)().weightedAverage(mesh.V())
-           /(bc.weightedAverage(mesh.V()) + SMALL);
+           /(bc.weightedAverage(mesh.V()) + small);
     }
 
     mgb += dMgb;

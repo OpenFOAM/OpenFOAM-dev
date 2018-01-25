@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ Foam::PatchTools::pointNormals
 
             if (nFaces >= 1)
             {
-                n /= mag(n)+VSMALL;
+                n /= mag(n)+vSmall;
             }
 
             // Put back into slave slots
@@ -173,7 +173,7 @@ Foam::PatchTools::pointNormals
                 extrudeN[f[fp]] += n;
             }
         }
-        extrudeN /= mag(extrudeN)+VSMALL;
+        extrudeN /= mag(extrudeN)+vSmall;
     }
 
 
@@ -226,7 +226,7 @@ Foam::PatchTools::edgeNormals
                 edgeNormals[edgeI] += faceNormals[eFaces[i]];
             }
         }
-        edgeNormals /= mag(edgeNormals)+VSMALL;
+        edgeNormals /= mag(edgeNormals)+vSmall;
     }
 
 
@@ -262,7 +262,7 @@ Foam::PatchTools::edgeNormals
         plusEqOp<point>(),              // add since normalised later on
         mapDistribute::transform()
     );
-    cppEdgeData /= mag(cppEdgeData)+VSMALL;
+    cppEdgeData /= mag(cppEdgeData)+vSmall;
 
 
     // Back from cpp-edge to patch-edge data

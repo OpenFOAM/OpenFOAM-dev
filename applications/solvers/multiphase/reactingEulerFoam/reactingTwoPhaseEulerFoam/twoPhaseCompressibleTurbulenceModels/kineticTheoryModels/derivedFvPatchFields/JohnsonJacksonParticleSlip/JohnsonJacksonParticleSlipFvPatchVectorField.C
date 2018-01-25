@@ -230,7 +230,7 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
        *gs0
        *specularityCoefficient_.value()
        *sqrt(3*Theta)
-       /max(6*(nu - nuFric)*alphaMax.value(), SMALL)
+       /max(6*(nu - nuFric)*alphaMax.value(), small)
     );
 
     this->valueFraction() = c/(c + patch().deltaCoeffs());

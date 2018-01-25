@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,7 +239,7 @@ void kinematicSingleLayer::continuityCheck()
         const volScalarField mass(deltaRho_*magSf());
         const dimensionedScalar totalMass =
             fvc::domainIntegrate(mass)
-          + dimensionedScalar("SMALL", dimMass*dimVolume, ROOTVSMALL);
+          + dimensionedScalar("small", dimMass*dimVolume, rootVSmall);
 
         const scalar sumLocalContErr =
             (
@@ -463,7 +463,7 @@ kinematicSingleLayer::kinematicSingleLayer
 
     cumulativeContErr_(0.0),
 
-    deltaSmall_("deltaSmall", dimLength, SMALL),
+    deltaSmall_("deltaSmall", dimLength, small),
     deltaCoLimit_(solution().lookupOrDefault("deltaCoLimit", 1e-4)),
 
     rho_
@@ -944,7 +944,7 @@ scalar kinematicSingleLayer::CourantNumber() const
         const scalarField sumPhi
         (
             fvc::surfaceSum(mag(phi_))().primitiveField()
-          / (deltaRho_.primitiveField() + ROOTVSMALL)
+          / (deltaRho_.primitiveField() + rootVSmall)
         );
 
         forAll(delta_, i)

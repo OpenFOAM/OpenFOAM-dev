@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ void Foam::circleSet::calcSamples
     vector axis1 = startPoint_ - origin_;
     const scalar radius = mag(axis1);
 
-    if (mag(axis1 & circleAxis_) > SMALL)
+    if (mag(axis1 & circleAxis_) > small)
     {
         WarningInFunction
             << "Vector defined by (startPoint - origin) not orthogonal to "

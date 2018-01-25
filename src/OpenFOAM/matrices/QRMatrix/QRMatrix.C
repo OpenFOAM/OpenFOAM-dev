@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ void Foam::QRMatrix<MatrixType>::solvex
             sum -= x[j]*R_(i, j);
         }
 
-        if (mag(R_(i, i)) < SMALL)
+        if (mag(R_(i, i)) < small)
         {
             FatalErrorInFunction
                 << "Back-substitution failed due to small diagonal"

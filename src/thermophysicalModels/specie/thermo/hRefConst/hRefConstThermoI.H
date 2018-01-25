@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,7 @@ inline void Foam::hRefConstThermo<EquationOfState>::operator+=
 
     EquationOfState::operator+=(ct);
 
-    if (mag(this->Y()) > SMALL)
+    if (mag(this->Y()) > small)
     {
         Y1 /= this->Y();
         const scalar Y2 = ct.Y()/this->Y();
@@ -180,7 +180,7 @@ inline Foam::hRefConstThermo<EquationOfState> Foam::operator+
       + static_cast<const EquationOfState&>(ct2)
     );
 
-    if (mag(eofs.Y()) < SMALL)
+    if (mag(eofs.Y()) < small)
     {
         return hRefConstThermo<EquationOfState>
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,12 +61,12 @@ Foam::pointHit Foam::face::ray
 
     point ctr = Foam::average(points(meshPoints));
 
-    scalar nearestHitDist = GREAT;
+    scalar nearestHitDist = great;
 
-    scalar nearestMissDist = GREAT;
+    scalar nearestMissDist = great;
     bool eligible = false;
 
-    // Initialize to miss, distance = GREAT
+    // Initialize to miss, distance = great
     pointHit nearest(p);
 
     const labelList& f = *this;
@@ -158,9 +158,9 @@ Foam::pointHit Foam::face::intersection
         ).intersection(p, q, alg, tol);
     }
 
-    scalar nearestHitDist = VGREAT;
+    scalar nearestHitDist = vGreat;
 
-    // Initialize to miss, distance = GREAT
+    // Initialize to miss, distance = great
     pointHit nearest(p);
 
     const labelList& f = *this;
@@ -231,7 +231,7 @@ Foam::pointHit Foam::face::nearestPointClassify
     const face& f = *this;
     point ctr = centre(meshPoints);
 
-    // Initialize to miss, distance=GREAT
+    // Initialize to miss, distance=great
     pointHit nearest(p);
 
     nearType = -1;

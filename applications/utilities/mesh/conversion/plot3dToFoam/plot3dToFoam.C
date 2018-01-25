@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,18 +179,18 @@ int main(int argc, char *argv[])
     mergePoints
     (
         points,
-        SMALL,
+        small,
         false,
         oldToNew,
         newPoints
     );
 
-    Info<< "Merged points within " << SMALL << " distance. Merged from "
+    Info<< "Merged points within " << small << " distance. Merged from "
         << oldToNew.size() << " down to " << newPoints.size()
         << " points." << endl;
 
     // Scale the points
-    if (scaleFactor > 1.0 + SMALL || scaleFactor < 1.0 - SMALL)
+    if (scaleFactor > 1.0 + small || scaleFactor < 1.0 - small)
     {
         newPoints *= scaleFactor;
     }

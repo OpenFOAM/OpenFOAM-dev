@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -274,7 +274,7 @@ void Foam::chemistryReductionMethods::PFA<CompType, ThermoType>::reduceMechanism
         {
             label ri = rABOtherSpec(A, i);
             scalar maxPACA = max(PA[ri],CA[ri]);
-            if (maxPACA > VSMALL)
+            if (maxPACA > vSmall)
             {
                 for (int j=0; j<NbrABInit[ri]; j++)
                 {

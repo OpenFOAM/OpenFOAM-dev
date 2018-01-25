@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,8 +129,8 @@ displacementInterpolationMotionSolver
             const word& zoneName = faceZoneToTable[i][0];
             const faceZone& fz = fZones[zoneName];
 
-            scalar minCoord = VGREAT;
-            scalar maxCoord = -VGREAT;
+            scalar minCoord = vGreat;
+            scalar maxCoord = -vGreat;
 
             forAll(fz().meshPoints(), localI)
             {
@@ -155,8 +155,8 @@ displacementInterpolationMotionSolver
         zoneCoordinates.sort();
 
         // Slightly tweak min and max face zone so points sort within
-        zoneCoordinates[0] -= SMALL;
-        zoneCoordinates.last() += SMALL;
+        zoneCoordinates[0] -= small;
+        zoneCoordinates.last() += small;
 
         // Check if we have static min and max mesh bounds
         const scalarField meshCoords(points0().component(dir));
@@ -188,7 +188,7 @@ displacementInterpolationMotionSolver
             label sz = rangeZone.size();
             rangeToCoord.setSize(sz+1);
             rangeZone.setSize(sz+1);
-            rangeToCoord[rangeI] = minCoord-SMALL;
+            rangeToCoord[rangeI] = minCoord-small;
             rangeZone[rangeI] = -1;
 
             if (debug)
@@ -219,7 +219,7 @@ displacementInterpolationMotionSolver
             label sz = rangeToCoord.size();
             rangeToCoord.setSize(sz+1);
             rangeZone.setSize(sz+1);
-            rangeToCoord[sz] = maxCoord+SMALL;
+            rangeToCoord[sz] = maxCoord+small;
             rangeZone[sz] = -1;
 
             if (debug)

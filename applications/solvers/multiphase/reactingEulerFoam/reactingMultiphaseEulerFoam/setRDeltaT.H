@@ -10,7 +10,7 @@
 
     scalar maxDeltaT
     (
-        pimpleDict.lookupOrDefault<scalar>("maxDeltaT", GREAT)
+        pimpleDict.lookupOrDefault<scalar>("maxDeltaT", great)
     );
 
     scalar rDeltaTSmoothingCoeff

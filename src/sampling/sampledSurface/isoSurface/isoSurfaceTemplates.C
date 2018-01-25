@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,7 +166,7 @@ Type Foam::isoSurface::generatePoint
 {
     scalar d = s1-s0;
 
-    if (mag(d) > VSMALL)
+    if (mag(d) > vSmall)
     {
         scalar s = (iso_-s0)/d;
 

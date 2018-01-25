@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2012-2016 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2012-2018 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ class distanceCalc
             geometry,
             surfaces,
             samples,
-            scalarField(1, GREAT),
+            scalarField(1, great),
             volumeType::OUTSIDE,
             nearestSurfaces,
             distance
@@ -201,7 +201,7 @@ public:
             ////- Surface intersects bb (but not using intersection test)
             //scalar ccDist = signedDistance(bb.midpoint());
             //scalar ccVal = ccDist - _iso_val;
-            //if (mag(ccVal) < SMALL)
+            //if (mag(ccVal) < small)
             //{
             //    return true;
             //}
@@ -323,7 +323,7 @@ public:
             //samples[6] = point(c.xmax(), c.ymax(), c.zmax());
             //samples[7] = point(c.xmin(), c.ymax(), c.zmax());
 
-            //scalarField nearestDistSqr(8, GREAT);
+            //scalarField nearestDistSqr(8, great);
             //
             //Foam::List<pointIndexHit> nearestInfo;
             //surf_.findNearest(samples, nearestDistSqr, nearestInfo);
@@ -568,7 +568,7 @@ int main(int argc, char *argv[])
             geometryToConformTo.findSurfaceNearest
             (
                 s.faceCentres(),
-                scalarField(s.size(), sqr(GREAT)),
+                scalarField(s.size(), sqr(great)),
                 hitInfo,
                 hitSurfaces
             );

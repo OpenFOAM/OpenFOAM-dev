@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,10 +213,10 @@ Foam::scalarField Foam::coupledPolyPatch::calcFaceTol
 
         // 1. calculate a typical size of the face. Use maximum distance
         //    to face centre
-        scalar maxLenSqr = -GREAT;
+        scalar maxLenSqr = -great;
         // 2. as measure of truncation error when comparing two coordinates
-        //    use SMALL * maximum component
-        scalar maxCmpt = -GREAT;
+        //    use small * maximum component
+        scalar maxCmpt = -great;
 
         forAll(f, fp)
         {
@@ -227,8 +227,8 @@ Foam::scalarField Foam::coupledPolyPatch::calcFaceTol
 
         tols[facei] = max
         (
-            SMALL,
-            max(SMALL*maxCmpt, Foam::sqrt(maxLenSqr))
+            small,
+            max(small*maxCmpt, Foam::sqrt(maxLenSqr))
         );
     }
     return tols;
@@ -244,7 +244,7 @@ Foam::label Foam::coupledPolyPatch::getRotation
 )
 {
     label anchorFp = -1;
-    scalar minDistSqr = GREAT;
+    scalar minDistSqr = great;
 
     forAll(f, fp)
     {
@@ -314,7 +314,7 @@ void Foam::coupledPolyPatch::calcTransformTensors
     // Tolerance calculation.
     // - normal calculation: assume absTol is the absolute error in a
     // single normal/transformation calculation. Consists both of numerical
-    // precision (on the order of SMALL and of writing precision
+    // precision (on the order of small and of writing precision
     // (from e.g. decomposition)
     // Then the overall error of summing the normals is sqrt(size())*absTol
     // - separation calculation: pass in from the outside an allowable error.

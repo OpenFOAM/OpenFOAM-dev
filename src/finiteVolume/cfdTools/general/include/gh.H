@@ -1,7 +1,7 @@
     Info<< "Calculating field g.h\n" << endl;
     dimensionedScalar ghRef
     (
-        mag(g.value()) > SMALL
+        mag(g.value()) > small
       ? g & (cmptMag(g.value())/mag(g.value()))*hRef
       : dimensionedScalar("ghRef", g.dimensions()*dimLength, 0)
     );

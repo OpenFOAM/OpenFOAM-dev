@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,10 +72,10 @@ label findPoint(const primitivePatch& pp, const point& nearPoint)
     const labelList& meshPoints = pp.meshPoints();
 
     // Find nearest and next nearest
-    scalar minDistSqr = GREAT;
+    scalar minDistSqr = great;
     label minI = -1;
 
-    scalar almostMinDistSqr = GREAT;
+    scalar almostMinDistSqr = great;
     label almostMinI = -1;
 
     forAll(meshPoints, i)
@@ -136,10 +136,10 @@ label findEdge
     const edgeList& edges = pp.edges();
 
     // Find nearest and next nearest
-    scalar minDist = GREAT;
+    scalar minDist = great;
     label minI = -1;
 
-    scalar almostMinDist = GREAT;
+    scalar almostMinDist = great;
     label almostMinI = -1;
 
     forAll(edges, edgeI)
@@ -218,10 +218,10 @@ label findFace
     const pointField& points = pp.points();
 
     // Find nearest and next nearest
-    scalar minDist = GREAT;
+    scalar minDist = great;
     label minI = -1;
 
-    scalar almostMinDist = GREAT;
+    scalar almostMinDist = great;
     label almostMinI = -1;
 
     forAll(pp, patchFacei)
@@ -289,7 +289,7 @@ label findCell(const primitiveMesh& mesh, const point& nearPoint)
         const labelList& cPoints = mesh.cellPoints()[celli];
 
         label minI = -1;
-        scalar minDistSqr = GREAT;
+        scalar minDistSqr = great;
 
         forAll(cPoints, i)
         {

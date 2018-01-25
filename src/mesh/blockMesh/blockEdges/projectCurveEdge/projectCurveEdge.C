@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,11 +170,11 @@ Foam::projectCurveEdge::position(const scalarList& lambdas) const
             );
 
             // Reset start and end point
-            if (lambdas[0] < SMALL)
+            if (lambdas[0] < small)
             {
                 points[0] = startPt;
             }
-            if (lambdas.last() > 1.0-SMALL)
+            if (lambdas.last() > 1.0-small)
             {
                 points.last() = endPt;
             }

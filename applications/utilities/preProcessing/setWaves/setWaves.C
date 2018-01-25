@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
                     1
                    /(
                        wallDist(mesh, labelList(1, patchi)).y()
-                     + dimensionedScalar("ySmall", dimLength, SMALL)
+                     + dimensionedScalar("ySmall", dimLength, small)
                     )
                 );
 

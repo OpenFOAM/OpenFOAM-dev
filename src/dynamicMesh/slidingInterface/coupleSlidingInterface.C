@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1439,7 +1439,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
                                     // its weight to exclude it from
                                     // future picks
                                     newFaceLabels.append(curPime[nextPoint]);
-                                    edgePointWeights[nextPoint] = GREAT;
+                                    edgePointWeights[nextPoint] = great;
                                 }
                             }
 
@@ -1746,7 +1746,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
                                     // its weight to exclude it from
                                     // future picks
                                     newFaceLabels.append(curPise[nextPoint]);
-                                    edgePointWeights[nextPoint] = GREAT;
+                                    edgePointWeights[nextPoint] = great;
                                 }
                             }
 

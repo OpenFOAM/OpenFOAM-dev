@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ void Foam::adjointOutletVelocityFvPatchVectorField::updateCoeffs()
         patch().lookupPatchField<volVectorField, vector>("U");
 
     scalarField Un(mag(patch().nf() & Up));
-    vectorField UtHat((Up - patch().nf()*Un)/(Un + SMALL));
+    vectorField UtHat((Up - patch().nf()*Un)/(Un + small));
 
     vectorField Uan(patch().nf()*(patch().nf() & patchInternalField()));
 

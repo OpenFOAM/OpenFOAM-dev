@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ projectPoints
 
         bool foundEligible = false;
 
-        scalar sqrDistance = GREAT;
+        scalar sqrDistance = great;
 
         // Force the full search for the first point to ensure good
         // starting face
@@ -218,7 +218,7 @@ projectPoints
             }
 
             result[curLocalPointLabel] = objectHit(false, -1);
-            scalar minDistance = GREAT;
+            scalar minDistance = great;
 
             forAll(masterFaces, facei)
             {
@@ -360,7 +360,7 @@ projectFaceCentres
 
         bool foundEligible = false;
 
-        scalar sqrDistance = GREAT;
+        scalar sqrDistance = great;
 
         // Force the full search for the first point to ensure good
         // starting face
@@ -459,7 +459,7 @@ projectFaceCentres
             }
 
             result[curLocalFaceLabel] = objectHit(false, -1);
-            scalar minDistance = GREAT;
+            scalar minDistance = great;
 
             forAll(masterFaces, facei)
             {

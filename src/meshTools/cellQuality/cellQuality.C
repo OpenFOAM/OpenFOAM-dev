@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::nonOrthogonality() const
         scalar magS = mag(s);
 
         scalar cosDDotS =
-            radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
+            radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + vSmall))));
 
         result[own[facei]] = max(cosDDotS, result[own[facei]]);
 
@@ -89,7 +89,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::nonOrthogonality() const
             scalar magS = mag(s);
 
             scalar cosDDotS =
-                radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
+                radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + vSmall))));
 
             result[faceCells[facei]] = max(cosDDotS, result[faceCells[facei]]);
         }
@@ -137,7 +137,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::skewness() const
 
         scalar skewness =
             mag(faceCtrs[facei] - faceIntersection)
-           /(mag(cellCtrs[nei[facei]] - cellCtrs[own[facei]]) + VSMALL);
+           /(mag(cellCtrs[nei[facei]] - cellCtrs[own[facei]]) + vSmall);
 
         result[own[facei]] = max(skewness, result[own[facei]]);
 
@@ -167,7 +167,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::skewness() const
                 mag(faceCentres[facei] - faceIntersection)
                /(
                     mag(faceCentres[facei] - cellCtrs[faceCells[facei]])
-                  + VSMALL
+                  + vSmall
                 );
 
             result[faceCells[facei]] = max(skewness, result[faceCells[facei]]);
@@ -203,7 +203,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceNonOrthogonality() const
         scalar magS = mag(s);
 
         scalar cosDDotS =
-            radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
+            radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + vSmall))));
 
         result[facei] = cosDDotS;
     }
@@ -228,7 +228,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceNonOrthogonality() const
             scalar magS = mag(s);
 
             scalar cosDDotS =
-                radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
+                radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + vSmall))));
 
             result[globalFacei++] = cosDDotS;
         }
@@ -275,7 +275,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceSkewness() const
 
         result[facei] =
             mag(faceCtrs[facei] - faceIntersection)
-           /(mag(cellCtrs[nei[facei]] - cellCtrs[own[facei]]) + VSMALL);
+           /(mag(cellCtrs[nei[facei]] - cellCtrs[own[facei]]) + vSmall);
     }
 
 
@@ -304,7 +304,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceSkewness() const
                 mag(faceCentres[facei] - faceIntersection)
                /(
                     mag(faceCentres[facei] - cellCtrs[faceCells[facei]])
-                  + VSMALL
+                  + vSmall
                 );
         }
     }

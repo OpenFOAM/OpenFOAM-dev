@@ -15,7 +15,7 @@
     // The pdf value for 4.0*delta is already very small.
     // scalar maxValue = delta*4.0;
 
-    if (maxValue - minValue < SMALL)
+    if (maxValue - minValue < small)
     {
         minValue = maxValue/20.0;
     }

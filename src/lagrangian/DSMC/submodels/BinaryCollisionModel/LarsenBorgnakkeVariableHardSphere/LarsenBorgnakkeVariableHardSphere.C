@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Foam::scalar Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::energyRatio
     scalar ChiAMinusOne = ChiA - 1;
     scalar ChiBMinusOne = ChiB - 1;
 
-    if (ChiAMinusOne < SMALL && ChiBMinusOne < SMALL)
+    if (ChiAMinusOne < small && ChiBMinusOne < small)
     {
         return rndGen.scalar01();
     }
@@ -58,11 +58,11 @@ Foam::scalar Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::energyRatio
 
         energyRatio = rndGen.scalar01();
 
-        if (ChiAMinusOne < SMALL)
+        if (ChiAMinusOne < small)
         {
             P = 1.0 - pow(energyRatio, ChiB);
         }
-        else if (ChiBMinusOne < SMALL)
+        else if (ChiBMinusOne < small)
         {
             P = 1.0 - pow(energyRatio, ChiA);
         }
@@ -151,7 +151,7 @@ Foam::scalar Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::sigmaTcR
 
     scalar cR = mag(pP.U() - pQ.U());
 
-    if (cR < VSMALL)
+    if (cR < vSmall)
     {
         return 0;
     }

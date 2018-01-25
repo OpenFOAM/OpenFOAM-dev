@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ Foam::diameterModels::IATEsources::wallBoiling::R
 
             forAll(alphatw, facei)
             {
-                if (dmdt[facei] > SMALL)
+                if (dmdt[facei] > small)
                 {
                     const label faceCelli = faceCells[facei];
                     R[faceCelli] =

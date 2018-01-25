@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,8 +121,8 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
 
     dimensionedScalar dMgft = 1.0e-3*
         (ft_*cAux*mgft)().weightedAverage(this->mesh().V())
-       /((ft_*cAux)().weightedAverage(this->mesh().V()) + SMALL)
-      + dimensionedScalar("ddMgft", mgft.dimensions(), SMALL);
+       /((ft_*cAux)().weightedAverage(this->mesh().V()) + small)
+      + dimensionedScalar("ddMgft", mgft.dimensions(), small);
 
     mgft += dMgft;
 

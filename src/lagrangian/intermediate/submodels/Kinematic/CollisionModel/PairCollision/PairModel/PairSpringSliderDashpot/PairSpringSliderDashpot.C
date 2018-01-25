@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,9 @@ void Foam::PairSpringSliderDashpot<CloudType>::findMinMaxProperties
     scalar& UMagMax
 ) const
 {
-    RMin = VGREAT;
-    rhoMax = -VGREAT;
-    UMagMax = -VGREAT;
+    RMin = vGreat;
+    rhoMax = -vGreat;
+    UMagMax = -vGreat;
 
     forAllConstIter(typename CloudType, this->owner(), iter)
     {
@@ -119,7 +119,7 @@ Foam::PairSpringSliderDashpot<CloudType>::PairSpringSliderDashpot
 
     Gstar_ = G/(2.0*(2.0 - nu));
 
-    cohesion_ = (mag(cohesionEnergyDensity_) > VSMALL);
+    cohesion_ = (mag(cohesionEnergyDensity_) > vSmall);
 }
 
 
@@ -157,7 +157,7 @@ Foam::label Foam::PairSpringSliderDashpot<CloudType>::nSubCycles() const
     scalar minCollisionDeltaT =
         5.429675
        *RMin
-       *pow(rhoMax/(Estar_*sqrt(UMagMax) + VSMALL), 0.4)
+       *pow(rhoMax/(Estar_*sqrt(UMagMax) + vSmall), 0.4)
        /collisionResolutionSteps_;
 
     return ceil(this->owner().time().deltaTValue()/minCollisionDeltaT);
@@ -195,7 +195,7 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
     {
         //Particles in collision
 
-        vector rHat_AB = r_AB/(r_AB_mag + VSMALL);
+        vector rHat_AB = r_AB/(r_AB_mag + vSmall);
 
         vector U_AB = pA.U() - pB.U();
 
@@ -254,7 +254,7 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
 
         scalar tangentialOverlapMag = mag(tangentialOverlap_AB);
 
-        if (tangentialOverlapMag > VSMALL)
+        if (tangentialOverlapMag > vSmall)
         {
             scalar kT = 8.0*sqrt(R*normalOverlapMag)*Gstar_;
 

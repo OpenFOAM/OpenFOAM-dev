@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ limitedSnGrad<Type>::correction
            *mag(snGradScheme<Type>::snGrad(vf, deltaCoeffs(vf), "SndGrad"))
            /(
                 (1 - limitCoeff_)*mag(corr)
-              + dimensionedScalar("small", corr.dimensions(), SMALL)
+              + dimensionedScalar("small", corr.dimensions(), small)
             ),
             dimensionedScalar("one", dimless, 1.0)
         )

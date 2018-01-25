@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ void injectionModelList::info(Ostream& os)
 
     forAll(patchInjectedMasses, patchi)
     {
-        if (mag(patchInjectedMasses[patchi]) > VSMALL)
+        if (mag(patchInjectedMasses[patchi]) > vSmall)
         {
             os  << indent << indent << "from patch " << pbm[patchi].name()
                 << " = " << patchInjectedMasses[patchi] << nl;

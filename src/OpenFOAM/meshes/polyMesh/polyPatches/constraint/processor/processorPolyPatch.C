@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,13 +238,13 @@ void Foam::processorPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 
             // For small face area calculation the results of the area
             // calculation have been found to only be accurate to ~1e-20
-            if (magSf < SMALL || nbrMagSf < SMALL)
+            if (magSf < small || nbrMagSf < small)
             {
                 // Undetermined normal. Use dummy normal to force separation
                 // check.
                 faceNormals[facei] = point(1, 0, 0);
                 nbrFaceNormals[facei] = -faceNormals[facei];
-                tols[facei] = GREAT;
+                tols[facei] = great;
             }
             else if (mag(magSf - nbrMagSf) > matchTolerance()*sqr(tols[facei]))
             {
@@ -637,7 +637,7 @@ Foam::label Foam::processorPolyPatch::matchFace
 
     label matchFp = -1;
 
-    scalar closestMatchDistSqr = sqr(GREAT);
+    scalar closestMatchDistSqr = sqr(great);
 
     ConstCirculator<face> aCirc(a);
     ConstCirculator<face> bCirc(b);
@@ -816,8 +816,8 @@ bool Foam::processorPolyPatch::order
 
                 const scalar absTolSqr = sqr(tols[lFacei]);
 
-                scalar closestMatchDistSqr = sqr(GREAT);
-                scalar matchDistSqr = sqr(GREAT);
+                scalar closestMatchDistSqr = sqr(great);
+                scalar matchDistSqr = sqr(great);
                 label closestFaceMatch = -1;
                 label closestFaceRotation = -1;
 

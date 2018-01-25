@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ void Foam::directAMI<SourcePatch, TargetPatch>::appendToDirectSeeds
             const face& srcF = this->srcPatch_[srcI];
             const point& srcC = srcCf[srcI];
 
-            scalar tol = GREAT;
+            scalar tol = great;
             forAll(srcF, fpI)
             {
                 const point& p = srcPoints[srcF[fpI]];
@@ -66,7 +66,7 @@ void Foam::directAMI<SourcePatch, TargetPatch>::appendToDirectSeeds
                     tol = d2;
                 }
             }
-            tol = max(SMALL, 0.0001*sqrt(tol));
+            tol = max(small, 0.0001*sqrt(tol));
 
             bool found = false;
             forAll(tgtNbr, j)

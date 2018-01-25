@@ -223,8 +223,8 @@ Foam::triSurfaceSearch::tree() const
             // Slightly extended bb. Slightly off-centred just so on symmetric
             // geometry there are less face/edge aligned items.
             bb = bb.extend(rndGen, 1e-4);
-            bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-            bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+            bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+            bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
         }
 
         scalar oldTol = indexedOctree<treeDataTriSurface>::perturbTol();
@@ -412,7 +412,7 @@ void Foam::triSurfaceSearch::findLineAll
             if (inter.hit())
             {
                 vector lineVec = end[i] - start[i];
-                lineVec /= mag(lineVec) + VSMALL;
+                lineVec /= mag(lineVec) + vSmall;
 
                 if (checkUniqueHit(inter, hits, lineVec))
                 {

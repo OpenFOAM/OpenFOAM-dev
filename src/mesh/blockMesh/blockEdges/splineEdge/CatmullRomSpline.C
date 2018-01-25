@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,11 +42,11 @@ Foam::CatmullRomSpline::CatmullRomSpline
 Foam::point Foam::CatmullRomSpline::position(const scalar mu) const
 {
     // endpoints
-    if (mu < SMALL)
+    if (mu < small)
     {
         return points().first();
     }
-    else if (mu > 1 - SMALL)
+    else if (mu > 1 - small)
     {
         return points().last();
     }

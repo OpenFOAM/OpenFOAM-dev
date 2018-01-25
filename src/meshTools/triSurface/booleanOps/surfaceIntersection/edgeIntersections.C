@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ void Foam::edgeIntersections::checkEdges(const triSurface& surf)
 
     treeBoundBox bb(localPoints);
 
-    scalar minSize = SMALL * bb.minDim();
+    scalar minSize = small * bb.minDim();
 
     forAll(edges, edgeI)
     {
@@ -133,7 +133,7 @@ void Foam::edgeIntersections::intersectEdges
         const point& pEnd = points1[meshPoints[e.end()]];
 
         const vector eVec(pEnd - pStart);
-        const vector n(eVec/(mag(eVec) + VSMALL));
+        const vector n(eVec/(mag(eVec) + vSmall));
 
         // Start tracking somewhat before pStart and up to somewhat after p1.
         // Note that tolerances here are smaller than those used to classify
@@ -336,13 +336,13 @@ bool Foam::edgeIntersections::rotatePerturb
 
             // Make sure rndVec only perp to edge
             vector n(points1[meshPoints[e[1]]] - points1[meshPoints[e[0]]]);
-            scalar magN = mag(n) + VSMALL;
+            scalar magN = mag(n) + vSmall;
             n /= magN;
 
             rndVec -= n*(n & rndVec);
 
             // Normalize
-            rndVec /= mag(rndVec) + VSMALL;
+            rndVec /= mag(rndVec) + vSmall;
 
             // Scale to be moved by tolerance.
             rndVec *= 0.01*magN;
@@ -523,7 +523,7 @@ Foam::scalarField Foam::edgeIntersections::minEdgeLength(const triSurface& surf)
     {
         const labelList& pEdges = pointEdges[pointi];
 
-        scalar minDist = GREAT;
+        scalar minDist = great;
 
         forAll(pEdges, i)
         {

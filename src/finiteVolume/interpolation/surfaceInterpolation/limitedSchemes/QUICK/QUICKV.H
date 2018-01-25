@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ public:
         }
 
         // Calculate the effective limiter for the QUICK interpolation
-        scalar QLimiter = (phif - phiU)/stabilise(phiCD - phiU, SMALL);
+        scalar QLimiter = (phif - phiU)/stabilise(phiCD - phiU, small);
 
         // Limit the limiter between upwind and downwind
         return max(min(QLimiter, 2), 0);

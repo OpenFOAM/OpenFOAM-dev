@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ bool Foam::ReitzKHRT<CloudType>::update
 
     // Note: Reitz is using radius instead of diameter for Re-number
     scalar reLiquid = rho*Urmag*r/mu;
-    scalar ohnesorge = sqrt(weLiquid)/(reLiquid + VSMALL);
+    scalar ohnesorge = sqrt(weLiquid)/(reLiquid + vSmall);
     scalar taylor = ohnesorge*sqrt(weGas);
 
     vector acceleration = Urel/tMom;
@@ -155,10 +155,10 @@ bool Foam::ReitzKHRT<CloudType>::update
     );
 
     // RT wave number
-    scalar KRT = sqrt(helpVariable/(3.0*sigma + VSMALL));
+    scalar KRT = sqrt(helpVariable/(3.0*sigma + vSmall));
 
     // wavelength of the fastest growing RT frequency
-    scalar lambdaRT = constant::mathematical::twoPi*cRT_/(KRT + VSMALL);
+    scalar lambdaRT = constant::mathematical::twoPi*cRT_/(KRT + vSmall);
 
     // if lambdaRT < diameter, then RT waves are growing on the surface
     // and we start to keep track of how long they have been growing
@@ -168,13 +168,13 @@ bool Foam::ReitzKHRT<CloudType>::update
     }
 
     // characteristic RT breakup time
-    scalar tauRT = cTau_/(omegaRT + VSMALL);
+    scalar tauRT = cTau_/(omegaRT + vSmall);
 
     // check if we have RT breakup
     if ((tc > tauRT) && (lambdaRT < d))
     {
         // the RT breakup creates diameter/lambdaRT new droplets
-        tc = -GREAT;
+        tc = -great;
         scalar nDrops = d/lambdaRT;
         d = cbrt(d3/nDrops);
     }

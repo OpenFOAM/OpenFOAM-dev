@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ flowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF, dict, false),
-    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -VGREAT)),
+    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -vGreat)),
     extrapolateProfile_
     (
         dict.lookupOrDefault<Switch>("extrapolateProfile", false)
@@ -244,7 +244,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::write(Ostream& os) const
     if (!volumetric_)
     {
         writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-        writeEntryIfDifferent<scalar>(os, "rhoInlet", -VGREAT, rhoInlet_);
+        writeEntryIfDifferent<scalar>(os, "rhoInlet", -vGreat, rhoInlet_);
     }
     os.writeKeyword("extrapolateProfile")
         << extrapolateProfile_ << token::END_STATEMENT << nl;

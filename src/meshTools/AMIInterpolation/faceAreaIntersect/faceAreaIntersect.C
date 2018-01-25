@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -387,13 +387,13 @@ Foam::scalar Foam::faceAreaIntersect::calc
     {
         triPoints tpA = getTriPoints(pointsA_, trisA[tA], false);
 
-//        if (triArea(tpA) > ROOTVSMALL)
+//        if (triArea(tpA) > rootVSmall)
         {
             forAll(trisB, tB)
             {
                 triPoints tpB = getTriPoints(pointsB_, trisB[tB], !reverseB_);
 
-//                if (triArea(tpB) > ROOTVSMALL)
+//                if (triArea(tpB) > rootVSmall)
                 {
                     totalArea += triangleIntersect(tpA, tpB, n);
                 }

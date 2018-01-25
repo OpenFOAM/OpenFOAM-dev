@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,7 +192,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::projectPointsToSurface
 
     List<pointIndexHit> nearInfo;
 
-    surf.findNearest(pts, scalarField(pts.size(), GREAT), nearInfo);
+    surf.findNearest(pts, scalarField(pts.size(), great), nearInfo);
 
     label nMiss = 0;
     forAll(nearInfo, i)
@@ -1462,7 +1462,7 @@ const
     const labelList& addr = tgtAddress_[tgtFacei];
 
     pointHit nearest;
-    nearest.setDistance(GREAT);
+    nearest.setDistance(great);
     label nearestFacei = -1;
 
     forAll(addr, i)
@@ -1508,7 +1508,7 @@ const
     const pointField& tgtPoints = tgtPatch.points();
 
     pointHit nearest;
-    nearest.setDistance(GREAT);
+    nearest.setDistance(great);
     label nearestFacei = -1;
 
     // Target face addresses that intersect source face srcFacei

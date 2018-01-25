@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::direction Foam::searchablePlate::calcNormal(const point& span)
                 << "Span should have two positive and one zero entry. Now:"
                 << span << exit(FatalError);
         }
-        else if (span[dir] < VSMALL)
+        else if (span[dir] < vSmall)
         {
             if (normalDir == 3)
             {
@@ -138,7 +138,7 @@ Foam::pointIndexHit Foam::searchablePlate::findLine
 
     const vector dir(end-start);
 
-    if (mag(dir[normalDir_]) < VSMALL)
+    if (mag(dir[normalDir_]) < vSmall)
     {
         info.setMiss();
         info.setIndex(-1);
@@ -291,7 +291,7 @@ void Foam::searchablePlate::boundingSpheres
     radiusSqr[0] = Foam::magSqr(0.5*span_);
 
     // Add a bit to make sure all points are tested inside
-    radiusSqr += Foam::sqr(SMALL);
+    radiusSqr += Foam::sqr(small);
 }
 
 

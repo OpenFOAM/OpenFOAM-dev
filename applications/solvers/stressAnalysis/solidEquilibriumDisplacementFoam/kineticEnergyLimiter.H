@@ -8,10 +8,10 @@ if (!(runTime.timeIndex() % 5))
     dimensionedScalar intKineticPower = fvc::domainIntegrate(kineticPower);
     Info<< "kineticPower = " << intKineticPower.value() << endl;
 
-    scalar smi = intKineticPower.value()/(intKineticEnergy.value() + VSMALL);
+    scalar smi = intKineticPower.value()/(intKineticEnergy.value() + vSmall);
     Info<< "smi = " << smi << endl;
 
-    if (smi < -SMALL)
+    if (smi < -small)
     {
         Info<< "Resetting Dcorr to 0" << endl;
         Dcorr == dimensionedVector("0", Dcorr.dimensions(), Zero);

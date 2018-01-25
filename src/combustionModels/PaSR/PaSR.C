@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,9 +85,9 @@ void Foam::combustionModels::PaSR<ReactionThermo>::correct()
         forAll(epsilon, i)
         {
             const scalar tk =
-                Cmix_*sqrt(max(muEff[i]/rho[i]/(epsilon[i] + SMALL), 0));
+                Cmix_*sqrt(max(muEff[i]/rho[i]/(epsilon[i] + small), 0));
 
-            if (tk > SMALL)
+            if (tk > small)
             {
                 kappa_[i] = tc[i]/(tc[i] + tk);
             }

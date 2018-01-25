@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,7 +210,7 @@ Foam::tensor Foam::cellShapeControl::cellAlignment(const point& pt) const
 
             for (label pI = 0; pI < 4; ++pI)
             {
-                if (bary[pI] > SMALL)
+                if (bary[pI] > small)
                 {
                     tri += triad(bary[pI]*ch->vertex(pI)->alignment());
                 }
@@ -288,7 +288,7 @@ void Foam::cellShapeControl::cellSizeAndAlignment
             {
                 size += bary[pI]*ch->vertex(pI)->targetCellSize();
 
-                if (bary[pI] > SMALL)
+                if (bary[pI] > small)
                 {
                     tri += triad(bary[pI]*ch->vertex(pI)->alignment());
                 }
@@ -318,7 +318,7 @@ void Foam::cellShapeControl::cellSizeAndAlignment
         {
             // Force orthogonalization of triad.
 
-            scalar dotProd = GREAT;
+            scalar dotProd = great;
             if (dir == 0)
             {
                 dotProd = v[1] & v[2];

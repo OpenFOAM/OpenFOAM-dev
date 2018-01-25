@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2011-2017 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2011-2018 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -115,15 +115,15 @@ int main(int argc, char *argv[])
 
     Random rand(57373);
 
-    while ((magSqr(eVal) < VSMALL) && pertI < 10)
+    while ((magSqr(eVal) < vSmall) && pertI < 10)
     {
         WarningInFunction
             << "No eigenValues found, shape may have symmetry, "
             << "perturbing inertia tensor diagonal" << endl;
 
-        J.xx() *= 1.0 + SMALL*rand.scalar01();
-        J.yy() *= 1.0 + SMALL*rand.scalar01();
-        J.zz() *= 1.0 + SMALL*rand.scalar01();
+        J.xx() *= 1.0 + small*rand.scalar01();
+        J.yy() *= 1.0 + small*rand.scalar01();
+        J.zz() *= 1.0 + small*rand.scalar01();
 
         eVal = eigenValues(J);
 
@@ -136,9 +136,9 @@ int main(int argc, char *argv[])
 
     if
     (
-        (mag(eVec.x() ^ eVec.y()) > (1.0 - SMALL))
-     && (mag(eVec.y() ^ eVec.z()) > (1.0 - SMALL))
-     && (mag(eVec.z() ^ eVec.x()) > (1.0 - SMALL))
+        (mag(eVec.x() ^ eVec.y()) > (1.0 - small))
+     && (mag(eVec.y() ^ eVec.z()) > (1.0 - small))
+     && (mag(eVec.z() ^ eVec.x()) > (1.0 - small))
     )
     {
         // Make the eigenvectors a right handed orthogonal triplet
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
         principal[1] = eVec.y();
         principal[2] = eVec.z();
 
-        scalar maxMagDotProduct = -GREAT;
+        scalar maxMagDotProduct = -great;
 
         // Matching axis indices, first: cartesian, second:principal
 
@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
 
         match =Pair<label>(-1, -1);
 
-        maxMagDotProduct = -GREAT;
+        maxMagDotProduct = -great;
 
         forAll(cartesian, cI)
         {

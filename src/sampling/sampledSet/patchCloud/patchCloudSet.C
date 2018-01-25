@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,8 +97,8 @@ void Foam::patchCloudSet::calcSamples
     bb = bb.extend(rndGen, 1e-4);
 
     // Make sure bb is 3D.
-    bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-    bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+    bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+    bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
 
     indexedOctree<treeDataFace> patchTree
@@ -142,7 +142,7 @@ void Foam::patchCloudSet::calcSamples
         // Fill in the distance field and the processor field
         if (!nearInfo.hit())
         {
-            nearest[sampleI].second().first() = Foam::sqr(GREAT);
+            nearest[sampleI].second().first() = Foam::sqr(great);
             nearest[sampleI].second().second() = Pstream::myProcNo();
         }
         else

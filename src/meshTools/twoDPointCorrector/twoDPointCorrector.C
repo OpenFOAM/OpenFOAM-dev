@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ void Foam::twoDPointCorrector::calcAddressing() const
     }
 
 
-    if (mag(pn) < VSMALL)
+    if (mag(pn) < vSmall)
     {
         FatalErrorInFunction
             << "Cannot determine normal vector from patches."
@@ -130,7 +130,7 @@ void Foam::twoDPointCorrector::calcAddressing() const
     {
         const edge& e = meshEdges[edgeI];
 
-        vector edgeVector = e.vec(meshPoints)/(e.mag(meshPoints) + VSMALL);
+        vector edgeVector = e.vec(meshPoints)/(e.mag(meshPoints) + vSmall);
 
         if (mag(edgeVector & pn) > edgeOrthogonalityTol)
         {

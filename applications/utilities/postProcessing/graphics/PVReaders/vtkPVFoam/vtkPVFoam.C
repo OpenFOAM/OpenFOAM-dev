@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -600,7 +600,7 @@ double* Foam::vtkPVFoam::findTimes(int& nTimeSteps)
         // skip "0/" time if requested and possible
         if (nTimes > 1 && reader_->GetSkipZeroTime())
         {
-            if (mag(timeLst[timeI].value()) < SMALL)
+            if (mag(timeLst[timeI].value()) < small)
             {
                 ++timeI;
                 --nTimes;

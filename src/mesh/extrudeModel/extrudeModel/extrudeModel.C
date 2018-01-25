@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ Foam::scalar Foam::extrudeModel::sumThickness(const label layer) const
 {
     // 1+r+r^2+ .. +r^(n-1) = (1-r^n)/(1-r)
 
-    if (mag(1.0-expansionRatio_) < SMALL)
+    if (mag(1.0-expansionRatio_) < small)
     {
         return scalar(layer)/nLayers_;
     }

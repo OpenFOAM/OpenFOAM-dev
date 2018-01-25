@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::vector Foam::CorrectionLimitingMethods::absolute::limitedVelocity
     (
         dU,
       - (1.0 + this->e_)*uRelative
-       *mag(uP)/max(mag(uRelative), SMALL)
+       *mag(uP)/max(mag(uRelative), small)
     );
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,13 +99,13 @@ int main(int argc, char *argv[])
 
     scalarField A(order, 0);
     OFstream file(runTime.path()/"WatersKing.dat");
-    const scalar LOGVGREAT = ::log(VGREAT);
+    const scalar LOGvGreat = ::log(vGreat);
     while (!runTime.end())
     {
         scalar t = runTime.timeOutputValue()/lambda;
         forAll(A, i)
         {
-            if (bk[i]*t < LOGVGREAT)
+            if (bk[i]*t < LOGvGreat)
             {
                 if (bk[i] >= ak[i])
                 {

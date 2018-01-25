@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -415,7 +415,7 @@ inline Foam::scalar Foam::KinematicParcel<ParcelType>::Re
     const scalar muc
 )
 {
-    return rhoc*mag(U - Uc)*d/max(muc, ROOTVSMALL);
+    return rhoc*mag(U - Uc)*d/max(muc, rootVSmall);
 }
 
 
@@ -440,7 +440,7 @@ inline Foam::scalar Foam::KinematicParcel<ParcelType>::We
     const scalar sigma
 )
 {
-    return rhoc*magSqr(U - Uc)*d/max(sigma, ROOTVSMALL);
+    return rhoc*magSqr(U - Uc)*d/max(sigma, rootVSmall);
 }
 
 
@@ -466,8 +466,8 @@ inline Foam::scalar Foam::KinematicParcel<ParcelType>::Eo
     const scalar sigma
 )
 {
-    const vector dir = U/max(mag(U), ROOTVSMALL);
-    return mag(g & dir)*(rho - rhoc)*sqr(d)/max(sigma, ROOTVSMALL);
+    const vector dir = U/max(mag(U), rootVSmall);
+    return mag(g & dir)*(rho - rhoc)*sqr(d)/max(sigma, rootVSmall);
 }
 
 

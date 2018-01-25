@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ volScalarField dynamicKEqn<BasicTurbulenceModel>::Ck
         simpleFilter_(0.5*(LL && MM))
        /(
             simpleFilter_(magSqr(MM))
-          + dimensionedScalar("small", sqr(MM.dimensions()), VSMALL)
+          + dimensionedScalar("small", sqr(MM.dimensions()), vSmall)
         )
     );
 
@@ -93,7 +93,7 @@ volScalarField dynamicKEqn<BasicTurbulenceModel>::Ce() const
     (
         0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_)))
     );
-    KK.max(dimensionedScalar("small", KK.dimensions(), SMALL));
+    KK.max(dimensionedScalar("small", KK.dimensions(), small));
 
     return Ce(D, KK);
 }
@@ -259,7 +259,7 @@ void dynamicKEqn<BasicTurbulenceModel>::correct()
     tgradU.clear();
 
     volScalarField KK(0.5*(filter_(magSqr(U)) - magSqr(filter_(U))));
-    KK.max(dimensionedScalar("small", KK.dimensions(), SMALL));
+    KK.max(dimensionedScalar("small", KK.dimensions(), small));
 
     tmp<fvScalarMatrix> kEqn
     (

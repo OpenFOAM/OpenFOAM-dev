@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ inline Foam::scalar Foam::SRIFallOffFunction::operator()
     const scalar Pr
 ) const
 {
-    scalar X = 1.0/(1.0 + sqr(log10(max(Pr, SMALL))));
+    scalar X = 1.0/(1.0 + sqr(log10(max(Pr, small))));
     return d_*pow(a_*exp(-b_/T) + exp(-T/c_), X)*pow(T, e_);
 }
 

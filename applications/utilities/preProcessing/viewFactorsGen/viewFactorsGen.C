@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,7 +196,7 @@ scalar calculateViewFactorFij
     vector r = i - j;
     scalar rMag = mag(r);
 
-    if (rMag > SMALL)
+    if (rMag > small)
     {
         scalar dAiMag = mag(dAi);
         scalar dAjMag = mag(dAj);
@@ -434,7 +434,7 @@ int main(int argc, char *argv[])
             ) = upp.localPoints();
 
             point cfo = cf;
-            scalar dist = GREAT;
+            scalar dist = great;
             forAll(availablePoints, iPoint)
             {
                 point cfFine = availablePoints[iPoint];

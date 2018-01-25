@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ inline bool Foam::smoothData::update
     TrackingData& td
 )
 {
-    if (!valid(td) || (value_ < VSMALL))
+    if (!valid(td) || (value_ < vSmall))
     {
         // My value not set - take over neighbour
         value_ = svf.value()/scale;
@@ -63,7 +63,7 @@ inline bool Foam::smoothData::update
 
 inline Foam::smoothData::smoothData()
 :
-    value_(-GREAT)
+    value_(-great)
 {}
 
 
@@ -78,7 +78,7 @@ inline Foam::smoothData::smoothData(const scalar value)
 template<class TrackingData>
 inline bool Foam::smoothData::valid(TrackingData& td) const
 {
-    return value_ > -SMALL;
+    return value_ > -small;
 }
 
 

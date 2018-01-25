@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,12 +164,12 @@ int main(int argc, char *argv[])
         Info<< "    px, pxTest = " << px << ", " << pxTest << endl;
         Info<< "    ipx, ipxTest = " << ipx << ", " << ipxTest << endl;
 
-        if (mag(px - pxTest) > SMALL)
+        if (mag(px - pxTest) > small)
         {
             Info<< "    *** WARNING: px != pxTest: " << px - pxTest << endl;
         }
 
-        if (mag(ipx - ipxTest) > SMALL)
+        if (mag(ipx - ipxTest) > small)
         {
             Info<< "    *** WARNING: ipx != ipxTest: " << ipx - ipxTest << endl;
         }

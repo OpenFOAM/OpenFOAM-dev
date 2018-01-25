@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ Foam::cloudSolution::cloudSolution
     active_(false),
     transient_(false),
     calcFrequency_(0),
-    maxCo_(GREAT),
+    maxCo_(great),
     iter_(0),
     trackTime_(0),
     coupled_(false),

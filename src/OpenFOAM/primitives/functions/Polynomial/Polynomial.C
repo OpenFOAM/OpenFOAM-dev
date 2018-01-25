@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -241,7 +241,7 @@ Foam::Polynomial<PolySize>::integralMinus1(const scalar intConstant) const
 {
     polyType newCoeffs;
 
-    if (this->v_[0] > VSMALL)
+    if (this->v_[0] > vSmall)
     {
         newCoeffs.logActive_ = true;
         newCoeffs.logCoeff_ = this->v_[0];

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -264,7 +264,7 @@ void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
         const scalar QPhip = gSum(out*phip);
         const scalar QWave = gSum(out*(U & patch().Sf()));
         const vectorField nBySf(patch().Sf()/sqr(patch().magSf()));
-        if (QPhip > VSMALL)
+        if (QPhip > vSmall)
         {
             refValue() += out*(QWave/QPhip)*phip*nBySf;
         }

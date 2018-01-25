@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -209,7 +209,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
     {
         // Create some data. Use slightly perturbed positions.
         Map<point> sparseData;
-        pointField fullData(mesh.nPoints(), point(GREAT, GREAT, GREAT));
+        pointField fullData(mesh.nPoints(), point(great, great, great));
 
         forAll(localPoints, i)
         {
@@ -235,7 +235,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
             mesh,
             fullData,
             minMagSqrEqOp<point>(),
-            point(GREAT, GREAT, GREAT)
+            point(great, great, great)
             // true                    // apply separation
         );
 
@@ -245,7 +245,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
         {
             const point& fullPt = fullData[meshPointi];
 
-            if (fullPt != point(GREAT, GREAT, GREAT))
+            if (fullPt != point(great, great, great))
             {
                 const point& sparsePt = sparseData[meshPointi];
 
@@ -285,7 +285,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
     {
         // Create some data. Use slightly perturbed positions.
         EdgeMap<point> sparseData;
-        pointField fullData(mesh.nEdges(), point(GREAT, GREAT, GREAT));
+        pointField fullData(mesh.nEdges(), point(great, great, great));
 
         const edgeList& edges = allBoundary.edges();
         const labelList meshEdges = allBoundary.meshEdges
@@ -319,7 +319,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
             mesh,
             fullData,
             minMagSqrEqOp<point>(),
-            point(GREAT, GREAT, GREAT)
+            point(great, great, great)
         );
 
         // Compare.
@@ -328,7 +328,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
         {
             const point& fullPt = fullData[meshEdgeI];
 
-            if (fullPt != point(GREAT, GREAT, GREAT))
+            if (fullPt != point(great, great, great))
             {
                 const point& sparsePt = sparseData[mesh.edges()[meshEdgeI]];
 
@@ -384,12 +384,12 @@ void testPointSync(const polyMesh& mesh, Random& rndGen)
             mesh,
             syncedPoints,
             minMagSqrEqOp<point>(),
-            point(GREAT, GREAT, GREAT)
+            point(great, great, great)
         );
 
         forAll(syncedPoints, pointi)
         {
-            if (mag(syncedPoints[pointi] - mesh.points()[pointi]) > SMALL)
+            if (mag(syncedPoints[pointi] - mesh.points()[pointi]) > small)
             {
                 FatalErrorInFunction
                     << "Point " << pointi
@@ -458,14 +458,14 @@ void testEdgeSync(const polyMesh& mesh, Random& rndGen)
             mesh,
             syncedMids,
             minMagSqrEqOp<point>(),
-            point(GREAT, GREAT, GREAT)
+            point(great, great, great)
         );
 
         forAll(syncedMids, edgeI)
         {
             point eMid = edges[edgeI].centre(mesh.points());
 
-            if (mag(syncedMids[edgeI] - eMid) > SMALL)
+            if (mag(syncedMids[edgeI] - eMid) > small)
             {
                 FatalErrorInFunction
                     << "Edge " << edgeI
@@ -534,7 +534,7 @@ void testFaceSync(const polyMesh& mesh, Random& rndGen)
 
         forAll(syncedFc, facei)
         {
-            if (mag(syncedFc[facei] - mesh.faceCentres()[facei]) > SMALL)
+            if (mag(syncedFc[facei] - mesh.faceCentres()[facei]) > small)
             {
                 FatalErrorInFunction
                     << "Face " << facei

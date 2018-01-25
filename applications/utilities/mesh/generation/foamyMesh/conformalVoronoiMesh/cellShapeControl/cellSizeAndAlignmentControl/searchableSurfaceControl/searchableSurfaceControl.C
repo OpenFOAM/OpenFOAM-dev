@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ addToRunTimeSelectionTable
 ////    geometryToConformTo_.findSurfaceNearest
 ////    (
 ////        pt,
-////        sqr(GREAT),
+////        sqr(great),
 ////        surfHit,
 ////        hitSurface
 ////    );
@@ -102,7 +102,7 @@ addToRunTimeSelectionTable
 //
 //    vector na = Zero;
 //
-//    scalar smallestAngle = GREAT;
+//    scalar smallestAngle = great;
 //
 //    for (label pnI = 1; pnI < ptNormals.size(); ++pnI)
 //    {
@@ -120,7 +120,7 @@ addToRunTimeSelectionTable
 //    // Secondary alignment
 //    vector ns = np ^ na;
 //
-//    if (mag(ns) < SMALL)
+//    if (mag(ns) < small)
 //    {
 //        WarningInFunction
 //            << "Parallel normals detected in spoke search." << nl
@@ -367,7 +367,7 @@ void Foam::searchableSurfaceControl::initialVertices
             infoFeature
         );
 
-        scalar limitedCellSize = GREAT;
+        scalar limitedCellSize = great;
 
         autoPtr<triad> pointAlignment;
 
@@ -426,7 +426,7 @@ void Foam::searchableSurfaceControl::initialVertices
                 vectorField normals(1);
                 searchableSurface_.getNormal(infoList, normals);
 
-                if (mag(normals[0]) < SMALL)
+                if (mag(normals[0]) < small)
                 {
                     normals[0] = vector(1, 1, 1);
                 }

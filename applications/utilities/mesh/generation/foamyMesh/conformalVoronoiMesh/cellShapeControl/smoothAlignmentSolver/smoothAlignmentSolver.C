@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -209,7 +209,7 @@ Foam::tmp<Foam::pointField> Foam::smoothAlignmentSolver::buildPointField
 {
     tmp<pointField> tPoints
     (
-        new pointField(mesh.vertexCount(), point(GREAT, GREAT, GREAT))
+        new pointField(mesh.vertexCount(), point(great, great, great))
     );
     pointField& points = tPoints.ref();
 
@@ -376,7 +376,7 @@ void Foam::smoothAlignmentSolver::smoothAlignments
                 {
                     if (tmpTriad.set(dir))
                     {
-                        tmpTriad[dir] *= 1.0/(dist + SMALL);
+                        tmpTriad[dir] *= 1.0/(dist + small);
                     }
                 }
 

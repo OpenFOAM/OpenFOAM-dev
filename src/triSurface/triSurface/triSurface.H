@@ -120,7 +120,7 @@ class triSurface
         //  Returns true if any points merged
         bool stitchTriangles
         (
-            const scalar tol = SMALL,
+            const scalar tol = small,
             const bool verbose = false
         );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
     const scalarField Tc(patchInternalField());
 
     // heat transfer coefficient [W/m2/K]
-    const scalarField htc(qDot/(Tp - Tc + ROOTVSMALL));
+    const scalarField htc(qDot/(Tp - Tc + rootVSmall));
 
     if (Pstream::parRun())
     {

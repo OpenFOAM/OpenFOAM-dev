@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -363,11 +363,11 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
     // Determine minimum edge length per refinement level
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    const scalar GREAT2 = sqr(GREAT);
+    const scalar great2 = sqr(great);
 
     label nLevels = gMax(cellLevel_)+1;
 
-    scalarField typEdgeLenSqr(nLevels, GREAT2);
+    scalarField typEdgeLenSqr(nLevels, great2);
 
 
     // 1. Look only at edges surrounded by cellLevel cells only.
@@ -450,7 +450,7 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
     //    edges sized according to highest celllevel)
     //    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    scalarField maxEdgeLenSqr(nLevels, -GREAT2);
+    scalarField maxEdgeLenSqr(nLevels, -great2);
 
     forAll(cellLevel_, celli)
     {
@@ -484,7 +484,7 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
 
     forAll(typEdgeLenSqr, levelI)
     {
-        if (typEdgeLenSqr[levelI] == GREAT2 && maxEdgeLenSqr[levelI] >= 0)
+        if (typEdgeLenSqr[levelI] == great2 && maxEdgeLenSqr[levelI] >= 0)
         {
             typEdgeLenSqr[levelI] = maxEdgeLenSqr[levelI];
         }
@@ -504,7 +504,7 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
     {
         scalar lenSqr = typEdgeLenSqr[levelI];
 
-        if (lenSqr < GREAT2)
+        if (lenSqr < great2)
         {
             level0Size = Foam::sqrt(lenSqr)*(1<<levelI);
 
@@ -1982,7 +1982,7 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
         // All cells visible if not read or readHistory = false
         (readHistory ? mesh_.nCells() : 0)
     ),
-    faceRemover_(mesh_, GREAT),     // merge boundary faces wherever possible
+    faceRemover_(mesh_, great),     // merge boundary faces wherever possible
     savedPointLevel_(0),
     savedCellLevel_(0)
 {
@@ -2112,7 +2112,7 @@ Foam::hexRef8::hexRef8
         ),
         history
     ),
-    faceRemover_(mesh_, GREAT),     // merge boundary faces wherever possible
+    faceRemover_(mesh_, great),     // merge boundary faces wherever possible
     savedPointLevel_(0),
     savedCellLevel_(0)
 {
@@ -2222,7 +2222,7 @@ Foam::hexRef8::hexRef8
         labelList(0),
         false
     ),
-    faceRemover_(mesh_, GREAT),     // merge boundary faces wherever possible
+    faceRemover_(mesh_, great),     // merge boundary faces wherever possible
     savedPointLevel_(0),
     savedCellLevel_(0)
 {
@@ -3390,7 +3390,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
         // This needs doing for if people do not write binary and we slowly
         // get differences.
 
-        pointField edgeMids(mesh_.nEdges(), point(-GREAT, -GREAT, -GREAT));
+        pointField edgeMids(mesh_.nEdges(), point(-great, -great, -great));
 
         forAll(edgeMidPoint, edgeI)
         {
@@ -3405,7 +3405,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
             mesh_,
             edgeMids,
             maxEqOp<vector>(),
-            point(-GREAT, -GREAT, -GREAT)
+            point(-great, -great, -great)
         );
 
 
@@ -3576,7 +3576,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
         pointField bFaceMids
         (
             mesh_.nFaces()-mesh_.nInternalFaces(),
-            point(-GREAT, -GREAT, -GREAT)
+            point(-great, -great, -great)
         );
 
         forAll(bFaceMids, i)

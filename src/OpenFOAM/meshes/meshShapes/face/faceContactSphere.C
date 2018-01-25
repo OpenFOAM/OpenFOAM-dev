@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,10 +39,10 @@ Foam::scalar Foam::face::contactSphereDiameter
 {
     scalar magN = Foam::mag(n);
 
-    vector n1 = n/(magN + SMALL);
+    vector n1 = n/(magN + small);
     vector n2 = normal(meshPoints);
 
-    n2 /= Foam::mag(n2) + SMALL;
+    n2 /= Foam::mag(n2) + small;
 
     return 2*((centre(meshPoints) - p) & n2)/((n1 & n2) - 1.0);
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::ORourkeCollision<CloudType>::collide
 
                     if (massChanged)
                     {
-                        if (m1 > ROOTVSMALL)
+                        if (m1 > rootVSmall)
                         {
                             const scalarField X(liquids_.X(p1.Y()));
                             p1.setCellValues(this->owner(), td);
@@ -89,7 +89,7 @@ void Foam::ORourkeCollision<CloudType>::collide
                             p1.d() = cbrt(6.0*m1/(p1.nParticle()*p1.rho()*pi));
                         }
 
-                        if (m2 > ROOTVSMALL)
+                        if (m2 > rootVSmall)
                         {
                             const scalarField X(liquids_.X(p2.Y()));
                             p2.setCellValues(this->owner(), td);
@@ -130,7 +130,7 @@ bool Foam::ORourkeCollision<CloudType>::collideParcels
 )
 {
     // Return if parcel masses are ~0
-    if ((m1 < ROOTVSMALL) || (m2 < ROOTVSMALL))
+    if ((m1 < rootVSmall) || (m2 < rootVSmall))
     {
         return false;
     }
@@ -200,7 +200,7 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
 
     scalar mTot = m1 + m2;
 
-    scalar gamma = d1/max(ROOTVSMALL, d2);
+    scalar gamma = d1/max(rootVSmall, d2);
     scalar f = pow3(gamma) + 2.7*gamma - 2.4*sqr(gamma);
 
     // Mass-averaged temperature
@@ -208,7 +208,7 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
 
     // Interpolate to find average surface tension
     scalar sigmaAve = sigma1;
-    if (mag(T2 - T1) > SMALL)
+    if (mag(T2 - T1) > small)
     {
         sigmaAve += (sigma2 - sigma1)*(Tave - T1)/(T2 - T1);
     }
@@ -217,9 +217,9 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
     scalar rhoAve = mTot/Vtot;
 
     scalar dAve = sqrt(d1*d2);
-    scalar WeColl = 0.5*rhoAve*sqr(magURel)*dAve/max(ROOTVSMALL, sigmaAve);
+    scalar WeColl = 0.5*rhoAve*sqr(magURel)*dAve/max(rootVSmall, sigmaAve);
 
-    scalar coalesceProb = min(1.0, 2.4*f/max(ROOTVSMALL, WeColl));
+    scalar coalesceProb = min(1.0, 2.4*f/max(rootVSmall, WeColl));
 
     scalar prob = this->owner().rndGen().template sample01<scalar>();
 

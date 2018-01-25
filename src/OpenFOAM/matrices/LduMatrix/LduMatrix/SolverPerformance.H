@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -288,7 +288,7 @@ template<>                                                                     \
 const scalar solverPerformance##Type::small_(1e-20);                           \
                                                                                \
 template<>                                                                     \
-const scalar solverPerformance##Type::vsmall_(VSMALL);                         \
+const scalar solverPerformance##Type::vsmall_(vSmall);                         \
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

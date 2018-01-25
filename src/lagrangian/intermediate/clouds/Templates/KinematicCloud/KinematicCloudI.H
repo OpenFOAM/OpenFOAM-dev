@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -333,7 +333,7 @@ inline Foam::scalar Foam::KinematicCloud<CloudType>::Dij
 
     reduce(si, sumOp<scalar>());
     reduce(sj, sumOp<scalar>());
-    sj = max(sj, VSMALL);
+    sj = max(sj, vSmall);
 
     return si/sj;
 }
@@ -342,7 +342,7 @@ inline Foam::scalar Foam::KinematicCloud<CloudType>::Dij
 template<class CloudType>
 inline Foam::scalar Foam::KinematicCloud<CloudType>::Dmax() const
 {
-    scalar d = -GREAT;
+    scalar d = -great;
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();

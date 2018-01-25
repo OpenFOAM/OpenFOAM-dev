@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,29 +67,29 @@ inline Foam::scalar Foam::LandauTellerReactionRate::operator()
 {
     scalar lta = A_;
 
-    if (mag(beta_) > VSMALL)
+    if (mag(beta_) > vSmall)
     {
         lta *= pow(T, beta_);
     }
 
     scalar expArg = 0.0;
 
-    if (mag(Ta_) > VSMALL)
+    if (mag(Ta_) > vSmall)
     {
         expArg -= Ta_/T;
     }
 
-    if (mag(B_) > VSMALL)
+    if (mag(B_) > vSmall)
     {
         expArg += B_/cbrt(T);
     }
 
-    if (mag(C_) > VSMALL)
+    if (mag(C_) > vSmall)
     {
         expArg += C_/pow(T, 2.0/3.0);
     }
 
-    if (mag(expArg) > VSMALL)
+    if (mag(expArg) > vSmall)
     {
         lta *= exp(expArg);
     }

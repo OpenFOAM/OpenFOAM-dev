@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Description
 if (adjustTimeStep)
 {
     scalar maxDeltaTFact =
-        min(maxCo/(CoNum + SMALL), maxAlphaCo/(alphaCoNum + SMALL));
+        min(maxCo/(CoNum + small), maxAlphaCo/(alphaCoNum + small));
 
     scalar deltaTFact = min(min(maxDeltaTFact, 1.0 + 0.1*maxDeltaTFact), 1.2);
 

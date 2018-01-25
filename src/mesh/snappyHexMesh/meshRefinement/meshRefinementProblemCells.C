@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ void Foam::meshRefinement::findNearest
     (
         allSurfaces,
         fc,
-        scalarField(fc.size(), sqr(GREAT)),    // sqr of attraction
+        scalarField(fc.size(), sqr(great)),    // sqr of attraction
         nearestSurface,
         nearestInfo
     );
@@ -313,7 +313,7 @@ bool Foam::meshRefinement::isCollapsedFace
         label nei = mesh_.faceNeighbour()[facei];
         vector d = mesh_.cellCentres()[nei] - ownCc;
 
-        scalar dDotS = (d & s)/(mag(d)*magS + VSMALL);
+        scalar dDotS = (d & s)/(mag(d)*magS + vSmall);
 
         if (dDotS < severeNonorthogonalityThreshold)
         {
@@ -332,7 +332,7 @@ bool Foam::meshRefinement::isCollapsedFace
         {
             vector d = neiCc[facei-mesh_.nInternalFaces()] - ownCc;
 
-            scalar dDotS = (d & s)/(mag(d)*magS + VSMALL);
+            scalar dDotS = (d & s)/(mag(d)*magS + vSmall);
 
             if (dDotS < severeNonorthogonalityThreshold)
             {
@@ -664,7 +664,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
         (
             surfaceZonesInfo::getUnnamedSurfaces(surfaces_.surfZones()),
             localPoints,
-            scalarField(localPoints.size(), sqr(GREAT)),    // sqr of attraction
+            scalarField(localPoints.size(), sqr(great)),    // sqr of attraction
             hitSurface,
             hitInfo
         );
@@ -1183,7 +1183,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             mesh_,
             newPoints,
             minMagSqrEqOp<point>(),     // combine op
-            vector(GREAT, GREAT, GREAT) // null value (note: cannot use VGREAT)
+            vector(great, great, great) // null value (note: cannot use vGreat)
         );
 
         mesh_.movePoints(newPoints);
@@ -1211,7 +1211,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             label nWrongFaces = 0;
 
             //const scalar minV(readScalar(motionDict.lookup("minVol", true)));
-            //if (minV > -GREAT)
+            //if (minV > -great)
             //{
             //    polyMeshGeometry::checkFacePyramids
             //    (
@@ -1240,7 +1240,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             //}
 
             scalar minArea(readScalar(motionDict.lookup("minArea")));
-            if (minArea > -SMALL)
+            if (minArea > -small)
             {
                 polyMeshGeometry::checkFaceArea
                 (

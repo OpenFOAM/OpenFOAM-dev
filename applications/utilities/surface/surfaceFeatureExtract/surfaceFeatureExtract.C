@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
             dictionary trimDict = surfaceDict.subDict("trimFeatures");
 
             scalar minLen =
-                trimDict.lookupOrAddDefault<scalar>("minLen", -GREAT);
+                trimDict.lookupOrAddDefault<scalar>("minLen", -great);
 
             label minElem = trimDict.lookupOrAddDefault<label>("minElem", 0);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,10 +76,10 @@ public:
         //- The great value used for greatBox and invertedBox
         static const scalar great;
 
-        //- A very large boundBox: min/max == -/+ VGREAT
+        //- A very large boundBox: min/max == -/+ vGreat
         static const boundBox greatBox;
 
-        //- A very large inverted boundBox: min/max == +/- VGREAT
+        //- A very large inverted boundBox: min/max == +/- vGreat
         static const boundBox invertedBox;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
         ::cos(degToRad(primitiveMesh::nonOrthThreshold_));
 
 
-    scalar minDDotS = GREAT;
+    scalar minDDotS = great;
     scalar sumDDotS = 0.0;
     label nSummed = 0;
     label severeNonOrth = 0;
@@ -76,7 +76,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
     {
         if (ortho[facei] < severeNonorthogonalityThreshold)
         {
-            if (ortho[facei] > SMALL)
+            if (ortho[facei] > small)
             {
                 if (setPtr)
                 {
@@ -327,7 +327,7 @@ bool Foam::polyMesh::checkEdgeAlignment
                 vector d(p[p1]-p[p0]);
                 scalar magD = mag(d);
 
-                if (magD > ROOTVSMALL)
+                if (magD > rootVSmall)
                 {
                     d /= magD;
 
@@ -513,7 +513,7 @@ bool Foam::polyMesh::checkFaceWeight
 
 
     label nErrorFaces = 0;
-    scalar minDet = GREAT;
+    scalar minDet = great;
     scalar sumDet = 0.0;
     label nSummed = 0;
 
@@ -600,7 +600,7 @@ bool Foam::polyMesh::checkVolRatio
 
 
     label nErrorFaces = 0;
-    scalar minDet = GREAT;
+    scalar minDet = great;
     scalar sumDet = 0.0;
     label nSummed = 0;
 
@@ -821,7 +821,7 @@ bool Foam::polyMesh::checkMeshMotion
         cellCtrs,
         report,         // report,
         detailedReport, // detailedReport,
-        -SMALL,         // minPyrVol
+        -small,         // minPyrVol
         nullptr            // setPtr
     );
     error = error || pyrVolError;

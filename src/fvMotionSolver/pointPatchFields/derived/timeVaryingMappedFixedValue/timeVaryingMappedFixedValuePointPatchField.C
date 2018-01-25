@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -546,7 +546,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
                 << endl;
         }
 
-        if (mag(averagePsi) < VSMALL)
+        if (mag(averagePsi) < vSmall)
         {
             // Field too small to scale. Offset instead.
             const Type offset = wantedAverage - averagePsi;

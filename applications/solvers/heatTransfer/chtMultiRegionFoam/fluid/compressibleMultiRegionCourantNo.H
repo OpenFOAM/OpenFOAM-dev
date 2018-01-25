@@ -1,4 +1,4 @@
-    scalar CoNum = -GREAT;
+    scalar CoNum = -great;
 
     forAll(fluidRegions, regionI)
     {

@@ -67,8 +67,8 @@ void Foam::extractCloseness
     // Find all intersections (in order)
     searchSurf.findLineAll(start, end, allHitinfo);
 
-    scalarField internalCloseness(start.size(), GREAT);
-    scalarField externalCloseness(start.size(), GREAT);
+    scalarField internalCloseness(start.size(), great);
+    scalarField externalCloseness(start.size(), great);
 
     forAll(allHitinfo, fi)
     {

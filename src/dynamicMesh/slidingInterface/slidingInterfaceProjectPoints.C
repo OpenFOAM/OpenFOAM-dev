@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,8 +123,8 @@ bool Foam::slidingInterface::projectPoints() const
     // Calculate min edge distance for points and faces
 
     // Calculate min edge length for the points and faces of master patch
-    scalarField minMasterPointLength(masterLocalPoints.size(), GREAT);
-    scalarField minMasterFaceLength(masterPatch.size(), GREAT);
+    scalarField minMasterPointLength(masterLocalPoints.size(), great);
+    scalarField minMasterFaceLength(masterPatch.size(), great);
 
     forAll(masterEdges, edgeI)
     {
@@ -166,8 +166,8 @@ bool Foam::slidingInterface::projectPoints() const
 //         << "min length for master faces: " << minMasterFaceLength << endl;
 
     // Calculate min edge length for the points and faces of slave patch
-    scalarField minSlavePointLength(slaveLocalPoints.size(), GREAT);
-    scalarField minSlaveFaceLength(slavePatch.size(), GREAT);
+    scalarField minSlavePointLength(slaveLocalPoints.size(), great);
+    scalarField minSlaveFaceLength(slavePatch.size(), great);
 
     forAll(slaveEdges, edgeI)
     {
@@ -379,7 +379,7 @@ bool Foam::slidingInterface::projectPoints() const
             << nAdjustedPoints << endl;
 
         // Check for zero-length edges in slave projection
-        scalar minEdgeLength = GREAT;
+        scalar minEdgeLength = great;
         scalar el = 0;
         label nShortEdges = 0;
 
@@ -387,7 +387,7 @@ bool Foam::slidingInterface::projectPoints() const
         {
             el = slaveEdges[edgeI].mag(projectedSlavePoints);
 
-            if (el < SMALL)
+            if (el < small)
             {
                 Pout<< "Point projection problems for edge: "
                     << slaveEdges[edgeI] << ". Length = " << el
@@ -447,7 +447,7 @@ bool Foam::slidingInterface::projectPoints() const
                 masterLocalFaces[slavePointFaceHits[pointi].hitObject()];
 
             label mergePoint = -1;
-            scalar mergeDist = GREAT;
+            scalar mergeDist = great;
 
             // Try all point before deciding on best fit.
             forAll(hitFace, hitPointi)
@@ -497,14 +497,14 @@ bool Foam::slidingInterface::projectPoints() const
     if (debug)
     {
         // Check for zero-length edges in slave projection
-        scalar minEdgeLength = GREAT;
+        scalar minEdgeLength = great;
         scalar el = 0;
 
         forAll(slaveEdges, edgeI)
         {
             el = slaveEdges[edgeI].mag(projectedSlavePoints);
 
-            if (el < SMALL)
+            if (el < small)
             {
                 Pout<< "Point projection problems for edge: "
                     << slaveEdges[edgeI] << ". Length = " << el
@@ -514,7 +514,7 @@ bool Foam::slidingInterface::projectPoints() const
             minEdgeLength = min(minEdgeLength, el);
         }
 
-        if (minEdgeLength < SMALL)
+        if (minEdgeLength < small)
         {
             FatalErrorInFunction
                 << " after point merge for object " << name()
@@ -554,7 +554,7 @@ bool Foam::slidingInterface::projectPoints() const
 
             const scalar mergeTol = pointMergeTol_*mergeLength;
 
-            scalar minDistance = GREAT;
+            scalar minDistance = great;
 
             forAll(hitFaceEdges, edgeI)
             {
@@ -603,7 +603,7 @@ bool Foam::slidingInterface::projectPoints() const
                     masterEdges[slavePointEdgeHits[pointi]];
 
                 label mergePoint = -1;
-                scalar mergeDist = GREAT;
+                scalar mergeDist = great;
 
                 forAll(hitMasterEdge, hmeI)
                 {
@@ -659,14 +659,14 @@ bool Foam::slidingInterface::projectPoints() const
             << "Number of adjusted slave points: " << nMovedPoints << endl;
 
         // Check for zero-length edges in slave projection
-        scalar minEdgeLength = GREAT;
+        scalar minEdgeLength = great;
         scalar el = 0;
 
         forAll(slaveEdges, edgeI)
         {
             el = slaveEdges[edgeI].mag(projectedSlavePoints);
 
-            if (el < SMALL)
+            if (el < small)
             {
                 Pout<< "Point projection problems for edge: "
                     << slaveEdges[edgeI] << ". Length = " << el
@@ -676,7 +676,7 @@ bool Foam::slidingInterface::projectPoints() const
             minEdgeLength = min(minEdgeLength, el);
         }
 
-        if (minEdgeLength < SMALL)
+        if (minEdgeLength < small)
         {
             FatalErrorInFunction
             << " after correction for object " << name()
@@ -726,7 +726,7 @@ bool Foam::slidingInterface::projectPoints() const
     //    index for every master point.
 
     labelList masterPointEdgeHits(masterLocalPoints.size(), -1);
-    scalarField masterPointEdgeDist(masterLocalPoints.size(), GREAT);
+    scalarField masterPointEdgeDist(masterLocalPoints.size(), great);
 
     // Note.  "Processing slave edges" code is repeated twice in the
     // sliding intergace coupling in order to allow the point

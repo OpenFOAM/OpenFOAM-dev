@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -252,7 +252,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
                 max(uTildeSqrAverage.interpolate(p.coordinates(), tetIs), 0.0)
             );
 
-        p.U() = u + (p.U() - uTilde)*uRms/max(uTildeRms, SMALL);
+        p.U() = u + (p.U() - uTilde)*uRms/max(uTildeRms, small);
     }
 }
 

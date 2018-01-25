@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,16 +49,16 @@ template<>
 const Foam::tensor Foam::tensor::vsType::one(tensor::uniform(1));
 
 template<>
-const Foam::tensor Foam::tensor::vsType::max(tensor::uniform(VGREAT));
+const Foam::tensor Foam::tensor::vsType::max(tensor::uniform(vGreat));
 
 template<>
-const Foam::tensor Foam::tensor::vsType::min(tensor::uniform(-VGREAT));
+const Foam::tensor Foam::tensor::vsType::min(tensor::uniform(-vGreat));
 
 template<>
-const Foam::tensor Foam::tensor::vsType::rootMax(tensor::uniform(ROOTVGREAT));
+const Foam::tensor Foam::tensor::vsType::rootMax(tensor::uniform(rootVGreat));
 
 template<>
-const Foam::tensor Foam::tensor::vsType::rootMin(tensor::uniform(-ROOTVGREAT));
+const Foam::tensor Foam::tensor::vsType::rootMin(tensor::uniform(-rootVGreat));
 
 template<>
 const Foam::tensor Foam::tensor::I
@@ -103,10 +103,10 @@ Foam::vector Foam::eigenValues(const tensor& t)
                 lambda[i] = 0;
                 break;
             case roots::posInf:
-                lambda[i] = VGREAT;
+                lambda[i] = vGreat;
                 break;
             case roots::negInf:
-                lambda[i] = - VGREAT;
+                lambda[i] = - vGreat;
                 break;
             case roots::nan:
                 FatalErrorInFunction
@@ -157,7 +157,7 @@ Foam::vector Foam::eigenVector
     magSd2 = mag(sd2);
 
     // Evaluate the eigenvector using the largest sub-determinant
-    if (magSd0 >= magSd1 && magSd0 >= magSd2 && magSd0 > SMALL)
+    if (magSd0 >= magSd1 && magSd0 >= magSd2 && magSd0 > small)
     {
         vector ev
         (
@@ -168,7 +168,7 @@ Foam::vector Foam::eigenVector
 
         return ev/mag(ev);
     }
-    else if (magSd1 >= magSd2 && magSd1 > SMALL)
+    else if (magSd1 >= magSd2 && magSd1 > small)
     {
         vector ev
         (
@@ -179,7 +179,7 @@ Foam::vector Foam::eigenVector
 
         return ev/mag(ev);
     }
-    else if (magSd2 > SMALL)
+    else if (magSd2 > small)
     {
         vector ev
         (
@@ -200,7 +200,7 @@ Foam::vector Foam::eigenVector
     magSd2 = mag(sd2);
 
     // Evaluate the eigenvector using the largest sub-determinant
-    if (magSd0 >= magSd1 && magSd0 >= magSd2 && magSd0 > SMALL)
+    if (magSd0 >= magSd1 && magSd0 >= magSd2 && magSd0 > small)
     {
         vector ev
         (
@@ -211,7 +211,7 @@ Foam::vector Foam::eigenVector
 
         return ev/mag(ev);
     }
-    else if (magSd1 >= magSd2 && magSd1 > SMALL)
+    else if (magSd1 >= magSd2 && magSd1 > small)
     {
         vector ev
         (
@@ -222,7 +222,7 @@ Foam::vector Foam::eigenVector
 
         return ev/mag(ev);
     }
-    else if (magSd2 > SMALL)
+    else if (magSd2 > small)
     {
         vector ev
         (

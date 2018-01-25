@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ namespace vectorTools
     (
         const Vector<T>& a,
         const Vector<T>& b,
-        const T& tolerance = SMALL
+        const T& tolerance = small
     )
     {
         return (mag(a ^ b) < tolerance) ? true : false;
@@ -72,7 +72,7 @@ namespace vectorTools
     (
         const Vector<T>& a,
         const Vector<T>& b,
-        const T& tolerance = SMALL
+        const T& tolerance = small
     )
     {
         return (mag(a & b) < tolerance) ? true : false;
@@ -106,7 +106,7 @@ namespace vectorTools
     (
         const Vector<T>& a,
         const Vector<T>& b,
-        const T& tolerance = SMALL
+        const T& tolerance = small
     )
     {
         scalar cosPhi = (a & b)/(mag(a)*mag(b) + tolerance);
@@ -121,7 +121,7 @@ namespace vectorTools
     (
         const Vector<T>& a,
         const Vector<T>& b,
-        const T& tolerance = SMALL
+        const T& tolerance = small
     )
     {
         scalar cosPhi = (a & b)/(mag(a)*mag(b) + tolerance);
@@ -136,7 +136,7 @@ namespace vectorTools
     (
         const Vector<T>& a,
         const Vector<T>& b,
-        const T& tolerance = SMALL
+        const T& tolerance = small
     )
     {
         return radToDeg(radAngleBetween(a, b, tolerance));

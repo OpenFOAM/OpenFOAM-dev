@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::rd
            max
            (
                magGradU,
-               dimensionedScalar("SMALL", magGradU.dimensions(), SMALL)
+               dimensionedScalar("small", magGradU.dimensions(), small)
            )*sqr(this->kappa_*this->y_)
        ),
        scalar(10)
@@ -131,14 +131,14 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::dTilda
                     1
                   - this->Cb1_*this->fv2(chi, fv1)
                    /(this->Cw1_*sqr(this->kappa_)*fwStar_)
-                 )/max(SMALL, fv1)
+                 )/max(small, fv1)
             )
         )
     );
 
     return max
     (
-        dimensionedScalar("SMALL", dimLength, SMALL),
+        dimensionedScalar("small", dimLength, small),
         fHyb*(1 + fRestore*Psi)*this->y_
       + (1 - fHyb)*this->CDES_*Psi*this->delta()
     );

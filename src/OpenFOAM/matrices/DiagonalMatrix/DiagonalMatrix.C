@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::DiagonalMatrix<Type>& Foam::DiagonalMatrix<Type>::invert()
     forAll(*this, i)
     {
         Type x = this->operator[](i);
-        if (mag(x) < VSMALL)
+        if (mag(x) < vSmall)
         {
             this->operator[](i) = Type(0);
         }
@@ -89,7 +89,7 @@ Foam::DiagonalMatrix<Type> Foam::inv(const DiagonalMatrix<Type>& A)
     forAll(A, i)
     {
         Type x = A[i];
-        if (mag(x) < VSMALL)
+        if (mag(x) < vSmall)
         {
             Ainv[i] = Type(0);
         }

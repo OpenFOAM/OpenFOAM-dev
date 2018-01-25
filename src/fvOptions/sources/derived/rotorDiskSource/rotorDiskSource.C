@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -289,7 +289,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
 
             // Determine first radial vector
             vector dx1(Zero);
-            scalar magR = -GREAT;
+            scalar magR = -great;
             forAll(cells_, i)
             {
                 const label celli = cells_[i];
@@ -311,7 +311,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
                 if (mag(dx2) > 0.5*magR)
                 {
                     axis = dx1 ^ dx2;
-                    if (mag(axis) > SMALL)
+                    if (mag(axis) > small)
                     {
                         break;
                     }
@@ -400,7 +400,7 @@ void Foam::fv::rotorDiskSource::constructGeometry()
 
     forAll(cells_, i)
     {
-        if (area_[i] > ROOTVSMALL)
+        if (area_[i] > rootVSmall)
         {
             const label celli = cells_[i];
 

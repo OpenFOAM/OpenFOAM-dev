@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,25 +70,25 @@ bool Foam::surfaceIntersection::excludeEdgeHit
 // {
 //        // Get edge vector
 //        vector eVec = e.vec(surf.localPoints());
-//        eVec /= mag(eVec) + VSMALL;
+//        eVec /= mag(eVec) + vSmall;
 //
 //        const labelList& eLabels = surf.faceEdges()[facei];
 //
 //        // Get edge vector of 0th edge of face
 //        vector e0Vec = surf.edges()[eLabels[0]].vec(surf.localPoints());
-//        e0Vec /= mag(e0Vec) + VSMALL;
+//        e0Vec /= mag(e0Vec) + vSmall;
 //
 //        vector n = e0Vec ^ eVec;
 //
-//        if (mag(n) < SMALL)
+//        if (mag(n) < small)
 //        {
 //            // e0 is aligned with e. Choose next edge of face.
 //            vector e1Vec = surf.edges()[eLabels[1]].vec(surf.localPoints());
-//            e1Vec /= mag(e1Vec) + VSMALL;
+//            e1Vec /= mag(e1Vec) + vSmall;
 //
 //            n = e1Vec ^ eVec;
 //
-//            if (mag(n) < SMALL)
+//            if (mag(n) < small)
 //            {
 //                // Problematic triangle. Two edges aligned with edgeI. Give
 //                // up.
@@ -237,7 +237,7 @@ void Foam::surfaceIntersection::storeIntersection
             const point& prevHit = allCutPoints[*iter];
             const point& thisHit = allCutPoints.last();
 
-            if (mag(prevHit - thisHit) < SMALL)
+            if (mag(prevHit - thisHit) < small)
             {
                 WarningInFunction
                     << "Encountered degenerate edge between face "
@@ -1036,7 +1036,7 @@ Foam::surfaceIntersection::surfaceIntersection
     //
 
     // Get typical dimension.
-    scalar minEdgeLen = GREAT;
+    scalar minEdgeLen = great;
     forAll(surf1.edges(), edgeI)
     {
         minEdgeLen = min

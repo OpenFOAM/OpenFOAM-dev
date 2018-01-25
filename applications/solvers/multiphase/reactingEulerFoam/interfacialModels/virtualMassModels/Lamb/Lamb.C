@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::virtualMassModels::Lamb::~Lamb()
 
 Foam::tmp<Foam::volScalarField> Foam::virtualMassModels::Lamb::Cvm() const
 {
-    volScalarField E(min(max(pair_.E(), SMALL), 1 - SMALL));
+    volScalarField E(min(max(pair_.E(), small), 1 - small));
     volScalarField rtOmEsq(sqrt(1 - sqr(E)));
 
     return

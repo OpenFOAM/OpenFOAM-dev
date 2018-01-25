@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
 
         bool foundTet = false;
         label closestFace = -1;
-        scalar minDistance = GREAT;
+        scalar minDistance = great;
 
         forAll(cellFaces, facei)
         {
@@ -102,7 +102,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
 
             // if normal and projection are not orthogonal this could
             // be the one...
-            if (mag(multiplierDenominator) > SMALL)
+            if (mag(multiplierDenominator) > small)
             {
                 scalar multiplier = multiplierNumerator/multiplierDenominator;
                 vector iPoint = cellCentre + multiplier*projection;
@@ -122,7 +122,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
         // two other points on the face
         // *********************************************************************
 
-        minDistance = GREAT;
+        minDistance = great;
         if (closestFace != -1)
         {
             label nFace = closestFace;
@@ -161,7 +161,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
 
         if (!foundTet)
         {
-            minDistance = GREAT;
+            minDistance = great;
 
             label facei = 0;
             while (facei < cellFaces.size() && !foundTet)

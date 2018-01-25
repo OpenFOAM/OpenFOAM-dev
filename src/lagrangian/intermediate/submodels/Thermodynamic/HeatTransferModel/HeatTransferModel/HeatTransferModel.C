@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ Foam::scalar Foam::HeatTransferModel<CloudType>::htc
 
     scalar htc = Nu*kappa/dp;
 
-    if (BirdCorrection_ && (mag(htc) > ROOTVSMALL) && (mag(NCpW) > ROOTVSMALL))
+    if (BirdCorrection_ && (mag(htc) > rootVSmall) && (mag(NCpW) > rootVSmall))
     {
         const scalar phit = min(NCpW/htc, 50);
         if (phit > 0.001)

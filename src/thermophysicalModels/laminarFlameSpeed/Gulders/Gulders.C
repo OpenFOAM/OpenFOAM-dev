@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::Gulders::SuRef
     scalar phi
 ) const
 {
-    if (phi > SMALL)
+    if (phi > small)
     {
         return W_*pow(phi, eta_)*exp(-xi_*sqr(phi - 1.075));
     }
@@ -223,7 +223,7 @@ Foam::laminarFlameSpeedModels::Gulders::operator()() const
             dimensionedScalar
             (
                 psiuReactionThermo_.lookup("stoichiometricAirFuelMassRatio")
-            )*ft/max(1 - ft, SMALL)
+            )*ft/max(1 - ft, small)
         );
     }
     else

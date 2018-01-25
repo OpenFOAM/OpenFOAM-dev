@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ buoyantKEpsilon<BasicTurbulenceModel>::kSource() const
         this->mesh_.objectRegistry::template
         lookupObject<uniformDimensionedVectorField>("g");
 
-    if (mag(g.value()) > SMALL)
+    if (mag(g.value()) > small)
     {
         return -fvm::SuSp(Gcoef(), this->k_);
     }
@@ -138,7 +138,7 @@ buoyantKEpsilon<BasicTurbulenceModel>::epsilonSource() const
         this->mesh_.objectRegistry::template
         lookupObject<uniformDimensionedVectorField>("g");
 
-    if (mag(g.value()) > SMALL)
+    if (mag(g.value()) > small)
     {
         vector gHat(g.value()/mag(g.value()));
 
@@ -146,7 +146,7 @@ buoyantKEpsilon<BasicTurbulenceModel>::epsilonSource() const
         volScalarField u
         (
             mag(this->U_ - gHat*v)
-          + dimensionedScalar("SMALL", dimVelocity, SMALL)
+          + dimensionedScalar("small", dimVelocity, small)
         );
 
         return -fvm::SuSp(this->C1_*tanh(mag(v)/u)*Gcoef(), this->epsilon_);

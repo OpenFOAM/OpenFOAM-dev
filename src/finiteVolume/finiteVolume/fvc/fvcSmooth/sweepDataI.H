@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ inline bool Foam::sweepData::update
 
     scalar myDist2 = magSqr(position - origin());
 
-    if (myDist2 < SMALL)
+    if (myDist2 < small)
     {
         if (svf.value() > value())
         {
@@ -73,7 +73,7 @@ inline bool Foam::sweepData::update
 
 inline Foam::sweepData::sweepData()
 :
-    value_(-GREAT),
+    value_(-great),
     origin_(vector::max)
 {}
 
@@ -90,7 +90,7 @@ inline Foam::sweepData::sweepData(const scalar value, const point& origin)
 template<class TrackingData>
 inline bool Foam::sweepData::valid(TrackingData& td) const
 {
-    return value_ > -SMALL;
+    return value_ > -small;
 }
 
 

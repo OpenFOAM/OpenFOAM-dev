@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,16 +43,16 @@ template<>
 const Foam::vector Foam::vector::vsType::one(vector::uniform(1));
 
 template<>
-const Foam::vector Foam::vector::vsType::max(vector::uniform(VGREAT));
+const Foam::vector Foam::vector::vsType::max(vector::uniform(vGreat));
 
 template<>
-const Foam::vector Foam::vector::vsType::min(vector::uniform(-VGREAT));
+const Foam::vector Foam::vector::vsType::min(vector::uniform(-vGreat));
 
 template<>
-const Foam::vector Foam::vector::vsType::rootMax(vector::uniform(ROOTVGREAT));
+const Foam::vector Foam::vector::vsType::rootMax(vector::uniform(rootVGreat));
 
 template<>
-const Foam::vector Foam::vector::vsType::rootMin(vector::uniform(-ROOTVGREAT));
+const Foam::vector Foam::vector::vsType::rootMin(vector::uniform(-rootVGreat));
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,7 +212,7 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
         const scalar exp = R.lhs()[slRef].exponent;
         if (exp < 1.0)
         {
-            if (cf > SMALL)
+            if (cf > small)
             {
                 pf *= pow(cf, exp - 1.0);
             }
@@ -254,7 +254,7 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
         const scalar exp = R.rhs()[srRef].exponent;
         if (exp < 1.0)
         {
-            if (cr>SMALL)
+            if (cr>small)
             {
                 pr *= pow(cr, exp - 1.0);
             }
@@ -364,9 +364,9 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
                 {
                     if (el < 1.0)
                     {
-                        if (c_[si] > SMALL)
+                        if (c_[si] > small)
                         {
-                            kf *= el*pow(c_[si] + VSMALL, el - 1.0);
+                            kf *= el*pow(c_[si] + vSmall, el - 1.0);
                         }
                         else
                         {
@@ -410,9 +410,9 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
                 {
                     if (er < 1.0)
                     {
-                        if (c_[si] > SMALL)
+                        if (c_[si] > small)
                         {
-                            kr *= er*pow(c_[si] + VSMALL, er - 1.0);
+                            kr *= er*pow(c_[si] + vSmall, er - 1.0);
                         }
                         else
                         {
@@ -483,7 +483,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimTime, SMALL),
+            dimensionedScalar("zero", dimTime, small),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -693,7 +693,7 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::solve
 {
     BasicChemistryModel<ReactionThermo>::correct();
 
-    scalar deltaTMin = GREAT;
+    scalar deltaTMin = great;
 
     if (!this->chemistry_)
     {
@@ -727,7 +727,7 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::solve
             scalar timeLeft = deltaT[celli];
 
             // Calculate the chemical source terms
-            while (timeLeft > SMALL)
+            while (timeLeft > small)
             {
                 scalar dt = timeLeft;
                 this->solve(c_, Ti, pi, dt, this->deltaTChem_[celli]);

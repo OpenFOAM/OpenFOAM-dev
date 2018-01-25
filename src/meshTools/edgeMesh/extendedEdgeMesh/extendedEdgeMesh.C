@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -785,8 +785,8 @@ Foam::extendedEdgeMesh::pointTree() const
             treeBoundBox(points()).extend(rndGen, 1e-4)
         );
 
-        bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-        bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
         const labelList featurePointLabels = identity(nonFeatureStart_);
 
@@ -825,8 +825,8 @@ Foam::extendedEdgeMesh::edgeTree() const
             treeBoundBox(points()).extend(rndGen, 1e-4)
         );
 
-        bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-        bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
         labelList allEdges(identity(edges().size()));
 
@@ -869,8 +869,8 @@ Foam::extendedEdgeMesh::edgeTreesByType() const
             treeBoundBox(points()).extend(rndGen, 1e-4)
         );
 
-        bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-        bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
+        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
         labelListList sliceEdges(nEdgeTypes);
 

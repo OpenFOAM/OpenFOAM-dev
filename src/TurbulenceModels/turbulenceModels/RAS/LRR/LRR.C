@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -330,7 +330,7 @@ void LRR<BasicTurbulenceModel>::correct()
                 label celli = curPatch.faceCells()[facei];
                 P[celli] *= min
                 (
-                    G[celli]/(0.5*mag(tr(P[celli])) + SMALL),
+                    G[celli]/(0.5*mag(tr(P[celli])) + small),
                     1.0
                 );
             }

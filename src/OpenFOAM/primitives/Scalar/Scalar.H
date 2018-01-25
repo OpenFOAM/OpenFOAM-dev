@@ -339,11 +339,11 @@ inline Scalar sqrtSumSqr(const Scalar a, const Scalar b)
 
     if (maga > magb)
     {
-        return maga*sqrt(1.0 + sqr(magb/maga));
+        return maga*sqrt(1 + sqr(magb/maga));
     }
     else
     {
-        return magb < ScalarVSmall ? 0.0 : magb*sqrt(1.0 + sqr(maga/magb));
+        return magb < ScalarVSmall ? 0 : magb*sqrt(1 + sqr(maga/magb));
     }
 }
 

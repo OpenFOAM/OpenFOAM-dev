@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -294,12 +294,12 @@ Foam::scalar Foam::liquidMixtureProperties::rho
 
     forAll(properties_, i)
     {
-        if (X[i] > SMALL)
+        if (X[i] > small)
         {
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
             scalar rho = properties_[i].rho(p, Ti);
 
-            if (rho > SMALL)
+            if (rho > small)
             {
                 scalar Yi = X[i]*properties_[i].W();
                 sumY += Yi;
@@ -324,7 +324,7 @@ Foam::scalar Foam::liquidMixtureProperties::pv
 
     forAll(properties_, i)
     {
-        if (X[i] > SMALL)
+        if (X[i] > small)
         {
             scalar Yi = X[i]*properties_[i].W();
             sumY += Yi;
@@ -350,7 +350,7 @@ Foam::scalar Foam::liquidMixtureProperties::hl
 
     forAll(properties_, i)
     {
-        if (X[i] > SMALL)
+        if (X[i] > small)
         {
             scalar Yi = X[i]*properties_[i].W();
             sumY += Yi;
@@ -376,7 +376,7 @@ Foam::scalar Foam::liquidMixtureProperties::Cp
 
     forAll(properties_, i)
     {
-        if (X[i] > SMALL)
+        if (X[i] > small)
         {
             scalar Yi = X[i]*properties_[i].W();
             sumY += Yi;
@@ -416,7 +416,7 @@ Foam::scalar Foam::liquidMixtureProperties::sigma
 
     forAll(properties_, i)
     {
-        if (Xs[i] > SMALL)
+        if (Xs[i] > small)
         {
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
             sigma += Xs[i]*properties_[i].sigma(p, Ti);
@@ -438,7 +438,7 @@ Foam::scalar Foam::liquidMixtureProperties::mu
 
     forAll(properties_, i)
     {
-        if (X[i] > SMALL)
+        if (X[i] > small)
         {
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
             mu += X[i]*log(properties_[i].mu(p, Ti));
@@ -507,7 +507,7 @@ Foam::scalar Foam::liquidMixtureProperties::D
 
     forAll(properties_, i)
     {
-        if (X[i] > SMALL)
+        if (X[i] > small)
         {
             scalar Ti = min(TrMax*properties_[i].Tc(), T);
             Dinv += X[i]/properties_[i].D(p, Ti);

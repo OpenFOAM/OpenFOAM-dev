@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,7 +197,7 @@ void simpleMarkFeatures
                   - allBoundary[f0].centre(allBoundary.points())
                 );
 
-                if (concaveMultiCells && (c1c0 & n0) > SMALL)
+                if (concaveMultiCells && (c1c0 & n0) > small)
                 {
                     // Found concave edge. Make into multiCell features
                     Info<< "Detected concave feature edge:" << edgeI

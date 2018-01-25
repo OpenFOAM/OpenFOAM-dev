@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,11 +144,11 @@ inline void faceLimitedGrad<Type>::limitFace
     const scalar extrapolate
 ) const
 {
-    if (extrapolate > maxDelta + VSMALL)
+    if (extrapolate > maxDelta + vSmall)
     {
         limiter = min(limiter, maxDelta/extrapolate);
     }
-    else if (extrapolate < minDelta - VSMALL)
+    else if (extrapolate < minDelta - vSmall)
     {
         limiter = min(limiter, minDelta/extrapolate);
     }

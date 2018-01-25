@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,8 +37,8 @@ bool Foam::primitiveMesh::checkEdgeLength
     const pointField& points = this->points();
     const faceList& faces = this->faces();
 
-    scalar minLenSqr = sqr(GREAT);
-    scalar maxLenSqr = -sqr(GREAT);
+    scalar minLenSqr = sqr(great);
+    scalar maxLenSqr = -sqr(great);
 
     labelHashSet smallEdgeSet(nPoints()/100);
 

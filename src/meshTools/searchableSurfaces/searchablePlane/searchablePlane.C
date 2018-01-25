@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,11 +68,11 @@ Foam::pointIndexHit Foam::searchablePlane::findLine
 
 Foam::boundBox Foam::searchablePlane::calcBounds() const
 {
-    point max(VGREAT, VGREAT, VGREAT);
+    point max(vGreat, vGreat, vGreat);
 
     for (direction dir = 0; dir < vector::nComponents; dir++)
     {
-        if (mag(normal()[dir]) - 1 < SMALL)
+        if (mag(normal()[dir]) - 1 < small)
         {
             max[dir] = 0;
 
@@ -144,7 +144,7 @@ void Foam::searchablePlane::boundingSpheres
     centres[0] = refPoint();
 
     radiusSqr.setSize(1);
-    radiusSqr[0] = Foam::sqr(GREAT);
+    radiusSqr[0] = Foam::sqr(great);
 }
 
 

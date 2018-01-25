@@ -40,7 +40,7 @@ bool interpolationCellPointFace<Type>::findTriangle
 
         vector fc = (tetPoints[0] + tetPoints[1] + tetPoints[2])/3.0;
 
-        vector newPos = position + SMALL*(fc-position);
+        vector newPos = position + small*(fc-position);
 
         // calculate triangle edge vectors and triangle face normal
         // the 'i':th edge is opposite node i
@@ -58,7 +58,7 @@ bool interpolationCellPointFace<Type>::findTriangle
         for (label i=0; i<3; i++)
         {
             normal[i] = triangleFaceNormal ^ edge[i];
-            normal[i] /= mag(normal[i]) + VSMALL;
+            normal[i] /= mag(normal[i]) + vSmall;
         }
 
         // check if position is inside triangle
@@ -77,7 +77,7 @@ bool interpolationCellPointFace<Type>::findTriangle
             for (label i=0; i<3; i++)
             {
                 label ip = (i+1) % 3;
-                scalar phiMax = max(VSMALL, normal[i] & edge[ip]);
+                scalar phiMax = max(vSmall, normal[i] & edge[ip]);
                 scalar phiLength = (position-tetPoints[ip]) & normal[i];
                 phi[i] = phiLength/phiMax;
             }

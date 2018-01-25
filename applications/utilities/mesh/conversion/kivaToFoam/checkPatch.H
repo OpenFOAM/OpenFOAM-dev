@@ -39,10 +39,10 @@
 
             if
             (
-                   mag(points[quadFace[0]].y()) < SMALL
-                && mag(points[quadFace[1]].y()) < SMALL
-                && mag(points[quadFace[2]].y()) < SMALL
-                && mag(points[quadFace[3]].y()) < SMALL
+                   mag(points[quadFace[0]].y()) < small
+                && mag(points[quadFace[1]].y()) < small
+                && mag(points[quadFace[2]].y()) < small
+                && mag(points[quadFace[3]].y()) < small
             )
             {
                 bcIndex = SYMMETRYPLANE;

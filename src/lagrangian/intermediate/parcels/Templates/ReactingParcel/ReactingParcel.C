@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
         cloud.composition();
     PhaseChangeModel<reactingCloudType>& phaseChange = cloud.phaseChange();
 
-    if (!phaseChange.active() || (YPhase < SMALL))
+    if (!phaseChange.active() || (YPhase < small))
     {
         return;
     }
@@ -157,7 +157,7 @@ Foam::scalar Foam::ReactingParcel<ParcelType>::updateMassFraction
     scalar mass1 = mass0 - sum(dMass);
 
     // only update the mass fractions if the new particle mass is finite
-    if (mass1 > ROOTVSMALL)
+    if (mass1 > rootVSmall)
     {
         forAll(Y, i)
         {
@@ -246,7 +246,7 @@ void Foam::ReactingParcel<ParcelType>::cellValueSourceCorrection
         addedMass += dm;
     }
 
-    if (maxMassI < ROOTVSMALL)
+    if (maxMassI < rootVSmall)
     {
         return;
     }
@@ -299,7 +299,7 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
 )
 {
     // No correction if total concentration of emitted species is small
-    if (!cloud.heatTransfer().BirdCorrection() || (sum(Cs) < SMALL))
+    if (!cloud.heatTransfer().BirdCorrection() || (sum(Cs) < small))
     {
         return;
     }
@@ -361,16 +361,16 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
         sumYiCbrtW += Ys[i]*cbrtW;
     }
 
-    Cps = max(Cps, ROOTVSMALL);
+    Cps = max(Cps, rootVSmall);
 
     rhos *= td.pc()/(RR*T);
-    rhos = max(rhos, ROOTVSMALL);
+    rhos = max(rhos, rootVSmall);
 
     mus /= sumYiSqrtW;
-    mus = max(mus, ROOTVSMALL);
+    mus = max(mus, rootVSmall);
 
     kappas /= sumYiCbrtW;
-    kappas = max(kappas, ROOTVSMALL);
+    kappas = max(kappas, rootVSmall);
 
     Prs = Cps*mus/kappas;
 }

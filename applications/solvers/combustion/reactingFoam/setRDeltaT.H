@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
     scalar maxCo(readScalar(pimpleDict.lookup("maxCo")));
 
     // Maximum time scale
-    scalar maxDeltaT(pimpleDict.lookupOrDefault<scalar>("maxDeltaT", GREAT));
+    scalar maxDeltaT(pimpleDict.lookupOrDefault<scalar>("maxDeltaT", great));
 
     // Smoothing parameter (0-1) when smoothing iterations > 0
     scalar rDeltaTSmoothingCoeff
@@ -84,8 +84,8 @@ License
         );
 
         Info<< "    Temperature = "
-            << 1/(gMax(rDeltaTT.field()) + VSMALL) << ", "
-            << 1/(gMin(rDeltaTT.field()) + VSMALL) << endl;
+            << 1/(gMax(rDeltaTT.field()) + vSmall) << ", "
+            << 1/(gMin(rDeltaTT.field()) + vSmall) << endl;
 
         rDeltaT.ref() = max(rDeltaT(), rDeltaTT);
     }
@@ -136,8 +136,8 @@ License
         if (foundY)
         {
             Info<< "    Composition = "
-                << 1/(gMax(rDeltaTY.field()) + VSMALL) << ", "
-                << 1/(gMin(rDeltaTY.field()) + VSMALL) << endl;
+                << 1/(gMax(rDeltaTY.field()) + vSmall) << ", "
+                << 1/(gMin(rDeltaTY.field()) + vSmall) << endl;
 
             rDeltaT.ref() = max(rDeltaT(), rDeltaTY);
         }

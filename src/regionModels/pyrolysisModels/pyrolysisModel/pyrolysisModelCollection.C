@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ scalar pyrolysisModelCollection::maxDiff() const
 
 scalar pyrolysisModelCollection::solidRegionDiffNo() const
 {
-    scalar totalDiNum = GREAT;
+    scalar totalDiNum = great;
 
     forAll(*this, i)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ bool Foam::matchPoints
 
     point compareOrigin = origin;
 
-    if (origin == point(VGREAT, VGREAT, VGREAT))
+    if (origin == point(vGreat, vGreat, vGreat))
     {
         if (pts1.size())
         {
@@ -75,7 +75,7 @@ bool Foam::matchPoints
 
 
         // Go through range of equal mag and find nearest vector.
-        scalar minDistSqr = VGREAT;
+        scalar minDistSqr = vGreat;
         label minFacei = -1;
 
         for
@@ -158,7 +158,7 @@ bool Foam::matchPoints
 
     point compareOrigin = origin;
 
-    if (origin == point(VGREAT, VGREAT, VGREAT))
+    if (origin == point(vGreat, vGreat, vGreat))
     {
         if (pts1.size())
         {
@@ -186,7 +186,7 @@ bool Foam::matchPoints
         }
 
         // Go through range of equal mag and find nearest vector.
-        scalar minDistSqr = VGREAT;
+        scalar minDistSqr = vGreat;
         scalar minDistNorm = 0;
         label minFacei = -1;
 
@@ -208,8 +208,8 @@ bool Foam::matchPoints
 
             if
             (
-                magSqr(pts0Dir[face0I]) < sqr(SMALL)
-             && magSqr(pts1Dir[facei]) < sqr(SMALL)
+                magSqr(pts0Dir[face0I]) < sqr(small)
+             && magSqr(pts1Dir[facei]) < sqr(small)
             )
             {
                 distNorm = -1;

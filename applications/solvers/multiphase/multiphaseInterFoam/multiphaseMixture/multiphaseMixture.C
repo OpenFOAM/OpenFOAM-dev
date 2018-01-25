@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -459,7 +459,7 @@ void Foam::multiphaseMixture::correctContactAngle
             scalar uTheta = tp().uTheta();
 
             // Calculate the dynamic contact angle if required
-            if (uTheta > SMALL)
+            if (uTheta > small)
             {
                 scalar thetaA = convertToRad*tp().thetaA(matched);
                 scalar thetaR = convertToRad*tp().thetaR(matched);
@@ -479,7 +479,7 @@ void Foam::multiphaseMixture::correctContactAngle
                 );
 
                 // Normalise nWall
-                nWall /= (mag(nWall) + SMALL);
+                nWall /= (mag(nWall) + small);
 
                 // Calculate Uwall resolved normal to the interface parallel to
                 // the interface

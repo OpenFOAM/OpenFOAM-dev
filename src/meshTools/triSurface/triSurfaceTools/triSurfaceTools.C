@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1173,7 +1173,7 @@ Foam::surfaceLocation Foam::triSurfaceTools::visitFaces
 {
     surfaceLocation nearest;
 
-    scalar minDistSqr = Foam::sqr(GREAT);
+    scalar minDistSqr = Foam::sqr(great);
 
     forAll(eFaces, i)
     {
@@ -1978,7 +1978,7 @@ Foam::label Foam::triSurfaceTools::minEdge
     const labelList& edgeIndices
 )
 {
-    scalar minLength = GREAT;
+    scalar minLength = great;
     label minIndex = -1;
     forAll(edgeIndices, i)
     {
@@ -2008,7 +2008,7 @@ Foam::label Foam::triSurfaceTools::maxEdge
     const labelList& edgeIndices
 )
 {
-    scalar maxLength = -GREAT;
+    scalar maxLength = -great;
     label maxIndex = -1;
     forAll(edgeIndices, i)
     {
@@ -2124,7 +2124,7 @@ Foam::vector Foam::triSurfaceTools::surfaceNormal
         {
             edgeNormal += surf.faceNormals()[eFaces[i]];
         }
-        return edgeNormal/(mag(edgeNormal) + VSMALL);
+        return edgeNormal/(mag(edgeNormal) + vSmall);
     }
     else
     {
@@ -2201,7 +2201,7 @@ Foam::triSurfaceTools::sideType Foam::triSurfaceTools::surfaceSide
 
         // scalar magSampleNearestVec = mag(sampleNearestVec);
 
-        // if (magSampleNearestVec > SMALL)
+        // if (magSampleNearestVec > small)
         // {
         //     c /= magSampleNearestVec*mag(surf.faceNormals()[nearestFacei]);
 
@@ -2284,7 +2284,7 @@ Foam::triSurfaceTools::sideType Foam::triSurfaceTools::surfaceSide
 
         const labelList& pEdges = surf.pointEdges()[nearPointi];
 
-        scalar minDistSqr = Foam::sqr(GREAT);
+        scalar minDistSqr = Foam::sqr(great);
         label minEdgeI = -1;
 
         forAll(pEdges, i)
@@ -2299,7 +2299,7 @@ Foam::triSurfaceTools::sideType Foam::triSurfaceTools::surfaceSide
             vector eVec(localPoints[otherPointi] - base);
             scalar magEVec = mag(eVec);
 
-            if (magEVec > VSMALL)
+            if (magEVec > vSmall)
             {
                 eVec /= magEVec;
 
@@ -2604,12 +2604,12 @@ void Foam::triSurfaceTools::calcInterpolationWeights
     for (label i=0; i<3; i++)
     {
         normal[i] = triangleFaceNormal ^ edge[i];
-        normal[i] /= mag(normal[i]) + VSMALL;
+        normal[i] /= mag(normal[i]) + vSmall;
     }
 
-    weights[0] = ((p-tri.b()) & normal[0]) / max(VSMALL, normal[0] & edge[1]);
-    weights[1] = ((p-tri.c()) & normal[1]) / max(VSMALL, normal[1] & edge[2]);
-    weights[2] = ((p-tri.a()) & normal[2]) / max(VSMALL, normal[2] & edge[0]);
+    weights[0] = ((p-tri.b()) & normal[0]) / max(vSmall, normal[0] & edge[1]);
+    weights[1] = ((p-tri.c()) & normal[1]) / max(vSmall, normal[1] & edge[2]);
+    weights[2] = ((p-tri.a()) & normal[2]) / max(vSmall, normal[2] & edge[0]);
 }
 
 
@@ -2636,7 +2636,7 @@ void Foam::triSurfaceTools::calcInterpolationWeights
         FixedList<label, 3>& verts = allVerts[i];
         FixedList<scalar, 3>& weights = allWeights[i];
 
-        scalar minDistance = GREAT;
+        scalar minDistance = great;
 
         forAll(s, facei)
         {
@@ -2681,9 +2681,9 @@ void Foam::triSurfaceTools::calcInterpolationWeights
                     verts[0] = f[nearLabel];
                     weights[0] = 1;
                     verts[1] = -1;
-                    weights[1] = -GREAT;
+                    weights[1] = -great;
                     verts[2] = -1;
-                    weights[2] = -GREAT;
+                    weights[2] = -great;
 
                     //Pout<< "calcScalingFactors : samplePt:" << samplePt
                     //    << " distance:" << nearest.distance()
@@ -2712,7 +2712,7 @@ void Foam::triSurfaceTools::calcInterpolationWeights
                     // Interpolate
                     weights[0] = 1 - s;
                     weights[1] = s;
-                    weights[2] = -GREAT;
+                    weights[2] = -great;
 
                     //Pout<< "calcScalingFactors : samplePt:" << samplePt
                     //    << " distance:" << nearest.distance()

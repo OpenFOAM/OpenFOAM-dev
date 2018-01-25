@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::vector Foam::cellModel::centre
                 cEst
             ).mag(points);
 
-        if (pyrVol > SMALL)
+        if (pyrVol > small)
         {
             WarningInFunction
                 << "zero or negative pyramid volume: " << -pyrVol
@@ -81,7 +81,7 @@ Foam::vector Foam::cellModel::centre
         sumV -= pyrVol;
     }
 
-    return sumVc/(sumV + VSMALL);
+    return sumVc/(sumV + vSmall);
 }
 
 
@@ -123,7 +123,7 @@ Foam::scalar Foam::cellModel::mag
                 cEst
             ).mag(points);
 
-        if (pyrVol > SMALL)
+        if (pyrVol > small)
         {
             WarningInFunction
                 << "zero or negative pyramid volume: " << -pyrVol

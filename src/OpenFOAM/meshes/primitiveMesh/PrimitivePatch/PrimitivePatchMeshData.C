@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -286,7 +286,7 @@ calcPointNormals() const
             curNormal += faceUnitNormals[curFaces[facei]];
         }
 
-        curNormal /= mag(curNormal) + VSMALL;
+        curNormal /= mag(curNormal) + vSmall;
     }
 
     if (debug)
@@ -381,7 +381,7 @@ calcFaceNormals() const
     forAll(n, facei)
     {
         n[facei] = this->operator[](facei).normal(points_);
-        n[facei] /= mag(n[facei]) + VSMALL;
+        n[facei] /= mag(n[facei]) + vSmall;
     }
 
     if (debug)

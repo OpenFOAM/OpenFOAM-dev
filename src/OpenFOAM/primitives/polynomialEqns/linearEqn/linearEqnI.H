@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ inline Foam::scalar Foam::linearEqn::derivative(const scalar x) const
 
 inline Foam::scalar Foam::linearEqn::error(const scalar x) const
 {
-    return mag(SMALL*x*a());
+    return mag(small*x*a());
 }
 
 
@@ -105,7 +105,7 @@ inline Foam::Roots<1> Foam::linearEqn::roots() const
         return Roots<1>(roots::nan, 0);
     }
 
-    if (mag(b/VGREAT) >= mag(a))
+    if (mag(b/vGreat) >= mag(a))
     {
         return Roots<1>(sign(a) == sign(b) ? roots::negInf : roots::posInf, 0);
     }

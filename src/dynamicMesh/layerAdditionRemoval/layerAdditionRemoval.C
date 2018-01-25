@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ void Foam::layerAdditionRemoval::checkDefinition()
 
     if
     (
-        minLayerThickness_ < VSMALL
+        minLayerThickness_ < vSmall
      || maxLayerThickness_ < minLayerThickness_
     )
     {
@@ -218,7 +218,7 @@ bool Foam::layerAdditionRemoval::changeTopology() const
     const scalarField& V = mesh.cellVolumes();
     const vectorField& S = mesh.faceAreas();
 
-    if (min(V) < -VSMALL)
+    if (min(V) < -vSmall)
     {
         FatalErrorInFunction
             << "negative cell volume. Error in mesh motion before "
@@ -227,7 +227,7 @@ bool Foam::layerAdditionRemoval::changeTopology() const
     }
 
     scalar avgDelta = 0;
-    scalar minDelta = GREAT;
+    scalar minDelta = great;
     scalar maxDelta = 0;
     label nDelta = 0;
 
@@ -346,7 +346,7 @@ bool Foam::layerAdditionRemoval::changeTopology() const
 
                     // Old thickness looses meaning.
                     // Set it up to indicate layer removal
-                    oldLayerThickness_ = GREAT;
+                    oldLayerThickness_ = great;
 
                     topologicalChange = true;
                 }
@@ -458,7 +458,7 @@ void Foam::layerAdditionRemoval::updateMesh(const mapPolyMesh&)
 
 void Foam::layerAdditionRemoval::setMinLayerThickness(const scalar t) const
 {
-    if (t < VSMALL || maxLayerThickness_ < t)
+    if (t < vSmall || maxLayerThickness_ < t)
     {
         FatalErrorInFunction
             << "Incorrect layer thickness definition."

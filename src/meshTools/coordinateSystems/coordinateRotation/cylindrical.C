@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ void Foam::cylindrical::init
         {
             label celli = cells[i];
             vector dir = cc[celli] - origin_;
-            dir /= mag(dir) + VSMALL;
+            dir /= mag(dir) + vSmall;
 
             R[i] = axesRotation(e3_, dir).R();
         }
@@ -82,7 +82,7 @@ void Foam::cylindrical::init
         forAll(cc, celli)
         {
             vector dir = cc[celli] - origin_;
-            dir /= mag(dir) + VSMALL;
+            dir /= mag(dir) + vSmall;
 
             R[celli] = axesRotation(e3_, dir).R();
         }
@@ -196,7 +196,7 @@ void Foam::cylindrical::updateCells
     {
         label celli = cells[i];
         vector dir = cc[celli] - origin_;
-        dir /= mag(dir) + VSMALL;
+        dir /= mag(dir) + vSmall;
 
         R[celli] = axesRotation(e3_, dir).R();
     }

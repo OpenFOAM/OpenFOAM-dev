@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
       to the original.
       Test with + and - this vector. Only if both register a hit is it seen
       as one.
-    - extend the test vector slightly (with SMALL) to account for numerical
+    - extend the test vector slightly (with small) to account for numerical
       inaccuracies.
 
 SourceFiles

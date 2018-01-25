@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::TimeScaleModels::nonEquilibrium::oneByTau
         8.0*sqrt(2.0)/(3.0*constant::mathematical::pi)
        *0.25*(1.0 - e_*e_);
 
-    return a*f*alphaPacked_/max(alphaPacked_ - alpha, SMALL);
+    return a*f*alphaPacked_/max(alphaPacked_ - alpha, small);
 }
 
 

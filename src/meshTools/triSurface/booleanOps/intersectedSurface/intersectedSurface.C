@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -448,12 +448,12 @@ Foam::label Foam::intersectedSurface::nextEdge
 
     // x-axis of coordinate system
     vector e0 = n ^ (points[prevE.otherVertex(prevVertI)] - points[prevVertI]);
-    e0 /= mag(e0) + VSMALL;
+    e0 /= mag(e0) + vSmall;
 
     // Get y-axis of coordinate system
     vector e1 = n ^ e0;
 
-    if (mag(mag(e1) - 1) > SMALL)
+    if (mag(mag(e1) - 1) > small)
     {
         {
             Pout<< "Writing face:" << facei << " to face.obj" << endl;
@@ -475,7 +475,7 @@ Foam::label Foam::intersectedSurface::nextEdge
     // Determine maximum angle over all connected (unvisited) edges.
     //
 
-    scalar maxAngle = -GREAT;
+    scalar maxAngle = -great;
     label maxEdgeI = -1;
 
     forAll(connectedEdges, connI)
@@ -506,7 +506,7 @@ Foam::label Foam::intersectedSurface::nextEdge
                 vector vec =
                     n ^ (points[e.otherVertex(prevVertI)] - points[prevVertI]);
 
-                vec /= mag(vec) + VSMALL;
+                vec /= mag(vec) + vSmall;
 
                 scalar angle = pseudoAngle(e0, e1, vec);
 
@@ -647,7 +647,7 @@ void Foam::intersectedSurface::findNearestVisited
 )
 {
     minVertI = -1;
-    minDist = GREAT;
+    minDist = great;
 
     forAllConstIter(Map<label>, pointVisited, iter)
     {
@@ -784,7 +784,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
     label unvisitedVert0 = -1;
 
     {
-        scalar minDist = GREAT;
+        scalar minDist = great;
 
         forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
@@ -829,7 +829,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
     label visitedVert1 = -1;
     label unvisitedVert1 = -1;
     {
-        scalar minDist = GREAT;
+        scalar minDist = great;
 
         forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {

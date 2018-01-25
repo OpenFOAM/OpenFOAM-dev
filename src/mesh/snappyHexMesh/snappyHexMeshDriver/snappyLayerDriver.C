@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -399,7 +399,7 @@ void Foam::snappyLayerDriver::handleFeatureAngle
 
     Info<< nl << "Handling feature edges ..." << endl;
 
-    if (minCos < 1-SMALL)
+    if (minCos < 1-small)
     {
         // Normal component of normals of connected faces.
         vectorField edgeNormal(mesh.nEdges(), point::max);
@@ -1079,13 +1079,13 @@ void Foam::snappyLayerDriver::calculateLayerThickness
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Note: only layer parameters consistent with layer specification
     // method (see layerParameters) will be correct.
-    scalarField firstLayerThickness(pp.nPoints(), GREAT);
-    scalarField finalLayerThickness(pp.nPoints(), GREAT);
-    scalarField totalThickness(pp.nPoints(), GREAT);
-    scalarField expRatio(pp.nPoints(), GREAT);
+    scalarField firstLayerThickness(pp.nPoints(), great);
+    scalarField finalLayerThickness(pp.nPoints(), great);
+    scalarField totalThickness(pp.nPoints(), great);
+    scalarField expRatio(pp.nPoints(), great);
 
     minThickness.setSize(pp.nPoints());
-    minThickness = GREAT;
+    minThickness = great;
 
     forAll(patchIDs, i)
     {
@@ -1131,7 +1131,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         pp.meshPoints(),
         firstLayerThickness,
         minEqOp<scalar>(),
-        GREAT               // null value
+        great               // null value
     );
     syncTools::syncPointList
     (
@@ -1139,7 +1139,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         pp.meshPoints(),
         finalLayerThickness,
         minEqOp<scalar>(),
-        GREAT               // null value
+        great               // null value
     );
     syncTools::syncPointList
     (
@@ -1147,7 +1147,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         pp.meshPoints(),
         totalThickness,
         minEqOp<scalar>(),
-        GREAT               // null value
+        great               // null value
     );
     syncTools::syncPointList
     (
@@ -1155,7 +1155,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         pp.meshPoints(),
         expRatio,
         minEqOp<scalar>(),
-        GREAT               // null value
+        great               // null value
     );
     syncTools::syncPointList
     (
@@ -1163,7 +1163,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         pp.meshPoints(),
         minThickness,
         minEqOp<scalar>(),
-        GREAT               // null value
+        great               // null value
     );
 
 
@@ -2535,7 +2535,7 @@ void Foam::snappyLayerDriver::printLayerData
         scalar sumFraction = 0;
         forAll(patchReal, i)
         {
-            if (patchWanted[i] > VSMALL)
+            if (patchWanted[i] > vSmall)
             {
                 sumFraction += (patchReal[i]/patchWanted[i]);
             }
@@ -2752,7 +2752,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                 scalarField pfld(patchReal.size(), 0.0);
                 forAll(patchReal, i)
                 {
-                    if (patchWanted[i] > VSMALL)
+                    if (patchWanted[i] > vSmall)
                     {
                         pfld[i] = patchReal[i]/patchWanted[i];
                     }

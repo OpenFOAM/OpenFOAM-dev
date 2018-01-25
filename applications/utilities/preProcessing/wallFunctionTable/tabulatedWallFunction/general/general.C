@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ void Foam::tabulatedWallFunctions::general::invertTable()
         Rey[i] = yPlus_[i]*uPlus_[i];
         if (invertedTable_.log10())
         {
-            Rey[i] = ::log10(max(ROOTVSMALL, Rey[i]));
+            Rey[i] = ::log10(max(rootVSmall, Rey[i]));
         }
     }
 

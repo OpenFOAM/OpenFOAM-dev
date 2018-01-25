@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void Foam::transformPoints
     vector T = tr.t();
 
     // Check if any translation
-    if (mag(T) > VSMALL)
+    if (mag(T) > vSmall)
     {
         TFOR_ALL_F_OP_F_OP_S(vector, rtf, =, vector, tf, -, vector, T);
     }
@@ -86,7 +86,7 @@ void Foam::transformPoints
     }
 
     // Check if any rotation
-    if (mag(tr.r().R() - I) > SMALL)
+    if (mag(tr.r().R() - I) > small)
     {
         transform(rtf, tr.r(), rtf);
     }
