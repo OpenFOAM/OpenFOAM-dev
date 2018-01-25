@@ -118,7 +118,7 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
     {
         const Reaction<ThermoType>& R = reactions_[i];
 
-        scalar omegai = omega
+        const scalar omegai = omega
         (
             R, c, T, p, pf, cf, lRef, pr, cr, rRef
         );
@@ -587,9 +587,6 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
     const label si
 ) const
 {
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
-
     tmp<volScalarField::Internal> tRR
     (
         new volScalarField::Internal
@@ -615,6 +612,9 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
 
+    scalar pf, cf, pr, cr;
+    label lRef, rRef;
+
     forAll(rho, celli)
     {
         const scalar rhoi = rho[celli];
@@ -627,21 +627,26 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
             c_[i] = rhoi*Yi/specieThermo_[i].W();
         }
 
-        const scalar w = omegaI
-        (
-            ri,
-            c_,
-            Ti,
-            pi,
-            pf,
-            cf,
-            lRef,
-            pr,
-            cr,
-            rRef
-        );
+        const Reaction<ThermoType>& R = reactions_[ri];
+        const scalar omegai = omega(R, c_, Ti, pi, pf, cf, lRef, pr, cr, rRef);
 
-        RR[celli] = w*specieThermo_[si].W();
+        forAll(R.lhs(), s)
+        {
+            if (si == R.lhs()[s].index)
+            {
+                RR[celli] -= R.lhs()[s].stoichCoeff*omegai;
+            }
+        }
+
+        forAll(R.rhs(), s)
+        {
+            if (si == R.rhs()[s].index)
+            {
+                RR[celli] += R.rhs()[s].stoichCoeff*omegai;
+            }
+        }
+
+        RR[celli] *= specieThermo_[si].W();
     }
 
     return tRR;
