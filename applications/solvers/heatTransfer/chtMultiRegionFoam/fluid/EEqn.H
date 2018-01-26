@@ -27,7 +27,7 @@
 
     fvOptions.constrain(EEqn);
 
-    solvPerfhe = EEqn.solve(mesh.solver(he.select(finalIter)));
+    EEqn.solve();
 
     fvOptions.correct(he);
 

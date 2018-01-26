@@ -1,1 +1,1 @@
-List<scalar> cumulativeContErr(fluidRegions.size(), 0.0);
+List<scalar> cumulativeContErrs(fluidRegions.size(), 0.0);

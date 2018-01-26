@@ -31,6 +31,4 @@ const volScalarField& betav = betavSolid[i];
 
 fv::options& fvOptions = solidHeatSources[i];
 
-bool& resReachedSolid = residualReachedSolid[i];
-bool& residualControlUsed = residualControlUsedSolid[i];
-bool& firstIteration = firstIterationSolid[i];
+solidNoLoopControl& pimple = pimples.solid(i);

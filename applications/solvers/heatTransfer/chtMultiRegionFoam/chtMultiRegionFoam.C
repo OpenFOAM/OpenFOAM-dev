@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,8 @@ Description
 #include "radiationModel.H"
 #include "fvOptions.H"
 #include "coordinateSystem.H"
+#include "pimpleMultiRegionControl.H"
+#include "pressureControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,17 +61,18 @@ int main(int argc, char *argv[])
     #include "createMeshes.H"
     #include "createFields.H"
     #include "initContinuityErrs.H"
+    pimpleMultiRegionControl pimples(fluidRegions, solidRegions);
+    #include "createFluidPressureControls.H"
     #include "createTimeControls.H"
     #include "readSolidTimeControls.H"
     #include "compressibleMultiRegionCourantNo.H"
     #include "solidRegionDiffusionNo.H"
     #include "setInitialMultiRegionDeltaT.H"
 
-    while (runTime.run())
+    while (pimples.run(runTime))
     {
         #include "readTimeControls.H"
         #include "readSolidTimeControls.H"
-        #include "readPIMPLEControls.H"
 
         #include "compressibleMultiRegionCourantNo.H"
         #include "solidRegionDiffusionNo.H"
@@ -79,36 +82,15 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        if (nOuterCorr != 1)
-        {
-            forAll(fluidRegions, i)
-            {
-                #include "storeOldFluidFields.H"
-            }
-        }
-
-        bool allRegionsConverged = false;
-        bool finalIter = false;
-
         // --- PIMPLE loop
-        for (int oCorr=0; oCorr<nOuterCorr; oCorr++)
+        while (pimples.loop())
         {
-            Info<< nl << "Pimple iteration " << oCorr;
-
-            if (oCorr == nOuterCorr-1 || allRegionsConverged)
-            {
-                finalIter = true;
-            }
-
             forAll(fluidRegions, i)
             {
                 Info<< "\nSolving for fluid region "
                     << fluidRegions[i].name() << endl;
                 #include "setRegionFluidFields.H"
-                #include "readFluidMultiRegionPIMPLEControls.H"
-                #include "readFluidMultiRegionResidualControls.H"
                 #include "solveFluid.H"
-                #include "residualControlsFluid.H"
             }
 
             forAll(solidRegions, i)
@@ -116,13 +98,8 @@ int main(int argc, char *argv[])
                 Info<< "\nSolving for solid region "
                     << solidRegions[i].name() << endl;
                 #include "setRegionSolidFields.H"
-                #include "readSolidMultiRegionPIMPLEControls.H"
-                #include "readSolidMultiRegionResidualControls.H"
                 #include "solveSolid.H"
-                #include "residualControlsSolid.H"
             }
-
-            #include "checkResidualControls.H"
         }
 
         runTime.write();

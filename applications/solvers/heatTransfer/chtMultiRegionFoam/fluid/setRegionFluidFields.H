@@ -1,8 +1,8 @@
-    fvMesh& mesh = fluidRegions[i];
+    const fvMesh& mesh = fluidRegions[i];
 
     CombustionModel<rhoReactionThermo>& reaction = reactionFluid[i];
 
-    rhoReactionThermo& thermo = reaction.thermo();
+    rhoReactionThermo& thermo = thermoFluid[i];
     thermo.validate(args.executable(), "h", "e");
 
     basicMultiComponentMixture& composition = thermo.composition();
@@ -57,8 +57,8 @@
         initialMassFluid[i]
     );
 
-    const bool frozenFlow = frozenFlowFluid[i];
+    pimpleNoLoopControl& pimple = pimples.pimple(i);
 
-    bool& resReachedFluid = residualReachedFluid[i];
-    bool& residualControlUsed = residualControlUsedFluid[i];
-    bool& firstIteration = firstIterationFluid[i];
+    pressureControl& pressureControl = pressureControlFluid[i];
+
+    scalar cumulativeContErr = cumulativeContErrs[i];

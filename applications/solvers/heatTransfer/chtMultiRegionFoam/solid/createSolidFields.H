@@ -6,10 +6,6 @@ PtrList<fv::options> solidHeatSources(solidRegions.size());
 PtrList<volScalarField> betavSolid(solidRegions.size());
 PtrList<volSymmTensorField> aniAlphas(solidRegions.size());
 
-List<bool> residualReachedSolid(solidRegions.size(), true);
-List<bool> residualControlUsedSolid(solidRegions.size(), false);
-List<bool> firstIterationSolid(solidRegions.size(), true);
-
 // Populate solid field pointer lists
 forAll(solidRegions, i)
 {
@@ -107,20 +103,5 @@ forAll(solidRegions, i)
                 dimensionedScalar("1", dimless, scalar(1))
             )
         );
-    }
-
-    const dictionary& pimpleDict =
-        solidRegions[i].solutionDict().subDict("PIMPLE");
-
-    if (pimpleDict.isDict("residualControl"))
-    {
-        Info<< "    Reading residual controls\n" << endl;
-
-        bool& residualControlUsed = residualControlUsedSolid[i];
-        bool& resReachedSolid = residualReachedSolid[i];
-        bool& firstIteration = firstIterationSolid[i];
-        const fvMesh& mesh = solidRegions[i];
-
-        #include "readSolidMultiRegionResidualControls.H"
     }
 }
