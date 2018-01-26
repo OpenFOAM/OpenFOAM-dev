@@ -786,7 +786,7 @@ bool Foam::Time::running() const
 
 bool Foam::Time::run() const
 {
-    const bool running = this->running();
+    bool running = this->running();
 
     if (!subCycling_)
     {
@@ -812,23 +812,23 @@ bool Foam::Time::run() const
                 functionObjects_.execute();
             }
         }
+
+        // Re-evaluate if running in case a function object has changed things
+        running = this->running();
     }
 
-    // Re-evaluate if running in case a function object has changed things
-    return this->running();
+    return running;
 }
 
 
 bool Foam::Time::loop()
 {
-    const bool running = this->running();
-
     if (run())
     {
         operator++();
     }
 
-    return running;
+    return running();
 }
 
 
