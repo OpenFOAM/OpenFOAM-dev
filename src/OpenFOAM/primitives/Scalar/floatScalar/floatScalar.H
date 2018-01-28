@@ -52,7 +52,7 @@ namespace Foam
 typedef float floatScalar;
 
 // Largest and smallest scalar values allowed in certain parts of the code
-static const floatScalar floatScalarVGreat = numeric_limits<float>::max();
+static const floatScalar floatScalarVGreat = numeric_limits<float>::max()/10;
 static const floatScalar floatScalarVSmall = numeric_limits<float>::min();
 
 static const floatScalar floatScalarSmall = numeric_limits<float>::epsilon();

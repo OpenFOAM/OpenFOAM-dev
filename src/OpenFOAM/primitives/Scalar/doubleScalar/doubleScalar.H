@@ -52,7 +52,7 @@ namespace Foam
 typedef double doubleScalar;
 
 // Largest and smallest scalar values allowed in certain parts of the code.
-static const doubleScalar doubleScalarVGreat = numeric_limits<double>::max();
+static const doubleScalar doubleScalarVGreat = numeric_limits<double>::max()/10;
 static const doubleScalar doubleScalarVSmall = numeric_limits<double>::min();
 
 static const doubleScalar doubleScalarSmall = numeric_limits<double>::epsilon();
