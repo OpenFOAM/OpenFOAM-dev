@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
 {
     is.fatalCheck
     (
-        "primitiveEntry::readData(const dictionary&, Istream&)"
+        "primitiveEntry::read(const dictionary&, Istream&) start"
     );
 
     label blockCount = 0;
@@ -150,7 +150,7 @@ bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
 
     is.fatalCheck
     (
-        "primitiveEntry::readData(const dictionary&, Istream&)"
+        "primitiveEntry::read(const dictionary&, Istream&) end"
     );
 
     if (currToken.good())

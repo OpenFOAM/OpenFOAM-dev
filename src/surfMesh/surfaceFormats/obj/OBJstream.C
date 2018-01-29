@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ Foam::Ostream& Foam::OBJstream::write(const word& str)
 
 Foam::Ostream& Foam::OBJstream::write(const string& str)
 {
-    OFstream::write(token::BEGIN_STRING);
+    OFstream::write(char(token::BEGIN_STRING));
 
     int backslash = 0;
     for (string::const_iterator iter = str.begin(); iter != str.end(); ++iter)
@@ -141,7 +141,7 @@ Foam::Ostream& Foam::OBJstream::write(const string& str)
     // silently drop any trailing backslashes
     // they would otherwise appear like an escaped end-quote
 
-    OFstream::write(token::END_STRING);
+    OFstream::write(char(token::END_STRING));
     return *this;
 }
 
@@ -154,7 +154,7 @@ Foam::Ostream& Foam::OBJstream::writeQuoted
 {
     if (quoted)
     {
-        OFstream::write(token::BEGIN_STRING);
+        OFstream::write(char(token::BEGIN_STRING));
 
         int backslash = 0;
         for
@@ -194,7 +194,7 @@ Foam::Ostream& Foam::OBJstream::writeQuoted
 
         // silently drop any trailing backslashes
         // they would otherwise appear like an escaped end-quote
-        OFstream::write(token::END_STRING);
+        OFstream::write(char(token::END_STRING));
     }
     else
     {

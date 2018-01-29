@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,11 +73,11 @@ class token
 public:
 
     //- Enumeration defining the types of token
-    enum tokenType
+    enum tokenType : char
     {
-        UNDEFINED,
+        UNDEFINED      = 0,
 
-        PUNCTUATION,
+        PUNCTUATION    = -127,
         WORD,
         VARIABLE,
         STRING,
@@ -85,14 +85,14 @@ public:
         LABEL,
         FLOAT_SCALAR,
         DOUBLE_SCALAR,
+        LONG_DOUBLE_SCALAR,
         COMPOUND,
 
         ERROR
     };
 
-
     //- Standard punctuation tokens
-    enum punctuationToken
+    enum punctuationToken : char
     {
         NULL_TOKEN     = '\0',
         SPACE          = ' ',
@@ -119,7 +119,6 @@ public:
         MULTIPLY       = '*',
         DIVIDE         = '/'
     };
-
 
     //- Abstract base class for complex tokens
     class compound
@@ -260,6 +259,7 @@ private:
             label labelToken_;
             floatScalar floatScalarToken_;
             doubleScalar doubleScalarToken_;
+            longDoubleScalar* longDoubleScalarTokenPtr_;
             mutable compound* compoundTokenPtr_;
         };
 
@@ -309,6 +309,9 @@ public:
         //- Construct doubleScalar token
         inline token(const doubleScalar, label lineNumber=0);
 
+        //- Construct longDoubleScalar token
+        inline token(const longDoubleScalar, label lineNumber=0);
+
         //- Construct from Istream
         token(Istream&);
 
@@ -347,6 +350,9 @@ public:
 
             inline bool isDoubleScalar() const;
             inline doubleScalar doubleScalarToken() const;
+
+            inline bool isLongDoubleScalar() const;
+            inline longDoubleScalar longDoubleScalarToken() const;
 
             inline bool isScalar() const;
             inline scalar scalarToken() const;
@@ -395,6 +401,7 @@ public:
             inline void operator=(const label);
             inline void operator=(const floatScalar);
             inline void operator=(const doubleScalar);
+            inline void operator=(const longDoubleScalar);
 
             inline void operator=(compound*);
 
@@ -408,6 +415,7 @@ public:
             inline bool operator==(const label) const;
             inline bool operator==(const floatScalar) const;
             inline bool operator==(const doubleScalar) const;
+            inline bool operator==(const longDoubleScalar) const;
 
 
         // Inequality
@@ -419,6 +427,7 @@ public:
             inline bool operator!=(const label) const;
             inline bool operator!=(const floatScalar) const;
             inline bool operator!=(const doubleScalar) const;
+            inline bool operator!=(const longDoubleScalar) const;
 
 
     // IOstream operators

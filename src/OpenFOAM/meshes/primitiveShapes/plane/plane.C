@@ -322,9 +322,10 @@ Foam::scalar Foam::plane::normalIntersect
     const vector& dir
 ) const
 {
-    scalar denom = stabilise((dir & normal_), vSmall);
+    const scalar num = (point_ - pnt0) & normal_;
+    const scalar den = dir & normal_;
 
-    return ((point_ - pnt0) & normal_)/denom;
+    return mag(den) > mag(num)*vSmall ? num/den : vGreat;
 }
 
 

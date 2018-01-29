@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -72,7 +72,7 @@ unsetenv WM_COMPILER_LIB_ARCH
 setenv WM_ARCH_OPTION 64
 
 #- Precision:
-#    WM_PRECISION_OPTION = DP | SP
+#    WM_PRECISION_OPTION = SP | DP | LP
 setenv WM_PRECISION_OPTION DP
 
 #- Label size:

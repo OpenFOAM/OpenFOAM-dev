@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,6 +141,9 @@ public:
 
             //- Write doubleScalar
             virtual Ostream& write(const doubleScalar);
+
+            //- Write longDoubleScalar
+            virtual Ostream& write(const longDoubleScalar);
 
             //- Write binary block
             virtual Ostream& write(const char*, std::streamsize);

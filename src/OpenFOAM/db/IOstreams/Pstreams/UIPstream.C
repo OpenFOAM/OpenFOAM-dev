@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "UIPstream.H"
 #include "int.H"
 #include "token.H"
+
 #include <cctype>
 
 
@@ -243,6 +244,21 @@ Foam::Istream& Foam::UIPstream::read(token& t)
             return *this;
         }
 
+        // longDoubleScalar
+        case token::LONG_DOUBLE_SCALAR :
+        {
+            longDoubleScalar val;
+            if (read(val))
+            {
+                t = val;
+            }
+            else
+            {
+                t.setBad();
+            }
+            return *this;
+        }
+
         // Character (returned as a single character word) or error
         default:
         {
@@ -307,6 +323,13 @@ Foam::Istream& Foam::UIPstream::read(floatScalar& val)
 
 
 Foam::Istream& Foam::UIPstream::read(doubleScalar& val)
+{
+    readFromBuffer(val);
+    return *this;
+}
+
+
+Foam::Istream& Foam::UIPstream::read(longDoubleScalar& val)
 {
     readFromBuffer(val);
     return *this;

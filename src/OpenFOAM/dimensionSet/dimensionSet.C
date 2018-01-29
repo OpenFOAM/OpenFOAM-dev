@@ -31,8 +31,8 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(dimensionSet, 1);
-const scalar dimensionSet::smallExponent = small;
+    defineTypeNameAndDebug(dimensionSet, 1);
+    const scalar dimensionSet::smallExponent = small;
 }
 
 

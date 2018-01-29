@@ -300,6 +300,7 @@ DebugSwitches
     ThermoParcel<fluidThermoParcel>     0;
     UMIST               0;
     UMISTV              0;
+    UPstream            0;
     UpwindFitData<cubicUpwindFitPolynomial> 0;
     UpwindFitData<quadraticLinearUpwindFitPolynomial> 0;
     UpwindFitData<quadraticUpwindFitPolynomial>     0;

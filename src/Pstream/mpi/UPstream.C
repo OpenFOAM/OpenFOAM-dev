@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,8 @@ Note
     #define MPI_SCALAR MPI_FLOAT
 #elif defined(WM_DP)
     #define MPI_SCALAR MPI_DOUBLE
+#elif defined(WM_LP)
+    #define MPI_SCALAR MPI_LONG_DOUBLE
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

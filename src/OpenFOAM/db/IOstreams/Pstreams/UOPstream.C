@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,12 +155,12 @@ Foam::Ostream& Foam::UOPstream::write(const token& t)
     // Raw token output only supported for verbatim strings for now
     if (t.type() == token::VERBATIMSTRING)
     {
-        write(char(token::VERBATIMSTRING));
+        writeToBuffer(char(token::VERBATIMSTRING));
         write(t.stringToken());
     }
     else if (t.type() == token::VARIABLE)
     {
-        write(char(token::VARIABLE));
+        writeToBuffer(char(token::VARIABLE));
         write(t.stringToken());
     }
     else
@@ -204,7 +204,7 @@ Foam::Ostream& Foam::UOPstream::write(const char* str)
 
 Foam::Ostream& Foam::UOPstream::write(const word& str)
 {
-    write(char(token::WORD));
+    writeToBuffer(char(token::WORD));
 
     size_t len = str.size();
     writeToBuffer(len);
@@ -216,7 +216,7 @@ Foam::Ostream& Foam::UOPstream::write(const word& str)
 
 Foam::Ostream& Foam::UOPstream::write(const string& str)
 {
-    write(char(token::STRING));
+    writeToBuffer(char(token::STRING));
 
     size_t len = str.size();
     writeToBuffer(len);
@@ -234,11 +234,11 @@ Foam::Ostream& Foam::UOPstream::writeQuoted
 {
     if (quoted)
     {
-        write(char(token::STRING));
+        writeToBuffer(char(token::STRING));
     }
     else
     {
-        write(char(token::WORD));
+        writeToBuffer(char(token::WORD));
     }
 
     size_t len = str.size();
@@ -251,7 +251,7 @@ Foam::Ostream& Foam::UOPstream::writeQuoted
 
 Foam::Ostream& Foam::UOPstream::write(const int32_t val)
 {
-    write(char(token::LABEL));
+    writeToBuffer(char(token::LABEL));
     writeToBuffer(val);
     return *this;
 }
@@ -259,7 +259,7 @@ Foam::Ostream& Foam::UOPstream::write(const int32_t val)
 
 Foam::Ostream& Foam::UOPstream::write(const int64_t val)
 {
-    write(char(token::LABEL));
+    writeToBuffer(char(token::LABEL));
     writeToBuffer(val);
     return *this;
 }
@@ -267,7 +267,7 @@ Foam::Ostream& Foam::UOPstream::write(const int64_t val)
 
 Foam::Ostream& Foam::UOPstream::write(const floatScalar val)
 {
-    write(char(token::FLOAT_SCALAR));
+    writeToBuffer(char(token::FLOAT_SCALAR));
     writeToBuffer(val);
     return *this;
 }
@@ -275,7 +275,15 @@ Foam::Ostream& Foam::UOPstream::write(const floatScalar val)
 
 Foam::Ostream& Foam::UOPstream::write(const doubleScalar val)
 {
-    write(char(token::DOUBLE_SCALAR));
+    writeToBuffer(char(token::DOUBLE_SCALAR));
+    writeToBuffer(val);
+    return *this;
+}
+
+
+Foam::Ostream& Foam::UOPstream::write(const longDoubleScalar val)
+{
+    writeToBuffer(char(token::LONG_DOUBLE_SCALAR));
     writeToBuffer(val);
     return *this;
 }

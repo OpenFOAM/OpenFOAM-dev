@@ -26,7 +26,7 @@ Typedef
 
 Description
     Single floating point number identical to float or double depending on
-    whether WM_SP or WM_DP is defined.
+    whether WM_SP, WM_DP or WM_LP is defined.
 
 SourceFiles
     scalar.C
@@ -38,6 +38,7 @@ SourceFiles
 
 #include "floatScalar.H"
 #include "doubleScalar.H"
+#include "longDoubleScalar.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,8 +58,6 @@ namespace Foam
     static const scalar rootSmall = floatScalarRootSmall;
     static const scalar vSmall = floatScalarVSmall;
     static const scalar rootVSmall = floatScalarRootVSmall;
-
-    scalar readScalar(Istream& is);
 }
 
 #elif defined(WM_DP)
@@ -77,9 +76,29 @@ namespace Foam
     static const scalar rootSmall = doubleScalarRootSmall;
     static const scalar vSmall = doubleScalarVSmall;
     static const scalar rootVSmall = doubleScalarRootVSmall;
-
-    scalar readScalar(Istream& is);
 }
+
+#elif defined(WM_LP)
+
+// Define scalar as a long double
+
+namespace Foam
+{
+    typedef longDoubleScalar scalar;
+
+    static const scalar great = longDoubleScalarGreat;
+    static const scalar rootGreat = longDoubleScalarRootGreat;
+    static const scalar vGreat = longDoubleScalarVGreat;
+    static const scalar rootVGreat = longDoubleScalarRootVGreat;
+    static const scalar small = longDoubleScalarSmall;
+    static const scalar rootSmall = longDoubleScalarRootSmall;
+    static const scalar vSmall = longDoubleScalarVSmall;
+    static const scalar rootVSmall = longDoubleScalarRootVSmall;
+}
+
+#else
+
+    #error "Precision not set, please set either WM_SP, WM_DP or WM_LP"
 
 #endif
 
@@ -96,14 +115,18 @@ namespace Foam
     static const scalar ROOTVSMALL = rootVSmall;
 }
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Additional transcendental functions
+// Additional global and transcendental functions
 
 namespace Foam
 {
+    scalar readScalar(Istream& is);
+
     //- Inverse normalized incomplete gamma function
     scalar invIncGamma(const scalar a, const scalar P);
 }
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

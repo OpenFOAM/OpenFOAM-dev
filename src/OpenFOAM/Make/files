@@ -42,6 +42,7 @@ $(ints)/uLabel/uLabel.C
 $(ints)/lists/labelIOList.C
 $(ints)/lists/labelListIOList.C
 
+primitives/Scalar/longDoubleScalar/longDoubleScalar.C
 primitives/Scalar/doubleScalar/doubleScalar.C
 primitives/Scalar/floatScalar/floatScalar.C
 primitives/Scalar/scalar/scalar.C
