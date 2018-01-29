@@ -823,12 +823,14 @@ bool Foam::Time::run() const
 
 bool Foam::Time::loop()
 {
-    if (run())
+    bool running = run();
+
+    if (running)
     {
         operator++();
     }
 
-    return running();
+    return running;
 }
 
 
