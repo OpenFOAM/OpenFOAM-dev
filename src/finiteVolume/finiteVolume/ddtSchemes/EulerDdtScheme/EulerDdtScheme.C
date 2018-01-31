@@ -276,7 +276,7 @@ EulerDdtScheme<Type>::fvcDdt
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                rDeltaT.value()*
+                rDeltaT*
                 (
                     alpha()
                    *rho()
