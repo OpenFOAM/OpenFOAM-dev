@@ -232,17 +232,17 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
         if (c[si] < c[lRef])
         {
             const scalar exp = R.lhs()[slRef].exponent;
-            pf *= pow(max(0.0, c[lRef]), exp);
+            pf *= pow(max(c[lRef], 0.0), exp);
             lRef = si;
             slRef = s;
         }
         else
         {
             const scalar exp = R.lhs()[s].exponent;
-            pf *= pow(max(0.0, c[si]), exp);
+            pf *= pow(max(c[si], 0.0), exp);
         }
     }
-    cf = max(0.0, c[lRef]);
+    cf = max(c[lRef], 0.0);
 
     {
         const scalar exp = R.lhs()[slRef].exponent;
@@ -274,23 +274,23 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
         if (c[si] < c[rRef])
         {
             const scalar exp = R.rhs()[srRef].exponent;
-            pr *= pow(max(0.0, c[rRef]), exp);
+            pr *= pow(max(c[rRef], 0.0), exp);
             rRef = si;
             srRef = s;
         }
         else
         {
             const scalar exp = R.rhs()[s].exponent;
-            pr *= pow(max(0.0, c[si]), exp);
+            pr *= pow(max(c[si], 0.0), exp);
         }
     }
-    cr = max(0.0, c[rRef]);
+    cr = max(c[rRef], 0.0);
 
     {
         const scalar exp = R.rhs()[srRef].exponent;
         if (exp < 1)
         {
-            if (cr>small)
+            if (cr > small)
             {
                 pr *= pow(cr, exp - 1);
             }
@@ -334,14 +334,14 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
         // efficiencies
         for (label i=0; i<NsDAC_; i++)
         {
-            this->c_[simplifiedToCompleteIndex_[i]] = max(0.0, c[i]);
+            this->c_[simplifiedToCompleteIndex_[i]] = max(c[i], 0.0);
         }
     }
     else
     {
         for (label i=0; i<this->nSpecie(); i++)
         {
-            this->c_[i] = max(0.0, c[i]);
+            this->c_[i] = max(c[i], 0.0);
         }
     }
 
@@ -416,7 +416,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
         this->c_ = completeC_;
         for (label i=0; i<NsDAC_; i++)
         {
-            this->c_[simplifiedToCompleteIndex_[i]] = max(0.0, c[i]);
+            this->c_[simplifiedToCompleteIndex_[i]] = max(c[i], 0.0);
         }
     }
     else
@@ -456,7 +456,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
                         {
                             if (this->c_[si] > small)
                             {
-                                kf *= el*pow(this->c_[si] + vSmall, el - 1);
+                                kf *= el*pow(this->c_[si], el - 1);
                             }
                             else
                             {
@@ -514,7 +514,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
                         {
                             if (this->c_[si] > small)
                             {
-                                kr *= er*pow(this->c_[si] + vSmall, er - 1);
+                                kr *= er*pow(this->c_[si], er - 1);
                             }
                             else
                             {
@@ -797,6 +797,9 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
                 this->nSpecie_ = mechRed_->nSpecie();
             }
             deltaTMin = min(this->deltaTChem_[celli], deltaTMin);
+
+            this->deltaTChem_[celli] =
+                min(this->deltaTChem_[celli], this->deltaTChemMax_);
         }
 
         // Set the RR vector (used in the solver)

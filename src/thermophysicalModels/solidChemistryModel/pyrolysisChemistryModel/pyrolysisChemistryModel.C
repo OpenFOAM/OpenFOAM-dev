@@ -387,9 +387,9 @@ jacobian
                 {
                     if (exp < 1.0)
                     {
-                        if (c2[si]>small)
+                        if (c2[si] > small)
                         {
-                            kf *= exp*pow(c2[si] + vSmall, exp - 1.0);
+                            kf *= exp*pow(c2[si], exp - 1.0);
                         }
                         else
                         {

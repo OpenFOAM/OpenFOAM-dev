@@ -125,16 +125,7 @@ Foam::scalar Foam::ReversibleReaction
     const scalarField& c
 ) const
 {
-    scalar Kc = this->Kc(p, T);
-
-    if (mag(Kc) > vSmall)
-    {
-        return kfwd/Kc;
-    }
-    else
-    {
-        return 0;
-    }
+    return kfwd/max(this->Kc(p, T), 1e-6);
 }
 
 

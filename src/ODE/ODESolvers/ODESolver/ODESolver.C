@@ -191,7 +191,8 @@ void Foam::ODESolver::solve
     FatalErrorInFunction
         << "Integration steps greater than maximum " << maxSteps_ << nl
         << "    xStart = " << xStart << ", xEnd = " << xEnd
-        << ", x = " << x << ", dxDid = " << step.dxDid
+        << ", x = " << x << ", dxDid = " << step.dxDid << nl
+        << "    y = " << y
         << exit(FatalError);
 }
 

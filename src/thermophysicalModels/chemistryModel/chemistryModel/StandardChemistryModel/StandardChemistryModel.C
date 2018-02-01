@@ -196,17 +196,17 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
         if (c[si] < c[lRef])
         {
             const scalar exp = R.lhs()[slRef].exponent;
-            pf *= pow(max(0.0, c[lRef]), exp);
+            pf *= pow(max(c[lRef], 0.0), exp);
             lRef = si;
             slRef = s;
         }
         else
         {
             const scalar exp = R.lhs()[s].exponent;
-            pf *= pow(max(0.0, c[si]), exp);
+            pf *= pow(max(c[si], 0.0), exp);
         }
     }
-    cf = max(0.0, c[lRef]);
+    cf = max(c[lRef], 0.0);
 
     {
         const scalar exp = R.lhs()[slRef].exponent;
@@ -238,23 +238,23 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
         if (c[si] < c[rRef])
         {
             const scalar exp = R.rhs()[srRef].exponent;
-            pr *= pow(max(0.0, c[rRef]), exp);
+            pr *= pow(max(c[rRef], 0.0), exp);
             rRef = si;
             srRef = s;
         }
         else
         {
             const scalar exp = R.rhs()[s].exponent;
-            pr *= pow(max(0.0, c[si]), exp);
+            pr *= pow(max(c[si], 0.0), exp);
         }
     }
-    cr = max(0.0, c[rRef]);
+    cr = max(c[rRef], 0.0);
 
     {
         const scalar exp = R.rhs()[srRef].exponent;
         if (exp < 1.0)
         {
-            if (cr>small)
+            if (cr > small)
             {
                 pr *= pow(cr, exp - 1.0);
             }
@@ -284,9 +284,9 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::derivatives
     const scalar T = c[nSpecie_];
     const scalar p = c[nSpecie_ + 1];
 
-    for (label i = 0; i < nSpecie_; i++)
+    forAll(c_, i)
     {
-        c_[i] = max(0.0, c[i]);
+        c_[i] = max(c[i], 0.0);
     }
 
     omega(c_, T, p, dcdt);
@@ -366,7 +366,7 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
                     {
                         if (c_[si] > small)
                         {
-                            kf *= el*pow(c_[si] + vSmall, el - 1.0);
+                            kf *= el*pow(c_[si], el - 1.0);
                         }
                         else
                         {
@@ -412,7 +412,7 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
                     {
                         if (c_[si] > small)
                         {
-                            kr *= er*pow(c_[si] + vSmall, er - 1.0);
+                            kr *= er*pow(c_[si], er - 1.0);
                         }
                         else
                         {
@@ -740,6 +740,9 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::solve
             }
 
             deltaTMin = min(this->deltaTChem_[celli], deltaTMin);
+
+            this->deltaTChem_[celli] =
+                min(this->deltaTChem_[celli], this->deltaTChemMax_);
 
             for (label i=0; i<nSpecie_; i++)
             {

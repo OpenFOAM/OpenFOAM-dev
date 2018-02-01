@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,6 +79,9 @@ protected:
 
         //- Initial chemical time step
         const scalar deltaTChemIni_;
+
+        //- Maximum chemical time step
+        const scalar deltaTChemMax_;
 
         //- Latest estimation of integration step
         volScalarField::Internal deltaTChem_;
