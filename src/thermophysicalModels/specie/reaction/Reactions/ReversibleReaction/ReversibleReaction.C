@@ -125,7 +125,7 @@ Foam::scalar Foam::ReversibleReaction
     const scalarField& c
 ) const
 {
-    return kfwd/max(this->Kc(p, T), 1e-6);
+    return kfwd/max(this->Kc(p, T), rootSmall);
 }
 
 
