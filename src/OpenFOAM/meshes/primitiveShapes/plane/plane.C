@@ -30,42 +30,27 @@ License
 
 void Foam::plane::calcPntAndVec(const scalarList& C)
 {
-    if (mag(C[0]) > vSmall)
-    {
-        point_ = vector((-C[3]/C[0]), 0, 0);
-    }
-    else
-    {
-        if (mag(C[1]) > vSmall)
-        {
-            point_ = vector(0, (-C[3]/C[1]), 0);
-        }
-        else
-        {
-            if (mag(C[2]) > vSmall)
-            {
-                point_ = vector(0, 0, (-C[3]/C[2]));
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "At least one plane coefficient must have a value"
-                    << abort(FatalError);
-            }
-        }
-    }
-
     normal_ = vector(C[0], C[1], C[2]);
-    scalar magUnitVector(mag(normal_));
 
-    if (magUnitVector < vSmall)
+    const scalar magNormal = mag(normal_);
+
+    if (magNormal == 0)
     {
         FatalErrorInFunction
-            << "Plane normal defined with zero length"
+            << "Plane normal has zero length"
             << abort(FatalError);
     }
 
-    normal_ /= magUnitVector;
+    normal_ /= magNormal;
+
+    if (magNormal < mag(C[3])*vSmall)
+    {
+        FatalErrorInFunction
+            << "Plane is too far from the origin"
+            << abort(FatalError);
+    }
+
+    point_ = - C[3]/magNormal*normal_;
 }
 
 
