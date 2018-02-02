@@ -3,6 +3,7 @@ sinclude $(RULES)/mplib$(WM_MPLIB)
 
 EXE_INC = \
     $(PFLAGS) $(PINC) \
+    -I$(FOAM_SRC)/Pstream/mpi/lnInclude \
     -I$(SCOTCH_ARCH_PATH)/include/$(FOAM_MPI) \
     -I$(SCOTCH_ARCH_PATH)/include \
     -I/usr/include/scotch \

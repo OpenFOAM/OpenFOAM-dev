@@ -77,10 +77,25 @@ bool Foam::UPstream::init(int& argc, char**& argv)
         &provided_thread_support
     );
 
+    // int numprocs;
+    // MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+    // int myRank;
+    // MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+
+    int myGlobalRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myGlobalRank);
+    MPI_Comm_split
+    (
+        MPI_COMM_WORLD,
+        1,
+        myGlobalRank,
+        &PstreamGlobals::MPI_COMM_FOAM
+    );
+
     int numprocs;
-    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+    MPI_Comm_size(PstreamGlobals::MPI_COMM_FOAM, &numprocs);
     int myRank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+    MPI_Comm_rank(PstreamGlobals::MPI_COMM_FOAM, &myRank);
 
     if (debug)
     {
@@ -175,14 +190,14 @@ void Foam::UPstream::exit(int errnum)
     }
     else
     {
-        MPI_Abort(MPI_COMM_WORLD, errnum);
+        MPI_Abort(PstreamGlobals::MPI_COMM_FOAM, errnum);
     }
 }
 
 
 void Foam::UPstream::abort()
 {
-    MPI_Abort(MPI_COMM_WORLD, 1);
+    MPI_Abort(PstreamGlobals::MPI_COMM_FOAM, 1);
 }
 
 
@@ -583,8 +598,13 @@ void Foam::UPstream::allocatePstreamCommunicator
                 << UPstream::worldComm << Foam::exit(FatalError);
         }
 
-        PstreamGlobals::MPICommunicators_[index] = MPI_COMM_WORLD;
-        MPI_Comm_group(MPI_COMM_WORLD, &PstreamGlobals::MPIGroups_[index]);
+        PstreamGlobals::MPICommunicators_[index] =
+            PstreamGlobals::MPI_COMM_FOAM;
+        MPI_Comm_group
+        (
+            PstreamGlobals::MPI_COMM_FOAM,
+            &PstreamGlobals::MPIGroups_[index]
+        );
         MPI_Comm_rank
         (
             PstreamGlobals::MPICommunicators_[index],

@@ -4,6 +4,7 @@ sinclude $(RULES)/mplib$(WM_MPLIB)
 EXE_INC = \
     /* -DFULLDEBUG -g -O0 */ \
     $(PFLAGS) $(PINC) \
+    -I$(FOAM_SRC)/Pstream/mpi/lnInclude \
     -I$(FOAM_SRC)/renumber/renumberMethods/lnInclude \
     -I$(ZOLTAN_ARCH_PATH)/include/ \
     -I$(LIB_SRC)/meshTools/lnInclude

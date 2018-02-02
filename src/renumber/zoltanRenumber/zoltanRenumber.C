@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -294,7 +294,7 @@ Foam::labelList Foam::zoltanRenumber::renumber
             << "Failed initialising Zoltan" << exit(FatalError);
     }
 
-    struct Zoltan_Struct *zz = Zoltan_Create(MPI_COMM_WORLD);
+    struct Zoltan_Struct *zz = Zoltan_Create(PstreamGlobals::MPI_COMM_FOAM);
 
     polyMesh& mesh = const_cast<polyMesh&>(pMesh);
 

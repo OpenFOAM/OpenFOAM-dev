@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ bool Foam::UOPstream::write
             MPI_BYTE,
             toProcNo,   //procID(toProcNo),
             tag,
-            PstreamGlobals::MPICommunicators_[communicator] //MPI_COMM_WORLD
+            PstreamGlobals::MPICommunicators_[communicator]
         );
 
         if (debug)
@@ -97,7 +97,7 @@ bool Foam::UOPstream::write
             MPI_BYTE,
             toProcNo,   //procID(toProcNo),
             tag,
-            PstreamGlobals::MPICommunicators_[communicator] //MPI_COMM_WORLD
+            PstreamGlobals::MPICommunicators_[communicator]
         );
 
         if (debug)
@@ -119,7 +119,7 @@ bool Foam::UOPstream::write
             MPI_BYTE,
             toProcNo,   //procID(toProcNo),
             tag,
-            PstreamGlobals::MPICommunicators_[communicator],//MPI_COMM_WORLD,
+            PstreamGlobals::MPICommunicators_[communicator],
             &request
         );
 

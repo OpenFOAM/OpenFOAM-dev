@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,23 +51,20 @@ namespace Foam
 
 namespace PstreamGlobals
 {
+    extern MPI_Comm MPI_COMM_FOAM;
 
-extern DynamicList<MPI_Request> outstandingRequests_;
+    extern DynamicList<MPI_Request> outstandingRequests_;
 
-//extern int nRequests_;
-//extern DynamicList<label> freedRequests_;
+    extern int nTags_;
 
-extern int nTags_;
+    extern DynamicList<int> freedTags_;
 
-extern DynamicList<int> freedTags_;
+    // Current communicators. First element will be MPI_COMM_FOAM
+    extern DynamicList<MPI_Comm> MPICommunicators_;
 
+    extern DynamicList<MPI_Group> MPIGroups_;
 
-// Current communicators. First element will be MPI_COMM_WORLD
-extern DynamicList<MPI_Comm> MPICommunicators_;
-extern DynamicList<MPI_Group> MPIGroups_;
-
-void checkCommunicator(const label, const label procNo);
-
+    void checkCommunicator(const label, const label procNo);
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,8 @@ namespace Foam
 {
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+MPI_Comm PstreamGlobals::MPI_COMM_FOAM;
 
 // Outstanding non-blocking operations.
 //! \cond fileScope
