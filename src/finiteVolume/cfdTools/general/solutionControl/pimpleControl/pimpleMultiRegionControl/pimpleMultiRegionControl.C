@@ -120,7 +120,7 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
         }
     }
 
-    if (nCorrPIMPLE_ < 1)
+    if (nCorrPIMPLE_ == 1)
     {
         Info<< nl << algorithmName << ": Operating solver in PISO mode" << nl
             << endl;
