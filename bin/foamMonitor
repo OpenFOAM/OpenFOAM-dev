@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -38,6 +38,7 @@ Usage: ${0##*/} [OPTION] <file>
 options:
   -help     | -h         print the usage
   -idle     | -i <time>  stops if <file> unchanging for <time> sec (default 60s)
+  -title    | -t <title> set the graph title (default "Data Monitoring")
   -logscale | -l         plots data (y-axis) on log scale, e.g. for residuals
   -refresh  | -r <time>  refreshes display every <time> sec (default 10s)
   -yrange   | -y <range> sets data (y-axis) <range>, format "[0:1]"
@@ -64,7 +65,7 @@ plotFileHeader() {
 set term x11 1 font "helvetica,17" linewidth 1.5 persist noraise
 $logscale
 $yrange
-set title "Data Monitoring"
+set title "$title"
 set xlabel "$xlabel"
 plot \\
 EOF
@@ -89,6 +90,7 @@ idle=60
 refresh=10
 logscale=""
 yrange=""
+title="Data Monitoring"
 command -v gnuplot >/dev/null 2>&1 || error "Gnuplot not installed"
 
 # parse options
@@ -106,6 +108,11 @@ do
     -l | -logscale)
         logscale="set logscale y"
         shift 1
+        ;;
+    -t | -title)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        title=$2
+        shift 2
         ;;
     -r | -refresh)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
