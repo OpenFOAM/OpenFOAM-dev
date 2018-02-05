@@ -565,9 +565,46 @@ bool Foam::functionObjectList::end()
 }
 
 
-bool Foam::functionObjectList::adjustTimeStep()
+bool Foam::functionObjectList::setTimeStep()
 {
-    bool ok = true;
+    bool set = true;
+
+    if (execution_)
+    {
+        if (!updated_)
+        {
+            read();
+        }
+
+        wordList names;
+
+        forAll(*this, objectI)
+        {
+            if (operator[](objectI).setTimeStep())
+            {
+                names.append(operator[](objectI).name());
+                set = true;
+            }
+        }
+
+        if (names.size() > 1)
+        {
+            WarningInFunction << "Multiple function objects (" << names[0];
+            for (label i = 1; i < names.size(); ++ i)
+            {
+                WarningInFunction << ", " << names[i];
+            }
+            WarningInFunction << ") are setting the time step." << endl;
+        }
+    }
+
+    return set;
+}
+
+
+Foam::scalar Foam::functionObjectList::timeToNextWrite()
+{
+    scalar result = vGreat;
 
     if (execution_)
     {
@@ -578,11 +615,11 @@ bool Foam::functionObjectList::adjustTimeStep()
 
         forAll(*this, objectI)
         {
-            ok = operator[](objectI).adjustTimeStep() && ok;
+            result = min(result, operator[](objectI).timeToNextWrite());
         }
     }
 
-    return ok;
+    return result;
 }
 
 

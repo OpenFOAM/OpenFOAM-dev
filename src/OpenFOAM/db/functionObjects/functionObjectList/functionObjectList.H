@@ -274,8 +274,11 @@ public:
         //- Called when Time::run() determines that the time-loop exits
         bool end();
 
-        //- Called at the end of Time::adjustDeltaT() if adjustTime is true
-        bool adjustTimeStep();
+        //- Override the time-step value
+        bool setTimeStep();
+
+        //- Return the time to the next write
+        scalar timeToNextWrite();
 
         //- Update for changes of mesh
         void updateMesh(const mapPolyMesh& mpm);

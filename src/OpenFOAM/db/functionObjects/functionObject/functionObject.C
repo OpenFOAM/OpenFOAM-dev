@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,9 +140,15 @@ bool Foam::functionObject::end()
 }
 
 
-bool Foam::functionObject::adjustTimeStep()
+bool Foam::functionObject::setTimeStep()
 {
     return false;
+}
+
+
+Foam::scalar Foam::functionObject::timeToNextWrite()
+{
+    return vGreat;
 }
 
 

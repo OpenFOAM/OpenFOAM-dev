@@ -119,48 +119,27 @@ bool Foam::functionObjects::timeControl::end()
 
 
 
-bool Foam::functionObjects::timeControl::adjustTimeStep()
+Foam::scalar Foam::functionObjects::timeControl::timeToNextWrite()
 {
     if
     (
         active()
-     && writeControl_.control()
-     == Foam::timeControl::ocAdjustableRunTime
+     && writeControl_.control() == Foam::timeControl::ocAdjustableRunTime
     )
     {
         const label  writeTimeIndex = writeControl_.executionIndex();
         const scalar writeInterval = writeControl_.interval();
 
-        scalar timeToNextWrite = max
-        (
-            0.0,
-            (writeTimeIndex + 1)*writeInterval
-          - (time_.value() - time_.startTime().value())
-        );
-
-        scalar deltaT = time_.deltaTValue();
-
-        scalar nSteps = timeToNextWrite/deltaT - small;
-
-        // functionObjects modify deltaT within nStepsToStartTimeChange
-        // NOTE: Potential problems arise if two function objects dump within
-        // the same interval
-        if (nSteps < nStepsToStartTimeChange_)
-        {
-            label nStepsToNextWrite = label(nSteps) + 1;
-
-            scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
-
-            // Adjust time step
-            if (newDeltaT < deltaT)
-            {
-                deltaT = max(newDeltaT, 0.2*deltaT);
-                const_cast<Time&>(time_).setDeltaT(deltaT, false);
-            }
-        }
+        return
+            max
+            (
+                0.0,
+                (writeTimeIndex + 1)*writeInterval
+              - (time_.value() - time_.startTime().value())
+            );
     }
 
-    return true;
+    return vGreat;
 }
 
 

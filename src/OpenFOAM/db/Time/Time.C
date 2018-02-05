@@ -83,44 +83,34 @@ Foam::word Foam::Time::controlDictName("controlDict");
 
 void Foam::Time::adjustDeltaT()
 {
-    bool adjustTime = false;
-    scalar timeToNextWrite = vGreat;
+    scalar timeToNextWrite = max
+    (
+        0.0,
+        (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
+    );
 
-    if (writeControl_ == wcAdjustableRunTime)
+    timeToNextWrite = min(timeToNextWrite, functionObjects_.timeToNextWrite());
+
+    scalar nSteps = timeToNextWrite/deltaT_;
+
+    // For tiny deltaT the label can overflow!
+    if (nSteps < labelMax)
     {
-        adjustTime = true;
-        timeToNextWrite = max
-        (
-            0.0,
-            (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
-        );
-    }
+        label nStepsToNextWrite = label(nSteps + 0.5);
 
-    if (adjustTime)
-    {
-        scalar nSteps = timeToNextWrite/deltaT_ - small;
+        scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
 
-        // For tiny deltaT the label can overflow!
-        if (nSteps < labelMax)
+        // Control the increase of the time step to within a factor of 2
+        // and the decrease within a factor of 5.
+        if (newDeltaT >= deltaT_)
         {
-            label nStepsToNextWrite = label(nSteps) + 1;
-
-            scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
-
-            // Control the increase of the time step to within a factor of 2
-            // and the decrease within a factor of 5.
-            if (newDeltaT >= deltaT_)
-            {
-                deltaT_ = min(newDeltaT, 2.0*deltaT_);
-            }
-            else
-            {
-                deltaT_ = max(newDeltaT, 0.2*deltaT_);
-            }
+            deltaT_ = min(newDeltaT, 2.0*deltaT_);
+        }
+        else
+        {
+            deltaT_ = max(newDeltaT, 0.2*deltaT_);
         }
     }
-
-    functionObjects_.adjustTimeStep();
 }
 
 
@@ -921,25 +911,29 @@ void Foam::Time::setEndTime(const scalar endTime)
 }
 
 
-void Foam::Time::setDeltaT
-(
-    const dimensionedScalar& deltaT,
-    const bool bAdjustDeltaT
-)
+void Foam::Time::setDeltaT(const dimensionedScalar& deltaT)
 {
-    setDeltaT(deltaT.value(), bAdjustDeltaT);
+    setDeltaT(deltaT.value());
 }
 
 
-void Foam::Time::setDeltaT(const scalar deltaT, const bool bAdjustDeltaT)
+void Foam::Time::setDeltaT(const scalar deltaT)
 {
-    deltaT_ = deltaT;
-    deltaTchanged_ = true;
+    setDeltaTNoAdjust(deltaT);
 
-    if (bAdjustDeltaT)
+    functionObjects_.setTimeStep();
+
+    if (writeControl_ == wcAdjustableRunTime)
     {
         adjustDeltaT();
     }
+}
+
+
+void Foam::Time::setDeltaTNoAdjust(const scalar deltaT)
+{
+    deltaT_ = deltaT;
+    deltaTchanged_ = true;
 }
 
 

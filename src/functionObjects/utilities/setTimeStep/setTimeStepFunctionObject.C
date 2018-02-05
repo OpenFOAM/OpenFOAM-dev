@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,12 +75,11 @@ Foam::functionObjects::setTimeStepFunctionObject::time() const
 }
 
 
-bool Foam::functionObjects::setTimeStepFunctionObject::adjustTimeStep()
+bool Foam::functionObjects::setTimeStepFunctionObject::setTimeStep()
 {
-    const_cast<Time&>(time()).setDeltaT
+    const_cast<Time&>(time()).setDeltaTNoAdjust
     (
-        timeStepPtr_().value(time_.timeOutputValue()),
-        false
+        timeStepPtr_().value(time_.timeOutputValue())
     );
 
     return true;
@@ -94,27 +93,20 @@ bool Foam::functionObjects::setTimeStepFunctionObject::read
 {
     timeStepPtr_ = Function1<scalar>::New("deltaT", dict);
 
-    // Check that adjustTimeStep is active
-    const dictionary& controlDict = time_.controlDict();
-
-    Switch adjust;
-    if
-    (
-       !controlDict.readIfPresent<Switch>("adjustTimeStep", adjust)
-    || !adjust
-    )
-    {
-        FatalIOErrorInFunction(dict)
-            << "Need to set 'adjustTimeStep' true to allow timestep control"
-            << exit(FatalIOError);
-    }
-
     return true;
 }
 
 
 bool Foam::functionObjects::setTimeStepFunctionObject::execute()
 {
+    bool adjustTimeStep =
+        time().controlDict().lookupOrDefault("adjustTimeStep", false);
+
+    if (!adjustTimeStep)
+    {
+        return setTimeStep();
+    }
+
     return true;
 }
 

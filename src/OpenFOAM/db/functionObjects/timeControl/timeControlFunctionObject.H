@@ -158,8 +158,8 @@ public:
             //- Called when Time::run() determines that the time-loop exits
             virtual bool end();
 
-            //- Called at the end of Time::adjustDeltaT() if adjustTime is true
-            virtual bool adjustTimeStep();
+            //- Return the time to the next write
+            virtual scalar timeToNextWrite();
 
             //- Read and set the function object if its data have changed
             virtual bool read(const dictionary&);
