@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -374,6 +374,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
 
             // Correctly oriented copy of internal field
             Field<Type> procInternalField(procField.primitiveField());
+
             // Addressing into original field
             labelList curAddr(procInternalField.size());
 
