@@ -82,6 +82,7 @@
                   - (fvOptions(alpha1, mixture.thermo1().rho())&rho1)
                 )/rho1
               - fvc::ddt(alpha1) - fvc::div(alphaPhi1)
+              + fvc::div(mesh.phi())*alpha1
               + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh))
             );
 
@@ -93,6 +94,7 @@
                  - (fvOptions(alpha2, mixture.thermo2().rho())&rho2)
                )/rho2
              - fvc::ddt(alpha2) - fvc::div(alphaPhi2)
+             + fvc::div(mesh.phi())*alpha2
              + (alpha2*psi2/rho2)*correction(fvm::ddt(p_rgh))
             );
     }
