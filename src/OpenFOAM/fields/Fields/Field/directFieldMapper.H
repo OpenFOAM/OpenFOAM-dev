@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ public:
     // Constructors
 
         //- Construct given addressing
-        patchFieldSubset(const labelUList& directAddressing)
+        directFieldMapper(const labelUList& directAddressing)
         :
             directAddressing_(directAddressing),
             hasUnmapped_(false)
