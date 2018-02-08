@@ -25,7 +25,7 @@ Class
     Foam::solidNoLoopControl
 
 Description
-    PIMPLE no-loop control class. Implements non-orthogonal and convergence
+    Solid no-loop control class. Implements non-orthogonal and convergence
     controls, but leaves loop controls to the derivation or owner. Can be
     derived into a "full" solid control or can be owned by a multi-region class.
 

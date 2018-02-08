@@ -25,9 +25,9 @@ Class
     Foam::pimpleNoLoopControl
 
 Description
-    PIMPLE no-loop control class. Implements various option flags, but leaves
+    Pimple no-loop control class. Implements various option flags, but leaves
     loop controls to the derivation or owner. Can be derived into a "full"
-    PIMPLE control or can be owned by a multi-region PIMPLE class.
+    pimple control or can be owned by a multi-region pimple class.
 
 SourceFiles
     pimpleNoLoopControlI.H
@@ -66,10 +66,10 @@ protected:
 
         //- Flag to indicate whether to update the density in SIMPLE mode rather
         //  than PISO mode
-        bool SIMPLErho_;
+        bool simpleRho_;
 
-        //- Flag to control whether turblence is solved just on the final PIMPLE
-        //  iteration, or on every PIMPLE iteration
+        //- Flag to control whether turblence is solved just on the final pimple
+        //  iteration, or on every pimple iteration
         bool turbOnFinalIterOnly_;
 
 
@@ -100,11 +100,11 @@ public:
 
         // Access
 
-            //- Flag to indicate whether to update the density in SIMPLE mode
-            inline bool SIMPLErho() const;
+            //- Flag to indicate whether to update the density in simple mode
+            inline bool simpleRho() const;
 
             //- Flag to indicate whether to solve the turbulence on the final
-            //  PIMPLE iteration only
+            //  pimple iteration only
             inline bool turbOnFinalIterOnly() const;
 };
 

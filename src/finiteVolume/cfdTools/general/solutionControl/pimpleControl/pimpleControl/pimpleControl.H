@@ -25,9 +25,9 @@ Class
     Foam::pimpleControl
 
 Description
-    PIMPLE control class. Provides time-loop control methods which exit the
+    Pimple control class. Provides time-loop control methods which exit the
     simulation once convergence criteria have been reached. Also provides
-    PIMPLE-loop control methods which exit the iteration once corrector
+    Pimple-loop control methods which exit the iteration once corrector
     convergence criteria have been met. Example usage:
 
     \verbatim
@@ -109,7 +109,7 @@ public:
 
         // Evolution
 
-            //- PIMPLE loop
+            //- Pimple loop
             bool loop();
 
             //- Time run loop

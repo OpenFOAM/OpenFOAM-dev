@@ -25,8 +25,8 @@ Class
     Foam::pimpleMultiRegionControl
 
 Description
-    PIMPLE multi-region control class. As Foam::pimpleControl, but for a multi-
-    region simulation comprising PIMPLE and solid regions. More region types
+    Pimple multi-region control class. As Foam::pimpleControl, but for a multi-
+    region simulation comprising pimple and solid regions. More region types
     could be added.
 
 SourceFiles
@@ -65,7 +65,7 @@ protected:
 
     // Protected data
 
-        //- The per-region PIMPLE controls
+        //- The per-region pimple controls
         PtrList<pimpleNoLoopControl> pimpleControls_;
 
         //- The per-region solid controls
@@ -143,7 +143,7 @@ public:
             //- Update the solve index in the correction residual control data
             virtual void updateCorrSolveIndex();
 
-            //- PIMPLE loop
+            //- Pimple loop
             bool loop();
 
             //- Time run loop

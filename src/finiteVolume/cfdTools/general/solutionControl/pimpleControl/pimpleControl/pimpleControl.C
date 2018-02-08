@@ -44,9 +44,9 @@ Foam::pimpleControl::pimpleControl(fvMesh& mesh, const word& algorithmName)
 
     printResidualControls();
 
-    if (nCorrPIMPLE_ > 1)
+    if (nCorrPimple_ > 1)
     {
-        printCorrResidualControls(nCorrPIMPLE_);
+        printCorrResidualControls(nCorrPimple_);
     }
     else
     {
@@ -71,7 +71,7 @@ bool Foam::pimpleControl::read()
         return false;
     }
 
-    nCorrPIMPLE_ = dict().lookupOrDefault<label>("nOuterCorrectors", 1);
+    nCorrPimple_ = dict().lookupOrDefault<label>("nOuterCorrectors", 1);
 
     return true;
 }

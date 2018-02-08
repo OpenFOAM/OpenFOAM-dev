@@ -1,4 +1,4 @@
-if (!mesh.steady() && !pimple.SIMPLErho())
+if (!mesh.steady() && !pimple.simpleRho())
 {
     rho = thermo.rho();
 }
@@ -132,7 +132,7 @@ if (adjustMass || pLimited)
 }
 
 // Density updates
-if (adjustMass || pLimited || mesh.steady() || pimple.SIMPLErho())
+if (adjustMass || pLimited || mesh.steady() || pimple.simpleRho())
 {
     rho = thermo.rho();
 }

@@ -101,10 +101,10 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
         Info<< nl << algorithmName << ": Region " << pimpleMeshes[i].name();
         pimpleControls_[i].printResidualControls();
 
-        if (nCorrPIMPLE_ > 1)
+        if (nCorrPimple_ > 1)
         {
             Info<< nl << algorithmName << ": Region " << pimpleMeshes[i].name();
-            pimpleControls_[i].printCorrResidualControls(nCorrPIMPLE_);
+            pimpleControls_[i].printCorrResidualControls(nCorrPimple_);
         }
     }
 
@@ -113,14 +113,14 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
         Info<< nl << algorithmName << ": Region " << solidMeshes[i].name();
         solidControls_[i].printResidualControls();
 
-        if (nCorrPIMPLE_ > 1)
+        if (nCorrPimple_ > 1)
         {
             Info<< nl << algorithmName << ": Region " << solidMeshes[i].name();
-            solidControls_[i].printCorrResidualControls(nCorrPIMPLE_);
+            solidControls_[i].printCorrResidualControls(nCorrPimple_);
         }
     }
 
-    if (nCorrPIMPLE_ == 1)
+    if (nCorrPimple_ == 1)
     {
         Info<< nl << algorithmName << ": Operating solver in PISO mode" << nl
             << endl;
@@ -155,7 +155,7 @@ bool Foam::pimpleMultiRegionControl::read()
 
     const dictionary& solutionDict = dict();
 
-    nCorrPIMPLE_ = solutionDict.lookupOrDefault<label>("nOuterCorrectors", 1);
+    nCorrPimple_ = solutionDict.lookupOrDefault<label>("nOuterCorrectors", 1);
 
     return true;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ public:
 
     // Constructors
 
-        //- Construct from the SIMPLE/PIMPLE sub-dictionary
+        //- Construct from the simple/pimple sub-dictionary
         pressureControl
         (
             const volScalarField& p,

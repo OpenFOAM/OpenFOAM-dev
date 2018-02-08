@@ -1,5 +1,5 @@
 {
-    if (pimple.nCorrPIMPLE() == 1)
+    if (pimple.nCorrPimple() == 1)
     {
         p =
         (

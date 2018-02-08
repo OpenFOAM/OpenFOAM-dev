@@ -37,7 +37,7 @@ namespace Foam
 
 bool Foam::pimpleLoop::read()
 {
-    nCorrPIMPLE_ =
+    nCorrPimple_ =
         control_.dict().lookupOrDefault<label>("nOuterCorrectors", 1);
 
     return true;
@@ -49,8 +49,8 @@ bool Foam::pimpleLoop::read()
 Foam::pimpleLoop::pimpleLoop(const solutionControl& control)
 :
     control_(control),
-    nCorrPIMPLE_(-1),
-    corrPIMPLE_(0),
+    nCorrPimple_(-1),
+    corrPimple_(0),
     converged_(false)
 {}
 
@@ -67,20 +67,20 @@ bool Foam::pimpleLoop::loop(correctorConvergenceControl& convergence)
 {
     read();
 
-    ++ corrPIMPLE_;
+    ++ corrPimple_;
 
     // Handle quit conditions first
     {
         // If all corrections have been completed then end the correction loop
-        if (corrPIMPLE_ > nCorrPIMPLE_)
+        if (corrPimple_ > nCorrPimple_)
         {
-            if (convergence.hasCorrResidualControls() && nCorrPIMPLE_ > 1)
+            if (convergence.hasCorrResidualControls() && nCorrPimple_ > 1)
             {
                 Info<< control_.algorithmName() << ": Not converged within "
-                    << nCorrPIMPLE_ << " iterations" << endl;
+                    << nCorrPimple_ << " iterations" << endl;
             }
 
-            corrPIMPLE_ = 0;
+            corrPimple_ = 0;
 
             return false;
         }
@@ -89,9 +89,9 @@ bool Foam::pimpleLoop::loop(correctorConvergenceControl& convergence)
         if (converged_)
         {
             Info<< control_.algorithmName() << ": Converged in "
-                << corrPIMPLE_ - 1 << " iterations" << endl;
+                << corrPimple_ - 1 << " iterations" << endl;
 
-            corrPIMPLE_ = 0;
+            corrPimple_ = 0;
             converged_ = false;
 
             return false;
@@ -102,7 +102,7 @@ bool Foam::pimpleLoop::loop(correctorConvergenceControl& convergence)
     {
         // If convergence has been reached then set the flag so that the loop
         // exits next time around
-        if (!firstPIMPLEIter() && convergence.corrCriteriaSatisfied())
+        if (!firstPimpleIter() && convergence.corrCriteriaSatisfied())
         {
             Info<< control_.algorithmName() << ": Converged " << nl
                 << control_.algorithmSpace() << "  Doing final iteration"
@@ -112,7 +112,7 @@ bool Foam::pimpleLoop::loop(correctorConvergenceControl& convergence)
 
         // Set up the next iteration by storing the index of the solution to
         // check the convergence of
-        if (firstPIMPLEIter())
+        if (firstPimpleIter())
         {
             convergence.resetCorrSolveIndex();
         }
@@ -122,9 +122,9 @@ bool Foam::pimpleLoop::loop(correctorConvergenceControl& convergence)
         }
 
         // Print the number of the iteration about to take place
-        if (nCorrPIMPLE_ > 1)
+        if (nCorrPimple_ > 1)
         {
-            Info<< control_.algorithmName() << ": Iteration " << corrPIMPLE_
+            Info<< control_.algorithmName() << ": Iteration " << corrPimple_
                 << endl;
         }
 

@@ -26,7 +26,7 @@ Class
 
 Description
     Corrector convergence control class. Provides methods to check the
-    convergence of an inner iteration loop (e.g., PIMPLE) against both absolute
+    convergence of an inner iteration loop (e.g., pimple) against both absolute
     and relative residual tolerances.
 
 SourceFiles

@@ -54,7 +54,7 @@ PIMPLE
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;
     consistent          yes;
-    SIMPLErho           yes;
+    simpleRho           yes;
 
     pMaxFactor          1.5;
     pMinFactor          0.9;

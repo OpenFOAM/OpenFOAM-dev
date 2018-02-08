@@ -25,33 +25,33 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::label Foam::pimpleLoop::nCorrPIMPLE() const
+inline Foam::label Foam::pimpleLoop::nCorrPimple() const
 {
-    return nCorrPIMPLE_;
+    return nCorrPimple_;
 }
 
 
-inline bool Foam::pimpleLoop::firstPIMPLEIter() const
+inline bool Foam::pimpleLoop::firstPimpleIter() const
 {
-    return corrPIMPLE_ == 1;
+    return corrPimple_ == 1;
 }
 
 
-inline bool Foam::pimpleLoop::finalPIMPLEIter() const
+inline bool Foam::pimpleLoop::finalPimpleIter() const
 {
-    return corrPIMPLE_ >= nCorrPIMPLE_;
+    return corrPimple_ >= nCorrPimple_;
 }
 
 
 inline bool Foam::pimpleLoop::firstIter() const
 {
-    return firstPIMPLEIter();
+    return firstPimpleIter();
 }
 
 
 inline bool Foam::pimpleLoop::finalIter() const
 {
-    return converged_ || finalPIMPLEIter();
+    return converged_ || finalPimpleIter();
 }
 
 

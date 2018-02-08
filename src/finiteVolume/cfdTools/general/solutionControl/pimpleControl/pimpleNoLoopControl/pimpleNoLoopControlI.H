@@ -25,9 +25,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline bool Foam::pimpleNoLoopControl::SIMPLErho() const
+inline bool Foam::pimpleNoLoopControl::simpleRho() const
 {
-    return SIMPLErho_;
+    return simpleRho_;
 }
 
 

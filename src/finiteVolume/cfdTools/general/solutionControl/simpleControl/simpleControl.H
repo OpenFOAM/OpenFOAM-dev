@@ -25,7 +25,7 @@ Class
     Foam::simpleControl
 
 Description
-    SIMPLE control class. Provides time-loop control methods which exit the
+    Simple control class. Provides time-loop control methods which exit the
     simulation once convergence criteria have been reached. Example usage:
 
     \verbatim

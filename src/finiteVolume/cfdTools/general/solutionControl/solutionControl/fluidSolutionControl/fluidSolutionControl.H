@@ -66,7 +66,7 @@ protected:
         bool transonic_;
 
         //- Flag to indicate to relax pressure using the "consistent" approach
-        //  of SIMPLEC
+        //  of simplec
         bool consistent_;
 
 
@@ -107,7 +107,7 @@ public:
             inline bool transonic() const;
 
             //- Flag to indicate to relax pressure using the "consistent"
-            //  approach of SIMPLEC
+            //  approach of simplec
             inline bool consistent() const;
 };
 

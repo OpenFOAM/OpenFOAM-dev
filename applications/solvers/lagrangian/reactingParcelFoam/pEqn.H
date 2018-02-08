@@ -1,4 +1,4 @@
-if (!pimple.SIMPLErho())
+if (!pimple.simpleRho())
 {
     rho = thermo.rho();
 }
@@ -76,7 +76,7 @@ if (pressureControl.limit(p))
     rho = thermo.rho();
     p_rgh = p - rho*gh;
 }
-else if (pimple.SIMPLErho())
+else if (pimple.simpleRho())
 {
     rho = thermo.rho();
 }

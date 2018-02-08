@@ -4,7 +4,7 @@ if (!pimple.solveFlow())
 }
 else
 {
-    if (!mesh.steady() && pimples.nCorrPIMPLE() <= 1)
+    if (!mesh.steady() && pimples.nCorrPimple() <= 1)
     {
         #include "rhoEqn.H"
     }

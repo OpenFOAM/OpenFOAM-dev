@@ -25,7 +25,7 @@ Class
     Foam::pimpleLoop
 
 Description
-    PIMPLE loop class. Implements the logic which controls the PIMPLE loop
+    Pimple loop class. Implements the logic which controls the pimple loop
     generically for a given corrector convergence control. Can therefore be
     used be either single- or multi-region control classes.
 
@@ -58,13 +58,13 @@ protected:
         //- Reference to the solution control
         const solutionControl& control_;
 
-        //- Maximum number of PIMPLE correctors
-        label nCorrPIMPLE_;
+        //- Maximum number of pimple correctors
+        label nCorrPimple_;
 
-        //- Current PIMPLE corrector
-        label corrPIMPLE_;
+        //- Current pimple corrector
+        label corrPimple_;
 
-        //- Flag to indicate convergence of the PIMPLE loop
+        //- Flag to indicate convergence of the pimple loop
         bool converged_;
 
 
@@ -96,14 +96,14 @@ public:
 
         // Access
 
-            //- Maximum number of PIMPLE correctors
-            inline label nCorrPIMPLE() const;
+            //- Maximum number of pimple correctors
+            inline label nCorrPimple() const;
 
-            //- Flag to indicate the first PIMPLE iteration
-            inline bool firstPIMPLEIter() const;
+            //- Flag to indicate the first pimple iteration
+            inline bool firstPimpleIter() const;
 
-            //- Flag to indicate the last PIMPLE iteration
-            inline bool finalPIMPLEIter() const;
+            //- Flag to indicate the last pimple iteration
+            inline bool finalPimpleIter() const;
 
             //- Flag to indicate the first iteration
             inline bool firstIter() const;
@@ -114,7 +114,7 @@ public:
 
         // Evolution
 
-            //- PIMPLE loop
+            //- Pimple loop
             bool loop(correctorConvergenceControl& convergence);
 };
 

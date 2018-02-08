@@ -51,7 +51,7 @@ Foam::pimpleNoLoopControl::pimpleNoLoopControl
         static_cast<singleRegionSolutionControl&>(*this),
         "outerCorrector"
     ),
-    SIMPLErho_(false),
+    simpleRho_(false),
     turbOnFinalIterOnly_(true)
 {
     read();
@@ -78,7 +78,10 @@ bool Foam::pimpleNoLoopControl::read()
         return false;
     }
 
-    SIMPLErho_ = dict().lookupOrDefault<bool>("SIMPLErho", false);
+    // The SIMPLErho keyword is maintained here for backwards compatibility
+    simpleRho_ = dict().lookupOrDefault<bool>("SIMPLErho", false);
+    simpleRho_ = dict().lookupOrDefault<bool>("simpleRho", simpleRho_);
+
     turbOnFinalIterOnly_ =
         dict().lookupOrDefault<bool>("turbOnFinalIterOnly", true);
 
