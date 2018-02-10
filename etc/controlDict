@@ -788,7 +788,7 @@ DebugSwitches
     solidBodyMotionFunction 0;
     solidBodyMotionFvMesh 0;
     solution            0;
-    specie              1;
+    specie              0;
     spectEddyVisc       0;
     sphereToCell        0;
     spherical           0;
