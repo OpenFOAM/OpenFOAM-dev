@@ -14,7 +14,7 @@
     (
         "phiHbyA",
         fvc::flux(HbyA)
-      + fvc::interpolate(rho*rAU())*fvc::ddtCorr(U, phi, Uf)
+      + MRF.zeroFilter(fvc::interpolate(rho*rAU())*fvc::ddtCorr(U, phi, Uf))
     );
     MRF.makeRelative(phiHbyA);
 

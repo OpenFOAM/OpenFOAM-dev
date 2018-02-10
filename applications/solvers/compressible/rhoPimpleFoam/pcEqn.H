@@ -21,7 +21,10 @@ surfaceScalarField phiHbyA
     "phiHbyA",
     (
         fvc::interpolate(rho)*fvc::flux(HbyA)
-      + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi, rhoUf)
+      + MRF.zeroFilter
+        (
+            fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi, rhoUf)
+        )
     )
 );
 

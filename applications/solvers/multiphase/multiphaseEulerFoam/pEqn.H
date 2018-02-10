@@ -98,7 +98,10 @@
         phiHbyAs[phasei] =
         (
             fvc::flux(HbyAs[phasei])
-          + rAlphaAUfs[phasei]*fvc::ddtCorr(phase.U(), phase.phi())
+          + MRF.zeroFilter
+            (
+                rAlphaAUfs[phasei]*fvc::ddtCorr(phase.U(), phase.phi())
+            )
         );
         MRF.makeRelative(phiHbyAs[phasei]);
         MRF.makeRelative(phase.phi().oldTime());

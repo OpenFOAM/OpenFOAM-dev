@@ -13,7 +13,10 @@ if (pimple.transonic())
        *(
             (
                 fvc::flux(HbyA)
-              + rhorAUf*fvc::ddtCorr(rho, U, rhoUf)/fvc::interpolate(rho)
+              + MRF.zeroFilter
+                (
+                    rhorAUf*fvc::ddtCorr(rho, U, rhoUf)/fvc::interpolate(rho)
+                )
             )
         )
     );
@@ -47,7 +50,7 @@ else
         "phiHbyA",
         (
             fvc::flux(rho*HbyA)
-          + rhorAUf*fvc::ddtCorr(rho, U, rhoUf)
+          + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, rhoUf))
         )
     );
 

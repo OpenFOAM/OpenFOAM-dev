@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,6 +184,14 @@ public:
             surfaceScalarField& phi
         ) const;
 
+        //- Filter-out the MRF region contribution from the given field
+        // setting the corresponding values to zero
+        template<class Type>
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> zeroFilter
+        (
+            const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tphi
+        ) const;
+
         //- Update MRFZone faces if the mesh topology changes
         void update();
 
@@ -207,6 +215,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "MRFZoneListTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

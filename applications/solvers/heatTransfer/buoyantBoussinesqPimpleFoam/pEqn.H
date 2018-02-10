@@ -9,7 +9,7 @@
     (
         "phiHbyA",
         fvc::flux(HbyA)
-      + rAUf*fvc::ddtCorr(U, phi)
+      + MRF.zeroFilter(rAUf*fvc::ddtCorr(U, phi))
       + phig
     );
 

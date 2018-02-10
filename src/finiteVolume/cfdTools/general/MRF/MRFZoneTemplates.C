@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,6 +202,37 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
                 rho.boundaryField()[patchi][patchFacei]
               * (Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
               & Sf.boundaryField()[patchi][patchFacei];
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::MRFZone::zero
+(
+    GeometricField<Type, fvsPatchField, surfaceMesh>& phi
+) const
+{
+    if (!active_)
+    {
+        return;
+    }
+
+    Field<Type>& phii = phi.primitiveFieldRef();
+
+    forAll(internalFaces_, i)
+    {
+        phii[internalFaces_[i]] = Zero;
+    }
+
+    typename GeometricField<Type, fvsPatchField, surfaceMesh>::Boundary& phibf =
+        phi.boundaryFieldRef();
+
+    forAll(includedFaces_, patchi)
+    {
+        forAll(includedFaces_[patchi], i)
+        {
+            phibf[patchi][includedFaces_[patchi][i]] = Zero;
         }
     }
 }

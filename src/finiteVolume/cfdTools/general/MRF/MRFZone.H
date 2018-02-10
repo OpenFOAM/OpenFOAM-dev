@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -256,6 +256,10 @@ public:
 
         //- Correct the boundary velocity for the rotation of the MRF region
         void correctBoundaryVelocity(volVectorField& U) const;
+
+        //- Zero the MRF region of the given field
+        template<class Type>
+        void zero(GeometricField<Type, fvsPatchField, surfaceMesh>& phi) const;
 
         //- Update MRFZone faces if the mesh topology changes
         void update();
