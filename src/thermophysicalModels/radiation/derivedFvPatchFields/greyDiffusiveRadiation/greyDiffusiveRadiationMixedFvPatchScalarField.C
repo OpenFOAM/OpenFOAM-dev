@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,10 +159,7 @@ updateCoeffs()
     const scalarField& Tp =
         patch().lookupPatchField<volScalarField, scalar>(TName_);
 
-    const radiationModel& radiation =
-        db().lookupObject<radiationModel>("radiationProperties");
-
-    const fvDOM& dom(refCast<const fvDOM>(radiation));
+    const fvDOM& dom = db().lookupObject<fvDOM>("radiationProperties");
 
     label rayId = -1;
     label lambdaId = -1;
