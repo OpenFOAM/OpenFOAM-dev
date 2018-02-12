@@ -89,6 +89,7 @@ Foam::fileName Foam::triSurfaceMesh::relativeFilePath
     return fName;
 }
 
+
 Foam::fileName Foam::triSurfaceMesh::checkFile
 (
     const regIOobject& io,
@@ -96,15 +97,16 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
     const bool isGlobal
 )
 {
-    fileName fName;
-    if (dict.readIfPresent("file", fName, false, false))
+    fileName dictFName, fName;
+
+    if (dict.readIfPresent("file", dictFName, false, false))
     {
-        fName = relativeFilePath(io, fName, isGlobal);
+        fName = relativeFilePath(io, dictFName, isGlobal);
 
         if (!exists(fName))
         {
             FatalErrorInFunction
-                << "Cannot find triSurfaceMesh at " << fName
+                << "Cannot find triSurfaceMesh at " << io.path(dictFName)
                 << exit(FatalError);
         }
     }
