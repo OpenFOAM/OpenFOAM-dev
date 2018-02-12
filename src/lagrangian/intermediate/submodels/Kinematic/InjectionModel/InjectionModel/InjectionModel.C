@@ -198,7 +198,7 @@ Foam::scalar Foam::InjectionModel<CloudType>::setNumberOfParticles
             scalar volumep = pi/6.0*pow3(diameter);
             scalar volumeTot = massTotal_/rho;
 
-            nP = (volumeFraction*volumeTot + delayedVolume_)/(parcels*volumep);
+            nP = volumeFraction*volumeTot/(parcels*volumep);
             break;
         }
         case pbNumber:
@@ -274,8 +274,7 @@ Foam::InjectionModel<CloudType>::InjectionModel(CloudType& owner)
     parcelBasis_(pbNumber),
     nParticleFixed_(0.0),
     time0_(0.0),
-    timeStep0_(this->template getModelProperty<scalar>("timeStep0")),
-    delayedVolume_(0.0)
+    timeStep0_(this->template getModelProperty<scalar>("timeStep0"))
 {}
 
 
@@ -302,8 +301,7 @@ Foam::InjectionModel<CloudType>::InjectionModel
     parcelBasis_(pbNumber),
     nParticleFixed_(0.0),
     time0_(owner.db().time().value()),
-    timeStep0_(this->template getModelProperty<scalar>("timeStep0")),
-    delayedVolume_(0.0)
+    timeStep0_(this->template getModelProperty<scalar>("timeStep0"))
 {
     // Provide some info
     // - also serves to initialise mesh dimensions - needed for parallel runs
@@ -369,8 +367,7 @@ Foam::InjectionModel<CloudType>::InjectionModel
     parcelBasis_(im.parcelBasis_),
     nParticleFixed_(im.nParticleFixed_),
     time0_(im.time0_),
-    timeStep0_(im.timeStep0_),
-    delayedVolume_(im.delayedVolume_)
+    timeStep0_(im.timeStep0_)
 {}
 
 
@@ -428,8 +425,6 @@ void Foam::InjectionModel<CloudType>::inject
 
     if (prepareForNextTimeStep(time, newParcels, newVolumeFraction))
     {
-        scalar delayedVolume = 0;
-
         const scalar trackTime = this->owner().solution().trackTime();
         const polyMesh& mesh = this->owner().mesh();
 
@@ -505,30 +500,21 @@ void Foam::InjectionModel<CloudType>::inject
                             pPtr->rho()
                         );
 
-                    if (pPtr->nParticle() >= 1.0)
-                    {
-                        parcelsAdded++;
-                        massAdded += pPtr->nParticle()*pPtr->mass();
+                    parcelsAdded ++;
 
-                        if (pPtr->move(cloud, td, dt))
-                        {
-                            cloud.addParticle(pPtr);
-                        }
-                        else
-                        {
-                            delete pPtr;
-                        }
+                    massAdded += pPtr->nParticle()*pPtr->mass();
+
+                    if (pPtr->move(cloud, td, dt))
+                    {
+                        cloud.addParticle(pPtr);
                     }
                     else
                     {
-                        delayedVolume += pPtr->nParticle()*pPtr->volume();
                         delete pPtr;
                     }
                 }
             }
         }
-
-        delayedVolume_ = delayedVolume;
     }
 
     postInjectCheck(parcelsAdded, massAdded);
