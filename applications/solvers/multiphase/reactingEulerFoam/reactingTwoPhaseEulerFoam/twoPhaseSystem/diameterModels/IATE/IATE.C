@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ void Foam::diameterModels::IATE::correct()
     (
         max
         (
-            fvc::average(phase_ + phase_.oldTime()),
+            0.5*fvc::average(phase_ + phase_.oldTime()),
             residualAlpha_
         )
     );
