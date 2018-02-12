@@ -1,0 +1,114 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh true;
+snap            true;
+addLayers       false;
+
+geometry
+{
+    heatedDuct
+    {
+        type triSurfaceMesh;
+        file "heatedDuct.stl";
+
+        regions
+        {
+            metalInlet     { name metalInlet;     }
+            heaterInlet    { name heaterInlet;    }
+            fluidInlet     { name fluidInlet;     }
+            metalOutlet    { name metalOutlet;    }
+            heaterOutlet   { name heaterOutlet;   }
+            fluidOutlet    { name fluidOutlet;    }
+            metalExternal  { name metalExternal;  }
+            heaterExternal { name heaterExternal; }
+        }
+    }
+
+    metalToHeater
+    {
+        type triSurfaceMesh;
+        file "metalToHeater.stl";
+    }
+
+    fluidToMetal
+    {
+        type triSurfaceMesh;
+        file "fluidToMetal.stl";
+    }
+};
+
+castellatedMeshControls
+{
+    refinementSurfaces
+    {
+        heatedDuct
+        {
+            level (0 0);
+            regions
+            {
+                metalInlet     { level (0 0); patchInfo { type patch; } }
+                heaterInlet    { level (0 0); patchInfo { type patch; } }
+                fluidInlet     { level (0 0); patchInfo { type patch; } }
+                metalOutlet    { level (0 0); patchInfo { type patch; } }
+                heaterOutlet   { level (0 0); patchInfo { type patch; } }
+                fluidOutlet    { level (0 0); patchInfo { type patch; } }
+                metalExternal  { level (1 1); patchInfo { type wall;  } }
+                heaterExternal { level (1 1); patchInfo { type wall;  } }
+            }
+        }
+
+        fluidToMetal
+        {
+            level (1 1);
+            faceZone fluidToMetal;
+            cellZone metal;
+            cellZoneInside insidePoint;
+            insidePoint (0.025 0.0025 0.075);
+        }
+
+        metalToHeater
+        {
+            level (1 1);
+            faceZone metalToHeater;
+            cellZone heater;
+            cellZoneInside insidePoint;
+            insidePoint (0.025 -0.005 0.075);
+        }
+    }
+
+    nCellsBetweenLevels 1;
+
+    refinementRegions
+    {}
+
+    locationInMesh (0.025 0.025 0.075);
+}
+
+addLayersControls
+{
+    relativeSizes       true;
+    minThickness        1;
+    finalLayerThickness 1;
+    expansionRatio      1;
+    layers
+    {}
+}
+
+// ************************************************************************* //
