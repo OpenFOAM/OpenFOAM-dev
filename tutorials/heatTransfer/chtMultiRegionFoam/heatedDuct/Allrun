@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+rm -rf constant/polyMesh/sets
+
+runApplication blockMesh
+runApplication snappyHexMesh -overwrite
+runApplication splitMeshRegions -cellZones -overwrite
+runApplication decomposePar -allRegions
+runParallel $(getApplication)
+runApplication reconstructPar -allRegions
+paraFoam -touchAll

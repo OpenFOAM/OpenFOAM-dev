@@ -1,0 +1,324 @@
+solid metalInlet
+ facet normal 0 0 1
+  outer loop
+   vertex 0 0 0
+   vertex 0.0075 0 0
+   vertex 0.005 0.005 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0075 0 0
+   vertex 0.0425 0 0
+   vertex 0.045 0.005 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex 0.0075 0 0
+   vertex 0.045 0.005 0
+   vertex 0.005 0.005 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0425 0 0
+   vertex 0.05 0 0
+   vertex 0.045 0.005 0
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex 0.05 0 0
+   vertex 0.05 0.05 0
+   vertex 0.045 0.045 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.05 0 0
+   vertex 0.045 0.045 0
+   vertex 0.045 0.005 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.05 0.05 0
+   vertex 0 0.05 0
+   vertex 0.005 0.045 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.05 0.05 0
+   vertex 0.005 0.045 0
+   vertex 0.045 0.045 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0 0.05 0
+   vertex 0 0 0
+   vertex 0.005 0.005 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0 0.05 0
+   vertex 0.005 0.005 0
+   vertex 0.005 0.045 0
+  endloop
+ endfacet
+endsolid metalInlet
+solid heaterInlet
+ facet normal -0 0 1
+  outer loop
+   vertex 0.0075 0 0
+   vertex 0.0075 -0.01 0
+   vertex 0.0425 0 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0075 -0.01 0
+   vertex 0.0425 -0.01 0
+   vertex 0.0425 0 0
+  endloop
+ endfacet
+endsolid heaterInlet
+solid fluidInlet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.005 0.005 0
+   vertex 0.045 0.005 0
+   vertex 0.045 0.045 0
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.005 0.005 0
+   vertex 0.045 0.045 0
+   vertex 0.005 0.045 0
+  endloop
+ endfacet
+endsolid fluidInlet
+solid metalOutlet
+ facet normal 0 0 1
+  outer loop
+   vertex 0 0 0.15
+   vertex 0.0075 0 0.15
+   vertex 0.005 0.005 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0075 0 0.15
+   vertex 0.0425 0 0.15
+   vertex 0.045 0.005 0.15
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex 0.0075 0 0.15
+   vertex 0.045 0.005 0.15
+   vertex 0.005 0.005 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0425 0 0.15
+   vertex 0.05 0 0.15
+   vertex 0.045 0.005 0.15
+  endloop
+ endfacet
+ facet normal 0 -0 1
+  outer loop
+   vertex 0.05 0 0.15
+   vertex 0.05 0.05 0.15
+   vertex 0.045 0.045 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.05 0 0.15
+   vertex 0.045 0.045 0.15
+   vertex 0.045 0.005 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.05 0.05 0.15
+   vertex 0 0.05 0.15
+   vertex 0.005 0.045 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.05 0.05 0.15
+   vertex 0.005 0.045 0.15
+   vertex 0.045 0.045 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0 0.05 0.15
+   vertex 0 0 0.15
+   vertex 0.005 0.005 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0 0.05 0.15
+   vertex 0.005 0.005 0.15
+   vertex 0.005 0.045 0.15
+  endloop
+ endfacet
+endsolid metalOutlet
+solid heaterOutlet
+ facet normal -0 0 1
+  outer loop
+   vertex 0.0075 0 0.15
+   vertex 0.0075 -0.01 0.15
+   vertex 0.0425 0 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.0075 -0.01 0.15
+   vertex 0.0425 -0.01 0.15
+   vertex 0.0425 0 0.15
+  endloop
+ endfacet
+endsolid heaterOutlet
+solid fluidOutlet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.005 0.005 0.15
+   vertex 0.045 0.005 0.15
+   vertex 0.045 0.045 0.15
+  endloop
+ endfacet
+ facet normal 0 0 1
+  outer loop
+   vertex 0.005 0.005 0.15
+   vertex 0.045 0.045 0.15
+   vertex 0.005 0.045 0.15
+  endloop
+ endfacet
+endsolid fluidOutlet
+solid metalExternal
+ facet normal 0 -1 0
+  outer loop
+   vertex 0 0 0
+   vertex 0.0075 0 0
+   vertex 0.0075 0 0.15
+  endloop
+ endfacet
+ facet normal 0 -1 0
+  outer loop
+   vertex 0 0 0
+   vertex 0.0075 0 0.15
+   vertex 0 0 0.15
+  endloop
+ endfacet
+ facet normal 0 -1 0
+  outer loop
+   vertex 0.0425 0 0
+   vertex 0.05 0 0
+   vertex 0.05 0 0.15
+  endloop
+ endfacet
+ facet normal 0 -1 0
+  outer loop
+   vertex 0.0425 0 0
+   vertex 0.05 0 0.15
+   vertex 0.0425 0 0.15
+  endloop
+ endfacet
+ facet normal 1 0 0
+  outer loop
+   vertex 0.05 0 0
+   vertex 0.05 0.05 0
+   vertex 0.05 0.05 0.15
+  endloop
+ endfacet
+ facet normal 1 0 0
+  outer loop
+   vertex 0.05 0 0
+   vertex 0.05 0.05 0.15
+   vertex 0.05 0 0.15
+  endloop
+ endfacet
+ facet normal 0 1 0
+  outer loop
+   vertex 0.05 0.05 0
+   vertex 0 0.05 0
+   vertex 0 0.05 0.15
+  endloop
+ endfacet
+ facet normal 0 1 -0
+  outer loop
+   vertex 0.05 0.05 0
+   vertex 0 0.05 0.15
+   vertex 0.05 0.05 0.15
+  endloop
+ endfacet
+ facet normal -1 0 0
+  outer loop
+   vertex 0 0.05 0
+   vertex 0 0 0
+   vertex 0 0 0.15
+  endloop
+ endfacet
+ facet normal -1 0 0
+  outer loop
+   vertex 0 0.05 0
+   vertex 0 0 0.15
+   vertex 0 0.05 0.15
+  endloop
+ endfacet
+endsolid metalExternal
+solid heaterExternal
+ facet normal -1 0 0
+  outer loop
+   vertex 0.0075 0 0
+   vertex 0.0075 -0.01 0
+   vertex 0.0075 -0.01 0.15
+  endloop
+ endfacet
+ facet normal -1 0 0
+  outer loop
+   vertex 0.0075 0 0
+   vertex 0.0075 -0.01 0.15
+   vertex 0.0075 0 0.15
+  endloop
+ endfacet
+ facet normal 0 -1 0
+  outer loop
+   vertex 0.0075 -0.01 0
+   vertex 0.0425 -0.01 0
+   vertex 0.0425 -0.01 0.15
+  endloop
+ endfacet
+ facet normal 0 -1 0
+  outer loop
+   vertex 0.0075 -0.01 0
+   vertex 0.0425 -0.01 0.15
+   vertex 0.0075 -0.01 0.15
+  endloop
+ endfacet
+ facet normal 1 0 0
+  outer loop
+   vertex 0.0425 -0.01 0
+   vertex 0.0425 0 0
+   vertex 0.0425 0 0.15
+  endloop
+ endfacet
+ facet normal 1 0 0
+  outer loop
+   vertex 0.0425 -0.01 0
+   vertex 0.0425 0 0.15
+   vertex 0.0425 -0.01 0.15
+  endloop
+ endfacet
+endsolid heaterExternal

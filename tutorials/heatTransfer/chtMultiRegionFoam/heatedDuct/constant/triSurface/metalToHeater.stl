@@ -1,0 +1,16 @@
+solid metalToHeater
+ facet normal 0 -1 0
+  outer loop
+   vertex 0.0075 0 0
+   vertex 0.0425 0 0
+   vertex 0.0425 0 0.15
+  endloop
+ endfacet
+ facet normal 0 -1 0
+  outer loop
+   vertex 0.0075 0 0
+   vertex 0.0425 0 0.15
+   vertex 0.0075 0 0.15
+  endloop
+ endfacet
+endsolid metalToHeater
