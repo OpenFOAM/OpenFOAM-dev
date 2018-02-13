@@ -345,6 +345,57 @@ int main(int argc, char *argv[])
     }
 
 
+    {
+        // Determine the existing processor count directly
+        label nProcs = fileHandler().nProcs(runTime.path());
+
+        if (forceOverwrite)
+        {
+            if (region)
+            {
+                FatalErrorInFunction
+                    << "Cannot force the decomposition of a single region"
+                    << exit(FatalError);
+            }
+
+            Info<< "Removing " << nProcs
+                << " existing processor directories" << endl;
+
+            // Remove existing processors directory
+            const fileName procDir(runTime.path()/word("processors"));
+            if (fileHandler().exists(procDir))
+            {
+                fileHandler().rmDir(procDir);
+            }
+
+            // Remove existing processor directories
+            // reverse order to avoid gaps if someone interrupts the process
+            for (label proci = nProcs-1; proci >= 0; --proci)
+            {
+                const fileName procDir
+                (
+                    runTime.path()/(word("processor") + name(proci))
+                );
+
+                if (fileHandler().exists(procDir))
+                {
+                    fileHandler().rmDir(procDir);
+                }
+            }
+        }
+        else if (nProcs && !region)
+        {
+            FatalErrorInFunction
+                << "Case is already decomposed with " << nProcs
+                << " domains, use the -force option or manually" << nl
+                << "remove processor directories before decomposing. e.g.,"
+                << nl
+                << "    rm -rf " << runTime.path().c_str() << "/processor*"
+                << nl
+                << exit(FatalError);
+        }
+    }
+
 
     forAll(regionNames, regioni)
     {
@@ -402,64 +453,11 @@ int main(int argc, char *argv[])
         }
         else if (nProcs)
         {
-            bool procDirsProblem = true;
-
             if (ifRequiredDecomposition && nProcs == nDomains)
             {
-                // we can reuse the decomposition
+                // Reuse the decomposition
                 decomposeFieldsOnly = true;
-                procDirsProblem = false;
-                forceOverwrite = false;
-
                 Info<< "Using existing processor directories" << nl;
-            }
-
-            if (region || allRegions)
-            {
-                procDirsProblem = false;
-                forceOverwrite = false;
-            }
-
-            if (forceOverwrite)
-            {
-                Info<< "Removing " << nProcs
-                    << " existing processor directories" << endl;
-
-                // Remove existing processors directory
-                const fileName procDir(runTime.path()/word("processors"));
-                if (fileHandler().exists(procDir))
-                {
-                    fileHandler().rmDir(procDir);
-                }
-
-                // Remove existing processor directories
-                // reverse order to avoid gaps if someone interrupts the process
-                for (label proci = nProcs-1; proci >= 0; --proci)
-                {
-                    const fileName procDir
-                    (
-                        runTime.path()/(word("processor") + name(proci))
-                    );
-
-                    if (fileHandler().exists(procDir))
-                    {
-                        fileHandler().rmDir(procDir);
-                    }
-                }
-
-                procDirsProblem = false;
-            }
-
-            if (procDirsProblem)
-            {
-                FatalErrorInFunction
-                    << "Case is already decomposed with " << nProcs
-                    << " domains, use the -force option or manually" << nl
-                    << "remove processor directories before decomposing. e.g.,"
-                    << nl
-                    << "    rm -rf " << runTime.path().c_str() << "/processor*"
-                    << nl
-                    << exit(FatalError);
             }
         }
 
