@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Foam::label Foam::cell::opposingFaceLabel
         {
             bool sharedPoint = false;
 
-            // Compare every vertex of the current face agains the
+            // Compare every vertex of the current face against the
             // vertices of the master face
             forAll(curFace, pointi)
             {

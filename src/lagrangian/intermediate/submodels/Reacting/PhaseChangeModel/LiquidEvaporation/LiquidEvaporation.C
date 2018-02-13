@@ -152,7 +152,7 @@ void Foam::LiquidEvaporation<CloudType>::calculate
         {
             WarningInFunction
                 << "Parcel reached critical conditions: "
-                << "evaporating all avaliable mass" << endl;
+                << "evaporating all available mass" << endl;
         }
 
         forAll(activeLiquids_, i)

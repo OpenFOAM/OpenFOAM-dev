@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
     Algorithm:
     -# find edge-surface intersection. Class 'surfaceIntersection'.
     -# combine intersection with both surfaces. Class 'intersectedSurface'.
-    -# subset surfaces upto intersection. The 'side' of the surface to
+    -# subset surfaces up to intersection. The 'side' of the surface to
        include is based on the faces that can be reached from a
        user-supplied face index.
     -# merge surfaces. Only the points on the intersection are shared.

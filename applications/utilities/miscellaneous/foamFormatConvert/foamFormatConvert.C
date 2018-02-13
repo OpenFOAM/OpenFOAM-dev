@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -441,7 +441,7 @@ int main(int argc, char *argv[])
                     const word& name = sprayFields[fieldi];
 
                     // Note: try the various field types. Make sure to
-                    //       exit once sucessful conversion to avoid re-read
+                    //       exit once successful conversion to avoid re-read
                     //       converted file.
 
                     if

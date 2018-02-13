@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ public:
             //- Square of span
             scalar span2_;
 
-            //- Minumum edge-length of the cell size below which protusions
+            //- Minimum edge-length of the cell size below which protusions
             //  through the surface are not split
             scalar minEdgeLen_;
 
@@ -140,7 +140,7 @@ public:
             //- Square of maxNotchLen
             scalar maxNotchLen2_;
 
-            //- The minimum distance alowed between a dual-cell vertex
+            //- The minimum distance allowed between a dual-cell vertex
             // and the surface before a point-pair is introduced
             scalar minNearPointDist_;
 

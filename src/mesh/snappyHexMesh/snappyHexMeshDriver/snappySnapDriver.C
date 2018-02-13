@@ -2762,7 +2762,7 @@ void Foam::snappySnapDriver::doSnap
             if (!meshOk)
             {
                 WarningInFunction
-                    << "Did not succesfully snap mesh."
+                    << "Did not successfully snap mesh."
                     << " Continuing to snap to resolve easy" << nl
                     << "    surfaces but the"
                     << " resulting mesh will not satisfy your quality"

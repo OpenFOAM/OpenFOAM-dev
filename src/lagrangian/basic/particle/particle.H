@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -369,7 +369,7 @@ public:
         //- Construct as a copy
         particle(const particle& p);
 
-        //- Construct as a copy with refernce to a new mesh
+        //- Construct as a copy with references to a new mesh
         particle(const particle& p, const polyMesh& mesh);
 
         //- Construct a clone

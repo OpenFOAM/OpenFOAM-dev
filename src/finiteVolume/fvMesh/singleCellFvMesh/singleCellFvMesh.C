@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ void Foam::singleCellFvMesh::agglomerateMesh
 
                     if (iter == localToNbr.end())
                     {
-                        // First occurence of this zone. Store correspondence
+                        // First occurrence of this zone. Store correspondence
                         // to remote zone number.
                         localToNbr.insert(myZone, nbrZone);
                     }

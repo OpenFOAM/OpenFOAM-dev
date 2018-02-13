@@ -576,7 +576,7 @@ void Foam::snappyLayerDriver::handleWarpedFaces
 }
 
 
-//// No extrusion on cells with multiple patch faces. There ususally is a reason
+//// No extrusion on cells with multiple patch faces. There usually is a reason
 //// why combinePatchFaces hasn't succeeded.
 //void Foam::snappyLayerDriver::handleMultiplePatchFaces
 //(
@@ -1865,7 +1865,7 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
         // ~~~~~~~~~
 
         // Make sure that a string of edges becomes a single face so
-        // not a butterfly. Occassionally an 'edge' will have a single dangling
+        // not a butterfly. Occasionally an 'edge' will have a single dangling
         // vertex due to face combining. These get extruded as a single face
         // (with a dangling vertex) so make sure this extrusion forms a single
         // shape.
@@ -3333,7 +3333,7 @@ void Foam::snappyLayerDriver::addLayers
 
 
         // With the stored topo changes we create a new mesh so we can
-        // undo if neccesary.
+        // undo if necessary.
 
         autoPtr<fvMesh> newMeshPtr;
         autoPtr<mapPolyMesh> map = meshMod.makeMesh
@@ -3353,7 +3353,7 @@ void Foam::snappyLayerDriver::addLayers
         );
         fvMesh& newMesh = newMeshPtr();
 
-        //?neccesary? Update fields
+        //?necessary? Update fields
         newMesh.updateMesh(map);
 
         newMesh.setInstance(meshRefiner_.timeName());

@@ -1186,7 +1186,7 @@ Foam::dynamicRefineFvMesh::~dynamicRefineFvMesh()
 
 bool Foam::dynamicRefineFvMesh::update()
 {
-    // Re-read dictionary. Choosen since usually -small so trivial amount
+    // Re-read dictionary. Chosen since usually -small so trivial amount
     // of time compared to actual refinement. Also very useful to be able
     // to modify on-the-fly.
     dictionary refineDict
@@ -1376,7 +1376,7 @@ bool Foam::dynamicRefineFvMesh::update()
 
         if ((nRefinementIterations_ % 10) == 0)
         {
-            // Compact refinement history occassionally (how often?).
+            // Compact refinement history occasionally (how often?).
             // Unrefinement causes holes in the refinementHistory.
             const_cast<refinementHistory&>(meshCutter().history()).compact();
         }

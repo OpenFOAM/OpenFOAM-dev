@@ -629,7 +629,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createPolyMesh.H"
 
-    // If nessecary add oldInternalFaces patch
+    // If necessary add oldInternalFaces patch
     label newPatchi = addPatch(mesh, "oldInternalFaces");
 
 

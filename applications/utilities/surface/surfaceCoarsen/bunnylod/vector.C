@@ -14,7 +14,7 @@ float magnitude(Vector v) {
 Vector normalize(Vector v) {
     float d=magnitude(v);
     if (d==0) {
-                printf("Cant normalize ZERO vector\n");
+                printf("Can't normalize ZERO vector\n");
                 assert(0);
                 d=0.1f;
         }

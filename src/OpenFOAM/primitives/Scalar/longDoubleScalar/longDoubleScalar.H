@@ -72,7 +72,7 @@ static const longDoubleScalar longDoubleScalarRootGreat
 static const longDoubleScalar longDoubleScalarRootSmall
     = ::sqrtl(longDoubleScalarSmall);
 
-//- Read whole of buf as a scalar. Return true if succesful.
+//- Read whole of buf as a scalar. Return true if successful.
 inline bool readScalar(const char* buf, longDoubleScalar& s)
 {
     char* endPtr;

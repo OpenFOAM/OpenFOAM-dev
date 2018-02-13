@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -505,7 +505,7 @@ void Foam::FaceCellWave<Type, TrackingData>::offset
 template<class Type, class TrackingData>
 void Foam::FaceCellWave<Type, TrackingData>::handleProcPatches()
 {
-    // Tranfer all the information to/from neighbouring processors
+    // Transfer all the information to/from neighbouring processors
 
     const globalMeshData& pData = mesh_.globalData();
 

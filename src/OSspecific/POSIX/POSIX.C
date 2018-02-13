@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -259,7 +259,7 @@ Foam::fileName Foam::cwd()
         }
         else if(errno == ERANGE)
         {
-            // Increment path length upto the pathLengthMax limit
+            // Increment path length up to the pathLengthMax limit
             if
             (
                 (pathLengthLimit += POSIX::pathLengthChunk)
@@ -687,7 +687,7 @@ Foam::fileNameList Foam::readDir
         {
             fileName fName(list->d_name);
 
-            // ignore files begining with ., i.e. '.', '..' and '.*'
+            // ignore files beginning with ., i.e. '.', '..' and '.*'
             if (fName.size() && fName[0] != '.')
             {
                 word fExt = fName.ext();

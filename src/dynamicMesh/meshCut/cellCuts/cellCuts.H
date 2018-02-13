@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -442,7 +442,7 @@ class cellCuts
             //- Set orientation of loops
             void orientPlanesAndLoops();
 
-            //- Top level driver: adressing calculation and loop detection
+            //- Top level driver: addressing calculation and loop detection
             //  (loops splitting cells).
             void calcLoopsAndAddressing(const labelList& cutCells);
 

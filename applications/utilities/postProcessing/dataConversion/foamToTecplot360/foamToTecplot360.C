@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -366,7 +366,7 @@ int main(int argc, char *argv[])
         print("    volTensorFields            :", Info, vtf);
 
 
-        // Construct pointMesh only if nessecary since constructs edge
+        // Construct pointMesh only if necessary since constructs edge
         // addressing (expensive on polyhedral meshes)
         if (noPointValues)
         {

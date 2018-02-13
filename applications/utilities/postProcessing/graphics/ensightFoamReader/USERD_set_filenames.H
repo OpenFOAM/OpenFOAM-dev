@@ -93,7 +93,7 @@ int USERD_set_filenames
     fieldNames = objects.names();
 
     // because of the spray being a 'field' ...
-    // get the availabe number of variables and
+    // get the available number of variables and
     // check for type (scalar/vector/tensor)
 
     label nVar = 0;

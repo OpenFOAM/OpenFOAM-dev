@@ -40,7 +40,7 @@ Quaternion model_orientation;  // orientation of bunny
 // We just set up this system here in this module
 // so that we could retrieve the model at any desired vertex count.
 // Therefore if this part of the program confuses you, then
-// dont worry about it.  It might help to look over the progmesh.cpp
+// don't worry about it.  It might help to look over the progmesh.cpp
 // module first.
 
 //       Map()
@@ -93,7 +93,7 @@ void DrawModelTriangles() {
                 //  could have been made into a "break" statement.
                 if(p0==p1 || p1==p2 || p2==p0) continue;
                 renderpolycount++;
-                // if we are not currenly morphing between 2 levels of detail
+                // if we are not currently morphing between 2 levels of detail
                 // (i.e. if morph=1.0) then q0,q1, and q2 are not necessary.
                 int q0= Map(p0,(int)(render_num*lodbase));
                 int q1= Map(p1,(int)(render_num*lodbase));

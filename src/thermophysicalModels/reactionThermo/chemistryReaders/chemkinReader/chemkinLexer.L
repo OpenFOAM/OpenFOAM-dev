@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1052,7 +1052,7 @@ bool finishReaction = false;
                         FatalErrorInFunction
                             << "Reverse reaction Arrhenius coefficients not"
                                " given for reverse LandauTeller reaction."
-                               " Please reorder 'REV' keyword to preceed 'RLT'"
+                               " Please reorder 'REV' keyword to precede 'RLT'"
                             << " on line " << lineNo_
                             << exit(FatalError);
                     }

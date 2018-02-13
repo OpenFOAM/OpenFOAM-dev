@@ -520,7 +520,7 @@ void Foam::cellCuts::calcFaceCuts() const
         // string of connected cuts; we don't want to start somewhere in the
         // middle.
 
-        // Pass1: find first point cut not preceeded by a cut.
+        // Pass1: find first point cut not preceded by a cut.
         label startFp = -1;
 
         forAll(f, fp)
@@ -544,7 +544,7 @@ void Foam::cellCuts::calcFaceCuts() const
             }
         }
 
-        // Pass2: first edge cut not preceeded by point cut
+        // Pass2: first edge cut not preceded by point cut
         if (startFp == -1)
         {
             forAll(f, fp)
@@ -1086,7 +1086,7 @@ bool Foam::cellCuts::walkCell
             {
                 // Cut along existing edge. So is in fact on two faces.
                 // Get faces on both sides of the edge to make
-                // sure we dont fold back on to those.
+                // sure we don't fold back on to those.
 
                 label f0, f1;
                 meshTools::getEdgeFaces(mesh(), celli, edgeI, f0, f1);
@@ -1595,7 +1595,7 @@ bool Foam::cellCuts::calcAnchors
                 {
                     if (hasSet1)
                     {
-                        // Second occurence of set1.
+                        // Second occurrence of set1.
                         WarningInFunction
                             << "Invalid loop " << loop << " for cell " << celli
                             << " since face " << f << " would be split into"
@@ -1612,7 +1612,7 @@ bool Foam::cellCuts::calcAnchors
                 {
                     if (hasSet2)
                     {
-                        // Second occurence of set1.
+                        // Second occurrence of set1.
                         WarningInFunction
                             << "Invalid loop " << loop << " for cell " << celli
                             << " since face " << f << " would be split into"
@@ -1650,7 +1650,7 @@ bool Foam::cellCuts::calcAnchors
                 {
                     if (hasSet1)
                     {
-                        // Second occurence of set1.
+                        // Second occurrence of set1.
                         WarningInFunction
                             << "Invalid loop " << loop << " for cell " << celli
                             << " since face " << f << " would be split into"
@@ -1667,7 +1667,7 @@ bool Foam::cellCuts::calcAnchors
                 {
                     if (hasSet2)
                     {
-                        // Second occurence of set1.
+                        // Second occurrence of set1.
                         WarningInFunction
                             << "Invalid loop " << loop << " for cell " << celli
                             << " since face " << f << " would be split into"

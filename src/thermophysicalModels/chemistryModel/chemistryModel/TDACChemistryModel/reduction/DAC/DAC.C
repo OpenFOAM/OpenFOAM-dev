@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
     {
         FatalErrorInFunction
             << searchInitSet_.size()-j
-            << " species in the intial set is not in the mechanism "
+            << " species in the initial set is not in the mechanism "
             << initSet
             << exit(FatalError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ void Foam::binaryTree<CompType, ThermoType>::insertNode
 
     }
 
-    // if we reach this point, there is an issue with the adressing
+    // if we reach this point, there is an issue with the addressing
     FatalErrorInFunction
         << "trying to insert a node with a wrong pointer to a chemPoint"
         << exit(FatalError);

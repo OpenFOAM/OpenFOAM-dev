@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ namespace Foam
 
 namespace stringOps
 {
-    //- Expand occurences of variables according to the mapping
+    //- Expand occurrences of variables according to the mapping
     //  Expansion includes:
     //  -# variables
     //    - "$VAR", "${VAR}"
@@ -84,7 +84,7 @@ namespace stringOps
     );
 
 
-    //- Inplace expand occurences of variables according to the mapping
+    //- Inplace expand occurrences of variables according to the mapping
     //  Expansion includes:
     //  -# variables
     //    - "$VAR", "${VAR}"
@@ -117,7 +117,7 @@ namespace stringOps
         const char sigil = '$'
     );
 
-    //- Expand occurences of variables according to the dictionary
+    //- Expand occurrences of variables according to the dictionary
     //  Expansion includes:
     //  -# variables
     //    - "$VAR", "${VAR}"
@@ -156,7 +156,7 @@ namespace stringOps
     );
 
 
-    //- Inplace expand occurences of variables according to the dictionary
+    //- Inplace expand occurrences of variables according to the dictionary
     //  and optionally environment variables
     //  Expansion includes:
     //  -# variables
@@ -177,7 +177,7 @@ namespace stringOps
     );
 
 
-    //- Inplace expand occurences of variables according to the dictionary
+    //- Inplace expand occurrences of variables according to the dictionary
     //  Expansion includes:
     //  -# variables
     //    - "$VAR", "${VAR}"
@@ -194,7 +194,7 @@ namespace stringOps
     );
 
 
-    //- Expand initial tildes and all occurences of environment variables
+    //- Expand initial tildes and all occurrences of environment variables
     //  Expansion includes:
     //  -# environment variables
     //    - "$VAR", "${VAR}"
@@ -233,7 +233,7 @@ namespace stringOps
     );
 
 
-    //- Expand initial tildes and all occurences of environment variables
+    //- Expand initial tildes and all occurrences of environment variables
     //  Expansion includes:
     //  -# environment variables
     //    - "$VAR", "${VAR}"

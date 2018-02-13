@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -892,7 +892,7 @@ bool Foam::polyBoundaryMesh::checkParallelSync(const bool report) const
                     Pout<< " ***Problem with boundary patch " << patchi
                         << " named " << bm[patchi].name()
                         << " of type " <<  bm[patchi].type()
-                        << ". The patch seems to be preceeded by processor"
+                        << ". The patch seems to be preceded by processor"
                         << " patches. This is can give problems."
                         << endl;
                 }

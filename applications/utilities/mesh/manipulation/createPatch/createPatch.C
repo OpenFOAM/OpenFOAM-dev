@@ -460,7 +460,7 @@ void syncPoints
     }
 
     //- Note: hasTransformation is only used for warning messages so
-    //  reduction not strictly nessecary.
+    //  reduction not strictly necessary.
     //reduce(hasTransformation, orOp<bool>());
 
     // Synchronize multiple shared points.

@@ -549,7 +549,7 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                     if (faceChanges)
                     {
                         nChangedFacesInMesh++;
-                        // In order to avoid loosing point from multiple
+                        // In order to avoid losing point from multiple
                         // insertions into the same face, the new face
                         // will be change incrementally.
                         // 1) Check if all the internal points of the edge

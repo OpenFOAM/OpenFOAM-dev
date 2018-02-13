@@ -64,7 +64,7 @@ static const floatScalar floatScalarRootVSmall = ::sqrt(floatScalarVSmall);
 static const floatScalar floatScalarRootGreat = ::sqrt(floatScalarGreat);
 static const floatScalar floatScalarRootSmall = ::sqrt(floatScalarSmall);
 
-//- Read whole of buf as a scalar. Return true if succesful.
+//- Read whole of buf as a scalar. Return true if successful.
 inline bool readScalar(const char* buf, floatScalar& s)
 {
     char* endPtr;

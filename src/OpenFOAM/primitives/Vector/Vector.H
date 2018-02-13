@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 
     A centre() member function which returns the Vector for which it is called
     is defined so that point which is a typedef to Vector\<scalar\> behaves as
-    other shapes in the shape hierachy.
+    other shapes in the shape hierarchy.
 
 SourceFiles
     VectorI.H

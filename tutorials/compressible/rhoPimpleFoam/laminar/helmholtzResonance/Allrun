@@ -36,7 +36,7 @@ cat << EOF | gnuplot -persist
 set terminal postscript eps size 5,4 enhanced color
 
 set xlabel "Time (s)"
-set ylabel "Guage pressure in the neck (Pa)"
+set ylabel "Gauge pressure in the neck (Pa)"
 
 set output "pressure.eps"
 

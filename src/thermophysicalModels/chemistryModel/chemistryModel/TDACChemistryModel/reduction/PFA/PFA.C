@@ -53,7 +53,7 @@ Foam::chemistryReductionMethods::PFA<CompType, ThermoType>::PFA
     {
         FatalErrorInFunction
             << searchInitSet_.size()-j
-            << " species in the intial set is not in the mechanism "
+            << " species in the initial set is not in the mechanism "
             << initSet
             << abort(FatalError);
     }

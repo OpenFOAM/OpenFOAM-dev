@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ class backgroundMeshDecomposition
         //- Random number generator
         Random& rndGen_;
 
-        //- Mesh stored on for this processor, specifiying the domain that it
+        //- Mesh stored on for this processor, specifying the domain that it
         //  is responsible for.
         fvMesh mesh_;
 

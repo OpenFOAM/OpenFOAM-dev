@@ -681,7 +681,7 @@ static void getSplitVerts
         }
         else
         {
-            // Copy upto (but not including) e[1]
+            // Copy up to (but not including) e[1]
             label i1 = findIndex(orderedVerts, e[1]);
             splitVerts = SubList<label>(orderedVerts, i1, 0);
             splitWeights = SubList<scalar>(orderedWeights, i1, 0);
@@ -714,7 +714,7 @@ static void getSplitVerts
     {
         // Reverse.
 
-        // Copy upto (but not including) e[0]
+        // Copy up to (but not including) e[0]
 
         label i0 = findIndex(orderedVerts, e[0]);
         splitVerts = SubList<label>(orderedVerts, i0, 0);

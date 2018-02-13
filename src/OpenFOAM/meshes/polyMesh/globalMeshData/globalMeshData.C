@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -277,7 +277,7 @@ void Foam::globalMeshData::countSharedEdges
         {
             if (globalFnd() == -1)
             {
-                // Second time occurence of this edge. Assign proper
+                // Second time occurrence of this edge. Assign proper
                 // edge label.
                 globalFnd() = sharedEdgeI++;
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ public:
             //- Return const access to the cloud region
             inline const regionModel& region() const;
 
-            //- Return refernce to the cloud region
+            //- Return references to the cloud region
             inline regionModel& region();
 
             //- Return the forces dictionary

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,7 +158,7 @@ List<OutList> invertManyToMany(const label len, const UList<InList>& in)
 //- Create identity map (map[i] == i) of given length
 labelList identity(const label len);
 
-//- Find first occurence of given element and return index,
+//- Find first occurrence of given element and return index,
 //  return -1 if not found. Linear search.
 template<class ListType>
 label findIndex
@@ -168,7 +168,7 @@ label findIndex
     const label start=0
 );
 
-//- Find all occurences of given element. Linear search.
+//- Find all occurrences of given element. Linear search.
 template<class ListType>
 labelList findIndices
 (
@@ -208,7 +208,7 @@ template<class ListType>
 label findMin(const ListType&, const label start=0);
 
 
-//- Find first occurence of given element in sorted list and return index,
+//- Find first occurrence of given element in sorted list and return index,
 //  return -1 if not found. Binary search.
 template<class ListType>
 label findSortedIndex

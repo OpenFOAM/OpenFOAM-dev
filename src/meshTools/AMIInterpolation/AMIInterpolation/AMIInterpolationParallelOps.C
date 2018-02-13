@@ -354,7 +354,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
     }
 
     // slightly increase size of bounding boxes to allow for cases where
-    // bounding boxes are perfectly alligned
+    // bounding boxes are perfectly aligned
     forAll(procBb[Pstream::myProcNo()], bbI)
     {
         treeBoundBox& bb = procBb[Pstream::myProcNo()][bbI];

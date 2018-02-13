@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
         \f]
 
     The methods are defined in terms of the effective time-step \f$\Delta
-    t_e\f$ by which the explicit rate is multipled. The effective time-step is
+    t_e\f$ by which the explicit rate is multiplied. The effective time-step is
     a function of the actual time step and the implicit coefficient, which must
     be implemented in each derived scheme.
 

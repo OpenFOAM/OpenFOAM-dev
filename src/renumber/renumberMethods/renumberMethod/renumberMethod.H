@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ public:
 
         //- Return the order in which cells need to be visited, i.e.
         //  from ordered back to original cell label.
-        //  Addresing in losort addressing (= neighbour + offsets into
+        //  Addressing in losort addressing (= neighbour + offsets into
         //  neighbour)
         virtual labelList renumber
         (

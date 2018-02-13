@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,7 +207,7 @@ public:
 
 
 // This function is added to overide the hack in pointPatchField.H
-// which enables simple backward compatability with verions using
+// which enables simple backward compatibility with verions using
 // referenceLevel in GeometicField
 template<class Type>
 tmp<Field<Type>> operator+

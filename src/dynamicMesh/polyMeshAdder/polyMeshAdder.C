@@ -891,7 +891,7 @@ void Foam::polyMeshAdder::mergePointZones
     // Zone(s) per point. Two levels: if only one zone
     // stored in pointToZone. Any extra stored in additionalPointToZones.
     // This is so we only allocate labelLists per point if absolutely
-    // necesary.
+    // necessary.
     labelList pointToZone(nAllPoints, -1);
     labelListList addPointToZones(nAllPoints);
 
@@ -1216,7 +1216,7 @@ void Foam::polyMeshAdder::mergeCellZones
     // Zone(s) per cell. Two levels: if only one zone
     // stored in cellToZone. Any extra stored in additionalCellToZones.
     // This is so we only allocate labelLists per cell if absolutely
-    // necesary.
+    // necessary.
     labelList cellToZone(nAllCells, -1);
     labelListList addCellToZones(nAllCells);
 

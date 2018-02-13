@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         |2011 OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,7 +140,7 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
         }
     }
 
-    // Construct (but not necesarily returned)
+    // Construct (but not necessarily returned)
     autoPtr<pointPatchField<Type>> pfPtr(cstrIter()(p, iF, dict));
 
     if

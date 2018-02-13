@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -570,7 +570,7 @@ int main(int argc, char *argv[])
 
     // Create 0 sized mesh to do all the generation of zero sized
     // fields on processors that have zero sized meshes. Note that this is
-    // only nessecary on master but since polyMesh construction with
+    // only necessary on master but since polyMesh construction with
     // Pstream::parRun does parallel comms we have to do it on all
     // processors
     autoPtr<fvMeshSubset> subsetterPtr;

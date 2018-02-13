@@ -365,7 +365,7 @@ enum  z_matset_via_file_type
 #define DATA_TARGET_MASK      0x0000000f
 
 /* ---------------------------------------
- *  Failed elemenet enums
+ *  Failed element enums
  * --------------------------------------- */
 
 enum z_element_failure_criteria

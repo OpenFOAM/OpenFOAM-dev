@@ -110,7 +110,7 @@ void Foam::blockMesh::calcMergeInfo()
         // point to point distance on the block face.
         // At the same time merge collated points on the block's faces
         // (removes boundary poles etc.)
-        // Collated points detected by initally taking a constant factor of
+        // Collated points detected by initially taking a constant factor of
         // the size of the block.
 
         boundBox bb(blockCells[blockPlabel].points(blockFaces, blockPoints));

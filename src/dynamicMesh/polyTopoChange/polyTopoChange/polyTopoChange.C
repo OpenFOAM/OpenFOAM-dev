@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1643,7 +1643,7 @@ void Foam::polyTopoChange::resetZones
             }
         }
 
-        // Reset the addresing on the zone
+        // Reset the addressing on the zone
         newMesh.pointZones().clearAddressing();
         forAll(newMesh.pointZones(), zoneI)
         {
@@ -1752,7 +1752,7 @@ void Foam::polyTopoChange::resetZones
         }
 
 
-        // Reset the addresing on the zone
+        // Reset the addressing on the zone
         newMesh.faceZones().clearAddressing();
         forAll(newMesh.faceZones(), zoneI)
         {
@@ -1846,7 +1846,7 @@ void Foam::polyTopoChange::resetZones
             }
         }
 
-        // Reset the addresing on the zone
+        // Reset the addressing on the zone
         newMesh.cellZones().clearAddressing();
         forAll(newMesh.cellZones(), zoneI)
         {

@@ -1,15 +1,15 @@
 /*
-EXTENDED THIRD MILLENIUM IDEAL GAS AND CONDENSED PHASE THERMOCHEMICAL DATABASE
+EXTENDED THIRD MILLENNIUM IDEAL GAS AND CONDENSED PHASE THERMOCHEMICAL DATABASE
 FOR COMBUSTION WITH UPDATES FROM ACTIVE THERMOCHEMICAL TABLES
 Authors: Elke Goos, Alexander Burcat and Branko Ruscic.
 
-It is strictly forbiden to include this database as is or parts of it in any
+It is strictly forbidden to include this database as is or parts of it in any
 commercial software firmware or hardware without permission from the authors.
 Contact: Elke.Goos@dlr.de
 
 *WARNING***The original 7-coeficient polynomials can accept molecules
 containing only four different elements. The new CHEMKIN program was changed to
-accept polynomials with 5 diferent elements. See the CHEMKIN manual.
+accept polynomials with 5 different elements. See the CHEMKIN manual.
 Where the fifth element exist, the new Chemkin convention was folowed.
 
 This file was generated from therm.dat provided in this directory.

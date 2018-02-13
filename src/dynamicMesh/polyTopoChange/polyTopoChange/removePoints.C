@@ -467,7 +467,7 @@ void Foam::removePoints::updateMesh(const mapPolyMesh& map)
                 {
                     FatalErrorInFunction
                         << "Old face " << savedFaceLabels_[localI]
-                        << " seems to have dissapeared."
+                        << " seems to have disappeared."
                         << abort(FatalError);
                 }
                 savedFaceLabels_[localI] = newFacei;
@@ -493,7 +493,7 @@ void Foam::removePoints::updateMesh(const mapPolyMesh& map)
                     {
                         FatalErrorInFunction
                             << "Old point " << pointi
-                            << " seems to have dissapeared."
+                            << " seems to have disappeared."
                             << abort(FatalError);
                     }
                 }

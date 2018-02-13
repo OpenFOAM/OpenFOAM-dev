@@ -274,7 +274,7 @@ class hexRef8
             polyTopoChange& meshMod
         ) const;
 
-        //- Store vertices from startFp upto face split point.
+        //- Store vertices from startFp up to face split point.
         //  Used when splitting face into 4.
         void walkFaceToMid
         (

@@ -771,7 +771,7 @@ Foam::pointIndexHit Foam::snappySnapDriver::findMultiPatchPoint
                     label& patch = normalToPatch[faceToNormalBin[i]];
                     if (patch == -1)
                     {
-                        // First occurence
+                        // First occurrence
                         patch = patchIDs[i];
                     }
                     else if (patch == -2)
@@ -3391,7 +3391,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurfaceFeature
         pp.meshPoints(),
         patchDisp,
         minMagSqrEqOp<point>(),         // combine op
-        vector(great, great, great)     // null value (note: cant use vGreat)
+        vector(great, great, great)     // null value (note: can't use vGreat)
     );
 
     return patchDisp;

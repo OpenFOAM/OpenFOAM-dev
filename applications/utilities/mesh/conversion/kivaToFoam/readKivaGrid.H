@@ -363,7 +363,7 @@ if
 
     if (pFaces[LINER][0].size() != newLinerFaces.size())
     {
-        Info<< "Transfered " << pFaces[LINER][0].size() - newLinerFaces.size()
+        Info<< "Transferred " << pFaces[LINER][0].size() - newLinerFaces.size()
             << " faces from liner region to cylinder head" << endl;
         pFaces[LINER][0] = newLinerFaces;
     }
@@ -392,7 +392,7 @@ if
 
     if (pFaces[CYLINDERHEAD][0].size() != newCylinderHeadFaces.size())
     {
-        Info<< "Transfered faces from cylinder-head region to linder" << endl;
+        Info<< "Transferred faces from cylinder-head region to linder" << endl;
         pFaces[CYLINDERHEAD][0] = newCylinderHeadFaces;
     }
 }

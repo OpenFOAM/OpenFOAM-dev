@@ -13,7 +13,7 @@ Notes for fluentMeshToFoam with zone preservation
     Writes all regions to cellZones preserving Fluent names
     Writes all region internal face to faceZones preserving Fluent names
     lines: 1545 - 1667
-    Zones are usefull for porous media and MRF calculations
+    Zones are useful for porous media and MRF calculations
 
 2. Zone Access
     - Zones are simple lists of label lists that can be accessed from polyMesh

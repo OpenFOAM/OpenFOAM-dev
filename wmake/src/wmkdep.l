@@ -3,7 +3,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2011-2016 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2011-2018 OpenFOAM Foundation
     \\/      M anipulation   |
 ------------------------------------------------------------------------------
 License
@@ -216,7 +216,7 @@ int main(int argc, char* argv[])
 
     /*
      * initialise depFile to zero and use strncat rather than strncpy
-     * because there is a bug in the SGI strncat that if 0 preceeds the '.'
+     * because there is a bug in the SGI strncat that if 0 precedes the '.'
      * it inserts a space
      */
     depFile = (char*)malloc(strlen(sourceFile) + 20);
@@ -365,7 +365,7 @@ void nextFile(const char* fileName)
         fflush(stdout);
         fflush(stderr);
 
-        /* only report the first occurance */
+        /* only report the first occurrence */
         lookUp(visitedFiles, fileName);
     }
     else

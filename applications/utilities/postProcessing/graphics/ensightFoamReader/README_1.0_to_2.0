@@ -14,7 +14,7 @@ You should consider it if:
   - you want to provide your own "border" elements (as opposed to EnSight's
                                                     computation of them)
 
-As an indication of the differences that might be realized in efficency,
+As an indication of the differences that might be realized in efficiency,
 consider the following comparison on an unstructured model consisting of:
 
 1,639,058 nodes
@@ -95,7 +95,7 @@ EnSight must do a fair amount of work to get data provided in the manner
 described above into the form that it uses internally. There is mapping that
 has to be setup and maintained between the global arrays and the local part
 arrays so that updating over time can be accomplished efficiently. There is
-hashing that is required in order to deal efficently with node ids.
+hashing that is required in order to deal efficiently with node ids.
 
 All of this leads to a considerable amount of temporary memory and processing,
 in order to get a model read into EnSight.
@@ -115,7 +115,7 @@ API 2.0 deals with:
 API 2.0 requires that the coordinates and corresponding nodal variables be
 provided per part. This eliminates the global to local mapping with all its
 associated temporary memory and processing time. The connectivity of the
-elements in each part reference the node indicies of its own (one-based) part
+elements in each part reference the node indices of its own (one-based) part
 coordinate array.  The connectivity of the elements do not reference the nodes
 according to node ids.  Node ids (and element ids for that matter) are purely
 labels for screen display and for query operations within EnSight. This
@@ -354,7 +354,7 @@ USERD_get_element_ids_for_part              USERD_get_part_element_ids_by_type
                             (Required) ->   USERD_get_border_availability
                       (Can be a dummy) ->   USERD_get_border_elements_by_type
 
-     transient model allocation efficency:
+     transient model allocation efficiency:
                       (Can be a dummy) ->   USERD_get_maxsize_info
 
      Possible use with Server-of-Servers:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,11 +166,11 @@ protected:
             //- Viscosity model
             autoPtr<filmViscosityModel> viscosity_;
 
-            //- Heat transfer coefficient bewteen film surface and primary
+            //- Heat transfer coefficient between film surface and primary
             //  region [W/m2/K]
             autoPtr<heatTransferModel> htcs_;
 
-            //- Heat transfer coefficient bewteen wall and film [W/m2/K]
+            //- Heat transfer coefficient between wall and film [W/m2/K]
             autoPtr<heatTransferModel> htcw_;
 
             //- Phase change

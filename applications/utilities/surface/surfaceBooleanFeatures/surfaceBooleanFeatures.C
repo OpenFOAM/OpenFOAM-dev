@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,10 +61,10 @@ Description
 
     @endverbatim
 
-    When the operation is peformed - for union, all of the edges generates where
-    one surfaces cuts another are all "internal" for union, and "external" for
-    intersection, b - a and a - b.  This has been assumed, formal (dis)proof is
-    invited.
+    When the operation is performed - for union, all of the edges generates
+    where one surfaces cuts another are all "internal" for union, and "external"
+    for intersection, b - a and a - b.  This has been assumed, formal (dis)proof
+    is invited.
 
 \*---------------------------------------------------------------------------*/
 

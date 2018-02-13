@@ -82,7 +82,7 @@ This file also contains guidance on necessary changes to modify an existing
 ****************************************************************************
 Note: A default dummy_gold reader and an Ensight Gold example of this new 2.0
       user defined reader API has been included with your EnSight release.
-      Also, the SILO reader included in the release utilizes the 2.0 API. 
+      Also, the SILO reader included in the release utilizes the 2.0 API.
 
       And while not identical, the API 1.0 readers might be useful to
       examine as examples.  Many of the routines are the same or similar.
@@ -115,10 +115,10 @@ The process for producing a user defined reader is:
         You may find it useful to place your library source in this area as
         well, but are not limited to this location.
 
- * ===>	The descriptions of each library routine and the order that the
+ * ===> The descriptions of each library routine and the order that the
         routines are called, which is provided in this file, along with
         the example libraries, should make it possible for you to produce
-        code for your own data reader.	
+        code for your own data reader.
 
 
 2. Produce the dynamic shared library.
@@ -166,7 +166,7 @@ The process for producing a user defined reader is:
 
    If you choose to use a different build environment for your reader,
    you should take care to use compatible compilation flags to ensure
-   compatibilty with the EnSight executables, most notably on the SGI
+   compatibility with the EnSight executables, most notably on the SGI
    and HP-UX 11.0 platforms, which should use the following flags:
 
       sgi_6.2_o32: -mips2
@@ -260,7 +260,7 @@ The process for producing a user defined reader is:
    location, and users can set the ENSIGHT7_READER variable to access them:
 
       setenv ENSIGHT7_READER /usr/local/lib/e7readers
-  
+
    A user working on a new reader may compile the reader and place it in
    a directory specified by the library path:
 
@@ -354,7 +354,7 @@ Order Routines are called
 
 The various main operations are given basically in the order they will
 be performed.  Within each operation, the order the routines will be
-called is given.  
+called is given.
 
 1. Setting name in the gui, and specifying one or two input fields
 
@@ -399,7 +399,7 @@ called is given.
 
         USERD_get_number_of_variables
         USERD_get_gold_variable_info
-              
+
 6. Part building (per part created)
 
         USERD_set_time_set_and_step
@@ -417,12 +417,12 @@ called is given.
                                        dialog is closed)
 
 7. Loading Variables
-          
+
         constants:
         ---------
         USERD_set_time_set_and_step
         USERD_get_constant_val
-          
+
         scalars/vectors/tensors:
         ------------------------
         USERD_get_descrip_lines
@@ -457,7 +457,7 @@ called is given.
         USERD_get_border_availability        (If border representation
         USERD_get_border_elements_by_type     is selected)
 
-  
+
 9. Node or Element queries over time
 
         USERD_get_var_value_at_specific
@@ -470,7 +470,7 @@ Detailed Specifications
 Include files:
 --------------
 The following header file is required in any file containing these library
-routines. 
+routines.
 
        #include "global_extern.h"
 
@@ -594,9 +594,9 @@ USERD_get_block_coords_by_component
    ---------
    (IN)  block_number            = The block part number
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
 
@@ -640,9 +640,9 @@ USERD_get_block_iblanking
    ---------
    (IN)  block_number            = The block part number
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
 
@@ -694,9 +694,9 @@ USERD_get_border_availability
    ---------
    (IN)  part_number             = The part number
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
 
@@ -727,7 +727,7 @@ USERD_get_border_elements_by_type
 
    Description:
    -----------
-   Provides border element connectivity and parent information. 
+   Provides border element connectivity and parent information.
 
    Specification:
    -------------
@@ -746,9 +746,9 @@ USERD_get_border_elements_by_type
    ---------
    (IN)  part_number           = The part number
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
 
@@ -796,7 +796,7 @@ USERD_get_border_elements_by_type
                                 (Array will have been allocated
                                  num_of_elements of the type long)
 
-   
+
    Notes:
    -----
    * Not called unless USERD_get_border_availability returned Z_OK
@@ -898,7 +898,7 @@ USERD_get_dataset_query_file_info
                              (Typically obtained with a call to the
                               "stat" system routine) (Is a long)
 
-      qfiles[].timemod     = The time the file was last modified 
+      qfiles[].timemod     = The time the file was last modified
                              (Z_MAXTIMLEN is the dimensioned length
                               of this string)
                              (Typically obtained with a call to the
@@ -998,7 +998,7 @@ USERD_get_element_label_status
          on a per part, per type basis, if TRUE status is returned here.
 
        For structured parts, EnSight will assign ids if you return a
-         status of TRUE here.  You cannot assign them youself!!
+         status of TRUE here.  You cannot assign them yourself!!
 
 
 --------------------------------------------------------------------
@@ -1014,7 +1014,7 @@ USERD_get_geom_timeset_number -
 
    Returns:
    -------
-   Geom_timeset_number = The timeset number that will be used for geometry.   
+   Geom_timeset_number = The timeset number that will be used for geometry.
                          For example, if USERD_get_number_of timesets
                          returns 2, the valid timeset numbers would be
                          1 or 2.
@@ -1056,30 +1056,30 @@ USERD_get_gold_part_build_info
    ---------
     (OUT) part_id                = Array containing the external part
                                    ids for each of the model parts.
-  
+
                                    IMPORTANT:
                                     Parts numbers must be >= 1, because
                                     of the way they are used in the GUI
-  
+
                *******************************************
                 The ids provided here are the numbers by
                 which the parts will be referred to in the
                 GUI (if possible). They are basically
                 labels as far as you are concerned.
-  
+
                 Note: The part numbers you pass to routines
                 which receive a part_number or block_number
                 or which_part as an argument are the 1-based
                 table index of the parts!
-  
+
                 example:  If Numparts_available = 3
-  
+
                           Table index        part_id
                           -----------        -------
                            1                  13
                            2                  57
                            3                  125
-  
+
                            ^                   ^
                            |                   |
                            |                    These are placed in:
@@ -1091,7 +1091,7 @@ USERD_get_gold_part_build_info
                             These implied table indices are the part_number,
                             block_number, or which_part numbers that you would
                             pass to routines like:
-  
+
                            USERD_get_part_coords(int part_number,...
                            USERD_get_part_node_ids(int part_number,...
                            USERD_get_part_elements_by_type(int part_number,...
@@ -1108,7 +1108,7 @@ USERD_get_gold_part_build_info
                                                            int which_node_or_elem,
                                                            int which_part,...
                ********************************************
-  
+
                                     (Array will have been allocated
                                      Numparts_available long)
 
@@ -1130,7 +1130,7 @@ USERD_get_gold_part_build_info
                                    long)
 
    (OUT) number_of_nodes        = Number of unstructured nodes in the part
- 
+
                                    (Array will have been allocated
                                     Numparts_available long)
 
@@ -1263,23 +1263,23 @@ USERD_get_gold_variable_info
                                             Z_PER_ELEM
 
    (OUT) var_complex          = TRUE if complex, FALSE otherwise
- 
+
                                 (Array will have been allocated
                                  Num_variables long)
- 
+
    (OUT) var_ifilename        = Variable imaginary filenames (if complex)
- 
+
                                 (Array will have been allocated
                                  Num_variables by Z_BUFL long)
 
    (OUT) var_freq             = complex frequency  (if complex)
- 
+
                                 (Array will have been allocated
                                  Num_variables long)
- 
+
    (OUT) var_contran          = TRUE if constant changes per time step
                                 FALSE if constant truly same at all time steps
- 
+
                                 (Array will have been allocated
                                  Num_variables long)
 
@@ -1353,7 +1353,7 @@ USERD_get_maxsize_info
    ---------
    (OUT) max_number_of_nodes    = Maximum number of unstructured nodes
                                   in the part (over all time).
- 
+
                                    (Array will have been allocated
                                     Numparts_available long)
 
@@ -1462,7 +1462,7 @@ USERD_get_name_of_reader
    Specification:
    -------------
    int USERD_get_name_of_reader(char reader_name[Z_MAX_USERD_NAME],
-				int *two_fields)
+                int *two_fields)
 
    Returns:
    -------
@@ -1475,8 +1475,8 @@ USERD_get_name_of_reader
                               (max length is Z_MAX_USERD_NAME, which is 20)
 
    (OUT) *two_fields          = FALSE if only one data field required
-				      in the data dialog of EnSight.
-				TRUE if two data fields required.
+                      in the data dialog of EnSight.
+                TRUE if two data fields required.
 
    Notes:
    -----
@@ -1650,37 +1650,37 @@ USERD_get_number_of_timesets
 
    * If you have a static model, both geometry and variables, you should
      return a value of zero.
- 
+
    * If you have a transient model, then you should return one or more.
- 
+
    For example:
- 
+
       Geometry    Variables                                 No. of timesets
       ---------   ------------------------------            ---------------
       static      static                                      0
       static      transient, all using same timeset           1
- 
+
       transient   transient, all using same timeset as geom   1
- 
+
       static      transient, using 3 different timesets       3
- 
+
       transient   transient, using 3 different timesets and
                              none of them the same as the
                              geometry timeset                 4
           etc.
- 
+
    NOTE: ALL GEOMETRY MUST USE THE SAME TIMESET!!! You will have to provide
                                                    the timeset number to use
                                                    for geometry in:
                                                USERD_get_geom_timeset_number
- 
+
          Variables can use the same timeset as the geometry, or can use
          other timesets. More than one variable can use the same timeset.
- 
+
    example:  changing geometry at 5 steps, 0.0, 1.0, 2.0, 3.0, 4.0
              variable 1 provided at these same five steps
              variable 2 provided at 3 steps, 0.5, 1.25, 3.33
- 
+
         This routine should return a value of 2, because only
         two different timesets are needed. Timeset 1 would be for the
         geometry and variable 1 (they both use it). Timeset 2 would
@@ -1742,9 +1742,9 @@ USERD_get_part_coords
    ---------
    (IN)  part_number             = The part number
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
 
@@ -1810,9 +1810,9 @@ USERD_get_part_element_ids_by_type
    ---------
    (IN)  part_number             = The part number
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
 
@@ -1885,9 +1885,9 @@ USERD_get_part_elements_by_type
    ---------
    (IN)  part_number           = The part number
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
 
@@ -1928,7 +1928,7 @@ USERD_get_part_elements_by_type
                               conn_array[100][4]  when called with Z_QUA04
 
                               conn_array[30][8]   when called with Z_HEX08
-   
+
    Notes:
    -----
    * Not called unless Num_unstructured_parts is > 0
@@ -1956,9 +1956,9 @@ USERD_get_part_node_ids
    ---------
    (IN)  part_number             = The part number
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
 
@@ -2058,7 +2058,7 @@ USERD_get_sol_times
 
    Description:
    -----------
-   Get the solution times associated with each time step for 
+   Get the solution times associated with each time step for
    desired timeset.
 
    Specification:
@@ -2074,7 +2074,7 @@ USERD_get_sol_times
    Arguments:
    ---------
    (IN)  timeset_number     = the timeset number
- 
+
                               For example: If USERD_get_number_of_timesets
                                            returns 2, the valid
                                            timeset_number's would be 1 and 2
@@ -2110,7 +2110,7 @@ USERD_get_timeset_description -
    Arguments:
    ---------
    (IN)  timeset_number     = the timeset number
- 
+
                               For example: If USERD_get_number_of_timesets
                                            returns 2, the valid
                                            timeset_number's would be 1 and 2
@@ -2165,14 +2165,14 @@ USERD_get_var_by_component
    (IN)  which_part                 Since EnSight Version 7.4
                                     -------------------------
                                   = The part number
-  
+
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
-  
+
                                     Prior to EnSight Version 7.4
                                     ----------------------------
                                   = The part id   This is the part_id label loaded
@@ -2207,22 +2207,22 @@ USERD_get_var_by_component
 
    (IN)  imag_data               = TRUE if imag component
                                    FALSE if real component
- 
+
    (IN)  component               = The component: (0       if Z_SCALAR)
                                                   (0 - 2   if Z_VECTOR)
                                                   (0 - 5   if Z_TENSOR)
                                                   (0 - 8   if Z_TENSOR9)
- 
-                                 * 6 Symmetric Indicies, 0:5    *
+
+                                 * 6 Symmetric Indices, 0:5    *
                                  * ---------------------------- *
                                  *     | 11 12 13 |   | 0 3 4 | *
                                  *     |          |   |       | *
                                  * T = |    22 23 | = |   1 5 | *
                                  *     |          |   |       | *
                                  *     |       33 |   |     2 | *
- 
 
-                                 * 9 General   Indicies, 0:8    *
+
+                                 * 9 General   Indices, 0:8    *
                                  * ---------------------------- *
                                  *     | 11 12 13 |   | 0 3 4 | *
                                  *     |          |   |       | *
@@ -2230,7 +2230,7 @@ USERD_get_var_by_component
                                  *     |          |   |       | *
                                  *     | 31 32 33 |   | 7 8 2 | *
 
-   (OUT) var_array 
+   (OUT) var_array
 
       -----------------------------------------------------------------------
       (IMPORTANT: this array is 1-based for both Z_PER_NODE and Z_PER_ELEM!!!)
@@ -2252,7 +2252,7 @@ USERD_get_var_by_component
             if Z_PER_ELEM:    = 1D array containing variable component
                                 value for each element of a particular
                                 part and type.
-                                    
+
                               (Array will have been allocated
                                (number_of_elements[which_part][which_type] + 1)
                                 long.  See USERD_get_gold_part_build_info)
@@ -2314,7 +2314,7 @@ USERD_get_var_value_at_specific
 
               If Z_PER_NODE:
                 = The node number.  This is not the id, but is
-                                    the index of the global node 
+                                    the index of the global node
                                     list (1 based), or the block's
                                     node list (1 based).
 
@@ -2345,14 +2345,14 @@ USERD_get_var_value_at_specific
    (IN)  which_part                 Since EnSight Version 7.4
                                     -------------------------
                                   = The part number
-  
+
                                     (1-based index of part table, namely:
-  
+
                                        1 ... Numparts_available.
-  
+
                                      It is NOT the part_id that
                                      is loaded in USERD_get_gold_part_build_info)
-  
+
                                     Prior to EnSight Version 7.4
                                     ----------------------------
                                   = The part id   This is the part_id label loaded
@@ -2420,8 +2420,8 @@ USERD_set_filenames
 
    (IN) filename_2   = the filename entered into the result
                          field of the data dialog.
-			 (If the two_fields flag in USERD_get_name_of_reader
-			  is FALSE, this will be null string)
+             (If the two_fields flag in USERD_get_name_of_reader
+              is FALSE, this will be null string)
 
    (IN) the_path     = the path info from the data dialog.
                        Note: filename_1 and filename_2 have already
@@ -2470,7 +2470,7 @@ USERD_set_server_number
      something that you can take advantage of.  If your data is already
      partitioned in some manner, such that you can access the proper
      portions using this information.
- 
+
      For all non-SOS uses, this will simply be 1 of 1
 
 
@@ -2496,7 +2496,7 @@ USERD_set_time_set_and_step
    Arguments:
    ---------
    (IN) timeset_number  = the timeset number (1 based).
- 
+
                           For example:  If USERD_get_number_of_timesets
                                         returns 2, the valid timeset_number's
                                         would be 1 and 2.

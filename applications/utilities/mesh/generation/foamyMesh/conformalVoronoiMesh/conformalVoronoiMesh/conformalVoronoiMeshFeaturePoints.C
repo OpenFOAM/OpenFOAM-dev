@@ -532,7 +532,7 @@ void Foam::conformalVoronoiMesh::createExternalEdgePointGroup
     );
 
     // Insert the slave points by reflecting refPt in both faces.
-    // with each slave refering to the master
+    // with each slave referring to the master
 
     Foam::point reflectedA = refPt + 2*ppDist*nA;
     pts.append

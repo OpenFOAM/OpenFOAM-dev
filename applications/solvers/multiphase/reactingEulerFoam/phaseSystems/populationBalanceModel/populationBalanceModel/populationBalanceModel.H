@@ -257,10 +257,10 @@ class populationBalanceModel
         //- Drift rate
         autoPtr<volScalarField> driftRate_;
 
-        //- Ratio between sucessive representative volumes
+        //- Ratio between successive representative volumes
         autoPtr<volScalarField> rx_;
 
-        //- Ratio between sucessive class widths
+        //- Ratio between successive class widths
         autoPtr<volScalarField> rdx_;
 
         //- Zeroeth order models

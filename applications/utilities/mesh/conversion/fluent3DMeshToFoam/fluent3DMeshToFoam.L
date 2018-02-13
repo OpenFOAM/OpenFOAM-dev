@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -927,7 +927,7 @@ int main(int argc, char *argv[])
     fluentGroupToFoamPatch.insert("fan");
 
 
-    // Create intial empty polyMesh
+    // Create initial empty polyMesh
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     polyMesh mesh

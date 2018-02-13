@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Class which represents a phase with a thermodynamic model. Provides access
     to the thermodynamic variables. Note that the thermo model itself is not
-    returned as this class could be substituted in the hierarcy for one which
+    returned as this class could be substituted in the hierarchy for one which
     mirrors the functionality, but does not include a thermo model; an
     incompressible phase model, for example.
 

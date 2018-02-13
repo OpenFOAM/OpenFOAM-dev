@@ -76,7 +76,7 @@ void CalcFPSDeltaT(){
         }
         DeltaT = (float)(current-last)/CLOCKS_PER_SEC;
         if(current==last) {
-                DeltaT = 0.1f/CLOCKS_PER_SEC;  // it just cant be 0
+                DeltaT = 0.1f/CLOCKS_PER_SEC;  // it just can't be 0
         }
         // if(DeltaT>1.0) DeltaT=1.0;
         FPS = (float)rv;

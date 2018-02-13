@@ -242,7 +242,7 @@ label markBorderPoints
 }
 
 
-// Get minumum length of edges connected to pointi
+// Get minimum length of edges connected to pointi
 // Serves to get some local length scale.
 scalar minEdgeLen(const triSurface& surf, const label pointi)
 {

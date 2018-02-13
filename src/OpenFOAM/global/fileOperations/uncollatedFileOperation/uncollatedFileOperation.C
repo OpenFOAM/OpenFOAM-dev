@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -598,7 +598,7 @@ bool Foam::fileOperations::uncollatedFileOperation::read
     if (masterOnly && Pstream::parRun())
     {
         // Master reads headerclassname from file. Make sure this gets
-        // transfered as well as contents.
+        // transferred as well as contents.
         Pstream::scatter(io.headerClassName());
         Pstream::scatter(io.note());
 

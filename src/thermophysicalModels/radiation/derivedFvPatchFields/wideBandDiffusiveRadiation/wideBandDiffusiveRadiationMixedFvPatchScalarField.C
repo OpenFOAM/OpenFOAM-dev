@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,7 +222,7 @@ updateCoeffs()
                   + temissivity[facei]*Eb[facei]
                 )/pi;
 
-            // Emmited heat flux from this ray direction
+            // Emitted heat flux from this ray direction
             qem[facei] = refValue()[facei]*nAve[facei];
         }
         else

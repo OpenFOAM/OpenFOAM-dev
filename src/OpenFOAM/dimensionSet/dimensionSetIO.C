@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -408,7 +408,7 @@ Foam::Istream& Foam::dimensionSet::read
 {
     multiplier = 1.0;
 
-    // Read begining of dimensionSet
+    // Read beginning of dimensionSet
     token startToken(is);
 
     if (startToken != token::BEGIN_SQR)
@@ -503,7 +503,7 @@ Foam::Istream& Foam::dimensionSet::read
 {
     multiplier = 1.0;
 
-    // Read begining of dimensionSet
+    // Read beginning of dimensionSet
     token startToken(is);
 
     if (startToken != token::BEGIN_SQR)

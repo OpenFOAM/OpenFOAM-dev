@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Contact-angle boundary condition for multi-phase interface-capturing
-    simulations.  Used in conjuction with multiphaseSystem.
+    simulations.  Used in conjunction with multiphaseSystem.
 
 SourceFiles
     alphaContactAngleFvPatchScalarField.C
@@ -65,7 +65,7 @@ public:
         //- Limiting advancing contact angle
         scalar thetaA_;
 
-        //- Limiting receeding contact angle
+        //- Limiting receding contact angle
         scalar thetaR_;
 
 
@@ -100,7 +100,7 @@ public:
                 else return 180.0 - thetaA_;
             }
 
-            //- Return the limiting receeding contact angle
+            //- Return the limiting receding contact angle
             scalar thetaR(bool matched=true) const
             {
                 if (matched) return thetaR_;

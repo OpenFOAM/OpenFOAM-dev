@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Description
     CR:     Drag tensor (1/m)
     CT:     Turbulence generation parameter (1/m)
     Nv:     Number of obstacles in cell per unit volume (m^-2)
-    nsv:    Tensor whose diagonal indicates the number to substract from
+    nsv:    Tensor whose diagonal indicates the number to subtract from
             Nv to get the number of obstacles crossing the flow in each
             direction.
 

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -30,7 +30,7 @@
 #
 # Description
 #     Remove all .o files from the object directory tree corresponding to the
-#     current source derectory or remove only the .o file corresponding to the
+#     current source directory or remove only the .o file corresponding to the
 #     optionally specified [file].  With the -a/-all/all option the .o files
 #     are removed for all platforms rather than just the current platform.
 #

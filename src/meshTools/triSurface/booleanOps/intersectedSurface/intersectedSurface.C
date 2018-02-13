@@ -360,7 +360,7 @@ Foam::intersectedSurface::calcPointEdgeAddressing
                 << points[e.end()] << endl;
         }
 
-        Pout<< "    Constructed point-edge adressing:" << endl;
+        Pout<< "    Constructed point-edge addressing:" << endl;
         forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
             Pout<< "    vertex " << iter.key() << " is connected to edges "
@@ -488,7 +488,7 @@ Foam::label Foam::intersectedSurface::nextEdge
 
             const edge& e = edges[edgeI];
 
-            // Find out whether walk of edge from prevVert would be acceptible.
+            // Find out whether walk of edge from prevVert would be acceptable.
             if
             (
                 stat == UNVISITED
@@ -691,7 +691,7 @@ void Foam::intersectedSurface::findNearestVisited
 // other edges in the face. This routine tries to connect the loose
 // edges up to the 'proper' edges by adding two extra edges between a
 // properly connected edge and an unconnected one. Since at this level the
-// adressing is purely in form of points and a cloud of edges this can
+// addressing is purely in form of points and a cloud of edges this can
 // be easily done.
 // (edges are to existing points. Don't want to introduce new vertices here
 // since then also neighbouring face would have to be split)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ public:
             //- Return const access to the cloud owner
             inline const CloudType& owner() const;
 
-            //- Return refernce to the cloud owner
+            //- Return references to the cloud owner
             inline CloudType& owner();
 
             //- Return the mesh database

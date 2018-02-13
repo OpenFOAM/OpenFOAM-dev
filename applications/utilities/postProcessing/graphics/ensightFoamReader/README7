@@ -52,22 +52,22 @@ The process for producing a user defined reader is:
         Reads FlowScience "flsgrf" flow3d data.
           $ENSIGHT6_HOME/ensight62/user_defined_src/readers/flow3d
 
-        Reads Tecplot "plt" files.        
+        Reads Tecplot "plt" files.
           $ENSIGHT6_HOME/ensight62/user_defined_src/readers/tecplot
 
-        Reads Common File Format data.        
+        Reads Common File Format data.
           $ENSIGHT6_HOME/ensight62/user_defined_src/readers/cff
 
-        Reads Cobalt grid and picture/restart file data.        
+        Reads Cobalt grid and picture/restart file data.
           $ENSIGHT6_HOME/ensight62/user_defined_src/readers/cobalt
- 
+
         You may find it useful to place your library source in this area as
         well, but are not limited to this location.
 
- * ===>	The descriptions of each library routine and the order that the
-	routines are called, which is provided in this file, along with
- 	the example libraries, should make it possible for you to produce
-	code for your own data reader.	
+ * ===> The descriptions of each library routine and the order that the
+    routines are called, which is provided in this file, along with
+    the example libraries, should make it possible for you to produce
+    code for your own data reader.
 
 
 2. Produce the dynamic shared library.
@@ -77,7 +77,7 @@ The process for producing a user defined reader is:
         for each machine type.  Operating system level differences could cause
         you to have to modify these makefiles slightly, but the general
         process is very straightforward.  Note that for the SGI environment you
-        must compile with the following flags to ensure compatability with
+        must compile with the following flags to ensure compatibility with
         the EnSight server:  Irix_5.3     -mips1
                              Irix_6.2     -mips2
                              Irix_6.5_n32 -mips3
@@ -139,11 +139,11 @@ The process for producing a user defined reader is:
    You can use any of the other provided readers by changing this variable.
    For example, to use the dytran reader:
 
-     setenv ENSIGHT6_READER dytran 
+     setenv ENSIGHT6_READER dytran
 
    Thus, you can use your reader in the same way.  If you provided "mydata",
    change ENSIGHT6_READER to:
- 
+
      setenv ENSIGHT6_READER mydata
 
 
@@ -187,7 +187,7 @@ Generally Needed for BLOCK data
 USERD_get_block_coords_by_component             block coordinates
 USERD_get_block_iblanking                       block iblanking values
 USERD_get_block_scalar_values                   block scalar variables
-USERD_get_block_vector_values_by_component      block vector variables 
+USERD_get_block_vector_values_by_component      block vector variables
 
 
 Generally needed for either or both kinds of data
@@ -223,7 +223,7 @@ Order Routines are called
 
 The various main operations are given basically in the order they will
 be performed.  Within each operation, the order the routines will be
-called is given.  
+called is given.
 
 1. Setting name in the gui, and specifying one or two input fields
 
@@ -254,7 +254,7 @@ called is given.
 
         USERD_get_number_of_variables
         USERD_get_variable_info
-              
+
 5. Part building (per part created)
 
         USERD_set_time_step
@@ -269,12 +269,12 @@ called is given.
                                        dialog is closed)
 
 6. Loading Variables
-          
+
         constants:
         ---------
         USERD_set_time_step
         USERD_get_constant_value
-          
+
         scalars:
         -------
         USERD_get_description_lines
@@ -309,7 +309,7 @@ called is given.
         USERD_get_element_ids_for_part
         USERD_get_block_iblanking
         USERD_get_block_coords_by_component
-  
+
 
 
 -----------------------
@@ -319,7 +319,7 @@ Detailed Specifications
 Include files:
 --------------
 The following header file is required in any file containing these library
-routines. 
+routines.
 
        #include "global_extern.h"
 
@@ -514,7 +514,7 @@ USERD_get_block_scalar_values
                                    for each node or element.
 
                                    Array will have been allocated:
-        
+
                                    if Z_PER_NODE:
                                       i*j*k for the block long
 
@@ -573,7 +573,7 @@ USERD_get_block_vector_values_by_component
                                    component value for each node or element.
 
                                    Array will have been allocated:
-        
+
                                    if Z_PER_NODE:
                                       i*j*k for the block long
 
@@ -680,7 +680,7 @@ USERD_get_dataset_query_file_info
                              (Typically obtained with a call to the
                               "stat" system routine) (Is a long)
 
-      qfiles[].timemod     = The time the file was last modified 
+      qfiles[].timemod     = The time the file was last modified
                              (Z_MAXTIMLEN is the dimensioned length
                               of this string)
                              (Typically obtained with a call to the
@@ -783,7 +783,7 @@ USERD_get_element_connectivities_for_part
                               conn_array[Z_TRI03][25][3]
                               conn_array[Z_QUA04][100][4]
                               conn_array[Z_HEX08][30][8]
-   
+
    Notes:
    -----
    * Not called unless Num_unstructured_parts is > 0
@@ -818,7 +818,7 @@ USERD_get_element_connectivities_for_part
 
 
         And conn_array here as follows:
-                                               
+
         Triangle  Connectivity
         --------  ------------
            T1     conn_array[Z_TRI03][0][0] = 1
@@ -913,7 +913,7 @@ USERD_get_element_label_status
          on a part by part basis, if TRUE status is returned here.
 
        For structured parts, EnSight will assign ids if you return a
-         status of TRUE here.  You cannot assign them youself!!
+         status of TRUE here.  You cannot assign them yourself!!
 
 
 
@@ -983,7 +983,7 @@ USERD_get_global_coords
 
         And conn_array in USERD_get_element_connectivities_for_part
         as follows:
-                                               
+
         Triangle  Connectivity
         --------  ------------
            T1     conn_array[Z_TRI03][0][0] = 1
@@ -1037,7 +1037,7 @@ USERD_get_name_of_reader
    Specification:
    -------------
    int USERD_get_name_of_reader(char reader_name[Z_MAX_USERD_NAME],
-				int *two_fields)
+                int *two_fields)
 
    Returns:
    -------
@@ -1050,8 +1050,8 @@ USERD_get_name_of_reader
                               (max length is Z_MAX_USERD_NAME, which is 20)
 
    (OUT) *two_fields          = FALSE if only one data field required
-				      in the data dialog of EnSight.
-				TRUE if two data fields required.
+                      in the data dialog of EnSight.
+                TRUE if two data fields required.
 
    Notes:
    -----
@@ -1305,7 +1305,7 @@ USERD_get_part_build_info
              The numbers provided here are the ones by
              which the parts will be referred to in any
              of the other routines which receive a part
-             number or block number as an argument!! 
+             number or block number as an argument!!
             ********************************************
 
                                   (Array will have been allocated
@@ -1421,7 +1421,7 @@ USERD_get_scalar_values
    ---------
    (IN)  which_scalar            = The variable number (of scalar type)
 
-   (IN)  which_part 
+   (IN)  which_part
 
             if Z_PER_NODE:         Not used
 
@@ -1433,7 +1433,7 @@ USERD_get_scalar_values
 
             if Z_PER_ELEM:       = The element type
 
-   (OUT) scalar_array 
+   (OUT) scalar_array
 
             if Z_PER_NODE:       = 1D array containing scalar values
                                     for each node.
@@ -1443,7 +1443,7 @@ USERD_get_scalar_values
 
             if Z_PER_ELEM:       = 1d array containing scalar values for
                                    each element of a particular part and type.
-                                    
+
                                    (Array will have been allocated
                                     number_of_elements[which_part][which_type]
                                     long.  See USERD_get_part_build_info)
@@ -1590,7 +1590,7 @@ USERD_get_variable_value_at_specific
 
                         If Z_PER_NODE:
                           = The node number.  This is not the id, but is
-                                              the index of the global node 
+                                              the index of the global node
                                               list (1 based), or the block's
                                               node list (1 based).
 
@@ -1683,7 +1683,7 @@ USERD_get_vector_values
    ---------
    (IN)  which_vector            = The variable number
 
-   (IN)  which_part 
+   (IN)  which_part
 
             if Z_PER_NODE:         Not used
 
@@ -1695,7 +1695,7 @@ USERD_get_vector_values
 
             if Z_PER_ELEM:       = The element type
 
-   (OUT) vector_array 
+   (OUT) vector_array
 
             if Z_PER_NODE:       = 1D array containing vector values
                                     for each node.
@@ -1719,7 +1719,7 @@ USERD_get_vector_values
 
             if Z_PER_ELEM:       = 1d array containing vector values for
                                    each element of a particular part and type.
-                                    
+
                                  (Array will have been allocated
                                   3 by number_of_elements[which_part][which_type]
                                   long.  See USERD_get_part_build_info)
@@ -1776,8 +1776,8 @@ USERD_set_filenames
                          field of the data dialog.
    (IN) filename_2   = the filename entered into the result
                          field of the data dialog.
-			 (If the two_fields flag in USERD_get_name_of_reader
-			  is FALSE, this will be null string)
+             (If the two_fields flag in USERD_get_name_of_reader
+              is FALSE, this will be null string)
    (IN) the_path     = the path info from the data dialog.
                        Note: filename_1 and filename_2 have already
                             had the path prepended to them.  This

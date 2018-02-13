@@ -383,7 +383,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        else if (nProcs && !region)
+        else if (nProcs && !region && !decomposeFieldsOnly)
         {
             FatalErrorInFunction
                 << "Case is already decomposed with " << nProcs

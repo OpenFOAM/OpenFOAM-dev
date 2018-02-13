@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -418,7 +418,7 @@ public:
             virtual void updateCoeffs();
 
             //- Update the coefficients associated with the patch field
-            //  with a weight field (0..1). This weight field is ususally
+            //  with a weight field (0..1). This weight field is usually
             //  provided as the amount of geometric overlap for 'duplicate'
             //  patches. Sets Updated to true
             virtual void updateWeightedCoeffs(const scalarField& weights);

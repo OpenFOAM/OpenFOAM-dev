@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ Class
     Foam::sigInt
 
 Description
-    Signal handler for INT interupt.
+    Signal handler for INT interrupt.
 
-    The standard interupt handler is overridden to ensure that the
+    The standard interrupt handler is overridden to ensure that the
     runningJob file is removed.
 
 See also

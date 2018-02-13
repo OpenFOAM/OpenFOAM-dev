@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ public:
     //  perpendicular bisector of the segment linking 0 to y2
     //      H' = {y| u^T.(y-yh) = 0},
     //  where yh = y2/2.
-    //  In the orginal composition space, the hyperplane H is defined by
+    //  In the orignal composition space, the hyperplane H is defined by
     //      H = {y| v^T(phi-phih) = 0},
     //  where phih = phi0 + L^-T.yh = (phi0 + phiq) / 2 and v is
     //            L.L^T (phiq-phi0)

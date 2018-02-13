@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -369,7 +369,7 @@ Foam::volPointInterpolation::interpolate
 
     if (!cache || vf.mesh().changing())
     {
-        // Delete any old occurences to avoid double registration
+        // Delete any old occurrences to avoid double registration
         if (db.objectRegistry::template foundObject<PointFieldType>(name))
         {
             PointFieldType& pf =

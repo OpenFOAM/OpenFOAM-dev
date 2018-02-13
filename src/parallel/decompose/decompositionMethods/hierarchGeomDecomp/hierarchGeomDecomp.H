@@ -104,7 +104,7 @@ class hierarchGeomDecomp
         //  wantedSize. Binary search.
         static void findBinary
         (
-            const label sizeTol,        // size difference considered acceptible
+            const label sizeTol,        // size difference considered acceptable
             const List<scalar>&,
             const label leftIndex,      // index of previous value
             const scalar leftValue,     // value at leftIndex
@@ -119,7 +119,7 @@ class hierarchGeomDecomp
         //  wantedSize. Binary search.
         static void findBinary
         (
-            const label sizeTol,        // size difference considered acceptible
+            const label sizeTol,        // size difference considered acceptable
             const List<scalar>& sortedWeightedSizes,
             const List<scalar>&,
             const label leftIndex,      // index of previous value

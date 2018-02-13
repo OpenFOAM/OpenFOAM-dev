@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,7 @@ public:
         // Mesh mover
 
             //- Move mesh using current pointDisplacement boundary values
-            //  and current dictionary settings. Return true if succesful
+            //  and current dictionary settings. Return true if successful
             //  (errors  on checkFaces less than allowable). Updates
             //  pointDisplacement.
             virtual bool move

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -257,7 +257,7 @@ bool Foam::boundaryCutter::splitFace
     else if (nSplitEdges + nModPoints == 1)
     {
         // single or multiple cuts on a single edge or single modified point
-        // Dont cut and let caller handle this.
+        // Don't cut and let caller handle this.
         Warning << "Face " << facei << " has only one edge cut " << endl;
         return false;
     }
@@ -759,7 +759,7 @@ void Foam::boundaryCutter::setRefinement
                 // Is external face so split
                 if (splitFace(facei, pointToPos, edgeToAddedPoints, meshMod))
                 {
-                    // Successfull split
+                    // Successful split
                     faceUptodate[facei] = true;
                 }
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,7 @@ public:
         //- Avoid masking the normal std::string replace
         using std::string::replace;
 
-        //- Replace first occurence of sub-string oldStr with newStr
+        //- Replace first occurrence of sub-string oldStr with newStr
         //  starting at start
         string& replace
         (
@@ -163,7 +163,7 @@ public:
             size_type start = 0
         );
 
-        //- Replace all occurences of sub-string oldStr with newStr
+        //- Replace all occurrences of sub-string oldStr with newStr
         //  starting at start
         string& replaceAll
         (
@@ -172,7 +172,7 @@ public:
             size_type start = 0
         );
 
-        //- Expand initial tildes and all occurences of environment variables
+        //- Expand initial tildes and all occurrences of environment variables
         //  Expansion includes:
         //  -# environment variables
         //    - "$VAR", "${VAR}"

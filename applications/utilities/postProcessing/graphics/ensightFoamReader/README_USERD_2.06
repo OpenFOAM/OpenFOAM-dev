@@ -48,10 +48,10 @@ reader itself.  (Can actually be added to pre-2.05 readers)
 
 
 ***>> API 2.04 additional capabilities (beyond API 2.03):
-Routines to handle failed elements.  Basically 
-a.One routine to return a flag indicating the existence of 
-  failed elements in at least one part in at least one 
-  timestep in the model.  
+Routines to handle failed elements.  Basically
+a.One routine to return a flag indicating the existence of
+  failed elements in at least one part in at least one
+  timestep in the model.
 b.A second routine to return a matrix of flags indexed by part and
   element type indicating which parts and element types have failed
   elements at the current time step.
@@ -67,7 +67,7 @@ c.Finally a third routine to return an array of flags for a given
 
 
 ****************************************************************************
-Note: Only the the Ensight Gold example reader, has been moved to 
+Note: Only the the Ensight Gold example reader, has been moved to
       this 2.06 API level.  And it is purely for an example - it does not
       actually provide a benefit.
 ****************************************************************************
@@ -99,10 +99,10 @@ The process for producing a user defined reader is:
         You may find it useful to place your library source in this area as
         well, but are not limited to this location.
 
- * ===>	The descriptions of each library routine and the order that the
+ * ===> The descriptions of each library routine and the order that the
         routines are called, which is provided in this file, along with
         the example libraries, should make it possible for you to produce
-        code for your own data reader.	
+        code for your own data reader.
 
 
 2. Produce the dynamic shared library.
@@ -150,7 +150,7 @@ The process for producing a user defined reader is:
 
    If you choose to use a different build environment for your reader,
    you should take care to use compatible compilation flags to ensure
-   compatibilty with the EnSight executables, most notably on the SGI
+   compatibility with the EnSight executables, most notably on the SGI
    and HP-UX 11.0 platforms, which should use the following flags:
 
       sgi_6.2_o32: -mips2
@@ -244,7 +244,7 @@ The process for producing a user defined reader is:
    location, and users can set the ENSIGHT7_READER variable to access them:
 
       setenv ENSIGHT7_READER /usr/local/lib/e7readers
-  
+
    A user working on a new reader may compile the reader and place it in
    a directory specified by the library path:
 
@@ -289,7 +289,7 @@ USERD_get_block_ghost_flags           block ghost cell flags
   These routines, which formerly were only for unstructured data, will now
   also be called for structured data if you specify that ids will be given
   in the USERD_get_node_label_status and USERD_get_element_label_status rotuines
-  ------------------------------------------------------------------------------ 
+  ------------------------------------------------------------------------------
   USERD_get_part_node_ids               part's node ids
   USERD_get_part_element_ids_by_type    part's element ids
 
@@ -368,7 +368,7 @@ USERD_bkup                            archive routine
 
 USERD_exit_routine                    cleanup upon exit routine
 
-USERD_get_uns_failed_params           Gets thresholds/criteria for failure  
+USERD_get_uns_failed_params           Gets thresholds/criteria for failure
 
 USERD_rigidbody_existence             Returns whether rigid body transformation
                                        data exists for the model.
@@ -391,14 +391,14 @@ Order Routines are called
 
 The various main operations are given basically in the order they will
 be performed.  Within each operation, the order the routines will be
-called is given.  
+called is given.
 
 1. Setting name in the gui, and specifying one or two input fields
 
         USERD_get_name_of_reader
         USERD_get_reader_descrip        (optional)
         USERD_get_extra_gui_numbers     (optional)
-	USERD_get_extra_gui_defaults    (optional)
+    USERD_get_extra_gui_defaults    (optional)
 
 2. Getting the reader version (also distinguishes between API's)
 
@@ -410,7 +410,7 @@ called is given.
                                     USERD_get_extra_gui_defaults routine)
         USERD_get_structured_reader_cinching
         USERD_set_server_number
-	USERD_set_extra_gui_data        (optional)
+    USERD_set_extra_gui_data        (optional)
         USERD_set_filenames
         USERD_get_number_of_timesets
         USERD_get_geom_timeset_number
@@ -445,7 +445,7 @@ called is given.
 
         USERD_get_number_of_variables
         USERD_get_gold_variable_info
-              
+
 6. Part building (per part created)
 
         both unstructured and structured:
@@ -487,12 +487,12 @@ called is given.
                                        dialog is closed)
 
 7. Loading Variables
-          
+
         constants:
         ---------
         USERD_set_time_set_and_step
         USERD_get_constant_val
-          
+
         scalars/vectors/tensors:
         ------------------------
         USERD_get_descrip_lines
@@ -536,7 +536,7 @@ called is given.
         USERD_get_border_availability        (If border representation
         USERD_get_border_elements_by_type     is selected)
 
-  
+
 9. Node or Element queries over time
 
         USERD_get_var_value_at_specific
@@ -576,7 +576,7 @@ Detailed Specifications
 Include files:
 --------------
 The following header file is required in any file containing these library
-routines. 
+routines.
 
        #include "global_extern.h"
 
@@ -823,24 +823,24 @@ USERD_get_block_ghost_flags
 
    (OUT) ghost_flags             = 1D array containing ghost flag value
                                      for each block cell.
-  
+
                                     (Array will have been allocated
                                      (i-1)*(j-1)*(k-1) for the block long)
-  
+
             possible values are:    0  = non-ghost cell  (normal cell)
                                    >0  = ghost cell
-  
+
     Notes:
     -----
     * This routine is new in the 2.01 API
 
     * This will be based on Current_time_step
-  
+
     * Only called for structured "block" parts that have some ghost cells
       as indicated by the USERD_get_ghost_in_block_flag.  The model must
       of course also have been indicated to have some ghost cells in the
       USERD_get_ghost_in_model_flag routine.
-  
+
     * It is sufficient to set the value to be 1 to flag as a ghost cell,
       but the value can be any non-zero value, so you could use it to
       indicate which block or which server (for Server-of-server use) the
@@ -908,7 +908,7 @@ USERD_get_border_elements_by_type
 
    Description:
    -----------
-   Provides border element connectivity and parent information. 
+   Provides border element connectivity and parent information.
 
    Specification:
    -------------
@@ -977,7 +977,7 @@ USERD_get_border_elements_by_type
                                 (Array will have been allocated
                                  num_of_elements of the type long)
 
-   
+
    Notes:
    -----
    * Not called unless USERD_get_border_availability returned Z_OK
@@ -1079,7 +1079,7 @@ USERD_get_dataset_query_file_info
                              (Typically obtained with a call to the
                               "stat" system routine) (Is a long)
 
-      qfiles[].timemod     = The time the file was last modified 
+      qfiles[].timemod     = The time the file was last modified
                              (Z_MAXTIMLEN is the dimensioned length
                               of this string)
                              (Typically obtained with a call to the
@@ -1186,7 +1186,7 @@ USERD_get_element_label_status
          on a per part, per type basis, if TRUE status is returned here.
 
        For structured parts, EnSight will assign ids if you return a
-         status of TRUE here.  You cannot assign them youself!!
+         status of TRUE here.  You cannot assign them yourself!!
 
    * Starting at API 2.01:
      --------------------
@@ -1213,7 +1213,7 @@ USERD_get_geom_timeset_number -
 
    Returns:
    -------
-   Geom_timeset_number = The timeset number that will be used for geometry.   
+   Geom_timeset_number = The timeset number that will be used for geometry.
                          For example, if USERD_get_number_of timesets
                          returns 2, the valid timeset numbers would be
                          1 or 2.
@@ -1329,7 +1329,7 @@ USERD_get_gold_part_build_info
                                    long)
 
    (OUT) number_of_nodes        = Number of unstructured nodes in the part
- 
+
                                    (Array will have been allocated
                                     Numparts_available long)
 
@@ -1612,23 +1612,23 @@ USERD_get_gold_variable_info
                                             Z_PER_ELEM
 
    (OUT) var_complex          = TRUE if complex, FALSE otherwise
- 
+
                                 (Array will have been allocated
                                  Num_variables long)
- 
+
    (OUT) var_ifilename        = Variable imaginary filenames (if complex)
- 
+
                                 (Array will have been allocated
                                  Num_variables by Z_BUFL long)
 
    (OUT) var_freq             = complex frequency  (if complex)
- 
+
                                 (Array will have been allocated
                                  Num_variables long)
- 
+
    (OUT) var_contran          = TRUE if constant changes per time step
                                 FALSE if constant truly same at all time steps
- 
+
                                 (Array will have been allocated
                                  Num_variables long)
 
@@ -1702,7 +1702,7 @@ USERD_get_ghosts_in_block_flag
    -----
     * This routine is new in the 2.01 API
     * This will be based on Current_time_step
-  
+
     * Intended for structured parts only, value will be ignored for
       unstructured parts
 
@@ -1726,7 +1726,7 @@ USERD_get_ghosts_in_model_flag
 
    Arguments:
    ---------
-  
+
    Notes:
    -----
     * This routine is new in the 2.01 API
@@ -1841,7 +1841,7 @@ USERD_get_maxsize_info
    ---------
    (OUT) max_number_of_nodes    = Maximum number of unstructured nodes
                                   in the part (over all time).
- 
+
                                    (Array will have been allocated
                                     Numparts_available long)
 
@@ -1964,7 +1964,7 @@ USERD_get_name_of_reader
    Specification:
    -------------
    int USERD_get_name_of_reader(char reader_name[Z_MAX_USERD_NAME],
-				int *two_fields)
+                int *two_fields)
 
    Returns:
    -------
@@ -1976,17 +1976,17 @@ USERD_get_name_of_reader
    (OUT) reader_name          = the name of the your reader or data format.
                               (max length is Z_MAX_USERD_NAME, which is 20)
 
-   (OUT) two_fields          = FALSE if only one data field is      
-                                      required.                      
-                                TRUE if two data fields required     
- 
-                                -1   if one field (Geom) required 
+   (OUT) two_fields          = FALSE if only one data field is
+                                      required.
+                                TRUE if two data fields required
+
+                                -1   if one field (Geom) required
                                      and one field (Param) is optional
                                      Param field can contain any text
                                      for example a file name, modifiers,
                                      etc. that can be used to modify the
                                      reader's behavior.
- 
+
 
    Notes:
    -----
@@ -2804,37 +2804,37 @@ USERD_get_number_of_timesets
 
    * If you have a static model, both geometry and variables, you should
      return a value of zero.
- 
+
    * If you have a transient model, then you should return one or more.
- 
+
    For example:
- 
+
       Geometry    Variables                                 No. of timesets
       ---------   ------------------------------            ---------------
       static      static                                      0
       static      transient, all using same timeset           1
- 
+
       transient   transient, all using same timeset as geom   1
- 
+
       static      transient, using 3 different timesets       3
- 
+
       transient   transient, using 3 different timesets and
                              none of them the same as the
                              geometry timeset                 4
           etc.
- 
+
    NOTE: ALL GEOMETRY MUST USE THE SAME TIMESET!!! You will have to provide
                                                    the timeset number to use
                                                    for geometry in:
                                                USERD_get_geom_timeset_number
- 
+
          Variables can use the same timeset as the geometry, or can use
          other timesets. More than one variable can use the same timeset.
- 
+
    example:  changing geometry at 5 steps, 0.0, 1.0, 2.0, 3.0, 4.0
              variable 1 provided at these same five steps
              variable 2 provided at 3 steps, 0.5, 1.25, 3.33
- 
+
         This routine should return a value of 2, because only
         two different timesets are needed. Timeset 1 would be for the
         geometry and variable 1 (they both use it). Timeset 2 would
@@ -3116,7 +3116,7 @@ USERD_get_part_elements_by_type
                               conn_array[100][4]  when called with Z_QUA04
 
                               conn_array[30][8]   when called with Z_HEX08
-   
+
    Notes:
    -----
    * Not called unless Num_unstructured_parts is > 0
@@ -3250,7 +3250,7 @@ USERD_get_sol_times
 
    Description:
    -----------
-   Get the solution times associated with each time step for 
+   Get the solution times associated with each time step for
    desired timeset.
 
    Specification:
@@ -3266,7 +3266,7 @@ USERD_get_sol_times
    Arguments:
    ---------
    (IN)  timeset_number     = the timeset number
- 
+
                               For example: If USERD_get_number_of_timesets
                                            returns 2, the valid
                                            timeset_number's would be 1 and 2
@@ -3302,7 +3302,7 @@ USERD_get_timeset_description -
    Arguments:
    ---------
    (IN)  timeset_number     = the timeset number
- 
+
                               For example: If USERD_get_number_of_timesets
                                            returns 2, the valid
                                            timeset_number's would be 1 and 2
@@ -3415,22 +3415,22 @@ USERD_get_var_by_component
 
    (IN)  imag_data               = TRUE if imag component
                                    FALSE if real component
- 
+
    (IN)  component               = The component: (0       if Z_SCALAR)
                                                   (0 - 2   if Z_VECTOR)
                                                   (0 - 5   if Z_TENSOR)
                                                   (0 - 8   if Z_TENSOR9)
- 
-                                 * 6 Symmetric Indicies, 0:5    *
+
+                                 * 6 Symmetric Indices, 0:5    *
                                  * ---------------------------- *
                                  *     | 11 12 13 |   | 0 3 4 | *
                                  *     |          |   |       | *
                                  * T = |    22 23 | = |   1 5 | *
                                  *     |          |   |       | *
                                  *     |       33 |   |     2 | *
- 
 
-                                 * 9 General   Indicies, 0:8    *
+
+                                 * 9 General   Indices, 0:8    *
                                  * ---------------------------- *
                                  *     | 11 12 13 |   | 0 3 4 | *
                                  *     |          |   |       | *
@@ -3438,7 +3438,7 @@ USERD_get_var_by_component
                                  *     |          |   |       | *
                                  *     | 31 32 33 |   | 7 8 2 | *
 
-   (OUT) var_array 
+   (OUT) var_array
 
       -----------------------------------------------------------------------
       (IMPORTANT: this array is 1-based for both Z_PER_NODE and Z_PER_ELEM!!!)
@@ -3460,7 +3460,7 @@ USERD_get_var_by_component
             if Z_PER_ELEM:    = 1D array containing variable component
                                 value for each element of a particular
                                 part and type.
-                                    
+
                               (Array will have been allocated
                                (number_of_elements[which_part][which_type] + 1)
                                 long.  See USERD_get_gold_part_build_info)
@@ -3522,7 +3522,7 @@ USERD_get_var_value_at_specific
 
               If Z_PER_NODE:
                 = The node number.  This is not the id, but is
-                                    the index of the global node 
+                                    the index of the global node
                                     list (1 based), or the block's
                                     node list (1 based).
 
@@ -3731,17 +3731,17 @@ USERD_set_filenames
 
    (IN) param_2      = The usage of this string depends on
                        'two_fields' in USERD_get_name_of_reader.
- 
+
                        If two_fields is FALSE then it's empty.
- 
-                       If two_fields is TRUE, this is the 
-                       manditory results file entered 
+
+                       If two_fields is TRUE, this is the
+                       manditory results file entered
                        into the result field of the data dialog.
- 
+
                        If two_fields is -1, then this contains
                        optional text (filenames, modifiers, etc.)
-                       that can be parsed and used to modify 
-                       reader 
+                       that can be parsed and used to modify
+                       reader
 
    (IN) the_path     = the path info from the data dialog.
                        Note: filename_1 and filename_2 have already
@@ -3790,7 +3790,7 @@ USERD_set_server_number
      something that you can take advantage of.  If your data is already
      partitioned in some manner, such that you can access the proper
      portions using this information.
- 
+
      For all non-SOS uses, this will simply be 1 of 1
 
 
@@ -3816,7 +3816,7 @@ USERD_set_time_set_and_step
    Arguments:
    ---------
    (IN) timeset_number  = the timeset number (1 based).
- 
+
                           For example:  If USERD_get_number_of_timesets
                                         returns 2, the valid timeset_number's
                                         would be 1 and 2.
@@ -3985,14 +3985,14 @@ USERD_rigidbody_values
    Arguments:
    ---------
    (IN)  part_number        = The part number
- 
+
                               (1-based index of part table, namely:
- 
+
                                  1 ... Numparts_available.
- 
+
                                It is NOT the part_id that
                                is loaded in USERD_get_gold_part_build_info)
- 
+
    (OUT) values             values[0] = IX   (x location)
                             values[1] = IY   (y location)
                             values[2] = IZ   (z location)
@@ -4037,7 +4037,7 @@ USERD_set_right_side
 
 
 ------------------------------------------------------------------
-	ENHANCED GUI ROUTINES
+    ENHANCED GUI ROUTINES
 
 --------------------------------------------------------------------
 USERD_get_extra_gui_numbers
@@ -4061,7 +4061,7 @@ USERD_get_extra_gui_numbers
    Arguments:
    ---------
    (OUT) num_Toggles    = number of toggles that will be provided
-   
+
          num_pulldowns  = number of pulldowns that will be provided
 
          num_fields     = number of fields that will be provided
@@ -4081,63 +4081,63 @@ USERD_get_extra_gui_numbers
      simply delete these routines, or change their
      names to something such as
      USERD_DISABLED_get_extra_gui_defaults
- 
+
      The presence of these routines
      will ensure that EnSight will call them and
      use their data to modify the extraction parameters set
      with some or all of the following:
      toggles, pulldown menu and fields.
- 
+
      The user can then interact with the enhanced
      GUI and then send their choices to
      USERD_set_extra_gui_data
-  
+
      Therefore if USERD_get_extra_gui_numbers
      exists then the other two must exist.
- 
+
      If none exist, then the GUI will be unchanged.
- 
+
      Toggle data will return an integer
                                TRUE if checked
                                FALSE if unchecked
- 
+
      Pulldown menu will return an integer representing
                                the menu item selected
- 
+
      Field will return a string Z_LEN_GUI_FIELD_STR long.
- 
+
      If all the enhanced GUI features are enabled it
      might look something like this
 
     ===================================================
     [] Title 1  [X] Title 3
     [X]Title 2  [X] Title 4
- 
+
     Pulldown Menu ->
         Menu Choice 1
         Menu Choice 2
         Menu Choice 3
- 
+
     Data Field Title 1 ____________________________
- 
+
     Data Field Title 2 ____________________________
     =====================================================
 
     This routine defines the numbers of toggles, pulldowns & fields
- 
+
     The following are defined in the global_extern.h
            Z_MAX_NUM_GUI_PULL_ITEMS max num GUI pulldowns
            Z_LEN_GUI_PULL_STR  max length of GUI pulldown string
            Z_LEN_GUI_FIELD_STR  max length of field string
            Z_LEN_GUI_TITLE_STR   max length of title string
- 
+
     The library is loaded, this routine is
      called, then the library is unloaded.
- 
+
     Do not define globals in this routine
      as when the library is unloaded, you'll
      lose them.
- 
+
 
 --------------------------------------------------------------------
 USERD_get_extra_gui_defaults
@@ -4171,17 +4171,17 @@ USERD_get_extra_gui_defaults
                                                          [Z_LEN_GUI_TITLE_STR] long
 
          toggle_default_status      = Setting for each toggle (TRUE or FALSE)
-                                      array dimension is [num_toggles] long 
+                                      array dimension is [num_toggles] long
 
          pulldown_Title             = title for each pulldown
                                       array dimension is [num_pulldowns] by
                                                          [Z_LEN_GUI_TITLE_STR] long
 
          pulldown_number_in_list    = number of items in each pulldown
-                                      array dimension is [num_pulldowns] long 
+                                      array dimension is [num_pulldowns] long
 
          pulldown_default_selection = pulldown item selection for each pulldown
-                                      array dimension is [num_pulldowns] long 
+                                      array dimension is [num_pulldowns] long
 
          pulldown_item_strings      = pulldown item strings
                                       array is [num_pulldowns] by
@@ -4201,7 +4201,7 @@ USERD_get_extra_gui_defaults
    Notes:
    -----
    * The library is loaded, this routine is called, then the library is unloaded.
- 
+
    * Do not define globals in this routine as when the library is unloaded, you'll
      lose them.
 
@@ -4242,7 +4242,7 @@ USERD_set_extra_gui_data
    * This routine is called when the library is permanently
      loaded to the EnSight session, so define your globals
      in this and later routines.
- 
+
    * It's up to you to change your reader behavior according to
      user entries!
 
@@ -4272,7 +4272,7 @@ USERD_get_var_extract_gui_numbers
    Arguments:
    ---------
    (OUT) num_Toggles    = number of toggles that will be provided
-   
+
          num_pulldowns  = number of pulldowns that will be provided
 
          num_fields     = number of fields that will be provided
@@ -4291,63 +4291,63 @@ USERD_get_var_extract_gui_numbers
      simply delete these routines, or change their
      names to something such as
      USERD_DISABLED_get_var_extract_gui_defaults
- 
+
      The presence of these routines
      will ensure that EnSight will call them and
      use their data to modify the extraction parameters set
      with some or all of the following:
      toggles, pulldown menu and fields.
- 
+
      The user can then interact with the enhanced
      GUI and then send their choices to
      USERD_set_extra_gui_data
-  
+
      Therefore if USERD_get_var_extract_gui_numbers
      exists then the other two must exist.
- 
+
      If none exist, then the GUI will be unchanged.
- 
+
      Toggle data will return an integer
                                TRUE if checked
                                FALSE if unchecked
- 
+
      Pulldown menu will return an integer representing
                                the menu item selected
- 
+
      Field will return a string Z_LEN_GUI_FIELD_STR long.
- 
+
      If all the enhanced GUI features are enabled it
      might look something like this
 
     ===================================================
     [] Title 1  [X] Title 3
     [X]Title 2  [X] Title 4
- 
+
     Pulldown Menu ->
         Menu Choice 1
         Menu Choice 2
         Menu Choice 3
- 
+
     Data Field Title 1 ____________________________
- 
+
     Data Field Title 2 ____________________________
     =====================================================
 
     This routine defines the numbers of toggles, pulldowns & fields
- 
+
     The following are defined in the global_extern.h
            Z_MAX_NUM_GUI_PULL_ITEMS max num GUI pulldowns
            Z_LEN_GUI_PULL_STR  max length of GUI pulldown string
            Z_LEN_GUI_FIELD_STR  max length of field string
            Z_LEN_GUI_TITLE_STR   max length of title string
- 
+
     The library is loaded, this routine is
      called, then the library is unloaded.
- 
+
     Do not define globals in this routine
      as when the library is unloaded, you'll
      lose them.
- 
+
 
 --------------------------------------------------------------------
 USERD_get_var_extract_gui_defaults
@@ -4381,17 +4381,17 @@ USERD_get_var_extract_gui_defaults
                                                          [Z_LEN_GUI_TITLE_STR] long
 
          toggle_default_status      = Setting for each toggle (TRUE or FALSE)
-                                      array dimension is [num_toggles] long 
+                                      array dimension is [num_toggles] long
 
          pulldown_Title             = title for each pulldown
                                       array dimension is [num_pulldowns] by
                                                          [Z_LEN_GUI_TITLE_STR] long
 
          pulldown_number_in_list    = number of items in each pulldown
-                                      array dimension is [num_pulldowns] long 
+                                      array dimension is [num_pulldowns] long
 
          pulldown_default_selection = pulldown item selection for each pulldown
-                                      array dimension is [num_pulldowns] long 
+                                      array dimension is [num_pulldowns] long
 
          pulldown_item_strings      = pulldown item strings
                                       array is [num_pulldowns] by
@@ -4411,7 +4411,7 @@ USERD_get_var_extract_gui_defaults
    Notes:
    -----
    * The library is loaded, this routine is called, then the library is unloaded.
- 
+
    * Do not define globals in this routine as when the library is unloaded, you'll
      lose them.
 
@@ -4452,7 +4452,7 @@ USERD_set_var_extract_gui_data
    * This routine is called when the library is permanently
      loaded to the EnSight session, so define your globals
      in this and later routines.
- 
+
    * It's up to you to change your reader behavior according to
      user entries!
 
@@ -4464,19 +4464,19 @@ USERD_set_var_extract_gui_data
 /* ----------------------------------------------------------
  *  New in EnSight 8 is the capability to remove (fail) elements
  *   based on variable threshold values.  Basically the variable
- *   name, a couple of thresholds, a couple of values and a logic 
+ *   name, a couple of thresholds, a couple of values and a logic
  *   criteria are read in from this routine.  Every element that
  *   satisfies the failure criteria is removed and not used in
  *   EnSight calculations.
- *   
- *  Example Failure criteria 
+ *
+ *  Example Failure criteria
  *     Let fail_var_name = "fail_flag"
  *         threshold_val1 = 0
- *         threshold_operator1 = Z_EQUAL_TO  
+ *         threshold_operator1 = Z_EQUAL_TO
  *         logic_criteria2 not used
  *         threshold_val2 not used
  *         threshold_operator2 not used
- *     For each value of "fail_flag" at each element, 
+ *     For each value of "fail_flag" at each element,
  *         if fail flag == threshold_val1 (0.0) then element fails
  *   Return (Z_ERR) if this is not used.
  *   Return (Z_OK) if failed element feature should be used
@@ -4505,7 +4505,7 @@ int USERD_get_uns_failed_params(
                                             Z_EQUAL_TO */
                 int *threshold_operator2,   /* Z_GREATER_THAN, Z_LESS_THAN,
                                             Z_EQUAL_TO */
-		int *logic_criteria2
+        int *logic_criteria2
 
 
 /*--------------------------------------------------------------------

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Description
       - procSchedule()[proci] gives per proci
 
     Does not care whether 'talking' is first send, second receive or maybe
-    full swap. This is all responsability of caller. See ProcessorTopology
+    full swap. This is all responsibility of caller. See ProcessorTopology
     class for use in scheduling processor boundary swaps.
 
 SourceFiles

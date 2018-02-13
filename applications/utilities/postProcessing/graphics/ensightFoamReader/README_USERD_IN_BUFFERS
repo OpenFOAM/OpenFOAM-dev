@@ -799,7 +799,7 @@ USERD_get_part_element_ids_by_type_in_buffers(int part_number,
  *                                                 (0 - 5   if Z_TENSOR)
  *                                                 (0 - 8   if Z_TENSOR9)
  *
- *                                * 6 Symmetric Indicies, 0:5    *
+ *                                * 6 Symmetric Indices, 0:5    *
  *                                * ---------------------------- *
  *                                *     | 11 12 13 |   | 0 3 4 | *
  *                                *     |          |   |       | *
@@ -807,7 +807,7 @@ USERD_get_part_element_ids_by_type_in_buffers(int part_number,
  *                                *     |          |   |       | *
  *                                *     |       33 |   |     2 | *
  *
- *                                * 9 General   Indicies, 0:8    *
+ *                                * 9 General   Indices, 0:8    *
  *                                * ---------------------------- *
  *                                *     | 11 12 13 |   | 0 1 2 | *
  *                                *     |          |   |       | *
