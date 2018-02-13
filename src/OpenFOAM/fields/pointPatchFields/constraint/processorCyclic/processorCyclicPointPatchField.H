@@ -150,7 +150,7 @@ public:
                 }
             }
 
-            //- Does the patch field perform the transfromation
+            //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
                 return

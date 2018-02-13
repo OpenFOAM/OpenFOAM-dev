@@ -171,7 +171,7 @@ public:
 
     // Member functions
 
-        // Acces functions
+        // Access functions
 
             // Return Ks
             scalarField& Ks()

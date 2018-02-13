@@ -25,9 +25,9 @@ Class
     Foam::sigInt
 
 Description
-    Signal handler for INT interupt.
+    Signal handler for INT interrupt.
 
-    The standard interupt handler is overridden to ensure that the
+    The standard interrupt handler is overridden to ensure that the
     runningJob file is removed.
 
 See also

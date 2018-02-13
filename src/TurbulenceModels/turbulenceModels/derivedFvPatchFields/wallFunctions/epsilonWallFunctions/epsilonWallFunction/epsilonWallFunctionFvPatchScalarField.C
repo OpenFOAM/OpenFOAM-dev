@@ -560,7 +560,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
 
     forAll(weights, facei)
     {
-        // Anly set the values if the weights are > tolerance
+        // Only set the values if the weights are > tolerance
         if (weights[facei] > tolerance_)
         {
             nConstrainedCells++;

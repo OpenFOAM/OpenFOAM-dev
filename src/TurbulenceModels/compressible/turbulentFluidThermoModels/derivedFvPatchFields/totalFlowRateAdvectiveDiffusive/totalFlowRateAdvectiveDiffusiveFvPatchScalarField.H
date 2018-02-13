@@ -59,7 +59,7 @@ class totalFlowRateAdvectiveDiffusiveFvPatchScalarField
         word phiName_;
 
         //- Name of the density field used to normalise the mass flux
-        //  if neccessary
+        //  if necessary
         word rhoName_;
 
         //- Mass flux fraction

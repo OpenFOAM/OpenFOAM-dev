@@ -475,7 +475,7 @@ void Foam::isoSurface::calcCutTypes
 }
 
 
-// Caculate centre of surface.
+// Calculate centre of surface.
 Foam::point Foam::isoSurface::calcCentre(const triSurface& s)
 {
     vector sum = Zero;

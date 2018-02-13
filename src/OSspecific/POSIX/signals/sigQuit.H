@@ -25,9 +25,9 @@ Class
     Foam::sigQuit
 
 Description
-    Signal handler for QUIT interupt.
+    Signal handler for QUIT interrupt.
 
-    The standard interupt handler is overridden to ensure that the
+    The standard interrupt handler is overridden to ensure that the
     runningJob file is removed.
 
 See also

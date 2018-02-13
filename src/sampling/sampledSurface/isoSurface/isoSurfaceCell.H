@@ -146,7 +146,7 @@ class isoSurfaceCell
             const labelledTri&
         );
 
-        //- Caculate centre of surface.
+        //- Calculate centre of surface.
         static point calcCentre(const triSurface&);
 
         //- Replace surface (localPoints, localTris) with single point.

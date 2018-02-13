@@ -30,7 +30,7 @@ Group
 Description
     Abstract base class for alphaContactAngle boundary conditions.
 
-    Derived classes must implement the theta() fuction which returns the
+    Derived classes must implement the theta() function which returns the
     wall contact angle field.
 
     The essential entry "limit" controls the gradient of alpha1 on the wall:

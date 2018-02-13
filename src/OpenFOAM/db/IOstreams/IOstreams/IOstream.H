@@ -311,11 +311,11 @@ public:
         // Check
 
             //- Check IOstream status for given operation
-            //  print IOstream state if error has occured
+            //  print IOstream state if error has occurred
             virtual bool check(const char* operation) const;
 
             //- Check IOstream status for given operation
-            //  print IOstream state if error has occured and exit
+            //  print IOstream state if error has occurred and exit
             void fatalCheck(const char* operation) const;
 
             //- Return true if stream has been opened

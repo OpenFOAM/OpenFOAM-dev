@@ -77,7 +77,7 @@ public:
 
         //- Return the instantiated type name
         //  Note: This defines the same name as pureMixture so that
-        //  non-reacting and reacting solvers are compatable
+        //  non-reacting and reacting solvers are compatible
         static word typeName()
         {
             return "pureMixture<" + ThermoType::typeName() + '>';

@@ -54,7 +54,7 @@ class cyclicGAMGInterface
 {
     // Private data
 
-        //- Neigbour patch number
+        //- Neighbour patch number
         label neighbPatchID_;
 
         //- Am I owner?
@@ -124,7 +124,7 @@ public:
 
         //- Cyclic interface functions
 
-            //- Return neigbour processor number
+            //- Return neighbour processor number
             virtual label neighbPatchID() const
             {
                 return neighbPatchID_;

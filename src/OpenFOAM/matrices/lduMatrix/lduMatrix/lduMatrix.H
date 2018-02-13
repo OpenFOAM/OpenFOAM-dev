@@ -31,7 +31,7 @@ Description
 
     Addressing arrays must be supplied for the upper and lower triangles.
 
-    It might be better if this class were organised as a hierachy starting
+    It might be better if this class were organised as a hierarchy starting
     from an empty matrix, then deriving diagonal, symmetric and asymmetric
     matrices.
 

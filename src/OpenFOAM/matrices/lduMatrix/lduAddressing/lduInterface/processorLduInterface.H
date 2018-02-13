@@ -90,7 +90,7 @@ public:
             //- Return processor number (rank in communicator)
             virtual int myProcNo() const = 0;
 
-            //- Return neigbour processor number (rank in communicator)
+            //- Return neighbour processor number (rank in communicator)
             virtual int neighbProcNo() const = 0;
 
             //- Return face transformation tensor

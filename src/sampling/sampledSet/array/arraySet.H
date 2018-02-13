@@ -57,7 +57,7 @@ class arraySet
 {
     // Private data
 
-        //- Coordinate syste
+        //- Coordinate system
         coordinateSystem coordSys_;
 
         //- Point density vector

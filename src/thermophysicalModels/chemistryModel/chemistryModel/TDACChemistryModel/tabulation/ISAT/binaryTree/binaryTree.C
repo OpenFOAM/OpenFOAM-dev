@@ -49,7 +49,7 @@ void Foam::binaryTree<CompType, ThermoType>::insertNode
 
     }
 
-    // if we reach this point, there is an issue with the adressing
+    // if we reach this point, there is an issue with the addressing
     FatalErrorInFunction
         << "trying to insert a node with a wrong pointer to a chemPoint"
         << exit(FatalError);
@@ -114,7 +114,7 @@ bool Foam::binaryTree<CompType, ThermoType>::inSubTree
                 return inSubTree(phiq, y->nodeRight(),x);
             }
         }
-        else // on right side (symetric of above)
+        else // on right side (symmetric of above)
         {
             if (y->nodeRight() == nullptr)
             {

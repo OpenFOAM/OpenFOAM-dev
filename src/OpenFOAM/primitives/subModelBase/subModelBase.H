@@ -149,7 +149,7 @@ public:
             //- Return the model 'active' status - default active = true
             virtual bool active() const;
 
-            //- Cache dependant sub-model fields
+            //- Cache dependent sub-model fields
             virtual void cacheFields(const bool store);
 
             //- Flag to indicate when to write a property
