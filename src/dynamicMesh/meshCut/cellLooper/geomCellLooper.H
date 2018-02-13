@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ class geomCellLooper
             vector& e1
         ) const;
 
-        //- Return true if the cut edge at loop[index] is inbetween the cuts
+        //- Return true if the cut edge at loop[index] is in between the cuts
         //  through the edge end points.
         bool edgeEndsCut(const labelList&, const label index) const;
 

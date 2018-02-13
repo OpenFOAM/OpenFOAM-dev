@@ -346,7 +346,7 @@ void Foam::searchableExtrudedCircle::findParametricNearest
     info.setSize(lambdas.size());
     info = pointIndexHit();
 
-    // Given the current lambdas interpolate radial direction inbetween
+    // Given the current lambdas interpolate radial direction in between
     // endpoints (all projected onto the starting coordinate system)
     quaternion qStart;
     vector radialStart;

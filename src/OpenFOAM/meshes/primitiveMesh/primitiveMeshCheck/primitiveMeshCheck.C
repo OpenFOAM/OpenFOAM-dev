@@ -1101,7 +1101,7 @@ bool Foam::primitiveMesh::checkUpperTriangular
     if ((debug || report) && nMultipleCells > 0)
     {
         Info<< "  <<Found " << nMultipleCells
-            << " neighbouring cells with multiple inbetween faces." << endl;
+            << " neighbouring cells with multiple in between faces." << endl;
     }
 
     if (error)

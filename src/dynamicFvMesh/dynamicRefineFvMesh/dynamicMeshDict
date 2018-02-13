@@ -53,7 +53,7 @@ dynamicRefineFvMeshCoeffs
     field gamma;
 
     // Which cells to un/refine: based on point values (simple averaging).
-    // - refine pointCells of point value inbetween minLevel..maxLevel
+    // - refine pointCells of point value in between minLevel..maxLevel
     // - unrefine pointCells that are within nBufferLayers of points marked
     //   for refinement.
     minLevel 0.01;

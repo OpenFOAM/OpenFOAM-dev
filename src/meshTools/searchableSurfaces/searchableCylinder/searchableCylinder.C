@@ -112,7 +112,7 @@ Foam::pointIndexHit Foam::searchableCylinder::findNearest
     }
     else
     {
-        // inbetween endcaps. Might either be nearer endcaps or cylinder wall
+        // in between endcaps. Might either be nearer endcaps or cylinder wall
 
         // distance to endpoint: parallel or parallel-magDir
         // distance to cylinder wall: magV-radius_

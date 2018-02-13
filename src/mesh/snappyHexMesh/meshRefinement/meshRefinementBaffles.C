@@ -1326,7 +1326,7 @@ bool Foam::meshRefinement::calcRegionToZone
 {
     bool changed = false;
 
-    // Check whether inbetween different regions
+    // Check whether in between different regions
     if (ownRegion != neiRegion)
     {
         // Jump. Change one of the sides to my type.
@@ -3088,10 +3088,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
     }
 
 
-    // Make sure namedSurfaceIndex is unset inbetween same cell cell zones.
+    // Make sure namedSurfaceIndex is unset in between same cell cell zones.
     if (!allowFreeStandingZoneFaces)
     {
-        Info<< "Only keeping zone faces inbetween different cellZones."
+        Info<< "Only keeping zone faces in between different cellZones."
             << nl << endl;
 
         makeConsistentFaceIndex(cellToZone, namedSurfaceIndex);

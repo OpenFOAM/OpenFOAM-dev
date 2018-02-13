@@ -365,7 +365,7 @@ void Foam::refinementFeatures::findHigherLevel
 
             label pointi = candidateMap[candidateI];
 
-            // pt is inbetween shell[minDistI] and shell[minDistI+1]
+            // pt is in between shell[minDistI] and shell[minDistI+1]
             maxLevel[pointi] = levels[minDistI+1];
         }
     }

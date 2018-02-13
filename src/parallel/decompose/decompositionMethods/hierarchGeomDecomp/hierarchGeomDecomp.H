@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ class hierarchGeomDecomp
             scalarField& sortedWeightedSizes
         );
 
-        //- Find index of t in list inbetween indices left and right
+        //- Find index of t in list in between indices left and right
         static label findLower
         (
             const List<scalar>&,

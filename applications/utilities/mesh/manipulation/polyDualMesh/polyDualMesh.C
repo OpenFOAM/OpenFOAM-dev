@@ -44,8 +44,8 @@ Usage
         Normally only constructs a single face between two cells. This single
         face might be too distorted. splitAllFaces will create a single face for
         every original cell the face passes through. The mesh will thus have
-        multiple faces inbetween two cells! (so is not strictly upper-triangular
-        anymore - checkMesh will complain)
+        multiple faces in between two cells! (so is not strictly
+        upper-triangular anymore - checkMesh will complain)
 
       - \par -doNotPreserveFaceZones:
         By default all faceZones are preserved by marking all faces, edges and
@@ -362,7 +362,7 @@ int main(int argc, char *argv[])
     argList::addBoolOption
     (
         "splitAllFaces",
-        "have multiple faces inbetween cells"
+        "have multiple faces in between cells"
     );
     argList::addBoolOption
     (
@@ -373,7 +373,7 @@ int main(int argc, char *argv[])
     (
         "doNotPreserveFaceZones",
         "disable the default behaviour of preserving faceZones by having"
-        " multiple faces inbetween cells"
+        " multiple faces in between cells"
     );
 
     #include "setRootCase.H"

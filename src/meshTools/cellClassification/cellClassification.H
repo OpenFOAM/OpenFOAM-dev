@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,7 +186,7 @@ private:
             const label celli
         ) const;
 
-        //- Get faces (and its 'owner') inbetween cells of differing type
+        //- Get faces (and its 'owner') in between cells of differing type
         // (meshType and non-meshType).
         void getMeshOutside(const label meshType, faceList&, labelList&) const;
 

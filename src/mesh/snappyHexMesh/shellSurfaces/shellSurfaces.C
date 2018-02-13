@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -291,7 +291,7 @@ void Foam::shellSurfaces::findHigherLevel
 
                 label pointi = candidateMap[candidateI];
 
-                // pt is inbetween shell[minDistI] and shell[minDistI+1]
+                // pt is in between shell[minDistI] and shell[minDistI+1]
                 maxLevel[pointi] = levels[minDistI+1];
             }
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,7 @@ public:
 
         // Utility functions
 
-            //- Find boundary data inbetween current time and interpolate
+            //- Find boundary data in between current time and interpolate
             void checkTable();
 
 

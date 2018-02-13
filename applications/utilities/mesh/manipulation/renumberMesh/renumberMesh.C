@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -255,7 +255,7 @@ labelList getFaceOrder
 
 
 // Determine face order such that inside region faces are sorted
-// upper-triangular but inbetween region faces are handled like boundary faces.
+// upper-triangular but in between region faces are handled like boundary faces.
 labelList getRegionFaceOrder
 (
     const primitiveMesh& mesh,

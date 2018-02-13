@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Description
 
     Usually to preserve boundaries:
         - all boundary faces are featureFaces
-        - all edges and points inbetween different patches are
+        - all edges and points in between different patches are
           featureEdges/points.
 
     In same way you can also preserve internal faces (e.g. faceZones)

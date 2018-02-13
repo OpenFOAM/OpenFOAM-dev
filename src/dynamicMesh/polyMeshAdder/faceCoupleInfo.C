@@ -538,7 +538,7 @@ void Foam::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
         else if (stringedEdges.size() > 1)
         {
             // String up the edges between e[0] and e[1]. Store the points
-            // inbetween e[0] and e[1] (all in cutFaces() labels)
+            // in between e[0] and e[1] (all in cutFaces() labels)
 
             DynamicList<label> splitPoints(stringedEdges.size()-1);
 
@@ -1428,7 +1428,7 @@ void Foam::faceCoupleInfo::perfectPointMatch
     const bool slaveFacesOrdered
 )
 {
-    // Calculate the set of cut faces inbetween master and slave patch assuming
+    // Calculate the set of cut faces in between master and slave patch assuming
     // perfect match (and optional face ordering on slave)
 
     if (debug)
@@ -1692,7 +1692,7 @@ void Foam::faceCoupleInfo::subDivisionMatch
     // Do masterEdges to cutEdges :
     // - mark all edges between two masterEdge endpoints. (geometric test since
     //   this is the only distinction)
-    // - this gives the borders inbetween which all cutfaces come from
+    // - this gives the borders in between which all cutfaces come from
     //   a single master face.
     if (debug)
     {
@@ -1790,7 +1790,7 @@ void Foam::faceCoupleInfo::subDivisionMatch
         writeEdges(cutToMasterEdges, cutToSlaveEdges);
     }
 
-    // Rework cutToMasterEdges into list of points inbetween two endpoints
+    // Rework cutToMasterEdges into list of points in between two endpoints
     // (cutEdgeToPoints_)
     setCutEdgeToPoints(cutToMasterEdges);
 

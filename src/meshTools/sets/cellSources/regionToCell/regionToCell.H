@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ class regionToCell
 
     // Private Member Functions
 
-        //- Mark faces inbetween selected and unselected elements
+        //- Mark faces in between selected and unselected elements
         void markRegionFaces
         (
             const boolList& selectedCell,

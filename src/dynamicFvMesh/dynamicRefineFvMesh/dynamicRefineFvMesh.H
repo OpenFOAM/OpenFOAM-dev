@@ -34,7 +34,7 @@ Description
         refineInterval  1;
         // Field to be refinement on
         field           alpha.water;
-        // Refine field inbetween lower..upper
+        // Refine field in between lower..upper
         lowerRefineLevel 0.001;
         upperRefineLevel 0.999;
         // If value < unrefineLevel (default=great) unrefine

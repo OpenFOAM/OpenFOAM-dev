@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -518,7 +518,7 @@ private:
             ) const;
 
             //- Make namedSurfaceIndex consistent with cellToZone
-            //  - clear out any blocked faces inbetween same cell zone.
+            //  - clear out any blocked faces in between same cell zone.
             void makeConsistentFaceIndex
             (
                 const labelList& cellToZone,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ class topoCellLooper
 
         //- Returns list of vertices on 'superEdge' i.e. list of edges connected
         // by non-feature points. First and last are feature points, ones
-        // inbetween are not.
+        // in between are not.
         labelList getSuperEdge
         (
             const cellFeatures& features,

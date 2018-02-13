@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,7 +200,7 @@ class faceCoupleInfo
 
             //- For edges originating from splitting of edges:
             //  given the two endpoints of the unsplit edge give the list
-            //  of inbetween vertices
+            //  of in between vertices
             edgeLookup cutEdgeToPoints_;
 
 
@@ -282,7 +282,7 @@ class faceCoupleInfo
             ) const;
 
             //- From (many-to-one) map of cut edges to master edges determine
-            //  points inbetween. I.e. just string up the edges. Stores this
+            //  points in between. I.e. just string up the edges. Stores this
             //  all on cutEdgeToPoints_
             void setCutEdgeToPoints(const labelList& cutToMasterEdges);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -462,7 +462,7 @@ void Foam::refinementHistory::add
     markCommonCells(cellToCluster);
 
 
-    // Unblock all faces inbetween same cluster
+    // Unblock all faces in between same cluster
 
     label nUnblocked = 0;
 
@@ -506,7 +506,7 @@ void Foam::refinementHistory::apply
     labelList cellToCluster;
     label nClusters = markCommonCells(cellToCluster);
 
-    // Unblock all faces inbetween same cluster
+    // Unblock all faces in between same cluster
 
 
     labelList clusterToProc(nClusters, -1);

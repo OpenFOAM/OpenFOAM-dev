@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ class timeVaryingMappedFixedValueFvPatchField
         //- Helper function to find the field files
         fileName findFieldFile(const word& timeName) const;
 
-        //- Find boundary data inbetween current time and interpolate
+        //- Find boundary data in between current time and interpolate
         void checkTable();
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ private:
         );
 
         //- Extends face f with split points. cutEdgeToPoints gives for every
-        // edge the points introduced inbetween the endpoints.
+        // edge the points introduced in between the endpoints.
         static void insertVertices
         (
             const edgeLookup& cutEdgeToPoints,

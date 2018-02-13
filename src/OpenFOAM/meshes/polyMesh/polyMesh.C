@@ -933,7 +933,7 @@ void Foam::polyMesh::addPatches
 
     // parallelData depends on the processorPatch ordering so force
     // recalculation. Problem: should really be done in removeBoundary but
-    // there is some info in parallelData which might be interesting inbetween
+    // there is some info in parallelData which might be interesting in between
     // removeBoundary and addPatches.
     globalMeshDataPtr_.clear();
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class polyLineSet
     // Private Member Functions
 
         //- Sample till hits boundary. Called with singleParticle at position
-        //  inbetween sampleCoords_[sampleI] and sampleCoords_[sampleI+1].
+        //  in between sampleCoords_[sampleI] and sampleCoords_[sampleI+1].
         //  Returns false if end of samples reached.
         bool trackToBoundary
         (

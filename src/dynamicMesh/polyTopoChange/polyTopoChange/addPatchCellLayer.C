@@ -1634,7 +1634,7 @@ void Foam::addPatchCellLayer::setRefinement
 
                     if (newFp >= 3)
                     {
-                        // Add face inbetween faces patchFacei and nbrFacei
+                        // Add face in between faces patchFacei and nbrFacei
                         // (possibly -1 for external edges)
 
                         newFace.setSize(newFp);

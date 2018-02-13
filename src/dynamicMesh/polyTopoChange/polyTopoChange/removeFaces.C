@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -906,7 +906,7 @@ void Foam::removeFaces::setRefinement
         // Now all unaffected edges will have labelMax, all affected edges the
         // number of unremoved faces.
 
-        // Filter for edges inbetween two remaining boundary faces that
+        // Filter for edges in between two remaining boundary faces that
         // make too big an angle.
         forAll(nFacesPerEdge, edgeI)
         {

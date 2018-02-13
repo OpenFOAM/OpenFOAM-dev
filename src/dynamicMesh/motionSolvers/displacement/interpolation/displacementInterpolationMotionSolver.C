@@ -235,7 +235,7 @@ displacementInterpolationMotionSolver
         // Sort the points
         // ~~~~~~~~~~~~~~~
 
-        // Count all the points inbetween rangeI and rangeI+1
+        // Count all the points in between rangeI and rangeI+1
         labelList nRangePoints(rangeToCoord.size(), 0);
 
         forAll(meshCoords, pointi)

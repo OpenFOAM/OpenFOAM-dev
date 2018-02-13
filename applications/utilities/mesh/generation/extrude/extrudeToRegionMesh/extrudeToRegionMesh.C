@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
     - if extruding boundary faces:
         - convert boundary faces to mappedWall patches
     - extrude edges of faceZone as a \<zone\>_sidePatch
-    - extrude edges inbetween different faceZones as a
+    - extrude edges in between different faceZones as a
       (nonuniformTransform)cyclic \<zoneA\>_\<zoneB\>
     - extrudes into master direction (i.e. away from the owner cell
       if flipMap is false)
@@ -107,10 +107,10 @@ becomes
 
 
 Notes:
-    - when extruding cyclics with only one cell inbetween it does not
+    - when extruding cyclics with only one cell in between it does not
       detect this as a cyclic since the face is the same face. It will
       only work if the coupled edge extrudes a different face so if there
-      are more than 1 cell inbetween.
+      are more than 1 cell in between.
 
 \endverbatim
 
@@ -641,7 +641,7 @@ void calcEdgeMinMaxZone
 
 // Count the number of faces in patches that need to be created. Calculates:
 //  zoneSidePatch[zoneI]         : the number of side faces to be created
-//  zoneZonePatch[zoneA,zoneB]   : the number of faces inbetween zoneA and B
+//  zoneZonePatch[zoneA,zoneB]   : the number of faces in between zoneA and B
 // Since this only counts we're not taking the processor patches into
 // account.
 void countExtrudePatches
@@ -671,7 +671,7 @@ void countExtrudePatches
 
         if (eFaces.size() == 2)
         {
-            // Internal edge - check if inbetween different zones.
+            // Internal edge - check if in between different zones.
             if (minZoneID[edgeI] != maxZoneID[edgeI])
             {
                 zoneZonePatch[minZoneID[edgeI]*nZones+maxZoneID[edgeI]]++;
@@ -683,7 +683,7 @@ void countExtrudePatches
          && extrudeEdgeGlobalFaces[edgeI].size() == 2
         )
         {
-            // Coupled edge - check if inbetween different zones.
+            // Coupled edge - check if in between different zones.
             if (minZoneID[edgeI] != maxZoneID[edgeI])
             {
                 const edge& e = extrudePatch.edges()[edgeI];
@@ -691,7 +691,7 @@ void countExtrudePatches
                 WarningInFunction
                     << "Edge " << edgeI
                     << "at " << pts[e[0]] << pts[e[1]]
-                    << " is a coupled edge and inbetween two different zones "
+                    << " is a coupled edge and in between two different zones "
                     << minZoneID[edgeI] << " and " << maxZoneID[edgeI] << endl
                     << "    This is currently not supported." << endl;
 
@@ -2082,7 +2082,7 @@ int main(int argc, char *argv[])
 
     // Now we'll have:
     //  zoneSidePatch[zoneA] : number of faces needed on the side of zoneA
-    //  zoneZonePatch_min[zoneA,zoneB] : number of faces needed inbetween A,B
+    //  zoneZonePatch_min[zoneA,zoneB] : number of faces needed in between A,B
 
 
     // Add the zone-side patches.
@@ -2097,7 +2097,7 @@ int main(int argc, char *argv[])
     );
 
 
-    // Add the patches inbetween zones
+    // Add the patches in between zones
     addInterZonePatches
     (
         mesh,

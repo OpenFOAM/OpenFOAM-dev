@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -725,7 +725,7 @@ void Foam::meshDualiser::createFacesAroundBoundaryPoint
             {
                 FatalErrorInFunction
                     << "Different dual cells but no feature edge"
-                    << " inbetween point:" << pointi
+                    << " in between point:" << pointi
                     << " coord:" << mesh_.points()[pointi]
                     << abort(FatalError);
             }
@@ -1331,7 +1331,7 @@ void Foam::meshDualiser::setRefinement
     //      - single cells on either side: triangulate
     //      - multiple cells: create single face between unique cell pair. Only
     //                        create face where cells differ on either side.
-    // - non-feature face : inbetween cell zones.
+    // - non-feature face : in between cell zones.
     forAll(faceToDualPoint_, facei)
     {
         if (faceToDualPoint_[facei] != -1 && mesh_.isInternalFace(facei))

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -393,7 +393,7 @@ Foam::labelList Foam::polyMeshAdder::getFaceOrder
 
 
 // Extends face f with split points. cutEdgeToPoints gives for every
-// edge the points introduced inbetween the endpoints.
+// edge the points introduced in between the endpoints.
 void Foam::polyMeshAdder::insertVertices
 (
     const edgeLookup& cutEdgeToPoints,
@@ -758,7 +758,7 @@ void Foam::polyMeshAdder::mergePrimitives
     // - get map from master edge to split edges.
     // - check all faces to find any edge that is split.
     {
-        // From two cut-points to labels of cut-points inbetween.
+        // From two cut-points to labels of cut-points in between.
         // (in order: from e[0] to e[1]
         const edgeLookup& cutEdgeToPoints = coupleInfo.cutEdgeToPoints();
 

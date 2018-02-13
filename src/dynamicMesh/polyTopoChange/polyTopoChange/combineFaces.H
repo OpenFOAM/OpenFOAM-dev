@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,7 +188,7 @@ public:
             void updateMesh(const mapPolyMesh&);
 
             //- Play commands into polyTopoChange to reinsert original faces.
-            //  No other topo changes can be done inbetween setRefinement and
+            //  No other topo changes can be done in between setRefinement and
             //  setUnrefinement. Can be called multiple times to undo parts
             //  of the last setRefinement call.
             //  Gets the master face labels whose sets need to be restored.

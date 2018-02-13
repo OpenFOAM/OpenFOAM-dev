@@ -2465,7 +2465,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement
     }
 
 
-    // Just seed with all faces inbetween different refinement levels for now
+    // Just seed with all faces in between different refinement levels for now
     // (alternatively only seed faces on cellsToRefine but that gives problems
     //  if no cells to refine)
     forAll(faceNeighbour, facei)
@@ -2993,7 +2993,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
 
     // Create some initial seeds to start walking from. This is only if there
     // are no facesToCheck.
-    // Just seed with all faces inbetween different refinement levels for now
+    // Just seed with all faces in between different refinement levels for now
     forAll(faceNeighbour, facei)
     {
         // Check if face already handled in loop above

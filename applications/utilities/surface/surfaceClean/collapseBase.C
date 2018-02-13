@@ -462,9 +462,9 @@ static label markRegions
 
 
 // Type of region.
-// -1  : edge inbetween uncollapsed faces.
-// -2  : edge inbetween collapsed faces
-// >=0 : edge inbetween uncollapsed and collapsed region. Returns region.
+// -1  : edge in between uncollapsed faces.
+// -2  : edge in between collapsed faces
+// >=0 : edge in between uncollapsed and collapsed region. Returns region.
 static label edgeType
 (
     const triSurface& surf,
@@ -474,7 +474,7 @@ static label edgeType
 {
     const labelList& eFaces = surf.edgeFaces()[edgeI];
 
-    // Detect if edge is inbetween collapseRegion and non-collapse face
+    // Detect if edge is in between collapseRegion and non-collapse face
     bool usesUncollapsed = false;
     label usesRegion = -1;
 
@@ -545,7 +545,7 @@ static labelListList getOutsideVerts
 
     forAll(edgeFaces, edgeI)
     {
-        // Detect if edge is inbetween collapseRegion and non-collapse face
+        // Detect if edge is in between collapseRegion and non-collapse face
         label regionI = edgeType(surf, collapseRegion, edgeI);
 
         if (regionI >= 0)
@@ -870,16 +870,16 @@ label collapseBase
         {
             const edge& e = edges[edgeI];
 
-            // Detect if edge is inbetween collapseRegion and non-collapse face
+            // Detect if edge is in between collapseRegion and non-collapse face
             label regionI = edgeType(surf, collapseRegion, edgeI);
 
             if (regionI == -2)
             {
-                // inbetween collapsed faces. nothing needs to be done.
+                // in between collapsed faces. nothing needs to be done.
             }
             else if (regionI == -1)
             {
-                // edge inbetween uncollapsed faces. Handle these later on.
+                // edge in between uncollapsed faces. Handle these later on.
             }
             else
             {

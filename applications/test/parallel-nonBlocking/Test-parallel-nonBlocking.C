@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
     }
 
 
-    // Do a non-blocking send inbetween
+    // Do a non-blocking send in between
     {
         PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 

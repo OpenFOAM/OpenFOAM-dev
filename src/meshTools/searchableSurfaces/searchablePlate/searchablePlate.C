@@ -84,7 +84,7 @@ Foam::pointIndexHit Foam::searchablePlate::findNearest
 ) const
 {
     // For every component direction can be
-    // left of min, right of max or inbetween.
+    // left of min, right of max or in between.
     // - outside points: project first one x plane (either min().x()
     // or max().x()), then onto y plane and finally z. You should be left
     // with intersection point

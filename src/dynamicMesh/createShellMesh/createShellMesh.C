@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -598,7 +598,7 @@ void Foam::createShellMesh::setRefinement
         //    << endl;
     }
 
-    // Add inbetween faces and face on top
+    // Add in between faces and face on top
     forAll(patch_.localFaces(), facei)
     {
         // Get face in original ordering
@@ -645,7 +645,7 @@ void Foam::createShellMesh::setRefinement
             faceToFaceMap.append(facei+1);  // unflipped
             faceToEdgeMap.append(-1);
 
-            //Pout<< "Added inbetween face " << newF
+            //Pout<< "Added in between face " << newF
             //    << " coords:" << UIndirectList<point>(meshMod.points(), newF)
             //    << " at layer " << layerI
             //    << " own " << own

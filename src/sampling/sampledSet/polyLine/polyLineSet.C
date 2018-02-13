@@ -92,7 +92,7 @@ bool Foam::polyLineSet::trackToBoundary
         samplingCells.append(singleParticle.cell());
         samplingFaces.append(-1);
 
-        // Convert trackPt to fraction inbetween sampleI and sampleI+1
+        // Convert trackPt to fraction in between sampleI and sampleI+1
         scalar dist =
             mag(trackPt - sampleCoords_[sampleI])
           / mag(sampleCoords_[sampleI+1] - sampleCoords_[sampleI]);

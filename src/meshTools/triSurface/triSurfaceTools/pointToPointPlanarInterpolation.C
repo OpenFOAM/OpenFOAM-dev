@@ -409,7 +409,7 @@ bool Foam::pointToPointPlanarInterpolation::findTime
         }
         else
         {
-            Pout<< "findTime : Found time " << timeVal << " inbetween"
+            Pout<< "findTime : Found time " << timeVal << " in between"
                 << " index:" << lo << " time:" << times[lo].value()
                 << " and index:" << hi << " time:" << times[hi].value()
                 << endl;

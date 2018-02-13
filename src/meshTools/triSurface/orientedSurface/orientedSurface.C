@@ -360,7 +360,7 @@ bool Foam::orientedSurface::orientConsistent(triSurface& s)
     bool anyFlipped = false;
 
     // Do initial flipping to make triangles consistent. Otherwise if the
-    // nearest is e.g. on an edge inbetween inconsistent triangles it might
+    // nearest is e.g. on an edge in between inconsistent triangles it might
     // make the wrong decision.
     if (s.size() > 0)
     {
@@ -450,7 +450,7 @@ bool Foam::orientedSurface::orient
 )
 {
     // Do initial flipping to make triangles consistent. Otherwise if the
-    // nearest is e.g. on an edge inbetween inconsistent triangles it might
+    // nearest is e.g. on an edge in between inconsistent triangles it might
     // make the wrong decision.
     bool topoFlipped = orientConsistent(s);
 
@@ -521,7 +521,7 @@ bool Foam::orientedSurface::orient
 )
 {
     // Do initial flipping to make triangles consistent. Otherwise if the
-    // nearest is e.g. on an edge inbetween inconsistent triangles it might
+    // nearest is e.g. on an edge in between inconsistent triangles it might
     // make the wrong decision.
     bool topoFlipped = orientConsistent(s);
 

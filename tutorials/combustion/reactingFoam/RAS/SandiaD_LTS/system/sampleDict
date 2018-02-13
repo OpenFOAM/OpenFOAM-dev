@@ -63,7 +63,7 @@ fields
 // Set sampling definition: choice of
 //      uniform             evenly distributed points on line
 //      face                one point per face intersection
-//      midPoint            one point per cell, inbetween two face intersections
+//      midPoint            one point per cell, in between two face intersections
 //      midPointAndFace     combination of face and midPoint
 //
 //      curve               specified points, not nessecary on line, uses

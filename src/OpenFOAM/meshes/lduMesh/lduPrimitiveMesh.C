@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -359,7 +359,7 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
           + procMesh.lduAddr().lowerAddr().size();
     }
 
-    // Count how faces get added. Interfaces inbetween get merged.
+    // Count how faces get added. Interfaces in between get merged.
 
     // Merged interfaces: map from two coarse processors back to
     // - procMeshes

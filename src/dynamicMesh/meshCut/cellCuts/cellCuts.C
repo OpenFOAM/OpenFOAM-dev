@@ -582,7 +582,7 @@ void Foam::cellCuts::calcFaceCuts() const
             label fp1 = f.fcIndex(fp);
 
             // Get the three items: current vertex, next vertex and edge
-            // inbetween
+            // in between
             label v0 = f[fp];
             label v1 = f[fp1];
             label edgeI = findEdge(facei, v0, v1);

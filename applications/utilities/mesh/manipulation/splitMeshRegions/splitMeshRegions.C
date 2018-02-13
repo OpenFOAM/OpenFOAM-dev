@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     cell-face-cell walking without crossing
     - boundary faces
     - additional faces from faceset (-blockedFaces faceSet).
-    - any face inbetween differing cellZones (-cellZones)
+    - any face in between differing cellZones (-cellZones)
 
     Output is:
     - volScalarField with regions as different scalars (-detectOnly)
