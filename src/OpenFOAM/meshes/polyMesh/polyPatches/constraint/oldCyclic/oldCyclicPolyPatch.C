@@ -1204,7 +1204,7 @@ bool Foam::oldCyclicPolyPatch::order
         rotation
     );
 
-    // Return false if no change neccesary, true otherwise.
+    // Return false if no change necessary, true otherwise.
 
     forAll(faceMap, facei)
     {

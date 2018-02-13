@@ -222,7 +222,7 @@ updateCoeffs()
                   + temissivity[facei]*Eb[facei]
                 )/pi;
 
-            // Emmited heat flux from this ray direction
+            // Emitted heat flux from this ray direction
             qem[facei] = refValue()[facei]*nAve[facei];
         }
         else

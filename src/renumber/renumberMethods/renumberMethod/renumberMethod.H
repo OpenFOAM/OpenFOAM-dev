@@ -125,7 +125,7 @@ public:
 
         //- Return the order in which cells need to be visited, i.e.
         //  from ordered back to original cell label.
-        //  Addresing in losort addressing (= neighbour + offsets into
+        //  Addressing in losort addressing (= neighbour + offsets into
         //  neighbour)
         virtual labelList renumber
         (

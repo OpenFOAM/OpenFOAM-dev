@@ -79,7 +79,7 @@ Foam::UIPstream::UIPstream
         }
 
 
-        // If the buffer size is not specified, probe the incomming message
+        // If the buffer size is not specified, probe the incoming message
         // and set it
         if (!wantedSize)
         {
@@ -180,7 +180,7 @@ Foam::UIPstream::UIPstream(const int fromProcNo, PstreamBuffers& buffers)
                 << Foam::endl;
         }
 
-        // If the buffer size is not specified, probe the incomming message
+        // If the buffer size is not specified, probe the incoming message
         // and set it
         if (!wantedSize)
         {
@@ -274,7 +274,7 @@ Foam::label Foam::UIPstream::read
         )
         {
             FatalErrorInFunction
-                << "MPI_Recv cannot receive incomming message"
+                << "MPI_Recv cannot receive incoming message"
                 << Foam::abort(FatalError);
 
             return 0;
@@ -298,7 +298,7 @@ Foam::label Foam::UIPstream::read
         {
             FatalErrorInFunction
                 << "buffer (" << label(bufSize)
-                << ") not large enough for incomming message ("
+                << ") not large enough for incoming message ("
                 << messageSize << ')'
                 << Foam::abort(FatalError);
         }

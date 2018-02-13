@@ -173,7 +173,7 @@ public:
 
     // Member functions
 
-        // Acces functions
+        // Access functions
 
             // Return z0
             scalarField& z0()

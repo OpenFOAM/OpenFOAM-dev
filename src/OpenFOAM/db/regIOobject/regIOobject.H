@@ -138,7 +138,7 @@ public:
         //  if registerCopy is true
         regIOobject(const regIOobject&, bool registerCopy);
 
-        //- Construct as copy with new name, transfering registry registration
+        //- Construct as copy with new name, transferring registry registration
         //  to copy as specified
         regIOobject(const word& newName, const regIOobject&, bool registerCopy);
 

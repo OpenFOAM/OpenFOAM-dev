@@ -62,7 +62,7 @@ class dynamicAlphaContactAngleFvPatchScalarField
         //- Limiting advancing contact angle
         scalar thetaA_;
 
-        //- Limiting receeding contact angle
+        //- Limiting receding contact angle
         scalar thetaR_;
 
 

@@ -88,7 +88,7 @@ public:
 
         //- Max size of thread buffer size. This is the overall size of
         //  all files to be written. Starts blocking if not enough size.
-        //  Read as float to enable easy specificiation of large sizes.
+        //  Read as float to enable easy specification of large sizes.
         static float maxThreadFileBufferSize;
 
 

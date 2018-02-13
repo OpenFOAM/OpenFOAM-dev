@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Calulate the face centres and areas.
+    Calculate the face centres and areas.
 
     Calculate the centre by breaking the face into triangles using the face
     centre and area-weighted averaging their centres.  This method copes with

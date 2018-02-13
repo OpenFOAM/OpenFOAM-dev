@@ -46,7 +46,7 @@ Description
 
     DAC uses a initial set of species that represents the major parts of the
     combustion mechanism, i.e. H2/O2, fuel decomposition and CO2 production.
-    Usualy, it includes the fuel, HO2 and CO. Then it computes the dependance
+    Usually, it includes the fuel, HO2 and CO. Then it computes the dependence
     of these set to the other species. This is done by introducing R-value
     defined by
 

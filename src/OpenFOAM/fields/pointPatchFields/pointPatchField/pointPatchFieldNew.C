@@ -140,7 +140,7 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
         }
     }
 
-    // Construct (but not necesarily returned)
+    // Construct (but not necessarily returned)
     autoPtr<pointPatchField<Type>> pfPtr(cstrIter()(p, iF, dict));
 
     if

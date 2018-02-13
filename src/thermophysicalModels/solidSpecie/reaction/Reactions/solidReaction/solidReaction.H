@@ -161,7 +161,7 @@ public:
         // Access
 
 
-            // - Acces to gas components of the reaction
+            // - Access to gas components of the reaction
             virtual const List<specieCoeffs>& grhs() const;
             virtual const List<specieCoeffs>& glhs() const;
 

@@ -151,7 +151,7 @@ public:
         //- Assignment to pointer changing this tmpNrc to a temporary T
         inline void operator=(T*);
 
-        //- Assignment transfering the temporary T to this tmpNrc
+        //- Assignment transferring the temporary T to this tmpNrc
         inline void operator=(const tmpNrc<T>&);
 };
 

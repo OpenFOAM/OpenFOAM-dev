@@ -50,7 +50,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
     if (!chemistryDict.isDict("chemistryType"))
     {
         FatalErrorInFunction
-            << "Template paramater based chemistry solver selection is no "
+            << "Template parameter based chemistry solver selection is no "
             << "longer supported. Please create a chemistryType dictionary"
             << "instead." << endl << endl << "For example, the entry:" << endl
             << "    chemistrySolver ode<StandardChemistryModel<"

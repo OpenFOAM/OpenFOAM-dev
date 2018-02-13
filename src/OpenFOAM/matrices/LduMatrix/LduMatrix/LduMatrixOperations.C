@@ -135,7 +135,7 @@ Foam::LduMatrix<Type, DType, LUType>::faceH(const Field<Type>& psi) const
     const Field<LUType>& Lower = const_cast<const LduMatrix&>(*this).lower();
     const Field<LUType>& Upper = const_cast<const LduMatrix&>(*this).upper();
 
-    // Take refereces to addressing
+    // Take references to addressing
     const unallocLabelList& l = lduAddr().lowerAddr();
     const unallocLabelList& u = lduAddr().upperAddr();
 

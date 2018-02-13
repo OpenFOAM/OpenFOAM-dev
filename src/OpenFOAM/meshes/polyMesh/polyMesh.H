@@ -85,7 +85,7 @@ public:
         //- Enumeration defining the state of the mesh after a read update.
         //  Used for post-processing applications, where the mesh
         //  needs to update based on the files written in time
-        //  directores
+        //  directories
         enum readUpdateState
         {
             UNCHANGED,

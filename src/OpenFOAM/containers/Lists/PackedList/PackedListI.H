@@ -369,7 +369,7 @@ inline void Foam::PackedList<nBits>::iteratorBase::operator=
     const unsigned int val
 )
 {
-    // Lazy evaluation - increase size on assigment
+    // Lazy evaluation - increase size on assignment
     if (index_ >= list_->size_)
     {
         list_->resize(index_ + 1);
@@ -1003,7 +1003,7 @@ inline bool Foam::PackedList<nBits>::set
     }
     else if (i >= size_)
     {
-        // Lazy evaluation - increase size on assigment
+        // Lazy evaluation - increase size on assignment
         resize(i + 1);
     }
 

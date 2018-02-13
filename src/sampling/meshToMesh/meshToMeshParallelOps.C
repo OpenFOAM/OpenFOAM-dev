@@ -123,7 +123,7 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
         procBb[Pstream::myProcNo()] = boundBox(src.points(), false);
 
         // slightly increase size of bounding boxes to allow for cases where
-        // bounding boxes are perfectly alligned
+        // bounding boxes are perfectly aligned
         procBb[Pstream::myProcNo()].inflate(0.01);
     }
     else

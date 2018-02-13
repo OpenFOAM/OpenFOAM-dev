@@ -246,7 +246,7 @@ public:
             //- Remove a file, returning true if successful otherwise false
             virtual bool rm(const fileName&) const = 0;
 
-            //- Remove a dirctory and its contents
+            //- Remove a directory and its contents
             virtual bool rmDir(const fileName&) const = 0;
 
 //            //- Open a shared library. Return handle to library. Print error

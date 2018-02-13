@@ -408,7 +408,7 @@ Foam::Istream& Foam::dimensionSet::read
 {
     multiplier = 1.0;
 
-    // Read begining of dimensionSet
+    // Read beginning of dimensionSet
     token startToken(is);
 
     if (startToken != token::BEGIN_SQR)
@@ -503,7 +503,7 @@ Foam::Istream& Foam::dimensionSet::read
 {
     multiplier = 1.0;
 
-    // Read begining of dimensionSet
+    // Read beginning of dimensionSet
     token startToken(is);
 
     if (startToken != token::BEGIN_SQR)

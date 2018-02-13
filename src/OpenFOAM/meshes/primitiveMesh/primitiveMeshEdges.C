@@ -266,7 +266,7 @@ void Foam::primitiveMesh::calcEdges(const bool doFaceEdges) const
         }
 
 
-        // Like faces sort edges in order of increasing neigbouring point.
+        // Like faces sort edges in order of increasing neighbouring point.
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // Automatically if points are sorted into internal and external points
         // the edges will be sorted into

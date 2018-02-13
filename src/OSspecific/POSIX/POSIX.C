@@ -687,7 +687,7 @@ Foam::fileNameList Foam::readDir
         {
             fileName fName(list->d_name);
 
-            // ignore files begining with ., i.e. '.', '..' and '.*'
+            // ignore files beginning with ., i.e. '.', '..' and '.*'
             if (fName.size() && fName[0] != '.')
             {
                 word fExt = fName.ext();
