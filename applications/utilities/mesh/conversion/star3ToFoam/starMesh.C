@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ const Foam::label Foam::starMesh::sammAddressingTable[9][12] =
 // shape. This would imply that the table below needs to be split between
 // the regular shapes (3-9), which are OK, and the SAMM shapes, for which
 // the face lookup needs to be done based on the rotation. Thus, for a samm
-// cell, firts find out the face index in the normal rotation using the cell
+// cell, first find out the face index in the normal rotation using the cell
 // face permutation table and then use the index from the shape face lookup.
 // Additionally, have in mind that this silliness does not allow matches
 // on face 7 and 8 of the samm cell.

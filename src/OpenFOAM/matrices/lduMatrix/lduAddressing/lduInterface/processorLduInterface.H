@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ public:
             //- Return processor number (rank in communicator)
             virtual int myProcNo() const = 0;
 
-            //- Return neigbour processor number (rank in communicator)
+            //- Return neighbour processor number (rank in communicator)
             virtual int neighbProcNo() const = 0;
 
             //- Return face transformation tensor

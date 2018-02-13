@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -266,7 +266,7 @@ void Foam::primitiveMesh::calcEdges(const bool doFaceEdges) const
         }
 
 
-        // Like faces sort edges in order of increasing neigbouring point.
+        // Like faces sort edges in order of increasing neighbouring point.
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // Automatically if points are sorted into internal and external points
         // the edges will be sorted into

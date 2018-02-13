@@ -190,7 +190,7 @@ Foam::point Foam::cell::centre
     // relationship, which is not available on this level. Thus, all the
     // pyramids are believed to be positive with no checking.
 
-    // first calculate the aproximate cell centre as the average of all
+    // first calculate the approximate cell centre as the average of all
     // face centres
     vector cEst = Zero;
     scalar sumArea = 0;
@@ -249,7 +249,7 @@ Foam::scalar Foam::cell::mag
 
     // WARNING! See cell::centre
 
-    // first calculate the aproximate cell centre as the average of all
+    // first calculate the approximate cell centre as the average of all
     // face centres
     vector cEst = Zero;
     scalar nCellFaces = 0;

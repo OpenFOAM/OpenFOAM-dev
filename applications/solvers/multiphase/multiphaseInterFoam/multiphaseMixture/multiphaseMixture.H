@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     Incompressible multi-phase mixture with built in solution for the
     phase fractions with interface compression for interface-capturing.
 
-    Derived from transportModel so that it can be unsed in conjunction with
+    Derived from transportModel so that it can be used in conjunction with
     the incompressible turbulence models.
 
     Surface tension and contact-angle is handled for the interface

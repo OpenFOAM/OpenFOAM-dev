@@ -206,7 +206,7 @@ Foam::label Foam::cellDistFuncs::getPointNeighbours
 
                 FatalErrorInFunction
                     << "Problem: fast pointNeighbours routine included " << nb
-                    << " which is not in proper neigbour list " << nbs.toc()
+                    << " which is not in proper neighbour list " << nbs.toc()
                     << abort(FatalError);
             }
             nbs.erase(nb);

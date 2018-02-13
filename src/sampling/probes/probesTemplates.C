@@ -47,7 +47,7 @@ public:
         {
             // Keep x.
 
-            // Note:chould check for y != unsetVal but multiple sample cells
+            // Note: should check for y != unsetVal but multiple sample cells
             // already handled in read().
         }
         else

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -268,7 +268,7 @@ public:
             return myProcNo_;
         }
 
-        //- Return neigbour processor number
+        //- Return neighbour processor number
         int neighbProcNo() const
         {
             return neighbProcNo_;

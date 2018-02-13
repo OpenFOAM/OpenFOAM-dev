@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,7 +198,7 @@ private:
         //- Convert the source tris and normals to a projection. Most of the
         //  time this does nothing, but if some of the normals point in the
         //  reverse direction the projection will be reduced to span only the
-        //  region in which the projection points forward throught the target
+        //  region in which the projection points forward through the target
         //  plane. Returns the number of edges in the projection (0, 3 or 4).
         label getSourceProjection
         (

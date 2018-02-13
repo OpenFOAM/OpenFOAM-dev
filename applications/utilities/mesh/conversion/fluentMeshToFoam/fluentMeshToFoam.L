@@ -1184,9 +1184,9 @@ int main(int argc, char *argv[])
         patchPhysicalTypes
     );
 
-    //don't write mesh yet, otherwise preservePatchTypes will be broken
-    //and zones wont be written
-    //checkmesh done after patch addition as well
+    // don't write mesh yet, otherwise preservePatchTypes will be broken
+    // and zones won't be written
+    // checkmesh done after patch addition as well
     Info<< "done." << endl;
 
 

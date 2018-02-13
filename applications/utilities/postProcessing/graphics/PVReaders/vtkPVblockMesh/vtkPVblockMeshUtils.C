@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,6 @@ vtkDataSet* Foam::vtkPVblockMesh::GetDataSetFromBlock
 }
 
 
-// ununsed at the moment
 Foam::label Foam::vtkPVblockMesh::GetNumberOfDataSets
 (
     vtkMultiBlockDataSet* output,

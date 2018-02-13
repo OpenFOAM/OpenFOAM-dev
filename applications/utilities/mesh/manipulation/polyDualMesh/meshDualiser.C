@@ -278,7 +278,7 @@ Foam::label Foam::meshDualiser::addInternalFace
         //    << " points:" << UIndirectList<point>(meshMod.points(), newFace)()
         //    << " n:" << n
         //    << " between dualowner:" << dualCell0
-        //    << " dualneigbour:" << dualCell1
+        //    << " dualneighbour:" << dualCell1
         //    << endl;
     }
     else
@@ -305,7 +305,7 @@ Foam::label Foam::meshDualiser::addInternalFace
         //    << " points:" << UIndirectList<point>(meshMod.points(), newFace)()
         //    << " n:" << n
         //    << " between dualowner:" << dualCell1
-        //    << " dualneigbour:" << dualCell0
+        //    << " dualneighbour:" << dualCell0
         //    << endl;
     }
     return dualFacei;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ public:
 
         //- Cyclic interface functions
 
-            //- Return neigbour processor number
+            //- Return neighbour processor number
             virtual label neighbPatchID() const
             {
                 return fineCyclicACMIInterface_.neighbPatchID();

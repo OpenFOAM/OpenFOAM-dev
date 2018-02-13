@@ -186,7 +186,7 @@ Foam::label Foam::meshSearch::findNearestFaceTree(const point& location) const
 
     if (!info.hit())
     {
-        // Search with desparate span
+        // Search with desperate span
         info = tree.findNearest(location, Foam::sqr(great));
     }
 

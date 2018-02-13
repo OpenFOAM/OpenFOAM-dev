@@ -127,7 +127,7 @@ void Foam::router::fixWeights
     {
         WarningInFunction
             << "Cannot route from node " << nodeI
-            << " since all neigbours of node "
+            << " since all neighbours of node "
             << "already allocated:" << endl;
 
         forAll(myNeighbours, neighbourI)

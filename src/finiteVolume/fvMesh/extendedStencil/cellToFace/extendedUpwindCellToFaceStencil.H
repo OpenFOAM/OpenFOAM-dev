@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class extendedUpwindCellToFaceStencil
         //- Does stencil contain upwind points only
         const bool pureUpwind_;
 
-        //- Swap map for getting neigbouring data
+        //- Swap map for getting neighbouring data
         autoPtr<mapDistribute> ownMapPtr_;
         autoPtr<mapDistribute> neiMapPtr_;
 
