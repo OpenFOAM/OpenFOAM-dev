@@ -183,7 +183,7 @@ Foam::twoPhaseSystem::twoPhaseSystem
             pair_,
             pair1In2_,
             pair2In1_,
-            false // Do not zero drag coefficent at fixed-flux BCs
+            false // Do not zero drag coefficient at fixed-flux BCs
         )
     );
 

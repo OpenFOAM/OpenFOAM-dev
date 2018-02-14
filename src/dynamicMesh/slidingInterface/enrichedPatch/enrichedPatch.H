@@ -36,7 +36,7 @@ Description
 
     Note:
     If new points are created during master-slave edge cutting, they
-    should be registred with the pointMap.
+    should be registered with the pointMap.
 
 
 SourceFiles

@@ -93,7 +93,7 @@ void Foam::helpTypes::helpBoundary::execute
     if (abortVar)
     {
         FatalErrorInFunction
-            << "Please unset FOAM_ABORT to use this utlity"
+            << "Please unset FOAM_ABORT to use this utility"
             << exit(FatalError);
     }
 

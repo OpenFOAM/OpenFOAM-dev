@@ -57,7 +57,7 @@ void Foam::nastranSurfaceWriter::formatOS(OFstream& os) const
 {
     os.setf(ios_base::scientific);
 
-    // capitalise the E marker
+    // capitalize the E marker
     os.setf(ios_base::uppercase);
 
     label prec = 0;

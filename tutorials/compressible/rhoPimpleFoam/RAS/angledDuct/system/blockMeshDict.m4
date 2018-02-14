@@ -17,7 +17,7 @@ FoamFile
 // the porosity is not aligned with the main axes
 //
 dnl> -----------------------------------------------------------------
-dnl> <STANDARD DEFINTIONS>
+dnl> <STANDARD DEFINITIONS>
 dnl>
 changecom(//)changequote([,]) dnl>
 define(calc, [esyscmd(perl -e 'print ($1)')]) dnl>
@@ -29,7 +29,7 @@ define(quad2D, ($1f $1b $2b $2f))  dnl>
 define(frontQuad, ($1f $2f $3f $4f)) dnl>
 define(backQuad, ($4b $3b $2b $1b)) dnl>
 dnl>
-dnl> </STANDARD DEFINTIONS>
+dnl> </STANDARD DEFINITIONS>
 dnl> -----------------------------------------------------------------
 dnl>
 define(ncells, 20) dnl>

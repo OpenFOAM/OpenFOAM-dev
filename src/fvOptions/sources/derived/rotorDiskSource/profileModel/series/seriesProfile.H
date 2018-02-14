@@ -33,8 +33,8 @@ Description
 
     where:
         AOA = angle of attack [deg] converted to [rad] internally
-        Cd = drag coefficent
-        Cl = lift coefficent
+        Cd = drag coefficient
+        Cl = lift coefficient
 
     Input in two (arbitrary length) lists:
 

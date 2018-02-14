@@ -2002,13 +2002,13 @@ bool Foam::polyMeshGeometry::checkFaceFlatness
         if (nWarped> 0)
         {
             Info<< "There are " << nWarped
-                << " faces with area of invidual triangles"
+                << " faces with area of individual triangles"
                 << " compared to overall area less than "
                 << minFlatness << nl << endl;
         }
         else
         {
-            Info<< "All faces are flat in that the area of invidual triangles"
+            Info<< "All faces are flat in that the area of individual triangles"
                 << " compared to overall area is less than "
                 << minFlatness << nl << endl;
         }
@@ -2020,7 +2020,7 @@ bool Foam::polyMeshGeometry::checkFaceFlatness
         {
             WarningInFunction
                 << nWarped  << " non-flat faces "
-                << "(area of invidual triangles"
+                << "(area of individual triangles"
                 << " compared to overall area"
                 << " < " << minFlatness << ") found.\n"
                 << endl;

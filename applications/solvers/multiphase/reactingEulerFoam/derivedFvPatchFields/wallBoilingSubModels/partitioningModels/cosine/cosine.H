@@ -91,7 +91,7 @@ public:
 
     // Member Functions
 
-        //- Calculate and return the wall heat-flux partioning
+        //- Calculate and return the wall heat-flux partitioning
         virtual tmp<scalarField> fLiquid(const scalarField& alphaLiquid) const;
 
         virtual void write(Ostream& os) const;

@@ -157,7 +157,7 @@ public:
 
         // Access
 
-            //- Does the patch field perform the transfromation
+            //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
                 return !(procPatch_.parallel() || pTraits<Type>::rank == 0);

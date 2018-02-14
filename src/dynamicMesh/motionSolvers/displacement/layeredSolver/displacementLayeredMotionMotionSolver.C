@@ -290,7 +290,7 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
     if (patchesDict.size() != 2)
     {
         FatalIOErrorInFunction(*this)
-            << "Two faceZones (patches) must be specifed per cellZone. "
+            << "Two faceZones (patches) must be specified per cellZone. "
             << " cellZone:" << cellZoneI
             << " patches:" << patchesDict.toc()
             << exit(FatalIOError);

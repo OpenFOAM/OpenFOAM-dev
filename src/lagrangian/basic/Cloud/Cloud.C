@@ -132,7 +132,7 @@ void Foam::Cloud<ParticleType>::deleteLostParticles()
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::cloudReset(const Cloud<ParticleType>& c)
 {
-    // Reset particle cound and particles only
+    // Reset particle count and particles only
     // - not changing the cloud object registry or reference to the polyMesh
     ParticleType::particleCount_ = 0;
     IDLList<ParticleType>::operator=(c);

@@ -25,7 +25,7 @@ Class
     Foam::pointConstraints
 
 Description
-    Application of (multi-)patch point contraints.
+    Application of (multi-)patch point constraints.
 
     Note: includes all points which are on the boundary of a patch
           with a constraint. It includes them (even though the constraint

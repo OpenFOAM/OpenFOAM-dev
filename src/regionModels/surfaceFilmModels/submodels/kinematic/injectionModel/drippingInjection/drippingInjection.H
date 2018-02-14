@@ -77,7 +77,7 @@ protected:
     // Protected data
 
         //- Stable film thickness - drips only formed if thickness
-        //  execeeds this threhold value
+        //  exceeds this threshold value
         scalar deltaStable_;
 
         //- Number of particles per parcel

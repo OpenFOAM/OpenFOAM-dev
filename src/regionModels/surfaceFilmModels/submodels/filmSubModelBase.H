@@ -71,7 +71,7 @@ public:
         //- Construct null
         filmSubModelBase(surfaceFilmRegionModel& film);
 
-        //- Construct from film film wihout name
+        //- Construct from film film without name
         filmSubModelBase
         (
             surfaceFilmRegionModel& film,

@@ -183,7 +183,7 @@ void Foam::GAMGSolver::Vcycle
         if (coarseSources.set(leveli + 1))
         {
             // If the optional pre-smoothing sweeps are selected
-            // smooth the coarse-grid field for the restriced source
+            // smooth the coarse-grid field for the restricted source
             if (nPreSweeps_)
             {
                 coarseCorrFields[leveli] = 0.0;

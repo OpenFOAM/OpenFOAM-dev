@@ -610,7 +610,7 @@ public:
 
     // Decompose and reconstruct
 
-        //- Return the tet point approproate for decomposition or reconstruction
+        //- Return the tet point appropriate for decomposition or reconstruction
         //  to or from the given mesh.
         label procTetPt
         (

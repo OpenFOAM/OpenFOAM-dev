@@ -61,8 +61,8 @@ Description
 
     @endverbatim
 
-    When the operation is performed - for union, all of the edges generates
-    where one surfaces cuts another are all "internal" for union, and "external"
+    When the operation is performed - for union, all of the edges generate
+    where one surface cuts another are all "internal" for union, and "external"
     for intersection, b - a and a - b.  This has been assumed, formal (dis)proof
     is invited.
 

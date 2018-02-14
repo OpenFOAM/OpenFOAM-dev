@@ -410,7 +410,7 @@ void Foam::vtkPVblockMesh::Update
     updateFoamMesh();
     reader_->UpdateProgress(0.5);
 
-    // Convert mesh elemente
+    // Convert mesh element
     int blockNo = 0;
 
     convertMeshCorners(output, blockNo);

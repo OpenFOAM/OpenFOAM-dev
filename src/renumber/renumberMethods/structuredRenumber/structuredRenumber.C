@@ -247,7 +247,7 @@ Foam::labelList Foam::structuredRenumber::renumber
         << " cells out of " << nTotalCells
         << "; using " << method_().type() << " renumbering for these" << endl;
 
-    // Get cell order using the method(). These values will get overwitten
+    // Get cell order using the method(). These values will get overwritten
     // by any visited cell so are used only if the number of nLayers is limited.
     labelList oldToOrdered
     (

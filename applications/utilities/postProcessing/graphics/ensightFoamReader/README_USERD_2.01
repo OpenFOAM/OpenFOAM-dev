@@ -1056,7 +1056,7 @@ USERD_get_element_label_status
 
    Notes:
    -----
-   * element lables are needed in order to do any element querying, or
+   * element labels are needed in order to do any element querying, or
      element labeling on-screen within EnSight.
 
    * Prior to API 2.01:

@@ -25,7 +25,7 @@ Application
     engineSwirl
 
 Description
-    Generates a swirling flow for engine calulations.
+    Generates a swirling flow for engine calculations.
 
 \*---------------------------------------------------------------------------*/
 

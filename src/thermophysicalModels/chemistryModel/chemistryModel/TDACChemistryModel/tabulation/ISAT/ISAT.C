@@ -371,10 +371,10 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
         Rcq[speciesNumber + 2] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 2];
     }
 
-    // Aaa is computed implicitely,
+    // Aaa is computed implicitly,
     // A is given by A = C(psi0, t0+dt), where C is obtained through solving
     // d/dt C(psi0,t) = J(psi(t))C(psi0,t)
-    // If we solve it implicitely:
+    // If we solve it implicitly:
     // (C(psi0, t0+dt) - C(psi0,t0))/dt = J(psi(t0+dt))C(psi0,t0+dt)
     // The Jacobian is thus computed according to the mapping
     // C(psi0,t0+dt)*(I-dt*J(psi(t0+dt))) = C(psi0, t0)

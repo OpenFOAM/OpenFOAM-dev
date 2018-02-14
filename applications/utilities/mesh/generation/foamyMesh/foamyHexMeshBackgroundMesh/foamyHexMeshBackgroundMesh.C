@@ -571,7 +571,7 @@ int main(int argc, char *argv[])
     }
 
 
-    Info<< "Refining backgroud mesh according to cell size specification" << nl
+    Info<< "Refining background mesh according to cell size specification" << nl
         << endl;
 
     backgroundMeshDecomposition backgroundMesh

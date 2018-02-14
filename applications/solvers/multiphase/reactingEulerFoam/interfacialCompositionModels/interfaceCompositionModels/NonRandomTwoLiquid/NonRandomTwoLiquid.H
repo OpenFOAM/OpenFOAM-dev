@@ -88,10 +88,10 @@ class NonRandomTwoLiquid
         //- Non-randomness constant parameter for species 2
         dimensionedScalar alpha21_;
 
-        //- Non-randomness linear paramater for species 1
+        //- Non-randomness linear parameter for species 1
         dimensionedScalar beta12_;
 
-        //- Non-randomness linear paramater for species 2
+        //- Non-randomness linear parameter for species 2
         dimensionedScalar beta21_;
 
         //- Interaction parameter model for species 1

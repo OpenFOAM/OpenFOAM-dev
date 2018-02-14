@@ -79,7 +79,7 @@ do
             usage
             exit 0
             ;;
-        # Check if called from wmake to avoid recusion
+        # Check if called from wmake to avoid recursion
         -fromWmake)
             fromWmake="fromWmake"
             ;;

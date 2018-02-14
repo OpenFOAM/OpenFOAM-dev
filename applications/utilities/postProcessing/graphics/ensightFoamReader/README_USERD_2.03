@@ -470,7 +470,7 @@ called is given.
           USERD_get_number_of_materials
           USERD_get_matf_var_info
 
-        For each elment type of each part containing material ids, calls:
+        For each element type of each part containing material ids, calls:
           USERD_size_matf_data
           USERD_load_matf_data
 
@@ -1081,7 +1081,7 @@ USERD_get_element_label_status
 
    Notes:
    -----
-   * element lables are needed in order to do any element querying, or
+   * element labels are needed in order to do any element querying, or
      element labeling on-screen within EnSight.
 
    * Prior to API 2.01:
@@ -1430,7 +1430,7 @@ USERD_get_gold_part_build_info
                               1       2       3  (I planes)
 
 
-        And note that if you were partioning this block for
+        And note that if you were partitioning this block for
         EnSight's Server of Servers, you would only have one part,
         instead of two.  Each SOS server would return its appropriate
         ranges in the last 6 slots. The first 3 slots would remain constant.
