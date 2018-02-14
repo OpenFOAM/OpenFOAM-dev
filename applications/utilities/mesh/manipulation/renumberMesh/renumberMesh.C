@@ -941,7 +941,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        // Detemines sorted back to original cell ordering
+        // Determines sorted back to original cell ordering
         cellOrder = renumberPtr().renumber
         (
             mesh,

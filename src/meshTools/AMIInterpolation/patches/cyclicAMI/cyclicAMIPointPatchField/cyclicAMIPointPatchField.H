@@ -183,7 +183,7 @@ public:
 
         // Cyclic AMI coupled interface functions
 
-            //- Does the patch field perform the transfromation
+            //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
                 return

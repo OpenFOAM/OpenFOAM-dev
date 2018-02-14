@@ -100,7 +100,7 @@ Foam::SingleMixtureFraction<CloudType>::SingleMixtureFraction
     if (this->phaseProps().size() != 3)
     {
         FatalErrorInFunction
-            << "Incorrect numebr of phases: " << nl
+            << "Incorrect number of phases: " << nl
             << "    Please specify 1 gas, 1 liquid and 1 solid"
             << exit(FatalError);
     }

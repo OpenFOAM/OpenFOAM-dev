@@ -59,7 +59,7 @@ class linearNormal
         //- First cell thickness
         scalar firstCellThickness_;
 
-        //- Layer cell distibution
+        //- Layer cell distribution
         scalarList layerPoints_;
 
 

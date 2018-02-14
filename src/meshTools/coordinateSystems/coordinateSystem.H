@@ -274,7 +274,7 @@ public:
                 return R_();
             }
 
-            //- Update and return the co-ordinate roation for a list of cells
+            //- Update and return the co-ordinate rotation for a list of cells
             const coordinateRotation& R
             (
                 const polyMesh& mesh,

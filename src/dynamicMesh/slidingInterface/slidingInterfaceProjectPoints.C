@@ -66,7 +66,7 @@ bool Foam::slidingInterface::projectPoints() const
     // Algorithm:
     // 1) Go through all the points of the master and slave patch and calculate
     //    minimum edge length coming from the point.  Calculate the point
-    //    merge tolerance as the fraction of mimimum edge length.
+    //    merge tolerance as the fraction of minimum edge length.
     // 2) Project all the slave points onto the master patch
     //    in the normal direction.
     // 3) If some points have missed and the match is integral, the

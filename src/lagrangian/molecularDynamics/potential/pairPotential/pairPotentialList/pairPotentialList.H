@@ -92,7 +92,7 @@ public:
 
         pairPotentialList();
 
-        //- Construct from idList and potental dictionaries
+        //- Construct from idList and potential dictionaries
         pairPotentialList
         (
             const List<word>& idList,

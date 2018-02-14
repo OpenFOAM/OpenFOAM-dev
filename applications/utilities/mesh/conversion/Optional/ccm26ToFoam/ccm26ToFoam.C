@@ -759,7 +759,7 @@ int main(int argc, char *argv[])
             << endl;
 
         // Create some default patch names/types. These will be overwritten
-        // by any problem desciption (if it is there)
+        // by any problem description (if it is there)
         foamPatchTypes.setSize(foamPatchStarts.size());
         foamPatchNames.setSize(foamPatchStarts.size());
 

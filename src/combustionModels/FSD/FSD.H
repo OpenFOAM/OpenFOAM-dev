@@ -41,7 +41,7 @@ Description
     different strain rates and fit using a expential distribution.
 
     The spacial distribution of the consumption speed (omega) is obtained also
-    from a strained flamelet solution and it is assumed to have a guassian
+    from a strained flamelet solution and it is assumed to have a gaussian
     distribution.
 
     If the grid resolution is not enough to resolve the flame, the consumption

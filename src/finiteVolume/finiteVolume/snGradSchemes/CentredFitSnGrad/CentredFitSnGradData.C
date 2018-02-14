@@ -53,7 +53,7 @@ Foam::CentredFitSnGradData<Polynomial>::CentredFitSnGradData
     if (debug)
     {
         InfoInFunction
-            << "Contructing CentredFitSnGradData<Polynomial>" << endl;
+            << "Constructing CentredFitSnGradData<Polynomial>" << endl;
     }
 
     calcFit();

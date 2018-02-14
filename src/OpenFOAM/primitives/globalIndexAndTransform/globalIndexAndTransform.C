@@ -68,7 +68,7 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
 
         // Test the difference between tensor parts to see if it is
         // less than the tolerance.  sqrt(3.0) factor used to scale
-        // differnces as this is magnitude of a rotation tensor.  If
+        // differences as this is magnitude of a rotation tensor.  If
         // neither transform has a rotation, then the test is not
         // necessary.
 

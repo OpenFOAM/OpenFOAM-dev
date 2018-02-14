@@ -172,7 +172,7 @@ public:
                 return procInterface_.neighbProcNo();
             }
 
-            //- Does the interface field perform the transfromation
+            //- Does the interface field perform the transformation
             virtual bool doTransform() const
             {
                 return doTransform_;

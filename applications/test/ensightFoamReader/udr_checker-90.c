@@ -3806,7 +3806,7 @@ gold_var_loader(int var_time_step)
           if(nsize > 0) {
             values = (float *) calloc((nsize+1),sizeof(float));
             if(values == (float *) NULL) {
-              fprintf(stderr,"Error: alocating variable values\n");
+              fprintf(stderr,"Error: allocating variable values\n");
               return(Z_ERR);
             }
 
@@ -3976,7 +3976,7 @@ gold_var_loader(int var_time_step)
 
               values = (float *) calloc((nsize+1),sizeof(float));
               if(values == (float *) NULL) {
-                fprintf(stderr,"Error: alocating variable values\n");
+                fprintf(stderr,"Error: allocating variable values\n");
                 return(Z_ERR);
               }
 
@@ -4665,7 +4665,7 @@ var_loader(int var_time_step)
           if(nsize > 0) {
             values = (float *) calloc((num_comps * nsize),sizeof(float));
             if(values == (float *) NULL) {
-              fprintf(stderr,"Error: alocating variable values\n");
+              fprintf(stderr,"Error: allocating variable values\n");
               return(Z_ERR);
             }
 
@@ -4726,7 +4726,7 @@ var_loader(int var_time_step)
 
                 tvalues = (float *) calloc(nsize,sizeof(float));
                 if(tvalues == (float *) NULL) {
-                  fprintf(stderr,"Error: alocating tvalues array\n");
+                  fprintf(stderr,"Error: allocating tvalues array\n");
                   return(Z_ERR);
                 }
 
@@ -4850,7 +4850,7 @@ var_loader(int var_time_step)
 
               values = (float *) calloc((num_comps * nsize),sizeof(float));
               if(values == (float *) NULL) {
-                fprintf(stderr,"Error: alocating variable values\n");
+                fprintf(stderr,"Error: allocating variable values\n");
                 return(Z_ERR);
               }
 
@@ -4910,7 +4910,7 @@ var_loader(int var_time_step)
 
                   tvalues = (float *) calloc(nsize,sizeof(float));
                   if(tvalues == (float *) NULL) {
-                    fprintf(stderr,"Error: alocating tvalues array\n");
+                    fprintf(stderr,"Error: allocating tvalues array\n");
                     return(Z_ERR);
                   }
 

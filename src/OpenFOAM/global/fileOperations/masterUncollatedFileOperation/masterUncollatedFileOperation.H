@@ -406,7 +406,7 @@ public:
 
         //- Max size of parallel communications. Switches from non-blocking
         //  to scheduled when reading/writing files. Read as float to enable
-        //  easy specificiation of large sizes.
+        //  easy specification of large sizes.
         static float maxMasterFileBufferSize;
 
 
@@ -531,7 +531,7 @@ public:
             //- Remove a file, returning true if successful otherwise false
             virtual bool rm(const fileName&) const;
 
-            //- Remove a dirctory and its contents
+            //- Remove a directory and its contents
             virtual bool rmDir(const fileName&) const;
 
 //            //- Open a shared library. Return handle to library. Print error

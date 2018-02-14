@@ -177,7 +177,7 @@ void Foam::ParticleErosion<CloudType>::postPatch
         // patch-normal direction
         this->owner().patchData(p, pp, nw, Up);
 
-        // particle velocity reletive to patch
+        // particle velocity relative to patch
         const vector& U = p.U() - Up;
 
         // quick reject if particle travelling away from the patch

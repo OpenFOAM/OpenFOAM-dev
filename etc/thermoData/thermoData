@@ -17,7 +17,7 @@ Specie names have been transposed into a form supported by the OpenFOAM parser:
 
   1. Names starting with characters "[1-9]|*|(" are prepended with "-s".
   2. The character "'" has been replaced with "p".
-  3. The characted "/" has been replaced with "by".
+  3. The character "/" has been replaced with "by".
   4. All tabs removed.
   5. All Parts of the species names are concatenated with spaces replaced by "_".
   6. "REF.ELEM.*" has been removed.

@@ -72,7 +72,7 @@ error() {
     exit 1
 }
 
-# Set true to clean-up file if interupted
+# Set true to clean-up file if interrupted
 cleanup=
 
 while [ "$#" -gt 0 ]

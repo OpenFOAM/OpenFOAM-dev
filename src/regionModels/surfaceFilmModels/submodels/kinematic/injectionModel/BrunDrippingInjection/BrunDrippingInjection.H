@@ -100,7 +100,7 @@ protected:
         scalar dCoeff_;
 
         //- Stable film thickness - drips only formed if thickness
-        //  execeeds this threhold value
+        //  exceeds this threshold value
         scalar deltaStable_;
 
         //- Diameters of particles to inject into the dripping

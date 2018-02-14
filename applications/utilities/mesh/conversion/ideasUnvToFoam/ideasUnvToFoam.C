@@ -577,7 +577,7 @@ void readDOFS
     DynamicList<labelList>& dofVertices
 )
 {
-    Info<< "Starting reading contraints at line " << is.lineNumber() << '.'
+    Info<< "Starting reading constraints at line " << is.lineNumber() << '.'
         << endl;
 
     string line;
@@ -942,7 +942,7 @@ int main(int argc, char *argv[])
         Info<< "Using " << dofVertIndices.size()
             << " DOF sets to detect boundary faces."<< endl;
 
-        // Renumber vertex numbers on contraints
+        // Renumber vertex numbers on constraints
         forAll(dofVertIndices, patchi)
         {
             inplaceRenumber(unvToFoam, dofVertIndices[patchi]);

@@ -405,7 +405,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
 
     // If the mechanism reduction is active, the computed Jacobian
     // is compact (size of the reduced set of species)
-    // but according to the informations of the complete set
+    // but according to the information of the complete set
     // (i.e. for the third-body efficiencies)
 
     const scalar T = c[this->nSpecie_];

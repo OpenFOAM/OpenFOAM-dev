@@ -63,7 +63,7 @@ Usage
     \table
         Property | Description               | Required    | Default value
         type     | type name: nearWallFields | yes         |
-        fields   | list of fields with correspoding output field names | yes |
+        fields   | list of fields with corresponding output field names | yes |
         patches  | list of patches to sample | yes         |
         distance | distance from patch to sample | yes     |
     \endtable

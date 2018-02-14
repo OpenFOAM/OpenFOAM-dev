@@ -246,7 +246,7 @@ void Foam::LISAAtomization<CloudType>::update
 
     scalar pExp = 0.135;
 
-    //  modifing dD to take account of flash boiling
+    //  modifying dD to take account of flash boiling
     dD = dD*(1.0 - chi*pow(pRatio, -pExp));
     scalar lBU = Cl_ * mag(Urel)*tau;
 

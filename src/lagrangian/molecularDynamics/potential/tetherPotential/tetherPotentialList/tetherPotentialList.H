@@ -84,7 +84,7 @@ public:
 
         tetherPotentialList();
 
-        //- Construct from siteIdList and potental dictionaries
+        //- Construct from siteIdList and potential dictionaries
         tetherPotentialList
         (
             const List<word>& siteIdList,

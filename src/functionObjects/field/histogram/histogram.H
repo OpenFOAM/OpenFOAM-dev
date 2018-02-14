@@ -102,7 +102,7 @@ class histogram
         //- Minimum value
         scalar min_;
 
-        //- Mumber of bins
+        //- Number of bins
         label nBins_;
 
         //- Output formatter to write

@@ -190,7 +190,7 @@ public:
             //- Remove a file, returning true if successful otherwise false
             virtual bool rm(const fileName&) const;
 
-            //- Remove a dirctory and its contents
+            //- Remove a directory and its contents
             virtual bool rmDir(const fileName&) const;
 
 //            //- Open a shared library. Return handle to library. Print error

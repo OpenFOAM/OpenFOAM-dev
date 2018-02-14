@@ -7,7 +7,7 @@ Note that you do not have to update your (1.0 API) user defined reader if it
 is already working fine for you.
 
 You should consider it if:
-  - efficieny gains are needed or
+  - efficiency gains are needed or
   - you need access to complex variables or
   - you need access to tensor variables or
   - you need multiple timeset capability or
@@ -345,7 +345,7 @@ USERD_get_element_ids_for_part              USERD_get_part_element_ids_by_type
                       (Can be a dummy) ->   USERD_get_model_extents
                             (Required) ->   USERD_get_reader_version
 
-     multiple timeset releated:
+     multiple timeset related:
                             (Required) ->   USERD_get_number_timesets
                             (Required) ->   USERD_get_timeset_description
                             (Required) ->   USERD_get_geom_timeset_number

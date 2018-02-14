@@ -28,7 +28,7 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// Defined as static to be able to dynamicly change it during simulations
+// Defined as static to be able to dynamically change it during simulations
 // (all chemPoints refer to the same object)
 template<class CompType, class ThermoType>
 Foam::scalar Foam::chemPointISAT<CompType, ThermoType>::tolerance_;
