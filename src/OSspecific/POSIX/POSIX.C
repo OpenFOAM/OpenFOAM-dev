@@ -563,9 +563,11 @@ bool Foam::isFile
             error::printStack(Pout);
         }
     }
+
     return
         S_ISREG(mode(name, followLink))
-     || (checkGzip && S_ISREG(mode(name + ".gz", followLink)));
+     || (checkGzip && S_ISREG(mode(name + ".gz", followLink)))
+     || (checkGzip && S_ISREG(mode(name + ".orig", followLink)));
 }
 
 

@@ -10,8 +10,6 @@ runApplication surfaceFeatureExtract
 
 runApplication blockMesh
 
-[ ! -d 0 ] && cp -r 0.orig 0
-
 runApplication decomposePar -copyZero
 runParallel snappyHexMesh -overwrite
 

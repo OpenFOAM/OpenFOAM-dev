@@ -5,7 +5,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication blockMesh
-cp 0/alpha.water.orig 0/alpha.water
 runApplication setFields
 runApplication `getApplication`
 

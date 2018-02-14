@@ -26,8 +26,6 @@ runApplication -s fBurner \
 
 runApplication createPatch -overwrite
 
-cp 0/ph_rgh.orig 0/ph_rgh
-
 runApplication -s master \
     decomposePar -force
 

@@ -9,12 +9,7 @@ application=`getApplication`
 runApplication blockMesh
 runApplication topoSet
 runApplication createPatch -overwrite
-
-cp 0/ph_rgh.orig 0/ph_rgh
-
 runApplication decomposePar -force
-
-# Run
 runParallel $application
 
 #------------------------------------------------------------------------------

@@ -59,13 +59,6 @@ cleanCase()
     rm -rf jobInfo > /dev/null 2>&1
     rm -rf postProcessing > /dev/null 2>&1
     rm -rf TDAC > /dev/null 2>&1
-    rm -rf probes* > /dev/null 2>&1
-    rm -rf forces* > /dev/null 2>&1
-    rm -rf graphs* > /dev/null 2>&1
-    rm -rf sets > /dev/null 2>&1
-    rm -rf surfaceSampling > /dev/null 2>&1
-    rm -rf cuttingPlane > /dev/null 2>&1
-    rm -rf system/machines > /dev/null 2>&1
 
     if [ -d constant/polyMesh ]
     then
@@ -83,12 +76,16 @@ cleanCase()
     rm -rf constant/tetDualMesh > /dev/null 2>&1
 
     rm -rf VTK > /dev/null 2>&1
+    rm -rf sequencedVTK > /dev/null 2>&1
+
     rm -f 0/cellLevel 0/pointLevel 0/cellDist constant/cellDecomposition
 
     if [ -e system/blockMeshDict.m4 ]
     then
         rm -f system/blockMeshDict > /dev/null 2>&1
     fi
+
+    find . -name "*.orig" -type f -exec sh -c 'rm -f ${0%.*} ${0%.*}.gz' {} \;
 }
 
 removeCase()

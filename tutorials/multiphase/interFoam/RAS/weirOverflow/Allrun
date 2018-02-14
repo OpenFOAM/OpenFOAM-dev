@@ -6,9 +6,5 @@
 cp -r 0.orig 0 > /dev/null 2>&1
 
 runApplication blockMesh
-
-cp 0/alpha.water.orig 0/alpha.water
-
 runApplication setFields
-
 runApplication `getApplication`

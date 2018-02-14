@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,20 +53,29 @@ Foam::IFstreamAllocator::IFstreamAllocator(const fileName& pathname)
     ifPtr_ = new ifstream(pathname.c_str());
 
     // If the file is compressed, decompress it before reading.
-    if (!ifPtr_->good() && isFile(pathname + ".gz", false))
+    if (!ifPtr_->good())
     {
-        if (IFstream::debug)
+        if (isFile(pathname + ".gz", false))
         {
-            InfoInFunction << "Decompressing " << pathname + ".gz" << endl;
+            delete ifPtr_;
+
+            if (IFstream::debug)
+            {
+                InfoInFunction << "Decompressing " << pathname + ".gz" << endl;
+            }
+
+            ifPtr_ = new igzstream((pathname + ".gz").c_str());
+
+            if (ifPtr_->good())
+            {
+                compression_ = IOstream::COMPRESSED;
+            }
         }
-
-        delete ifPtr_;
-
-        ifPtr_ = new igzstream((pathname + ".gz").c_str());
-
-        if (ifPtr_->good())
+        else if (isFile(pathname + ".orig", false))
         {
-            compression_ = IOstream::COMPRESSED;
+            delete ifPtr_;
+
+            ifPtr_ = new ifstream((pathname + ".orig").c_str());
         }
     }
 }

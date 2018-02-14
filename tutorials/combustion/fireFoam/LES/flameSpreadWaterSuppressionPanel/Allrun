@@ -33,8 +33,6 @@ rm log.createPatch
 # create actual patches
 runApplication createPatch -region filmRegion -overwrite
 
-cp 0/ph_rgh.orig 0/ph_rgh
-
 # Run
 runApplication `getApplication`
 
