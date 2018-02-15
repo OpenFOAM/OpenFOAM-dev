@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,10 +186,42 @@ public:
             virtual surfaceScalarField& alphaRhoPhi();
 
 
-        // Turbulence
+        // Transport
 
-            //- Return the turbulence model
-            virtual const phaseCompressibleTurbulenceModel& turbulence() const;
+            //- Return the turbulent dynamic viscosity
+            virtual tmp<volScalarField> mut() const;
+
+            //- Return the effective dynamic viscosity
+            virtual tmp<volScalarField> muEff() const;
+
+            //- Return the turbulent kinematic viscosity
+            virtual tmp<volScalarField> nut() const;
+
+            //- Return the effective kinematic viscosity
+            virtual tmp<volScalarField> nuEff() const;
+
+            //- Return the effective thermal conductivity
+            virtual tmp<volScalarField> kappaEff() const;
+
+            //- Return the effective thermal conductivity on a patch
+            virtual tmp<scalarField> kappaEff(const label patchi) const;
+
+            //- Return the effective thermal diffusivity for enthalpy
+            virtual tmp<volScalarField> alphaEff() const;
+
+            //- Return the effective thermal conductivity for enthalpy on a
+            //  patch
+            virtual tmp<scalarField> alphaEff(const label patchi) const;
+
+            //- Return the turbulent kinetic energy
+            virtual tmp<volScalarField> k() const;
+
+            //- Return the phase-pressure'
+            //  (derivative of phase-pressure w.r.t. phase-fraction)
+            virtual tmp<volScalarField> pPrime() const;
+
+            //- Return the turbulent term for the momentum equation
+            virtual tmp<fvVectorMatrix> divDevRhoReff();
 };
 
 

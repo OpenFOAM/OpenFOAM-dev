@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ Foam::turbulentDispersionModels::LopezDeBertodano::D() const
     return
         Ctd_
        *pair_.continuous().rho()
-       *pair_.continuous().turbulence().k();
+       *continuousTurbulence().k();
 }
 
 

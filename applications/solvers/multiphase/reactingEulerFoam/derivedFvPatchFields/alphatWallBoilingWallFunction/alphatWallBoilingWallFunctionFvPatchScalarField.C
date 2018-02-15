@@ -408,9 +408,25 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
             const phaseModel& vapor(fluid.phases()[otherPhaseName_]);
 
-            // Retrieve turbulence properties from model
+            // Retrieve turbulence properties from models
             const phaseCompressibleTurbulenceModel& turbModel =
-                liquid.turbulence();
+                db().lookupObject<phaseCompressibleTurbulenceModel>
+                (
+                    IOobject::groupName
+                    (
+                        turbulenceModel::propertiesName,
+                        liquid.name()
+                    )
+                );
+            const phaseCompressibleTurbulenceModel& vaporTurbModel =
+                db().lookupObject<phaseCompressibleTurbulenceModel>
+                (
+                    IOobject::groupName
+                    (
+                        turbulenceModel::propertiesName,
+                        vapor.name()
+                    )
+                );
 
             const tmp<scalarField> tnutw = turbModel.nut(patchi);
 
@@ -457,10 +473,10 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const scalarField yPlusTherm(this->yPlusTherm(P, Prat));
 
             const fvPatchScalarField& rhoLiquidw =
-                liquid.turbulence().rho().boundaryField()[patchi];
+                turbModel.rho().boundaryField()[patchi];
 
             const fvPatchScalarField& rhoVaporw =
-                vapor.turbulence().rho().boundaryField()[patchi];
+                vaporTurbModel.rho().boundaryField()[patchi];
 
             tmp<volScalarField> tCp = liquid.thermo().Cp();
             const volScalarField& Cp = tCp();

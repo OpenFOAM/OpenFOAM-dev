@@ -44,7 +44,7 @@ tmp<surfaceScalarField> phiF2;
     (
         fvc::interpolate
         (
-            rAU1*(D + phase1.turbulence().pPrime())
+            rAU1*(D + phase1.pPrime())
         )
     );
 
@@ -53,7 +53,7 @@ tmp<surfaceScalarField> phiF2;
     (
         fvc::interpolate
         (
-            rAU2*(D + phase2.turbulence().pPrime())
+            rAU2*(D + phase2.pPrime())
         )
     );
 

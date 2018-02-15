@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -310,13 +310,15 @@ public:
             //- Return the laminar thermal conductivity on a patch
             virtual tmp<scalarField> kappa(const label patchi) const = 0;
 
-            //- Return the effective thermal conductivity
+            //- Return the effective thermal conductivity, given the turbulent
+            //  thermal diffusivity
             virtual tmp<volScalarField> kappaEff
             (
                 const volScalarField& alphat
             ) const = 0;
 
-            //- Access the effective thermal conductivity
+            //- Return the effective thermal conductivity on a patch, given the
+            //  turbulent thermal diffusivity
             virtual tmp<scalarField> kappaEff
             (
                 const scalarField& alphat,
@@ -329,13 +331,15 @@ public:
             //- Return the laminar thermal diffusivity for enthalpy on a patch
             virtual tmp<scalarField> alpha(const label patchi) const = 0;
 
-            //- Return the effective thermal diffusivity for enthalpy
+            //- Return the effective thermal diffusivity for enthalpy, given the
+            //  turbulent thermal diffusivity
             virtual tmp<volScalarField> alphaEff
             (
                 const volScalarField& alphat
             ) const = 0;
 
-            //- Return the effective thermal diffusivity for enthalpy on a patch
+            //- Return the effective thermal diffusivity for enthalpy on a
+            //  patch, given the turbulent thermal diffusivity
             virtual tmp<scalarField> alphaEff
             (
                 const scalarField& alphat,
@@ -345,9 +349,40 @@ public:
 
         // Turbulence
 
-            //- Return the turbulence model
-            virtual const phaseCompressibleTurbulenceModel&
-                turbulence() const = 0;
+            //- Return the turbulent dynamic viscosity
+            virtual tmp<volScalarField> mut() const = 0;
+
+            //- Return the effective dynamic viscosity
+            virtual tmp<volScalarField> muEff() const = 0;
+
+            //- Return the turbulent kinematic viscosity
+            virtual tmp<volScalarField> nut() const = 0;
+
+            //- Return the effective kinematic viscosity
+            virtual tmp<volScalarField> nuEff() const = 0;
+
+            //- Return the effective thermal conductivity
+            virtual tmp<volScalarField> kappaEff() const = 0;
+
+            //- Return the effective thermal conductivity on a patch
+            virtual tmp<scalarField> kappaEff(const label patchi) const = 0;
+
+            //- Return the effective thermal diffusivity for enthalpy
+            virtual tmp<volScalarField> alphaEff() const = 0;
+
+            //- Return the effective thermal conductivity for enthalpy on a
+            //  patch
+            virtual tmp<scalarField> alphaEff(const label patchi) const = 0;
+
+            //- Return the turbulent kinetic energy
+            virtual tmp<volScalarField> k() const = 0;
+
+            //- Return the phase-pressure'
+            //  (derivative of phase-pressure w.r.t. phase-fraction)
+            virtual tmp<volScalarField> pPrime() const = 0;
+
+            //- Return the turbulent term for the momentum equation
+            virtual tmp<fvVectorMatrix> divDevRhoReff() = 0;
 };
 
 

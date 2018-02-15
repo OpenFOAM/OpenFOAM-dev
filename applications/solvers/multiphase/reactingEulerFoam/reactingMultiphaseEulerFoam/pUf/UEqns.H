@@ -41,7 +41,7 @@ PtrList<fvVectorMatrix> UEqns(phases.size());
             (
                 fvm::div(alphaRhoPhi, U) - fvm::Sp(fvc::div(alphaRhoPhi), U)
               + MRF.DDt(alpha*rho, U)
-              + phase.turbulence().divDevRhoReff(U)
+              + phase.divDevRhoReff()
               + fvm::SuSp(fvOptions(alpha, rho)&rho, U)
              ==
                 fvOptions(alpha, rho, U)

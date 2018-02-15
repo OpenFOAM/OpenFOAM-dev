@@ -89,11 +89,8 @@ KocamustafaogullariIshii::dDeparture
     const uniformDimensionedVectorField& g =
         liquid.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
-    const fvPatchScalarField& rhoLiquid =
-        liquid.turbulence().rho().boundaryField()[patchi];
-
-    const fvPatchScalarField& rhoVapor =
-        vapor.turbulence().rho().boundaryField()[patchi];
+    const scalarField rhoLiquid(liquid.thermo().rho(patchi));
+    const scalarField rhoVapor(vapor.thermo().rho(patchi));
 
     const scalarField rhoM((rhoLiquid - rhoVapor)/rhoVapor);
 

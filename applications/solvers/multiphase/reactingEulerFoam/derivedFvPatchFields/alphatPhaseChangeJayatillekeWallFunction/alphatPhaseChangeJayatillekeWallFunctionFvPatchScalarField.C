@@ -132,7 +132,11 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::calcAlphat
     const label patchi = patch().index();
 
     // Retrieve turbulence properties from model
-    const phaseCompressibleTurbulenceModel& turbModel = phase.turbulence();
+    const phaseCompressibleTurbulenceModel& turbModel =
+        db().lookupObject<phaseCompressibleTurbulenceModel>
+        (
+            IOobject::groupName(turbulenceModel::propertiesName, phase.name())
+        );
 
     const scalar Cmu25 = pow025(Cmu_);
 

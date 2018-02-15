@@ -60,13 +60,13 @@ tmp<surfaceScalarField> Ff2;
     // Phase-1 turbulent dispersion and particle-pressure diffusivity
     surfaceScalarField Df1
     (
-        fvc::interpolate(D + phase1.turbulence().pPrime())
+        fvc::interpolate(D + phase1.pPrime())
     );
 
     // Phase-2 turbulent dispersion and particle-pressure diffusivity
     surfaceScalarField Df2
     (
-        fvc::interpolate(D + phase2.turbulence().pPrime())
+        fvc::interpolate(D + phase2.pPrime())
     );
 
     // Cache the phase diffusivities for implicit treatment in the

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,20 +82,17 @@ Foam::tmp<Foam::volScalarField>
 Foam::turbulentDispersionModels::Burns::D() const
 {
     const fvMesh& mesh(pair_.phase1().mesh());
-    const dragModel&
-        drag
+    const dragModel& drag =
+        mesh.lookupObject<dragModel>
         (
-            mesh.lookupObject<dragModel>
-            (
-                IOobject::groupName(dragModel::typeName, pair_.name())
-            )
+            IOobject::groupName(dragModel::typeName, pair_.name())
         );
 
     return
         0.75
        *drag.CdRe()
        *pair_.continuous().nu()
-       *pair_.continuous().turbulence().nut()
+       *continuousTurbulence().nut()
        /(
             sigma_
            *sqr(pair_.dispersed().d())

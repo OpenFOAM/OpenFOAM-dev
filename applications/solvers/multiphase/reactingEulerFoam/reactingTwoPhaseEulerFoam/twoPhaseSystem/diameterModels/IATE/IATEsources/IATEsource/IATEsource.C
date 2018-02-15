@@ -87,7 +87,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Ur() const
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Ut() const
 {
-    return sqrt(2*otherPhase().turbulence().k());
+    return sqrt(2*otherPhase().k());
 }
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Re() const

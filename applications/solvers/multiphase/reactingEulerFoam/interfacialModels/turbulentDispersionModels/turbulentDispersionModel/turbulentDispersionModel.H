@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "phaseCompressibleTurbulenceModelFwd.H"
 
 namespace Foam
 {
@@ -113,6 +114,9 @@ public:
 
 
     // Member Functions
+
+        //- Return a reference to the turbulence model for the continuous phase
+        const phaseCompressibleTurbulenceModel& continuousTurbulence() const;
 
         //- Turbulent diffusivity
         //  multiplying the gradient of the phase-fraction

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,6 @@ License
 #include "phasePair.H"
 #include "phaseCompressibleTurbulenceModel.H"
 #include "addToRunTimeSelectionTable.H"
-
 #include "dragModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -86,7 +85,7 @@ Foam::turbulentDispersionModels::Gosman::D() const
        *drag.CdRe()
        *pair_.dispersed()
        *pair_.continuous().nu()
-       *pair_.continuous().turbulence().nut()
+       *continuousTurbulence().nut()
        /(
             sigma_
            *sqr(pair_.dispersed().d())

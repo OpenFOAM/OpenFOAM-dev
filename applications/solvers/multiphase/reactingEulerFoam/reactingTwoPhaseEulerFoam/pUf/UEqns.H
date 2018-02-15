@@ -27,7 +27,7 @@ fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVol/dimTime);
             fvm::div(alphaRhoPhi1, U1) - fvm::Sp(fvc::div(alphaRhoPhi1), U1)
           + fvm::Sp(dmdt21, U1) - dmdt21*U2
           + MRF.DDt(alpha1*rho1, U1)
-          + phase1.turbulence().divDevRhoReff(U1)
+          + phase1.divDevRhoReff()
           + Vm*(UgradU1 - (UgradU2 & U2))
           - fvOptions(alpha1, rho1, U1)
           + fvm::SuSp(fvOptions(alpha1, rho1)&rho1, U1)
@@ -44,7 +44,7 @@ fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVol/dimTime);
             fvm::div(alphaRhoPhi2, U2) - fvm::Sp(fvc::div(alphaRhoPhi2), U2)
           - fvm::Sp(dmdt12, U2) + dmdt12*U1
           + MRF.DDt(alpha2*rho2, U2)
-          + phase2.turbulence().divDevRhoReff(U2)
+          + phase2.divDevRhoReff()
           + Vm*(UgradU2 - (UgradU1 & U1))
           - fvOptions(alpha2, rho2, U2)
           + fvm::SuSp(fvOptions(alpha2, rho2)&rho2, U2)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -251,6 +251,7 @@ template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::correctEnergyTransport()
 {
     BasePhaseModel::correctEnergyTransport();
+
     turbulence_->correctEnergyTransport();
 }
 
@@ -395,10 +396,90 @@ Foam::MovingPhaseModel<BasePhaseModel>::alphaRhoPhi()
 
 
 template<class BasePhaseModel>
-const Foam::phaseCompressibleTurbulenceModel&
-Foam::MovingPhaseModel<BasePhaseModel>::turbulence() const
+Foam::tmp<Foam::volScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::mut() const
 {
-    return turbulence_;
+    return turbulence_->mut();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::volScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::muEff() const
+{
+    return turbulence_->muEff();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::volScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::nut() const
+{
+    return turbulence_->nut();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::volScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::nuEff() const
+{
+    return turbulence_->nuEff();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::volScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::kappaEff() const
+{
+    return turbulence_->kappaEff();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::scalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
+{
+    return turbulence_->kappaEff(patchi);
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::volScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::alphaEff() const
+{
+    return turbulence_->alphaEff();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::scalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::alphaEff(const label patchi) const
+{
+    return turbulence_->alphaEff(patchi);
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::volScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::k() const
+{
+    return turbulence_->k();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::volScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::pPrime() const
+{
+    return turbulence_->pPrime();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::MovingPhaseModel<BasePhaseModel>::divDevRhoReff()
+{
+    return turbulence_->divDevRhoReff(U_);
 }
 
 

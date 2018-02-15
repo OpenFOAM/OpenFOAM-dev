@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,11 +82,8 @@ Cole::fDeparture
     const uniformDimensionedVectorField& g =
         liquid.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
-    const fvPatchScalarField& rhoLiquid =
-        liquid.turbulence().rho().boundaryField()[patchi];
-
-    const fvPatchScalarField& rhoVapor =
-        vapor.turbulence().rho().boundaryField()[patchi];
+    const scalarField rhoLiquid(liquid.thermo().rho(patchi));
+    const scalarField rhoVapor(vapor.thermo().rho(patchi));
 
     return sqrt
     (
