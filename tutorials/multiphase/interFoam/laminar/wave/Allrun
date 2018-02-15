@@ -6,8 +6,6 @@ cd ${0%/*} || exit 1
 
 runApplication blockMesh
 
-cp -r 0.orig 0
-
 runApplication extrudeMesh
 
 for i in 1 2

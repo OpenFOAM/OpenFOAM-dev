@@ -7,8 +7,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Remove surface
 rm -f constant/triSurface/bullet.stl.gz
 
-# Remove copy of 0.orig
-rm -rf 0
+rm -f 0/phi
 
 cleanCase
 

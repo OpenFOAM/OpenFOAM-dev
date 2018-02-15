@@ -6,7 +6,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 application=`getApplication`
 
-cp -r 0.orig 0 > /dev/null 2>&1
 runApplication blockMesh
 runApplication $application -writePhi -writep
 runApplication postProcess -func streamFunction

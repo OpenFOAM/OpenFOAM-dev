@@ -7,6 +7,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 application=`getApplication`
 
 runApplication ./makeMesh
+runApplication setFields
 runApplication $application
 
 #------------------------------------------------------------------------------

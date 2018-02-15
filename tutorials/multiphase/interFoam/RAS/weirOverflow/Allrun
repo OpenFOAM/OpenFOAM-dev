@@ -3,8 +3,8 @@
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-cp -r 0.orig 0 > /dev/null 2>&1
-
 runApplication blockMesh
 runApplication setFields
 runApplication `getApplication`
+
+#------------------------------------------------------------------------------

@@ -23,9 +23,6 @@ done
 
 runApplication snappyHexMesh -overwrite
 
-rm -rf 0
-cp -r 0.orig 0
-
 runApplication setWaves -alpha alpha.water
 
 runApplication decomposePar
@@ -35,3 +32,5 @@ runParallel renumberMesh -overwrite
 runParallel $(getApplication)
 
 runApplication reconstructPar
+
+#------------------------------------------------------------------------------

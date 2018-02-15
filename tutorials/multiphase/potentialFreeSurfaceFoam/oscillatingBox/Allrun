@@ -10,7 +10,6 @@ application=`getApplication`
 runApplication blockMesh
 runApplication topoSet
 runApplication subsetMesh -overwrite c0 -patch floatingObject
-cp -r 0.orig 0 > /dev/null 2>&1
 
 runApplication $application
 

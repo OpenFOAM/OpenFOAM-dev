@@ -99,8 +99,8 @@ PIMPLE
 {
     momentumPredictor no;
     transonic       no;
-    nOuterCorrectors 1;
-    nCorrectors     2;
+    nOuterCorrectors 3;
+    nCorrectors     1;
     nNonOrthogonalCorrectors 0;
 }
 

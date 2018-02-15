@@ -10,8 +10,6 @@ application=`getApplication`
 runApplication blockMesh
 runApplication extrudeMesh
 
-rm -rf 0 2> /dev/null
-cp -r 0.orig 0
 runApplication setFields
 runApplication $application
 

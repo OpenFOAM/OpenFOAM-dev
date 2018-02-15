@@ -7,9 +7,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Set application name
 application=`getApplication`
 
-rm -rf 0
-cp -r 0.orig 0
-
 runApplication blockMesh
 runApplication setFields
 runApplication $application
