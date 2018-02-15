@@ -6,7 +6,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 cleanCase
 
-rm -rf 0
 rm -rf constant/extendedFeatureEdgeMesh/
 rm -f constant/triSurface/*.eMesh*
 rm -f constant/triSurface/*.stl
@@ -19,6 +18,5 @@ rm -f constant/backgroundMeshDecomposition/polyMesh/faces
 rm -f constant/backgroundMeshDecomposition/polyMesh/neighbour
 rm -f constant/backgroundMeshDecomposition/polyMesh/owner
 rm -f constant/backgroundMeshDecomposition/polyMesh/points
-
 
 #------------------------------------------------------------------------------

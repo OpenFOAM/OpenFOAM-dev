@@ -4,17 +4,15 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# create mesh
+# Create mesh
 runApplication blockMesh
 
-cp -r 0.orig 0
-
-# initialise with potentialFoam solution
+# Initialise with potentialFoam solution
 runApplication potentialFoam
 
 rm -f 0/phi
 
-# run the solver
+# Run the solver
 runApplication `getApplication`
 
 #------------------------------------------------------------------------------

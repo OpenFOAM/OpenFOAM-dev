@@ -4,19 +4,14 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Make dummy 0 directory
-mkdir 0
-
 runApplication blockMesh
 cp system/decomposeParDict.hierarchical system/decomposeParDict
-runApplication decomposePar
+runApplication decomposePar -copyZero
 
 cp system/decomposeParDict.ptscotch system/decomposeParDict
 runParallel snappyHexMesh -overwrite
 
 find . -type f -iname "*level*" -exec rm {} \;
-
-ls -d processor* | xargs -I {} cp -r 0.orig ./{}/0
 
 runParallel topoSet
 runParallel `getApplication`

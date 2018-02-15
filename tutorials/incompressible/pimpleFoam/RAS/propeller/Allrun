@@ -11,3 +11,5 @@ runApplication decomposePar
 runParallel `getApplication`
 
 runApplication reconstructPar
+
+#------------------------------------------------------------------------------

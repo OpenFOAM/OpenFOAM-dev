@@ -4,10 +4,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial clean functions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-# remove surface
+# Remove surface
 rm -f constant/triSurface/motorBike.obj.gz
-
-rm -rf 0 > /dev/null 2>&1
 
 cleanCase
 

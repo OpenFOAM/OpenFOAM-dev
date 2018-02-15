@@ -7,13 +7,12 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version         2.0;
+    version         2;
     format          ascii;
     class           dictionary;
     location        "system";
     object          controlDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 application     reactingFoam;
 
@@ -23,13 +22,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         6000;
+endTime         1500;
 
 deltaT          1;
 
 writeControl    runTime;
 
-writeInterval   100;
+writeInterval   1500;
 
 purgeWrite      0;
 

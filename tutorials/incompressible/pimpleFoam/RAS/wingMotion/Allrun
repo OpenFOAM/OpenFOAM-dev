@@ -13,16 +13,14 @@ runApplication snappyHexMesh -overwrite
 cd ../wingMotion2D_simpleFoam
 runApplication extrudeMesh
 runApplication createPatch -overwrite
-cp -r 0.orig 0
 runApplication simpleFoam
 
 # Copy the mesh from the steady state case and map the results to a
 # mesh motion case, then solve transient.
 cd ../wingMotion2D_pimpleFoam
 cp -r ../wingMotion2D_simpleFoam/constant/polyMesh constant
-cp -r 0.orig 0
 runApplication mapFields ../wingMotion2D_simpleFoam -sourceTime latestTime -consistent
-mv 0/pointDisplacement.unmapped 0/pointDisplacement
+cp pointDisplacement 0/pointDisplacement
 runApplication decomposePar
 runParallel `getApplication`
 runApplication reconstructPar

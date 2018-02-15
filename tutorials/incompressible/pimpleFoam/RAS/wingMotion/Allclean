@@ -9,8 +9,9 @@ cleanCase
 
 cd ../wingMotion2D_simpleFoam
 cleanCase
-rm -rf 0
 
 cd ../wingMotion2D_pimpleFoam
 cleanCase
-rm -rf 0
+rm -f 0/p 0/nut 0/k 0/omega 0/U 0/pointDisplacement
+
+#------------------------------------------------------------------------------

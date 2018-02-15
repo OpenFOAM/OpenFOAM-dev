@@ -11,5 +11,4 @@ runApplication foamyQuadMesh -overwrite
 runApplication extrude2DMesh -overwrite polyMesh2D
 runApplication checkMesh -allGeometry -allTopology -constant -noZero
 
-
 #------------------------------------------------------------------------------

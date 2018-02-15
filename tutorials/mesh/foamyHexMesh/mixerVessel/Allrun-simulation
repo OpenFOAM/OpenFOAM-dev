@@ -9,16 +9,11 @@ cp system/controlDict.flow system/controlDict
 # Set application name
 application=$(getApplication)
 
-rm -rf 0
-
 runApplication createBaffles -overwrite
 runApplication mergeOrSplitBaffles -split -overwrite
 
 # Get rid of zero faced patches
 runApplication createPatch -overwrite
-
-# Copy fields after meshing to avoind the generation of unnecessary patch fields
-cp -r 0.orig 0
 
 # Initialize alpha
 runApplication setFields
@@ -32,6 +27,5 @@ runParallel $application
 
 # Reconstruct
 runApplication reconstructPar -noFunctionObjects
-
 
 #------------------------------------------------------------------------------

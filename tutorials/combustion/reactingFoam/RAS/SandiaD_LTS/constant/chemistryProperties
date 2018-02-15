@@ -20,7 +20,7 @@ chemistryType
     method          TDAC;
 }
 
-chemistry       on;
+chemistry       off;
 
 importantSpecies
 {

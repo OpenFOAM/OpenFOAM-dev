@@ -1,0 +1,64 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       volScalarField;
+    location    "0";
+    object      p_rgh;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 125000;
+
+boundaryField
+{
+    outlet
+    {
+        type            fixedValue;
+        value           uniform 125000;
+    }
+    vessel
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           uniform 125000;
+    }
+    gasInlet
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           uniform 125000;
+    }
+    sparger
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           uniform 125000;
+    }
+    spargerShaft
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           uniform 125000;
+    }
+    shaftRotating
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           uniform 125000;
+    }
+    shaft
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           uniform 125000;
+    }

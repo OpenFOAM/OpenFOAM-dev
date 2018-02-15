@@ -19,12 +19,8 @@ intersectSurfaces()
 # Set application name
 application=$(getApplication)
 
-rm -rf 0
-
-
 # Run the surface preparation script
 ./constant/triSurface/surfaceProcess.sh > log.surfaceProcess 2>&1
-
 
 # Surface intersections
 intersectSurfaces                           \
@@ -68,7 +64,6 @@ do
         -surf1Baffle                                    \
         -surf2Baffle
 done
-
 
 # Meshing
 cp system/controlDict.mesh system/controlDict
