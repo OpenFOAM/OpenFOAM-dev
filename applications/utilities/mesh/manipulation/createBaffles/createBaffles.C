@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -455,7 +455,7 @@ int main(int argc, char *argv[])
 
     Switch internalFacesOnly(false);
 
-    Switch noFields(false);
+    Switch fields(false);
 
     PtrList<faceSelection> selectors;
     {
@@ -463,7 +463,7 @@ int main(int argc, char *argv[])
         IOdictionary dict(dictIO);
 
         dict.lookup("internalFacesOnly") >> internalFacesOnly;
-        noFields = dict.lookupOrDefault("noFields", false);
+        fields = dict.lookupOrDefault("fields", false);
 
         const dictionary& selectionsDict = dict.subDict("baffles");
 
@@ -500,39 +500,37 @@ int main(int argc, char *argv[])
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
 
-    // Read vol fields.
-    Info<< "Reading geometric fields" << nl << endl;
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
+
     PtrList<volScalarField> vsFlds;
-    if (!noFields) ReadFields(mesh, objects, vsFlds);
+    if (fields) ReadFields(mesh, objects, vsFlds);
 
     PtrList<volVectorField> vvFlds;
-    if (!noFields) ReadFields(mesh, objects, vvFlds);
+    if (fields) ReadFields(mesh, objects, vvFlds);
 
     PtrList<volSphericalTensorField> vstFlds;
-    if (!noFields) ReadFields(mesh, objects, vstFlds);
+    if (fields) ReadFields(mesh, objects, vstFlds);
 
     PtrList<volSymmTensorField> vsymtFlds;
-    if (!noFields) ReadFields(mesh, objects, vsymtFlds);
+    if (fields) ReadFields(mesh, objects, vsymtFlds);
 
     PtrList<volTensorField> vtFlds;
-    if (!noFields) ReadFields(mesh, objects, vtFlds);
-
-    // Read surface fields.
+    if (fields) ReadFields(mesh, objects, vtFlds);
 
     PtrList<surfaceScalarField> ssFlds;
-    if (!noFields) ReadFields(mesh, objects, ssFlds);
+    if (fields) ReadFields(mesh, objects, ssFlds);
 
     PtrList<surfaceVectorField> svFlds;
-    if (!noFields) ReadFields(mesh, objects, svFlds);
+    if (fields) ReadFields(mesh, objects, svFlds);
 
     PtrList<surfaceSphericalTensorField> sstFlds;
-    if (!noFields) ReadFields(mesh, objects, sstFlds);
+    if (fields) ReadFields(mesh, objects, sstFlds);
 
     PtrList<surfaceSymmTensorField> ssymtFlds;
-    if (!noFields) ReadFields(mesh, objects, ssymtFlds);
+    if (fields) ReadFields(mesh, objects, ssymtFlds);
 
     PtrList<surfaceTensorField> stFlds;
-    if (!noFields) ReadFields(mesh, objects, stFlds);
+    if (fields) ReadFields(mesh, objects, stFlds);
 
 
 
