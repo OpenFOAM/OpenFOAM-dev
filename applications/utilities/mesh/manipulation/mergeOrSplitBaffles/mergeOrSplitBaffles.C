@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,6 +239,11 @@ int main(int argc, char *argv[])
         "split",
         "topologically split duplicate surfaces"
     );
+    argList::addBoolOption
+    (
+        "fields",
+        "update fields"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -250,6 +255,7 @@ int main(int argc, char *argv[])
     const bool split      = args.optionFound("split");
     const bool overwrite  = args.optionFound("overwrite");
     const bool detectOnly = args.optionFound("detectOnly");
+    const bool fields     = args.optionFound("fields");
 
     // Collect all boundary faces
     labelList boundaryFaces(mesh.nFaces() - mesh.nInternalFaces());
@@ -270,39 +276,37 @@ int main(int argc, char *argv[])
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
 
-    // Read vol fields.
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
 
     PtrList<volScalarField> vsFlds;
-    ReadFields(mesh, objects, vsFlds);
+    if (fields) ReadFields(mesh, objects, vsFlds);
 
     PtrList<volVectorField> vvFlds;
-    ReadFields(mesh, objects, vvFlds);
+    if (fields) ReadFields(mesh, objects, vvFlds);
 
     PtrList<volSphericalTensorField> vstFlds;
-    ReadFields(mesh, objects, vstFlds);
+    if (fields) ReadFields(mesh, objects, vstFlds);
 
     PtrList<volSymmTensorField> vsymtFlds;
-    ReadFields(mesh, objects, vsymtFlds);
+    if (fields) ReadFields(mesh, objects, vsymtFlds);
 
     PtrList<volTensorField> vtFlds;
-    ReadFields(mesh, objects, vtFlds);
-
-    // Read surface fields.
+    if (fields) ReadFields(mesh, objects, vtFlds);
 
     PtrList<surfaceScalarField> ssFlds;
-    ReadFields(mesh, objects, ssFlds);
+    if (fields) ReadFields(mesh, objects, ssFlds);
 
     PtrList<surfaceVectorField> svFlds;
-    ReadFields(mesh, objects, svFlds);
+    if (fields) ReadFields(mesh, objects, svFlds);
 
     PtrList<surfaceSphericalTensorField> sstFlds;
-    ReadFields(mesh, objects, sstFlds);
+    if (fields) ReadFields(mesh, objects, sstFlds);
 
     PtrList<surfaceSymmTensorField> ssymtFlds;
-    ReadFields(mesh, objects, ssymtFlds);
+    if (fields) ReadFields(mesh, objects, ssymtFlds);
 
     PtrList<surfaceTensorField> stFlds;
-    ReadFields(mesh, objects, stFlds);
+    if (fields) ReadFields(mesh, objects, stFlds);
 
 
     // Mesh change engine
