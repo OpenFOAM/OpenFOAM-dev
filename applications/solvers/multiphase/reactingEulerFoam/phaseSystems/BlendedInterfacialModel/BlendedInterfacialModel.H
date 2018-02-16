@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,6 @@ SourceFiles
 #include "blendingMethod.H"
 #include "phasePair.H"
 #include "orderedPhasePair.H"
-
 #include "geometricZeroField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,7 +45,22 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class BlendedInterfacialModel Declaration
+                    Class blendedInterfacialModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedInterfacialModel
+{
+    public:
+
+        //- Convenience function to interpolate blending values. Needs to be
+        //  specialised, so can't sit in the templated class.
+        template<class GeoField>
+        static inline tmp<GeoField> interpolate(tmp<volScalarField> f);
+};
+
+
+/*---------------------------------------------------------------------------*\
+                    Class BlendedInterfacialModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ModelType>
@@ -85,8 +99,26 @@ class BlendedInterfacialModel
         void operator=(const BlendedInterfacialModel<ModelType>&);
 
         //- Correct coeff/value on fixed flux boundary conditions
-        template<class GeometricField>
-        void correctFixedFluxBCs(GeometricField& field) const;
+        template<class GeoField>
+        void correctFixedFluxBCs(GeoField& field) const;
+
+        //- Return the blended coeff/value
+        template
+        <
+            class Type,
+            template<class> class PatchField,
+            class GeoMesh,
+            class ... Args
+        >
+        tmp<GeometricField<Type, PatchField, GeoMesh>> evaluate
+        (
+            tmp<GeometricField<Type, PatchField, GeoMesh>>
+            (ModelType::*method)(Args ...) const,
+            const word& name,
+            const dimensionSet& dims,
+            const bool subtract,
+            Args ... args
+        ) const;
 
 
 public:
