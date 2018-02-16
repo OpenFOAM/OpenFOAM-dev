@@ -9,14 +9,8 @@ runApplication surfaceFeatureExtract
 runApplication blockMesh
 runApplication snappyHexMesh -overwrite
 
-if [ -d 0 ] ; then
-   rm -rf 0
-fi
-
 runApplication createBaffles -overwrite
 runApplication mergeOrSplitBaffles -split -overwrite
-
-cp -r 0.orig 0
 
 runApplication $(getApplication)
 

@@ -10,6 +10,4 @@ cleanCase
 foamCleanPolyMesh -region air
 foamCleanPolyMesh -region porous
 
-rm -f *.OpenFOAM
-
-rm -rf 0
+#------------------------------------------------------------------------------

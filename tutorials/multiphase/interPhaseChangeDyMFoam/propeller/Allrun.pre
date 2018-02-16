@@ -8,18 +8,16 @@ cd ${0%/*} || exit 1    # Run from this directory
 cp $FOAM_TUTORIALS/resources/geometry/propellerTip.obj.gz constant/triSurface/
 
 runApplication blockMesh
-
 runApplication surfaceFeatureExtract
-
 runApplication snappyHexMesh -overwrite
-
-runApplication renumberMesh -overwrite
 
 # Generate face/cell sets and zones
 runApplication topoSet -dict system/createInletOutletSets.topoSetDict
 
 # Create the inlet/outlet and AMI patches
 runApplication createPatch -overwrite
+
+runApplication renumberMesh -overwrite
 
 # Test by running moveDynamicMesh
 #runApplication moveDynamicMesh -checkAMI

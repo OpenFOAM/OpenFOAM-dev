@@ -9,34 +9,21 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      nuTilda;
+    class       dictionary;
+    location    "0.018/uniform";
+    object      time;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -1 0 0 0 0];
+value           0.0180000000000000021;
 
-internalField   uniform 0;
+name            "0.018";
 
-boundaryField
-{
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
+index           569;
 
-    inlet
-    {
-        type            zeroGradient;
-    }
+deltaT          3.125e-05;
 
-    outlet
-    {
-        type            zeroGradient;
-    }
+deltaT0         3.125e-05;
 
-    walls
-    {
-        type            zeroGradient;
-    }
-}
 
 // ************************************************************************* //

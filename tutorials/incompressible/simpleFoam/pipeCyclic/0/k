@@ -17,34 +17,31 @@ FoamFile
 
 dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 3.75e-9;
+internalField   uniform 1;
 
 boundaryField
 {
-    back
-    {
-        type            symmetryPlane;
-    }
-    front
-    {
-        type            symmetryPlane;
-    }
-    inletCentral
+    inlet
     {
         type            turbulentIntensityKineticEnergyInlet;
-        intensity       0.15;
-        value           uniform 3.75e-9;
-    }
-    inletSides
-    {
-        type            turbulentIntensityKineticEnergyInlet;
-        intensity       0.16;
-        value           uniform 3.75e-9;
+        intensity       0.05;
+        value           uniform 1;
     }
     outlet
     {
         type            inletOutlet;
-        inletValue      uniform 3.75e-9;
+        inletValue      uniform 1;
+        value           uniform 1;
+    }
+    side1
+    {
+        type            cyclicAMI;
+        value           uniform 1;
+    }
+    side2
+    {
+        type            cyclicAMI;
+        value           uniform 1;
     }
     walls
     {

@@ -8,7 +8,7 @@
 FoamFile
 {
     version     2.0;
-    format      ascii;
+    format      binary;
     class       volScalarField;
     location    "0";
     object      p;
@@ -21,23 +21,44 @@ internalField   uniform 0;
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
-
+    outerCylinder
+    {
+        type            zeroGradient;
+    }
+    propellerTip
+    {
+        type            zeroGradient;
+    }
+    propellerStem1
+    {
+        type            zeroGradient;
+    }
+    propellerStem2
+    {
+        type            zeroGradient;
+    }
+    propellerStem3
+    {
+        type            zeroGradient;
+    }
+    AMI1
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
+    AMI2
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
     inlet
     {
         type            zeroGradient;
     }
-
     outlet
     {
         type            fixedValue;
         value           uniform 0;
-    }
-
-    wall
-    {
-        type            zeroGradient;
     }
 }
 

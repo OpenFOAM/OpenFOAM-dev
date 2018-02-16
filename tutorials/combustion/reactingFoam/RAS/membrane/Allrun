@@ -13,8 +13,8 @@ runApplication blockMesh
 runApplication snappyHexMesh -overwrite
 runApplication createBaffles -overwrite
 
-cp -r 0.orig 0
-
 runApplication setFields
 
 runApplication reactingFoam
+
+#------------------------------------------------------------------------------

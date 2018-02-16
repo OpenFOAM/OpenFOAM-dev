@@ -9,14 +9,46 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      transportProperties;
+    class       volScalarField;
+    location    "0";
+    object      epsilon;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-transportModel  Newtonian;
+dimensions      [0 2 -3 0 0 0 0];
 
-nu              [0 2 -1 0 0 0 0] 1e-05;
+internalField   uniform 1;
+
+boundaryField
+{
+    inlet
+    {
+        type            turbulentMixingLengthDissipationRateInlet;
+        mixingLength    0.5;
+        value           uniform 1;
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 1;
+        value           uniform 1;
+    }
+    side1
+    {
+        type            cyclicAMI;
+        value           uniform 1;
+    }
+    side2
+    {
+        type            cyclicAMI;
+        value           uniform 1;
+    }
+    walls
+    {
+        type            epsilonWallFunction;
+        value           uniform 1;
+    }
+}
+
 
 // ************************************************************************* //

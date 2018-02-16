@@ -42,7 +42,11 @@ boundaryField
     atmosphere
     {
         type            totalPressure;
+        rho             rho;
+        psi             none;
+        gamma           1;
         p0              uniform 0;
+        value           uniform 0;
     }
     defaultFaces
     {
@@ -52,20 +56,21 @@ boundaryField
     {
         type            porousBafflePressure;
         patchType       cyclic;
-        jump            uniform 0;
-        value           uniform 0;
         D               1000;
         I               500;
         length          0.15;
+        jump            uniform 0;
+        value           uniform 0;
     }
     porous_half1
     {
         type            porousBafflePressure;
         patchType       cyclic;
-        value           uniform 0;
         D               1000;
         I               500;
         length          0.15;
+        jump            uniform 0;
+        value           uniform 0;
     }
 }
 

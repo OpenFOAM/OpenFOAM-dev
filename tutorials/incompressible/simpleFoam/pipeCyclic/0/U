@@ -9,48 +9,50 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
+    class       volVectorField;
     location    "0";
-    object      nut;
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -1 0 0 0 0];
+dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform (1 0 0);
 
 boundaryField
 {
-    back
+    inlet
     {
-        type            symmetryPlane;
-    }
-    front
-    {
-        type            symmetryPlane;
-    }
-    inletCentral
-    {
-        type            calculated;
-        value           uniform 0;
-    }
-    inletSides
-    {
-        type            calculated;
-        value           uniform 0;
+        type            codedFixedValue;
+        value           uniform (1 0 0);
+        name            swirl;
+        code            #{
+            const vector axis(1, 0, 0);
+
+            vectorField v(2.0*this->patch().Cf() ^ axis);
+            v.replace(vector::X, 1.0);
+            operator==(v);
+        #};
     }
     outlet
     {
-        type            calculated;
-        value           uniform 0;
+        type            inletOutlet;
+        inletValue      uniform (1 0 0);
+        value           uniform (1 0 0);
+    }
+    side1
+    {
+        type            cyclicAMI;
+        value           uniform (1 0 0);
+    }
+    side2
+    {
+        type            cyclicAMI;
+        value           uniform (1 0 0);
     }
     walls
     {
-        type            nutkWallFunction;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0;
+        type            noSlip;
     }
 }
 

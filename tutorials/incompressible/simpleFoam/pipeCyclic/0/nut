@@ -11,36 +11,40 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      epsilon;
+    object      nut;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
+dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform 1;
+internalField   uniform 0;
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
-
     inlet
     {
-        type            turbulentMixingLengthDissipationRateInlet;
-        mixingLength    0.5;       // 0.5m - half channel height
-        value           $internalField;
+        type            calculated;
+        value           uniform 0;
     }
-
     outlet
     {
-        type            inletOutlet;
-        inletValue      $internalField;
+        type            calculated;
+        value           uniform 0;
     }
-
+    side1
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
+    side2
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
     walls
     {
-        type            epsilonWallFunction;
-        value           $internalField;
+        type            nutkWallFunction;
+        value           uniform 0;
     }
 }
 

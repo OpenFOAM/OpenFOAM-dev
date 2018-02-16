@@ -1,8 +1,6 @@
 #!/bin/sh
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-cp -rf 0.orig 0
-
 runApplication blockMesh
 
 #If using batch mode
@@ -29,3 +27,5 @@ runApplication createPatch -region wallFilmRegion -overwrite
 
 paraFoam -touch
 paraFoam -touch -region wallFilmRegion
+
+#------------------------------------------------------------------------------

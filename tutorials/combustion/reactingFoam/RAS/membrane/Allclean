@@ -4,4 +4,7 @@ cd ${0%/*} || exit 1
 
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-rm -rf 0 constant/triSurface/membrane-*.stl.gz && cleanCase
+rm -rf constant/triSurface/membrane-*.stl.gz
+cleanCase
+
+#------------------------------------------------------------------------------

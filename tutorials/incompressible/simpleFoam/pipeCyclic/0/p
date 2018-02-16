@@ -11,50 +11,38 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      omega;
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 -1 0 0 0 0];
+dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 4.5e-3;
+internalField   uniform 0;
 
 boundaryField
 {
-    back
+    inlet
     {
-        type            symmetryPlane;
-    }
-    front
-    {
-        type            symmetryPlane;
-    }
-    inletCentral
-    {
-        type            turbulentMixingLengthFrequencyInlet;
-        mixingLength    0.007;
-        k               k;
-        value           uniform 4.5e-3;
-    }
-    inletSides
-    {
-        type            turbulentMixingLengthFrequencyInlet;
-        mixingLength    0.007;
-        k               k;
-        value           uniform 4.5e-3;
+        type            zeroGradient;
     }
     outlet
     {
-        type            inletOutlet;
-        inletValue      uniform 4.5e-3;
+        type            fixedValue;
+        value           uniform 0;
+    }
+    side1
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
+    side2
+    {
+        type            cyclicAMI;
+        value           uniform 0;
     }
     walls
     {
-        type            omegaWallFunction;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        value           $internalField;
+        type            zeroGradient;
     }
 }
 

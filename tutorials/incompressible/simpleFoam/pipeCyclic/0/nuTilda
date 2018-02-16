@@ -11,36 +11,37 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      k;
+    object      nuTilda;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform 1;
+internalField   uniform 0;
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
-
     inlet
     {
-        type            turbulentIntensityKineticEnergyInlet;
-        intensity       0.05;       // 5% turbulent intensity
-        value           $internalField;
+        type            zeroGradient;
     }
-
     outlet
     {
-        type            inletOutlet;
-        inletValue      $internalField;
+        type            zeroGradient;
     }
-
+    side1
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
+    side2
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
     walls
     {
-        type            kqRWallFunction;
-        value           uniform 0;
+        type            zeroGradient;
     }
 }
 

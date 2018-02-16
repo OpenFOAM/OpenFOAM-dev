@@ -24,26 +24,26 @@ boundaryField
     leftWall
     {
         type            epsilonWallFunction;
-        value           uniform 0.1;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
+        value           uniform 0.1;
     }
     rightWall
     {
         type            epsilonWallFunction;
-        value           uniform 0.1;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
+        value           uniform 0.1;
     }
     lowerWall
     {
         type            epsilonWallFunction;
-        value           uniform 0.1;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
+        value           uniform 0.1;
     }
     atmosphere
     {

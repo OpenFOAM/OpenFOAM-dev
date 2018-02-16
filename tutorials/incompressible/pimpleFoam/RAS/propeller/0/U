@@ -8,7 +8,7 @@
 FoamFile
 {
     version     2.0;
-    format      ascii;
+    format      binary;
     class       volVectorField;
     location    "0";
     object      U;
@@ -21,30 +21,49 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
-
+    outerCylinder
+    {
+        type            noSlip;
+    }
+    propellerTip
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+    propellerStem1
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+    propellerStem2
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+    propellerStem3
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+    AMI1
+    {
+        type            cyclicAMI;
+        value           uniform (0 0 0);
+    }
+    AMI2
+    {
+        type            cyclicAMI;
+        value           uniform (0 0 0);
+    }
     inlet
     {
         type            fixedValue;
         value           uniform (0 -5 0);
     }
-
     outlet
     {
         type            inletOutlet;
         inletValue      uniform (0 0 0);
-        value           uniform (0 0 0);
-    }
-
-    outerCylinder
-    {
-        type            noSlip;
-    }
-
-    "propeller.*"
-    {
-        type            movingWallVelocity;
         value           uniform (0 0 0);
     }
 }
