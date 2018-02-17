@@ -8,7 +8,7 @@
 FoamFile
 {
     version     2.0;
-    format      binary;
+    format      ascii;
     class       volScalarField;
     location    "0";
     object      nut;
@@ -21,49 +21,24 @@ internalField   uniform 0;
 
 boundaryField
 {
-    outerCylinder
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-    propellerTip
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-    propellerStem1
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-    propellerStem2
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-    propellerStem3
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-    AMI1
-    {
-        type            cyclicAMI;
-        value           uniform 0;
-    }
-    AMI2
-    {
-        type            cyclicAMI;
-        value           uniform 0;
-    }
+    //- Set patchGroups for constraint patches
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            calculated;
         value           uniform 0;
     }
+
     outlet
     {
         type            calculated;
+        value           uniform 0;
+    }
+
+    wall
+    {
+        type            nutkWallFunction;
         value           uniform 0;
     }
 }
