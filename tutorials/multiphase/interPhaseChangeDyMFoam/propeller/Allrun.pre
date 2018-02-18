@@ -17,7 +17,7 @@ runApplication topoSet -dict system/createInletOutletSets.topoSetDict
 # Create the inlet/outlet and AMI patches
 runApplication createPatch -overwrite
 
-runApplication renumberMesh -overwrite
+runApplication renumberMesh -noFields -overwrite
 
 # Test by running moveDynamicMesh
 #runApplication moveDynamicMesh -checkAMI

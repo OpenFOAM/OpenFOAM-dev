@@ -622,12 +622,15 @@ int main(int argc, char *argv[])
         "frontWidth",
         "calculate the rms of the frontwidth"
     );
-
+    argList::addBoolOption
+    (
+        "noFields",
+        "do not update fields"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
     runTime.functionObjects().off();
-
 
     // Force linker to include zoltan symbols. This section is only needed since
     // Zoltan is a static library
@@ -635,7 +638,6 @@ int main(int argc, char *argv[])
         Info<< "renumberMesh built with zoltan support." << nl << endl;
         (void)zoltanRenumber::typeName;
     #endif
-
 
     // Get times list
     instantList Times = runTime.times();
@@ -651,6 +653,7 @@ int main(int argc, char *argv[])
     const bool readDict = args.optionFound("dict");
     const bool doFrontWidth = args.optionFound("frontWidth");
     const bool overwrite = args.optionFound("overwrite");
+    const bool fields = !args.optionFound("noFields");
 
     label band;
     scalar profile;
@@ -823,58 +826,60 @@ int main(int argc, char *argv[])
     IOobjectList objects(mesh, runTime.timeName());
 
 
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
+
     // Read vol fields.
 
     PtrList<volScalarField> vsFlds;
-    ReadFields(mesh, objects, vsFlds);
+    if (fields) ReadFields(mesh, objects, vsFlds);
 
     PtrList<volVectorField> vvFlds;
-    ReadFields(mesh, objects, vvFlds);
+    if (fields) ReadFields(mesh, objects, vvFlds);
 
     PtrList<volSphericalTensorField> vstFlds;
-    ReadFields(mesh, objects, vstFlds);
+    if (fields) ReadFields(mesh, objects, vstFlds);
 
     PtrList<volSymmTensorField> vsymtFlds;
-    ReadFields(mesh, objects, vsymtFlds);
+    if (fields) ReadFields(mesh, objects, vsymtFlds);
 
     PtrList<volTensorField> vtFlds;
-    ReadFields(mesh, objects, vtFlds);
+    if (fields) ReadFields(mesh, objects, vtFlds);
 
 
     // Read surface fields.
 
     PtrList<surfaceScalarField> ssFlds;
-    ReadFields(mesh, objects, ssFlds);
+    if (fields) ReadFields(mesh, objects, ssFlds);
 
     PtrList<surfaceVectorField> svFlds;
-    ReadFields(mesh, objects, svFlds);
+    if (fields) ReadFields(mesh, objects, svFlds);
 
     PtrList<surfaceSphericalTensorField> sstFlds;
-    ReadFields(mesh, objects, sstFlds);
+    if (fields) ReadFields(mesh, objects, sstFlds);
 
     PtrList<surfaceSymmTensorField> ssymtFlds;
-    ReadFields(mesh, objects, ssymtFlds);
+    if (fields) ReadFields(mesh, objects, ssymtFlds);
 
     PtrList<surfaceTensorField> stFlds;
-    ReadFields(mesh, objects, stFlds);
+    if (fields) ReadFields(mesh, objects, stFlds);
 
 
     // Read point fields.
 
     PtrList<pointScalarField> psFlds;
-    ReadFields(pointMesh::New(mesh), objects, psFlds);
+    if (fields) ReadFields(pointMesh::New(mesh), objects, psFlds);
 
     PtrList<pointVectorField> pvFlds;
-    ReadFields(pointMesh::New(mesh), objects, pvFlds);
+    if (fields) ReadFields(pointMesh::New(mesh), objects, pvFlds);
 
     PtrList<pointSphericalTensorField> pstFlds;
-    ReadFields(pointMesh::New(mesh), objects, pstFlds);
+    if (fields) ReadFields(pointMesh::New(mesh), objects, pstFlds);
 
     PtrList<pointSymmTensorField> psymtFlds;
-    ReadFields(pointMesh::New(mesh), objects, psymtFlds);
+    if (fields) ReadFields(pointMesh::New(mesh), objects, psymtFlds);
 
     PtrList<pointTensorField> ptFlds;
-    ReadFields(pointMesh::New(mesh), objects, ptFlds);
+    if (fields) ReadFields(pointMesh::New(mesh), objects, ptFlds);
 
 
     Info<< endl;
