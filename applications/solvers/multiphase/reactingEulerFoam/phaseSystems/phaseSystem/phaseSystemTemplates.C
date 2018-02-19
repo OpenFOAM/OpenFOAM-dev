@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,6 +197,161 @@ void Foam::phaseSystem::generatePairsAndSubModels
         }
     }
 }
+
+
+template<class GeoField>
+void Foam::phaseSystem::addField
+(
+    const phaseModel& phase,
+    const word& fieldName,
+    tmp<GeoField> field,
+    PtrList<GeoField>& fieldList
+) const
+{
+    if (fieldList.set(phase.index()))
+    {
+        fieldList[phase.index()] += field;
+    }
+    else
+    {
+        fieldList.set
+        (
+            phase.index(),
+            new GeoField
+            (
+                IOobject::groupName(fieldName, phase.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField>
+void Foam::phaseSystem::addField
+(
+    const phaseModel& phase,
+    const word& fieldName,
+    const GeoField& field,
+    PtrList<GeoField>& fieldList
+) const
+{
+    addField(phase, fieldName, tmp<GeoField>(field), fieldList);
+}
+
+
+template<class GeoField>
+void Foam::phaseSystem::addField
+(
+    const phaseModel& phase,
+    const word& fieldName,
+    tmp<GeoField> field,
+    HashPtrTable<GeoField>& fieldTable
+) const
+{
+    if (fieldTable.found(phase.name()))
+    {
+        *fieldTable[phase.name()] += field;
+    }
+    else
+    {
+        fieldTable.set
+        (
+            phase.name(),
+            new GeoField
+            (
+                IOobject::groupName(fieldName, phase.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField>
+void Foam::phaseSystem::addField
+(
+    const phaseModel& phase,
+    const word& fieldName,
+    const GeoField& field,
+    HashPtrTable<GeoField>& fieldTable
+) const
+{
+    addField(phase, fieldName, tmp<GeoField>(field), fieldTable);
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::phaseSystem::fillFields
+(
+    const word& name,
+    const dimensionSet& dims,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& fieldList
+) const
+{
+    forAll(this->phaseModels_, phasei)
+    {
+        if (fieldList.set(phasei))
+        {
+            continue;
+        }
+
+        const phaseModel& phase = this->phaseModels_[phasei];
+
+        fieldList.set
+        (
+            phasei,
+            new GeometricField<Type, PatchField, GeoMesh>
+            (
+                IOobject
+                (
+                    IOobject::groupName(name, phase.name()),
+                    this->mesh_.time().timeName(),
+                    this->mesh_
+                ),
+                this->mesh_,
+                dimensioned<Type>("zero", dims, pTraits<Type>::zero)
+            )
+        );
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::phaseSystem::fillFields
+(
+    const word& name,
+    const dimensionSet& dims,
+    HashPtrTable<GeometricField<Type, PatchField, GeoMesh>>& fieldTable
+) const
+{
+    forAll(this->phaseModels_, phasei)
+    {
+        const phaseModel& phase = this->phaseModels_[phasei];
+
+        if (fieldTable.set(phase.name()))
+        {
+            continue;
+        }
+
+        fieldTable.set
+        (
+            phase.name(),
+            new GeometricField<Type, PatchField, GeoMesh>
+            (
+                IOobject
+                (
+                    IOobject::groupName(name, phase.name()),
+                    this->mesh_.time().timeName(),
+                    this->mesh_
+                ),
+                this->mesh_,
+                dimensioned<Type>("zero", dims, pTraits<Type>::zero)
+            )
+        );
+    }
+}
+
 
 template<class modelType>
 const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const

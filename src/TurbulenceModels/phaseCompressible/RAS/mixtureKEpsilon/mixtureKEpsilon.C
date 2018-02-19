@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "fvOptions.H"
 #include "bound.H"
 #include "twoPhaseSystem.H"
+#include "dragModel.H"
 #include "virtualMassModel.H"
 #include "fixedValueFvPatchFields.H"
 #include "inletOutletFvPatchFields.H"
@@ -389,7 +390,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::Ct2() const
     volScalarField beta
     (
         (6*this->Cmu_/(4*sqrt(3.0/2.0)))
-       *fluid.drag(gas).K()/liquid.rho()
+       *fluid.Kd()/liquid.rho()
        *(liquidTurbulence.k_/liquidTurbulence.epsilon_)
     );
     volScalarField Ct0((3 + beta)/(1 + beta + 2*gas.rho()/liquid.rho()));
@@ -413,9 +414,9 @@ tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::rhogEff() const
 {
     const transportModel& gas = this->transport();
     const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
-    return
-        gas.rho()
-      + fluid.virtualMass(gas).Cvm()*fluid.otherPhase(gas).rho();
+    const virtualMassModel& virtualMass =
+        fluid.lookupSubModel<virtualMassModel>(gas, fluid.otherPhase(gas));
+    return gas.rho() + virtualMass.Cvm()*fluid.otherPhase(gas).rho();
 }
 
 
@@ -491,6 +492,8 @@ tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::bubbleG() const
     const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
     const transportModel& liquid = fluid.otherPhase(gas);
 
+    const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
+
     volScalarField magUr(mag(liquidTurbulence.U() - this->U()));
 
     // Lahey model
@@ -500,7 +503,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::bubbleG() const
        *liquid*liquid.rho()
        *(
             pow3(magUr)
-          + pow(fluid.drag(gas).CdRe()*liquid.nu()/gas.d(), 4.0/3.0)
+          + pow(drag.CdRe()*liquid.nu()/gas.d(), 4.0/3.0)
            *pow(magUr, 5.0/3.0)
         )
        *gas
@@ -510,7 +513,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::bubbleG() const
     // Simple model
     // tmp<volScalarField> bubbleG
     // (
-    //     Cp_*liquid*fluid.drag(gas).K()*sqr(magUr)
+    //     Cp_*liquid*drag.K()*sqr(magUr)
     // );
 
     return bubbleG;

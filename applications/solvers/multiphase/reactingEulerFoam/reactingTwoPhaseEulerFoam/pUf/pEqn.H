@@ -22,74 +22,47 @@ surfaceScalarField alphaRhof20
 );
 
 // Drag coefficient
-surfaceScalarField Kdf("Kdf", fluid.Kdf());
+const surfaceScalarField Kdf("Kdf", fluid.Kdf());
 
-// Virtual-mass coefficient
-surfaceScalarField Vmf("Vmf", fluid.Vmf());
+// Diagonal coefficients
+PtrList<surfaceScalarField> AFfs(fluid.AFfs());
 
-surfaceScalarField rAUf1
+PtrList<surfaceScalarField> rAUfs;
+rAUfs.append
 (
-    IOobject::groupName("rAUf", phase1.name()),
-    1.0
-   /(
-        byDt(alphaRhof10 + Vmf)
-      + fvc::interpolate(U1Eqn.A())
-      + Kdf
+    new surfaceScalarField
+    (
+        IOobject::groupName("rAUf", phase1.name()),
+        1.0
+       /(
+            byDt(alphaRhof10)
+          + fvc::interpolate(U1Eqn.A())
+          + AFfs[0]
+        )
     )
 );
-
-surfaceScalarField rAUf2
+rAUfs.append
 (
-    IOobject::groupName("rAUf", phase2.name()),
-    1.0
-   /(
-        byDt(alphaRhof20 + Vmf)
-      + fvc::interpolate(U2Eqn.A())
-      + Kdf
+    new surfaceScalarField
+    (
+        IOobject::groupName("rAUf", phase2.name()),
+        1.0
+       /(
+            byDt(alphaRhof20)
+          + fvc::interpolate(U2Eqn.A())
+          + AFfs[0]
+        )
     )
 );
+const surfaceScalarField& rAUf1 = rAUfs[0];
+const surfaceScalarField& rAUf2 = rAUfs[1];
 
+AFfs.clear();
 
-// Turbulent dispersion, particle-pressure, lift and wall-lubrication forces
-tmp<surfaceScalarField> Ff1;
-tmp<surfaceScalarField> Ff2;
-{
-    // Turbulent-dispersion diffusivity
-    volScalarField D(fluid.D());
-
-    // Phase-1 turbulent dispersion and particle-pressure diffusivity
-    surfaceScalarField Df1
-    (
-        fvc::interpolate(D + phase1.pPrime())
-    );
-
-    // Phase-2 turbulent dispersion and particle-pressure diffusivity
-    surfaceScalarField Df2
-    (
-        fvc::interpolate(D + phase2.pPrime())
-    );
-
-    // Cache the phase diffusivities for implicit treatment in the
-    // phase-fraction equation
-    if (implicitPhasePressure)
-    {
-        phase1.DbyA(rAUf1*Df1);
-        phase2.DbyA(rAUf2*Df2);
-    }
-
-    // Lift and wall-lubrication forces
-    surfaceScalarField Ff(fluid.Ff());
-
-    // Phase-fraction face-gradient
-    surfaceScalarField snGradAlpha1(fvc::snGrad(alpha1)*mesh.magSf());
-
-    // Phase-1 dispersion, lift and wall-lubrication force
-    Ff1 = Df1*snGradAlpha1 + Ff;
-
-    // Phase-2 dispersion, lift and wall-lubrication force
-    Ff2 = -Df2*snGradAlpha1 - Ff;
-}
-
+// Explicit force fluxes
+PtrList<surfaceScalarField> phiFfs(fluid.phiFfs(rAUfs));
+const surfaceScalarField& phiFf1 = phiFfs[0];
+const surfaceScalarField& phiFf2 = phiFfs[1];
 
 while (pimple.correct())
 {
@@ -105,48 +78,46 @@ while (pimple.correct())
     MRF.correctBoundaryFlux(U1, phi1);
     MRF.correctBoundaryFlux(U2, phi2);
 
-    surfaceScalarField alpharAUf1
+    const surfaceScalarField alpharAUf1
     (
         IOobject::groupName("alpharAUf", phase1.name()),
         max(alphaf1, phase1.residualAlpha())*rAUf1
     );
 
-    surfaceScalarField alpharAUf2
+    const surfaceScalarField alpharAUf2
     (
         IOobject::groupName("alpharAUf", phase2.name()),
         max(alphaf2, phase2.residualAlpha())*rAUf2
     );
 
-    surfaceScalarField ghSnGradRho
+    // Combined buoyancy and force fluxes
+    const surfaceScalarField ghSnGradRho
     (
         "ghSnGradRho",
         ghf*fvc::snGrad(rho)*mesh.magSf()
     );
 
-    // Phase-1 buoyancy flux
-    surfaceScalarField phig1
+    const surfaceScalarField phigF1
     (
-        IOobject::groupName("phig", phase1.name()),
         alpharAUf1
        *(
             ghSnGradRho
           - alphaf2*(rhof1 - rhof2)*(g & mesh.Sf())
         )
+      + phiFf1
     );
 
-    // Phase-2 buoyancy flux
-    surfaceScalarField phig2
+    const surfaceScalarField phigF2
     (
-        IOobject::groupName("phig", phase2.name()),
         alpharAUf2
        *(
             ghSnGradRho
           - alphaf1*(rhof2 - rhof1)*(g & mesh.Sf())
         )
+      + phiFf2
     );
 
-
-    // Phase-1 predicted flux
+    // Predicted fluxes
     surfaceScalarField phiHbyA1
     (
         IOobject::groupName("phiHbyA", phase1.name()),
@@ -156,15 +127,11 @@ while (pimple.correct())
     phiHbyA1 =
         rAUf1
        *(
-            (alphaRhof10 + Vmf)
-           *byDt(MRF.absolute(phi1.oldTime()))
+            alphaRhof10*byDt(MRF.absolute(phi1.oldTime()))
           + fvc::flux(U1Eqn.H())
-          + Vmf*tddtPhi2()
-          + Kdf*MRF.absolute(phi2)
-          - Ff1()
-        );
+        )
+      - phigF1;
 
-    // Phase-2 predicted flux
     surfaceScalarField phiHbyA2
     (
         IOobject::groupName("phiHbyA", phase2.name()),
@@ -174,26 +141,29 @@ while (pimple.correct())
     phiHbyA2 =
         rAUf2
        *(
-            (alphaRhof20 + Vmf)
-           *byDt(MRF.absolute(phi2.oldTime()))
+            alphaRhof20*byDt(MRF.absolute(phi2.oldTime()))
           + fvc::flux(U2Eqn.H())
-          + Vmf*tddtPhi1()
-          + Kdf*MRF.absolute(phi1)
-          - Ff2()
-       );
+        )
+      - phigF2;
 
+    // Drag fluxes
+    PtrList<surfaceScalarField> phiKdPhifs(fluid.phiKdPhifs(rAUfs));
+    const surfaceScalarField& phiKdPhif1 = phiKdPhifs[0];
+    const surfaceScalarField& phiKdPhif2 = phiKdPhifs[1];
 
+    // Total predicted flux
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
-        alphaf1*(phiHbyA1 - phig1) + alphaf2*(phiHbyA2 - phig2)
+        alphaf1*(phiHbyA1 - phiKdPhif1) + alphaf2*(phiHbyA2 - phiKdPhif2)
     );
+
     MRF.makeRelative(phiHbyA);
 
-    phiHbyA1 -= phig1;
-    phiHbyA2 -= phig2;
+    phiKdPhifs.clear();
 
-    surfaceScalarField rAUf
+    // Construct pressure "diffusivity"
+    const surfaceScalarField rAUf
     (
         "rAUf",
         mag(alphaf1*alpharAUf1 + alphaf2*alpharAUf2)
@@ -212,11 +182,8 @@ while (pimple.correct())
         )/(mesh.magSf().boundaryField()*rAUf.boundaryField())
     );
 
-    tmp<fvScalarMatrix> pEqnComp1;
-    tmp<fvScalarMatrix> pEqnComp2;
-
     // Construct the compressibility parts of the pressure equation
-
+    tmp<fvScalarMatrix> pEqnComp1, pEqnComp2;
     if (phase1.compressible())
     {
         if (pimple.transonic())
@@ -357,18 +324,14 @@ while (pimple.correct())
 
             phi = phiHbyA + pEqnIncomp.flux();
 
-            surfaceScalarField phi1s
+            const surfaceScalarField phi1s
             (
-                phiHbyA1
-              + alpharAUf1*mSfGradp
-              - rAUf1*Kdf*MRF.absolute(phi2)
+                phiHbyA1 + alpharAUf1*mSfGradp
             );
 
-            surfaceScalarField phi2s
+            const surfaceScalarField phi2s
             (
-                phiHbyA2
-              + alpharAUf2*mSfGradp
-              - rAUf2*Kdf*MRF.absolute(phi1)
+                phiHbyA2 + alpharAUf2*mSfGradp
             );
 
             surfaceScalarField phir

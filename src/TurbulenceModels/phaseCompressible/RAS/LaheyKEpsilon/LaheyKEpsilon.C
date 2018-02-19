@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "LaheyKEpsilon.H"
 #include "fvOptions.H"
 #include "twoPhaseSystem.H"
+#include "dragModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -191,6 +192,8 @@ tmp<volScalarField> LaheyKEpsilon<BasicTurbulenceModel>::bubbleG() const
     const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(liquid.fluid());
     const transportModel& gas = fluid.otherPhase(liquid);
 
+    const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
+
     volScalarField magUr(mag(this->U_ - gasTurbulence.U()));
 
     tmp<volScalarField> bubbleG
@@ -198,7 +201,7 @@ tmp<volScalarField> LaheyKEpsilon<BasicTurbulenceModel>::bubbleG() const
         Cp_
        *(
             pow3(magUr)
-          + pow(fluid.drag(gas).CdRe()*liquid.nu()/gas.d(), 4.0/3.0)
+          + pow(drag.CdRe()*liquid.nu()/gas.d(), 4.0/3.0)
            *pow(magUr, 5.0/3.0)
         )
        *gas

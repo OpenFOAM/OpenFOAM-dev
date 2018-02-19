@@ -7,12 +7,10 @@ volScalarField& alpha2 = phase2;
 volVectorField& U1 = phase1.U();
 surfaceScalarField& phi1 = phase1.phi();
 surfaceScalarField& alphaPhi1 = phase1.alphaPhi();
-surfaceScalarField& alphaRhoPhi1 = phase1.alphaRhoPhi();
 
 volVectorField& U2 = phase2.U();
 surfaceScalarField& phi2 = phase2.phi();
 surfaceScalarField& alphaPhi2 = phase2.alphaPhi();
-surfaceScalarField& alphaRhoPhi2 = phase2.alphaRhoPhi();
 surfaceScalarField& phi = fluid.phi();
 
 rhoThermo& thermo1 = phase1.thermo();

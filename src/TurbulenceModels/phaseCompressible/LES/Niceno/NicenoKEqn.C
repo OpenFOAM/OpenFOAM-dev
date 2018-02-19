@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "NicenoKEqn.H"
 #include "fvOptions.H"
 #include "twoPhaseSystem.H"
+#include "dragModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -181,11 +182,13 @@ tmp<volScalarField> NicenoKEqn<BasicTurbulenceModel>::bubbleG() const
         refCast<const twoPhaseSystem>(liquid.fluid());
     const transportModel& gas = fluid.otherPhase(liquid);
 
+    const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
+
     volScalarField magUr(mag(this->U_ - gasTurbulence.U()));
 
     tmp<volScalarField> bubbleG
     (
-        Cp_*sqr(magUr)*fluid.drag(gas).K()/liquid.rho()
+        Cp_*sqr(magUr)*drag.K()/liquid.rho()
     );
 
     return bubbleG;

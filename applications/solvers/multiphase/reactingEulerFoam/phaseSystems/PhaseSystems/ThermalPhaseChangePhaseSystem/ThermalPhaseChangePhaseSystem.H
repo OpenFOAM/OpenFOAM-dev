@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,6 +82,14 @@ protected:
             wMDotL_;
 
 
+    // Protected member functions
+
+        //- Add the mass-based momentum transfer to the equations
+        void addMomentumTransfer
+        (
+            phaseSystem::momentumTransferTable& eqns
+        ) const;
+
 
 public:
 
@@ -125,6 +133,10 @@ public:
         //- Return the momentum transfer matrices
         virtual autoPtr<phaseSystem::momentumTransferTable>
             momentumTransfer() const;
+
+        //- Return the momentum transfer matrices for the face based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable>
+            momentumTransferf() const;
 
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;

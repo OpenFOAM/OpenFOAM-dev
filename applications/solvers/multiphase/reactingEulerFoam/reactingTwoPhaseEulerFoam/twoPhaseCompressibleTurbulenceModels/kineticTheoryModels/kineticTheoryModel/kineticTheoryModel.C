@@ -410,7 +410,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         // Drag
         volScalarField beta
         (
-            refCast<const twoPhaseSystem>(phase_.fluid()).drag(phase_).K()
+            refCast<const twoPhaseSystem>(phase_.fluid()).Kd()
         );
 
         // Eq. 3.25, p. 50 Js = J1 - J2

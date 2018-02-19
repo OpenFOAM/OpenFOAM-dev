@@ -50,10 +50,7 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::~HeatTransferPhaseSystem()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-bool Foam::HeatTransferPhaseSystem<BasePhaseSystem>::transfersMass
-(
-    const phaseModel& phase
-) const
+bool Foam::HeatTransferPhaseSystem<BasePhaseSystem>::transfersMass() const
 {
     return false;
 }

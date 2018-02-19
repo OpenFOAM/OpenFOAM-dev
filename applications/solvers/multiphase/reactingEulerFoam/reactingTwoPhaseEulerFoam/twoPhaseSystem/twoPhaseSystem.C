@@ -85,12 +85,6 @@ Foam::twoPhaseSystem::sigma() const
 }
 
 
-const Foam::dragModel& Foam::twoPhaseSystem::drag(const phaseModel& phase) const
-{
-    return lookupSubModel<dragModel>(phase, otherPhase(phase));
-}
-
-
 Foam::tmp<Foam::volScalarField>
 Foam::twoPhaseSystem::Kd() const
 {
@@ -111,13 +105,6 @@ Foam::twoPhaseSystem::Kdf() const
 }
 
 
-const Foam::virtualMassModel&
-Foam::twoPhaseSystem::virtualMass(const phaseModel& phase) const
-{
-    return lookupSubModel<virtualMassModel>(phase, otherPhase(phase));
-}
-
-
 Foam::tmp<Foam::volScalarField>
 Foam::twoPhaseSystem::Vm() const
 {
@@ -125,52 +112,6 @@ Foam::twoPhaseSystem::Vm() const
     (
         phasePairKey(phase1().name(), phase2().name())
     );
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::twoPhaseSystem::Vmf() const
-{
-    return Vmf
-    (
-        phasePairKey(phase1().name(), phase2().name())
-    );
-}
-
-
-Foam::tmp<Foam::volVectorField>
-Foam::twoPhaseSystem::F() const
-{
-    return F
-    (
-        phasePairKey(phase1().name(), phase2().name())
-    );
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::twoPhaseSystem::Ff() const
-{
-    return Ff
-    (
-        phasePairKey(phase1().name(), phase2().name())
-    );
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::twoPhaseSystem::D() const
-{
-    return D
-    (
-        phasePairKey(phase1().name(), phase2().name())
-    );
-}
-
-
-bool Foam::twoPhaseSystem::transfersMass() const
-{
-    return transfersMass(phase1());
 }
 
 
@@ -229,10 +170,12 @@ void Foam::twoPhaseSystem::solve()
     surfaceScalarField phir("phir", phi1 - phi2);
 
     tmp<surfaceScalarField> alphaDbyA;
-
-    if (notNull(phase1_.DbyA()) && notNull(phase2_.DbyA()))
+    if (DByAfs().found(phase1_.name()) && DByAfs().found(phase2_.name()))
     {
-        surfaceScalarField DbyA(phase1_.DbyA() + phase2_.DbyA());
+        surfaceScalarField DbyA
+        (
+            *DByAfs()[phase1_.name()] + *DByAfs()[phase2_.name()]
+        );
 
         alphaDbyA =
             fvc::interpolate(max(alpha1, scalar(0)))

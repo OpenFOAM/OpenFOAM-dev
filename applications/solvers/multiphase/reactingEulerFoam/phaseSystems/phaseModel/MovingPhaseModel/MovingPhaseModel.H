@@ -80,7 +80,10 @@ protected:
         surfaceScalarField alphaRhoPhi_;
 
         //- Lagrangian acceleration field (needed for virtual-mass)
-        volVectorField DUDt_;
+        mutable tmp<volVectorField> DUDt_;
+
+        //- Lagrangian acceleration field on the faces (needed for virtual-mass)
+        mutable tmp<surfaceScalarField> DUDtf_;
 
         //- Dilatation rate
         tmp<volScalarField> divU_;
@@ -90,10 +93,6 @@ protected:
 
         //- Continuity error
         volScalarField continuityError_;
-
-        //- Phase diffusivity divided by the momentum coefficient.
-        //  Used for implicit treatment of the phase pressure and dispersion
-        tmp<surfaceScalarField> DbyA_;
 
 
 private:
@@ -137,14 +136,8 @@ public:
         //- Return the momentum equation
         virtual tmp<fvVectorMatrix> UEqn();
 
-
-        // Implicit phase pressure and dispersion support
-
-            //- Return the phase diffusivity divided by the momentum coefficient
-            virtual const surfaceScalarField& DbyA() const;
-
-            //- Set the phase diffusivity divided by the momentum coefficient
-            virtual void DbyA(const tmp<surfaceScalarField>& DbyA);
+        //- Return the momentum equation for the face-based algorithm
+        virtual tmp<fvVectorMatrix> UfEqn();
 
 
         // Momentum
@@ -157,6 +150,9 @@ public:
 
             //- Return the substantive acceleration
             virtual tmp<volVectorField> DUDt() const;
+
+            //- Return the substantive acceleration on the faces
+            virtual tmp<surfaceScalarField> DUDtf() const;
 
             //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
             virtual const tmp<volScalarField>& divU() const;
@@ -219,9 +215,6 @@ public:
             //- Return the phase-pressure'
             //  (derivative of phase-pressure w.r.t. phase-fraction)
             virtual tmp<volScalarField> pPrime() const;
-
-            //- Return the turbulent term for the momentum equation
-            virtual tmp<fvVectorMatrix> divDevRhoReff();
 };
 
 

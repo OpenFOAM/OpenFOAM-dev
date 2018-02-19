@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,11 +182,17 @@ public:
 
         // Access
 
-            //- Return the drag model for the given phase
-            const dragModel& drag(const phaseModel& phase) const;
+            //- Access a sub model between a phase pair
+            template<class modelType>
+            const modelType& lookupSubModel(const phasePair& key) const;
 
-            //- Return the virtual mass model for the given phase
-            const virtualMassModel& virtualMass(const phaseModel& phase) const;
+            //- Access a sub model between two phases
+            template<class modelType>
+            const modelType& lookupSubModel
+            (
+                const phaseModel& dispersed,
+                const phaseModel& continuous
+            ) const;
 
             //- Return the surface tension coefficient
             const dimensionedScalar& sigma() const;
@@ -233,6 +239,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "twoPhaseSystemI.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "twoPhaseSystemTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

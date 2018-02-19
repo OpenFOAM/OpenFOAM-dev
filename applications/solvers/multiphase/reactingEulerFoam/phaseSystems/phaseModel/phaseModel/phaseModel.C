@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -209,20 +209,6 @@ const Foam::volScalarField& Foam::phaseModel::K() const
 {
     NotImplemented;
     return volScalarField::null();
-}
-
-
-const Foam::surfaceScalarField& Foam::phaseModel::DbyA() const
-{
-    return surfaceScalarField::null();
-}
-
-
-void Foam::phaseModel::DbyA(const tmp<surfaceScalarField>& DbyA)
-{
-    WarningInFunction
-        << "Attempt to set the dilatation rate of an incompressible phase"
-        << endl;
 }
 
 

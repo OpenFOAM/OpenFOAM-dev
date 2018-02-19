@@ -53,13 +53,21 @@ class multiphaseSystem
 :
     public phaseSystem
 {
-    // Private data
+private:
 
-        volScalarField alphas_;
+    // Private typedefs
 
         typedef HashTable<scalar, phasePairKey, phasePairKey::hash>
             cAlphaTable;
 
+
+    // Private data
+
+        //- The indexed phase-fraction field; e.g., 1 for water, 2 for air, 3
+        //  for oil, etc...
+        volScalarField alphas_;
+
+        //-
         cAlphaTable cAlphas_;
 
         //- Stabilisation for normalisation of the interface normal
@@ -100,25 +108,24 @@ class multiphaseSystem
             const phaseModel& alpha2
         ) const;
 
-
         //- Return the drag coefficient for phase pair
         virtual tmp<volScalarField> Kd(const phasePairKey& key) const = 0;
-
-        //- Return the face drag coefficient for phase pair
-        virtual tmp<surfaceScalarField> Kdf(const phasePairKey& key) const = 0;
 
         //- Return the virtual mass coefficient for phase pair
         virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
 
-        //- Return the face virtual mass coefficient for phase pair
-        virtual tmp<surfaceScalarField> Vmf(const phasePairKey& key) const = 0;
-
-        //- Return the turbulent diffusivity for phase pair
-        //  Multiplies the phase-fraction gradient
-        virtual tmp<volScalarField> D(const phasePairKey& key) const = 0;
-
         //- Return the interfacial mass flow rate for phase pair
         virtual tmp<volScalarField> dmdt(const phasePairKey& key) const = 0;
+
+
+protected:
+
+    // Protected data
+
+        //- Flag to indicate that returned lists of fields are "complete"; i.e.,
+        //  that an absence of force is returned as a constructed list of zeros,
+        //  rather than a null pointer
+        static const bool fillFields_ = false;
 
 
 public:
@@ -160,54 +167,69 @@ public:
 
     // Member Functions
 
-        //- Return the drag coefficient for all phase-pairs
-        virtual const phaseSystem::KdTable& Kds() const = 0;
+        using phaseSystem::sigma;
+        using phaseSystem::dmdt;
 
-        //- Return the face drag coefficient for all phase-pairs
-        virtual const phaseSystem::KdfTable& Kdfs() const = 0;
+        //- Return the momentum transfer matrices for the cell-based algorithm
+        virtual autoPtr<momentumTransferTable> momentumTransfer() const = 0;
 
-        //- Return the virtual mass force coefficient for all phase-pairs
-        virtual const phaseSystem::VmTable& Vms() const = 0;
+        //- Return the momentum transfer matrices for the face-based algiorithm
+        virtual autoPtr<momentumTransferTable> momentumTransferf() const = 0;
 
-        //- Return the face based virtual mass force coefficient
-        //  for all phase-pairs
-        virtual const phaseSystem::VmfTable& Vmfs() const = 0;
+        //- Return the implicit force coefficients for the face-based algorithm
+        virtual Xfer<PtrList<surfaceScalarField>> AFfs() const = 0;
 
-        //- Return the drag coefficient for phase
-        virtual tmp<volScalarField> Kd(const phaseModel& phase) const = 0;
+        //- Return the force fluxes for the cell-based algorithm
+        virtual Xfer<PtrList<surfaceScalarField>> phiFs
+        (
+            const PtrList<volScalarField>& rAUs
+        ) = 0;
 
-        //- Return the face based drag coefficient for phase
-        virtual tmp<surfaceScalarField> Kdf(const phaseModel& phase) const = 0;
+        //- Return the force fluxes for the face-based algorithm
+        virtual Xfer<PtrList<surfaceScalarField>> phiFfs
+        (
+            const PtrList<surfaceScalarField>& rAUfs
+        ) = 0;
 
-        //- Return the face based virtual mass force coefficient for phase
-        virtual tmp<surfaceScalarField> Vmf(const phaseModel& phase) const = 0;
-
-        //- Return the combined force (lift + wall-lubrication) for phase pair
-        virtual autoPtr<PtrList<Foam::volVectorField>> Fs() const = 0;
-
-        //- Return the combined face force (lift + wall-lubrication)
-        virtual autoPtr<PtrList<Foam::surfaceScalarField>> Ffs() const = 0;
-
-        //- Return the turbulent dispersion force on faces for phase pair
-        virtual autoPtr<PtrList<Foam::surfaceScalarField>> phiDs
+        //- Return the force fluxes for the cell-based algorithm
+        virtual Xfer<PtrList<surfaceScalarField>> phiKdPhis
         (
             const PtrList<volScalarField>& rAUs
         ) const = 0;
 
-        //- Return the face based turbulent dispersion force on faces
-        //  for phase pair
-        virtual autoPtr<PtrList<Foam::surfaceScalarField>> phiDfs
+        //- Return the force fluxes for the face-based algorithm
+        virtual Xfer<PtrList<surfaceScalarField>> phiKdPhifs
         (
             const PtrList<surfaceScalarField>& rAUfs
         ) const = 0;
 
-        //- Return true if there is mass transfer for phase
-        virtual bool transfersMass(const phaseModel& phase) const = 0;
+        //- Return the explicit part of the drag force
+        virtual Xfer<PtrList<volVectorField>> KdUByAs
+        (
+            const PtrList<volScalarField>& rAUs
+        ) const = 0;
 
-        using phaseSystem::dmdt;
+        //- Solve the drag system for the new velocities and fluxes
+        virtual void partialElimination
+        (
+            const PtrList<volScalarField>& rAUs
+        ) = 0;
 
-        //- Return the momentum transfer matrices
-        virtual autoPtr<momentumTransferTable> momentumTransfer() const = 0;
+        //- Solve the drag system for the new fluxes
+        virtual void partialEliminationf
+        (
+            const PtrList<surfaceScalarField>& rAUfs
+        ) = 0;
+
+        //- Return the flux corrections for the cell-based algorithm
+        virtual Xfer<PtrList<surfaceScalarField>> ddtCorrByAs
+        (
+            const PtrList<volScalarField>& rAUs,
+            const bool includeVirtualMass = false
+        ) const = 0;
+
+        //- Return the phase diffusivities divided by the momentum coefficients
+        virtual const HashPtrTable<surfaceScalarField>& DByAfs() const = 0;
 
         //- Return the heat transfer matrices
         virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
@@ -215,6 +237,10 @@ public:
         //- Return the mass transfer matrices
         virtual autoPtr<massTransferTable> massTransfer() const = 0;
 
+        //- Return true if there is mass transfer
+        virtual bool transfersMass() const = 0;
+
+        //- Return the surface tension force
         tmp<surfaceScalarField> surfaceTension(const phaseModel& phase) const;
 
         //- Indicator of the proximity of the interface

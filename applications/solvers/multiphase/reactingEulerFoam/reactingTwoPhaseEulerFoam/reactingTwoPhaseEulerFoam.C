@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,16 +65,7 @@ int main(int argc, char *argv[])
         pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
     );
 
-    Switch implicitPhasePressure
-    (
-        mesh.solverDict(alpha1.name()).lookupOrDefault<Switch>
-        (
-            "implicitPhasePressure", false
-        )
-    );
-
     #include "pUf/createRDeltaTf.H"
-    #include "pUf/createDDtU.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -119,7 +110,6 @@ int main(int argc, char *argv[])
                 #include "pUf/UEqns.H"
                 #include "EEqns.H"
                 #include "pUf/pEqn.H"
-                #include "pUf/DDtU.H"
             }
             else
             {

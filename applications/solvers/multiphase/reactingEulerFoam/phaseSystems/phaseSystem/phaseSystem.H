@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -272,6 +272,68 @@ protected:
                 phasePairKey::hash
             >& models
         );
+
+        //- Add the field to a phase-indexed list, with the given name,
+        //  constructing if necessary
+        template<class GeoField>
+        void addField
+        (
+            const phaseModel& phase,
+            const word& fieldName,
+            tmp<GeoField> field,
+            PtrList<GeoField>& fieldList
+        ) const;
+
+        //- Add the field to a phase-indexed list, with the given name,
+        //  constructing if necessary
+        template<class GeoField>
+        void addField
+        (
+            const phaseModel& phase,
+            const word& fieldName,
+            const GeoField& field,
+            PtrList<GeoField>& fieldList
+        ) const;
+
+        //- Add the field to a phase-indexed table, with the given name,
+        //  constructing if necessary
+        template<class GeoField>
+        void addField
+        (
+            const phaseModel& phase,
+            const word& fieldName,
+            tmp<GeoField> field,
+            HashPtrTable<GeoField>& fieldTable
+        ) const;
+
+        //- Add the field to a phase-indexed table, with the given name,
+        //  constructing if necessary
+        template<class GeoField>
+        void addField
+        (
+            const phaseModel& phase,
+            const word& fieldName,
+            const GeoField& field,
+            HashPtrTable<GeoField>& fieldTable
+        ) const;
+
+        //- Fill up gaps in a phase-indexed list with zeros
+        template<class Type, template<class> class PatchField, class GeoMesh>
+        void fillFields
+        (
+            const word& name,
+            const dimensionSet& dims,
+            PtrList<GeometricField<Type, PatchField, GeoMesh>>& fieldList
+        ) const;
+
+        //- Fill up gaps in a phase-indexed table with zeros
+        template<class Type, template<class> class PatchField, class GeoMesh>
+        void fillFields
+        (
+            const word& name,
+            const dimensionSet& dims,
+            HashPtrTable<GeometricField<Type, PatchField, GeoMesh>>& fieldTable
+        ) const;
 
 
 public:

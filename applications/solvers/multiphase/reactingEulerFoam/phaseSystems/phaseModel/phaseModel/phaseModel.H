@@ -201,6 +201,9 @@ public:
         //- Return the momentum equation
         virtual tmp<fvVectorMatrix> UEqn() = 0;
 
+        //- Return the momentum equation for the face-based algorithm
+        virtual tmp<fvVectorMatrix> UfEqn() = 0;
+
         //- Return the enthalpy equation
         virtual tmp<fvScalarMatrix> heEqn() = 0;
 
@@ -224,15 +227,6 @@ public:
 
             //- Return the phase kinetic energy
             virtual const volScalarField& K() const;
-
-
-        // Implicit phase pressure and dispersion support
-
-            //- Return the phase diffusivity divided by the momentum coefficient
-            virtual const surfaceScalarField& DbyA() const;
-
-            //- Set the phase diffusivity divided by the momentum coefficient
-            virtual void DbyA(const tmp<surfaceScalarField>& DbyA);
 
 
         // Thermo
@@ -264,6 +258,9 @@ public:
 
             //- Return the substantive acceleration
             virtual tmp<volVectorField> DUDt() const = 0;
+
+            //- Return the substantive acceleration on the faces
+            virtual tmp<surfaceScalarField> DUDtf() const = 0;
 
             //- Constant access the continuity error
             virtual tmp<volScalarField> continuityError() const = 0;
@@ -380,9 +377,6 @@ public:
             //- Return the phase-pressure'
             //  (derivative of phase-pressure w.r.t. phase-fraction)
             virtual tmp<volScalarField> pPrime() const = 0;
-
-            //- Return the turbulent term for the momentum equation
-            virtual tmp<fvVectorMatrix> divDevRhoReff() = 0;
 };
 
 

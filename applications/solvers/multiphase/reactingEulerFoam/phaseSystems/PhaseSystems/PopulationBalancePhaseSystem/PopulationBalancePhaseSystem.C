@@ -25,6 +25,41 @@ License
 
 #include "PopulationBalancePhaseSystem.H"
 
+
+// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
+
+template<class BasePhaseSystem>
+void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::
+addMomentumTransfer(phaseSystem::momentumTransferTable& eqns) const
+{
+    // Source term due to mass transfer
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        const phasePair& pair(phasePairIter());
+
+        if (pair.ordered())
+        {
+            continue;
+        }
+
+        const volVectorField& U1(pair.phase1().U());
+        const volVectorField& U2(pair.phase2().U());
+
+        const volScalarField dmdt(this->pDmdt(pair));
+        const volScalarField dmdt21(posPart(dmdt));
+        const volScalarField dmdt12(negPart(dmdt));
+
+        *eqns[pair.phase1().name()] += dmdt21*U2 - fvm::Sp(dmdt21, U1);
+        *eqns[pair.phase2().name()] -= dmdt12*U1 - fvm::Sp(dmdt12, U2);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
@@ -207,33 +242,20 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransfer() const
     autoPtr<phaseSystem::momentumTransferTable>
         eqnsPtr(BasePhaseSystem::momentumTransfer());
 
-    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
+    addMomentumTransfer(eqnsPtr());
 
-    // Source term due to mass trasfer
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
+    return eqnsPtr;
+}
 
-        if (pair.ordered())
-        {
-            continue;
-        }
 
-        const volVectorField& U1(pair.phase1().U());
-        const volVectorField& U2(pair.phase2().U());
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransferf() const
+{
+    autoPtr<phaseSystem::momentumTransferTable>
+        eqnsPtr(BasePhaseSystem::momentumTransferf());
 
-        const volScalarField dmdt(this->pDmdt(pair));
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
-
-        *eqns[pair.phase1().name()] += dmdt21*U2 - fvm::Sp(dmdt21, U1);
-        *eqns[pair.phase2().name()] -= dmdt12*U1 - fvm::Sp(dmdt12, U2);
-    }
+    addMomentumTransfer(eqnsPtr());
 
     return eqnsPtr;
 }

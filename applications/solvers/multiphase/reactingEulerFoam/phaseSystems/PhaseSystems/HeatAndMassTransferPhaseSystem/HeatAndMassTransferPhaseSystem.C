@@ -132,10 +132,8 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-bool Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::transfersMass
-(
-    const phaseModel& phase
-) const
+bool
+Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::transfersMass() const
 {
     return true;
 }
@@ -197,6 +195,17 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
 {
     autoPtr<phaseSystem::momentumTransferTable>
         eqnsPtr(BasePhaseSystem::momentumTransfer());
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransferf() const
+{
+    autoPtr<phaseSystem::momentumTransferTable>
+        eqnsPtr(BasePhaseSystem::momentumTransferf());
 
     return eqnsPtr;
 }
