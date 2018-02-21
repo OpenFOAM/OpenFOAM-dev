@@ -42,8 +42,8 @@ Foam::fluidSolutionControl::fluidSolutionControl
 )
 :
     nonOrthogonalSolutionControl(mesh, algorithmName),
-    solveFlow_(false),
-    momentumPredictor_(false),
+    frozenFlow_(false),
+    momentumPredictor_(true),
     transonic_(false),
     consistent_(false)
 {}
@@ -66,7 +66,10 @@ bool Foam::fluidSolutionControl::read()
 
     const dictionary& solutionDict = dict();
 
-    solveFlow_ = solutionDict.lookupOrDefault<bool>("solveFlow", true);
+    // The solveFluid keyword is maintained here for backwards compatibility
+    frozenFlow_ = !solutionDict.lookupOrDefault<bool>("solveFluid", true);
+    frozenFlow_ = solutionDict.lookupOrDefault<bool>("frozenFlow", frozenFlow_);
+
     momentumPredictor_ =
         solutionDict.lookupOrDefault<bool>("momentumPredictor", true);
     transonic_ = solutionDict.lookupOrDefault<bool>("transonic", false);

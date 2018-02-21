@@ -25,9 +25,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline bool Foam::fluidSolutionControl::solveFlow() const
+inline bool Foam::fluidSolutionControl::frozenFlow() const
 {
-    return solveFlow_;
+    return frozenFlow_;
 }
 
 
