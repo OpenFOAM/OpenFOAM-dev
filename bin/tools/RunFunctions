@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -46,7 +46,7 @@ getNumberOfProcessors()
 
 getApplication()
 {
-    sed -ne 's/^ *application\s*\([a-zA-Z]*\)\s*;.*$/\1/p' system/controlDict
+    foamDictionary -entry application -value system/controlDict
 }
 
 runApplication()
