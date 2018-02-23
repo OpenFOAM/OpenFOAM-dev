@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,46 +22,50 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::freestreamFvPatchField
+    Foam::freestreamVelocityFvPatchVectorField
 
 Group
     grpInletBoundaryConditions grpOutletBoundaryConditions
 
 Description
-    This boundary condition provides a free-stream condition.  It is a 'mixed'
-    condition derived from the \c inletOutlet condition, whereby the mode of
-    operation switches between fixed (free stream) value and zero gradient
-    based on the sign of the flux.
+    This boundary condition provides a free-stream condition for velocity.
+
+    It is an inlet-outlet condition that uses the velocity orientation to
+    continuously blend between fixed value for normal inlet and zero gradient
+    for normal outlet flow.
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        freestreamValue   | freestream velocity          | yes         |
-        phi          | flux field name         | no          | phi
+        Property        | Description             | Required    | Default value
+        freestreamValue | freestream velocity     | yes         |
     \endtable
 
     Example of the boundary condition specification:
     \verbatim
     <patchName>
     {
-        type            freestream;
+        type            freestreamVelocity;
         freestreamValue uniform (300 0 0);
     }
     \endverbatim
 
+Note
+    This condition is designed to operate with the freestreamPressure condition
+
 See also
     Foam::mixedFvPatchField
-    Foam::inletOutletFvPatchField
+    Foam::freestreamFvPatchField
 
 SourceFiles
-    freestreamFvPatchField.C
+    freestreamVelocityFvPatchVectorField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef freestreamFvPatchField_H
-#define freestreamFvPatchField_H
+#ifndef freestreamVelocityFvPatchVectorField_H
+#define freestreamVelocityFvPatchVectorField_H
 
-#include "inletOutletFvPatchField.H"
+#include "fvPatchFields.H"
+#include "mixedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,95 +73,99 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class freestreamFvPatchField Declaration
+             Class freestreamVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class freestreamFvPatchField
+class freestreamVelocityFvPatchVectorField
 :
-    public inletOutletFvPatchField<Type>
+    public mixedFvPatchVectorField
 {
 
 public:
 
     //- Runtime type information
-    TypeName("freestream");
+    TypeName("freestreamVelocity");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        freestreamFvPatchField
+        freestreamVelocityFvPatchVectorField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<vector, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        freestreamFvPatchField
+        freestreamVelocityFvPatchVectorField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<vector, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given freestreamFvPatchField onto a new patch
-        freestreamFvPatchField
+        //- Construct by mapping given freestreamVelocityFvPatchVectorField onto
+        //  a new patch
+        freestreamVelocityFvPatchVectorField
         (
-            const freestreamFvPatchField<Type>&,
+            const freestreamVelocityFvPatchVectorField&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy
-        freestreamFvPatchField
+        freestreamVelocityFvPatchVectorField
         (
-            const freestreamFvPatchField<Type>&
+            const freestreamVelocityFvPatchVectorField&
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
+        virtual tmp<fvPatchVectorField> clone() const
         {
-            return tmp<fvPatchField<Type>>
+            return tmp<fvPatchVectorField>
             (
-                new freestreamFvPatchField<Type>(*this)
+                new freestreamVelocityFvPatchVectorField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        freestreamFvPatchField
+        freestreamVelocityFvPatchVectorField
         (
-            const freestreamFvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const freestreamVelocityFvPatchVectorField&,
+            const DimensionedField<vector, volMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type>> clone
+        virtual tmp<fvPatchVectorField> clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<vector, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type>>
+            return tmp<fvPatchVectorField>
             (
-                new freestreamFvPatchField<Type>(*this, iF)
+                new freestreamVelocityFvPatchVectorField(*this, iF)
             );
         }
 
 
     // Member functions
 
-        // Return defining fields
-
-            const Field<Type>& freestreamValue() const
+            const vectorField& freestreamValue() const
             {
-                return this->refValue();
+                return refValue();
             }
 
-            Field<Type>& freestreamValue()
+            vectorField& freestreamValue()
             {
-                return this->refValue();
+                return refValue();
             }
+
+
+        // Evaluation functions
+
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
 
 
         //- Write
@@ -168,12 +176,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "freestreamFvPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

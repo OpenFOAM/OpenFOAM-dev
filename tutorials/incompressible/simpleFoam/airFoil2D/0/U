@@ -22,14 +22,14 @@ boundaryField
 {
     inlet
     {
-        type            freestream;
-        freestreamValue uniform (25.75 3.62 0);
+        type            freestreamVelocity;
+        freestreamValue $internalField;
     }
 
     outlet
     {
-        type            freestream;
-        freestreamValue uniform (25.75 3.62 0);
+        type            freestreamVelocity;
+        freestreamValue $internalField;
     }
 
     walls

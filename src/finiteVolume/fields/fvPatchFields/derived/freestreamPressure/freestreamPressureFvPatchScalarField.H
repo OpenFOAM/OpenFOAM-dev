@@ -29,15 +29,16 @@ Group
 
 Description
     This boundary condition provides a free-stream condition for pressure.
-    It is a zero-gradient condition that constrains the flux across the patch
-    based on the free-stream velocity.
+
+    It is an outlet-inlet condition that uses the velocity orientation to
+    continuously blend between zero gradient for normal inlet and fixed value
+    for normal outlet flow.
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        U            | velocity field name     | no          | U
-        phi          | flux field name         | no          | phi
-        rho          | density field name      | no          | none
+        Property        | Description             | Required    | Default value
+        U               | velocity field name     | no          | U
+        freestreamValue | freestream pressure     | yes         |
     \endtable
 
     Example of the boundary condition specification:
@@ -45,14 +46,15 @@ Usage
     <patchName>
     {
         type            freestreamPressure;
+        freestreamValue uniform 1e5;
     }
     \endverbatim
 
 Note
-    This condition is designed to operate with a freestream velocity condition
+    This condition is designed to operate with a freestreamVelocity condition
 
 See also
-    Foam::zeroGradientFvPatchField
+    Foam::mixedFvPatchField
     Foam::freestreamFvPatchField
 
 SourceFiles
@@ -64,7 +66,7 @@ SourceFiles
 #define freestreamPressureFvPatchScalarField_H
 
 #include "fvPatchFields.H"
-#include "zeroGradientFvPatchFields.H"
+#include "mixedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,19 +79,12 @@ namespace Foam
 
 class freestreamPressureFvPatchScalarField
 :
-    public zeroGradientFvPatchScalarField
+    public mixedFvPatchScalarField
 {
     // Private data
 
         //- Name of the velocity field
         word UName_;
-
-        //- Name of the flux transporting the field
-        word phiName_;
-
-        //- Name of the density field used to normalise the mass flux
-        //  if necessary
-        word rhoName_;
 
 
 public:
@@ -161,6 +156,17 @@ public:
 
 
     // Member functions
+
+            const scalarField& freestreamValue() const
+            {
+                return refValue();
+            }
+
+            scalarField& freestreamValue()
+            {
+                return refValue();
+            }
+
 
         // Evaluation functions
 

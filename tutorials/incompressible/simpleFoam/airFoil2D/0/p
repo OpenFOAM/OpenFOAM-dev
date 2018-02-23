@@ -23,11 +23,13 @@ boundaryField
     inlet
     {
         type            freestreamPressure;
+        freestreamValue $internalField;
     }
 
     outlet
     {
         type            freestreamPressure;
+        freestreamValue $internalField;
     }
 
     walls
