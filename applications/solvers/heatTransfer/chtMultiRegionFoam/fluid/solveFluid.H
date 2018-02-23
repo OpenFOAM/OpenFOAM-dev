@@ -1,4 +1,4 @@
-if (!pimple.solveFlow())
+if (pimple.frozenFlow())
 {
     #include "EEqn.H"
 }

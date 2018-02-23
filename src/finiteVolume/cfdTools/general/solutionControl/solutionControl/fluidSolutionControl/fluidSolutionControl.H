@@ -56,8 +56,8 @@ protected:
 
     // Protected data
 
-        //- Flag to indicate to solve for the flow
-        bool solveFlow_;
+        //- Flag to indicate not to solve for the flow
+        bool frozenFlow_;
 
         //- Flag to indicate to solve for momentum
         bool momentumPredictor_;
@@ -97,8 +97,8 @@ public:
 
         // Access
 
-            //- Flag to indicate to solve for the flow
-            inline bool solveFlow() const;
+            //- Flag to indicate not to solve for the flow
+            inline bool frozenFlow() const;
 
             //- Flag to indicate to solve for momentum
             inline bool momentumPredictor() const;
