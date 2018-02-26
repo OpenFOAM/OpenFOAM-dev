@@ -41,13 +41,12 @@ SourceFiles
 #define cellLimitedGrad_H
 
 #include "gradScheme.H"
+#include "Field.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace fv
 {
@@ -56,10 +55,11 @@ namespace fv
                        Class cellLimitedGrad Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class Type, class Limiter>
 class cellLimitedGrad
 :
-    public fv::gradScheme<Type>
+    public fv::gradScheme<Type>,
+    public Limiter
 {
     // Private Data
 
@@ -70,6 +70,18 @@ class cellLimitedGrad
 
 
     // Private Member Functions
+
+        void limitGradient
+        (
+            const Field<scalar>& limiter,
+            Field<vector>& gIf
+        ) const;
+
+        void limitGradient
+        (
+            const Field<vector>& limiter,
+            Field<tensor>& gIf
+        ) const;
 
         //- Disallow default bitwise copy construct
         cellLimitedGrad(const cellLimitedGrad&);
@@ -90,6 +102,7 @@ public:
         cellLimitedGrad(const fvMesh& mesh, Istream& schemeData)
         :
             gradScheme<Type>(mesh),
+            Limiter(schemeData),
             basicGradScheme_(fv::gradScheme<Type>::New(mesh, schemeData)),
             k_(readScalar(schemeData))
         {
@@ -107,13 +120,21 @@ public:
 
     // Member Functions
 
-        static inline void limitFace
+        inline void limitFaceCmpt
+        (
+            scalar& limiter,
+            const scalar maxDelta,
+            const scalar minDelta,
+            const scalar extrapolate
+        ) const;
+
+        inline void limitFace
         (
             Type& limiter,
             const Type& maxDelta,
             const Type& minDelta,
             const Type& extrapolate
-        );
+        ) const;
 
         //- Return the gradient of the given field to the gradScheme::grad
         //  for optional caching
@@ -131,73 +152,67 @@ public:
 
 // * * * * * * * * * * * * Inline Member Function  * * * * * * * * * * * * * //
 
-template<>
-inline void cellLimitedGrad<scalar>::limitFace
+template<class Type, class Limiter>
+inline void cellLimitedGrad<Type, Limiter>::limitFaceCmpt
 (
     scalar& limiter,
-    const scalar& maxDelta,
-    const scalar& minDelta,
-    const scalar& extrapolate
-)
+    const scalar maxDelta,
+    const scalar minDelta,
+    const scalar extrapolate
+) const
 {
-    if (extrapolate > maxDelta + vSmall)
+    scalar r = 1;
+
+    if (extrapolate > small)
     {
-        limiter = min(limiter, maxDelta/extrapolate);
+        r = maxDelta/extrapolate;
     }
-    else if (extrapolate < minDelta - vSmall)
+    else if (extrapolate < -small)
     {
-        limiter = min(limiter, minDelta/extrapolate);
+        r = minDelta/extrapolate;
     }
+    else
+    {
+        return;
+    }
+
+    limiter = min(limiter, Limiter::limiter(r));
 }
 
 
-template<class Type>
-inline void cellLimitedGrad<Type>::limitFace
+template<class Type, class Limiter>
+inline void cellLimitedGrad<Type, Limiter>::limitFace
 (
     Type& limiter,
     const Type& maxDelta,
     const Type& minDelta,
     const Type& extrapolate
-)
+) const
 {
-    for (direction cmpt=0; cmpt<Type::nComponents; cmpt++)
+    for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
     {
-        cellLimitedGrad<scalar>::limitFace
+        limitFaceCmpt
         (
-            limiter.component(cmpt),
-            maxDelta.component(cmpt),
-            minDelta.component(cmpt),
-            extrapolate.component(cmpt)
+            setComponent(limiter, cmpt),
+            component(maxDelta, cmpt),
+            component(minDelta, cmpt),
+            component(extrapolate, cmpt)
         );
     }
 }
-
-
-// * * * * * * * * Template Member Function Specialisations  * * * * * * * * //
-
-template<>
-tmp<volVectorField> cellLimitedGrad<scalar>::calcGrad
-(
-    const volScalarField& vsf,
-    const word& name
-) const;
-
-
-template<>
-tmp<volTensorField> cellLimitedGrad<vector>::calcGrad
-(
-    const volVectorField& vsf,
-    const word& name
-) const;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace fv
 
+} // End namespace Foam
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Foam
+#ifdef NoRepository
+    #include "cellLimitedGrad.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -24,335 +24,49 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellLimitedGrad.H"
-#include "gaussGrad.H"
-#include "fvMesh.H"
-#include "volMesh.H"
-#include "surfaceMesh.H"
-#include "volFields.H"
-#include "fixedValueFvPatchFields.H"
+#include "minmodGradientLimiter.H"
+#include "VenkatakrishnanGradientLimiter.H"
+#include "cubicGradientLimiter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makeFvGradScheme(cellLimitedGrad)
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<>
-Foam::tmp<Foam::volVectorField>
-Foam::fv::cellLimitedGrad<Foam::scalar>::calcGrad
-(
-    const volScalarField& vsf,
-    const word& name
-) const
-{
-    const fvMesh& mesh = vsf.mesh();
-
-    tmp<volVectorField> tGrad = basicGradScheme_().calcGrad(vsf, name);
-
-    if (k_ < small)
-    {
-        return tGrad;
+#define makeNamedFvLimitedGradTypeScheme(SS, Type, Limiter, Name)              \
+    typedef Foam::fv::SS<Foam::Type, Foam::fv::gradientLimiters::Limiter>      \
+        SS##Type##Limiter##_;                                                  \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        SS##Type##Limiter##_,                                                  \
+        Name,                                                                  \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace fv                                                           \
+        {                                                                      \
+            gradScheme<Type>::addIstreamConstructorToTable                     \
+            <                                                                  \
+                SS<Type, gradientLimiters::Limiter>                            \
+            > add##SS##Type##Limiter##IstreamConstructorToTable_;              \
+        }                                                                      \
     }
 
-    volVectorField& g = tGrad.ref();
+#define makeFvLimitedGradTypeScheme(SS, Type, Limiter)                         \
+    makeNamedFvLimitedGradTypeScheme(SS##Grad, Type, Limiter, #SS"<"#Limiter">")
 
-    const labelUList& owner = mesh.owner();
-    const labelUList& neighbour = mesh.neighbour();
+#define makeFvLimitedGradScheme(SS, Limiter)                                   \
+                                                                               \
+    makeFvLimitedGradTypeScheme(SS, scalar, Limiter)                           \
+    makeFvLimitedGradTypeScheme(SS, vector, Limiter)
 
-    const volVectorField& C = mesh.C();
-    const surfaceVectorField& Cf = mesh.Cf();
 
-    scalarField maxVsf(vsf.primitiveField());
-    scalarField minVsf(vsf.primitiveField());
+// Default limiter in minmod specified without the limiter name
+// for backward compatibility
+makeNamedFvLimitedGradTypeScheme(cellLimitedGrad, scalar, minmod, "cellLimited")
+makeNamedFvLimitedGradTypeScheme(cellLimitedGrad, vector, minmod, "cellLimited")
 
-    forAll(owner, facei)
-    {
-        label own = owner[facei];
-        label nei = neighbour[facei];
-
-        scalar vsfOwn = vsf[own];
-        scalar vsfNei = vsf[nei];
-
-        maxVsf[own] = max(maxVsf[own], vsfNei);
-        minVsf[own] = min(minVsf[own], vsfNei);
-
-        maxVsf[nei] = max(maxVsf[nei], vsfOwn);
-        minVsf[nei] = min(minVsf[nei], vsfOwn);
-    }
-
-
-    const volScalarField::Boundary& bsf = vsf.boundaryField();
-
-    forAll(bsf, patchi)
-    {
-        const fvPatchScalarField& psf = bsf[patchi];
-
-        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
-
-        if (psf.coupled())
-        {
-            const scalarField psfNei(psf.patchNeighbourField());
-
-            forAll(pOwner, pFacei)
-            {
-                label own = pOwner[pFacei];
-                scalar vsfNei = psfNei[pFacei];
-
-                maxVsf[own] = max(maxVsf[own], vsfNei);
-                minVsf[own] = min(minVsf[own], vsfNei);
-            }
-        }
-        else
-        {
-            forAll(pOwner, pFacei)
-            {
-                label own = pOwner[pFacei];
-                scalar vsfNei = psf[pFacei];
-
-                maxVsf[own] = max(maxVsf[own], vsfNei);
-                minVsf[own] = min(minVsf[own], vsfNei);
-            }
-        }
-    }
-
-    maxVsf -= vsf;
-    minVsf -= vsf;
-
-    if (k_ < 1.0)
-    {
-        const scalarField maxMinVsf((1.0/k_ - 1.0)*(maxVsf - minVsf));
-        maxVsf += maxMinVsf;
-        minVsf -= maxMinVsf;
-
-        //maxVsf *= 1.0/k_;
-        //minVsf *= 1.0/k_;
-    }
-
-
-    // create limiter
-    scalarField limiter(vsf.primitiveField().size(), 1.0);
-
-    forAll(owner, facei)
-    {
-        label own = owner[facei];
-        label nei = neighbour[facei];
-
-        // owner side
-        limitFace
-        (
-            limiter[own],
-            maxVsf[own],
-            minVsf[own],
-            (Cf[facei] - C[own]) & g[own]
-        );
-
-        // neighbour side
-        limitFace
-        (
-            limiter[nei],
-            maxVsf[nei],
-            minVsf[nei],
-            (Cf[facei] - C[nei]) & g[nei]
-        );
-    }
-
-    forAll(bsf, patchi)
-    {
-        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
-        const vectorField& pCf = Cf.boundaryField()[patchi];
-
-        forAll(pOwner, pFacei)
-        {
-            label own = pOwner[pFacei];
-
-            limitFace
-            (
-                limiter[own],
-                maxVsf[own],
-                minVsf[own],
-                (pCf[pFacei] - C[own]) & g[own]
-            );
-        }
-    }
-
-    if (fv::debug)
-    {
-        Info<< "gradient limiter for: " << vsf.name()
-            << " max = " << gMax(limiter)
-            << " min = " << gMin(limiter)
-            << " average: " << gAverage(limiter) << endl;
-    }
-
-    g.primitiveFieldRef() *= limiter;
-    g.correctBoundaryConditions();
-    gaussGrad<scalar>::correctBoundaryConditions(vsf, g);
-
-    return tGrad;
-}
-
-
-template<>
-Foam::tmp<Foam::volTensorField>
-Foam::fv::cellLimitedGrad<Foam::vector>::calcGrad
-(
-    const volVectorField& vsf,
-    const word& name
-) const
-{
-    const fvMesh& mesh = vsf.mesh();
-
-    tmp<volTensorField> tGrad = basicGradScheme_().calcGrad(vsf, name);
-
-    if (k_ < small)
-    {
-        return tGrad;
-    }
-
-    volTensorField& g = tGrad.ref();
-
-    const labelUList& owner = mesh.owner();
-    const labelUList& neighbour = mesh.neighbour();
-
-    const volVectorField& C = mesh.C();
-    const surfaceVectorField& Cf = mesh.Cf();
-
-    vectorField maxVsf(vsf.primitiveField());
-    vectorField minVsf(vsf.primitiveField());
-
-    forAll(owner, facei)
-    {
-        label own = owner[facei];
-        label nei = neighbour[facei];
-
-        const vector& vsfOwn = vsf[own];
-        const vector& vsfNei = vsf[nei];
-
-        maxVsf[own] = max(maxVsf[own], vsfNei);
-        minVsf[own] = min(minVsf[own], vsfNei);
-
-        maxVsf[nei] = max(maxVsf[nei], vsfOwn);
-        minVsf[nei] = min(minVsf[nei], vsfOwn);
-    }
-
-
-    const volVectorField::Boundary& bsf = vsf.boundaryField();
-
-    forAll(bsf, patchi)
-    {
-        const fvPatchVectorField& psf = bsf[patchi];
-        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
-
-        if (psf.coupled())
-        {
-            const vectorField psfNei(psf.patchNeighbourField());
-
-            forAll(pOwner, pFacei)
-            {
-                label own = pOwner[pFacei];
-                const vector& vsfNei = psfNei[pFacei];
-
-                maxVsf[own] = max(maxVsf[own], vsfNei);
-                minVsf[own] = min(minVsf[own], vsfNei);
-            }
-        }
-        else
-        {
-            forAll(pOwner, pFacei)
-            {
-                label own = pOwner[pFacei];
-                const vector& vsfNei = psf[pFacei];
-
-                maxVsf[own] = max(maxVsf[own], vsfNei);
-                minVsf[own] = min(minVsf[own], vsfNei);
-            }
-        }
-    }
-
-    maxVsf -= vsf;
-    minVsf -= vsf;
-
-    if (k_ < 1.0)
-    {
-        const vectorField maxMinVsf((1.0/k_ - 1.0)*(maxVsf - minVsf));
-        maxVsf += maxMinVsf;
-        minVsf -= maxMinVsf;
-
-        //maxVsf *= 1.0/k_;
-        //minVsf *= 1.0/k_;
-    }
-
-
-    // create limiter
-    vectorField limiter(vsf.primitiveField().size(), vector::one);
-
-    forAll(owner, facei)
-    {
-        label own = owner[facei];
-        label nei = neighbour[facei];
-
-        // owner side
-        limitFace
-        (
-            limiter[own],
-            maxVsf[own],
-            minVsf[own],
-            (Cf[facei] - C[own]) & g[own]
-        );
-
-        // neighbour side
-        limitFace
-        (
-            limiter[nei],
-            maxVsf[nei],
-            minVsf[nei],
-            (Cf[facei] - C[nei]) & g[nei]
-        );
-    }
-
-    forAll(bsf, patchi)
-    {
-        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
-        const vectorField& pCf = Cf.boundaryField()[patchi];
-
-        forAll(pOwner, pFacei)
-        {
-            label own = pOwner[pFacei];
-
-            limitFace
-            (
-                limiter[own],
-                maxVsf[own],
-                minVsf[own],
-                ((pCf[pFacei] - C[own]) & g[own])
-            );
-        }
-    }
-
-    if (fv::debug)
-    {
-        Info<< "gradient limiter for: " << vsf.name()
-            << " max = " << gMax(limiter)
-            << " min = " << gMin(limiter)
-            << " average: " << gAverage(limiter) << endl;
-    }
-
-    tensorField& gIf = g.primitiveFieldRef();
-
-    forAll(gIf, celli)
-    {
-        gIf[celli] = tensor
-        (
-            cmptMultiply(limiter[celli], gIf[celli].x()),
-            cmptMultiply(limiter[celli], gIf[celli].y()),
-            cmptMultiply(limiter[celli], gIf[celli].z())
-        );
-    }
-
-    g.correctBoundaryConditions();
-    gaussGrad<vector>::correctBoundaryConditions(vsf, g);
-
-    return tGrad;
-}
-
+makeFvLimitedGradScheme(cellLimited, Venkatakrishnan)
+makeFvLimitedGradScheme(cellLimited, cubic)
 
 // ************************************************************************* //
