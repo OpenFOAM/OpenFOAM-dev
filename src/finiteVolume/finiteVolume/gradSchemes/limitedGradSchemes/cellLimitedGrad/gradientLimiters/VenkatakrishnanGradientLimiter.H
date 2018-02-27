@@ -83,13 +83,18 @@ class Venkatakrishnan
 
 public:
 
-    Venkatakrishnan(Istream&)
-    {}
+    // Constructors
 
-    inline scalar limiter(const scalar r) const
-    {
-        return (sqr(r) + 2*r)/(sqr(r) + r + 2);
-    }
+        Venkatakrishnan(Istream&)
+        {}
+
+
+    // Member Functions
+
+        inline scalar limiter(const scalar r) const
+        {
+            return (sqr(r) + 2*r)/(sqr(r) + r + 2);
+        }
 };
 
 

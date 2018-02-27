@@ -80,40 +80,54 @@ namespace gradientLimiters
 
 class cubic
 {
-    const scalar rt_;
-    const scalar a_;
-    const scalar b_;
+    // Private Data
+
+        //- Limiter transition point at which the limiter function -> 1
+        //  Must be > 1
+        const scalar rt_;
+
+        //- Coefficient of the r^3 term (evaluated from rt)
+        const scalar a_;
+
+        // - Coefficient of the r^2 term  (evaluated from rt)
+        const scalar b_;
+
 
 public:
 
-    cubic(Istream& schemeData)
-    :
-        rt_(readScalar(schemeData)),
-        a_(2.0/sqr(rt_) - 2.0/pow3(rt_)),
-        b_(-(3.0/2.0)*a_*rt_)
-    {
-        if (rt_ < 1)
-        {
-            FatalIOErrorInFunction
-            (
-                schemeData
-            )   << "coefficient = " << rt_
-                << " should be > 1"
-                << exit(FatalIOError);
-        }
-    }
+    // Constructors
 
-    inline scalar limiter(const scalar r) const
-    {
-        if (r < rt_)
+        cubic(Istream& schemeData)
+        :
+            rt_(readScalar(schemeData)),
+            a_(2.0/sqr(rt_) - 2.0/pow3(rt_)),
+            b_(-(3.0/2.0)*a_*rt_)
         {
-            return ((a_*r + b_)*r + 1)*r;
+            if (rt_ < 1)
+            {
+                FatalIOErrorInFunction
+                (
+                    schemeData
+                )   << "coefficient = " << rt_
+                    << " should be > 1"
+                    << exit(FatalIOError);
+            }
         }
-        else
+
+
+    // Member Functions
+
+        inline scalar limiter(const scalar r) const
         {
-            return 1;
+            if (r < rt_)
+            {
+                return ((a_*r + b_)*r + 1)*r;
+            }
+            else
+            {
+                return 1;
+            }
         }
-    }
 };
 
 

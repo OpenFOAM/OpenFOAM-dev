@@ -69,13 +69,18 @@ class minmod
 
 public:
 
-    minmod(Istream&)
-    {}
+    // Constructors
 
-    inline scalar limiter(const scalar r) const
-    {
-        return min(r, 1);
-    }
+        minmod(Istream&)
+        {}
+
+
+    // Member Functions
+
+        inline scalar limiter(const scalar r) const
+        {
+            return min(r, 1);
+        }
 };
 
 
