@@ -45,6 +45,15 @@ Description
     }
     \endverbatim
 
+    Note: this limiter formally allows the limiter function to slightly exceed 1
+    which is generally not a good idea and can cause unboundedness.  To avoid
+    this problem the limiter function is clipped to 1 which is likely to be
+    better behaved but is then not differentiable and so no longer conforms to
+    the basic principles of this kind of limiter function.  All these issues are
+    resolved in a consistent and differentiable manner by the
+    Foam::fv::gradientLimiters::cubic limiter which is recommended in
+    preference to the Foam::fv::gradientLimiters::Venkatakrishnan limiter.
+
 See also
     Foam::fv::cellLimitedGrad
     Foam::fv::gradientLimiters::cubic
