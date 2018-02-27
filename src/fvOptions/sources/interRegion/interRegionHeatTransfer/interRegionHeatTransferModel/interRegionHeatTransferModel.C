@@ -258,6 +258,16 @@ void Foam::fv::interRegionHeatTransferModel::addSup
     {
         eqn += htc_*(Tmapped - T);
     }
+
+    {
+        const dimensionedScalar energy =
+            fvc::domainIntegrate(htc_*(T - Tmapped));
+
+        Info<< this->name()
+            << ": Energy exchange (explicit) from region " << nbrMesh.name()
+            << " To " << mesh_.name() << " : " <<  energy.value()
+            << endl;
+    }
 }
 
 
