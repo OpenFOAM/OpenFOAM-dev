@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -461,7 +461,7 @@ Foam::wordList Foam::basicThermo::splitThermoName
             // is greater than nCmpt return an empty list
             if (i == nCmpt)
             {
-                return wordList::null();
+                return wordList();
             }
         }
         beg = end + 1;
@@ -471,7 +471,7 @@ Foam::wordList Foam::basicThermo::splitThermoName
     // return an empty list
     if (i + 1 != nCmpt)
     {
-        return wordList::null();
+        return wordList();
     }
 
     if (beg < thermoName.size())
