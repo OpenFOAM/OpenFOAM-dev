@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,12 +186,22 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
     scalarField Tc(patchInternalField());
     scalarField& Tp = *this;
 
-    const turbulentTemperatureRadCoupledMixedFvPatchScalarField&
-        nbrField = refCast
-            <const turbulentTemperatureRadCoupledMixedFvPatchScalarField>
-            (
-                nbrPatch.lookupPatchField<volScalarField, scalar>(TnbrName_)
-            );
+    typedef turbulentTemperatureRadCoupledMixedFvPatchScalarField thisType;
+
+    const fvPatchScalarField& nbrTp =
+        nbrPatch.lookupPatchField<volScalarField, scalar>(TnbrName_);
+
+    if (!isA<thisType>(nbrTp))
+    {
+        FatalErrorInFunction
+            << "Patch field for " << internalField().name() << " on "
+            << patch().name() << " is of type " << thisType::typeName
+            << endl << "The neighbouring patch field " << TnbrName_ << " on "
+            << nbrPatch.name() << " is of type " << nbrTp.type() << endl
+            << "They need to be the same type" << exit(FatalError);
+    }
+
+    const thisType& nbrField = refCast<const thisType>(nbrTp);
 
     // Swap to obtain full local values of neighbour internal field
     scalarField TcNbr(nbrField.patchInternalField());
