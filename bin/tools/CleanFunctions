@@ -88,6 +88,12 @@ cleanCase()
     find . -name "*.orig" -type f -exec sh -c 'rm -f ${0%.*} ${0%.*}.gz' {} \;
 }
 
+cleanVoFCase()
+{
+    cleanCase
+    find 0 \( -name "alphas" -o -name "T.*" ! -name "T.orig" \) -exec rm -f {} \;
+}
+
 removeCase()
 {
     echo "Removing ${1:-unknown} case"
