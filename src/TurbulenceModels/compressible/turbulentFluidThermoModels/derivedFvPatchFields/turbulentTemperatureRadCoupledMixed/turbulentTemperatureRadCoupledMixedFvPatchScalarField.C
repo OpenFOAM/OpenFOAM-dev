@@ -197,8 +197,8 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
             << "Patch field for " << internalField().name() << " on "
             << patch().name() << " is of type " << thisType::typeName
             << endl << "The neighbouring patch field " << TnbrName_ << " on "
-            << nbrPatch.name() << " is of type " << nbrTp.type() << endl
-            << "They need to be the same type" << exit(FatalError);
+            << nbrPatch.name() << " is required to be the same, but is "
+            << "currently of type " << nbrTp.type() << exit(FatalError);
     }
 
     const thisType& nbrField = refCast<const thisType>(nbrTp);
