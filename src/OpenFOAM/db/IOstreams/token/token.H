@@ -77,7 +77,7 @@ public:
     {
         UNDEFINED      = 0,
 
-        PUNCTUATION    = -127,
+        PUNCTUATION    = char(128),
         WORD,
         VARIABLE,
         STRING,
