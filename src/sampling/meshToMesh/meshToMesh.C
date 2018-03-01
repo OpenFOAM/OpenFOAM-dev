@@ -27,6 +27,8 @@ License
 #include "Time.H"
 #include "globalIndex.H"
 #include "meshToMeshMethod.H"
+#include "OSHA1stream.H"
+#include "IOmapDistribute.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -630,6 +632,234 @@ void Foam::meshToMesh::constructFromCuttingPatches
     }
 }
 
+Foam::SHA1Digest Foam::meshToMesh::checksum(const polyMesh &mesh) const
+{
+    OSHA1stream digest;
+    digest << mesh.points() << endl;
+    digest << mesh.faces() << endl;
+    digest << mesh.faceOwner() << endl;
+    digest << mesh.faceNeighbour() << endl;
+    digest << mesh.boundaryMesh() << endl;
+    return digest.digest();
+}
+
+Foam::fileName Foam::meshToMesh::cacheData(
+    const polyMesh& src,
+    const polyMesh& tgt,
+    const word &addition
+) const
+{
+    return src.pointsInstance()
+        / "polyMesh"
+        / "meshToMeshCache"
+        / "to_" + tgt.name() + "_" + addition;
+}
+
+void Foam::meshToMesh::writeCacheData(
+    const polyMesh& src,
+    const polyMesh& tgt,
+    const word &addition
+) const
+{
+    // bool hasAMI=patchAMIs_.size()>0;
+    // reduce(hasAMI,orOp<bool>());
+    // if(hasAMI) {
+    //     WarningInFunction << "Can't handle AMI-data. Nothing written" << endl;
+    //     return;
+    // }
+    fileName base=cacheData(src,tgt,addition);
+    Info << "Writing mesh-to-mesh data to " << base << endl;
+    localIOdictionary digest
+    (
+        IOobject
+        (
+            base+"_Digests",
+            src,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        )
+    );
+    digest.add("srcMeshSHA1",checksum(src).str());
+    digest.add("tgtMeshSHA1",checksum(tgt).str());
+    digest.regIOobject::write();
+
+    unsigned int oldPrecision=IOstream::defaultPrecision(15);
+
+    OFstream data
+    (
+        IOobject
+        (
+            base,
+            src,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ).objectPath(),
+        src.time().writeFormat(),
+        src.time().writeVersion(),
+        src.time().writeCompression()
+    );
+
+    IOobject::writeBanner(data);
+
+    data << srcPatchID_ << endl;
+    data << tgtPatchID_ << endl;
+    IOobject::writeDivider(data);
+
+    // Re-calculate this during reading
+    //    data << patchAMIs_ << endl;
+
+    data << cuttingPatches_ << endl;
+    IOobject::writeDivider(data);
+    data << srcToTgtCellAddr_ << endl;
+    data << tgtToSrcCellAddr_ << endl;
+    IOobject::writeDivider(data);
+    data << srcToTgtCellWght_ << endl;
+    data << tgtToSrcCellWght_ << endl;
+    IOobject::writeDivider(data);
+    data << V_ << endl;
+    data << singleMeshProc_ << endl;
+    IOobject::writeEndDivider(data);
+
+    if(Pstream::parRun())
+    {
+        IOmapDistribute srcMap
+        (
+            IOobject
+            (
+                base+"_srcMap",
+                src,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            srcMapPtr_()
+        );
+        srcMap.write();
+        IOmapDistribute tgtMap
+        (
+            IOobject
+            (
+                base+"_tgtMap",
+                src,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            tgtMapPtr_()
+        );
+        tgtMap.write();
+    }
+
+    IOstream::defaultPrecision(oldPrecision);
+}
+
+bool Foam::meshToMesh::readCacheData(
+    const polyMesh& src,
+    const polyMesh& tgt,
+    const word &addition,
+    const word& AMIMethodName
+)
+{
+    fileName base=cacheData(src,tgt,addition);
+
+    localIOdictionary digest
+    (
+        IOobject
+        (
+            base+"_Digests",
+            src,
+            IOobject::READ_IF_PRESENT,
+            IOobject::NO_WRITE
+        )
+    );
+
+    bool hasDigest=digest.found("srcMeshSHA1");
+    if(debug && !hasDigest)
+    {
+        Pout << "No file with digests" << endl;
+    }
+    reduce(hasDigest,andOp<bool>());
+    if(!hasDigest)
+    {
+        return false;
+    }
+    string srcDigest(digest.lookup("srcMeshSHA1"));
+    string tgtDigest(digest.lookup("tgtMeshSHA1"));
+    bool correctDigests=
+    (
+        checksum(src)==srcDigest
+        &&
+        checksum(tgt)==tgtDigest
+    );
+    if(debug && !correctDigests)
+    {
+        Pout << "From digest file " << digest.objectPath() << endl;
+        Pout << "Src: Expected " << srcDigest << endl;
+        Pout << "Src: Got " << checksum(src).str() << endl;
+        Pout << "Tgt: Expected " << tgtDigest << endl;
+        Pout << "Tgt: Got " << checksum(tgt).str() << endl;
+    }
+    reduce(correctDigests,andOp<bool>());
+    if(!correctDigests)
+    {
+        return false;
+    }
+    Info << "Reading mesh-to-mesh data from " << base << endl;
+    IFstream data
+    (
+        IOobject
+        (
+            base,
+            src,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ).objectPath()
+    );
+    data >> srcPatchID_;
+    data >> tgtPatchID_;
+    data >> cuttingPatches_;
+    data >> srcToTgtCellAddr_;
+    data >> tgtToSrcCellAddr_;
+    data >> srcToTgtCellWght_;
+    data >> tgtToSrcCellWght_;
+    data >> V_;
+    data >> singleMeshProc_;
+
+    if(Pstream::parRun())
+    {
+        IOmapDistribute srcMap
+        (
+            IOobject
+            (
+                base+"_srcMap",
+                src,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
+        srcMapPtr_=srcMap.mapDistribute::clone();
+        IOmapDistribute tgtMap
+        (
+            IOobject
+            (
+                base+"_tgtMap",
+                src,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
+        tgtMapPtr_=tgtMap.mapDistribute::clone();
+    }
+    calculatePatchAMIs(AMIMethodName);
+
+    Info<< "    Overlap volume: " << V_ << endl;
+
+    return true;
+}
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -656,6 +886,23 @@ Foam::meshToMesh::meshToMesh
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
+    word addition(interpolationMethodNames_[method]);
+    addition+="_"+name(0);
+
+    if(
+        readCacheData(
+            src,
+            tgt,
+            addition,
+            AMIPatchToPatchInterpolation::interpolationMethodToWord
+            (
+                interpolationMethodAMI(method)
+            )
+        )
+    )
+    {
+        return;
+    }
     constructNoCuttingPatches
     (
         interpolationMethodNames_[method],
@@ -665,6 +912,7 @@ Foam::meshToMesh::meshToMesh
         ),
         interpAllPatches
     );
+    writeCacheData(src,tgt,addition);
 }
 
 
@@ -692,7 +940,13 @@ Foam::meshToMesh::meshToMesh
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
+    word addition(methodName+"_"+AMIMethodName+"_"+name(1));
+    if(readCacheData(src,tgt,addition,AMIMethodName))
+    {
+        return;
+    }
     constructNoCuttingPatches(methodName, AMIMethodName, interpAllPatches);
+    writeCacheData(src,tgt,addition);
 }
 
 
@@ -720,6 +974,22 @@ Foam::meshToMesh::meshToMesh
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
+    word addition(interpolationMethodNames_[method]);
+    addition+="_"+name(2);
+    if(
+        readCacheData(
+            src,
+            tgt,
+            addition,
+            AMIPatchToPatchInterpolation::interpolationMethodToWord
+            (
+                interpolationMethodAMI(method)
+            )
+        )
+    )
+    {
+        return;
+    }
     constructFromCuttingPatches
     (
         interpolationMethodNames_[method],
@@ -730,6 +1000,7 @@ Foam::meshToMesh::meshToMesh
         patchMap,
         cuttingPatches
     );
+    writeCacheData(src,tgt,addition);
 }
 
 
@@ -758,6 +1029,11 @@ Foam::meshToMesh::meshToMesh
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
+    word addition(methodName+"_"+AMIMethodName+"_"+name(4));
+    if(readCacheData(src,tgt,addition,AMIMethodName))
+    {
+        return;
+    }
     constructFromCuttingPatches
     (
         methodName,
@@ -765,6 +1041,7 @@ Foam::meshToMesh::meshToMesh
         patchMap,
         cuttingPatches
     );
+    writeCacheData(src,tgt,addition);
 }
 
 

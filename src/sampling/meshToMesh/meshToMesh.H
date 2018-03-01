@@ -252,6 +252,30 @@ private:
                 labelList& tgtCellIDs
             ) const;
 
+        //- calculate a checksum over a mesh
+        SHA1Digest checksum(const polyMesh &mesh) const;
+
+        //- name of the File to write the cached data to
+        fileName cacheData(
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const word &addition
+        ) const;
+
+        //- write the cacheData
+        void writeCacheData(
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const word &addition
+        ) const;
+
+        //- read the cacheData
+        bool readCacheData(
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const word &addition,
+            const word& AMIMethodName
+        );
 
         //- Disallow default bitwise copy construct
         meshToMesh(const meshToMesh&);
