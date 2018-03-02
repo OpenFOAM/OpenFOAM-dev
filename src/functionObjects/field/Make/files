@@ -48,6 +48,7 @@ MachNo/MachNo.C
 
 turbulenceFields/turbulenceFields.C
 yPlus/yPlus.C
+turbulenceIntensity/turbulenceIntensity.C
 wallShearStress/wallShearStress.C
 wallHeatFlux/wallHeatFlux.C
 wallHeatTransferCoeff/wallHeatTransferCoeff.C

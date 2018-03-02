@@ -1,0 +1,19 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates and writes the turbulence intensity field I.
+
+\*---------------------------------------------------------------------------*/
+
+type            turbulenceIntensity;
+libs            ("libfieldFunctionObjects.so");
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //
