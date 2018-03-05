@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ protected:
     // Protected data
 
         //- Stable film thickness - drips only formed if thickness
-        //  execeeds this threhold value
+        //  exceeds this threshold value
         scalar deltaStable_;
 
         //- Number of particles per parcel

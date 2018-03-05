@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
         }
         const globalIndex globalRegions(offsets.xfer());
 
-        // Minimise regions across connected cells
+        // Minimize regions across connected cells
         // Note: still uses global decisions so all processors are running
         //       in lock-step, i.e. slowest determines overall time.
         //       To avoid this we could switch off Pstream::parRun.
@@ -223,7 +223,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
     // Initial global region numbers
     const globalIndex globalRegions(mesh().nFaces());
 
-    // Minimise regions across connected cells (including parallel)
+    // Minimize regions across connected cells (including parallel)
     calcNonCompactRegionSplit
     (
         globalRegions,

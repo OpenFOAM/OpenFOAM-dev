@@ -692,7 +692,7 @@ Foam::labelList Foam::hierarchGeomDecomp::decompose
     pointField rotatedPoints(rotDelta_ & points);
 
     // Calculate tolerance of cell distribution. For large cases finding
-    // distibution to the cell exact would cause too many iterations so allow
+    // distribution to the cell exact would cause too many iterations so allow
     // some slack.
     label allSize = points.size();
     reduce(allSize, sumOp<label>());
@@ -733,7 +733,7 @@ Foam::labelList Foam::hierarchGeomDecomp::decompose
     pointField rotatedPoints(rotDelta_ & points);
 
     // Calculate tolerance of cell distribution. For large cases finding
-    // distibution to the cell exact would cause too many iterations so allow
+    // distribution to the cell exact would cause too many iterations so allow
     // some slack.
     label allSize = points.size();
     reduce(allSize, sumOp<label>());

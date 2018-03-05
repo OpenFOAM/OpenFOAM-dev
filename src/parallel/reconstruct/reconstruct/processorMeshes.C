@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,7 +195,7 @@ Foam::fvMesh::readUpdateState Foam::processorMeshes::readUpdate()
      || stat == fvMesh::TOPO_PATCH_CHANGE
     )
     {
-        // Reread all meshes and addresssing
+        // Reread all meshes and addressing
         read();
     }
     return stat;

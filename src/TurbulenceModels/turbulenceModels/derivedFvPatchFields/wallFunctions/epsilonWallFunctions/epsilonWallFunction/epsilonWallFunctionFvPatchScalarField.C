@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -560,7 +560,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
 
     forAll(weights, facei)
     {
-        // Anly set the values if the weights are > tolerance
+        // Only set the values if the weights are > tolerance
         if (weights[facei] > tolerance_)
         {
             nConstrainedCells++;

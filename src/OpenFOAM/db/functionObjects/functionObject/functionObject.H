@@ -231,7 +231,8 @@ public:
         virtual bool end();
 
         //- Called by Time::setDeltaT(). Allows the function object to override
-        //  the time-step value. Returns whether or not the value was overriden.
+        //  the time-step value.
+        //  Returns whether or not the value was overridden.
         virtual bool setTimeStep();
 
         //- Called by Time::adjustTimeStep(). Allows the function object to

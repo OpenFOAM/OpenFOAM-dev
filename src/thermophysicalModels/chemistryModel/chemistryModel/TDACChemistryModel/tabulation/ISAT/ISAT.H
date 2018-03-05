@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ class ISAT
         label checkEntireTreeInterval_;
 
         //- Factor that multiply the ideal depth of a binary tree to decide
-        // wheter to try to balance of not
+        // whether to try to balance of not
         scalar maxDepthFactor_;
 
         //- Minimal size before trying to balance the tree
@@ -156,7 +156,7 @@ class ISAT
         bool cleanAndBalance();
 
         //- Functions to construct the gradients matrix
-        //  When mecanism reduction is active, the A matrix is given by
+        //  When mechanism reduction is active, the A matrix is given by
         //        Aaa Aad
         //  A = ( Ada Add ), where the sub gradient matrices are:
         //  (Aaa) active species according to active species, (Aad) active

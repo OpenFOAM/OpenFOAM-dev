@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
     zero-gradient, fixed-gradient, fixed-value and mixed conditions.
 
     The next level of derivation covers all the specialised typed with
-    specific evaluation proceedures, particularly with respect to specific
+    specific evaluation procedures, particularly with respect to specific
     fields.
 
 SourceFiles

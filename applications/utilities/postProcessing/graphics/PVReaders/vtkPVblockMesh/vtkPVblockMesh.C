@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -410,7 +410,7 @@ void Foam::vtkPVblockMesh::Update
     updateFoamMesh();
     reader_->UpdateProgress(0.5);
 
-    // Convert mesh elemente
+    // Convert mesh element
     int blockNo = 0;
 
     convertMeshCorners(output, blockNo);

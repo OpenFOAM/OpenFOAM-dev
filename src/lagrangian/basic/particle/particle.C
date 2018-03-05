@@ -1108,7 +1108,7 @@ void Foam::particle::correctAfterInteractionListReferral(const label celli)
     // in this tet. It will, however, generate the correct vector when the
     // position method is called. A referred particle should never be tracked,
     // so this approximate topology is good enough. By using the nearby cell we
-    // minimise the error associated with the incorrect topology.
+    // minimize the error associated with the incorrect topology.
     coordinates_ = barycentric(1, 0, 0, 0);
     if (mesh_.moving())
     {

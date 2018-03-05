@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -216,7 +216,7 @@ endif
 switch ("$WM_COMPILER_TYPE")
 case OpenFOAM:
 case ThirdParty:
-    # Default versions of GMP, MPFR and MPC, overide as necessary
+    # Default versions of GMP, MPFR and MPC, override as necessary
     set gmp_version=gmp-5.1.2
     set mpfr_version=mpfr-3.1.2
     set mpc_version=mpc-1.0.1

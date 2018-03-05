@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ void Foam::GAMGSolver::Vcycle
         if (coarseSources.set(leveli + 1))
         {
             // If the optional pre-smoothing sweeps are selected
-            // smooth the coarse-grid field for the restriced source
+            // smooth the coarse-grid field for the restricted source
             if (nPreSweeps_)
             {
                 coarseCorrFields[leveli] = 0.0;

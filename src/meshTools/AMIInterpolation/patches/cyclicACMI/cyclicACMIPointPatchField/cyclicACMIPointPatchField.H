@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ public:
 
         // Cyclic AMI coupled interface functions
 
-            //- Does the patch field perform the transfromation
+            //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
                 return

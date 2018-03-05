@@ -277,12 +277,12 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
                 masterPtVec
             );
 
-        // Specialise for size = 1 && baffle
+        // Specialize for size = 1 && baffle
         if (mag((normalDir & nextNormalDir) - 1) < small)
         {
             if (inside)
             {
-//                Info<< "Specialise for size 1 and baffle" << endl;
+//                Info<< "Specialize for size 1 and baffle" << endl;
 
                 vector s = ppDist*(edDir ^ normal);
 

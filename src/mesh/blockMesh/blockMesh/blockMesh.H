@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ class blockMesh
         //- Optional searchable geometry to project face-points to
         searchableSurfaces geometry_;
 
-        //- The scaling factor to convert to metres
+        //- The scaling factor to convert to meters
         scalar scaleFactor_;
 
         //- The list of block vertices
@@ -215,7 +215,7 @@ public:
                 return faces_;
             }
 
-            //- The scaling factor used to convert to metres
+            //- The scaling factor used to convert to meters
             scalar scaleFactor() const;
 
             //- The points for the entire mesh

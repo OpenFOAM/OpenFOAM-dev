@@ -96,10 +96,10 @@ class regionToCell
         //  it contains a locationInMesh
         boolList findRegions(const bool verbose, const regionSplit&) const;
 
-        //- Unselect regions not containing a locationInMesh
+        //- Deselect regions not containing a locationInMesh
         void unselectOutsideRegions(boolList& selectedCell) const;
 
-        //- Unselect one layer of cells from selectedCell
+        //- Deselect one layer of cells from selectedCell
         void shrinkRegions(boolList& selectedCell) const;
 
         //- Erode a given number of layers from selectedCell. Remove any

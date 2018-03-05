@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ public:
 
         //- Max size of thread buffer size. This is the overall size of
         //  all files to be written. Starts blocking if not enough size.
-        //  Read as float to enable easy specificiation of large sizes.
+        //  Read as float to enable easy specification of large sizes.
         static float maxThreadFileBufferSize;
 
 

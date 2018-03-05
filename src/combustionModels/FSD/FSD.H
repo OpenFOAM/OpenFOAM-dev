@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Description
     different strain rates and fit using a expential distribution.
 
     The spacial distribution of the consumption speed (omega) is obtained also
-    from a strained flamelet solution and it is assumed to have a guassian
+    from a strained flamelet solution and it is assumed to have a gaussian
     distribution.
 
     If the grid resolution is not enough to resolve the flame, the consumption

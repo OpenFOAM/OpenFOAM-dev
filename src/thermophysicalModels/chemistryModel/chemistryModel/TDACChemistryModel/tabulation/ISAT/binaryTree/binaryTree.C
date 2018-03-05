@@ -114,7 +114,7 @@ bool Foam::binaryTree<CompType, ThermoType>::inSubTree
                 return inSubTree(phiq, y->nodeRight(),x);
             }
         }
-        else // on right side (symetric of above)
+        else // on right side (symmetric of above)
         {
             if (y->nodeRight() == nullptr)
             {

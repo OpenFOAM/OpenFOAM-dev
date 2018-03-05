@@ -595,7 +595,7 @@ Foam::label Foam::polyTopoChange::getCellOrder
     label cellInOrder = 0;
 
 
-    // Work arrays. Kept outside of loop to minimise allocations.
+    // Work arrays. Kept outside of loop to minimize allocations.
     // - neighbour cells
     DynamicList<label> nbrs;
     // - corresponding weights

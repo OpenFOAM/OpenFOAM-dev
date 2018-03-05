@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,7 +165,7 @@ bool mvBak(const fileName&, const std::string& ext = "bak");
 //- Remove a file, returning true if successful otherwise false
 bool rm(const fileName&);
 
-//- Remove a dirctory and its contents
+//- Remove a directory and its contents
 bool rmDir(const fileName&);
 
 //- Sleep for the specified number of seconds

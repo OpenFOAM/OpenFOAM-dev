@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Usage
     \table
         Property | Description               | Required    | Default value
         type     | type name: nearWallFields | yes         |
-        fields   | list of fields with correspoding output field names | yes |
+        fields   | list of fields with corresponding output field names | yes |
     \endtable
 
 

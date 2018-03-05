@@ -79,8 +79,8 @@ Description
     When this coefficient alpha is below the specified threshold, the species is
     removed from the search initiating set. In the original paper from
     Pepiot-Desjardins et al.[2], this coefficient is further transformed to
-    compute a global normalized scaling coefficient but here as it is dynamicly
-    computed, alpha is not introduced in the calculation of R.
+    compute a global normalized scaling coefficient but here as it is
+    dynamically computed, alpha is not introduced in the calculation of R.
 
     References:
     \verbatim

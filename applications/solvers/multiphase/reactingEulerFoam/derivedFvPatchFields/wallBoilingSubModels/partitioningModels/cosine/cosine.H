@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ public:
 
     // Member Functions
 
-        //- Calculate and return the wall heat-flux partioning
+        //- Calculate and return the wall heat-flux partitioning
         virtual tmp<scalarField> fLiquid(const scalarField& alphaLiquid) const;
 
         virtual void write(Ostream& os) const;

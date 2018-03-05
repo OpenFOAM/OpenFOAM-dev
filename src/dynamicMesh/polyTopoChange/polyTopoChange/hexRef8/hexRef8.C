@@ -2263,7 +2263,7 @@ Foam::labelList Foam::hexRef8::consistentRefinement
 {
     // Loop, modifying cellsToRefine, until no more changes to due to 2:1
     // conflicts.
-    // maxSet = false : unselect cells to refine
+    // maxSet = false : deselect cells to refine
     // maxSet = true  : select cells to refine
 
     // Go to straight boolList.
@@ -5344,7 +5344,7 @@ Foam::labelList Foam::hexRef8::consistentUnrefinement
 
     // Loop, modifying pointsToUnrefine, until no more changes to due to 2:1
     // conflicts.
-    // maxSet = false : unselect points to refine
+    // maxSet = false : deselect points to refine
     // maxSet = true: select points to refine
 
     // Maintain boolList for pointsToUnrefine and cellsToUnrefine

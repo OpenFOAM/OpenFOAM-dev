@@ -64,7 +64,7 @@ private:
 
     // Private data
 
-        //- Refence to the owner fvDOM object
+        //- Reference to the owner fvDOM object
         const fvDOM& dom_;
 
         //- Reference to the mesh

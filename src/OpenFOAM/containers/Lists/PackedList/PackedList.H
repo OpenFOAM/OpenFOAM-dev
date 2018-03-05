@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Note
 
     The lazy evaluation used means that reading an out-of-range element
     returns zero, but does not affect the list size.  Even in a non-const
-    context, only the assigment itself causes the element to be created.
+    context, only the assignment itself causes the element to be created.
     For example,
     \code
         list.resize(4);

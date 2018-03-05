@@ -1072,7 +1072,7 @@ Foam::label Foam::edgeCollapser::syncCollapse
                 masterPointPriority
             );
 
-            // Mark as collapsable but with nonsense master so it gets
+            // Mark as collapsible but with nonsense master so it gets
             // overwritten and starts an update wave
             allEdgeInfo[edgeI] = pointEdgeCollapse
             (

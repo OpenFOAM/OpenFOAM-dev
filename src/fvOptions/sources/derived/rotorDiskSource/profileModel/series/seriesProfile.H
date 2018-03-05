@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,8 +33,8 @@ Description
 
     where:
         AOA = angle of attack [deg] converted to [rad] internally
-        Cd = drag coefficent
-        Cl = lift coefficent
+        Cd = drag coefficient
+        Cl = lift coefficient
 
     Input in two (arbitrary length) lists:
 

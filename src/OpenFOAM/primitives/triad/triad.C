@@ -208,7 +208,7 @@ void Foam::triad::operator+=(const triad& t2)
 
     if (set() && t2.set())
     {
-        direction correspondance[3]{0, 0, 0};
+        direction correspondence[3]{0, 0, 0};
         short signd[3];
 
         for (direction i=0; i<3; i++)
@@ -225,7 +225,7 @@ void Foam::triad::operator+=(const triad& t2)
                 bool set = false;
                 for (direction k=0; k<i; k++)
                 {
-                    if (correspondance[k] == j)
+                    if (correspondence[k] == j)
                     {
                         set = true;
                         break;
@@ -239,14 +239,14 @@ void Foam::triad::operator+=(const triad& t2)
 
                     if (maga > mostAligned)
                     {
-                        correspondance[i] = j;
+                        correspondence[i] = j;
                         mostAligned = maga;
                         signd[i] = sign(a);
                     }
                 }
             }
 
-            operator[](i) += signd[i]*t2.operator[](correspondance[i]);
+            operator[](i) += signd[i]*t2.operator[](correspondence[i]);
         }
     }
 }

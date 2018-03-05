@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::pointConstraints
 
 Description
-    Application of (multi-)patch point contraints.
+    Application of (multi-)patch point constraints.
 
     Note: includes all points which are on the boundary of a patch
           with a constraint. It includes them (even though the constraint

@@ -610,7 +610,7 @@ int main(int argc, char *argv[])
 {
     argList::addNote
     (
-        "Renumber mesh to minimise bandwidth"
+        "Renumber mesh to minimize bandwidth"
     );
 
     #include "addRegionOption.H"
@@ -946,7 +946,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        // Detemines sorted back to original cell ordering
+        // Determines sorted back to original cell ordering
         cellOrder = renumberPtr().renumber
         (
             mesh,

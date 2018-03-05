@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::labelList Foam::bandCompression(const labelListList& cellCellAddressing)
     label cellInOrder = 0;
 
 
-    // Work arrays. Kept outside of loop to minimise allocations.
+    // Work arrays. Kept outside of loop to minimize allocations.
     // - neighbour cells
     DynamicList<label> nbrs;
     // - corresponding weights
@@ -176,7 +176,7 @@ Foam::labelList Foam::bandCompression
     label cellInOrder = 0;
 
 
-    // Work arrays. Kept outside of loop to minimise allocations.
+    // Work arrays. Kept outside of loop to minimize allocations.
     // - neighbour cells
     DynamicList<label> nbrs;
     // - corresponding weights

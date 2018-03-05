@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
           + name(z)
           + "." + outExtension;
 
-        Info<< "    Writing mulitple part "
+        Info<< "    Writing multiple part "
             << z << " to " << remainingPartFileName << endl;
 
         zoneSurf.write(remainingPartFileName);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -258,7 +258,7 @@ void Foam::topoSet::writeDebug
     boundBox bb(pointField(coords, toc()), true);
 
     os  << "Set bounding box: min = "
-        << bb.min() << "    max = " << bb.max() << " metres. " << endl << endl;
+        << bb.min() << "    max = " << bb.max() << " meters. " << endl << endl;
 
     label n = 0;
 

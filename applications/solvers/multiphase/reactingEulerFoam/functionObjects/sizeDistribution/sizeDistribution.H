@@ -181,7 +181,7 @@ protected:
         //- Number concentrations
         List<scalar> N_;
 
-        //- Write moments up to spezified order with respect to abszissaType
+        //- Write moments up to specified order with respect to abszissaType
         label momentOrder_;
 
         //- Normalization switch

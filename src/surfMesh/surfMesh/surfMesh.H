@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ public:
 
         //- Enumeration defining the state of the mesh after a read update.
         //  Used for post-processing applications, where the mesh
-        //  needs to update based on the files written in time directores
+        //  needs to update based on the files written in time directories
         enum readUpdateState
         {
             UNCHANGED,

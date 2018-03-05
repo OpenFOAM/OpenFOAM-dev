@@ -7,7 +7,7 @@ Note that you do not have to update your (1.0 API) user defined reader if it
 is already working fine for you.
 
 You should consider it if:
-  - efficieny gains are needed or
+  - efficiency gains are needed or
   - you need access to complex variables or
   - you need access to tensor variables or
   - you need multiple timeset capability or
@@ -120,7 +120,7 @@ coordinate array.  The connectivity of the elements do not reference the nodes
 according to node ids.  Node ids (and element ids for that matter) are purely
 labels for screen display and for query operations within EnSight. This
 eliminates the need for node id hashing as a model is read.
- 
+
 The 2.0 API has been created for those needing more efficiency - both in terms
 of memory use and speed. The increased efficiency is possible because data is
 requested in a manner which more closely represents the way that EnSight
@@ -132,7 +132,7 @@ temporary memory (and allocation time) that is needed in the old
 API. Depending on what you must do to get your data into the form required,
 the memory savings and the speed improvement when loading models can be quite
 significant!!
- 
+
 Additionally, the ability to handle tensor and complex variables has been
 added to the new API, and support for multiple timesets is provided.
 ------------------------------------------------
@@ -176,7 +176,7 @@ A) Changes related to imaginary flag for complex data
    =====================================================
    If you don't deal with complex variables, simply add
    this flag to your argument list and ignore its value.
-   ----------------------------------------------------- 
+   -----------------------------------------------------
 
 API 1.0                                 API 2.0
 -------                                 -------
@@ -222,7 +222,7 @@ B) Changes related to complex data info, and constant type
 
    The argument var_timeset needs to be added, and set
    appropriately.
-   --------------------------------------------------------- 
+   ---------------------------------------------------------
 
 API 1.0                                 API 2.0
 -------                                 -------
@@ -297,7 +297,7 @@ USERD_set_time_step                     USERD_set_time_set_and_step
 E) Changes related to global_extern.h
    ======================================================
 
-   Be sure to include the updated global_extern.h file that comes 
+   Be sure to include the updated global_extern.h file that comes
    with the EnSight 7.2 release (not the one from previous releases).
 
 
@@ -323,9 +323,9 @@ API 1.0                                     API 2.0
 These routines:                             replaced by the single routine:
 ---------------------------                 -------------------------------
 USERD_get_block_scalar_values               USERD_get_var_by_component
-USERD_get_block_vector_values_by_component    
-USERD_get_scalar_values                       
-USERD_get_vector_values                       
+USERD_get_block_vector_values_by_component
+USERD_get_scalar_values
+USERD_get_vector_values
 
 These global coordinate routines:           replaced by part coord routines:
 ---------------------------------           --------------------------------
@@ -345,7 +345,7 @@ USERD_get_element_ids_for_part              USERD_get_part_element_ids_by_type
                       (Can be a dummy) ->   USERD_get_model_extents
                             (Required) ->   USERD_get_reader_version
 
-     multiple timeset releated:
+     multiple timeset related:
                             (Required) ->   USERD_get_number_timesets
                             (Required) ->   USERD_get_timeset_description
                             (Required) ->   USERD_get_geom_timeset_number

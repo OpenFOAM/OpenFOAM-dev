@@ -61,7 +61,7 @@ class ParticleForce
         //- Reference to the mesh database
         const fvMesh& mesh_;
 
-        //- Force coefficients dictaionary
+        //- Force coefficients dictionary
         const dictionary coeffs_;
 
 

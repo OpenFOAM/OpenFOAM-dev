@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
     if (!chemistryDict.isDict("chemistryType"))
     {
         FatalErrorInFunction
-            << "Template paramater based chemistry solver selection is no "
+            << "Template parameter based chemistry solver selection is no "
             << "longer supported. Please create a chemistryType dictionary"
             << "instead." << endl << endl << "For example, the entry:" << endl
             << "    chemistrySolver ode<StandardChemistryModel<"

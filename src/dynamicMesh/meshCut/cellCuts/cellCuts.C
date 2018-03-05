@@ -2323,7 +2323,7 @@ void Foam::cellCuts::setFromCellLoops
 
             if (setFromCellLoop(celli, loop, loopWeights))
             {
-                // Valid loop. Call above will have upated all already.
+                // Valid loop. Call above will have updated all already.
             }
             else
             {

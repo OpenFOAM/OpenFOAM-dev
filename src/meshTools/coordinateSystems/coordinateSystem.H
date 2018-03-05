@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -274,7 +274,7 @@ public:
                 return R_();
             }
 
-            //- Update and return the co-ordinate roation for a list of cells
+            //- Update and return the co-ordinate rotation for a list of cells
             const coordinateRotation& R
             (
                 const polyMesh& mesh,

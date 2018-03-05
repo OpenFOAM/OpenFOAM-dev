@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,38 +61,38 @@ namespace Foam
 {
     // doesn't recognize specialization otherwise
     template<>
-    scalar csvTableReader<scalar>::readValue(const List<string>& splitted)
+    scalar csvTableReader<scalar>::readValue(const List<string>& split)
     {
-        if (componentColumns_[0] >= splitted.size())
+        if (componentColumns_[0] >= split.size())
         {
             FatalErrorInFunction
                 << "No column " << componentColumns_[0] << " in "
-                << splitted << endl
+                << split << endl
                 << exit(FatalError);
         }
 
-        return readScalar(IStringStream(splitted[componentColumns_[0]])());
+        return readScalar(IStringStream(split[componentColumns_[0]])());
     }
 
 
     template<class Type>
-    Type csvTableReader<Type>::readValue(const List<string>& splitted)
+    Type csvTableReader<Type>::readValue(const List<string>& split)
     {
         Type result;
 
         for(label i = 0;i < pTraits<Type>::nComponents; i++)
         {
-            if (componentColumns_[i] >= splitted.size())
+            if (componentColumns_[i] >= split.size())
             {
                 FatalErrorInFunction
                     << "No column " << componentColumns_[i] << " in "
-                    << splitted << endl
+                    << split << endl
                     << exit(FatalError);
             }
 
             result[i] = readScalar
             (
-                IStringStream(splitted[componentColumns_[i]])()
+                IStringStream(split[componentColumns_[i]])()
             );
         }
 
@@ -126,7 +126,7 @@ void Foam::csvTableReader<Type>::operator()
         string line;
         in.getLine(line);
 
-        DynamicList<string> splitted;
+        DynamicList<string> split;
 
         std::size_t pos = 0;
         while (pos != std::string::npos)
@@ -135,23 +135,23 @@ void Foam::csvTableReader<Type>::operator()
 
             if (nPos == std::string::npos)
             {
-                splitted.append(line.substr(pos));
+                split.append(line.substr(pos));
                 pos=nPos;
             }
             else
             {
-                splitted.append(line.substr(pos, nPos-pos));
+                split.append(line.substr(pos, nPos-pos));
                 pos=nPos+1;
             }
         }
 
-        if (splitted.size() <= 1)
+        if (split.size() <= 1)
         {
             break;
         }
 
-        scalar time = readScalar(IStringStream(splitted[timeColumn_])());
-        Type value = readValue(splitted);
+        scalar time = readScalar(IStringStream(split[timeColumn_])());
+        Type value = readValue(split);
 
         values.append(Tuple2<scalar,Type>(time, value));
     }

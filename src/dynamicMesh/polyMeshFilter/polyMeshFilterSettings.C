@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ Foam::polyMeshFilterSettings::polyMeshFilterSettings(const dictionary& dict)
 void Foam::polyMeshFilterSettings::writeSettings(Ostream& os) const
 {
     os  << "Merging:" << nl
-        << "    edges with length less than " << minLen() << " metres" << nl
+        << "    edges with length less than " << minLen() << " meters" << nl
         << "    edges split by a point with edges in line to within "
         << radToDeg(::acos(maxCos())) << " degrees" << nl
         << "    Minimum edge length reduction factor = "

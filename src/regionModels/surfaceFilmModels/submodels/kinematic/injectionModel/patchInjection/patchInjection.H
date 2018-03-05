@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,8 +66,8 @@ class patchInjection
 
 protected:
 
-        //- Stable film thickness - mass only removed if thickness execeeds
-        //  this threhold value
+        //- Stable film thickness - mass only removed if thickness exceeds
+        //  this threshold value
         scalar deltaStable_;
 
         //- List of patch IDs at which the film is removed

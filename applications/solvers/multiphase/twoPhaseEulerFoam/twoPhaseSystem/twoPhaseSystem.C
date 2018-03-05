@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ Foam::twoPhaseSystem::twoPhaseSystem
             pair_,
             pair1In2_,
             pair2In1_,
-            false // Do not zero drag coefficent at fixed-flux BCs
+            false // Do not zero drag coefficient at fixed-flux BCs
         )
     );
 

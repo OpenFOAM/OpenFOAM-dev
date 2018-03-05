@@ -577,7 +577,7 @@ void readDOFS
     DynamicList<labelList>& dofVertices
 )
 {
-    Info<< "Starting reading contraints at line " << is.lineNumber() << '.'
+    Info<< "Starting reading constraints at line " << is.lineNumber() << '.'
         << endl;
 
     string line;
@@ -942,7 +942,7 @@ int main(int argc, char *argv[])
         Info<< "Using " << dofVertIndices.size()
             << " DOF sets to detect boundary faces."<< endl;
 
-        // Renumber vertex numbers on contraints
+        // Renumber vertex numbers on constraints
         forAll(dofVertIndices, patchi)
         {
             inplaceRenumber(unvToFoam, dofVertIndices[patchi]);
@@ -1227,7 +1227,7 @@ int main(int argc, char *argv[])
                 forAll(indizes, i)
                 {
                     const label old = oldIndizes[i];
-                    label noveau = -1;
+                    label nouveau = -1;
                     label c1 = -1, c2 = -1;
                     if (faceToCell[0].found(old))
                     {
@@ -1253,7 +1253,7 @@ int main(int argc, char *argv[])
                                 const face& f = boundaryFaces[old];
                                 if (mag(centers[j]- f.centre(points)) < small)
                                 {
-                                    noveau = j;
+                                    nouveau = j;
                                     break;
                                 }
                             }
@@ -1269,13 +1269,13 @@ int main(int argc, char *argv[])
                              || (c2 == own[j] && c1 == nei[j])
                             )
                             {
-                                noveau = j;
+                                nouveau = j;
                                 break;
                             }
                         }
                     }
-                    assert(noveau > -1);
-                    indizes[i] = noveau;
+                    assert(nouveau > -1);
+                    indizes[i] = nouveau;
                 }
                 fZones[cnt] = new faceZone
                 (

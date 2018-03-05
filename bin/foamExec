@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -96,18 +96,18 @@ do
         ;;
     -m | -mode)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
+        etcOpts="$etcOpts $1 $2"    # pass through to foamEtcFile
         shift
         ;;
     -p | -prefix)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
+        etcOpts="$etcOpts $1 $2"    # pass through to foamEtcFile
         prefixDir="$2"
         shift
         ;;
     -v | -version)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
+        etcOpts="$etcOpts $1 $2"    # pass through to foamEtcFile
         version="$2"
         shift
         ;;

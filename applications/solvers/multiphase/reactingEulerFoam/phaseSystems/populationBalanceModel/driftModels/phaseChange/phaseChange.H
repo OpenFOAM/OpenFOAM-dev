@@ -56,7 +56,7 @@ class phaseChange
 {
     // Private data
 
-        //- Names of unorderd phasePairs between which phaseChange occurs, i.e.
+        //- Names of unordered phasePairs between which phaseChange occurs, i.e.
         //  "(gasIAndLiquid gasIIAndLiquid)"
         List<word> pairNames_;
 

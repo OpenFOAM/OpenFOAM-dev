@@ -490,7 +490,7 @@ public:
 
 
 // This function is added as a hack to enable simple backward compatibility
-// with verions using referenceLevel in GeometicField
+// with versions using referenceLevel in GeometicField
 template<class Type>
 const pointPatchField<Type>& operator+
 (

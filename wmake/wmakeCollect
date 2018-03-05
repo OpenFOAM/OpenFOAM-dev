@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -72,7 +72,7 @@ error() {
     exit 1
 }
 
-# Set true to clean-up file if interupted
+# Set true to clean-up file if interrupted
 cleanup=
 
 while [ "$#" -gt 0 ]
