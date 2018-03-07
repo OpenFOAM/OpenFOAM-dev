@@ -1,4 +1,5 @@
 CGAL_INC = \
+    -DCGAL_NO_DEPRECATED_CODE \
     -I$(CGAL_ARCH_PATH)/include \
     -I$(MPFR_ARCH_PATH)/include \
     -I$(GMP_ARCH_PATH)/include \
