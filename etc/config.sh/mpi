@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -147,6 +147,14 @@ MPICH-GM)
     _foamAddLib     $MPI_ARCH_PATH/lib
 
     _foamAddLib     $GM_LIB_PATH
+    ;;
+
+MVAPICH2)
+    export FOAM_MPI=mvapich2
+    libDir=`mpicc -show -cc= | sed -e 's/.*-L\([^ ]*\).*/\1/'`
+    export MPI_ARCH_PATH="${libDir%/*}"
+    _foamAddLib $libDir
+    unset libDir
     ;;
 
 HPMPI)
