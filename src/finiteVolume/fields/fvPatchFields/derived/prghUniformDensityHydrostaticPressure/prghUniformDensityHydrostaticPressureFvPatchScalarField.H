@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,55 +22,59 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::uniformDensityHydrostaticPressureFvPatchScalarField
+    Foam::prghUniformDensityHydrostaticPressureFvPatchScalarField
 
 Group
     grpGenericBoundaryConditions
 
 Description
-    This boundary condition provides a hydrostatic pressure condition,
+    This boundary condition provides a hydrostatic pressure condition for p_rgh,
     calculated as:
 
         \f[
-            p_{hyd} = p_{ref} + \rho g (x - x_{ref})
+            p_{rgh} = p_{ref} - (\rho - \rho_0) g (h - h_{ref})
         \f]
 
     where
     \vartable
-        p_{hyd} | Hyrostatic pressure [Pa]
-        p_{ref} | Reference pressure [Pa]
-        x_{ref} | Reference point in Cartesian co-ordinates
-        \rho    | Density (assumed uniform)
-        g       | Acceleration due to gravity [m/s2]
+        p_{rgh}    | Pseudo hydrostatic pressure [Pa]
+        p_{ref}    | Static pressure at hRef [Pa]
+        h          | Height in the opposite direction to gravity
+        h_{ref}    | Reference height in the opposite direction to gravity
+        \rho       | Density field
+        \rho_{ref} | Uniform reference density at boundary
+        g          | Acceleration due to gravity [m/s^2]
     \endtable
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        rho          | uniform density [kg/m3] | yes         |
-        pRefValue    | reference pressure [Pa] | yes         |
-        pRefPoint    | reference pressure location | yes     |
+        Property     | Description               | Required    | Default value
+        pRef         | Reference static pressure | yes         |
+        rhoRef       | Reference density         | yes         |
+        rho          | Density field name        | no          | rho
     \endtable
 
     Example of the boundary condition specification:
     \verbatim
     <patchName>
     {
-        type            uniformDensityHydrostaticPressure;
-        rho             rho;
-        pRefValue       1e5;
-        pRefPoint       (0 0 0);
+        type            prghUniformDensityHydrostaticPressure;
+        rhoRef          1000;
+        p               0;
         value           uniform 0; // optional initial value
     }
     \endverbatim
 
+See also
+    Foam::fixedValueFvPatchScalarField
+
 SourceFiles
-    uniformDensityHydrostaticPressureFvPatchScalarField.C
+    prghUniformDensityHydrostaticPressureFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformDensityHydrostaticPressureFvPatchScalarField_H
-#define uniformDensityHydrostaticPressureFvPatchScalarField_H
+#ifndef prghUniformDensityHydrostaticPressureFvPatchScalarField_H
+#define prghUniformDensityHydrostaticPressureFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
 
@@ -80,42 +84,45 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-     Class uniformDensityHydrostaticPressureFvPatchScalarField Declaration
+   Class prghUniformDensityHydrostaticPressureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformDensityHydrostaticPressureFvPatchScalarField
+class prghUniformDensityHydrostaticPressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
 
-        //- Constant density in the far-field
-        scalar rho_;
+protected:
 
-        //- Reference pressure
-        scalar pRefValue_;
+    // Protected data
 
-        //- Reference pressure location
-        vector pRefPoint_;
+        //- Reference Static pressure
+        scalar pRef_;
+
+        //- Reference density
+        scalar rhoRef_;
+
+        //- Name of phase-fraction field
+        word rhoName_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("uniformDensityHydrostaticPressure");
+    TypeName("prghUniformDensityHydrostaticPressure");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        uniformDensityHydrostaticPressureFvPatchScalarField
+        prghUniformDensityHydrostaticPressureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        uniformDensityHydrostaticPressureFvPatchScalarField
+        prghUniformDensityHydrostaticPressureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -123,34 +130,38 @@ public:
         );
 
         //- Construct by mapping given
-        //  uniformDensityHydrostaticPressureFvPatchScalarField onto a new patch
-        uniformDensityHydrostaticPressureFvPatchScalarField
+        //  prghUniformDensityHydrostaticPressureFvPatchScalarField
+        //  onto a new patch
+        prghUniformDensityHydrostaticPressureFvPatchScalarField
         (
-            const uniformDensityHydrostaticPressureFvPatchScalarField&,
+            const prghUniformDensityHydrostaticPressureFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy
-        uniformDensityHydrostaticPressureFvPatchScalarField
+        prghUniformDensityHydrostaticPressureFvPatchScalarField
         (
-            const uniformDensityHydrostaticPressureFvPatchScalarField&
+            const prghUniformDensityHydrostaticPressureFvPatchScalarField&
         );
 
         //- Construct and return a clone
         virtual tmp<fvPatchScalarField> clone() const
         {
-            return tmp<fvPatchScalarField>
+            return tmp<fvPatchScalarField >
             (
-                new uniformDensityHydrostaticPressureFvPatchScalarField(*this)
+                new prghUniformDensityHydrostaticPressureFvPatchScalarField
+                (
+                    *this
+                )
             );
         }
 
         //- Construct as copy setting internal field reference
-        uniformDensityHydrostaticPressureFvPatchScalarField
+        prghUniformDensityHydrostaticPressureFvPatchScalarField
         (
-            const uniformDensityHydrostaticPressureFvPatchScalarField&,
+            const prghUniformDensityHydrostaticPressureFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -162,7 +173,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new uniformDensityHydrostaticPressureFvPatchScalarField
+                new prghUniformDensityHydrostaticPressureFvPatchScalarField
                 (
                     *this,
                     iF
@@ -172,47 +183,6 @@ public:
 
 
     // Member functions
-
-        // Access
-
-            //- Return the constant density in the far-field
-            scalar rho() const
-            {
-                return rho_;
-            }
-
-            //- Return reference to the constant density in the far-field
-            //  to allow adjustment
-            scalar& rho()
-            {
-                return rho_;
-            }
-
-            //- Return the reference pressure
-            scalar pRefValue() const
-            {
-                return pRefValue_;
-            }
-
-            //- Return reference to the reference pressure to allow adjustment
-            scalar& pRefValue()
-            {
-                return pRefValue_;
-            }
-
-            //- Return the pressure reference location
-            const vector& pRefPoint() const
-            {
-                return pRefPoint_;
-            }
-
-            //- Return reference to the pressure reference location
-            //  to allow adjustment
-            vector& pRefPoint()
-            {
-                return pRefPoint_;
-            }
-
 
         // Evaluation functions
 
