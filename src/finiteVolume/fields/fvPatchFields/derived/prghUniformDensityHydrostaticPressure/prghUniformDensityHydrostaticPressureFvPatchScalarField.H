@@ -32,7 +32,7 @@ Description
     calculated as:
 
         \f[
-            p_{rgh} = p_{ref} - (\rho - \rho_0) g (h - h_{ref})
+            p_{rgh} = p_{ref} - (\rho - \rho_{ref}) g (h - h_{ref})
         \f]
 
     where
