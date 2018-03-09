@@ -391,7 +391,7 @@ Foam::scalar Foam::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
     }
     if (debugTgtFace)
     {
-        writeFaceOBJ(tgtFace, tgtPoints, "target" + std::to_string(tgtFacei));
+        writeFaceOBJ(tgtFace, tgtPoints, "target" + name(tgtFacei));
     }
 
     // Triangulate the faces
@@ -493,7 +493,7 @@ Foam::scalar Foam::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
                 // Write the triangles resulting from the cut
                 if (debugWrite)
                 {
-                    writeCutTrisVTK(cutTris, "tris" + std::to_string(i + 1));
+                    writeCutTrisVTK(cutTris, "tris" + name(i + 1));
                 }
             }
 
@@ -543,13 +543,13 @@ Foam::scalar Foam::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
                 writeCutTrisVTK
                 (
                     cutTris,
-                    "target" + std::to_string(tgtFacei) + "_"
-                  + "tris" + std::to_string(writeCutTrisVTKIndex ++)
+                    "target" + name(tgtFacei) + "_"
+                  + "tris" + name(writeCutTrisVTKIndex ++)
                 );
             }
             if (debugWrite)
             {
-                writeCutTrisVTK(cutTris, "tris" + std::to_string(srcN));
+                writeCutTrisVTK(cutTris, "tris" + name(srcN));
 
                 Info << "view triangles then press ENTER to continue ...";
                 getchar();
