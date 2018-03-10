@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -219,6 +219,7 @@ void omegaWallFunctionFvPatchScalarField::calculate
     const scalarField& y = turbModel.y()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
+    const scalar Cmu5 = sqrt(Cmu_);
 
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
@@ -233,49 +234,65 @@ void omegaWallFunctionFvPatchScalarField::calculate
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
+    const FieldType& G =
+        db().lookupObject<FieldType>(turbModel.GName());
+
     // Set omega and G
     forAll(nutw, facei)
     {
         const label celli = patch.faceCells()[facei];
-
-        const scalar yPlus = Cmu25*y[facei]*sqrt(k[celli])/nuw[facei];
-
         const scalar w = cornerWeights[facei];
 
-        const scalar omegaVis = 6*nuw[facei]/(beta1_*sqr(y[facei]));
-        const scalar omegaLog = sqrt(k[celli])/(Cmu25*kappa_*y[facei]);
-
-        // Switching between the laminar sub-layer and the log-region rather
-        // than blending has been found to provide more accurate results over a
-        // range of near-wall y+.
-        //
-        // For backward-compatibility the blending method is provided as an
-        // option
+        const scalar Rey = y[facei]*sqrt(k[celli])/nuw[facei];
+        const scalar yPlus = Cmu25*Rey;
+        const scalar uPlus = (1/kappa_)*log(E_*yPlus);
 
         if (blended_)
         {
-            omega0[celli] += w*sqrt(sqr(omegaVis) + sqr(omegaLog));
-        }
+            const scalar lamFrac = exp(-Rey/11);
+            const scalar turbFrac = 1 - lamFrac;
 
-        if (yPlus > yPlusLam_)
-        {
-            if (!blended_)
-            {
-                omega0[celli] += w*omegaLog;
-            }
+            const scalar uStar = sqrt
+            (
+                lamFrac*nuw[facei]*magGradUw[facei] + turbFrac*Cmu5*k[celli]
+            );
+
+            const scalar omegaVis = 6*nuw[facei]/(beta1_*sqr(y[facei]));
+            const scalar omegaLog = uStar/(Cmu5*kappa_*y[facei]);
+
+            omega0[celli] += w*(lamFrac*omegaVis + turbFrac*omegaLog);
 
             G0[celli] +=
                 w
-               *(nutw[facei] + nuw[facei])
-               *magGradUw[facei]
-               *Cmu25*sqrt(k[celli])
-               /(kappa_*y[facei]);
+               *(
+                   lamFrac*G[celli]
+
+                 + turbFrac
+                  *sqr(uStar*magGradUw[facei]*y[facei]/uPlus)
+                  /(nuw[facei]*kappa_*yPlus)
+               );
         }
         else
         {
-            if (!blended_)
+            if (yPlus < yPlusLam_)
             {
+                const scalar omegaVis = 6*nuw[facei]/(beta1_*sqr(y[facei]));
+
                 omega0[celli] += w*omegaVis;
+
+                G0[celli] += w*G[celli];
+            }
+            else
+            {
+                const scalar uStar = sqrt(Cmu5*k[celli]);
+                const scalar omegaLog = uStar/(Cmu5*kappa_*y[facei]);
+
+                omega0[celli] += w*omegaLog;
+
+                G0[celli] +=
+                    w*
+                    sqr(uStar*magGradUw[facei]*y[facei]/uPlus)
+                   /(nuw[facei]*kappa_*yPlus);
             }
         }
     }
@@ -297,31 +314,6 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     beta1_(0.075),
     blended_(false),
     yPlusLam_(nutWallFunctionFvPatchScalarField::yPlusLam(kappa_, E_)),
-    G_(),
-    omega_(),
-    initialised_(false),
-    master_(-1),
-    cornerWeights_()
-{
-    checkType();
-}
-
-
-omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
-(
-    const omegaWallFunctionFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
-    Cmu_(ptf.Cmu_),
-    kappa_(ptf.kappa_),
-    E_(ptf.E_),
-    beta1_(ptf.beta1_),
-    blended_(ptf.blended_),
-    yPlusLam_(ptf.yPlusLam_),
     G_(),
     omega_(),
     initialised_(false),
@@ -356,6 +348,31 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 
     // apply zero-gradient condition on start-up
     this->operator==(patchInternalField());
+}
+
+
+omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
+(
+    const omegaWallFunctionFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
+    Cmu_(ptf.Cmu_),
+    kappa_(ptf.kappa_),
+    E_(ptf.E_),
+    beta1_(ptf.beta1_),
+    blended_(ptf.blended_),
+    yPlusLam_(ptf.yPlusLam_),
+    G_(),
+    omega_(),
+    initialised_(false),
+    master_(-1),
+    cornerWeights_()
+{
+    checkType();
 }
 
 
@@ -465,8 +482,6 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
     const scalarField& G0 = this->G();
     const scalarField& omega0 = this->omega();
 
-    typedef DimensionedField<scalar, volMesh> FieldType;
-
     FieldType& G =
         const_cast<FieldType&>
         (
@@ -516,8 +531,6 @@ void omegaWallFunctionFvPatchScalarField::updateWeightedCoeffs
 
     const scalarField& G0 = this->G();
     const scalarField& omega0 = this->omega();
-
-    typedef DimensionedField<scalar, volMesh> FieldType;
 
     FieldType& G =
         const_cast<FieldType&>

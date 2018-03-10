@@ -56,7 +56,7 @@ gnuplot<<EOF
     set size 0.75, 0.75
     set parametric
     # u+ range
-    set trange [0:35]
+    set xrange [0:20000]
     # Spaldings law
     k=0.41
     E=9.8

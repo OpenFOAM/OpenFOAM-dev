@@ -284,30 +284,6 @@ epsilonWallFunctionFvPatchScalarField
 Foam::epsilonWallFunctionFvPatchScalarField::
 epsilonWallFunctionFvPatchScalarField
 (
-    const epsilonWallFunctionFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
-    Cmu_(ptf.Cmu_),
-    kappa_(ptf.kappa_),
-    E_(ptf.E_),
-    yPlusLam_(ptf.yPlusLam_),
-    G_(),
-    epsilon_(),
-    initialised_(false),
-    master_(-1),
-    cornerWeights_()
-{
-    checkType();
-}
-
-
-Foam::epsilonWallFunctionFvPatchScalarField::
-epsilonWallFunctionFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -328,6 +304,30 @@ epsilonWallFunctionFvPatchScalarField
 
     // Apply zero-gradient condition on start-up
     this->operator==(patchInternalField());
+}
+
+
+Foam::epsilonWallFunctionFvPatchScalarField::
+epsilonWallFunctionFvPatchScalarField
+(
+    const epsilonWallFunctionFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
+    Cmu_(ptf.Cmu_),
+    kappa_(ptf.kappa_),
+    E_(ptf.E_),
+    yPlusLam_(ptf.yPlusLam_),
+    G_(),
+    epsilon_(),
+    initialised_(false),
+    master_(-1),
+    cornerWeights_()
+{
+    checkType();
 }
 
 
