@@ -169,7 +169,10 @@ while (pimple.correct())
 
         forAll(phases, phasei)
         {
-            phiHbyA -= alphafs[phasei]*phiKdPhifs[phasei];
+            if (phiKdPhifs.set(phasei))
+            {
+                phiHbyA -= alphafs[phasei]*phiKdPhifs[phasei];
+            }
         }
     }
 

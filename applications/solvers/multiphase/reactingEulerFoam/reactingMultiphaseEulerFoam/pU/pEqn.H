@@ -137,8 +137,14 @@ while (pimple.correct())
 
         forAll(phases, phasei)
         {
-            HbyAs[phasei] -= KdUByAs[phasei];
-            phiHbyAs[phasei] -= phiKdPhis[phasei];
+            if (KdUByAs.set(phasei))
+            {
+                HbyAs[phasei] -= KdUByAs[phasei];
+            }
+            if (phiKdPhis.set(phasei))
+            {
+                phiHbyAs[phasei] -= phiKdPhis[phasei];
+            }
         }
     }
 
@@ -169,7 +175,10 @@ while (pimple.correct())
 
         forAll(phases, phasei)
         {
-            phiHbyA -= alphafs[phasei]*phiKdPhis[phasei];
+            if (phiKdPhis.set(phasei))
+            {
+                phiHbyA -= alphafs[phasei]*phiKdPhis[phasei];
+            }
         }
     }
 
