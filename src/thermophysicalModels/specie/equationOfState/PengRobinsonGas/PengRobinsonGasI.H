@@ -59,9 +59,9 @@ inline Foam::PengRobinsonGas<Specie>::PengRobinsonGas
 :
     Specie(name, pg),
     Tc_(pg.Tc_),
-    Pc_(pg.Pc_),
     Vc_(pg.Vc_),
     Zc_(pg.Zc_),
+    Pc_(pg.Pc_),
     omega_(pg.omega_)
 {}
 
