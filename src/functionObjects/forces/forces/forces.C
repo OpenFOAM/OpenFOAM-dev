@@ -261,7 +261,12 @@ Foam::functionObjects::forces::devRhoReff() const
         const dictionary& transportProperties =
              obr_.lookupObject<dictionary>("transportProperties");
 
-        dimensionedScalar nu(transportProperties.lookup("nu"));
+        dimensionedScalar nu
+        (
+            "nu",
+            dimViscosity,
+            transportProperties.lookup("nu")
+        );
 
         const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
 
