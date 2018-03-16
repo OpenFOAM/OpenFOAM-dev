@@ -235,6 +235,14 @@ void Foam::MRFZone::zero
             phibf[patchi][includedFaces_[patchi][i]] = Zero;
         }
     }
+
+    forAll(excludedFaces_, patchi)
+    {
+        forAll(excludedFaces_[patchi], i)
+        {
+            phibf[patchi][excludedFaces_[patchi][i]] = Zero;
+        }
+    }
 }
 
 
