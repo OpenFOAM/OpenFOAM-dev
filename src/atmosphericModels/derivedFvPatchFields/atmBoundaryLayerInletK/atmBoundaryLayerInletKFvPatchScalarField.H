@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::atmBoundaryLayerInletEpsilonFvPatchScalarField
+    Foam::atmBoundaryLayerInletKFvPatchScalarField
 
 Group
     grpRASBoundaryConditions grpInletBoundaryConditions
 
 Description
     This boundary condition specifies an inlet value for the turbulence
-    dissipation, \f$\epsilon\f$, appropriate for atmospheric boundary layers.
+    kinetic energy, \f$k\f$, appropriate for atmospheric boundary layers.
 
     See Foam::atmBoundaryLayer for details.
 
@@ -37,7 +37,7 @@ Description
     \verbatim
     ground
     {
-        type            atmBoundaryLayerInletEpsilon;
+        type            atmBoundaryLayerInletK;
         z               (0 0 1);
         Uref            10.0;
         Zref            20.0;
@@ -49,18 +49,18 @@ Description
 See also
     Foam::atmBoundaryLayer,
     Foam::atmBoundaryLayerInletVelocityFvPatchVectorField,
-    Foam::atmBoundaryLayerInletKFvPatchScalarField
+    Foam::atmBoundaryLayerInletEpsilonFvPatchScalarField
 
 SourceFiles
-    atmBoundaryLayerInletEpsilonFvPatchScalarField.C
+    atmBoundaryLayerInletKFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef atmBoundaryLayerInletEpsilonFvPatchScalarField_H
-#define atmBoundaryLayerInletEpsilonFvPatchScalarField_H
+#ifndef atmBoundaryLayerInletKFvPatchScalarField_H
+#define atmBoundaryLayerInletKFvPatchScalarField_H
 
 #include "fvPatchFields.H"
-#include "fixedValueFvPatchFields.H"
+#include "inletOutletFvPatchFields.H"
 #include "atmBoundaryLayer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -69,32 +69,32 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-        Class atmBoundaryLayerInletEpsilonFvPatchScalarField Declaration
+        Class atmBoundaryLayerInletKFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class atmBoundaryLayerInletEpsilonFvPatchScalarField
+class atmBoundaryLayerInletKFvPatchScalarField
 :
-    public fixedValueFvPatchScalarField,
+    public inletOutletFvPatchScalarField,
     public atmBoundaryLayer
 {
 
 public:
 
     //- Runtime type information
-    TypeName("atmBoundaryLayerInletEpsilon");
+    TypeName("atmBoundaryLayerInletK");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        atmBoundaryLayerInletEpsilonFvPatchScalarField
+        atmBoundaryLayerInletKFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        atmBoundaryLayerInletEpsilonFvPatchScalarField
+        atmBoundaryLayerInletKFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -102,10 +102,10 @@ public:
         );
 
         //- Construct by mapping given
-        //  atmBoundaryLayerInletEpsilonFvPatchScalarField onto a new patch
-        atmBoundaryLayerInletEpsilonFvPatchScalarField
+        //  atmBoundaryLayerInletKFvPatchScalarField onto a new patch
+        atmBoundaryLayerInletKFvPatchScalarField
         (
-            const atmBoundaryLayerInletEpsilonFvPatchScalarField&,
+            const atmBoundaryLayerInletKFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
@@ -116,14 +116,14 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new atmBoundaryLayerInletEpsilonFvPatchScalarField(*this)
+                new atmBoundaryLayerInletKFvPatchScalarField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        atmBoundaryLayerInletEpsilonFvPatchScalarField
+        atmBoundaryLayerInletKFvPatchScalarField
         (
-            const atmBoundaryLayerInletEpsilonFvPatchScalarField&,
+            const atmBoundaryLayerInletKFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -135,7 +135,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new atmBoundaryLayerInletEpsilonFvPatchScalarField(*this, iF)
+                new atmBoundaryLayerInletKFvPatchScalarField(*this, iF)
             );
         }
 

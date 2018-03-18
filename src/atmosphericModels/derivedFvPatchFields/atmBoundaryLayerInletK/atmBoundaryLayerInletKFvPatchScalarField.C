@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "atmBoundaryLayerInletEpsilonFvPatchScalarField.H"
+#include "atmBoundaryLayerInletKFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
@@ -36,90 +36,104 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-atmBoundaryLayerInletEpsilonFvPatchScalarField::
-atmBoundaryLayerInletEpsilonFvPatchScalarField
+atmBoundaryLayerInletKFvPatchScalarField::
+atmBoundaryLayerInletKFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    inletOutletFvPatchScalarField(p, iF),
     atmBoundaryLayer()
 {}
 
 
-atmBoundaryLayerInletEpsilonFvPatchScalarField::
-atmBoundaryLayerInletEpsilonFvPatchScalarField
+atmBoundaryLayerInletKFvPatchScalarField::
+atmBoundaryLayerInletKFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF, dict, false),
+    inletOutletFvPatchScalarField(p, iF),
     atmBoundaryLayer(patch().Cf(), dict)
 {
-    scalarField::operator=(epsilon(patch().Cf()));
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+
+    refValue() = k(patch().Cf());
+    refGrad() = 0;
+    valueFraction() = 1;
+
+    if (dict.found("value"))
+    {
+        scalarField::operator=(scalarField("value", dict, p.size()));
+    }
+    else
+    {
+        scalarField::operator=(refValue());
+    }
 }
 
 
-atmBoundaryLayerInletEpsilonFvPatchScalarField::
-atmBoundaryLayerInletEpsilonFvPatchScalarField
+atmBoundaryLayerInletKFvPatchScalarField::
+atmBoundaryLayerInletKFvPatchScalarField
 (
-    const atmBoundaryLayerInletEpsilonFvPatchScalarField& psf,
+    const atmBoundaryLayerInletKFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(psf, p, iF, mapper),
+    inletOutletFvPatchScalarField(psf, p, iF, mapper),
     atmBoundaryLayer(psf, mapper)
 {}
 
 
-atmBoundaryLayerInletEpsilonFvPatchScalarField::
-atmBoundaryLayerInletEpsilonFvPatchScalarField
+atmBoundaryLayerInletKFvPatchScalarField::
+atmBoundaryLayerInletKFvPatchScalarField
 (
-    const atmBoundaryLayerInletEpsilonFvPatchScalarField& psf,
+    const atmBoundaryLayerInletKFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(psf, iF),
+    inletOutletFvPatchScalarField(psf, iF),
     atmBoundaryLayer(psf)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void atmBoundaryLayerInletEpsilonFvPatchScalarField::autoMap
+void atmBoundaryLayerInletKFvPatchScalarField::autoMap
 (
     const fvPatchFieldMapper& m
 )
 {
-    fixedValueFvPatchScalarField::autoMap(m);
+    inletOutletFvPatchScalarField::autoMap(m);
     atmBoundaryLayer::autoMap(m);
 }
 
 
-void atmBoundaryLayerInletEpsilonFvPatchScalarField::rmap
+void atmBoundaryLayerInletKFvPatchScalarField::rmap
 (
     const fvPatchScalarField& psf,
     const labelList& addr
 )
 {
-    fixedValueFvPatchScalarField::rmap(psf, addr);
+    inletOutletFvPatchScalarField::rmap(psf, addr);
 
-    const atmBoundaryLayerInletEpsilonFvPatchScalarField& blpsf =
-        refCast<const atmBoundaryLayerInletEpsilonFvPatchScalarField>(psf);
+    const atmBoundaryLayerInletKFvPatchScalarField& blpsf =
+        refCast<const atmBoundaryLayerInletKFvPatchScalarField>(psf);
 
     atmBoundaryLayer::rmap(blpsf, addr);
 }
 
 
-void atmBoundaryLayerInletEpsilonFvPatchScalarField::write(Ostream& os) const
+void atmBoundaryLayerInletKFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
     atmBoundaryLayer::write(os);
+    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntry("value", os);
 }
 
@@ -129,7 +143,7 @@ void atmBoundaryLayerInletEpsilonFvPatchScalarField::write(Ostream& os) const
 makePatchTypeField
 (
     fvPatchScalarField,
-    atmBoundaryLayerInletEpsilonFvPatchScalarField
+    atmBoundaryLayerInletKFvPatchScalarField
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

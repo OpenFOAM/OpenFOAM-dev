@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "atmBoundaryLayerInletKFvPatchScalarField.H"
+#include "atmBoundaryLayerInletVelocityFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
@@ -36,90 +36,104 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-atmBoundaryLayerInletKFvPatchScalarField::
-atmBoundaryLayerInletKFvPatchScalarField
+atmBoundaryLayerInletVelocityFvPatchVectorField::
+atmBoundaryLayerInletVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    inletOutletFvPatchVectorField(p, iF),
     atmBoundaryLayer()
 {}
 
 
-atmBoundaryLayerInletKFvPatchScalarField::
-atmBoundaryLayerInletKFvPatchScalarField
+atmBoundaryLayerInletVelocityFvPatchVectorField::
+atmBoundaryLayerInletVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF, dict, false),
+    inletOutletFvPatchVectorField(p, iF),
     atmBoundaryLayer(patch().Cf(), dict)
 {
-    scalarField::operator=(k(patch().Cf()));
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+
+    refValue() = U(patch().Cf());
+    refGrad() = Zero;
+    valueFraction() = 1;
+
+    if (dict.found("value"))
+    {
+        vectorField::operator=(vectorField("value", dict, p.size()));
+    }
+    else
+    {
+        vectorField::operator=(refValue());
+    }
 }
 
 
-atmBoundaryLayerInletKFvPatchScalarField::
-atmBoundaryLayerInletKFvPatchScalarField
+atmBoundaryLayerInletVelocityFvPatchVectorField::
+atmBoundaryLayerInletVelocityFvPatchVectorField
 (
-    const atmBoundaryLayerInletKFvPatchScalarField& psf,
+    const atmBoundaryLayerInletVelocityFvPatchVectorField& pvf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<vector, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(psf, p, iF, mapper),
-    atmBoundaryLayer(psf, mapper)
+    inletOutletFvPatchVectorField(pvf, p, iF, mapper),
+    atmBoundaryLayer(pvf, mapper)
 {}
 
 
-atmBoundaryLayerInletKFvPatchScalarField::
-atmBoundaryLayerInletKFvPatchScalarField
+atmBoundaryLayerInletVelocityFvPatchVectorField::
+atmBoundaryLayerInletVelocityFvPatchVectorField
 (
-    const atmBoundaryLayerInletKFvPatchScalarField& psf,
-    const DimensionedField<scalar, volMesh>& iF
+    const atmBoundaryLayerInletVelocityFvPatchVectorField& pvf,
+    const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(psf, iF),
-    atmBoundaryLayer(psf)
+    inletOutletFvPatchVectorField(pvf, iF),
+    atmBoundaryLayer(pvf)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void atmBoundaryLayerInletKFvPatchScalarField::autoMap
+void atmBoundaryLayerInletVelocityFvPatchVectorField::autoMap
 (
     const fvPatchFieldMapper& m
 )
 {
-    fixedValueFvPatchScalarField::autoMap(m);
+    inletOutletFvPatchVectorField::autoMap(m);
     atmBoundaryLayer::autoMap(m);
 }
 
 
-void atmBoundaryLayerInletKFvPatchScalarField::rmap
+void atmBoundaryLayerInletVelocityFvPatchVectorField::rmap
 (
-    const fvPatchScalarField& psf,
+    const fvPatchVectorField& pvf,
     const labelList& addr
 )
 {
-    fixedValueFvPatchScalarField::rmap(psf, addr);
+    inletOutletFvPatchVectorField::rmap(pvf, addr);
 
-    const atmBoundaryLayerInletKFvPatchScalarField& blpsf =
-        refCast<const atmBoundaryLayerInletKFvPatchScalarField>(psf);
+    const atmBoundaryLayerInletVelocityFvPatchVectorField& blpvf =
+        refCast<const atmBoundaryLayerInletVelocityFvPatchVectorField>(pvf);
 
-    atmBoundaryLayer::rmap(blpsf, addr);
+    atmBoundaryLayer::rmap(blpvf, addr);
 }
 
 
-void atmBoundaryLayerInletKFvPatchScalarField::write(Ostream& os) const
+void atmBoundaryLayerInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
-    fvPatchScalarField::write(os);
+    fvPatchVectorField::write(os);
     atmBoundaryLayer::write(os);
+    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntry("value", os);
 }
 
@@ -128,8 +142,8 @@ void atmBoundaryLayerInletKFvPatchScalarField::write(Ostream& os) const
 
 makePatchTypeField
 (
-    fvPatchScalarField,
-    atmBoundaryLayerInletKFvPatchScalarField
+    fvPatchVectorField,
+    atmBoundaryLayerInletVelocityFvPatchVectorField
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

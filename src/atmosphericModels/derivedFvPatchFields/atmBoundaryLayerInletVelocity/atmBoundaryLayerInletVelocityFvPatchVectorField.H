@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ SourceFiles
 #define atmBoundaryLayerInletVelocityFvPatchVectorField_H
 
 #include "fvPatchFields.H"
-#include "fixedValueFvPatchFields.H"
+#include "inletOutletFvPatchFields.H"
 #include "atmBoundaryLayer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -75,7 +75,7 @@ namespace Foam
 
 class atmBoundaryLayerInletVelocityFvPatchVectorField
 :
-    public fixedValueFvPatchVectorField,
+    public inletOutletFvPatchVectorField,
     public atmBoundaryLayer
 {
 
