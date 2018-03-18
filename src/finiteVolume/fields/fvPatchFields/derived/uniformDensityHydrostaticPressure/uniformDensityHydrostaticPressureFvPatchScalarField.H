@@ -37,7 +37,7 @@ Description
 
     where
     \vartable
-        p_{hyd} | Hyrostatic pressure [Pa]
+        p_{hyd} | Hydrostatic pressure [Pa]
         p_{ref} | Reference pressure [Pa]
         x_{ref} | Reference point in Cartesian co-ordinates
         \rho    | Density (assumed uniform)
