@@ -81,6 +81,7 @@ wmake $targetType rigidBodyDynamics
 wmake $targetType rigidBodyMeshMotion
 wmake $targetType waves
 wmake $targetType semiPermeableBaffle
+wmake $targetType atmosphericModels
 
 
 #------------------------------------------------------------------------------

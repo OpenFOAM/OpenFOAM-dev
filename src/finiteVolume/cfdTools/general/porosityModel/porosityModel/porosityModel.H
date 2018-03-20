@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,6 +222,9 @@ public:
 
         //- Return const access to the cell zone IDs
         inline const labelList& cellZoneIDs() const;
+
+        //- Return dictionary used for model construction
+        const dictionary& dict() const;
 
         //- Transform the model data wrt mesh changes
         virtual void transformModelData();

@@ -4,4 +4,7 @@ derivedFvPatchFields/atmBoundaryLayerInletK/atmBoundaryLayerInletKFvPatchScalarF
 derivedFvPatchFields/atmBoundaryLayerInletEpsilon/atmBoundaryLayerInletEpsilonFvPatchScalarField.C
 derivedFvPatchFields/nutkAtmRoughWallFunction/nutkAtmRoughWallFunctionFvPatchScalarField.C
 
+atmosphericTurbulentTransportModels.C
+porosityModels/powerLawLopesdaCosta/powerLawLopesdaCosta.C
+
 LIB = $(FOAM_LIBBIN)/libatmosphericModels

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,7 @@ class edge;
 class labelledTri;
 class polyBoundaryMesh;
 class plane;
+class boundBox;
 
 /*---------------------------------------------------------------------------*\
                            Class triSurfaceTools Declaration
@@ -472,6 +473,16 @@ public:
             const labelHashSet& includePatches,
             const bool verbose = false
         );
+
+
+        static triSurface triangulate
+        (
+            const polyBoundaryMesh& bMesh,
+            const labelHashSet& includePatches,
+            const boundBox& bBox,
+            const bool verbose = false
+        );
+
 
         //- Face-centre triangulation of (selected patches of) boundaryMesh.
         //  Needs

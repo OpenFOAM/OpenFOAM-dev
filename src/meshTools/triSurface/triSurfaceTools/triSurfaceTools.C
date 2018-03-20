@@ -32,7 +32,6 @@ License
 #include "plane.H"
 #include "geompack.H"
 
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 const Foam::label Foam::triSurfaceTools::ANYEDGE = -1;
@@ -2328,7 +2327,6 @@ Foam::triSurfaceTools::sideType Foam::triSurfaceTools::surfaceSide
 }
 
 
-// triangulation of boundaryMesh
 Foam::triSurface Foam::triSurfaceTools::triangulate
 (
     const polyBoundaryMesh& bMesh,
@@ -2371,6 +2369,96 @@ Foam::triSurface Foam::triSurfaceTools::triangulate
                 triangles.append(labelledTri(f[0], f[1], f[2], newPatchi));
 
                 nTriTotal++;
+            }
+        }
+
+        if (verbose)
+        {
+            Pout<< patch.name() << " : generated " << nTriTotal
+                << " triangles from " << patch.size() << " faces with"
+                << " new patchid " << newPatchi << endl;
+        }
+
+        newPatchi++;
+    }
+    triangles.shrink();
+
+    // Create globally numbered tri surface
+    triSurface rawSurface(triangles, mesh.points());
+
+    // Create locally numbered tri surface
+    triSurface surface
+    (
+        rawSurface.localFaces(),
+        rawSurface.localPoints()
+    );
+
+    // Add patch names to surface
+    surface.patches().setSize(newPatchi);
+
+    newPatchi = 0;
+
+    forAllConstIter(labelHashSet, includePatches, iter)
+    {
+        const label patchi = iter.key();
+        const polyPatch& patch = bMesh[patchi];
+
+        surface.patches()[newPatchi].name() = patch.name();
+        surface.patches()[newPatchi].geometricType() = patch.type();
+
+        newPatchi++;
+    }
+
+    return surface;
+}
+
+
+Foam::triSurface Foam::triSurfaceTools::triangulate
+(
+    const polyBoundaryMesh& bMesh,
+    const labelHashSet& includePatches,
+    const boundBox& bBox,
+    const bool verbose
+)
+{
+    const polyMesh& mesh = bMesh.mesh();
+
+    // Storage for surfaceMesh. Size estimate.
+    DynamicList<labelledTri> triangles
+    (
+        mesh.nFaces() - mesh.nInternalFaces()
+    );
+
+    label newPatchi = 0;
+
+    forAllConstIter(labelHashSet, includePatches, iter)
+    {
+        const label patchi = iter.key();
+        const polyPatch& patch = bMesh[patchi];
+        const pointField& points = patch.points();
+
+        label nTriTotal = 0;
+
+        forAll(patch, patchFacei)
+        {
+            const face& f = patch[patchFacei];
+
+            if (bBox.containsAny(points, f))
+            {
+                faceList triFaces(f.nTriangles(points));
+
+                label nTri = 0;
+
+                f.triangles(points, nTri, triFaces);
+
+                forAll(triFaces, triFacei)
+                {
+                    const face& f = triFaces[triFacei];
+
+                    triangles.append(labelledTri(f[0], f[1], f[2], newPatchi));
+
+                    nTriTotal++;
+                }
             }
         }
 

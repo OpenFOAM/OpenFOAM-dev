@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,28 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-inline const Foam::word& Foam::porosityModel::name() const
-{
-    return name_;
-}
+#include "turbulentTransportModels.H"
 
+// -------------------------------------------------------------------------- //
+// RAS models
+// -------------------------------------------------------------------------- //
 
-inline bool Foam::porosityModel::active() const
-{
-    return active_;
-}
-
-
-inline const Foam::dictionary& Foam::porosityModel::dict() const
-{
-    return dict_;
-}
-
-
-inline const Foam::labelList& Foam::porosityModel::cellZoneIDs() const
-{
-    return cellZoneIDs_;
-}
-
+#include "kEpsilonLopesdaCosta.H"
+makeRASModel(kEpsilonLopesdaCosta);
 
 // ************************************************************************* //
