@@ -189,8 +189,6 @@ void Foam::multiphaseSystem::solveAlphas()
     );
 
 
-    volScalarField divU(fvc::div(fvc::absolute(phi_, phases().first().U())));
-
     forAll(phases(), phasei)
     {
         phaseModel& phase = phases()[phasei];
@@ -209,20 +207,13 @@ void Foam::multiphaseSystem::solveAlphas()
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("Sp", divU.dimensions(), 0.0)
+            dimensionedScalar("Sp", dimless/dimTime, 0)
         );
 
         volScalarField::Internal Su
         (
-            IOobject
-            (
-                "Su",
-                mesh_.time().timeName(),
-                mesh_
-            ),
-            // Divergence term is handled explicitly to be
-            // consistent with the explicit transport solution
-            divU*min(alpha, scalar(1))
+            "Su",
+            min(alpha, scalar(1))*fvc::div(fvc::absolute(phi_, phase.U()))
         );
 
         if (phase.divU().valid())
