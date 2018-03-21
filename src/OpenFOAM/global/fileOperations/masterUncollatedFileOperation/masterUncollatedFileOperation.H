@@ -28,6 +28,31 @@ Description
     fileOperations that performs all file operations on the master processor.
     Requires the calls to be parallel synchronised!
 
+    Limitations: - no /processor in filename
+                 - no /uniform/ in the filename
+
+    The main logic is in ::filePath which returns a
+    - same path on all processors. This can either be a global file
+      (system/controlDict, processorXXX/0/uniform/) or a collated file
+      (processors/0/p)
+    - same path on all processors of the local communicator
+      (processors4_0-1/0/p)
+    - different path on all processors (processor0/0/p)
+
+    system/controlDict:
+    filePath worldmaster: <globalRoot>/system/controlDict
+             localmaster:           ,,
+             slave      :           ,,
+
+    processor0/uniform/time
+    filePath worldmaster: <globalRoot>/processorXXX/uniform/time
+             localmaster:           ,,
+             slave      :           ,,
+
+    processors0/0/p
+    processors10/0/p
+    processors10_2-4/0/p
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef fileOperations_masterUncollatedFileOperation_H
@@ -36,6 +61,9 @@ Description
 #include "fileOperation.H"
 #include "OSspecific.H"
 #include "HashPtrTable.H"
+#include "Switch.H"
+#include "unthreadedInitialise.H"
+#include "boolList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,6 +86,9 @@ class masterUncollatedFileOperation
 protected:
 
     // Protected data
+
+        //- Any communicator allocated by me
+        const label myComm_;
 
         //- Cached times for a given directory
         mutable HashPtrTable<instantList> times_;
@@ -345,18 +376,29 @@ protected:
 
     // Private Member Functions
 
+        //- Get the list of processors that are part of this communicator
+        static labelList subRanks(const label n);
+
         template<class Type>
-        Type scatterList(const UList<Type>&) const;
+        Type scatterList(const UList<Type>&, const int, const label comm) const;
 
         template<class Type, class fileOp>
-        Type masterOp(const fileName&, const fileOp& fop) const;
+        Type masterOp
+        (
+            const fileName&,
+            const fileOp& fop,
+            const int tag,
+            const label comm
+        ) const;
 
         template<class Type, class fileOp>
         Type masterOp
         (
             const fileName&,
             const fileName&,
-            const fileOp& fop
+            const fileOp& fop,
+            const int tag,
+            const label comm
         ) const;
 
         //- Equivalent of Time::findInstance
@@ -366,25 +408,31 @@ protected:
             const instant& t
         );
 
-        //- Search for object; return info on how it was found
+        //- Search (locally!) for object; return info on how it was found.
+        //  Does not do any parallel communication.
         //    checkGlobal : also check undecomposed case
         //    isFile      : true:check for file  false:check for directory
-        fileName filePathInfo
+        // searchType    : how was found
+        // processorsDir : name of processor directory
+        // instance      : instance
+        virtual fileName filePathInfo
         (
             const bool checkGlobal,
             const bool isFile,
             const IOobject&,
-            pathType&,
-            word&
+            pathType& searchType,
+            word& processorsDir,
+            word& instance
         ) const;
 
         //- Construct filePath
-        static fileName objectPath
+        fileName localObjectPath
         (
             const IOobject&,
-            const pathType&,
-            const word&
-        );
+            const pathType& searchType,
+            const word& processorsDir,
+            const word& instancePath
+        ) const;
 
         //- Read file contents and send to processors
         static void readAndSend
@@ -394,6 +442,29 @@ protected:
             const labelUList& procs,
             PstreamBuffers& pBufs
         );
+
+        //- Detect file (possibly compressed), read file contents and send
+        //  to processors
+        static void readAndSend
+        (
+            const fileName& fName,
+            const labelUList& procs,
+            PstreamBuffers& pBufs
+        );
+
+        //- Read files on comms master
+        static autoPtr<ISstream> read
+        (
+            IOobject& io,
+            const label comm,
+            const bool uniform,             // on comms master only
+            const fileNameList& filePaths,  // on comms master only
+            const boolList& procValid       // on comms master only
+        );
+
+        //- Helper: check IO for local existence. Like filePathInfo but
+        //  without parent searchign and instance searching
+        bool exists(const dirIndexList&, IOobject& io) const;
 
 
 public:
@@ -414,6 +485,9 @@ public:
 
         //- Construct null
         masterUncollatedFileOperation(const bool verbose);
+
+        //- Construct from communicator
+        masterUncollatedFileOperation(const label comm, const bool verbose);
 
 
     //- Destructor
@@ -665,35 +739,46 @@ public:
             //- Get sorted list of times
             virtual instantList findTimes(const fileName&, const word&) const;
 
+            //- Find instance where IOobject is. Fails if cannot be found
+            //  and readOpt() is MUST_READ/MUST_READ_IF_MODIFIED. Otherwise
+            //  returns stopInstance.
+            virtual IOobject findInstance
+            (
+                const IOobject& io,
+                const scalar startValue,
+                const word& stopInstance
+            ) const;
+
             //- Callback for time change
             virtual void setTime(const Time&) const;
-
-            //- root+casename with any 'processorXXX' replaced by 'processsors'
-            static fileName processorsCasePath(const IOobject&);
-
-            //- Like io.path with provided instance and any 'processorXXX'
-            //  replaced by 'processsors'
-            static fileName processorsPath(const IOobject&, const word&);
-
-            //- Operating on fileName: replace processorXXX with processors
-            static fileName processorsPath(const fileName&);
-
-            //- Split fileName into part before processor and part after.
-            //  Returns -1 or processor number. Use with care.
-            //  - path/"processor" + Foam::name(proci)/local reconstructs input
-            //  - path/"processors"/local reconstructs processors equivalence
-            static label splitProcessorPath
-            (
-                const fileName&,
-                fileName& path,
-                fileName& local
-            );
 
             //- Return cached times
             const HashPtrTable<instantList>& times() const
             {
                 return times_;
             }
+};
+
+
+/*---------------------------------------------------------------------------*\
+           Class masterUncollatedFileOperationInitialise Declaration
+\*---------------------------------------------------------------------------*/
+
+class masterUncollatedFileOperationInitialise
+:
+    public unthreadedInitialise
+{
+public:
+
+    // Constructors
+
+        //- Construct from components
+        masterUncollatedFileOperationInitialise(int& argc, char**& argv);
+
+
+    //- Destructor
+    virtual ~masterUncollatedFileOperationInitialise()
+    {}
 };
 
 

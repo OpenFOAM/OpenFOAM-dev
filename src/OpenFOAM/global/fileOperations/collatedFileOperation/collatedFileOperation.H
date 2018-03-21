@@ -43,6 +43,7 @@ SourceFiles
 
 #include "masterUncollatedFileOperation.H"
 #include "OFstreamCollator.H"
+#include "fileOperationInitialise.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,13 +60,32 @@ class collatedFileOperation
 :
     public masterUncollatedFileOperation
 {
-    // Private data
+protected:
+
+    // Protected data
+
+        //- Any communicator allocated by me
+        const label myComm_;
 
         //- Threaded writer
         mutable OFstreamCollator writer_;
 
+        // For non-parallel operation
+
+            //- Number of processors (overall)
+            label nProcs_;
+
+            //- Ranks of IO handlers
+            const labelList ioRanks_;
+
 
    // Private Member Functions
+
+        static labelList ioRanks();
+
+        //- Is proci master of communicator (in parallel) or master of
+        //  the io ranks (non-parallel)
+        bool isMasterRank(const label proci) const;
 
         //- Append to processors/ file
         bool appendObject
@@ -97,6 +117,15 @@ public:
         //- Construct null
         collatedFileOperation(const bool verbose);
 
+        //- Construct from user communicator
+        collatedFileOperation
+        (
+            const label comm,
+            const labelList& ioRanks,
+            const word& typeName,
+            const bool verbose
+        );
+
 
     //- Destructor
     virtual ~collatedFileOperation();
@@ -123,6 +152,54 @@ public:
                 IOstream::compressionType compression=IOstream::UNCOMPRESSED,
                 const bool valid = true
             ) const;
+
+        // Other
+
+            //- Actual name of processors dir
+            virtual word processorsDir(const IOobject&) const;
+
+            //- Actual name of processors dir
+            virtual word processorsDir(const fileName&) const;
+
+            //- Set number of processor directories/results. Only used in
+            //  decomposePar
+            virtual void setNProcs(const label nProcs);
+};
+
+
+/*---------------------------------------------------------------------------*\
+               Class collatedFileOperationInitialise Declaration
+\*---------------------------------------------------------------------------*/
+
+class collatedFileOperationInitialise
+:
+    public masterUncollatedFileOperationInitialise
+{
+public:
+
+    // Constructors
+
+        //- Construct from components
+        collatedFileOperationInitialise(int& argc, char**& argv)
+        :
+            masterUncollatedFileOperationInitialise(argc, argv)
+        {}
+
+
+    //- Destructor
+    virtual ~collatedFileOperationInitialise()
+    {}
+
+
+    // Member Functions
+
+        //- Needs threading
+        virtual bool needsThreading() const
+        {
+            return
+                collatedFileOperation::maxThreadFileBufferSize
+              > 0;
+        }
 };
 
 

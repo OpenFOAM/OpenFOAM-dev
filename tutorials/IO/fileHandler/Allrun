@@ -4,25 +4,94 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
+application=`getApplication`
+
 runApplication blockMesh
 
 #- Test writing collated format
 runApplication decomposePar -fileHandler collated
-runParallel `getApplication` -fileHandler collated
+runParallel $application -fileHandler collated
 runApplication reconstructPar -latestTime -fileHandler collated
 
-#- Delete collated files
-rm -rf processors
-
 #- Test writing uncollated format
-runApplication -s uncollated decomposePar -fileHandler uncollated
-runParallel -s uncollated `getApplication` -fileHandler uncollated
+runApplication -s uncollated decomposePar -fileHandler uncollated -force
+runParallel -s uncollated $application -fileHandler uncollated
+
+
+#- Test uncollated+distributed running: copy to different roots
+rm -rf machineA/fileHandler
+mkdir -p machineA/fileHandler
+(   cd machineA/fileHandler && \
+    cp -r ../../processor[0-1] . && \
+    cp -r ../../system . && \
+    mkdir -p constant && cp ../../constant/* constant
+)
+#- Note: slave node does not need constant&system since these are global
+rm -rf machineB/fileHandler
+mkdir -p machineB/fileHandler
+(   cd machineB/fileHandler && \
+    cp -r ../../processor[2-3] .
+)
+#- Run with different roots
+(   d=$PWD && \
+    cd machineA/fileHandler && \
+    runParallel -s multiRoot $application \
+    -fileHandler masterUncollated -ioRanks '(0 2)' \
+    -roots "(\"$d/machineA\" \"$d/machineB\" \"$d/machineB\")"
+)
+
 
 #- Restart from uncollated
-runParallel -s collated `getApplication` -fileHandler collated
+runParallel -s collated $application -fileHandler collated
 runApplication -s collated reconstructPar -latestTime -fileHandler collated
 
 #- Convert the parallel format to uncollated
 runParallel foamFormatConvert -fileHandler uncollated
+
+#- Restart with multiple IO ranks
+runParallel -s multiCollated \
+    $application -fileHandler collated -ioRanks '(0 2)'
+
+#- Reconstruct the multi-rank format. Delete the collated directory
+#  since conflicts with the multi-collated directory
+rm -rf processors4
+runApplication -s multiCollated reconstructPar -latestTime \
+    -fileHandler collated -ioRanks '(0 2)'
+
+#- Convert the multi-rank format to uncollated
+runParallel -s uncollated foamFormatConvert -fileHandler uncollated
+
+#- Restart from multiCollated using collated
+runParallel -s uncollated_from_multiCollated \
+    $application -fileHandler uncollated
+
+
+
+#- Test collated+distributed running: copy to different roots
+#  Important: make sure to copy uniform since we're copying it
+
+#- Delete all processor directories
+runApplication -s collated decomposePar \
+    -fileHandler collated -force -copyUniform
+
+rm -rf machineA/fileHandler
+mkdir -p machineA/fileHandler
+(   cd machineA/fileHandler && \
+    cp -r ../../processor* . && \
+    cp -r ../../system . && \
+    mkdir -p constant && cp ../../constant/* constant
+)
+#- Note: slave node does not need constant&system since these are global
+rm -rf machineB/fileHandler
+mkdir -p machineB/fileHandler
+
+#- Run with different roots
+(   d=$PWD && \
+    cd machineA/fileHandler && \
+    runParallel -s distributed_multiCollated $application \
+    -fileHandler collated -ioRanks '(0 2)' \
+    -roots "(\"$d/machineA\" \"$d/machineB\" \"$d/machineB\")"
+)
+
 
 #------------------------------------------------------------------------------

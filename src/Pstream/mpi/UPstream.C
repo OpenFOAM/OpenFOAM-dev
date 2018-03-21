@@ -65,7 +65,7 @@ void Foam::UPstream::addValidParOptions(HashTable<string>& validParOptions)
 }
 
 
-bool Foam::UPstream::init(int& argc, char**& argv)
+bool Foam::UPstream::init(int& argc, char**& argv, const bool needsThread)
 {
     //MPI_Init(&argc, &argv);
     int provided_thread_support;
@@ -73,7 +73,11 @@ bool Foam::UPstream::init(int& argc, char**& argv)
     (
         &argc,
         &argv,
-        MPI_THREAD_MULTIPLE,
+        (
+            needsThread
+          ? MPI_THREAD_MULTIPLE
+          : MPI_THREAD_SINGLE
+        ),
         &provided_thread_support
     );
 

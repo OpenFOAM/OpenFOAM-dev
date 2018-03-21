@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,8 @@ void Foam::regIOobject::close()
     if (IFstream::debug)
     {
         Pout<< "regIOobject::close() : "
-            << "finished reading " << isPtr_().name()
+            << "finished reading "
+            << (isPtr_.valid() ? isPtr_().name() : "dummy")
             << endl;
     }
 

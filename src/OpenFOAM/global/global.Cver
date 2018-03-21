@@ -87,11 +87,6 @@ bool Foam::jobInfo::constructed(false);
 #include "dimensionedConstants.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Read and set cell models
-
-#include "globalCellModeller.C"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Create the jobInfo file in the $FOAM_JOB_DIR/runningJobs directory
 
 #include "jobInfo.C"

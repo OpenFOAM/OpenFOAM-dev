@@ -362,24 +362,40 @@ int main(int argc, char *argv[])
                 << " existing processor directories" << endl;
 
             // Remove existing processors directory
-            const fileName procDir(runTime.path()/word("processors"));
-            if (fileHandler().exists(procDir))
-            {
-                fileHandler().rmDir(procDir);
-            }
-
-            // Remove existing processor directories
-            // reverse order to avoid gaps if someone interrupts the process
-            for (label proci = nProcs-1; proci >= 0; --proci)
-            {
-                const fileName procDir
+            fileNameList dirs
+            (
+                fileHandler().readDir
                 (
-                    runTime.path()/(word("processor") + name(proci))
-                );
+                    runTime.path(),
+                    fileName::Type::DIRECTORY
+                )
+            );
+            forAllReverse(dirs, diri)
+            {
+                const fileName& d = dirs[diri];
 
-                if (fileHandler().exists(procDir))
+                // Starts with 'processors'
+                if (d.find("processors") == 0)
                 {
-                    fileHandler().rmDir(procDir);
+                    if (fileHandler().exists(d))
+                    {
+                        fileHandler().rmDir(d);
+                    }
+                }
+
+                // Starts with 'processor'
+                if (d.find("processor") == 0)
+                {
+                    // Check that integer after processor
+                    fileName num(d.substr(9));
+                    label proci = -1;
+                    if (Foam::read(num.c_str(), proci))
+                    {
+                        if (fileHandler().exists(d))
+                        {
+                            fileHandler().rmDir(d);
+                        }
+                    }
                 }
             }
         }
@@ -430,11 +446,13 @@ int main(int argc, char *argv[])
                 false
             )
         );
-
         // Get requested numberOfSubdomains. Note: have no mesh yet so
         // cannot use decompositionModel::New
         const label nDomains =
             readLabel(IOdictionary(dictIO).lookup("numberOfSubdomains"));
+
+        // Give file handler a chance to determine the output directory
+        const_cast<fileOperation&>(fileHandler()).setNProcs(nDomains);
 
         if (decomposeFieldsOnly)
         {

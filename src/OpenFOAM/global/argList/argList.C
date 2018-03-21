@@ -34,6 +34,8 @@ License
 #include "regIOobject.H"
 #include "dynamicCode.H"
 #include "fileOperation.H"
+#include "fileOperationInitialise.H"
+#include "stringListOps.H"
 
 #include <cctype>
 
@@ -63,6 +65,13 @@ Foam::argList::initValidTables::initValidTables()
         "slave root directories for distributed running"
     );
     validParOptions.set("roots", "(dir1 .. dirN)");
+
+    argList::addOption
+    (
+        "hostRoots", "(((host1 dir1) .. (hostN dirN))",
+        "slave root directories (per host) for distributed running"
+    );
+    validParOptions.set("hostRoots", "((host1 dir1) .. (hostN dirN))");
 
     argList::addBoolOption
     (
@@ -148,6 +157,7 @@ void Foam::argList::noParallel()
 {
     removeOption("parallel");
     removeOption("roots");
+    removeOption("hostRoots");
     validParOptions.clear();
 }
 
@@ -395,6 +405,34 @@ Foam::argList::argList
     args_(argc),
     options_(argc)
 {
+    // Check for fileHandler
+    word handlerType(getEnv("FOAM_FILEHANDLER"));
+    for (int argI = 0; argI < argc; ++argI)
+    {
+        if (argv[argI][0] == '-')
+        {
+            const char *optionName = &argv[argI][1];
+            if (string(optionName) == "fileHandler")
+            {
+                handlerType = argv[argI+1];
+                break;
+            }
+        }
+    }
+    if (handlerType.empty())
+    {
+        handlerType = fileOperation::defaultFileHandler;
+    }
+
+    // Detect any parallel options
+    bool needsThread = fileOperations::fileOperationInitialise::New
+    (
+        handlerType,
+        argc,
+        argv
+    )().needsThreading();
+
+
     // Check if this run is a parallel run by searching for any parallel option
     // If found call runPar which might filter argv
     for (int argI = 0; argI < argc; ++argI)
@@ -405,7 +443,7 @@ Foam::argList::argList
 
             if (validParOptions.found(optionName))
             {
-                parRunControl_.runPar(argc, argv);
+                parRunControl_.runPar(argc, argv, needsThread);
                 break;
             }
         }
@@ -614,6 +652,58 @@ void Foam::argList::parse
         Foam::fileHandler(handler);
     }
 
+
+    stringList slaveMachine;
+    stringList slaveProcs;
+
+    // Collect slave machine/pid
+    if (parRunControl_.parRun())
+    {
+        if (Pstream::master())
+        {
+            slaveMachine.setSize(Pstream::nProcs() - 1);
+            slaveProcs.setSize(Pstream::nProcs() - 1);
+            label proci = 0;
+            for
+            (
+                int slave = Pstream::firstSlave();
+                slave <= Pstream::lastSlave();
+                slave++
+            )
+            {
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
+
+                string slaveBuild;
+                label slavePid;
+                fromSlave >> slaveBuild >> slaveMachine[proci] >> slavePid;
+
+                slaveProcs[proci] = slaveMachine[proci]+"."+name(slavePid);
+                proci++;
+
+                // Check build string to make sure all processors are running
+                // the same build
+                if (slaveBuild != Foam::FOAMbuild)
+                {
+                    FatalErrorIn(executable())
+                        << "Master is running version " << Foam::FOAMbuild
+                        << "; slave " << proci << " is running version "
+                        << slaveBuild
+                        << exit(FatalError);
+                }
+            }
+        }
+        else
+        {
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
+            toMaster << string(Foam::FOAMbuild) << hostName() << pid();
+        }
+    }
+
+
     // Case is a single processor run unless it is running parallel
     int nProcs = 1;
 
@@ -638,6 +728,52 @@ void Foam::argList::parse
                 source = "-roots";
                 IStringStream is(options_["roots"]);
                 roots = readList<fileName>(is);
+
+                if (roots.size() != 1)
+                {
+                    dictNProcs = roots.size()+1;
+                }
+            }
+            else if (options_.found("hostRoots"))
+            {
+                source = "-hostRoots";
+                IStringStream is(options_["hostRoots"]);
+                List<Tuple2<wordRe, fileName>> hostRoots(is);
+
+                roots.setSize(Pstream::nProcs()-1);
+                forAll(hostRoots, i)
+                {
+                    const Tuple2<wordRe, fileName>& hostRoot = hostRoots[i];
+                    const wordRe& re = hostRoot.first();
+                    labelList matchedRoots(findStrings(re, slaveMachine));
+                    forAll(matchedRoots, matchi)
+                    {
+                        label slavei = matchedRoots[matchi];
+                        if (roots[slavei] != wordRe())
+                        {
+                            FatalErrorInFunction
+                                << "Slave " << slaveMachine[slavei]
+                                << " has multiple matching roots in "
+                                << hostRoots << exit(FatalError);
+                        }
+                        else
+                        {
+                            roots[slavei] = hostRoot.second();
+                        }
+                    }
+                }
+
+                // Check
+                forAll(roots, slavei)
+                {
+                    if (roots[slavei] == wordRe())
+                    {
+                        FatalErrorInFunction
+                            << "Slave " << slaveMachine[slavei]
+                            << " has no matching roots in "
+                            << hostRoots << exit(FatalError);
+                    }
+                }
 
                 if (roots.size() != 1)
                 {
@@ -810,56 +946,6 @@ void Foam::argList::parse
         case_ = globalCase_;
     }
 
-
-    stringList slaveProcs;
-
-    // Collect slave machine/pid
-    if (parRunControl_.parRun())
-    {
-        if (Pstream::master())
-        {
-            slaveProcs.setSize(Pstream::nProcs() - 1);
-            label proci = 0;
-            for
-            (
-                int slave = Pstream::firstSlave();
-                slave <= Pstream::lastSlave();
-                slave++
-            )
-            {
-                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
-
-                string slaveBuild;
-                string slaveMachine;
-                label slavePid;
-                fromSlave >> slaveBuild >> slaveMachine >> slavePid;
-
-                slaveProcs[proci++] = slaveMachine + "." + name(slavePid);
-
-                // Check build string to make sure all processors are running
-                // the same build
-                if (slaveBuild != Foam::FOAMbuild)
-                {
-                    FatalErrorIn(executable())
-                        << "Master is running version " << Foam::FOAMbuild
-                        << "; slave " << proci << " is running version "
-                        << slaveBuild
-                        << exit(FatalError);
-                }
-            }
-        }
-        else
-        {
-            OPstream toMaster
-            (
-                Pstream::commsTypes::scheduled,
-                Pstream::masterNo()
-            );
-            toMaster << string(Foam::FOAMbuild) << hostName() << pid();
-        }
-    }
-
-
     if (Pstream::master() && writeInfoHeader)
     {
         Info<< "Case   : " << (rootPath_/globalCase_).c_str() << nl
@@ -977,6 +1063,7 @@ bool Foam::argList::setOption(const word& opt, const string& param)
             opt == "case"
          || opt == "parallel"
          || opt == "roots"
+         || opt == "hostRoots"
         )
         {
             FatalError
@@ -1050,6 +1137,7 @@ bool Foam::argList::unsetOption(const word& opt)
             opt == "case"
          || opt == "parallel"
          || opt == "roots"
+         || opt == "hostRoots"
         )
         {
             FatalError

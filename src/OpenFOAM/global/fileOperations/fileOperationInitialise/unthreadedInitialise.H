@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,34 +21,64 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    cellModeller global initializations
+Class
+    Foam::unthreadedInitialise
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellModeller.H"
-#include "etcFiles.H"
-#include "IFstream.H"
+#ifndef unthreadedInitialise_H
+#define unthreadedInitialise_H
 
-// * * * * * * * * * * * * * * * Static data * * * * * * * * * * * * * * * * //
-
-Foam::PtrList<Foam::cellModel> Foam::cellModeller::models_
-(
-    IFstream(findEtcFile("cellModels", true))()
-);
-
-Foam::List<Foam::cellModel*> Foam::cellModeller::modelPtrs_;
-
-Foam::HashTable<const Foam::cellModel*> Foam::cellModeller::modelDictionary_;
-
+#include "fileOperationInitialise.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    // Construct a dummy cellModeller which reads the models and fills
-    // the above tables
-    cellModeller globalCellModeller_;
-}
+namespace fileOperations
+{
+
+/*---------------------------------------------------------------------------*\
+                     Class unthreadedInitialise Declaration
+\*---------------------------------------------------------------------------*/
+
+class unthreadedInitialise
+:
+    public fileOperationInitialise
+{
+public:
+
+    // Constructors
+
+        //- Construct from components
+        unthreadedInitialise(int& argc, char**& argv)
+        :
+            fileOperationInitialise(argc, argv)
+        {}
+
+
+    //- Destructor
+    virtual ~unthreadedInitialise()
+    {}
+
+
+    // Member Functions
+
+        //- Needs threading
+        virtual bool needsThreading() const
+        {
+            return false;
+        }
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace fileOperations
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

@@ -28,9 +28,9 @@ License
 #include "IFstream.H"
 #include "OFstream.H"
 #include "addToRunTimeSelectionTable.H"
-#include "masterUncollatedFileOperation.H"
 #include "decomposedBlockData.H"
 #include "dummyISstream.H"
+#include "unthreadedInitialise.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -40,6 +40,15 @@ namespace fileOperations
 {
     defineTypeNameAndDebug(uncollatedFileOperation, 0);
     addToRunTimeSelectionTable(fileOperation, uncollatedFileOperation, word);
+
+    // Mark as not needing threaded mpi
+    addNamedToRunTimeSelectionTable
+    (
+        fileOperationInitialise,
+        unthreadedInitialise,
+        word,
+        uncollated
+    );
 }
 }
 
@@ -102,17 +111,20 @@ Foam::fileName Foam::fileOperations::uncollatedFileOperation::filePathInfo
             // Check if parallel "procesors" directory
             if (io.time().processorCase())
             {
-                fileName path = fileOperations::masterUncollatedFileOperation::
-                processorsPath
+                tmpNrc<dirIndexList> pDirs
                 (
-                    io,
-                    io.instance()
+                    lookupProcessorsPath(io.objectPath())
                 );
-                fileName objectPath = path/io.name();
-
-                if (isFileOrDir(isFile, objectPath))
+                forAll(pDirs(), i)
                 {
-                    return objectPath;
+                    const fileName& pDir = pDirs()[i].first();
+                    fileName objPath =
+                        processorsPath(io, io.instance(), pDir)
+                       /io.name();
+                    if (objPath != objectPath && isFileOrDir(isFile, objPath))
+                    {
+                        return objPath;
+                    }
                 }
             }
 
@@ -153,6 +165,8 @@ Foam::fileOperations::uncollatedFileOperation::uncollatedFileOperation
 (
     const bool verbose
 )
+:
+    fileOperation(Pstream::worldComm)
 {
     if (verbose)
     {
@@ -536,15 +550,7 @@ Foam::fileOperations::uncollatedFileOperation::readStream
     {
         // Analyse the objectpath to find out the processor we're trying
         // to access
-        fileName path;
-        fileName local;
-        label proci = fileOperations::masterUncollatedFileOperation::
-        splitProcessorPath
-        (
-            io.objectPath(),
-            path,
-            local
-        );
+        label proci = detectProcessorPath(io.objectPath());
 
         if (proci == -1)
         {
@@ -552,6 +558,26 @@ Foam::fileOperations::uncollatedFileOperation::readStream
                 << "could not detect processor number"
                 << " from objectPath:" << io.objectPath()
                 << exit(FatalIOError);
+        }
+
+        // Analyse the fileName for any processor subset. Note: this
+        // should really be part of filePath() which should return
+        // both file and index in file.
+        fileName path, procDir, local;
+        label groupStart, groupSize, nProcs;
+        splitProcessorPath
+        (
+            fName,
+            path,
+            procDir,
+            local,
+            groupStart,
+            groupSize,
+            nProcs
+        );
+        if (groupStart != -1 && groupSize > 0)
+        {
+            proci = proci-groupStart;
         }
 
         // Read data and return as stream
@@ -573,8 +599,8 @@ bool Foam::fileOperations::uncollatedFileOperation::read
     {
         if (debug)
         {
-            Pout<< "uncollatedFileOperation::read() : "
-                << "reading object " << io.objectPath()
+            Pout<< "uncollatedFileOperation::read :"
+                << " Reading object " << io.objectPath()
                 << " from file " << endl;
         }
 

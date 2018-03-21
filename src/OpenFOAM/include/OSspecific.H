@@ -212,33 +212,6 @@ label osRandomInteger();
 scalar osRandomDouble();
 
 
-// Thread handling
-
-//- Allocate a thread
-label allocateThread();
-
-//- Start a thread
-void createThread(const label, void *(*start_routine) (void *), void *arg);
-
-//- Wait for thread
-void joinThread(const label);
-
-//- Delete a thread
-void freeThread(const label);
-
-//- Allocate a mutex variable
-label allocateMutex();
-
-//- Lock a mutex variable
-void lockMutex(const label);
-
-//- Unlock a mutex variable
-void unlockMutex(const label);
-
-//- Free a mutex variable
-void freeMutex(const label);
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

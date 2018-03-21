@@ -218,7 +218,7 @@ void Foam::vtkPVFoam::updateMeshPartsStatus()
 
 Foam::vtkPVFoam::vtkPVFoam
 (
-    const char* const FileName,
+    const char* const vtkFileName,
     vtkPVFoamReader* reader
 )
 :
@@ -242,9 +242,11 @@ Foam::vtkPVFoam::vtkPVFoam
 {
     if (debug)
     {
-        Info<< "Foam::vtkPVFoam::vtkPVFoam - " << FileName << endl;
+        Info<< "Foam::vtkPVFoam::vtkPVFoam - " << vtkFileName << endl;
         printMemory();
     }
+
+    fileName FileName(vtkFileName);
 
     // Make sure not to use the threaded version - it does not like
     // being loaded as a shared library - static cleanup order is problematic.
@@ -252,7 +254,7 @@ Foam::vtkPVFoam::vtkPVFoam
     fileOperations::collatedFileOperation::maxThreadFileBufferSize = 0;
 
     // avoid argList and get rootPath/caseName directly from the file
-    fileName fullCasePath(fileName(FileName).path());
+    fileName fullCasePath(FileName.path());
 
     if (!isDir(fullCasePath))
     {
@@ -263,9 +265,21 @@ Foam::vtkPVFoam::vtkPVFoam
         fullCasePath = cwd();
     }
 
-    // Set the case as an environment variable - some BCs might use this
+
+    if (fullCasePath.name().find("processors", 0) == 0)
+    {
+        // FileName e.g. "cavity/processors256/processor1.OpenFOAM
+        // Remove the processors section so it goes into processorDDD
+        // checking below.
+        fullCasePath = fullCasePath.path()/fileName(FileName.name()).lessExt();
+    }
+
+
     if (fullCasePath.name().find("processor", 0) == 0)
     {
+        // Give filehandler opportunity to analyse number of processors
+        (void)fileHandler().filePath(fullCasePath);
+
         const fileName globalCase = fullCasePath.path();
 
         setEnv("FOAM_CASE", globalCase, true);
@@ -280,7 +294,7 @@ Foam::vtkPVFoam::vtkPVFoam
     // look for 'case{region}.OpenFOAM'
     // could be stringent and insist the prefix match the directory name...
     // Note: cannot use fileName::name() due to the embedded '{}'
-    string caseName(fileName(FileName).lessExt());
+    string caseName(FileName.lessExt());
     string::size_type beg = caseName.find_last_of("/{");
     string::size_type end = caseName.find('}', beg);
 

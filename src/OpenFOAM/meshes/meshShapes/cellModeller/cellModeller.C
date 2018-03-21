@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,17 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "cellModeller.H"
+#include "IFstream.H"
+#include "etcFiles.H"
+
+// * * * * * * * * * * * * * * * Static data * * * * * * * * * * * * * * * * //
+
+Foam::PtrList<Foam::cellModel> Foam::cellModeller::models_;
+
+Foam::List<Foam::cellModel*> Foam::cellModeller::modelPtrs_;
+
+Foam::HashTable<const Foam::cellModel*> Foam::cellModeller::modelDictionary_;
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -35,7 +46,8 @@ Foam::cellModeller::cellModeller()
     if (modelPtrs_.size())
     {
         FatalErrorInFunction
-            << "attempt to re-construct cellModeller when it already exists"
+            << "attempt to re-construct cellModeller when it already exists :"
+            << modelPtrs_.size()
             << exit(FatalError);
     }
 
@@ -87,6 +99,13 @@ Foam::cellModeller::~cellModeller()
 
 const Foam::cellModel* Foam::cellModeller::lookup(const word& name)
 {
+    if (models_.empty())
+    {
+        IFstream is(findEtcFile("cellModels", true));
+        is  >> models_;
+        cellModeller m;
+    }
+
     HashTable<const cellModel*>::iterator iter = modelDictionary_.find(name);
 
     if (iter != modelDictionary_.end())
@@ -97,6 +116,19 @@ const Foam::cellModel* Foam::cellModeller::lookup(const word& name)
     {
         return nullptr;
     }
+}
+
+
+const Foam::cellModel* Foam::cellModeller::lookup(const label i)
+{
+    if (models_.empty())
+    {
+        IFstream is(findEtcFile("cellModels", true));
+        is  >> models_;
+        cellModeller m;
+    }
+
+    return modelPtrs_[i];
 }
 
 

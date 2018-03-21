@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,16 @@ protected:
 
 
     // Protected member functions
+
+        //- Helper: determine number of processors whose recvSizes fits
+        //  ito maxBufferSize
+        static label calcNumProcs
+        (
+            const label comm,
+            const off_t maxBufferSize,
+            const labelUList& recvSizes,
+            const label startProci
+        );
 
         //- Read data into *this. ISstream is only valid on master.
         static bool readBlocks
@@ -202,12 +212,12 @@ public:
             const label comm,
             autoPtr<OSstream>& osPtr,
             List<std::streamoff>& start,
-            const UList<char>&,
+            const UList<char>& masterData,
 
             const labelUList& recvSizes,
 
-            const bool haveSlaveData,       // does master have slaveData
-            const List<char>& slaveData,    // optional slave data (on master)
+            // optional slave data (on master)
+            const PtrList<SubList<char>>& slaveData,
 
             const UPstream::commsTypes,
             const bool syncReturnState = true

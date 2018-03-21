@@ -7,9 +7,11 @@ global/etcFiles/etcFiles.C
 
 fileOps = global/fileOperations
 $(fileOps)/fileOperation/fileOperation.C
+$(fileOps)/fileOperationInitialise/fileOperationInitialise.C
 $(fileOps)/uncollatedFileOperation/uncollatedFileOperation.C
 $(fileOps)/masterUncollatedFileOperation/masterUncollatedFileOperation.C
 $(fileOps)/collatedFileOperation/collatedFileOperation.C
+$(fileOps)/collatedFileOperation/hostCollatedFileOperation.C
 $(fileOps)/collatedFileOperation/threadedCollatedOFstream.C
 $(fileOps)/collatedFileOperation/OFstreamCollator.C
 
@@ -269,7 +271,6 @@ $(Time)/Time.C
 $(Time)/TimeIO.C
 $(Time)/findTimes.C
 $(Time)/subCycleTime.C
-$(Time)/findInstance.C
 $(Time)/timeSelector.C
 
 $(Time)/instant/instant.C

@@ -45,9 +45,4 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-// OptimisationSwitches
-// {
-//     fileHandler collated;
-// }
-
 // ************************************************************************* //

@@ -653,6 +653,36 @@ Foam::instantList Foam::Time::times() const
 }
 
 
+Foam::word Foam::Time::findInstance
+(
+    const fileName& dir,
+    const word& name,
+    const IOobject::readOption rOpt,
+    const word& stopInstance
+) const
+{
+    IOobject startIO
+    (
+        name,           // name might be empty!
+        timeName(),
+        dir,
+        *this,
+        rOpt
+    );
+
+    IOobject io
+    (
+        fileHandler().findInstance
+        (
+            startIO,
+            timeOutputValue(),
+            stopInstance
+        )
+    );
+    return io.instance();
+}
+
+
 Foam::word Foam::Time::findInstancePath
 (
     const fileName& directory,

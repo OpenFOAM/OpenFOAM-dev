@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,21 +95,31 @@ Foam::dictionary& Foam::debug::controlDict()
 {
     if (!controlDictPtr_)
     {
-        fileNameList controlDictFiles = findEtcFiles("controlDict", true);
-        controlDictPtr_ = new dictionary();
-        forAllReverse(controlDictFiles, cdfi)
+        string controlDictString(getEnv("FOAM_CONTROLDICT"));
+        if (!controlDictString.empty())
         {
-            IFstream ifs(controlDictFiles[cdfi]);
-
-            if (!ifs.good())
+            // Read from environment
+            IStringStream is(controlDictString);
+            controlDictPtr_ = new dictionary(is);
+        }
+        else
+        {
+            fileNameList controlDictFiles = findEtcFiles("controlDict", true);
+            controlDictPtr_ = new dictionary();
+            forAllReverse(controlDictFiles, cdfi)
             {
-                SafeFatalIOErrorInFunction
-                (
-                    ifs,
-                    "Cannot open controlDict"
-                );
+                IFstream ifs(controlDictFiles[cdfi]);
+
+                if (!ifs.good())
+                {
+                    SafeFatalIOErrorInFunction
+                    (
+                        ifs,
+                        "Cannot open controlDict"
+                    );
+                }
+                controlDictPtr_->merge(dictionary(ifs));
             }
-            controlDictPtr_->merge(dictionary(ifs));
         }
     }
 

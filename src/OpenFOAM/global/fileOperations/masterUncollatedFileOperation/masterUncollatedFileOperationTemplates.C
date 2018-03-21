@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,14 +31,16 @@ License
 template<class Type>
 Type Foam::fileOperations::masterUncollatedFileOperation::scatterList
 (
-    const UList<Type>& masterLst
+    const UList<Type>& masterLst,
+    const int tag,
+    const label comm
 ) const
 {
     // TBD: more efficient scatter
-    PstreamBuffers pBufs(UPstream::commsTypes::nonBlocking);
-    if (Pstream::master())
+    PstreamBuffers pBufs(UPstream::commsTypes::nonBlocking, tag, comm);
+    if (Pstream::master(comm))
     {
-        for (label proci = 1; proci < Pstream::nProcs(); proci++)
+        for (label proci = 1; proci < Pstream::nProcs(comm); proci++)
         {
             UOPstream os(proci, pBufs);
             os << masterLst[proci];
@@ -48,9 +50,9 @@ Type Foam::fileOperations::masterUncollatedFileOperation::scatterList
 
     Type myResult;
 
-    if (Pstream::master())
+    if (Pstream::master(comm))
     {
-        myResult = masterLst[Pstream::myProcNo()];
+        myResult = masterLst[Pstream::myProcNo(comm)];
     }
     else
     {
@@ -65,21 +67,25 @@ template<class Type, class fileOp>
 Type Foam::fileOperations::masterUncollatedFileOperation::masterOp
 (
     const fileName& fName,
-    const fileOp& fop
+    const fileOp& fop,
+    const int tag,
+    const label comm
 ) const
 {
     if (IFstream::debug)
     {
-        Pout<< "masterUncollatedFileOperation : Operation on " << fName << endl;
+        Pout<< "masterUncollatedFileOperation::masterOp : Operation "
+            << typeid(fileOp).name()
+            << " on " << fName << endl;
     }
     if (Pstream::parRun())
     {
-        List<fileName> filePaths(Pstream::nProcs());
-        filePaths[Pstream::myProcNo()] = fName;
-        Pstream::gatherList(filePaths);
+        List<fileName> filePaths(Pstream::nProcs(comm));
+        filePaths[Pstream::myProcNo(comm)] = fName;
+        Pstream::gatherList(filePaths, tag, comm);
 
-        List<Type> result(Pstream::nProcs());
-        if (Pstream::master())
+        List<Type> result(filePaths.size());
+        if (Pstream::master(comm))
         {
             result = fop(filePaths[0]);
             for (label i = 1; i < filePaths.size(); i++)
@@ -91,7 +97,7 @@ Type Foam::fileOperations::masterUncollatedFileOperation::masterOp
             }
         }
 
-        return scatterList(result);
+        return scatterList(result, tag, comm);
     }
     else
     {
@@ -105,7 +111,9 @@ Type Foam::fileOperations::masterUncollatedFileOperation::masterOp
 (
     const fileName& src,
     const fileName& dest,
-    const fileOp& fop
+    const fileOp& fop,
+    const int tag,
+    const label comm
 ) const
 {
     if (IFstream::debug)
@@ -115,16 +123,16 @@ Type Foam::fileOperations::masterUncollatedFileOperation::masterOp
     }
     if (Pstream::parRun())
     {
-        List<fileName> srcs(Pstream::nProcs());
-        srcs[Pstream::myProcNo()] = src;
-        Pstream::gatherList(srcs);
+        List<fileName> srcs(Pstream::nProcs(comm));
+        srcs[Pstream::myProcNo(comm)] = src;
+        Pstream::gatherList(srcs, tag, comm);
 
-        List<fileName> dests(Pstream::nProcs());
-        dests[Pstream::myProcNo()] = dest;
-        Pstream::gatherList(dests);
+        List<fileName> dests(srcs.size());
+        dests[Pstream::myProcNo(comm)] = dest;
+        Pstream::gatherList(dests, tag, comm);
 
-        List<Type> result(Pstream::nProcs());
-        if (Pstream::master())
+        List<Type> result(Pstream::nProcs(comm));
+        if (Pstream::master(comm))
         {
             result = fop(srcs[0], dests[0]);
             for (label i = 1; i < srcs.size(); i++)
@@ -136,7 +144,7 @@ Type Foam::fileOperations::masterUncollatedFileOperation::masterOp
             }
         }
 
-        return scatterList(result);
+        return scatterList(result, tag, comm);
     }
     else
     {
