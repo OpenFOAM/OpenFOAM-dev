@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "absorptionCoeffs.H"
 #include "IOstreams.H"
 
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
 Foam::radiation::absorptionCoeffs::~absorptionCoeffs()
@@ -40,7 +39,7 @@ void Foam::radiation::absorptionCoeffs::checkT(const scalar T) const
     if (T < Tlow_ || T > Thigh_)
     {
         WarningInFunction
-            << "usinf absCoeff out of temperature range:" << nl
+            << "using absorptionCoeffs out of temperature range:" << nl
             << "    " << Tlow_ << " -> " << Thigh_ << ";  T = " << T
             << nl << endl;
     }
@@ -72,7 +71,6 @@ void Foam::radiation::absorptionCoeffs::initialise(const dictionary& dict)
     dict.lookup("Tlow") >> Tlow_;
     dict.lookup("Thigh") >> Thigh_;
     dict.lookup("invTemp") >> invTemp_;
-
     dict.lookup("loTcoeffs") >> lowACoeffs_;
     dict.lookup("hiTcoeffs") >> highACoeffs_;
 }

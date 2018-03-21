@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,6 +198,44 @@ Foam::scalar Foam::radiation::blackBodyEmission::fLambdaT
 
 
 Foam::tmp<Foam::volScalarField>
+Foam::radiation::blackBodyEmission::deltaLambdaT
+(
+    const volScalarField& T,
+    const Vector2D<scalar>& band
+) const
+{
+    tmp<volScalarField> deltaLambdaT
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "deltaLambdaT",
+                T.mesh().time().timeName(),
+                T.mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            T.mesh(),
+            dimensionedScalar("deltaLambdaT", dimless, 1.0)
+        )
+    );
+
+    if (band != Vector2D<scalar>::one)
+    {
+        scalarField& deltaLambdaTf = deltaLambdaT.ref();
+
+        forAll(T, i)
+        {
+            deltaLambdaTf[i] = fLambdaT(band[1]*T[i]) - fLambdaT(band[0]*T[i]);
+        }
+    }
+
+    return deltaLambdaT;
+}
+
+
+Foam::tmp<Foam::volScalarField>
 Foam::radiation::blackBodyEmission::EbDeltaLambdaT
 (
     const volScalarField& T,
@@ -220,21 +258,13 @@ Foam::radiation::blackBodyEmission::EbDeltaLambdaT
         )
     );
 
-
-    if (band == Vector2D<scalar>::one)
-    {
-        return Eb;
-    }
-    else
+    if (band != Vector2D<scalar>::one)
     {
         scalarField& Ebif = Eb.ref();
 
         forAll(T, i)
         {
-            const scalar T1 = fLambdaT(band[1]*T[i]);
-            const scalar T2 = fLambdaT(band[0]*T[i]);
-
-            Ebif[i] *= T1 - T2;
+            Ebif[i] *= fLambdaT(band[1]*T[i]) - fLambdaT(band[0]*T[i]);
         }
 
         volScalarField::Boundary& EbBf = Eb.ref().boundaryFieldRef();
@@ -256,9 +286,9 @@ Foam::radiation::blackBodyEmission::EbDeltaLambdaT
                 }
             }
         }
-
-        return Eb;
     }
+
+    return Eb;
 }
 
 
