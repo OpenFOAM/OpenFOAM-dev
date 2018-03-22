@@ -1,0 +1,25 @@
+#!/usr/bin/gnuplot
+
+set terminal postscript eps monochrome
+set output "probabilityDensity.eps"
+set decimalsign "."
+
+set format x '%g'
+set format y "%.1f"
+set xtics 1 mirror
+set xlabel 'd(m)'
+set ytics 0.1 mirror
+set ylabel 'Probability density function (m^{-3})'
+
+set xrange [1:10]
+set yrange [0:0.4]
+set key left
+
+plot 'rigorous.numberDensity.dat' w l t "Number density, Vanni (2000)",\
+'rigorous.volumeDensity.dat' w l t "Volume density, Vanni (2000)",\
+'box.all.numberDensity.volume.bubbles.transposed.dat' every ::0::12 u 1:2 w p pt 1 t 'Number density, air1',\
+'box.all.numberDensity.volume.bubbles.transposed.dat' every ::13::22 u 1:2 w p pt 5 t 'Number density, air2',\
+'box.all.numberDensity.volume.bubbles.transposed.dat' every ::23::30 u 1:2 w p pt 9 t 'Number density, air3',\
+'box.all.volumeDensity.volume.bubbles.transposed.dat' every ::0::12 u 1:2 w p pt 2 t 'Volume density, air1',\
+'box.all.volumeDensity.volume.bubbles.transposed.dat' every ::13::22 u 1:2 w p pt 6 t 'Volume density, air2',\
+'box.all.volumeDensity.volume.bubbles.transposed.dat' every ::23::30 u 1:2 w p pt 10 t 'Volume density, air3'

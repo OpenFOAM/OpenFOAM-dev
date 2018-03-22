@@ -1,0 +1,11 @@
+The cases contained in this directory can be used for testing the
+populationBalanceModel class which is a part of the reactingEulerFoam framework.
+They represent single-cell setups, i.e. they solve the population balance
+equation without spatial transport. The setups already represent the
+inhomogeneous case, i.e. the populationBalance is split over multiple
+velocityGroups. This can help to identify wether the populationBalance-induced
+mass transfer terms are handled correctly. The cases can also be used to study
+the influence of certain parameters on the form of the size distribution, before
+running a simulation with spatial transport. Further test cases are contained in
+
+test/multiphase/reactingTwoPhaseEulerFoam/populationBalanceModeling

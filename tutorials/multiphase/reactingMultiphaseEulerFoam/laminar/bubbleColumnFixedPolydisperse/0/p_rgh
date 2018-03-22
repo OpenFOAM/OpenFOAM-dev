@@ -29,9 +29,9 @@ boundaryField
     {
         type            prghTotalPressure;
         p0              $internalField;
-        U               U.airII;
-        phi             phi.airII;
-        rho             thermo:rho.airII;
+        U               U.air2;
+        phi             phi.air2;
+        rho             thermo:rho.air2;
         value           $internalField;
     }
     walls

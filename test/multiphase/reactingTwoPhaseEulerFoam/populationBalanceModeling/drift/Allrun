@@ -1,0 +1,39 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Set application name
+application=`getApplication`
+
+runApplication blockMesh
+runApplication $application
+
+# Get and transpose results
+cp postProcessing/box.all.numberDensity.volume.bubbles/0/box.all.numberDensity.volume.bubbles.dat .
+
+sed -i -e 1d box.all.numberDensity.volume.bubbles.dat
+sed -i -e 's/# /#/g' box.all.numberDensity.volume.bubbles.dat
+
+awk '
+{
+    for (i=1; i<=NF; i++)  {
+        a[NR,i] = $i
+    }
+}
+NF>p { p = NF }
+END {
+    for(j=1; j<=p; j++) {
+        str=a[1,j]
+        for(i=2; i<=NR; i++){
+            str=str" "a[i,j];
+        }
+        print str
+    }
+}' box.all.numberDensity.volume.bubbles.dat > box.all.numberDensity.volume.bubbles.transposed.dat
+
+# Create plot
+./plot
+
+#------------------------------------------------------------------------------

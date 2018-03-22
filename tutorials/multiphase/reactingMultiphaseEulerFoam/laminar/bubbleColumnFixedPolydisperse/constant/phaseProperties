@@ -17,9 +17,9 @@ FoamFile
 
 type heatAndMomentumTransferMultiphaseSystem;
 
-phases (airI airII water);
+phases (air1 air2 water);
 
-airI
+air1
 {
     type            purePhaseModel;
     diameterModel   isothermal;
@@ -32,7 +32,7 @@ airI
     residualAlpha   1e-6;
 }
 
-airII
+air2
 {
     type            purePhaseModel;
     diameterModel   isothermal;
@@ -62,10 +62,10 @@ blending
     default
     {
         type            linear;
-        minFullyContinuousAlpha.airI 0.7;
-        minPartlyContinuousAlpha.airI 0.5;
-        minFullyContinuousAlpha.airII 0.7;
-        minPartlyContinuousAlpha.airII 0.5;
+        minFullyContinuousAlpha.air1 0.7;
+        minPartlyContinuousAlpha.air1 0.5;
+        minFullyContinuousAlpha.air2 0.7;
+        minPartlyContinuousAlpha.air2 0.5;
         minFullyContinuousAlpha.water 0.7;
         minPartlyContinuousAlpha.water 0.5;
     }
@@ -73,13 +73,13 @@ blending
 
 surfaceTension
 (
-    (airI and water)
+    (air1 and water)
     {
         type            constant;
         sigma           0.07;
     }
 
-    (airII and water)
+    (air2 and water)
     {
         type            constant;
         sigma           0.07;
@@ -91,25 +91,25 @@ interfaceCompression
 
 aspectRatio
 (
-    (airI in water)
+    (air1 in water)
     {
         type            constant;
         E0              1.0;
     }
 
-    (water in airI)
+    (water in air1)
     {
         type            constant;
         E0              1.0;
     }
 
-    (airII in water)
+    (air2 in water)
     {
         type            constant;
         E0              1.0;
     }
 
-    (water in airII)
+    (water in air2)
     {
         type            constant;
         E0              1.0;
@@ -118,7 +118,7 @@ aspectRatio
 
 drag
 (
-    (airI in water)
+    (air1 in water)
     {
         type            SchillerNaumann;
         residualRe      1e-3;
@@ -128,7 +128,7 @@ drag
         }
     }
 
-    (water in airI)
+    (water in air1)
     {
         type            SchillerNaumann;
         residualRe      1e-3;
@@ -138,7 +138,7 @@ drag
         }
     }
 
-    (airI and water)
+    (air1 and water)
     {
         type            segregated;
         m               0.5;
@@ -149,7 +149,7 @@ drag
         }
     }
 
-    (airII in water)
+    (air2 in water)
     {
         type            SchillerNaumann;
         residualRe      1e-3;
@@ -159,7 +159,7 @@ drag
         }
     }
 
-    (water in airII)
+    (water in air2)
     {
         type            SchillerNaumann;
         residualRe      1e-3;
@@ -169,7 +169,7 @@ drag
         }
     }
 
-    (airII and water)
+    (air2 and water)
     {
         type            segregated;
         m               0.5;
@@ -180,7 +180,7 @@ drag
         }
     }
 
-    (airI in airII)
+    (air1 in air2)
     {
         type            SchillerNaumann;
         residualRe      1e-3;
@@ -190,7 +190,7 @@ drag
         }
     }
 
-    (airII in airI)
+    (air2 in air1)
     {
         type            SchillerNaumann;
 
@@ -201,7 +201,7 @@ drag
         }
     }
 
-    (airI and airII)
+    (air1 and air2)
     {
         type            segregated;
         m               0.5;
@@ -215,37 +215,37 @@ drag
 
 virtualMass
 (
-    (airI in water)
+    (air1 in water)
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (water in airI)
+    (water in air1)
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (airII in water)
+    (air2 in water)
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (water in airII)
+    (water in air2)
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (airI in airII)
+    (air1 in air2)
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (airI in airII)
+    (air1 in air2)
     {
         type            constantCoefficient;
         Cvm             0.5;
@@ -254,37 +254,37 @@ virtualMass
 
 heatTransfer
 (
-    (airI in water)
+    (air1 in water)
     {
         type            RanzMarshall;
         residualAlpha   1e-4;
     }
 
-    (water in airI)
+    (water in air1)
     {
         type            RanzMarshall;
         residualAlpha   1e-4;
     }
 
-    (airII in water)
+    (air2 in water)
     {
         type            RanzMarshall;
         residualAlpha   1e-4;
     }
 
-    (water in airII)
+    (water in air2)
     {
         type            RanzMarshall;
         residualAlpha   1e-4;
     }
 
-    (airI in airII)
+    (air1 in air2)
     {
         type            RanzMarshall;
         residualAlpha   1e-4;
     }
 
-    (airII in airI)
+    (air2 in air1)
     {
         type            RanzMarshall;
         residualAlpha   1e-4;

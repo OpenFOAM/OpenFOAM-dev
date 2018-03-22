@@ -60,14 +60,14 @@ functions0
         writeControl    writeTime;
         fields
         (
-            U.airI
+            U.air1
             {
                  mean        on;
                  prime2Mean  off;
                  base        time;
             }
 
-            U.airII
+            U.air2
             {
                  mean        on;
                  prime2Mean  off;
@@ -81,14 +81,14 @@ functions0
                  base        time;
             }
 
-            alpha.airI
+            alpha.air1
             {
                  mean        on;
                  prime2Mean  off;
                  base        time;
             }
 
-            alpha.airII
+            alpha.air2
             {
                  mean        on;
                  prime2Mean  off;

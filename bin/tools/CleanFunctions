@@ -39,7 +39,9 @@ cleanTimeDirectories()
         rm -rf ./${timeDir} ./-${timeDir} > /dev/null 2>&1
         zeros="0$zeros"
     done
-    rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./log-* ./logSummary.* ./*.xml ./ParaView* ./paraFoam* ./*.OpenFOAM ./*.blockMesh ./.setSet > /dev/null 2>&1
+    rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./log-* ./logSummary.* ./*.xml \
+       ./*.dat ./*.eps ./ParaView* ./paraFoam* ./*.OpenFOAM ./*.blockMesh \
+       ./.setSet > /dev/null 2>&1
 }
 
 cleanDynamicCode()

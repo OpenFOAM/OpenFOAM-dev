@@ -1,0 +1,211 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type populationBalanceMultiphaseSystem;
+
+phases (air1 air2 air3 water);
+
+populationBalances (bubbles);
+
+air1
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        formFactor      1;
+
+        sizeGroups
+        (
+            f0 {d  2.2723832645E-02; value 0.0;}
+            f1 {d  2.6012294874E-02; value 0.0;}
+            f2 {d  2.9776644423E-02; value 0.0;}
+            f3 {d  3.4085748967E-02; value 0.0;}
+            f4 {d  3.9018442311E-02; value 0.0;}
+            f5 {d  4.4664966635E-02; value 0.0;}
+            f6 {d  5.1128623451E-02; value 0.0;}
+            f7 {d  5.8527663466E-02; value 0.0;}
+            f8 {d  6.6997449953E-02; value 0.0;}
+            f9 {d  7.6692935176E-02; value 0.0;}
+            f10{d  8.7791495199E-02; value 0.0;}
+            f11{d  1.0049617493E-01; value 0.0;}
+            f12{d  1.1503940276E-01; value 0.0;}
+            f13{d  1.3168724280E-01; value 0.0;}
+            f14{d  1.5074426239E-01; value 0.0;}
+            f15{d  1.7255910415E-01; value 0.0;}
+            f16{d  1.9753086420E-01; value 0.0;}
+            f17{d  2.2611639359E-01; value 0.0;}
+            f18{d  2.5883865622E-01; value 0.0;}
+            f19{d  2.9629629630E-01; value 1.0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+air2
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        formFactor      1;
+
+        sizeGroups
+        (
+            f20{d  3.3917459039E-01; value 1.0;}
+            f21{d  3.8825798433E-01; value 0.0;}
+            f22{d  4.4444444444E-01; value 0.0;}
+            f23{d  5.0876188558E-01; value 0.0;}
+            f24{d  5.8238697649E-01; value 0.0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+air3
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        formFactor      1;
+
+        sizeGroups
+        (
+            f25{d  6.6666666667E-01; value 0.0;}
+            f26{d  7.6314282837E-01; value 0.0;}
+            f27{d  8.7358046474E-01; value 0.0;}
+            f28{d  1.0;              value 1.0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-6;
+}
+
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase water;
+
+        coalescenceModels
+        ();
+
+        binaryBreakupModels
+        (
+            powerLawUniformBinary
+            {
+                power   2.0;
+            }
+        );
+
+        breakupModels
+        ();
+
+        driftModels
+        ();
+
+        nucleationModels
+        ();
+    }
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase water;
+    }
+}
+
+surfaceTension
+();
+
+interfaceCompression
+();
+
+aspectRatio
+();
+
+drag
+();
+
+virtualMass
+();
+
+heatTransfer.air1
+();
+
+heatTransfer.air2
+();
+
+heatTransfer.air3
+();
+
+heatTransfer.water
+();
+
+massTransfer.air1
+();
+
+massTransfer.air2
+();
+
+massTransfer.air3
+();
+
+massTransfer.water
+();
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+();
+
+bubbleInducedTurbulence
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //

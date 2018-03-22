@@ -1,0 +1,47 @@
+#!/usr/bin/gnuplot
+
+set terminal postscript eps monochrome
+set output "numberDensity.eps"
+set decimalsign "."
+
+set format xy '%g'
+set xtics 1e2 mirror
+set xlabel 'v(m^{3})'
+set ytics 1e5 mirror
+set ylabel 'n(m^{-3}m^{-3})'
+
+set logscale xy
+set xrange [1e-5:1e2]
+set yrange [1e-15:100]
+set key center left
+
+C = 1
+N0 = 2.5
+v0 = 0.01
+
+# Dimensionless volume
+X(x) = x/v0
+
+# Initial condition
+n0(x) = (N0/v0)*X(x)*exp(-X(x))
+
+T(t) = C*N0*t
+
+# For solution of quadratic saddle point equation
+p(x) = -1/X(x)
+q(t) = -(T(t)/(T(t) + 2))
+
+# Saddle point calculation
+y_s(t,x) = -p(x)/2 + sqrt((p(x)/2)**2 - q(T(t)))
+
+# Dimensionless spectrum function
+phi(x,t) = (8*exp((y_s(t,x) - 1)*X(x)*2))/(((T(t) + 2)**2)*y_s(t,x)*(4*pi*(2 - 1/(y_s(t,x)*X(x)))))
+
+# Number density at time t
+n(x,t) = (N0/v0)*phi(x,t)
+
+plot n0(x) ls -1 t 'Initial Condition',\
+n(x,10.0) ls 2 lc rgb 'black' t 'Scott (1968)',\
+'box.all.numberDensity.volume.bubbles.transposed.dat' every ::0::46 u 1:2 w p pt 1 t 'air1',\
+'box.all.numberDensity.volume.bubbles.transposed.dat' every ::47::55 u 1:2 w p pt 5 t 'air2',\
+'box.all.numberDensity.volume.bubbles.transposed.dat' every ::56::70 u 1:2 w p pt 9 t 'air3'

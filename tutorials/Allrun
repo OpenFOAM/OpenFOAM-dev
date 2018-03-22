@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -32,6 +32,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+dir=${PWD##*/}
 
 # logReport <logfile>
 # Extracts useful info from log file.
@@ -67,7 +69,7 @@ logReport()
 }
 
 
-# Recursively run all tutorials
+# Recursively run all cases
 foamRunTutorials -test -skipFirst
 
 

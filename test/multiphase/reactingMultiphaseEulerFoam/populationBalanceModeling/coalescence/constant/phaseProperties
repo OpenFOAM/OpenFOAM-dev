@@ -1,0 +1,253 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type populationBalanceMultiphaseSystem;
+
+phases (air1 air2 air3 water);
+
+populationBalances (bubbles);
+
+air1
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        formFactor      1;
+
+        sizeGroups
+        (
+            f0  {d  0.021336488 ; value 0.0000000005    ;}
+            f1  {d  0.022984035 ; value 0.0000000002    ;}
+            f2  {d  0.024758801 ; value 0.0000000004    ;}
+            f3  {d  0.02667061  ; value 0.0000000008    ;}
+            f4  {d  0.028730043 ; value 0.0000000015    ;}
+            f5  {d  0.030948501 ; value 0.0000000029    ;}
+            f6  {d  0.033338262 ; value 0.0000000057    ;}
+            f7  {d  0.035912554 ; value 0.0000000110    ;}
+            f8  {d  0.038685626 ; value 0.0000000215    ;}
+            f9  {d  0.041672828 ; value 0.0000000420    ;}
+            f10 {d  0.044890693 ; value 0.0000000819    ;}
+            f11 {d  0.048357033 ; value 0.0000001595    ;}
+            f12 {d  0.052091034 ; value 0.0000003107    ;}
+            f13 {d  0.056113366 ; value 0.0000006046    ;}
+            f14 {d  0.060446291 ; value 0.0000011757    ;}
+            f15 {d  0.065113793 ; value 0.0000022836    ;}
+            f16 {d  0.070141707 ; value 0.0000044295    ;}
+            f17 {d  0.075557864 ; value 0.0000085770    ;}
+            f18 {d  0.081392241 ; value 0.0000165724    ;}
+            f19 {d  0.087677134 ; value 0.0000319345    ;}
+            f20 {d  0.09444733  ; value 0.0000613299    ;}
+            f21 {d  0.101740302 ; value 0.0001172884    ;}
+            f22 {d  0.109596418 ; value 0.0002231264    ;}
+            f23 {d  0.118059162 ; value 0.0004216851    ;}
+            f24 {d  0.127175377 ; value 0.0007904101    ;}
+            f25 {d  0.136995522 ; value 0.0014663924    ;}
+            f26 {d  0.147573953 ; value 0.0026857456    ;}
+            f27 {d  0.158969221 ; value 0.0048406166    ;}
+            f28 {d  0.171244403 ; value 0.0085509222    ;}
+            f29 {d  0.184467441 ; value 0.0147306117    ;}
+            f30 {d  0.198711527 ; value 0.0245922381    ;}
+            f31 {d  0.214055503 ; value 0.0394763633    ;}
+            f32 {d  0.230584301 ; value 0.0603362728    ;}
+            f33 {d  0.248389408 ; value 0.0867356518    ;}
+            f34 {d  0.267569379 ; value 0.1154885945    ;}
+            f35 {d  0.288230376 ; value 0.1397279858    ;}
+            f36 {d  0.310486761 ; value 0.1499792809    ;}
+            f37 {d  0.334461724 ; value 0.1386064986    ;}
+            f38 {d  0.36028797  ; value 0.1062408386    ;}
+            f39 {d  0.388108451 ; value 0.0644531062    ;}
+            f40 {d  0.418077155 ; value 0.0291911897    ;}
+            f41 {d  0.450359963 ; value 0.0091744326    ;}
+            f42 {d  0.485135563 ; value 0.0018262321    ;}
+            f43 {d  0.522596444 ; value 0.0002053972    ;}
+            f44 {d  0.562949953 ; value 0.0000113164    ;}
+            f45 {d  0.606419454 ; value 0.0000002555    ;}
+            f46 {d  0.653245554 ; value 0.0000000019    ;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+air2
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        formFactor      1;
+
+        sizeGroups
+        (
+            f47 {d  0.703687442 ; value 1.0000000000    ;}
+            f48 {d  0.758024318 ; value 0.0000000000    ;}
+            f49 {d  0.816556943 ; value 0.0000000000    ;}
+            f50 {d  0.879609302 ; value 0.0000000000    ;}
+            f51 {d  0.947530397 ; value 0.0000000000    ;}
+            f52 {d  1.020696179 ; value 0.0000000000    ;}
+            f53 {d  1.099511628 ; value 0.0000000000    ;}
+            f54 {d  1.184412996 ; value 0.0000000000    ;}
+            f55 {d  1.275870223 ; value 0.0000000000    ;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+air3
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        formFactor      1;
+
+        sizeGroups
+        (
+            f56 {d  1.374389535 ; value 1.0000000000    ;}
+            f57 {d  1.480516246 ; value 0.0000000000    ;}
+            f58 {d  1.594837779 ; value 0.0000000000    ;}
+            f59 {d  1.717986918 ; value 0.0000000000    ;}
+            f60 {d  1.850645307 ; value 0.0000000000    ;}
+            f61 {d  1.993547224 ; value 0.0000000000    ;}
+            f62 {d  2.147483648 ; value 0.0000000000    ;}
+            f63 {d  2.313306634 ; value 0.0000000000    ;}
+            f64 {d  2.49193403  ; value 0.0000000000    ;}
+            f65 {d  2.68435456  ; value 0.0000000000    ;}
+            f66 {d  2.891633292 ; value 0.0000000000    ;}
+            f67 {d  3.114917538 ; value 0.0000000000    ;}
+            f68 {d  3.3554432   ; value 0.0000000000    ;}
+            f69 {d  3.614541615 ; value 0.0000000000    ;}
+            f70 {d  3.893646922 ; value 0.0000000000    ;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-6;
+}
+
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase water;
+
+        coalescenceModels
+        (
+            constant
+            {
+                rate 1.0;
+            }
+        );
+
+        binaryBreakupModels
+        ();
+
+        breakupModels
+        ();
+
+        driftModels
+        ();
+
+        nucleationModels
+        ();
+    }
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase water;
+    }
+}
+
+surfaceTension
+();
+
+interfaceCompression
+();
+
+aspectRatio
+();
+
+drag
+();
+
+virtualMass
+();
+
+heatTransfer.air1
+();
+
+heatTransfer.air2
+();
+
+heatTransfer.air3
+();
+
+heatTransfer.water
+();
+
+massTransfer.air1
+();
+
+massTransfer.air2
+();
+
+massTransfer.air3
+();
+
+massTransfer.water
+();
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+();
+
+bubbleInducedTurbulence
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //
