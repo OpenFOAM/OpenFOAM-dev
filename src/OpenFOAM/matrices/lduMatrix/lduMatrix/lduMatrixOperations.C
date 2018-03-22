@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,11 @@ Description
 
 void Foam::lduMatrix::sumDiag()
 {
+    if (!lowerPtr_ && !upperPtr_)
+    {
+        return;
+    }
+
     const scalarField& Lower = const_cast<const lduMatrix&>(*this).lower();
     const scalarField& Upper = const_cast<const lduMatrix&>(*this).upper();
     scalarField& Diag = diag();
@@ -49,6 +54,11 @@ void Foam::lduMatrix::sumDiag()
 
 void Foam::lduMatrix::negSumDiag()
 {
+    if (!lowerPtr_ && !upperPtr_)
+    {
+        return;
+    }
+
     const scalarField& Lower = const_cast<const lduMatrix&>(*this).lower();
     const scalarField& Upper = const_cast<const lduMatrix&>(*this).upper();
     scalarField& Diag = diag();
@@ -69,6 +79,11 @@ void Foam::lduMatrix::sumMagOffDiag
     scalarField& sumOff
 ) const
 {
+    if (!lowerPtr_ && !upperPtr_)
+    {
+        return;
+    }
+
     const scalarField& Lower = const_cast<const lduMatrix&>(*this).lower();
     const scalarField& Upper = const_cast<const lduMatrix&>(*this).upper();
 

@@ -30,6 +30,11 @@ License
 template<class Type, class DType, class LUType>
 void Foam::LduMatrix<Type, DType, LUType>::sumDiag()
 {
+    if (!lowerPtr_ && !upperPtr_)
+    {
+        return;
+    }
+
     const Field<LUType>& Lower = const_cast<const LduMatrix&>(*this).lower();
     const Field<LUType>& Upper = const_cast<const LduMatrix&>(*this).upper();
     Field<DType>& Diag = diag();
@@ -48,6 +53,11 @@ void Foam::LduMatrix<Type, DType, LUType>::sumDiag()
 template<class Type, class DType, class LUType>
 void Foam::LduMatrix<Type, DType, LUType>::negSumDiag()
 {
+    if (!lowerPtr_ && !upperPtr_)
+    {
+        return;
+    }
+
     const Field<LUType>& Lower = const_cast<const LduMatrix&>(*this).lower();
     const Field<LUType>& Upper = const_cast<const LduMatrix&>(*this).upper();
     Field<DType>& Diag = diag();
@@ -69,6 +79,11 @@ void Foam::LduMatrix<Type, DType, LUType>::sumMagOffDiag
     Field<LUType>& sumOff
 ) const
 {
+    if (!lowerPtr_ && !upperPtr_)
+    {
+        return;
+    }
+
     const Field<LUType>& Lower = const_cast<const LduMatrix&>(*this).lower();
     const Field<LUType>& Upper = const_cast<const LduMatrix&>(*this).upper();
 
