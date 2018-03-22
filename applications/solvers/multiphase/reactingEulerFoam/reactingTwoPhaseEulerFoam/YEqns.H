@@ -5,44 +5,41 @@
     phaseSystem::massTransferTable&
         massTransfer(massTransferPtr());
 
-    PtrList<volScalarField>& Y1 = phase1.Y();
-    PtrList<volScalarField>& Y2 = phase2.Y();
-
-    forAll(Y1, i)
+    if (!phase1.pure())
     {
-        tmp<fvScalarMatrix> Y1iEqn(phase1.YiEqn(Y1[i]));
+        UPtrList<volScalarField>& Y1 = phase1.YActiveRef();
 
-        if (Y1iEqn.valid())
+        forAll(Y1, i)
         {
-            Y1iEqn =
+            fvScalarMatrix Y1iEqn
             (
-                Y1iEqn
+                phase1.YiEqn(Y1[i])
              ==
                *massTransfer[Y1[i].name()]
               + fvOptions(alpha1, rho1, Y1[i])
             );
 
-            Y1iEqn->relax();
-            Y1iEqn->solve(mesh.solver("Yi"));
+            Y1iEqn.relax();
+            Y1iEqn.solve(mesh.solver("Yi"));
         }
     }
 
-    forAll(Y2, i)
+    if (!phase2.pure())
     {
-        tmp<fvScalarMatrix> Y2iEqn(phase2.YiEqn(Y2[i]));
+        UPtrList<volScalarField>& Y2 = phase2.YActiveRef();
 
-        if (Y2iEqn.valid())
+        forAll(Y2, i)
         {
-            Y2iEqn =
+            fvScalarMatrix Y2iEqn
             (
-                Y2iEqn
+                phase2.YiEqn(Y2[i])
              ==
                *massTransfer[Y2[i].name()]
               + fvOptions(alpha2, rho2, Y2[i])
             );
 
-            Y2iEqn->relax();
-            Y2iEqn->solve(mesh.solver("Yi"));
+            Y2iEqn.relax();
+            Y2iEqn.solve(mesh.solver("Yi"));
         }
     }
 

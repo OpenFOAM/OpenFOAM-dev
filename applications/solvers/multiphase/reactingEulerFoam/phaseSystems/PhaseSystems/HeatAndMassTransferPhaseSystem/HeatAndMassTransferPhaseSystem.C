@@ -132,86 +132,6 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-bool
-Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::transfersMass() const
-{
-    return true;
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::dmdt
-(
-    const phasePairKey& key
-) const
-{
-    return tmp<Foam::volScalarField>
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "dmdt",
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::dmdt
-(
-    const Foam::phaseModel& phase
-) const
-{
-    tmp<volScalarField> tDmdt
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("dmdt", phase.name()),
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
-
-    return tDmdt;
-}
-
-
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
-Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
-{
-    autoPtr<phaseSystem::momentumTransferTable>
-        eqnsPtr(BasePhaseSystem::momentumTransfer());
-
-    return eqnsPtr;
-}
-
-
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
-Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransferf() const
-{
-    autoPtr<phaseSystem::momentumTransferTable>
-        eqnsPtr(BasePhaseSystem::momentumTransferf());
-
-    return eqnsPtr;
-}
-
-
-template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
 Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
 {
@@ -328,7 +248,6 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::massTransfer() const
 template<class BasePhaseSystem>
 void Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::correctThermo()
 {
-
     phaseSystem::correctThermo();
 
     forAllConstIter

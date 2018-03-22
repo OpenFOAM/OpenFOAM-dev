@@ -19,7 +19,7 @@ dimensionedScalar pMin
 
 #include "gh.H"
 
-volScalarField& p = fluid.phase1().thermo().p();
+volScalarField& p = fluid.phase1().thermoRef().p();
 
 Info<< "Reading field p_rgh\n" << endl;
 volScalarField p_rgh

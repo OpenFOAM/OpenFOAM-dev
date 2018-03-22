@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ License
 #include "InertPhaseModel.H"
 #include "ReactingPhaseModel.H"
 #include "MovingPhaseModel.H"
+#include "StationaryPhaseModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,6 +70,30 @@ namespace Foam
     );
 
     typedef
+        AnisothermalPhaseModel
+        <
+            PurePhaseModel
+            <
+                InertPhaseModel
+                <
+                    StationaryPhaseModel
+                    <
+                        ThermoPhaseModel<phaseModel, rhoThermo>
+                    >
+                >
+            >
+        >
+        pureStationaryPhaseModel;
+
+    addNamedToRunTimeSelectionTable
+    (
+        phaseModel,
+        pureStationaryPhaseModel,
+        phaseSystem,
+        pureStationaryPhaseModel
+    );
+
+    typedef
         IsothermalPhaseModel
         <
             PurePhaseModel
@@ -90,6 +115,30 @@ namespace Foam
         pureIsothermalPhaseModel,
         phaseSystem,
         pureIsothermalPhaseModel
+    );
+
+    typedef
+        IsothermalPhaseModel
+        <
+            PurePhaseModel
+            <
+                InertPhaseModel
+                <
+                    StationaryPhaseModel
+                    <
+                        ThermoPhaseModel<phaseModel, rhoThermo>
+                    >
+                >
+            >
+        >
+        pureStationaryIsothermalPhaseModel;
+
+    addNamedToRunTimeSelectionTable
+    (
+        phaseModel,
+        pureStationaryIsothermalPhaseModel,
+        phaseSystem,
+        pureStationaryIsothermalPhaseModel
     );
 
     typedef

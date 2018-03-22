@@ -1,8 +1,5 @@
+// Face volume fractions
 PtrList<surfaceScalarField> alphafs(phases.size());
-PtrList<volScalarField> rAUs(phases.size());
-PtrList<surfaceScalarField> alpharAUfs(phases.size());
-
-// Diagonal coefficients
 forAll(phases, phasei)
 {
     phaseModel& phase = phases[phasei];
@@ -10,20 +7,37 @@ forAll(phases, phasei)
 
     alphafs.set(phasei, fvc::interpolate(alpha).ptr());
     alphafs[phasei].rename("pEqn" + alphafs[phasei].name());
+}
+
+// Diagonal coefficients
+PtrList<volScalarField> rAUs(phases.size());
+forAll(fluid.movingPhases(), movingPhasei)
+{
+    phaseModel& phase = fluid.movingPhases()[movingPhasei];
+    const volScalarField& alpha = phase;
 
     rAUs.set
     (
-        phasei,
+        phase.index(),
         new volScalarField
         (
             IOobject::groupName("rAU", phase.name()),
             1.0
            /(
-               UEqns[phasei].A()
+               UEqns[phase.index()].A()
              + byDt(max(phase.residualAlpha() - alpha, scalar(0))*phase.rho())
             )
         )
     );
+}
+fluid.fillFields("rAU", dimTime/dimDensity, rAUs);
+
+// Phase diagonal coefficients
+PtrList<surfaceScalarField> alpharAUfs(phases.size());
+forAll(phases, phasei)
+{
+    phaseModel& phase = phases[phasei];
+    const volScalarField& alpha = phase;
 
     alpharAUfs.set
     (
@@ -44,6 +58,13 @@ while (pimple.correct())
 
     // Correct p_rgh for consistency with p and the updated densities
     p_rgh = p - rho*gh;
+
+    // Correct fixed-flux BCs to be consistent with the velocity BCs
+    forAll(fluid.movingPhases(), movingPhasei)
+    {
+        phaseModel& phase = fluid.movingPhases()[movingPhasei];
+        MRF.correctBoundaryFlux(phase.U(), phase.phiRef());
+    }
 
     // Combined buoyancy and force fluxes
     PtrList<surfaceScalarField> phigFs(phases.size());
@@ -85,17 +106,14 @@ while (pimple.correct())
         // Correction force fluxes
         PtrList<surfaceScalarField> ddtCorrByAs(fluid.ddtCorrByAs(rAUs));
 
-        forAll(phases, phasei)
+        forAll(fluid.movingPhases(), movingPhasei)
         {
-            phaseModel& phase = phases[phasei];
+            phaseModel& phase = fluid.movingPhases()[movingPhasei];
             const volScalarField& alpha = phase;
-
-            // Correct fixed-flux BCs to be consistent with the velocity BCs
-            MRF.correctBoundaryFlux(phase.U(), phase.phi());
 
             HbyAs.set
             (
-                phasei,
+                phase.index(),
                 new volVectorField
                 (
                     IOobject::groupName("HbyA", phase.name()),
@@ -103,31 +121,33 @@ while (pimple.correct())
                 )
             );
 
-            HbyAs[phasei] =
-                rAUs[phasei]
+            HbyAs[phase.index()] =
+                rAUs[phase.index()]
                *(
-                    UEqns[phasei].H()
+                    UEqns[phase.index()].H()
                   + byDt
                     (
                         max(phase.residualAlpha() - alpha, scalar(0))
                        *phase.rho()
                     )
-                   *phase.U().oldTime()
+                   *phase.U()().oldTime()
                 );
 
             phiHbyAs.set
             (
-                phasei,
+                phase.index(),
                 new surfaceScalarField
                 (
                     IOobject::groupName("phiHbyA", phase.name()),
-                    fvc::flux(HbyAs[phasei])
-                  - phigFs[phasei]
-                  - ddtCorrByAs[phasei]
+                    fvc::flux(HbyAs[phase.index()])
+                  - phigFs[phase.index()]
+                  - ddtCorrByAs[phase.index()]
                 )
             );
         }
     }
+    fluid.fillFields("HbyA", dimVelocity, HbyAs);
+    fluid.fillFields("phiHbyA", dimForce/dimDensity/dimVelocity, phiHbyAs);
 
     // Add explicit drag forces and fluxes if not doing partial elimination
     if (!partialElimination)
@@ -211,7 +231,8 @@ while (pimple.correct())
         forAll(phases, phasei)
         {
             phaseModel& phase = phases[phasei];
-            phib += alphafs[phasei].boundaryField()*phase.phi().boundaryField();
+            phib +=
+                alphafs[phasei].boundaryField()*phase.phi()().boundaryField();
         }
 
         setSnGrad<fixedFluxPressureFvPatchScalarField>
@@ -225,11 +246,12 @@ while (pimple.correct())
 
     // Compressible pressure equations
     PtrList<fvScalarMatrix> pEqnComps(phases.size());
+    PtrList<volScalarField> dmdts(fluid.dmdts());
     forAll(phases, phasei)
     {
         phaseModel& phase = phases[phasei];
         const volScalarField& alpha = phase;
-        volScalarField& rho = phase.thermo().rho();
+        volScalarField& rho = phase.thermoRef().rho();
 
         if (phase.compressible())
         {
@@ -246,7 +268,7 @@ while (pimple.correct())
                     phasei,
                     (
                         (
-                            phase.continuityError()
+                            fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
                           - fvc::Sp
                             (
                                 fvc::ddt(alpha) + fvc::div(phase.alphaPhi()),
@@ -274,7 +296,7 @@ while (pimple.correct())
                     phasei,
                     (
                         (
-                            phase.continuityError()
+                            fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
                           - fvc::Sp
                             (
                                 (fvc::ddt(alpha) + fvc::div(phase.alphaPhi())),
@@ -287,27 +309,38 @@ while (pimple.correct())
                 );
             }
         }
-        else
-        {
-            pEqnComps.set
-            (
-                phasei,
-                fvm::Su(-(fvOptions(alpha, rho)&rho)/rho, p_rgh).ptr()
-            );
-        }
 
-        if (fluid.transfersMass())
+        // Add option sources
+        if (fvOptions.appliesToField(rho.name()))
         {
+            tmp<fvScalarMatrix> optEqn = fvOptions(alpha, rho);
             if (pEqnComps.set(phasei))
             {
-                pEqnComps[phasei] -= fluid.dmdt(phase)/rho;
+                pEqnComps[phasei] -= (optEqn&rho)/rho;
             }
             else
             {
                 pEqnComps.set
                 (
                     phasei,
-                    fvm::Su(-fluid.dmdt(phase)/rho, p_rgh)
+                    fvm::Su(- (optEqn&rho)/rho, p_rgh).ptr()
+                );
+            }
+        }
+
+        // Add mass transfer
+        if (dmdts.set(phasei))
+        {
+            if (pEqnComps.set(phasei))
+            {
+                pEqnComps[phasei] -= dmdts[phasei]/rho;
+            }
+            else
+            {
+                pEqnComps.set
+                (
+                    phasei,
+                    fvm::Su(- dmdts[phasei]/rho, p_rgh)
                 );
             }
         }
@@ -351,16 +384,18 @@ while (pimple.correct())
 
             surfaceScalarField mSfGradp("mSfGradp", pEqnIncomp.flux()/rAUf);
 
-            forAll(phases, phasei)
+            forAll(fluid.movingPhases(), movingPhasei)
             {
-                phaseModel& phase = phases[phasei];
+                phaseModel& phase = fluid.movingPhases()[movingPhasei];
 
-                phase.phi() = phiHbyAs[phasei] + alpharAUfs[phasei]*mSfGradp;
+                phase.phiRef() =
+                    phiHbyAs[phase.index()]
+                  + alpharAUfs[phase.index()]*mSfGradp;
 
                 // Set the phase dilatation rates
-                if (pEqnComps.set(phasei))
+                if (pEqnComps.set(phase.index()))
                 {
-                    phase.divU(-pEqnComps[phasei] & p_rgh);
+                    phase.divU(-pEqnComps[phase.index()] & p_rgh);
                 }
             }
 
@@ -369,16 +404,16 @@ while (pimple.correct())
 
             mSfGradp = pEqnIncomp.flux()/rAUf;
 
-            forAll(phases, phasei)
+            forAll(fluid.movingPhases(), movingPhasei)
             {
-                phaseModel& phase = phases[phasei];
+                phaseModel& phase = fluid.movingPhases()[movingPhasei];
 
-                phase.U() =
-                    HbyAs[phasei]
+                phase.URef() =
+                    HbyAs[phase.index()]
                   + fvc::reconstruct
                     (
-                        alpharAUfs[phasei]*mSfGradp
-                      - phigFs[phasei]
+                        alpharAUfs[phase.index()]*mSfGradp
+                      - phigFs[phase.index()]
                     );
             }
 
@@ -387,12 +422,12 @@ while (pimple.correct())
                 fluid.partialElimination(rAUs);
             }
 
-            forAll(phases, phasei)
+            forAll(fluid.movingPhases(), movingPhasei)
             {
-                phaseModel& phase = phases[phasei];
+                phaseModel& phase = fluid.movingPhases()[movingPhasei];
 
-                phase.U().correctBoundaryConditions();
-                fvOptions.correct(phase.U());
+                phase.URef().correctBoundaryConditions();
+                fvOptions.correct(phase.URef());
             }
         }
     }
@@ -407,7 +442,7 @@ while (pimple.correct())
     forAll(phases, phasei)
     {
         phaseModel& phase = phases[phasei];
-        phase.thermo().rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
+        phase.thermoRef().rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
     }
 
     // Correct p_rgh for consistency with p and the updated densities

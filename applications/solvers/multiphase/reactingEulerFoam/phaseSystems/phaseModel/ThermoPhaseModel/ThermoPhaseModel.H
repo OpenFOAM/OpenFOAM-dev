@@ -49,7 +49,7 @@ namespace Foam
 class rhoThermo;
 
 /*---------------------------------------------------------------------------*\
-                           Class phaseModel Declaration
+                      Class ThermoPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel, class ThermoType>
@@ -85,12 +85,14 @@ public:
 
         // Thermo
 
-            //- Return const access to the thermophysical model
+            //- Return whether the phase is compressible
+            virtual bool compressible() const;
+
+            //- Return the thermophysical model
             virtual const rhoThermo& thermo() const;
 
-            //- Return non-const access to the thermophysical model
-            //  for correction
-            virtual rhoThermo& thermo();
+            //- Access the thermophysical model
+            virtual rhoThermo& thermoRef();
 
             //- Return the density field
             virtual tmp<volScalarField> rho() const;
@@ -101,28 +103,30 @@ public:
             //- Return the laminar dynamic viscosity
             virtual tmp<volScalarField> mu() const;
 
-            //- Access the laminar dynamic viscosity
+            //- Return the laminar dynamic viscosity on a patch
             virtual tmp<scalarField> mu(const label patchi) const;
 
             //- Return the laminar kinematic viscosity
             virtual tmp<volScalarField> nu() const;
 
-            //- Access the laminar kinematic viscosity
+            //- Return the laminar kinematic viscosity on a patch
             virtual tmp<scalarField> nu(const label patchi) const;
 
             //- Return the laminar thermal conductivity
             virtual tmp<volScalarField> kappa() const;
 
-            //- Access the laminar thermal conductivity
+            //- Return the laminar thermal conductivity on a patch
             virtual tmp<scalarField> kappa(const label patchi) const;
 
-            //- Return the laminar thermal conductivity
+            //- Return the laminar thermal conductivity, given the turbulent
+            //  thermal diffusivity
             virtual tmp<volScalarField> kappaEff
             (
                 const volScalarField& alphat
             ) const;
 
-            //- Access the laminar thermal conductivity
+            //- Return the laminar thermal conductivity on a patch, given the
+            //  turbulent thermal diffusivity
             virtual tmp<scalarField> kappaEff
             (
                 const scalarField& alphat,
@@ -135,18 +139,29 @@ public:
             //- Return the thermal diffusivity for enthalpy on a patch
             virtual tmp<scalarField> alpha(const label patchi) const;
 
-            //- Return the thermal diffusivity for enthalpy
+            //- Return the effective thermal diffusivity for enthalpy, given the
+            //  turbulent thermal diffusivity
             virtual tmp<volScalarField> alphaEff
             (
                 const volScalarField& alphat
             ) const;
 
-            //- Return the thermal diffusivity for enthalpy on a patch
+            //- Return the effective thermal diffusivity for enthalpy on a
+            //  patch, given the turbulent thermal diffusivity
             virtual tmp<scalarField> alphaEff
             (
                 const scalarField& alphat,
                 const label patchi
             ) const;
+
+
+        // Turbulence (prevents compiler warnings)
+
+            //- Return the effective thermal conductivity
+            using BasePhaseModel::kappaEff;
+
+            //- Return the effective thermal conductivity for enthalpy
+            using BasePhaseModel::alphaEff;
 };
 
 

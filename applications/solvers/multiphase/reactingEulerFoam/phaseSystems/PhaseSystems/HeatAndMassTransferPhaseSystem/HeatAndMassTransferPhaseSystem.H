@@ -113,23 +113,6 @@ public:
 
     // Member Functions
 
-        //- Return true if there is mass transfer
-        virtual bool transfersMass() const;
-
-        //- Return the interfacial mass flow rate
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
-
-        //- Return the total interfacial mass transfer rate for phase
-        virtual tmp<volScalarField> dmdt(const phaseModel& phase) const;
-
-        //- Return the momentum transfer matrices
-        virtual autoPtr<phaseSystem::momentumTransferTable>
-            momentumTransfer() const;
-
-        //- Return the momentum transfer matrices for the face based algorithm
-        virtual autoPtr<phaseSystem::momentumTransferTable>
-            momentumTransferf() const;
-
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable>
             heatTransfer() const;

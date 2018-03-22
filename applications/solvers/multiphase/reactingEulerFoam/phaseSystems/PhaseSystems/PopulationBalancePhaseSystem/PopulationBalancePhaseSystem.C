@@ -29,34 +29,20 @@ License
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::
-addMomentumTransfer(phaseSystem::momentumTransferTable& eqns) const
+Foam::tmp<Foam::volScalarField>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::pDmdt
+(
+    const phasePairKey& key
+) const
 {
-    // Source term due to mass transfer
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
+    if (!pDmdt_.found(key))
     {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        const volVectorField& U1(pair.phase1().U());
-        const volVectorField& U2(pair.phase2().U());
-
-        const volScalarField dmdt(this->pDmdt(pair));
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
-
-        *eqns[pair.phase1().name()] += dmdt21*U2 - fvm::Sp(dmdt21, U1);
-        *eqns[pair.phase2().name()] -= dmdt12*U1 - fvm::Sp(dmdt12, U2);
+        return phaseSystem::dmdt(key);
     }
+
+    const scalar pDmdtSign(Pair<word>::compare(pDmdt_.find(key).key(), key));
+
+    return pDmdtSign**pDmdt_[key];
 }
 
 
@@ -152,112 +138,31 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::
 
 template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::pDmdt
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdt
 (
     const phasePairKey& key
 ) const
 {
-    if (pDmdt_.found(key))
-    {
-        const scalar pDmdtSign
-        (
-            Pair<word>::compare(pDmdt_.find(key).key(), key)
-        );
+    return BasePhaseSystem::dmdt(key) + this->pDmdt(key);
+}
 
-        return pDmdtSign**pDmdt_[key];
+
+template<class BasePhaseSystem>
+Foam::Xfer<Foam::PtrList<Foam::volScalarField>>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
+{
+    PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
+
+    forAllConstIter(pDmdtTable, pDmdt_, pDmdtIter)
+    {
+        const phasePair& pair = this->phasePairs_[pDmdtIter.key()];
+        const volScalarField& pDmdt = *pDmdtIter();
+
+        this->addField(pair.phase1(), "dmdt", pDmdt, dmdts);
+        this->addField(pair.phase2(), "dmdt", - pDmdt, dmdts);
     }
 
-    tmp<volScalarField> tpDmdt
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "dmdt",
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
-
-    return tpDmdt;
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdt
-(
-    const phaseModel& phase
-) const
-{
-    tmp<volScalarField> tDmdtFromKey
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("dmdtFromKey", phase.name()),
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
-
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        if (pair.contains(phase))
-        {
-            tDmdtFromKey.ref() += this->dmdt
-            (
-                phasePairKey(phase.name(), pair.otherPhase(phase).name(), false)
-            );
-        }
-    }
-
-    return tDmdtFromKey;
-}
-
-
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransfer() const
-{
-    autoPtr<phaseSystem::momentumTransferTable>
-        eqnsPtr(BasePhaseSystem::momentumTransfer());
-
-    addMomentumTransfer(eqnsPtr());
-
-    return eqnsPtr;
-}
-
-
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransferf() const
-{
-    autoPtr<phaseSystem::momentumTransferTable>
-        eqnsPtr(BasePhaseSystem::momentumTransferf());
-
-    addMomentumTransfer(eqnsPtr());
-
-    return eqnsPtr;
+    return dmdts.xfer();
 }
 
 

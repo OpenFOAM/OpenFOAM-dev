@@ -8,46 +8,38 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
     phaseSystem::heatTransferTable&
         heatTransfer = heatTransferPtr();
 
+    if (!phase1.isothermal())
     {
-        tmp<fvScalarMatrix> E1Eqn(phase1.heEqn());
+        fvScalarMatrix E1Eqn
+        (
+            phase1.heEqn()
+         ==
+           *heatTransfer[phase1.name()]
+          + alpha1*rho1*(U1&g)
+          + fvOptions(alpha1, rho1, thermo1.he())
+        );
 
-        if (E1Eqn.valid())
-        {
-            E1Eqn =
-            (
-                E1Eqn
-             ==
-               *heatTransfer[phase1.name()]
-              + alpha1*rho1*(U1&g)
-              + fvOptions(alpha1, rho1, phase1.thermo().he())
-            );
-
-            E1Eqn->relax();
-            fvOptions.constrain(E1Eqn.ref());
-            E1Eqn->solve();
-            fvOptions.correct(phase1.thermo().he());
-        }
+        E1Eqn.relax();
+        fvOptions.constrain(E1Eqn);
+        E1Eqn.solve();
+        fvOptions.correct(thermo1.he());
     }
 
+    if (!phase2.isothermal())
     {
-        tmp<fvScalarMatrix> E2Eqn(phase2.heEqn());
+        fvScalarMatrix E2Eqn
+        (
+            phase2.heEqn()
+         ==
+           *heatTransfer[phase2.name()]
+          + alpha2*rho2*(U2&g)
+          + fvOptions(alpha2, rho2, phase2.thermoRef().he())
+        );
 
-        if (E2Eqn.valid())
-        {
-            E2Eqn =
-            (
-                E2Eqn
-             ==
-               *heatTransfer[phase2.name()]
-              + alpha2*rho2*(U2&g)
-              + fvOptions(alpha2, rho2, phase2.thermo().he())
-            );
-
-            E2Eqn->relax();
-            fvOptions.constrain(E2Eqn.ref());
-            E2Eqn->solve();
-            fvOptions.correct(phase2.thermo().he());
-        }
+        E2Eqn.relax();
+        fvOptions.constrain(E2Eqn);
+        E2Eqn.solve();
+        fvOptions.correct(thermo2.he());
     }
 
     fluid.correctThermo();

@@ -5,31 +5,26 @@
     phaseSystem::massTransferTable&
         massTransfer(massTransferPtr());
 
-    forAll(phases, phasei)
+    forAll(fluid.multiComponentPhases(), multiComponentPhasei)
     {
-        phaseModel& phase = phases[phasei];
+        phaseModel& phase = fluid.multiComponentPhases()[multiComponentPhasei];
 
-        PtrList<volScalarField>& Y = phase.Y();
+        UPtrList<volScalarField>& Y = phase.YActiveRef();
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
 
         forAll(Y, i)
         {
-            tmp<fvScalarMatrix> YiEqn(phase.YiEqn(Y[i]));
+            fvScalarMatrix YiEqn
+            (
+                phase.YiEqn(Y[i])
+             ==
+               *massTransfer[Y[i].name()]
+              + fvOptions(alpha, rho, Y[i])
+            );
 
-            if (YiEqn.valid())
-            {
-                YiEqn =
-                (
-                    YiEqn
-                  ==
-                    *massTransfer[Y[i].name()]
-                   + fvOptions(alpha, rho, Y[i])
-                );
-
-                YiEqn->relax();
-                YiEqn->solve(mesh.solver("Yi"));
-            }
+            YiEqn.relax();
+            YiEqn.solve(mesh.solver("Yi"));
         }
     }
 

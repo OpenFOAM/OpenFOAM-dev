@@ -31,34 +31,38 @@ License
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::
-addMomentumTransfer(phaseSystem::momentumTransferTable& eqns) const
+Foam::tmp<Foam::volScalarField>
+Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
+(
+    const phasePairKey& key
+) const
 {
-    // Source term due to mass trasfer
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
+    if (!iDmdt_.found(key))
     {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        const volVectorField& U1(pair.phase1().U());
-        const volVectorField& U2(pair.phase2().U());
-
-        const volScalarField dmdt(this->iDmdt(pair) + this->wDmdt(pair));
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
-
-        *eqns[pair.phase1().name()] += dmdt21*U2 - fvm::Sp(dmdt21, U1);
-        *eqns[pair.phase2().name()] -= dmdt12*U1 - fvm::Sp(dmdt12, U2);
+        return phaseSystem::dmdt(key);
     }
+
+    const scalar dmdtSign(Pair<word>::compare(iDmdt_.find(key).key(), key));
+
+    return dmdtSign**iDmdt_[key];
+}
+
+
+template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::wDmdt
+(
+    const phasePairKey& key
+) const
+{
+    if (!wDmdt_.found(key))
+    {
+        return phaseSystem::dmdt(key);
+    }
+
+    const scalar dmdtSign(Pair<word>::compare(wDmdt_.find(key).key(), key));
+
+    return dmdtSign**wDmdt_[key];
 }
 
 
@@ -174,199 +178,40 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::saturation() const
 
 template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
-Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
-(
-    const phasePairKey& key
-) const
-{
-    const scalar dmdtSign(Pair<word>::compare(iDmdt_.find(key).key(), key));
-    return dmdtSign**iDmdt_[key];
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
-(
-    const Foam::phaseModel& phase
-) const
-{
-    tmp<volScalarField> tiDmdt
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("iDmdt", phase.name()),
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
-
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        if (pair.contains(phase))
-        {
-            tiDmdt.ref() += this->iDmdt
-            (
-                phasePairKey(phase.name(), pair.otherPhase(phase).name())
-            );
-        }
-    }
-
-    return tiDmdt;
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::wDmdt
-(
-    const phasePairKey& key
-) const
-{
-    const scalar dmdtSign(Pair<word>::compare(wDmdt_.find(key).key(), key));
-
-    return dmdtSign**wDmdt_[key];
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::wDmdt
-(
-    const Foam::phaseModel& phase
-) const
-{
-    tmp<volScalarField> twDmdt
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("wDmdt", phase.name()),
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
-
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        if (pair.contains(phase))
-        {
-            twDmdt.ref() += this->wDmdt
-            (
-                phasePairKey(phase.name(), pair.otherPhase(phase).name())
-            );
-        }
-    }
-
-    return twDmdt;
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
 Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdt
 (
-    const Foam::phaseModel& phase
+    const phasePairKey& key
 ) const
 {
-    tmp<volScalarField> tDmdt
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("Dmdt", phase.name()),
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
+    return BasePhaseSystem::dmdt(key) + this->iDmdt(key) + this->wDmdt(key);
+}
 
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
+
+template<class BasePhaseSystem>
+Foam::Xfer<Foam::PtrList<Foam::volScalarField>>
+Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
+{
+    PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
+
+    forAllConstIter(iDmdtTable, iDmdt_, iDmdtIter)
     {
-        const phasePair& pair(phasePairIter());
+        const phasePair& pair = this->phasePairs_[iDmdtIter.key()];
+        const volScalarField& iDmdt = *iDmdtIter();
 
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        if (pair.contains(phase))
-        {
-            tDmdt.ref() += this->dmdt
-            (
-                phasePairKey(phase.name(), pair.otherPhase(phase).name())
-            );
-        }
+        this->addField(pair.phase1(), "dmdt", iDmdt, dmdts);
+        this->addField(pair.phase2(), "dmdt", - iDmdt, dmdts);
     }
 
-    return tDmdt;
-}
+    forAllConstIter(wDmdtTable, wDmdt_, wDmdtIter)
+    {
+        const phasePair& pair = this->phasePairs_[wDmdtIter.key()];
+        const volScalarField& wDmdt = *wDmdtIter();
 
+        this->addField(pair.phase1(), "dmdt", wDmdt, dmdts);
+        this->addField(pair.phase2(), "dmdt", - wDmdt, dmdts);
+    }
 
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
-Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::momentumTransfer() const
-{
-    autoPtr<phaseSystem::momentumTransferTable>
-        eqnsPtr(BasePhaseSystem::momentumTransfer());
-
-    addMomentumTransfer(eqnsPtr());
-
-    return eqnsPtr;
-}
-
-
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
-Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::momentumTransferf() const
-{
-    autoPtr<phaseSystem::momentumTransferTable>
-        eqnsPtr(BasePhaseSystem::momentumTransferf());
-
-    addMomentumTransfer(eqnsPtr());
-
-    return eqnsPtr;
+    return dmdts.xfer();
 }
 
 
@@ -461,7 +306,6 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::massTransfer() const
 
         forAll(Yi, i)
         {
-
             if (Yi[i].member() != volatile_)
             {
                 continue;

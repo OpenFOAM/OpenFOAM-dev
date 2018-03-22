@@ -7,32 +7,27 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
 
     phaseSystem::heatTransferTable& heatTransfer = heatTransferPtr();
 
-    forAll(phases, phasei)
+    forAll(fluid.anisothermalPhases(), anisothermalPhasei)
     {
-        phaseModel& phase = phases[phasei];
+        phaseModel& phase = fluid.anisothermalPhases()[anisothermalPhasei];
 
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
         const volVectorField& U = phase.U();
 
-        tmp<fvScalarMatrix> EEqn(phase.heEqn());
+        fvScalarMatrix EEqn
+        (
+            phase.heEqn()
+         ==
+           *heatTransfer[phase.name()]
+          + alpha*rho*(U&g)
+          + fvOptions(alpha, rho, phase.thermoRef().he())
+        );
 
-        if (EEqn.valid())
-        {
-            EEqn =
-            (
-                EEqn
-             ==
-               *heatTransfer[phase.name()]
-              + alpha*rho*(U&g)
-              + fvOptions(alpha, rho, phase.thermo().he())
-            );
-
-            EEqn->relax();
-            fvOptions.constrain(EEqn.ref());
-            EEqn->solve();
-            fvOptions.correct(phase.thermo().he());
-        }
+        EEqn.relax();
+        fvOptions.constrain(EEqn);
+        EEqn.solve();
+        fvOptions.correct(phase.thermoRef().he());
     }
 
     fluid.correctThermo();

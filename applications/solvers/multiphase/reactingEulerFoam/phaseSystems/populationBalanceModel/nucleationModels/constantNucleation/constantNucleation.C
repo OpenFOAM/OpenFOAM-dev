@@ -105,12 +105,10 @@ nucleationRate
 )
 {
     const sizeGroup& fi = *popBal_.sizeGroups()[i];
-    phaseModel& phase = const_cast<phaseModel&>(fi.phase());
-    volScalarField& rho = phase.thermo().rho();
 
-    nucleationRate +=
+    nucleationRate -=
         popBal_.gamma(i, velGroup_.formFactor()*pow3(d_))
-       *(popBal_.fluid().fvOptions()(phase, rho)&rho)/rho/fi.x();
+       *fi.phase().continuityErrorSources()/fi.phase().rho()/fi.x();
 }
 
 

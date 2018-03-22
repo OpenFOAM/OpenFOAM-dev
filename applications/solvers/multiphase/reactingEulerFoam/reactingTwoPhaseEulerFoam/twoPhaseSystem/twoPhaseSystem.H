@@ -66,9 +66,6 @@ private:
         //- Return the virtual mass coefficient for phase pair
         virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
 
-        //- Return the interfacial mass flow rate for phase pair
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const = 0;
-
 
 protected:
 
@@ -126,89 +123,22 @@ public:
     // Member Functions
 
         using phaseSystem::sigma;
-        using phaseSystem::dmdt;
+        using phaseSystem::dmdts;
 
-        //- Constant access phase model 1
+        //- Return phase model 1
         const phaseModel& phase1() const;
 
         //- Access phase model 1
         phaseModel& phase1();
 
-        //- Constant access phase model 2
+        //- Return phase model 2
         const phaseModel& phase2() const;
 
         //- Access phase model 2
         phaseModel& phase2();
 
-        //- Constant access the phase not given as an argument
+        //- Return the phase not given as an argument
         const phaseModel& otherPhase(const phaseModel& phase) const;
-
-        //- Return the momentum transfer matrices for the cell-based algorithm
-        virtual autoPtr<momentumTransferTable> momentumTransfer() const = 0;
-
-        //- Return the momentum transfer matrices for the face-based algorithm
-        virtual autoPtr<momentumTransferTable> momentumTransferf() const = 0;
-
-        //- Return the implicit force coefficients for the face-based algorithm
-        virtual Xfer<PtrList<surfaceScalarField>> AFfs() const = 0;
-
-        //- Return the force fluxes for the cell-based algorithm
-        virtual Xfer<PtrList<surfaceScalarField>> phiFs
-        (
-            const PtrList<volScalarField>& rAUs
-        ) = 0;
-
-        //- Return the force fluxes for the face-based algorithm
-        virtual Xfer<PtrList<surfaceScalarField>> phiFfs
-        (
-            const PtrList<surfaceScalarField>& rAUfs
-        ) = 0;
-
-        //- Return the force fluxes for the cell-based algorithm
-        virtual Xfer<PtrList<surfaceScalarField>> phiKdPhis
-        (
-            const PtrList<volScalarField>& rAUs
-        ) const = 0;
-
-        //- Return the force fluxes for the face-based algorithm
-        virtual Xfer<PtrList<surfaceScalarField>> phiKdPhifs
-        (
-            const PtrList<surfaceScalarField>& rAUfs
-        ) const = 0;
-
-        //- Return the explicit part of the drag force
-        virtual Xfer<PtrList<volVectorField>> KdUByAs
-        (
-            const PtrList<volScalarField>& rAUs
-        ) const = 0;
-
-        //- Solve the drag system for the new velocities and fluxes
-        virtual void partialElimination
-        (
-            const PtrList<volScalarField>& rAUs
-        ) = 0;
-
-        //- Solve the drag system for the new fluxes
-        virtual void partialEliminationf
-        (
-            const PtrList<surfaceScalarField>& rAUfs
-        ) = 0;
-
-        //- Return the flux corrections for the cell-based algorithm
-        virtual Xfer<PtrList<surfaceScalarField>> ddtCorrByAs
-        (
-            const PtrList<volScalarField>& rAUs,
-            const bool includeVirtualMass = false
-        ) const = 0;
-
-        //- Return the phase diffusivities divided by the momentum coefficients
-        virtual const HashPtrTable<surfaceScalarField>& DByAfs() const = 0;
-
-        //- Return the heat transfer matrices
-        virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
-
-        //- Return the mass transfer matrices
-        virtual autoPtr<massTransferTable> massTransfer() const = 0;
 
         //- Return the surface tension coefficient
         tmp<volScalarField> sigma() const;
@@ -221,9 +151,6 @@ public:
 
         //- Return the virtual mass coefficient
         tmp<volScalarField> Vm() const;
-
-        //- Return true if there is mass transfer
-        virtual bool transfersMass() const = 0;
 
         //- Solve for the phase fractions
         virtual void solve();

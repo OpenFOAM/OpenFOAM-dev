@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,13 +50,19 @@ Foam::PurePhaseModel<BasePhaseModel>::~PurePhaseModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::fvScalarMatrix>
-Foam::PurePhaseModel<BasePhaseModel>::YiEqn
-(
-    volScalarField& Yi
-)
+bool Foam::PurePhaseModel<BasePhaseModel>::pure() const
 {
-    NotImplemented;
+    return true;
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::PurePhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
+{
+    FatalErrorInFunction
+        << "Cannot construct a species fraction equation for a pure phase"
+        << exit(FatalError);
 
     return tmp<fvScalarMatrix>();
 }
@@ -66,14 +72,42 @@ template<class BasePhaseModel>
 const Foam::PtrList<Foam::volScalarField>&
 Foam::PurePhaseModel<BasePhaseModel>::Y() const
 {
+    // Y_ has never been set, so we are returning an empty list
+
     return Y_;
 }
 
 
 template<class BasePhaseModel>
 Foam::PtrList<Foam::volScalarField>&
-Foam::PurePhaseModel<BasePhaseModel>::Y()
+Foam::PurePhaseModel<BasePhaseModel>::YRef()
 {
+    FatalErrorInFunction
+        << "Cannot access the species fractions of for a pure phase"
+        << exit(FatalError);
+
+    return Y_;
+}
+
+
+template<class BasePhaseModel>
+const Foam::UPtrList<Foam::volScalarField>&
+Foam::PurePhaseModel<BasePhaseModel>::YActive() const
+{
+    // Y_ has never been set, so we are returning an empty list
+
+    return Y_;
+}
+
+
+template<class BasePhaseModel>
+Foam::UPtrList<Foam::volScalarField>&
+Foam::PurePhaseModel<BasePhaseModel>::YActiveRef()
+{
+    FatalErrorInFunction
+        << "Cannot access the species fractions of for a pure phase"
+        << exit(FatalError);
+
     return Y_;
 }
 

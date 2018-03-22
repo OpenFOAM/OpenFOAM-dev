@@ -281,6 +281,8 @@ void Foam::phaseSystem::addField
 }
 
 
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::phaseSystem::fillFields
 (

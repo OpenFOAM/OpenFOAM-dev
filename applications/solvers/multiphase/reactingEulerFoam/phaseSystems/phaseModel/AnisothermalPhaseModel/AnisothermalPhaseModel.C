@@ -26,63 +26,7 @@ License
 #include "AnisothermalPhaseModel.H"
 #include "phaseSystem.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class BasePhaseModel>
-Foam::AnisothermalPhaseModel<BasePhaseModel>::AnisothermalPhaseModel
-(
-    const phaseSystem& fluid,
-    const word& phaseName,
-    const label index
-)
-:
-    BasePhaseModel(fluid, phaseName, index),
-    K_
-    (
-        IOobject
-        (
-            IOobject::groupName("K", this->name()),
-            fluid.mesh().time().timeName(),
-            fluid.mesh()
-        ),
-        fluid.mesh(),
-        dimensionedScalar("K", sqr(dimVelocity), scalar(0))
-    )
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class BasePhaseModel>
-Foam::AnisothermalPhaseModel<BasePhaseModel>::~AnisothermalPhaseModel()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class BasePhaseModel>
-bool Foam::AnisothermalPhaseModel<BasePhaseModel>::compressible() const
-{
-    return !this->thermo().incompressible();
-}
-
-
-template<class BasePhaseModel>
-void Foam::AnisothermalPhaseModel<BasePhaseModel>::correctKinematics()
-{
-    BasePhaseModel::correctKinematics();
-    K_ = 0.5*magSqr(this->U());
-}
-
-
-template<class BasePhaseModel>
-void Foam::AnisothermalPhaseModel<BasePhaseModel>::correctThermo()
-{
-    BasePhaseModel::correctThermo();
-
-    this->thermo_->correct();
-}
-
+// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
@@ -111,18 +55,57 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::filterPressureWork
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class BasePhaseModel>
+Foam::AnisothermalPhaseModel<BasePhaseModel>::AnisothermalPhaseModel
+(
+    const phaseSystem& fluid,
+    const word& phaseName,
+    const label index
+)
+:
+    BasePhaseModel(fluid, phaseName, index)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class BasePhaseModel>
+Foam::AnisothermalPhaseModel<BasePhaseModel>::~AnisothermalPhaseModel()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class BasePhaseModel>
+void Foam::AnisothermalPhaseModel<BasePhaseModel>::correctThermo()
+{
+    BasePhaseModel::correctThermo();
+
+    this->thermo_->correct();
+}
+
+
+template<class BasePhaseModel>
+bool Foam::AnisothermalPhaseModel<BasePhaseModel>::isothermal() const
+{
+    return false;
+}
+
+
 template<class BasePhaseModel>
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 {
     const volScalarField& alpha = *this;
-    const volVectorField& U = this->U();
-    const surfaceScalarField& alphaPhi = this->alphaPhi();
-    const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi();
 
-    const volScalarField& contErr(this->continuityError());
+    const volVectorField U(this->U());
+    const surfaceScalarField alphaPhi(this->alphaPhi());
+    const surfaceScalarField alphaRhoPhi(this->alphaRhoPhi());
 
-    const volScalarField alphaEff(this->alphaEff());
+    const volScalarField contErr(this->continuityError());
+    const volScalarField K(this->K());
 
     volScalarField& he = this->thermo_->he();
 
@@ -132,13 +115,13 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
       + fvm::div(alphaRhoPhi, he)
       - fvm::Sp(contErr, he)
 
-      + fvc::ddt(alpha, this->rho(), K_) + fvc::div(alphaRhoPhi, K_)
-      - contErr*K_
+      + fvc::ddt(alpha, this->rho(), K) + fvc::div(alphaRhoPhi, K)
+      - contErr*K
 
       - fvm::laplacian
         (
             fvc::interpolate(alpha)
-           *fvc::interpolate(alphaEff),
+           *fvc::interpolate(this->alphaEff()),
             he
         )
      ==
@@ -160,14 +143,6 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
     }
 
     return tEEqn;
-}
-
-
-template<class BasePhaseModel>
-const Foam::volScalarField&
-Foam::AnisothermalPhaseModel<BasePhaseModel>::K() const
-{
-    return K_;
 }
 
 

@@ -1,20 +1,21 @@
 phaseModel& phase1 = fluid.phase1();
 phaseModel& phase2 = fluid.phase2();
 
-volScalarField& alpha1 = phase1;
-volScalarField& alpha2 = phase2;
+const volScalarField& alpha1 = phase1;
+const volScalarField& alpha2 = phase2;
 
-volVectorField& U1 = phase1.U();
-surfaceScalarField& phi1 = phase1.phi();
-surfaceScalarField& alphaPhi1 = phase1.alphaPhi();
+volVectorField& U1 = phase1.URef();
+surfaceScalarField& phi1 = phase1.phiRef();
+const surfaceScalarField& alphaPhi1 = phase1.alphaPhi();
 
-volVectorField& U2 = phase2.U();
-surfaceScalarField& phi2 = phase2.phi();
-surfaceScalarField& alphaPhi2 = phase2.alphaPhi();
+volVectorField& U2 = phase2.URef();
+surfaceScalarField& phi2 = phase2.phiRef();
+const surfaceScalarField& alphaPhi2 = phase2.alphaPhi();
+
 surfaceScalarField& phi = fluid.phi();
 
-rhoThermo& thermo1 = phase1.thermo();
-rhoThermo& thermo2 = phase2.thermo();
+rhoThermo& thermo1 = phase1.thermoRef();
+rhoThermo& thermo2 = phase2.thermoRef();
 
 volScalarField& rho1 = thermo1.rho();
 const volScalarField& psi1 = thermo1.psi();

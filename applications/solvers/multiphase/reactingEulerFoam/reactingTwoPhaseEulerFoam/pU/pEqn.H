@@ -184,7 +184,7 @@ while (pimple.correct())
 
             pEqnComp1 =
                 (
-                    phase1.continuityError()
+                    fvc::ddt(alpha1, rho1) + fvc::div(phase1.alphaRhoPhi())
                   - fvc::Sp(fvc::ddt(alpha1) + fvc::div(alphaPhi1), rho1)
                 )/rho1
               + correction
@@ -202,17 +202,12 @@ while (pimple.correct())
         {
             pEqnComp1 =
                 (
-                    phase1.continuityError()
+                    fvc::ddt(alpha1, rho1) + fvc::div(phase1.alphaRhoPhi())
                   - fvc::Sp(fvc::ddt(alpha1) + fvc::div(alphaPhi1), rho1)
                 )/rho1
               + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh));
         }
     }
-    else
-    {
-        pEqnComp1 = fvm::Su(-(fvOptions(alpha1, rho1)&rho1)/rho1, p_rgh);
-    }
-
     if (phase2.compressible())
     {
         if (pimple.transonic())
@@ -225,7 +220,7 @@ while (pimple.correct())
 
             pEqnComp2 =
                 (
-                    phase2.continuityError()
+                    fvc::ddt(alpha2, rho2) + fvc::div(phase2.alphaRhoPhi())
                   - fvc::Sp(fvc::ddt(alpha2) + fvc::div(alphaPhi2), rho2)
                 )/rho2
               + correction
@@ -243,35 +238,65 @@ while (pimple.correct())
         {
             pEqnComp2 =
                 (
-                    phase2.continuityError()
+                    fvc::ddt(alpha2, rho2) + fvc::div(phase2.alphaRhoPhi())
                   - fvc::Sp(fvc::ddt(alpha2) + fvc::div(alphaPhi2), rho2)
                 )/rho2
               + (alpha2*psi2/rho2)*correction(fvm::ddt(p_rgh));
         }
     }
-    else
+
+    // Add option sources
     {
-        pEqnComp2 = fvm::Su(-(fvOptions(alpha2, rho2)&rho2)/rho2, p_rgh);
+        if (fvOptions.appliesToField(rho1.name()))
+        {
+            tmp<fvScalarMatrix> optEqn1 = fvOptions(alpha1, rho1);
+            if (pEqnComp1.valid())
+            {
+                pEqnComp1.ref() -= (optEqn1 & rho1)/rho1;
+            }
+            else
+            {
+                pEqnComp1 = fvm::Su(- (optEqn1 & rho1)/rho1, p_rgh);
+            }
+        }
+        if (fvOptions.appliesToField(rho2.name()))
+        {
+            tmp<fvScalarMatrix> optEqn2 = fvOptions(alpha2, rho2);
+            if (pEqnComp2.valid())
+            {
+                pEqnComp2.ref() -= (optEqn2 & rho2)/rho2;
+            }
+            else
+            {
+                pEqnComp2 = fvm::Su(- (optEqn2 & rho2)/rho2, p_rgh);
+            }
+        }
     }
 
-    if (fluid.transfersMass())
+    // Add mass transfer
     {
-        if (pEqnComp1.valid())
+        PtrList<volScalarField> dmdts(fluid.dmdts());
+        if (dmdts.set(0))
         {
-            pEqnComp1.ref() -= fluid.dmdt(phase1)/rho1;
+            if (pEqnComp1.valid())
+            {
+                pEqnComp1.ref() -= dmdts[0]/rho1;
+            }
+            else
+            {
+                pEqnComp1 = fvm::Su(- dmdts[0]/rho1, p_rgh);
+            }
         }
-        else
+        if (dmdts.set(1))
         {
-            pEqnComp1 = fvm::Su(-fluid.dmdt(phase1)/rho1, p_rgh);
-        }
-
-        if (pEqnComp2.valid())
-        {
-            pEqnComp2.ref() -= fluid.dmdt(phase2)/rho2;
-        }
-        else
-        {
-            pEqnComp2 = fvm::Su(-fluid.dmdt(phase2)/rho2, p_rgh);
+            if (pEqnComp2.valid())
+            {
+                pEqnComp2.ref() -= dmdts[1]/rho2;
+            }
+            else
+            {
+                pEqnComp2 = fvm::Su(- dmdts[1]/rho2, p_rgh);
+            }
         }
     }
 

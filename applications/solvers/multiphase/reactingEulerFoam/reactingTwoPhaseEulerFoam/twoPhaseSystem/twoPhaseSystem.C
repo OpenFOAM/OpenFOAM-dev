@@ -29,6 +29,7 @@ License
 
 #include "MULES.H"
 #include "subCycle.H"
+#include "UniformField.H"
 
 #include "fvcDdt.H"
 #include "fvcDiv.H"
@@ -280,15 +281,15 @@ void Foam::twoPhaseSystem::solve()
 
                 if (alphaSubCycle.index() == 1)
                 {
-                    phase1_.alphaPhi() = alphaPhi10;
+                    phase1_.alphaPhiRef() = alphaPhi10;
                 }
                 else
                 {
-                    phase1_.alphaPhi() += alphaPhi10;
+                    phase1_.alphaPhiRef() += alphaPhi10;
                 }
             }
 
-            phase1_.alphaPhi() /= nAlphaSubCycles;
+            phase1_.alphaPhiRef() /= nAlphaSubCycles;
         }
         else
         {
@@ -304,7 +305,7 @@ void Foam::twoPhaseSystem::solve()
                 zeroField()
             );
 
-            phase1_.alphaPhi() = alphaPhi1;
+            phase1_.alphaPhiRef() = alphaPhi1;
         }
 
         if (alphaDbyA.valid())
@@ -318,15 +319,15 @@ void Foam::twoPhaseSystem::solve()
             alpha1Eqn.relax();
             alpha1Eqn.solve();
 
-            phase1_.alphaPhi() += alpha1Eqn.flux();
+            phase1_.alphaPhiRef() += alpha1Eqn.flux();
         }
 
-        phase1_.alphaRhoPhi() =
+        phase1_.alphaRhoPhiRef() =
             fvc::interpolate(phase1_.rho())*phase1_.alphaPhi();
 
-        phase2_.alphaPhi() = phi_ - phase1_.alphaPhi();
-        phase2_.correctInflowOutflow(phase2_.alphaPhi());
-        phase2_.alphaRhoPhi() =
+        phase2_.alphaPhiRef() = phi_ - phase1_.alphaPhi();
+        phase2_.correctInflowOutflow(phase2_.alphaPhiRef());
+        phase2_.alphaRhoPhiRef() =
             fvc::interpolate(phase2_.rho())*phase2_.alphaPhi();
 
         Info<< alpha1.name() << " volume fraction = "

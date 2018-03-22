@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,62 @@ inline Foam::phaseSystem::phaseModelList&
 Foam::phaseSystem::phases()
 {
     return phaseModels_;
+}
+
+
+inline const Foam::phaseSystem::phaseModelPartialList&
+Foam::phaseSystem::movingPhases() const
+{
+    return movingPhaseModels_;
+}
+
+
+inline Foam::phaseSystem::phaseModelPartialList&
+Foam::phaseSystem::movingPhases()
+{
+    return movingPhaseModels_;
+}
+
+
+inline const Foam::phaseSystem::phaseModelPartialList&
+Foam::phaseSystem::stationaryPhases() const
+{
+    return stationaryPhaseModels_;
+}
+
+
+inline Foam::phaseSystem::phaseModelPartialList&
+Foam::phaseSystem::stationaryPhases()
+{
+    return stationaryPhaseModels_;
+}
+
+
+inline const Foam::phaseSystem::phaseModelPartialList&
+Foam::phaseSystem::anisothermalPhases() const
+{
+    return anisothermalPhaseModels_;
+}
+
+
+inline Foam::phaseSystem::phaseModelPartialList&
+Foam::phaseSystem::anisothermalPhases()
+{
+    return anisothermalPhaseModels_;
+}
+
+
+inline const Foam::phaseSystem::phaseModelPartialList&
+Foam::phaseSystem::multiComponentPhases() const
+{
+    return multiComponentPhaseModels_;
+}
+
+
+inline Foam::phaseSystem::phaseModelPartialList&
+Foam::phaseSystem::multiComponentPhases()
+{
+    return multiComponentPhaseModels_;
 }
 
 

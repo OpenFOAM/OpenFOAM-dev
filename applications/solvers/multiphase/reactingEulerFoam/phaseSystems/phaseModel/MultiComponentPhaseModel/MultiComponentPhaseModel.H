@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class phaseModel Declaration
+                   Class MultiComponentPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel>
@@ -64,6 +64,9 @@ protected:
 
         //- Inert species index
         label inertIndex_;
+
+        //- Pointer list to active species
+        UPtrList<volScalarField> YActive_;
 
 
 public:
@@ -87,17 +90,23 @@ public:
         //- Correct the thermodynamics
         virtual void correctThermo();
 
-        //- Return the species fraction equation
-        virtual tmp<fvScalarMatrix> YiEqn
-        (
-            volScalarField& Yi
-        );
+        //- Return whether the phase is pure (i.e., not multi-component)
+        virtual bool pure() const;
 
-        //- Constant access the species mass fractions
+        //- Return the species fraction equation
+        virtual tmp<fvScalarMatrix> YiEqn(volScalarField& Yi);
+
+        //- Return the species mass fractions
         virtual const PtrList<volScalarField>& Y() const;
 
         //- Access the species mass fractions
-        virtual PtrList<volScalarField>& Y();
+        virtual PtrList<volScalarField>& YRef();
+
+        //- Return the active species mass fractions
+        virtual const UPtrList<volScalarField>& YActive() const;
+
+        //- Access the active species mass fractions
+        virtual UPtrList<volScalarField>& YActiveRef();
 };
 
 

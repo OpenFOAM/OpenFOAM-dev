@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class phaseModel Declaration
+                  Class AnisothermalPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel>
@@ -52,12 +52,6 @@ class AnisothermalPhaseModel
 :
     public BasePhaseModel
 {
-    // Private data
-
-        //- Kinetic energy
-        volScalarField K_;
-
-
     // Private member functions
 
         //- Optionally filter the pressure work term as the phase-fraction -> 0
@@ -85,20 +79,14 @@ public:
 
     // Member Functions
 
-        //- Return true if the phase is compressible otherwise false
-        virtual bool compressible() const;
-
-        //- Correct the kinematics
-        virtual void correctKinematics();
-
         //- Correct the thermodynamics
         virtual void correctThermo();
 
+        //- Return whether the phase is isothermal
+        virtual bool isothermal() const;
+
         //- Return the enthalpy equation
         virtual tmp<fvScalarMatrix> heEqn();
-
-        //- Return the phase kinetic energy
-        virtual const volScalarField& K() const;
 };
 
 

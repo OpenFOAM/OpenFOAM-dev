@@ -50,67 +50,6 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::~HeatTransferPhaseSystem()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-bool Foam::HeatTransferPhaseSystem<BasePhaseSystem>::transfersMass() const
-{
-    return false;
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::HeatTransferPhaseSystem<BasePhaseSystem>::dmdt
-(
-    const phasePairKey& key
-) const
-{
-    return tmp<volScalarField>
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName
-                (
-                    "dmdt",
-                    this->phasePairs_[key]->name()
-                ),
-                this->mesh().time().timeName(),
-                this->mesh().time()
-            ),
-            this->mesh(),
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
-}
-
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::HeatTransferPhaseSystem<BasePhaseSystem>::dmdt
-(
-    const Foam::phaseModel& phase
-) const
-{
-    tmp<volScalarField> tDmdt
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("dmdt", phase.name()),
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
-    );
-
-    return tDmdt;
-}
-
-
-template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
 Foam::HeatTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
 {

@@ -20,7 +20,7 @@ dimensionedScalar pMin
 
 #include "gh.H"
 
-volScalarField& p = phases[0].thermo().p();
+volScalarField& p = phases[0].thermoRef().p();
 
 Info<< "Reading field p_rgh\n" << endl;
 volScalarField p_rgh

@@ -165,12 +165,6 @@ bool Foam::phaseModel::read()
 }
 
 
-bool Foam::phaseModel::compressible() const
-{
-    return false;
-}
-
-
 void Foam::phaseModel::correctInflowOutflow(surfaceScalarField& alphaPhi) const
 {
     surfaceScalarField::Boundary& alphaPhiBf = alphaPhi.boundaryFieldRef();
@@ -186,29 +180,6 @@ void Foam::phaseModel::correctInflowOutflow(surfaceScalarField& alphaPhi) const
             alphaPhip = phiBf[patchi]*alphaBf[patchi];
         }
     }
-}
-
-
-const Foam::tmp<Foam::volScalarField>& Foam::phaseModel::divU() const
-{
-    NotImplemented;
-    static tmp<Foam::volScalarField> divU_(nullptr);
-    return divU_;
-}
-
-
-void Foam::phaseModel::divU(const tmp<volScalarField>& divU)
-{
-    WarningInFunction
-        << "Attempt to set the dilatation rate of an incompressible phase"
-        << endl;
-}
-
-
-const Foam::volScalarField& Foam::phaseModel::K() const
-{
-    NotImplemented;
-    return volScalarField::null();
 }
 
 

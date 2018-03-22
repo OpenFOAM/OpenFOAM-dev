@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class phaseModel Declaration
+                     Class ReactingPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel, class ReactionType>
@@ -82,10 +82,7 @@ public:
         virtual void correctThermo();
 
         //- Return the species fraction equation
-        virtual tmp<fvScalarMatrix> R
-        (
-            volScalarField& Yi
-        ) const;
+        virtual tmp<fvScalarMatrix> R(volScalarField& Yi) const;
 
         //- Return heat release rate
         virtual tmp<volScalarField> Qdot() const;

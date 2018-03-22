@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,21 +50,25 @@ Foam::IsothermalPhaseModel<BasePhaseModel>::~IsothermalPhaseModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-bool Foam::IsothermalPhaseModel<BasePhaseModel>::compressible() const
-{
-    return !this->thermo().incompressible();
-}
+void Foam::IsothermalPhaseModel<BasePhaseModel>::correctThermo()
+{}
 
 
 template<class BasePhaseModel>
-void Foam::IsothermalPhaseModel<BasePhaseModel>::correctThermo()
-{}
+bool Foam::IsothermalPhaseModel<BasePhaseModel>::isothermal() const
+{
+    return true;
+}
 
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::IsothermalPhaseModel<BasePhaseModel>::heEqn()
 {
+    FatalErrorInFunction
+        << "Cannot construct an energy equation for an isothermal phase"
+        << exit(FatalError);
+
     return tmp<fvScalarMatrix>();
 }
 
