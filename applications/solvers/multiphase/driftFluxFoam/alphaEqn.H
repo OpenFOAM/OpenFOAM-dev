@@ -32,11 +32,12 @@
 
             MULES::correct
             (
+                geometricOneField(),
                 alpha1,
                 alphaPhi,
                 talphaPhiCorr0.ref(),
-                mixture.alphaMax(),
-                0
+                UniformField<scalar>(mixture.alphaMax()),
+                zeroField()
             );
 
             alphaPhi += talphaPhiCorr0();
@@ -71,11 +72,12 @@
 
             MULES::correct
             (
+                geometricOneField(),
                 alpha1,
                 talphaPhiUn(),
                 talphaPhiCorr.ref(),
-                mixture.alphaMax(),
-                0
+                UniformField<scalar>(mixture.alphaMax()),
+                zeroField()
             );
 
             // Under-relax the correction for all but the 1st corrector
@@ -95,11 +97,12 @@
 
             MULES::explicitSolve
             (
+                geometricOneField(),
                 alpha1,
                 phi,
                 alphaPhi,
-                mixture.alphaMax(),
-                0
+                UniformField<scalar>(mixture.alphaMax()),
+                zeroField()
             );
         }
     }

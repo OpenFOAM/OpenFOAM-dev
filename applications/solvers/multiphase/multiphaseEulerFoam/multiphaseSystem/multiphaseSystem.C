@@ -132,8 +132,8 @@ void Foam::multiphaseSystem::solveAlphas()
             alphaPhiCorr,
             zeroField(),
             zeroField(),
-            1,
-            0,
+            oneField(),
+            zeroField(),
             true
         );
 
@@ -168,9 +168,7 @@ void Foam::multiphaseSystem::solveAlphas()
         (
             geometricOneField(),
             phase,
-            alphaPhi,
-            zeroField(),
-            zeroField()
+            alphaPhi
         );
 
         phase.alphaPhi() = alphaPhi;

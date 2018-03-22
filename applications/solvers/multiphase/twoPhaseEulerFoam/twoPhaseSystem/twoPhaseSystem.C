@@ -45,6 +45,7 @@ License
 #include "fixedValueFvsPatchFields.H"
 #include "blendingMethod.H"
 #include "HashPtrTable.H"
+#include "UniformField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -464,8 +465,8 @@ void Foam::twoPhaseSystem::solve()
                     alphaPhic10,
                     (alphaSubCycle.index()*Sp)(),
                     (Su - (alphaSubCycle.index() - 1)*Sp*alpha1)(),
-                    phase1_.alphaMax(),
-                    0
+                    UniformField<scalar>(phase1_.alphaMax()),
+                    zeroField()
                 );
 
                 if (alphaSubCycle.index() == 1)
@@ -490,8 +491,8 @@ void Foam::twoPhaseSystem::solve()
                 alphaPhic1,
                 Sp,
                 Su,
-                phase1_.alphaMax(),
-                0
+                UniformField<scalar>(phase1_.alphaMax()),
+                zeroField()
             );
 
             phase1_.alphaPhi() = alphaPhic1;

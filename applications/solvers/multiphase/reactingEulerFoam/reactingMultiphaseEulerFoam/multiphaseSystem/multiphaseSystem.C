@@ -69,8 +69,6 @@ void Foam::multiphaseSystem::calcAlphas()
 
 void Foam::multiphaseSystem::solveAlphas()
 {
-    bool LTS = fv::localEulerDdt::enabled(mesh_);
-
     forAll(phases(), phasei)
     {
         phases()[phasei].correctBoundaryConditions();
@@ -138,40 +136,18 @@ void Foam::multiphaseSystem::solveAlphas()
 
         phase.correctInflowOutflow(alphaPhiCorr);
 
-        if (LTS)
-        {
-            MULES::limit
-            (
-                fv::localEulerDdt::localRDeltaT(mesh_),
-                geometricOneField(),
-                phase,
-                phi_,
-                alphaPhiCorr,
-                zeroField(),
-                zeroField(),
-                phase.alphaMax(),
-                0,
-                true
-            );
-        }
-        else
-        {
-            const scalar rDeltaT = 1.0/mesh_.time().deltaTValue();
-
-            MULES::limit
-            (
-                rDeltaT,
-                geometricOneField(),
-                phase,
-                phi_,
-                alphaPhiCorr,
-                zeroField(),
-                zeroField(),
-                phase.alphaMax(),
-                0,
-                true
-            );
-        }
+        MULES::limit
+        (
+            geometricOneField(),
+            phase,
+            phi_,
+            alphaPhiCorr,
+            zeroField(),
+            zeroField(),
+            UniformField<scalar>(phase.alphaMax()),
+            zeroField(),
+            true
+        );
     }
 
     MULES::limitSum(alphaPhiCorrs);

@@ -621,8 +621,8 @@ void Foam::multiphaseMixture::solveAlphas
             alphaPhiCorr,
             zeroField(),
             zeroField(),
-            1,
-            0,
+            oneField(),
+            zeroField(),
             true
         );
 
@@ -658,9 +658,7 @@ void Foam::multiphaseMixture::solveAlphas
         (
             geometricOneField(),
             alpha,
-            alphaPhi,
-            zeroField(),
-            zeroField()
+            alphaPhi
         );
 
         rhoPhi_ += alphaPhi*alpha.rho();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,39 @@ inline const Type& operator/(const Type& t, const one&)
     return t;
 }
 
+inline const one& min(const one& o, const one&)
+{
+    return o;
+}
+
+template<class Type>
+inline Type min(const one&, const Type& t)
+{
+    return min(scalar(1), t);
+}
+
+template<class Type>
+inline Type min(const Type& t, const one&)
+{
+    return min(t, scalar(1));
+}
+
+inline const one& max(const one& o, const one&)
+{
+    return o;
+}
+
+template<class Type>
+inline Type max(const one&, const Type& t)
+{
+    return max(scalar(1), t);
+}
+
+template<class Type>
+inline Type max(const Type& t, const one&)
+{
+    return max(t, scalar(1));
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

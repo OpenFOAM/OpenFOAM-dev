@@ -12,7 +12,15 @@
         )
     );
 
-    MULES::explicitSolve(alpha1, phi, alphaPhi, 1, 0);
+    MULES::explicitSolve
+    (
+        geometricOneField(),
+        alpha1,
+        phi,
+        alphaPhi,
+        oneField(),
+        zeroField()
+    );
 
     rhoPhi = alphaPhi*(rho1 - rho2) + phi*rho2;
 

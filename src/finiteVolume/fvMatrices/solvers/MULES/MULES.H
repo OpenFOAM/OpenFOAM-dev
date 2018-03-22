@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,8 @@ SourceFiles
 #include "zero.H"
 #include "zeroField.H"
 #include "UPtrList.H"
+#include "HashSet.H"
+#include "UniformField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,6 +73,14 @@ void explicitSolve
     const SuType& Su
 );
 
+template<class RhoType>
+void explicitSolve
+(
+    const RhoType& rho,
+    volScalarField& psi,
+    const surfaceScalarField& phiPsi
+);
+
 template<class RhoType, class SpType, class SuType>
 void explicitSolve
 (
@@ -81,7 +91,25 @@ void explicitSolve
     const SuType& Su
 );
 
-template<class RhoType, class SpType, class SuType>
+template<class RhoType, class PsiMaxType, class PsiMinType>
+void explicitSolve
+(
+    const RhoType& rho,
+    volScalarField& psi,
+    const surfaceScalarField& phiBD,
+    surfaceScalarField& phiPsi,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
+);
+
+template
+<
+    class RhoType,
+    class SpType,
+    class SuType,
+    class PsiMaxType,
+    class PsiMinType
+>
 void explicitSolve
 (
     const RhoType& rho,
@@ -90,20 +118,19 @@ void explicitSolve
     surfaceScalarField& phiPsi,
     const SpType& Sp,
     const SuType& Su,
-    const scalar psiMax,
-    const scalar psiMin
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
 );
 
-void explicitSolve
-(
-    volScalarField& psi,
-    const surfaceScalarField& phiBD,
-    surfaceScalarField& phiPsi,
-    const scalar psiMax,
-    const scalar psiMin
-);
-
-template<class RdeltaTType, class RhoType, class SpType, class SuType>
+template
+<
+    class RdeltaTType,
+    class RhoType,
+    class SpType,
+    class SuType,
+    class PsiMaxType,
+    class PsiMinType
+>
 void limiter
 (
     scalarField& allLambda,
@@ -114,11 +141,19 @@ void limiter
     const surfaceScalarField& phiCorr,
     const SpType& Sp,
     const SuType& Su,
-    const scalar psiMax,
-    const scalar psiMin
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
 );
 
-template<class RdeltaTType, class RhoType, class SpType, class SuType>
+template
+<
+    class RdeltaTType,
+    class RhoType,
+    class SpType,
+    class SuType,
+    class PsiMaxType,
+    class PsiMinType
+>
 void limit
 (
     const RdeltaTType& rDeltaT,
@@ -128,17 +163,51 @@ void limit
     surfaceScalarField& phiPsi,
     const SpType& Sp,
     const SuType& Su,
-    const scalar psiMax,
-    const scalar psiMin,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin,
     const bool returnCorr
 );
 
+template
+<
+    class RhoType,
+    class SpType,
+    class SuType,
+    class PsiMaxType,
+    class PsiMinType
+>
+void limit
+(
+    const RhoType& rho,
+    const volScalarField& psi,
+    const surfaceScalarField& phi,
+    surfaceScalarField& phiPsi,
+    const SpType& Sp,
+    const SuType& Su,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin,
+    const bool returnCorr
+);
 
 void limitSum(UPtrList<scalarField>& phiPsiCorrs);
 
 template<class SurfaceScalarFieldList>
 void limitSum(SurfaceScalarFieldList& phiPsiCorrs);
 
+void limitSum
+(
+    const UPtrList<const scalarField>& alphas,
+    UPtrList<scalarField>& phiPsiCorrs,
+    const labelHashSet& fixed
+);
+
+template<class SurfaceScalarFieldList>
+void limitSum
+(
+    const SurfaceScalarFieldList& alphas,
+    SurfaceScalarFieldList& phiPsiCorrs,
+    const labelHashSet& fixed
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

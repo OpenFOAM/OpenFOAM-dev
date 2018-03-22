@@ -1051,8 +1051,8 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             alphaPhiCorr,
             zeroField(),
             zeroField(),
-            1,
-            0,
+            oneField(),
+            zeroField(),
             true
         );
 

@@ -78,8 +78,8 @@
                     divU*(alpha10 - alpha100)
                   - vDotvmcAlphal*alpha10
                 )(),
-                1,
-                0
+                oneField(),
+                zeroField()
             );
 
             // Under-relax the correction for all but the 1st corrector
@@ -103,8 +103,8 @@
                 talphaPhiCorr.ref(),
                 vDotvmcAlphal,
                 (divU*alpha1 + vDotcAlphal)(),
-                1,
-                0
+                oneField(),
+                zeroField()
             );
 
             talphaPhi = talphaPhiCorr;

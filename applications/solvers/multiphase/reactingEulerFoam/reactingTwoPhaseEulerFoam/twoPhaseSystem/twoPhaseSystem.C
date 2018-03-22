@@ -274,8 +274,8 @@ void Foam::twoPhaseSystem::solve()
                     alphaPhi10,
                     (alphaSubCycle.index()*Sp)(),
                     (Su - (alphaSubCycle.index() - 1)*Sp*alpha1)(),
-                    phase1_.alphaMax(),
-                    0
+                    UniformField<scalar>(phase1_.alphaMax()),
+                    zeroField()
                 );
 
                 if (alphaSubCycle.index() == 1)
@@ -300,8 +300,8 @@ void Foam::twoPhaseSystem::solve()
                 alphaPhi1,
                 Sp,
                 Su,
-                phase1_.alphaMax(),
-                0
+                UniformField<scalar>(phase1_.alphaMax()),
+                zeroField()
             );
 
             phase1_.alphaPhi() = alphaPhi1;
