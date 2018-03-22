@@ -56,18 +56,6 @@ blending
         type            none;
         continuousPhase liquid;
     }
-
-    heatTransfer
-    {
-        type            none;
-        continuousPhase liquid;
-    }
-
-    massTransfer
-    {
-        type            none;
-        continuousPhase liquid;
-    }
 }
 
 surfaceTension

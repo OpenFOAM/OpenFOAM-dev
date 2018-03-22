@@ -74,6 +74,19 @@ blending
     {
         type            linear;
         minFullyContinuousAlpha.water 0.7;
+        minPartlyContinuousAlpha.water 0.3;
+        minFullyContinuousAlpha.oil 0.7;
+        minPartlyContinuousAlpha.oil 0.3;
+        minFullyContinuousAlpha.mercury 0.7;
+        minPartlyContinuousAlpha.mercury 0.3;
+        minFullyContinuousAlpha.air 0.7;
+        minPartlyContinuousAlpha.air 0.3;
+    }
+
+    drag
+    {
+        type            linear;
+        minFullyContinuousAlpha.water 0.7;
         minPartlyContinuousAlpha.water 0.5;
         minFullyContinuousAlpha.oil 0.7;
         minPartlyContinuousAlpha.oil 0.5;

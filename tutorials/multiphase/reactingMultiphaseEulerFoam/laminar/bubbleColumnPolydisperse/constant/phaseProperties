@@ -140,6 +140,17 @@ blending
         minFullyContinuousAlpha.water 0.7;
         minPartlyContinuousAlpha.water 0.5;
     }
+
+    drag
+    {
+        type            linear;
+        minFullyContinuousAlpha.air1 0.7;
+        minPartlyContinuousAlpha.air1 0.3;
+        minFullyContinuousAlpha.air2 0.7;
+        minPartlyContinuousAlpha.air2 0.3;
+        minFullyContinuousAlpha.water 0.7;
+        minPartlyContinuousAlpha.water 0.3;
+    }
 }
 
 surfaceTension

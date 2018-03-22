@@ -50,13 +50,13 @@ blending
     default
     {
         type            linear;
-        minPartlyContinuousAlpha.gas 0.5;
+        minPartlyContinuousAlpha.gas 0.3;
         minFullyContinuousAlpha.gas 0.7;
-        minPartlyContinuousAlpha.liquid 0.5;
+        minPartlyContinuousAlpha.liquid 0.3;
         minFullyContinuousAlpha.liquid 0.7;
     }
 
-    heatTransferModel
+    heatTransfer
     {
         type            linear;
         minPartlyContinuousAlpha.gas 0;
@@ -65,13 +65,9 @@ blending
         minFullyContinuousAlpha.liquid 1;
     }
 
-    massTransferModel
+    massTransfer
     {
-        type            linear;
-        minPartlyContinuousAlpha.gas 0;
-        minFullyContinuousAlpha.gas 1;
-        minPartlyContinuousAlpha.liquid 0;
-        minFullyContinuousAlpha.liquid 1;
+        $heatTransfer;
     }
 }
 
