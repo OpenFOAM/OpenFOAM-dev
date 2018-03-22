@@ -47,6 +47,21 @@ template<class Type>
 Foam::outletMappedUniformInletFvPatchField<Type>::
 outletMappedUniformInletFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<Type>(p, iF, dict),
+    outletPatchName_(dict.lookup("outletPatch")),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi"))
+{}
+
+
+template<class Type>
+Foam::outletMappedUniformInletFvPatchField<Type>::
+outletMappedUniformInletFvPatchField
+(
     const outletMappedUniformInletFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -56,21 +71,6 @@ outletMappedUniformInletFvPatchField
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
     outletPatchName_(ptf.outletPatchName_),
     phiName_(ptf.phiName_)
-{}
-
-
-template<class Type>
-Foam::outletMappedUniformInletFvPatchField<Type>::
-outletMappedUniformInletFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<Type>(p, iF, dict),
-    outletPatchName_(dict.lookup("outletPatch")),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi"))
 {}
 
 

@@ -62,7 +62,7 @@ Usage
         Property     | Description                | Required    | Default value
         setAverage   | Switch to activate setting of average value | no | false
         perturb      | Perturb points for regular geometries | no | 1e-5
-        fieldTableName | Alternative field name to sample | no| this field name
+        fieldTable   | Alternative field name to sample | no| this field name
         mapMethod    | Type of mapping            | no | planarInterpolation
         offset       | Offset to mapped values    | no | Zero
         dataDir      | Top-level directory of the points and field data \\

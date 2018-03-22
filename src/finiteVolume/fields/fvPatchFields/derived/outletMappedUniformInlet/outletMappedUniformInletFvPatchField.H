@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,14 +29,14 @@ Group
 
 Description
     This boundary conditon averages the field over the "outlet" patch specified
-    by name "outletPatchName" and applies this as the uniform value of the
-    field over this patch.
+    by name "outletPatch" and applies this as the uniform value of the field
+    over this patch.
 
 Usage
     \table
         Property        | Description             | Required    | Default value
-        outletPatchName | name of outlet patch    | yes         |
-        phi             | flux field name         | no          | phi
+        outletPatch     | Name of outlet patch    | yes         |
+        phi             | Flux field name         | no          | phi
     \endtable
 
     Example of the boundary condition specification:
