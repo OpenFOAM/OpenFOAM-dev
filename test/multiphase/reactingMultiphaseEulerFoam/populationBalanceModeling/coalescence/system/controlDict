@@ -53,7 +53,7 @@ maxDeltaT       1;
 
 functions
 {
-    box.all.numberDensity.volume.bubbles
+    numberDensity
     {
         type                sizeDistribution;
         functionObjectLibs  ("libreactingEulerFoamFunctionObjects.so");

@@ -13,7 +13,7 @@ set ylabel 'n(m^{-3}m^{-3})'
 set logscale xy
 set xrange [1e-5:1.5]
 set yrange [1e-5:10]
-set key center
+set key at graph 0.8,0.5
 
 N0 = 0.05
 v0 = 1.0
@@ -21,7 +21,7 @@ v0 = 1.0
 n(x,t) = N0*exp(-t*x**2.0)*2.0*t*v0
 
 plot "<printf '1 0.05\n1 0\n'" w l t "Init. Cond.",\
-n(x,10.0) ls 2 lc rgb "black" t "Ziff and McGrady (1985)",\
-'box.all.numberDensity.volume.bubbles.transposed.dat' every ::0::19 u 1:2 w p pt 1 t 'air1',\
-'box.all.numberDensity.volume.bubbles.transposed.dat' every ::20::24 u 1:2 w p pt 5 t 'air2',\
-'box.all.numberDensity.volume.bubbles.transposed.dat' every ::25::28 u 1:2 w p pt 9 t 'air3'
+n(x,10.0) ls 2 lc rgb "black" t "[Ziff and McGrady, J. Phys. A: Math. Gen., 18: 3027-3037, 1985]",\
+'numberDensity.transposed.dat' every ::0::19 u 1:2 w p pt 1 t 'air1',\
+'numberDensity.transposed.dat' every ::20::24 u 1:2 w p pt 5 t 'air2',\
+'numberDensity.transposed.dat' every ::25::28 u 1:2 w p pt 9 t 'air3'
