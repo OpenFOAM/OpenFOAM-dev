@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,11 +163,11 @@ class fvMeshDistribute
                 labelListList& constructFaceMap
             );
 
-            //- Merge any shared points that are geometrically shared. Needs
-            //  parallel valid mesh - uses globalMeshData.
+            //- Merge any local points that were remotely coupled.
             //  constructPointMap is adapted for the new point labels.
             autoPtr<mapPolyMesh> mergeSharedPoints
             (
+                const labelList& pointToGlobalMaster,
                 labelListList& constructPointMap
             );
 
@@ -175,19 +175,21 @@ class fvMeshDistribute
         // Coupling information
 
             //- Construct the local environment of all boundary faces.
-            void getNeighbourData
+            void getCouplingData
             (
                 const labelList& distribution,
                 labelList& sourceFace,
                 labelList& sourceProc,
                 labelList& sourcePatch,
-                labelList& sourceNewProc
+                labelList& sourceNewProc,
+                labelList& sourcePointMaster
             ) const;
 
             // Subset the neighbourCell/neighbourProc fields
-            static void subsetBoundaryData
+            static void subsetCouplingData
             (
                 const fvMesh& mesh,
+                const labelList& pointMap,
                 const labelList& faceMap,
                 const labelList& cellMap,
 
@@ -200,11 +202,13 @@ class fvMeshDistribute
                 const labelList& sourceProc,
                 const labelList& sourcePatch,
                 const labelList& sourceNewProc,
+                const labelList& sourcePointMaster,
 
                 labelList& subFace,
                 labelList& subProc,
                 labelList& subPatch,
-                labelList& subNewProc
+                labelList& subNewProc,
+                labelList& subPointMaster
             );
 
             //- Find cells on mesh whose faceID/procID match the neighbour
@@ -237,6 +241,14 @@ class fvMeshDistribute
                 const labelList& boundaryData1  // added mesh
             );
 
+            //- Map point data to new mesh (resulting from adding two meshes)
+            static labelList mapPointData
+            (
+                const primitiveMesh& mesh,      // mesh after adding
+                const mapAddedPolyMesh& map,
+                const labelList& boundaryData0, // on mesh before adding
+                const labelList& boundaryData1  // on added mesh
+            );
 
         // Other
 
@@ -276,6 +288,7 @@ class fvMeshDistribute
                 const labelList& sourceProc,
                 const labelList& sourcePatch,
                 const labelList& sourceNewProc,
+                const labelList& sourcePointMaster,
                 Ostream& toDomain
             );
             //- Send subset of fields
@@ -300,6 +313,7 @@ class fvMeshDistribute
                 labelList& domainSourceProc,
                 labelList& domainSourcePatch,
                 labelList& domainSourceNewProc,
+                labelList& domainSourcePointMaster,
                 Istream& fromNbr
             );
 
