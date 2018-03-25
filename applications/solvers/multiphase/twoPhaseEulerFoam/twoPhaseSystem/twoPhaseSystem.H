@@ -218,7 +218,7 @@ public:
             //- Return the mixture flux
             inline const surfaceScalarField& phi() const;
 
-            //- Return non-const access to the the mixture flux
+            //- Return non-const access to the mixture flux
             inline surfaceScalarField& phi();
 
             //- Return the dilatation term

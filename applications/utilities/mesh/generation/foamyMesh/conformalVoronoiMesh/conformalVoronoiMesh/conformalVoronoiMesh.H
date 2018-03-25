@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -728,7 +728,7 @@ private:
 
         label classifyBoundaryPoint(Cell_handle cit) const;
 
-        //- Index all of the the Delaunay cells and calculate their
+        //- Index all of the Delaunay cells and calculate their
         //- Dual points
         void indexDualVertices
         (

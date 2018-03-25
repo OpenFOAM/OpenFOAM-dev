@@ -301,7 +301,7 @@ void Foam::particle::changeFace(const label tetTriI)
         tetFacei_ = newFaceI;
         tetPti_ = edgeI;
 
-        // Exit the loop now that the the tet point has been found
+        // Exit the loop now that the tet point has been found
         break;
     }
 

@@ -112,7 +112,7 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
                 << " plane aligns with a coordinate plane." << nl
                 << "    The wedge plane should make a small angle (~2.5deg)"
                    " with the coordinate plane" << nl
-                << "    and the the pair of wedge planes should be symmetric"
+                << "    and the pair of wedge planes should be symmetric"
                 << " about the coordinate plane." << nl
                 << "    Normal of wedge plane is " << n_
                 << " , implied coordinate plane direction is " << centreNormal_

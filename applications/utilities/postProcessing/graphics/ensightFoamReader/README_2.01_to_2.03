@@ -53,7 +53,7 @@ Header files changes
 global_extern.h         has appropriate changes, must use it
 global_extern_proto.h   new file, access from global_extern.h
 
-Basically the the old global_extern.h file has been split into two files now.
+Basically the old global_extern.h file has been split into two files now.
 
 
 
@@ -644,7 +644,7 @@ USERD_get_nsided_conn -
 
    Notes:
    -----
-   * Will not be called unless there are some nsided elements in the the part.
+   * Will not be called unless there are some nsided elements in the part.
 
    * Providing nsided information to Ensight:
   

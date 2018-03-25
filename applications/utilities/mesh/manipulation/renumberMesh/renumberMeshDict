@@ -26,7 +26,7 @@ sortCoupledFaceCells false;
 // blockCoeffs dictionary to construct a decompositionMethod to do
 // a block subdivision) and then applies the renumberMethod to each
 // block in turn. This can be used in large cases to keep the blocks
-// fitting in cache with all the the cache misses bunched at the end.
+// fitting in cache with all the cache misses bunched at the end.
 // This number is the approximate size of the blocks - this gets converted
 // to a number of blocks that is the input to the decomposition method.
 //blockSize 1000;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Faster version of the DICPreconditioner diagonal-based incomplete
     Cholesky preconditioner for symmetric matrices
-    (symmetric equivalent of DILU) in which the the reciprocal of the
+    (symmetric equivalent of DILU) in which the reciprocal of the
     preconditioned diagonal and the upper coefficients divided by the diagonal
     are calculated and stored.
 

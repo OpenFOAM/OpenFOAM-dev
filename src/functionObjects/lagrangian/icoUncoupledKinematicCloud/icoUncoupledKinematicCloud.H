@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,9 @@ Description
 
     It may be used in conjunction with any transient single-phase incompressible
     flow solver such as pisoFoam or pimpleFoam and tracks the particles or
-    parcels without affecting the the flow-field.
+    parcels without affecting the flow-field.
 
-    The kinematicCloud requires the the density of the fluid which is looked-up
+    The kinematicCloud requires the density of the fluid which is looked-up
     from constant/transportProperties dictionary and the acceleration due to
     gravity which is read from the constant/g file if present or defaults to
     zero.

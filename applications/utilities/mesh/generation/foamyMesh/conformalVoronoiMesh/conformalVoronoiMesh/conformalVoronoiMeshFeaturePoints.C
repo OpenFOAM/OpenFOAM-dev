@@ -513,7 +513,7 @@ void Foam::conformalVoronoiMesh::createExternalEdgePointGroup
     // Convex. So refPt will be inside domain and hence a master point
     Foam::point refPt = edgePt - ppDist*refVec;
 
-    // Insert the master point pairing the the first slave
+    // Insert the master point pairing the first slave
 
     if (!geometryToConformTo_.inside(refPt))
     {

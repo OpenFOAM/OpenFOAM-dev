@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,7 @@ public:
 };
 
 
-// Use macros to emulate partial-specialisation of the the Laplacian functions
+// Use macros to emulate partial-specialisation of the Laplacian functions
 // for scalar diffusivity gamma
 
 #define defineFvmLaplacianScalarGamma(Type)                                    \

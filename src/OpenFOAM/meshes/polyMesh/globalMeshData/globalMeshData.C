@@ -902,7 +902,7 @@ void Foam::globalMeshData::calcGlobalEdgeSlaves() const
 
 
     // The whole problem with deducting edge-connectivity from
-    // point-connectivity is that one of the the endpoints might be
+    // point-connectivity is that one of the endpoints might be
     // a local master but the other endpoint might not. So we first
     // need to make sure that all points know about connectivity and
     // the transformations.
