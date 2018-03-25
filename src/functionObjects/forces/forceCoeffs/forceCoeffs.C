@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,9 +156,16 @@ bool Foam::functionObjects::forceCoeffs::read(const dictionary& dict)
     forces::read(dict);
 
     // Directions for lift and drag forces, and pitch moment
+    // Normalize to ensure that the directions are unit vectors
+
     dict.lookup("liftDir") >> liftDir_;
+    liftDir_ /= mag(liftDir_);
+
     dict.lookup("dragDir") >> dragDir_;
+    dragDir_ /= mag(dragDir_);
+
     dict.lookup("pitchAxis") >> pitchAxis_;
+    pitchAxis_ /= mag(pitchAxis_);
 
     // Free stream velocity magnitude
     dict.lookup("magUInf") >> magUInf_;
