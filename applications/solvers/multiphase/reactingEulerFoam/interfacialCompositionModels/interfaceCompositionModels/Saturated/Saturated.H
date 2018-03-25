@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ protected:
 
     // Private Member Functions
 
-        //- Constant of propotionality between partial pressure and mass
+        //- Constant of proportionality between partial pressure and mass
         //  fraction
         tmp<volScalarField> wRatioByP() const;
 
