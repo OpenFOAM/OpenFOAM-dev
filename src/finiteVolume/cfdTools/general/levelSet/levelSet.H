@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> levelSetAverage
     const GeometricField<Type, pointPatchField, pointMesh>& negativeP
 );
 
-//- Calculate the volume-fraction that a level set occupies. This gives the the
+//- Calculate the volume-fraction that a level set occupies. This gives the
 //  same result as levelSetAverage if the fields passed to the latter are
 //  uniformly 0 and 1. The above flag flips the direction.
 tmp<scalarField> levelSetFraction
