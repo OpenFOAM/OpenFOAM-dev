@@ -25,7 +25,14 @@ Class
     Foam::StationaryPhaseModel
 
 Description
-    ...
+    Class which represents a stationary (and therefore probably solid) phase.
+    Generates, but does not store, zero velocity and flux field and turbulent
+    qauantities. Throws an error when non-const access is requested to the
+    motion fields or when the momentum equation is requested. Usage must
+    must protect against such calls.
+
+See also
+    MovingPhaseModel
 
 SourceFiles
     StationaryPhaseModel.C

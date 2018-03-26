@@ -26,17 +26,15 @@ Class
 
 Description
     Class which represents a moving fluid phase. Holds the velocity, fluxes and
-    turbulence model. Provides access to the turbulent quantities.
+    turbulence model and can generate the momentum equation. The interface is
+    quite restrictive as it also has to support an equivalent stationary model,
+    which does not store motion fields or a turbulence model.
 
     Possible future extensions include separating the turbulent fuctionality
-    into another layer. It should also be possible to replace this layer with a
-    stationary phase model, in order to model packed beds or simple porous
-    media. This would probably require extra functionality, such as returning
-    the inputs into the general pressure equation (A, HbyA, etc ...).
+    into another layer.
 
-    Note that this class does not return the turbulence model, it just provides
-    indirect access to the turbulent data. This is so a layer without
-    turbulence modelling (such as a stationary model) could be substituted.
+See also
+    StationaryPhaseModel
 
 SourceFiles
     MovingPhaseModel.C
