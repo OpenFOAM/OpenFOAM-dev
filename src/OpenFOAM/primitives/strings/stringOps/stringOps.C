@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,7 +270,7 @@ Foam::string Foam::stringOps::getVariable
         OStringStream buf;
         // Force floating point numbers to be printed with at least
         // some decimal digits.
-        buf << fixed;
+        buf << scientific;
         buf.precision(IOstream::defaultPrecision());
 
         // fail for non-primitiveEntry
@@ -585,7 +585,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                     OStringStream buf;
                     // Force floating point numbers to be printed with at least
                     // some decimal digits.
-                    buf << fixed;
+                    buf << scientific;
                     buf.precision(IOstream::defaultPrecision());
                     if (ePtr->isDict())
                     {
