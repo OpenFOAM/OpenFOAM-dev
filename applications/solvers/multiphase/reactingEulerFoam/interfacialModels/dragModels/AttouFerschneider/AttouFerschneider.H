@@ -26,7 +26,7 @@ Class
 
 Description
     Attou and Ferschneider's Drag model for film flow through packed beds. The
-    implementation follows the desciption of Gunjal and Ranade, who, in the
+    implementation follows the description of Gunjal and Ranade, who, in the
     reference below, formulate the model in more convenient terms.
 
     Reference:
