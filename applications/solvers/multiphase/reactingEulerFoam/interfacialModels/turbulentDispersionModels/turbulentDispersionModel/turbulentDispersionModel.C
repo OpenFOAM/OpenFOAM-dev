@@ -29,12 +29,14 @@ License
 #include "surfaceInterpolate.H"
 #include "fvcSnGrad.H"
 #include "phaseCompressibleTurbulenceModel.H"
+#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(turbulentDispersionModel, 0);
+    defineBlendedInterfacialModelTypeNameAndDebug(turbulentDispersionModel, 0);
     defineRunTimeSelectionTable(turbulentDispersionModel, dictionary);
 }
 

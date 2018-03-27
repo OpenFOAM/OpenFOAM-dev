@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,12 +26,14 @@ License
 #include "virtualMassModel.H"
 #include "phasePair.H"
 #include "surfaceInterpolate.H"
+#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(virtualMassModel, 0);
+    defineBlendedInterfacialModelTypeNameAndDebug(virtualMassModel, 0);
     defineRunTimeSelectionTable(virtualMassModel, dictionary);
 }
 

@@ -377,4 +377,16 @@ const modelType& Foam::phaseSystem::lookupSubModel
 }
 
 
+template<class modelType>
+const Foam::BlendedInterfacialModel<modelType>&
+Foam::phaseSystem::lookupBlendedSubModel(const phasePair& key) const
+{
+    return
+        mesh().lookupObject<BlendedInterfacialModel<modelType>>
+        (
+            IOobject::groupName(modelType::typeName, key.name())
+        );
+}
+
+
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,12 +28,14 @@ License
 #include "fvcFlux.H"
 #include "surfaceInterpolate.H"
 #include "wallFvPatch.H"
+#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(wallLubricationModel, 0);
+    defineBlendedInterfacialModelTypeNameAndDebug(wallLubricationModel, 0);
     defineRunTimeSelectionTable(wallLubricationModel, dictionary);
 }
 

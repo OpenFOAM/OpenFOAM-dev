@@ -199,6 +199,15 @@ Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
     const bool correctFixedFluxBCs
 )
 :
+    regIOobject
+    (
+        IOobject
+        (
+            IOobject::groupName(typeName, phasePair(phase1, phase2).name()),
+            phase1.mesh().time().timeName(),
+            phase1.mesh()
+        )
+    ),
     phase1_(phase1),
     phase2_(phase2),
     blending_(blending),
@@ -220,6 +229,15 @@ Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
     const bool correctFixedFluxBCs
 )
 :
+    regIOobject
+    (
+        IOobject
+        (
+            IOobject::groupName(typeName, pair.name()),
+            pair.phase1().mesh().time().timeName(),
+            pair.phase1().mesh()
+        )
+    ),
     phase1_(pair.phase1()),
     phase2_(pair.phase2()),
     blending_(blending),
@@ -345,6 +363,13 @@ Foam::tmp<Foam::volScalarField>
 Foam::BlendedInterfacialModel<ModelType>::D() const
 {
     return evaluate(&ModelType::D, "D", ModelType::dimD, false);
+}
+
+
+template<class ModelType>
+bool Foam::BlendedInterfacialModel<ModelType>::writeData(Ostream& os) const
+{
+    return os.good();
 }
 
 
