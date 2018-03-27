@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,14 @@ License
 
 #include "heatTransferModel.H"
 #include "phasePair.H"
+#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(heatTransferModel, 0);
+    defineBlendedInterfacialModelTypeNameAndDebug(heatTransferModel, 0);
     defineRunTimeSelectionTable(heatTransferModel, dictionary);
 }
 

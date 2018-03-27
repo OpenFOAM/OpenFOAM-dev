@@ -367,6 +367,11 @@ public:
                 const phaseModel& continuous
             ) const;
 
+            //- Return a blended sub model between a phase pair
+            template<class modelType>
+            const BlendedInterfacialModel<modelType>&
+            lookupBlendedSubModel(const phasePair& key) const;
+
 
         // Field construction
 

@@ -30,6 +30,9 @@ License
 #include "fvcDdt.H"
 #include "localEulerDdtScheme.H"
 
+#include "dragModel.H"
+#include "BlendedInterfacialModel.H"
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
