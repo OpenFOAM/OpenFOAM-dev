@@ -19,6 +19,7 @@ diameterModels/velocityGroup/sizeGroup/sizeGroup.C
 
 populationBalanceModel/coalescenceModels/coalescenceModel/coalescenceModel.C
 populationBalanceModel/coalescenceModels/constantCoalescence/constantCoalescence.C
+populationBalanceModel/coalescenceModels/CoulaloglouTavlaridesCoalescence/CoulaloglouTavlaridesCoalescence.C
 populationBalanceModel/coalescenceModels/hydrodynamic/hydrodynamic.C
 
 populationBalanceModel/binaryBreakupModels/binaryBreakupModel/binaryBreakupModel.C
