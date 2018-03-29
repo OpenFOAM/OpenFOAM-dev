@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 
-runApplication datToFoam grid256.dat
+runApplication datToFoam constant/grid256.dat
 
 CONST="constant"
 cat $CONST/pointsHeader $CONST/points.tmp > $CONST/polyMesh/points
