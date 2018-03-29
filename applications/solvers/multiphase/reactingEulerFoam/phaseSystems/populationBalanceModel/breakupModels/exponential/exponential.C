@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,13 +50,14 @@ Foam::diameterModels::breakupModels::exponential::exponential
 )
 :
     breakupModel(popBal, dict),
-    exponent_(readScalar(dict.lookup("exponent")))
+    exponent_(readScalar(dict.lookup("exponent"))),
+    C_(readScalar(dict.lookup("C")))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::breakupModels::exponential::breakupRate
+void Foam::diameterModels::breakupModels::exponential::setBreakupRate
 (
     volScalarField& breakupRate,
     const label i
@@ -64,7 +65,8 @@ void Foam::diameterModels::breakupModels::exponential::breakupRate
 {
     const sizeGroup& fi = *popBal_.sizeGroups()[i];
 
-    breakupRate.primitiveFieldRef() = C_.value()*exp(exponent_*fi.x().value());
+    breakupRate.primitiveFieldRef() =
+        C_*exp(exponent_*fi.x().value());
 }
 
 

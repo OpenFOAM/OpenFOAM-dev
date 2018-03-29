@@ -38,6 +38,25 @@ namespace diameterModels
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+const Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::coalescenceModel::sigma
+(
+    const word& phase1,
+    const word& phase2
+) const
+{
+    const phasePairKey key
+    (
+        phase1,
+        phase2
+    );
+
+    return popBal_.fluid().sigma(key);
+}
+
+
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::diameterModels::coalescenceModel>
@@ -73,12 +92,26 @@ Foam::diameterModels::coalescenceModel::coalescenceModel
     const dictionary& dict
 )
 :
-    popBal_(popBal),
-    C_("C", dimless, dict.lookupOrDefault("C", 1.0))
+    popBal_(popBal)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::phaseCompressibleTurbulenceModel&
+Foam::diameterModels::coalescenceModel::continuousTurbulence() const
+{
+    return
+        popBal_.mesh().lookupObject<phaseCompressibleTurbulenceModel>
+        (
+            IOobject::groupName
+            (
+                turbulenceModel::propertiesName,
+                popBal_.continuousPhase().name()
+            )
+        );
+}
+
 
 void Foam::diameterModels::coalescenceModel::correct()
 {}

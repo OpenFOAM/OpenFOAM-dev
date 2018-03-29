@@ -91,7 +91,7 @@ public:
         virtual void correct();
 
         //- Add to driftRate
-        virtual void driftRate
+        virtual void addToDriftRate
         (
             volScalarField& driftRate,
             const label i

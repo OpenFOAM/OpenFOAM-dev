@@ -38,6 +38,7 @@ SourceFiles
 
 #include "populationBalanceModel.H"
 #include "daughterSizeDistributionModel.H"
+#include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,14 +57,11 @@ protected:
 
     // Protected data
 
-        //- Reference to the populationBalance
+        //- Reference to the populationBalanceModel
         const populationBalanceModel& popBal_;
 
         //- Dictionary
         dictionary dict_;
-
-        //- Optional coefficient
-        const dimensionedScalar C_;
 
         //- Daughter size distribution model
         autoPtr<daughterSizeDistributionModel> dsd_;
@@ -144,11 +142,14 @@ public:
 
     // Member Functions
 
-        //- Return reference to the populationBalance
+        //- Return reference to the populationBalanceModel
         const populationBalanceModel& popBal() const
         {
             return popBal_;
         }
+
+        //- Return a reference to the turbulence model for the continuous phase
+        const phaseCompressibleTurbulenceModel& continuousTurbulence() const;
 
         //- Return const-reference to daughter size distribution pointer
         const autoPtr<daughterSizeDistributionModel>& dsdPtr() const
@@ -165,8 +166,8 @@ public:
         //- Correct diameter independent expressions
         virtual void correct();
 
-        //- Add to breakupRate
-        virtual void breakupRate
+        //- Set total breakupRate
+        virtual void setBreakupRate
         (
             volScalarField& breakupRate,
             const label i

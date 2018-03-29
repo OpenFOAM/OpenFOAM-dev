@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::diameterModels::coalescenceModels::hydrodynamic::hydrodynamic
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::hydrodynamic::coalescenceRate
+void Foam::diameterModels::coalescenceModels::hydrodynamic::addToCoalescenceRate
 (
     volScalarField& coalescenceRate,
     const label i,
@@ -66,7 +66,7 @@ void Foam::diameterModels::coalescenceModels::hydrodynamic::coalescenceRate
     const sizeGroup& fj = *popBal_.sizeGroups()[j];
 
     coalescenceRate.primitiveFieldRef() +=
-        C_.value()*pow3((fi.d().value() + fj.d().value()));
+        pow3((fi.d().value() + fj.d().value()));
 }
 
 

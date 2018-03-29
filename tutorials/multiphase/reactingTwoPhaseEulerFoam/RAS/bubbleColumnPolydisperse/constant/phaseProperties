@@ -81,10 +81,7 @@ populationBalanceCoeffs
 
         coalescenceModels
         (
-            hydrodynamic
-            {
-                C 0.25;
-            }
+            CoulaloglouTavlarides{}
         );
 
         binaryBreakupModels
@@ -94,8 +91,8 @@ populationBalanceCoeffs
         (
             exponential
             {
-                C 0.5;
-                exponent 0.01;
+                C 10.0;
+                exponent 1.0;
                 daughterSizeDistributionModel uniformBinary;
             }
         );

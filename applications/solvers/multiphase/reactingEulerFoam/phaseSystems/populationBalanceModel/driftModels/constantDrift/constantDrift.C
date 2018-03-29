@@ -80,15 +80,17 @@ void Foam::diameterModels::driftModels::constantDrift::correct()
 }
 
 
-void Foam::diameterModels::driftModels::constantDrift::driftRate
+void Foam::diameterModels::driftModels::constantDrift::addToDriftRate
 (
     volScalarField& driftRate,
     const label i
 )
 {
     const sizeGroup& fi = *popBal_.sizeGroups()[i];
+    phaseModel& phase = const_cast<phaseModel&>(fi.phase());
+    volScalarField& rho = phase.thermoRef().rho();
 
-    driftRate -= fi.phase().continuityErrorSources()/(N_*fi.phase().rho());
+    driftRate += (popBal_.fluid().fvOptions()(phase, rho)&rho)/(N_*rho);
 }
 
 

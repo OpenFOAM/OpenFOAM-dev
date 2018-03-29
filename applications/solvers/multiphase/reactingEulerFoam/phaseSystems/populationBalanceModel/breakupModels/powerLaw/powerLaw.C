@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::diameterModels::breakupModels::powerLaw::powerLaw
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::breakupModels::powerLaw::breakupRate
+void Foam::diameterModels::breakupModels::powerLaw::setBreakupRate
 (
     volScalarField& breakupRate,
     const label i
@@ -64,7 +64,7 @@ void Foam::diameterModels::breakupModels::powerLaw::breakupRate
 {
     const sizeGroup& fi = *popBal_.sizeGroups()[i];
 
-    breakupRate.primitiveFieldRef() = C_.value()*pow(fi.x().value(), power_);
+    breakupRate.primitiveFieldRef() = pow(fi.x().value(), power_);
 }
 
 

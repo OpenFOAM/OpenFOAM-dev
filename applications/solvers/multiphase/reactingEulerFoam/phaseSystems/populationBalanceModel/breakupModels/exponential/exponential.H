@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,11 @@ class exponential
 {
     // Private data
 
-        //- Power
+        //- Exponent
         scalar exponent_;
+
+        //- Coefficient
+        scalar C_;
 
 
 public:
@@ -82,8 +85,8 @@ public:
 
     // Member Functions
 
-        //- Add to total breakupRate
-        virtual void breakupRate
+        //- Set total breakupRate
+        virtual void setBreakupRate
         (
             volScalarField& breakupRate,
             const label i

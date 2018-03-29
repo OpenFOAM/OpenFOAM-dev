@@ -62,9 +62,9 @@ Description
     \verbatim
         Binary breakup term formulation:
             Liao, Y.; Oertel, R.; Kriebitzsch, S.; Schlegel, F.; Lucas, D.
-            (2017). A Discrete Population Balance Equation for Binary Breakage.
-            International Journal for Numerical Methods in Fluids, Accepted for
-            publication.
+            (2018). A Discrete Population Balance Equation for Binary Breakage.
+            International Journal for Numerical Methods in Fluids,
+            DOI 10.1002/fld.4491.
     \endverbatim
 
 Usage

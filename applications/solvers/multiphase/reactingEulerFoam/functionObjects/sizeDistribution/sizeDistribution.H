@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::sizeDistribution
 
 Group
-    grpreactingEulerFoamFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates and outputs information about the size

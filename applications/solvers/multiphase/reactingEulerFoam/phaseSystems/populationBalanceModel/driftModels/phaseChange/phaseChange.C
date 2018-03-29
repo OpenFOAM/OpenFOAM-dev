@@ -108,7 +108,7 @@ void Foam::diameterModels::driftModels::phaseChange::correct()
 }
 
 
-void Foam::diameterModels::driftModels::phaseChange::driftRate
+void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
 (
     volScalarField& driftRate,
     const label i

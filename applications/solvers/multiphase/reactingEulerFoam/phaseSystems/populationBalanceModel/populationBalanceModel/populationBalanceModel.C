@@ -692,7 +692,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
                 forAll(coalescence_, model)
                 {
-                    coalescence_[model].coalescenceRate
+                    coalescence_[model].addToCoalescenceRate
                     (
                         coalescenceRate_(),
                         i,
@@ -710,7 +710,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
         {
             forAll(breakup_, model)
             {
-                breakup_[model].breakupRate(breakupRate_(), i);
+                breakup_[model].setBreakupRate(breakupRate_(), i);
 
                 birthByBreakup(i, model);
 
@@ -728,7 +728,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
                 forAll(binaryBreakup_, model)
                 {
-                    binaryBreakup_[model].binaryBreakupRate
+                    binaryBreakup_[model].addToBinaryBreakupRate
                     (
                         binaryBreakupRate_(),
                         j,
@@ -750,7 +750,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
             forAll(drift_, model)
             {
-                drift_[model].driftRate(driftRate_(), i);
+                drift_[model].addToDriftRate(driftRate_(), i);
             }
 
             drift(i);
@@ -762,7 +762,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
             forAll(nucleation_, model)
             {
-                nucleation_[model].nucleationRate(nucleationRate_(), i);
+                nucleation_[model].addToNucleationRate(nucleationRate_(), i);
             }
 
             nucleation(i);

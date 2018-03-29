@@ -90,7 +90,7 @@ public:
         virtual void correct();
 
         //- Add to nucleationRate
-        virtual void nucleationRate
+        virtual void addToNucleationRate
         (
             volScalarField& nucleationRate,
             const label i

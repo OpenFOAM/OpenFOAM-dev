@@ -143,8 +143,8 @@ void Foam::diameterModels::nucleationModels::wallBoiling::correct()
 }
 
 
-void Foam::diameterModels::nucleationModels::wallBoiling::
-nucleationRate
+void
+Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
 (
     volScalarField& nucleationRate,
     const label i

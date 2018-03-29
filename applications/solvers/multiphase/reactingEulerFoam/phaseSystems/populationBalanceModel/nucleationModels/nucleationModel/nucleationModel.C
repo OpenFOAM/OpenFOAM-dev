@@ -54,9 +54,9 @@ Foam::diameterModels::nucleationModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown zeroeth order model type "
+            << "Unknown nucleation model type "
             << type << nl << nl
-            << "Valid zeroeth order model types : " << endl
+            << "Valid nucleation model types : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }

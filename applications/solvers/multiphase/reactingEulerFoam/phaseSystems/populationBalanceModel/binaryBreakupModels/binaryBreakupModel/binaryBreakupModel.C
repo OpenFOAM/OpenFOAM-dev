@@ -72,12 +72,26 @@ Foam::diameterModels::binaryBreakupModel::binaryBreakupModel
     const dictionary& dict
 )
 :
-    popBal_(popBal),
-    C_("C", dimless, dict.lookupOrDefault("C", 1.0))
+    popBal_(popBal)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::phaseCompressibleTurbulenceModel&
+Foam::diameterModels::binaryBreakupModel::continuousTurbulence() const
+{
+    return
+        popBal_.mesh().lookupObject<phaseCompressibleTurbulenceModel>
+        (
+            IOobject::groupName
+            (
+                turbulenceModel::propertiesName,
+                popBal_.continuousPhase().name()
+            )
+        );
+}
+
 
 void Foam::diameterModels::binaryBreakupModel::correct()
 {}

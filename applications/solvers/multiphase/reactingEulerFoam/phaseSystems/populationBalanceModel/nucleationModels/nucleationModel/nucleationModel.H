@@ -133,7 +133,7 @@ public:
 
     // Member Functions
 
-        //- Return reference to the populationBalance
+        //- Return reference to the populationBalanceModel
         const populationBalanceModel& popBal() const
         {
             return popBal_;
@@ -143,7 +143,7 @@ public:
         virtual void correct();
 
         //- Add to nucleationRate
-        virtual void nucleationRate
+        virtual void addToNucleationRate
         (
             volScalarField& nucleationRate,
             const label i
