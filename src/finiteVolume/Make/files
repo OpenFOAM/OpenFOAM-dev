@@ -192,7 +192,6 @@ $(derivedFvPatchFields)/translatingWallVelocity/translatingWallVelocityFvPatchVe
 $(derivedFvPatchFields)/turbulentInlet/turbulentInletFvPatchFields.C
 $(derivedFvPatchFields)/turbulentIntensityKineticEnergyInlet/turbulentIntensityKineticEnergyInletFvPatchScalarField.C
 $(derivedFvPatchFields)/uniformDensityHydrostaticPressure/uniformDensityHydrostaticPressureFvPatchScalarField.C
-$(derivedFvPatchFields)/prghUniformDensityHydrostaticPressure/prghUniformDensityHydrostaticPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/uniformFixedGradient/uniformFixedGradientFvPatchFields.C
 $(derivedFvPatchFields)/uniformFixedValue/uniformFixedValueFvPatchFields.C
 $(derivedFvPatchFields)/uniformInletOutlet/uniformInletOutletFvPatchFields.C
@@ -205,12 +204,12 @@ $(derivedFvPatchFields)/outletPhaseMeanVelocity/outletPhaseMeanVelocityFvPatchVe
 $(derivedFvPatchFields)/waveTransmissive/waveTransmissiveFvPatchFields.C
 $(derivedFvPatchFields)/waveSurfacePressure/waveSurfacePressureFvPatchScalarField.C
 $(derivedFvPatchFields)/interstitialInletVelocity/interstitialInletVelocityFvPatchVectorField.C
-$(derivedFvPatchFields)/prghPressure/prghPressureFvPatchScalarField.C
-$(derivedFvPatchFields)/prghTotalPressure/prghTotalPressureFvPatchScalarField.C
-$(derivedFvPatchFields)/prghTotalHydrostaticPressure/prghTotalHydrostaticPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/fixedProfile/fixedProfileFvPatchFields.C
 $(derivedFvPatchFields)/plenumPressure/plenumPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/interfaceCompression/interfaceCompressionFvPatchScalarField.C
+$(derivedFvPatchFields)/pressure/pressureFvPatchScalarField.C
+$(derivedFvPatchFields)/PrghPressure/prghPressureFvPatchScalarFields.C
+$(derivedFvPatchFields)/prghTotalHydrostaticPressure/prghTotalHydrostaticPressureFvPatchScalarField.C
 
 fvsPatchFields = fields/fvsPatchFields
 $(fvsPatchFields)/fvsPatchField/fvsPatchFields.C

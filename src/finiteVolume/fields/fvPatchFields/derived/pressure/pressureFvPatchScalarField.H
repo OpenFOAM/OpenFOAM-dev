@@ -22,59 +22,44 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::prghUniformDensityHydrostaticPressureFvPatchScalarField
+    Foam::pressureFvPatchScalarField
 
 Group
     grpGenericBoundaryConditions
 
 Description
-    This boundary condition provides a hydrostatic pressure condition for p_rgh,
-    calculated as:
+    Static pressure boundary condition
 
-        \f[
-            p_{rgh} = p_{ref} - (\rho - \rho_{ref}) g (h - h_{ref})
-        \f]
-
-    where
-    \vartable
-        p_{rgh}    | Pseudo hydrostatic pressure [Pa]
-        p_{ref}    | Static pressure at hRef [Pa]
-        h          | Height in the opposite direction to gravity
-        h_{ref}    | Reference height in the opposite direction to gravity
-        \rho       | Density field
-        \rho_{ref} | Uniform reference density at boundary
-        g          | Acceleration due to gravity [m/s^2]
-    \endtable
+    Used as the base-class for static pressure boundary conditions force
+    alternative pressure variables, e.g. p_rgh.
 
 Usage
     \table
-        Property     | Description               | Required    | Default value
-        pRef         | Reference static pressure | yes         |
-        rhoRef       | Reference density         | yes         |
-        rho          | Density field name        | no          | rho
+        Property     | Description             | Required    | Default value
+        p            | static pressure         | yes         |
     \endtable
 
     Example of the boundary condition specification:
     \verbatim
     <patchName>
     {
-        type            prghUniformDensityHydrostaticPressure;
-        rhoRef          1000;
-        p               0;
+        type            pressure;
+        p               uniform 0;
         value           uniform 0; // optional initial value
     }
     \endverbatim
 
 See also
     Foam::fixedValueFvPatchScalarField
+    Foam::PrghPressureFvPatchScalarField
 
 SourceFiles
-    prghUniformDensityHydrostaticPressureFvPatchScalarField.C
+    pressureFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef prghUniformDensityHydrostaticPressureFvPatchScalarField_H
-#define prghUniformDensityHydrostaticPressureFvPatchScalarField_H
+#ifndef pressureFvPatchScalarField_H
+#define pressureFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
 
@@ -84,10 +69,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-   Class prghUniformDensityHydrostaticPressureFvPatchScalarField Declaration
+         Class pressureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class prghUniformDensityHydrostaticPressureFvPatchScalarField
+class pressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
@@ -96,33 +81,27 @@ protected:
 
     // Protected data
 
-        //- Reference Static pressure
-        scalar pRef_;
-
-        //- Reference density
-        scalar rhoRef_;
-
-        //- Name of phase-fraction field
-        word rhoName_;
+        //- Static pressure
+        scalarField p_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("prghUniformDensityHydrostaticPressure");
+    TypeName("pressure");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        prghUniformDensityHydrostaticPressureFvPatchScalarField
+        pressureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        prghUniformDensityHydrostaticPressureFvPatchScalarField
+        pressureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -130,20 +109,19 @@ public:
         );
 
         //- Construct by mapping given
-        //  prghUniformDensityHydrostaticPressureFvPatchScalarField
-        //  onto a new patch
-        prghUniformDensityHydrostaticPressureFvPatchScalarField
+        //  pressureFvPatchScalarField onto a new patch
+        pressureFvPatchScalarField
         (
-            const prghUniformDensityHydrostaticPressureFvPatchScalarField&,
+            const pressureFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy
-        prghUniformDensityHydrostaticPressureFvPatchScalarField
+        pressureFvPatchScalarField
         (
-            const prghUniformDensityHydrostaticPressureFvPatchScalarField&
+            const pressureFvPatchScalarField&
         );
 
         //- Construct and return a clone
@@ -151,17 +129,14 @@ public:
         {
             return tmp<fvPatchScalarField >
             (
-                new prghUniformDensityHydrostaticPressureFvPatchScalarField
-                (
-                    *this
-                )
+                new pressureFvPatchScalarField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        prghUniformDensityHydrostaticPressureFvPatchScalarField
+        pressureFvPatchScalarField
         (
-            const prghUniformDensityHydrostaticPressureFvPatchScalarField&,
+            const pressureFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -173,16 +148,43 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new prghUniformDensityHydrostaticPressureFvPatchScalarField
-                (
-                    *this,
-                    iF
-                )
+                new pressureFvPatchScalarField(*this, iF)
             );
         }
 
 
     // Member functions
+
+        // Access
+
+            //- Return the static pressure
+            const scalarField& p() const
+            {
+                return p_;
+            }
+
+            //- Return reference to the static pressure to allow adjustment
+            scalarField& p()
+            {
+                return p_;
+            }
+
+
+        // Mapping functions
+
+            //- Map (and resize as needed) from self given a mapping object
+            virtual void autoMap
+            (
+                const fvPatchFieldMapper&
+            );
+
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            virtual void rmap
+            (
+                const fvPatchScalarField&,
+                const labelList&
+            );
+
 
         // Evaluation functions
 

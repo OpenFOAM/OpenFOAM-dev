@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::prghPressureFvPatchScalarField
+    Foam::PrghPressureFvPatchScalarField
 
 Group
     grpGenericBoundaryConditions
 
 Description
-    This boundary condition provides static pressure condition for p_rgh,
-    calculated as:
+    This boundary condition provides the p_rgh equivalent of a pressure
+    boundary condition calculated as:
 
         \f[
             p_rgh = p - \rho g (h - hRef)
@@ -45,36 +45,15 @@ Description
         g       | acceleration due to gravity [m/s^2]
     \endtable
 
-Usage
-    \table
-        Property     | Description             | Required    | Default value
-        rho          | rho field name          | no          | rho
-        p            | static pressure         | yes         |
-    \endtable
-
-    Example of the boundary condition specification:
-    \verbatim
-    <patchName>
-    {
-        type            prghPressure;
-        rho             rho;
-        p               uniform 0;
-        value           uniform 0; // optional initial value
-    }
-    \endverbatim
-
-See also
-    Foam::fixedValueFvPatchScalarField
-
 SourceFiles
-    prghPressureFvPatchScalarField.C
+    PrghPressureFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef prghPressureFvPatchScalarField_H
-#define prghPressureFvPatchScalarField_H
+#ifndef PrghPressureFvPatchScalarField_H
+#define PrghPressureFvPatchScalarField_H
 
-#include "fixedValueFvPatchFields.H"
+#include "fvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,42 +61,32 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-         Class prghPressureFvPatchScalarField Declaration
+         Class PrghPressureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class prghPressureFvPatchScalarField
+template<class PressureFvPatchScalarField>
+class PrghPressureFvPatchScalarField
 :
-    public fixedValueFvPatchScalarField
+    public PressureFvPatchScalarField
 {
-
-protected:
-
-    // Protected data
-
-        //- Name of phase-fraction field
-        word rhoName_;
-
-        //- Static pressure
-        scalarField p_;
-
 
 public:
 
     //- Runtime type information
-    TypeName("prghPressure");
+    TypeName("PrghPressure");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        prghPressureFvPatchScalarField
+        PrghPressureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        prghPressureFvPatchScalarField
+        PrghPressureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -125,19 +94,19 @@ public:
         );
 
         //- Construct by mapping given
-        //  prghPressureFvPatchScalarField onto a new patch
-        prghPressureFvPatchScalarField
+        //  PrghPressureFvPatchScalarField onto a new patch
+        PrghPressureFvPatchScalarField
         (
-            const prghPressureFvPatchScalarField&,
+            const PrghPressureFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy
-        prghPressureFvPatchScalarField
+        PrghPressureFvPatchScalarField
         (
-            const prghPressureFvPatchScalarField&
+            const PrghPressureFvPatchScalarField&
         );
 
         //- Construct and return a clone
@@ -145,14 +114,14 @@ public:
         {
             return tmp<fvPatchScalarField >
             (
-                new prghPressureFvPatchScalarField(*this)
+                new PrghPressureFvPatchScalarField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        prghPressureFvPatchScalarField
+        PrghPressureFvPatchScalarField
         (
-            const prghPressureFvPatchScalarField&,
+            const PrghPressureFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -164,52 +133,17 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new prghPressureFvPatchScalarField(*this, iF)
+                new PrghPressureFvPatchScalarField(*this, iF)
             );
         }
 
 
     // Member functions
 
-        // Access
-
-            //- Return the static pressure
-            const scalarField& p() const
-            {
-                return p_;
-            }
-
-            //- Return reference to the static pressure to allow adjustment
-            scalarField& p()
-            {
-                return p_;
-            }
-
-
-        // Mapping functions
-
-            //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
-
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchScalarField&,
-                const labelList&
-            );
-
-
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
-
-
-        //- Write
-        virtual void write(Ostream&) const;
 };
 
 
@@ -218,6 +152,24 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "PrghPressureFvPatchScalarField.C"
+#endif
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define makePrghPatchScalarField(Pressure, PrghPressure)                       \
+    typedef PrghPressureFvPatchScalarField<Pressure##FvPatchScalarField>       \
+    PrghPressure;                                                              \
+                                                                               \
+    defineTemplateTypeNameAndDebug(PrghPressure, 0);                           \
+                                                                               \
+    addToPatchFieldRunTimeSelection                                            \
+    (                                                                          \
+        fvPatchScalarField,                                                    \
+        PrghPressure                                                           \
+    )
 
 #endif
 
