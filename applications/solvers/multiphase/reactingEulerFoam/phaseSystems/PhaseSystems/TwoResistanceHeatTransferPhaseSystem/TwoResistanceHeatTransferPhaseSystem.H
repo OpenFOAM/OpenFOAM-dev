@@ -22,18 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::HeatTransferPhaseSystem
+    Foam::TwoResistanceHeatTransferPhaseSystem
 
 Description
     Class which models interfacial heat transfer between a number of phases.
+    Two heat transfer models are stored at each interface, one for each phase.
+    This permits definition of an interface temperature with which heat transfer
+    occurs. It also allows derived systems to define other thermodynamic
+    properties at the interface and therefore represent phase changes.
+
+See also
+    OneResistanceHeatTransferPhaseSystem
 
 SourceFiles
-    HeatTransferPhaseSystem.C
+    TwoResistanceHeatTransferPhaseSystem.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef HeatTransferPhaseSystem_H
-#define HeatTransferPhaseSystem_H
+#ifndef TwoResistanceHeatTransferPhaseSystem_H
+#define TwoResistanceHeatTransferPhaseSystem_H
 
 #include "phaseSystem.H"
 
@@ -42,16 +49,18 @@ SourceFiles
 namespace Foam
 {
 
+template<class modelType>
+class BlendedInterfacialModel;
+
 class blendingMethod;
-template<class modelType> class BlendedInterfacialModel;
 class heatTransferModel;
 
 /*---------------------------------------------------------------------------*\
-                    Class HeatTransferPhaseSystem Declaration
+         Class TwoResistanceHeatTransferPhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>
-class HeatTransferPhaseSystem
+class TwoResistanceHeatTransferPhaseSystem
 :
     public BasePhaseSystem
 {
@@ -61,13 +70,16 @@ protected:
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<heatTransferModel>>,
+            Pair<autoPtr<BlendedInterfacialModel<heatTransferModel>>>,
             phasePairKey,
             phasePairKey::hash
         > heatTransferModelTable;
 
 
     // Protected data
+
+        //- Interface temperatures
+        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash> Tf_;
 
         // Sub Models
 
@@ -80,11 +92,11 @@ public:
     // Constructors
 
         //- Construct from fvMesh
-        HeatTransferPhaseSystem(const fvMesh&);
+        TwoResistanceHeatTransferPhaseSystem(const fvMesh&);
 
 
     //- Destructor
-    virtual ~HeatTransferPhaseSystem();
+    virtual ~TwoResistanceHeatTransferPhaseSystem();
 
 
     // Member Functions
@@ -92,8 +104,11 @@ public:
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
-        //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
+        //- Correct the thermodynamics
+        virtual void correctThermo();
+
+        //- Correct the interface thermodynamics
+        virtual void correctInterfaceThermo();
 
         //- Read base phaseProperties dictionary
         virtual bool read();
@@ -107,7 +122,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "HeatTransferPhaseSystem.C"
+    #include "TwoResistanceHeatTransferPhaseSystem.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

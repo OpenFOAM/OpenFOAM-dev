@@ -168,28 +168,10 @@ drag
 virtualMass
 ();
 
-heatTransfer.air1
+heatTransfer
 ();
 
-heatTransfer.air2
-();
-
-heatTransfer.air3
-();
-
-heatTransfer.water
-();
-
-massTransfer.air1
-();
-
-massTransfer.air2
-();
-
-massTransfer.air3
-();
-
-massTransfer.water
+phaseTransfer
 ();
 
 lift

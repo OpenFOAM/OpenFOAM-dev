@@ -19,7 +19,7 @@ type thermalPhaseChangeTwoPhaseSystem;
 
 phases (steam water);
 
-massTransfer on;
+phaseChange on;
 
 steam
 {
@@ -126,10 +126,7 @@ heatTransfer.water
     }
 );
 
-massTransfer.steam
-();
-
-massTransfer.water
+phaseTransfer
 ();
 
 lift

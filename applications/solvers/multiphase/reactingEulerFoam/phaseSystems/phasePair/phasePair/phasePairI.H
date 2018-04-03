@@ -67,6 +67,27 @@ inline const Foam::phaseModel& Foam::phasePair::otherPhase
 }
 
 
+inline Foam::label Foam::phasePair::index(const phaseModel& phase) const
+{
+    if (&phase1_ == &phase)
+    {
+        return 0;
+    }
+    else if (&phase2_ == &phase)
+    {
+        return 1;
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "this phasePair does not contain phase " << phase.name()
+            << exit(FatalError);
+
+        return -1;
+    }
+}
+
+
 inline const Foam::uniformDimensionedVectorField& Foam::phasePair::g() const
 {
     return g_;
@@ -90,6 +111,12 @@ inline Foam::phasePair::const_iterator::const_iterator(const phasePair& pair)
 :
     const_iterator(pair, 0)
 {}
+
+
+inline Foam::label Foam::phasePair::const_iterator::index() const
+{
+    return index_;
+}
 
 
 inline bool Foam::phasePair::const_iterator::operator==

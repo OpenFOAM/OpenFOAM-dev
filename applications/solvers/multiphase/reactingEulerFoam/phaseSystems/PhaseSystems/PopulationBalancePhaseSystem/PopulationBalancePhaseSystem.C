@@ -168,45 +168,6 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 
 template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::massTransferTable>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::heatTransfer() const
-{
-    autoPtr<phaseSystem::heatTransferTable> eqnsPtr =
-        BasePhaseSystem::heatTransfer();
-
-    phaseSystem::heatTransferTable& eqns = eqnsPtr();
-
-    // Source term due to mass trasfer
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        const volScalarField& he1(pair.phase1().thermo().he());
-        const volScalarField& he2(pair.phase2().thermo().he());
-
-        const volScalarField dmdt(this->pDmdt(pair));
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
-
-        *eqns[pair.phase1().name()] += dmdt21*he2 - fvm::Sp(dmdt21, he1);
-        *eqns[pair.phase2().name()] -= dmdt12*he1 - fvm::Sp(dmdt12, he2);
-    }
-
-    return eqnsPtr;
-}
-
-
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::massTransferTable>
 Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::massTransfer() const
 {
     autoPtr<phaseSystem::massTransferTable> eqnsPtr =

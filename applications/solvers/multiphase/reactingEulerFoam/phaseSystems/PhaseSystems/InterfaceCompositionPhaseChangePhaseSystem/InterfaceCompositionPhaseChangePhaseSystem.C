@@ -25,6 +25,7 @@ License
 
 #include "InterfaceCompositionPhaseChangePhaseSystem.H"
 #include "interfaceCompositionModel.H"
+#include "massTransferModel.H"
 
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
@@ -65,6 +66,68 @@ InterfaceCompositionPhaseChangePhaseSystem
         interfaceCompositionModels_
     );
 
+    this->generatePairsAndSubModels
+    (
+        "massTransfer",
+        massTransferModels_,
+        false
+    );
+
+    // Check that models have been specified in the correct combinations
+    forAllConstIter
+    (
+        interfaceCompositionModelTable,
+        interfaceCompositionModels_,
+        interfaceCompositionModelIter
+    )
+    {
+        const phasePair& pair =
+            this->phasePairs_[interfaceCompositionModelIter.key()];
+
+        if (!pair.ordered())
+        {
+            FatalErrorInFunction
+                << "An interfacial composition model is specified for the "
+                << "unordered " << pair << " pair. Composition models only "
+                << "apply to ordered pairs. A entry for an "
+                << phasePairKey("A", "B", true) << " pair means a model for "
+                << "the A side of the A-B interface; i.e., \"A in the presence "
+                << "of B\""
+                << exit(FatalError);
+        }
+
+        const phasePairKey key(pair.phase1().name(), pair.phase2().name());
+
+        if (!massTransferModels_[key][pair.index(pair.phase1())].valid())
+        {
+            FatalErrorInFunction
+                << "A species transfer model for the " << pair.phase1().name()
+                << " side of the " << key << " pair is not specified. This is "
+                << "required by the corresponding interface composition model."
+                << exit(FatalError);
+        }
+    }
+    forAllConstIter
+    (
+        massTransferModelTable,
+        massTransferModels_,
+        massTransferModelIter
+    )
+    {
+        const phasePair& pair =
+            this->phasePairs_[massTransferModelIter.key()];
+
+        if (!this->heatTransferModels_.found(pair))
+        {
+             FatalErrorInFunction
+                 << "A Heat transfer model for " << pair << " pair is not "
+                 << "specified. This is required by the corresponding species "
+                 << "transfer model"
+                 << exit(FatalError);
+        }
+    }
+
+    // Generate mass transfer fields, set to zero
     forAllConstIter
     (
         phaseSystem::phasePairTable,
@@ -158,66 +221,6 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
-Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
-heatTransfer() const
-{
-    autoPtr<phaseSystem::heatTransferTable> eqnsPtr =
-        BasePhaseSystem::heatTransfer();
-
-    phaseSystem::heatTransferTable& eqns = eqnsPtr();
-
-    // Source term due to mass transfer
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        if
-        (
-            this->heatTransferModels_.found(phasePairIter.key())
-        )
-        {
-            const phasePair& pair(phasePairIter());
-
-            if (pair.ordered())
-            {
-                continue;
-            }
-
-            const phaseModel& phase1 = pair.phase1();
-            const phaseModel& phase2 = pair.phase2();
-
-            const volScalarField& he1(phase1.thermo().he());
-            const volScalarField& he2(phase2.thermo().he());
-
-            const volScalarField K1(phase1.K());
-            const volScalarField K2(phase2.K());
-
-            const volScalarField dmdt(this->dmdt(pair));
-            const volScalarField dmdt21(posPart(dmdt));
-            const volScalarField dmdt12(negPart(dmdt));
-            const volScalarField& Tf(*this->Tf_[pair]);
-
-            *eqns[phase1.name()] +=
-                dmdt21*(phase1.thermo().he(phase1.thermo().p(), Tf))
-              - fvm::Sp(dmdt21, he1)
-              + dmdt21*(K2 - K1);
-
-            *eqns[phase2.name()] -=
-                dmdt12*(phase2.thermo().he(phase2.thermo().p(), Tf))
-              - fvm::Sp(dmdt12, he2)
-              + dmdt12*(K1 - K2);
-        }
-    }
-
-    return eqnsPtr;
-}
-
-
-template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::massTransferTable>
 Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
 massTransfer() const
@@ -262,10 +265,8 @@ massTransfer() const
             interfaceCompositionModelIter()
         );
 
-        const phasePair& pair
-        (
-            this->phasePairs_[interfaceCompositionModelIter.key()]
-        );
+        const phasePair& pair =
+            this->phasePairs_[interfaceCompositionModelIter.key()];
         const phaseModel& phase = pair.phase1();
         const phaseModel& otherPhase = pair.phase2();
         const phasePairKey key(phase.name(), otherPhase.name());
@@ -279,7 +280,7 @@ massTransfer() const
 
         const volScalarField K
         (
-            this->massTransferModels_[key][phase.name()]->K()
+            massTransferModels_[key][pair.index(phase)]->K()
         );
 
         forAllConstIter
@@ -335,10 +336,8 @@ massTransfer() const
 
 template<class BasePhaseSystem>
 void Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
-correctThermo()
+correctInterfaceThermo()
 {
-    phaseSystem::correctThermo();
-
     // This loop solves for the interface temperatures, Tf, and updates the
     // interface composition models.
     //
@@ -353,23 +352,19 @@ correctThermo()
 
     forAllConstIter
     (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
+        massTransferModelTable,
+        massTransferModels_,
+        massTransferModelIter
     )
     {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
+        const phasePair& pair =
+            this->phasePairs_[massTransferModelIter.key()];
 
         const phasePairKey key12(pair.first(), pair.second(), true);
         const phasePairKey key21(pair.second(), pair.first(), true);
 
-        volScalarField H1(this->heatTransferModels_[pair][pair.first()]->K());
-        volScalarField H2(this->heatTransferModels_[pair][pair.second()]->K());
+        volScalarField H1(this->heatTransferModels_[pair].first()->K());
+        volScalarField H2(this->heatTransferModels_[pair].second()->K());
         dimensionedScalar HSmall("small", heatTransferModel::dimK, small);
 
         volScalarField mDotL
@@ -402,7 +397,7 @@ correctThermo()
         {
             this->interfaceCompositionModels_[key12]->addMDotL
             (
-                this->massTransferModels_[pair][pair.first()]->K(),
+                massTransferModelIter().first()->K(),
                 Tf,
                 mDotL,
                 mDotLPrime
@@ -412,7 +407,7 @@ correctThermo()
         {
             this->interfaceCompositionModels_[key21]->addMDotL
             (
-                this->massTransferModels_[pair][pair.second()]->K(),
+                massTransferModelIter().second()->K(),
                 Tf,
                 mDotL,
                 mDotLPrime

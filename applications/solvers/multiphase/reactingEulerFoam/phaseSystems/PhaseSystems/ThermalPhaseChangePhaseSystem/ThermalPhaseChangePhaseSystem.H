@@ -78,8 +78,8 @@ protected:
         //- The saturation model used to evaluate Tsat = Tf
         autoPtr<saturationModel> saturationModel_;
 
-        // Mass transfer enabled
-        Switch massTransfer_;
+        // Phase change enabled
+        Switch phaseChange_;
 
         //- Interfacial Mass transfer rate
         iDmdtTable iDmdt_;
@@ -129,8 +129,8 @@ public:
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
 
-        //- Correct the thermodynamics
-        virtual void correctThermo();
+        //- Correct the interface thermodynamics
+        virtual void correctInterfaceThermo();
 
         //- Read base phaseProperties dictionary
         virtual bool read();

@@ -201,41 +201,22 @@ virtualMass
     }
 );
 
-heatTransfer.air
+heatTransfer
 (
     (air in water)
     {
-        type spherical;
-        residualAlpha 1e-3;
+        type            RanzMarshall;
+        residualAlpha   1e-4;
     }
 
     (water in air)
     {
-        type RanzMarshall;
-        residualAlpha 1e-3;
+        type            RanzMarshall;
+        residualAlpha   1e-4;
     }
 );
 
-heatTransfer.water
-(
-    (air in water)
-    {
-        type RanzMarshall;
-        residualAlpha 1e-3;
-    }
-
-    (water in air)
-    {
-        type spherical;
-        residualAlpha 1e-3;
-    }
-);
-
-massTransfer.air
-(
-);
-
-massTransfer.water
+phaseTransfer
 (
 );
 

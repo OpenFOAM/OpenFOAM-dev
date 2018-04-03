@@ -38,10 +38,7 @@ SourceFiles
 #ifndef PopulationBalancePhaseSystem_H
 #define PopulationBalancePhaseSystem_H
 
-#include "HeatAndMassTransferPhaseSystem.H"
-#include "saturationModel.H"
-#include "Switch.H"
-
+#include "phaseSystem.H"
 #include "populationBalanceModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -100,9 +97,6 @@ public:
 
         //- Return the mass transfer rates for each phase
         virtual Xfer<PtrList<volScalarField>> dmdts() const;
-
-        //- Return the heat transfer matrices
-        virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;

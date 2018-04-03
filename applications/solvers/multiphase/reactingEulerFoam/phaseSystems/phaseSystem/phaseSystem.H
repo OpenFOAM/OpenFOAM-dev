@@ -214,20 +214,22 @@ protected:
                 autoPtr<BlendedInterfacialModel<modelType>>,
                 phasePairKey,
                 phasePairKey::hash
-            >& models
+            >& models,
+            const bool correctFixedFluxBCs = true
         );
 
-        //- Generate pairs and per-phase sub-model tables
+        //- Generate pairs and two-sided sub-model tables
         template<class modelType>
         void generatePairsAndSubModels
         (
             const word& modelName,
             HashTable
             <
-                HashTable<autoPtr<modelType>>,
+                Pair<autoPtr<modelType>>,
                 phasePairKey,
                 phasePairKey::hash
-            >& models
+            >& models,
+            const bool correctFixedFluxBCs = true
         );
 
         //- Add the field to a phase-indexed list, with the given name,

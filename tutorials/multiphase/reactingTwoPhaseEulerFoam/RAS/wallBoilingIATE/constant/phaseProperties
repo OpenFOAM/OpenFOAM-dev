@@ -19,7 +19,7 @@ type    thermalPhaseChangeTwoPhaseSystem;
 
 phases (gas liquid);
 
-massTransfer on;
+phaseChange on;
 
 gas
 {
@@ -169,10 +169,7 @@ heatTransfer.liquid
     }
 );
 
-massTransfer.gas
-();
-
-massTransfer.liquid
+phaseTransfer
 ();
 
 lift

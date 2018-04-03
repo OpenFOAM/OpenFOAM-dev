@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,23 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::InterfaceCompositionPhaseChangePhaseSystem
+    Foam::MassTransferTransferPhaseSystem
 
 Description
-    Class to provide interfacial heat and mass transfer between a number of
-    phases according to a interface composition model.
-
-    The interface temperature is calculated such that the net rate at which the
-    heat is transferred to the interface is equal to the latent heat consumed by
-    the mass transfer.
+    Class which models non-thermally-coupled mass transfers; i.e.,
+    representation changes, rather than phase changes.
 
 SourceFiles
-    InterfaceCompositionPhaseChangePhaseSystem.C
+    PhaseTransferPhaseSystem.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef InterfaceCompositionPhaseChangePhaseSystem_H
-#define InterfaceCompositionPhaseChangePhaseSystem_H
+#ifndef PhaseTransferPhaseSystem_H
+#define PhaseTransferPhaseSystem_H
 
 #include "phaseSystem.H"
 
@@ -47,15 +43,16 @@ SourceFiles
 namespace Foam
 {
 
-class interfaceCompositionModel;
-class massTransferModel;
+class blendingMethod;
+template<class modelType> class BlendedInterfacialModel;
+class phaseTransferModel;
 
 /*---------------------------------------------------------------------------*\
-                 Class InterfaceCompositionPhaseChangePhaseSystem Declaration
+                    Class PhaseTransferPhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>
-class InterfaceCompositionPhaseChangePhaseSystem
+class PhaseTransferPhaseSystem
 :
     public BasePhaseSystem
 {
@@ -65,20 +62,13 @@ protected:
 
         typedef HashTable
         <
-            autoPtr<interfaceCompositionModel>,
+            autoPtr<BlendedInterfacialModel<phaseTransferModel>>,
             phasePairKey,
             phasePairKey::hash
-        > interfaceCompositionModelTable;
-
-        typedef HashTable
-        <
-            Pair<autoPtr<BlendedInterfacialModel<massTransferModel>>>,
-            phasePairKey,
-            phasePairKey::hash
-        > massTransferModelTable;
+        > phaseTransferModelTable;
 
         typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            iDmdtTable;
+            rDmdtTable;
 
 
     // Protected data
@@ -86,22 +76,15 @@ protected:
         // Sub Models
 
             //- Mass transfer models
-            massTransferModelTable massTransferModels_;
+            phaseTransferModelTable phaseTransferModels_;
 
-            //- Interface composition models
-            interfaceCompositionModelTable interfaceCompositionModels_;
-
-            //- Interfacial Mass transfer rate
-            iDmdtTable iDmdt_;
-
-            //- Explicit part of the mass transfer rate
-            iDmdtTable iDmdtExplicit_;
-
+            //- Mass transfer rates
+            rDmdtTable rDmdt_;
 
     // Protected member functions
 
-        //- Return the interfacial mass transfer rate for a pair for a pair
-        virtual tmp<volScalarField> iDmdt(const phasePairKey& key) const;
+        //- Return the representation mass transfer rate
+        virtual tmp<volScalarField> rDmdt(const phasePairKey& key) const;
 
 
 public:
@@ -109,11 +92,11 @@ public:
     // Constructors
 
         //- Construct from fvMesh
-        InterfaceCompositionPhaseChangePhaseSystem(const fvMesh&);
+        PhaseTransferPhaseSystem(const fvMesh&);
 
 
     //- Destructor
-    virtual ~InterfaceCompositionPhaseChangePhaseSystem();
+    virtual ~PhaseTransferPhaseSystem();
 
 
     // Member Functions
@@ -127,8 +110,8 @@ public:
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
 
-        //- Correct the thermodynamics
-        virtual void correctInterfaceThermo();
+        //- Correct the mass transfer rates
+        virtual void correct();
 
         //- Read base phaseProperties dictionary
         virtual bool read();
@@ -142,7 +125,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "InterfaceCompositionPhaseChangePhaseSystem.C"
+    #include "PhaseTransferPhaseSystem.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

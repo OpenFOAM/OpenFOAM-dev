@@ -334,96 +334,47 @@ virtualMass
     }
 );
 
-heatTransfer.air1
+heatTransfer
 (
     (air1 in water)
     {
-        type spherical;
-        residualAlpha 1e-3;
+        type            RanzMarshall;
+        residualAlpha   1e-4;
     }
 
     (water in air1)
     {
-        type RanzMarshall;
-        residualAlpha 1e-3;
-    }
-
-    (air1 in air2)
-    {
-        type spherical;
-        residualAlpha 1e-3;
-    }
-
-    (air2 in air1)
-    {
-        type spherical;
-        residualAlpha 1e-3;
-    }
-);
-
-heatTransfer.air2
-(
-    (air2 in water)
-    {
-        type spherical;
-        residualAlpha 1e-3;
-    }
-
-    (water in air2)
-    {
-        type RanzMarshall;
-        residualAlpha 1e-3;
-    }
-
-    (air1 in air2)
-    {
-        type spherical;
-        residualAlpha 1e-3;
-    }
-
-    (air2 in air1)
-    {
-        type spherical;
-        residualAlpha 1e-3;
-    }
-);
-
-heatTransfer.water
-(
-    (air1 in water)
-    {
-        type RanzMarshall;
-        residualAlpha 1e-3;
-    }
-
-    (water in air1)
-    {
-        type spherical;
-        residualAlpha 1e-3;
+        type            RanzMarshall;
+        residualAlpha   1e-4;
     }
 
     (air2 in water)
     {
-        type RanzMarshall;
-        residualAlpha 1e-3;
+        type            RanzMarshall;
+        residualAlpha   1e-4;
     }
 
     (water in air2)
     {
-        type spherical;
-        residualAlpha 1e-3;
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+
+    (air1 in air2)
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+
+    (air2 in air1)
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
     }
 );
 
-massTransfer.air1
+phaseTransfer
 ();
-
-massTransfer.air2
-();
-
-massTransfer.water
-();
-
 
 lift
 ();

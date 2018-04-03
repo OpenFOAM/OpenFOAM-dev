@@ -164,6 +164,10 @@ public:
             //  the given phase
             inline const phaseModel& otherPhase(const phaseModel& phase) const;
 
+            //- Return the index of the given phase. Generates a FatalError if
+            //  this phasePair does not contain the given phase
+            inline label index(const phaseModel& phase) const;
+
             //- Return gravitation acceleration
             inline const uniformDimensionedVectorField& g() const;
 
@@ -190,6 +194,12 @@ public:
 
                 //- Construct from pair, moving to its 'begin' position
                 inline explicit const_iterator(const phasePair&);
+
+
+            // Access
+
+                //- Return the current index
+                inline label index() const;
 
 
             // Member operators

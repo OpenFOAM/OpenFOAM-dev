@@ -23,27 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "HeatTransferPhaseSystem.H"
+#include "OneResistanceHeatTransferPhaseSystem.H"
 #include "fvmSup.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::HeatTransferPhaseSystem<BasePhaseSystem>::HeatTransferPhaseSystem
+Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::
+OneResistanceHeatTransferPhaseSystem
 (
     const fvMesh& mesh
 )
 :
     BasePhaseSystem(mesh)
 {
-    this->generatePairsAndSubModels("heatTransfer", heatTransferModels_);
+    this->generatePairsAndSubModels
+    (
+        "heatTransfer",
+        heatTransferModels_,
+        false
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::HeatTransferPhaseSystem<BasePhaseSystem>::~HeatTransferPhaseSystem()
+Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::
+~OneResistanceHeatTransferPhaseSystem()
 {}
 
 
@@ -51,7 +58,8 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::~HeatTransferPhaseSystem()
 
 template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
-Foam::HeatTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
+Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::
+heatTransfer() const
 {
     autoPtr<phaseSystem::heatTransferTable> eqnsPtr
     (
@@ -71,6 +79,7 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
         );
     }
 
+    // Heat transfer across the interface
     forAllConstIter
     (
         heatTransferModelTable,
@@ -96,25 +105,47 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
         }
     }
 
-    return eqnsPtr;
-}
-
-
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::massTransferTable>
-Foam::HeatTransferPhaseSystem<BasePhaseSystem>::massTransfer() const
-{
-    autoPtr<phaseSystem::massTransferTable> eqnsPtr
+    // Source term due to mass transfer
+    forAllConstIter
     (
-        new phaseSystem::massTransferTable()
-    );
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        const phasePair& pair(phasePairIter());
+
+        if (pair.ordered())
+        {
+            continue;
+        }
+
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
+
+        const volScalarField& he1(phase1.thermo().he());
+        const volScalarField& he2(phase2.thermo().he());
+
+        const volScalarField K1(phase1.K());
+        const volScalarField K2(phase2.K());
+
+        const volScalarField dmdt(this->dmdt(pair));
+        const volScalarField dmdt21(posPart(dmdt));
+        const volScalarField dmdt12(negPart(dmdt));
+
+        *eqns[phase1.name()] +=
+            dmdt21*he2 - fvm::Sp(dmdt21, he1) + dmdt21*(K2 - K1);
+
+        *eqns[phase2.name()] -=
+            dmdt12*he1 - fvm::Sp(dmdt12, he2) + dmdt12*(K1 - K2);
+    }
 
     return eqnsPtr;
 }
 
 
 template<class BasePhaseSystem>
-bool Foam::HeatTransferPhaseSystem<BasePhaseSystem>::read()
+bool Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::read()
 {
     if (BasePhaseSystem::read())
     {

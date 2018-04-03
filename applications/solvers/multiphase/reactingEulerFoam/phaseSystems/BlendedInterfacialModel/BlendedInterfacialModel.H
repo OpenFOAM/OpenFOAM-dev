@@ -190,6 +190,9 @@ public:
         //- Return the blended diffusivity
         tmp<volScalarField> D() const;
 
+        //- Return the blended mass transfer rate
+        tmp<volScalarField> dmdt() const;
+
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;
 };

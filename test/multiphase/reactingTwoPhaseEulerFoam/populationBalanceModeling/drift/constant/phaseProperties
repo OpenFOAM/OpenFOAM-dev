@@ -141,16 +141,10 @@ drag
 virtualMass
 ();
 
-heatTransfer.air
+heatTransfer
 ();
 
-heatTransfer.water
-();
-
-massTransfer.air
-();
-
-massTransfer.water
+phaseTransfer
 ();
 
 lift

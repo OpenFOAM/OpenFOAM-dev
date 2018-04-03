@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type heatAndMomentumTransferMultiphaseSystem;
+type basicMultiphaseSystem;
 
 phases (air1 air2 water);
 
@@ -301,6 +301,9 @@ heatTransfer
         residualAlpha   1e-4;
     }
 );
+
+phaseTransfer
+();
 
 lift
 ();

@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    heatAndMomentumTransferTwoPhaseSystem;
+type    basicTwoPhaseSystem;
 
 phases (particles air);
 
@@ -93,6 +93,10 @@ heatTransfer
         type            RanzMarshall;
         residualAlpha   1e-4;
     }
+);
+
+phaseTransfer
+(
 );
 
 lift

@@ -367,6 +367,14 @@ Foam::BlendedInterfacialModel<ModelType>::D() const
 
 
 template<class ModelType>
+Foam::tmp<Foam::volScalarField>
+Foam::BlendedInterfacialModel<ModelType>::dmdt() const
+{
+    return evaluate(&ModelType::dmdt, "dmdt", ModelType::dimDmdt, false);
+}
+
+
+template<class ModelType>
 bool Foam::BlendedInterfacialModel<ModelType>::writeData(Ostream& os) const
 {
     return os.good();
