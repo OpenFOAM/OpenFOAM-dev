@@ -433,7 +433,7 @@ public:
             virtual autoPtr<momentumTransferTable> momentumTransfer() = 0;
 
             //- Return the momentum transfer matrices for the face-based
-            //  algiorithm
+            //  algorithm
             virtual autoPtr<momentumTransferTable> momentumTransferf() = 0;
 
             //- Return the implicit force coefficients for the face-based
