@@ -54,7 +54,7 @@ uniformDensityHydrostaticPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF, dict, true),
+    fixedValueFvPatchScalarField(p, iF, dict),
     rho_(readScalar(dict.lookup("rho"))),
     pRefValue_(readScalar(dict.lookup("pRefValue"))),
     pRefPoint_(dict.lookup("pRefPoint"))
