@@ -41,7 +41,8 @@ uniformDensityHydrostaticPressureFvPatchScalarField
 :
     fixedValueFvPatchScalarField(p, iF),
     rho_(0.0),
-    pRefValue_(0.0),
+    pRef_(0.0),
+    pRefPointSpecified_(false),
     pRefPoint_(Zero)
 {}
 
@@ -54,11 +55,24 @@ uniformDensityHydrostaticPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF, dict),
-    rho_(readScalar(dict.lookup("rho"))),
-    pRefValue_(readScalar(dict.lookup("pRefValue"))),
-    pRefPoint_(dict.lookup("pRefPoint"))
-{}
+    fixedValueFvPatchScalarField(p, iF, dict, false),
+    rho_(readScalar(dict.lookup("rhoRef"))),
+    pRef_(readScalar(dict.lookup("pRef"))),
+    pRefPointSpecified_(dict.found("pRefPoint")),
+    pRefPoint_(dict.lookupOrDefault<vector>("pRefPoint", Zero))
+{
+    if (dict.found("value"))
+    {
+        fvPatchScalarField::operator=
+        (
+            scalarField("value", dict, p.size())
+        );
+    }
+    else
+    {
+        fvPatchField<scalar>::operator=(pRef_);
+    }
+}
 
 
 Foam::uniformDensityHydrostaticPressureFvPatchScalarField::
@@ -72,7 +86,8 @@ uniformDensityHydrostaticPressureFvPatchScalarField
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
     rho_(ptf.rho_),
-    pRefValue_(ptf.pRefValue_),
+    pRef_(ptf.pRef_),
+    pRefPointSpecified_(ptf.pRefPointSpecified_),
     pRefPoint_(ptf.pRefPoint_)
 {}
 
@@ -85,7 +100,8 @@ uniformDensityHydrostaticPressureFvPatchScalarField
 :
     fixedValueFvPatchScalarField(ptf),
     rho_(ptf.rho_),
-    pRefValue_(ptf.pRefValue_),
+    pRef_(ptf.pRef_),
+    pRefPointSpecified_(ptf.pRefPointSpecified_),
     pRefPoint_(ptf.pRefPoint_)
 {}
 
@@ -99,7 +115,8 @@ uniformDensityHydrostaticPressureFvPatchScalarField
 :
     fixedValueFvPatchScalarField(ptf, iF),
     rho_(ptf.rho_),
-    pRefValue_(ptf.pRefValue_),
+    pRef_(ptf.pRef_),
+    pRefPointSpecified_(ptf.pRefPointSpecified_),
     pRefPoint_(ptf.pRefPoint_)
 {}
 
@@ -116,10 +133,25 @@ void Foam::uniformDensityHydrostaticPressureFvPatchScalarField::updateCoeffs()
     const uniformDimensionedVectorField& g =
         db().lookupObject<uniformDimensionedVectorField>("g");
 
+    scalar ghRef = g.value() & pRefPoint_;
+
+    if (!pRefPointSpecified_)
+    {
+        const uniformDimensionedScalarField& hRef =
+            db().lookupObject<uniformDimensionedScalarField>("hRef");
+
+        ghRef =
+        (
+            mag(g.value()) > small
+          ? (g & (cmptMag(g.value())/mag(g.value()))*hRef).value()
+          : 0
+        );
+    }
+
     operator==
     (
-        pRefValue_
-      + rho_*((g.value() & patch().Cf()) - (g.value() & pRefPoint_))
+        pRef_
+      + rho_*((g.value() & patch().Cf()) - ghRef)
     );
 
     fixedValueFvPatchScalarField::updateCoeffs();
@@ -132,9 +164,13 @@ void Foam::uniformDensityHydrostaticPressureFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("rho") << rho_ << token::END_STATEMENT << nl;
-    os.writeKeyword("pRefValue") << pRefValue_ << token::END_STATEMENT << nl;
-    os.writeKeyword("pRefPoint") << pRefPoint_ << token::END_STATEMENT << nl;
+    os.writeKeyword("rhoRef") << rho_ << token::END_STATEMENT << nl;
+    os.writeKeyword("pRef") << pRef_ << token::END_STATEMENT << nl;
+    if (pRefPointSpecified_)
+    {
+        os.writeKeyword("pRefPoint")
+            << pRefPoint_ << token::END_STATEMENT << nl;
+    }
     writeEntry("value", os);
 }
 

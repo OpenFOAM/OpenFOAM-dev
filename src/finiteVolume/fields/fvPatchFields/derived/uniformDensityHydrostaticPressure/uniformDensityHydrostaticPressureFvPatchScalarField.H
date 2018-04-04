@@ -32,25 +32,25 @@ Description
     calculated as:
 
         \f[
-            p_{hyd} = p_{ref} + \rho g (x - x_{ref})
+            p_{hyd} = p_{ref} + \rho_{ref} g (x - x_{ref})
         \f]
 
     where
     \vartable
-        p_{hyd} | Hydrostatic pressure [Pa]
-        p_{ref} | Reference pressure [Pa]
-        x_{ref} | Reference point in Cartesian co-ordinates
-        \rho    | Density (assumed uniform)
-        g       | Acceleration due to gravity [m/s2]
+        p_{hyd}    | Hydrostatic pressure [Pa]
+        p_{ref}    | Reference pressure [Pa]
+        x_{ref}    | Reference point in Cartesian co-ordinates
+        \rho_{ref} | Density (assumed uniform)
+        g          | Acceleration due to gravity [m/s2]
     \endtable
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        rho          | Uniform density [kg/m3] | yes         |
-        pRefValue    | Reference pressure [Pa] | yes         |
-        pRefPoint    | Reference pressure location | yes     |
-        value        | Initial value           | yes         |
+        rhoRef       | Uniform density [kg/m3] | yes         |
+        pRef         | Reference pressure [Pa] | yes         |
+        pRefPoint    | Reference pressure location | no      | hRef
+        value        | Initial value           | no          | pRef
     \endtable
 
     Example of the boundary condition specification:
@@ -58,10 +58,9 @@ Usage
     <patchName>
     {
         type            uniformDensityHydrostaticPressure;
-        rho             rho;
-        pRefValue       1e5;
+        rhoRef          1000;
+        pRef            1e5;
         pRefPoint       (0 0 0);
-        value           uniform 0; // Required initial value
     }
     \endverbatim
 
@@ -94,9 +93,12 @@ class uniformDensityHydrostaticPressureFvPatchScalarField
         scalar rho_;
 
         //- Reference pressure
-        scalar pRefValue_;
+        scalar pRef_;
 
-        //- Reference pressure location
+        //- True if the reference pressure location is specified
+        bool pRefPointSpecified_;
+
+        //- Optional reference pressure location
         vector pRefPoint_;
 
 
@@ -190,15 +192,15 @@ public:
             }
 
             //- Return the reference pressure
-            scalar pRefValue() const
+            scalar pRef() const
             {
-                return pRefValue_;
+                return pRef_;
             }
 
             //- Return reference to the reference pressure to allow adjustment
-            scalar& pRefValue()
+            scalar& pRef()
             {
-                return pRefValue_;
+                return pRef_;
             }
 
             //- Return the pressure reference location
