@@ -47,9 +47,10 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        rho          | uniform density [kg/m3] | yes         |
-        pRefValue    | reference pressure [Pa] | yes         |
-        pRefPoint    | reference pressure location | yes     |
+        rho          | Uniform density [kg/m3] | yes         |
+        pRefValue    | Reference pressure [Pa] | yes         |
+        pRefPoint    | Reference pressure location | yes     |
+        value        | Initial value           | yes         |
     \endtable
 
     Example of the boundary condition specification:
@@ -60,7 +61,7 @@ Usage
         rho             rho;
         pRefValue       1e5;
         pRefPoint       (0 0 0);
-        value           uniform 0; // optional initial value
+        value           uniform 0; // Required initial value
     }
     \endverbatim
 

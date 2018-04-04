@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,23 +54,11 @@ uniformDensityHydrostaticPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF, dict, false),
+    fixedValueFvPatchScalarField(p, iF, dict, true),
     rho_(readScalar(dict.lookup("rho"))),
     pRefValue_(readScalar(dict.lookup("pRefValue"))),
     pRefPoint_(dict.lookup("pRefPoint"))
-{
-    if (dict.found("value"))
-    {
-        fvPatchField<scalar>::operator=
-        (
-            scalarField("value", dict, p.size())
-        );
-    }
-    else
-    {
-        evaluate();
-    }
-}
+{}
 
 
 Foam::uniformDensityHydrostaticPressureFvPatchScalarField::
