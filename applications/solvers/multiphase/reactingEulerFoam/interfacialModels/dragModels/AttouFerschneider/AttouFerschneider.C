@@ -109,7 +109,7 @@ Foam::dragModels::AttouFerschneider::AttouFerschneider
     liquidName_(dict.lookup("liquid")),
     solidName_(dict.lookup("solid")),
     E1_("E1", dimless, dict),
-    E2_("E1", dimless, dict)
+    E2_("E2", dimless, dict)
 {}
 
 

@@ -20,7 +20,14 @@ internalField   uniform 0;
 
 boundaryField
 {
-    "(bottom|top|walls)"
+    bottom
+    {
+        type            inletOutlet;
+        phi             phi.water;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+    "(top|walls)"
     {
         type            zeroGradient;
     }

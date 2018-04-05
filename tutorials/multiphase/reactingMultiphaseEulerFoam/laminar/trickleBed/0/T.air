@@ -20,7 +20,14 @@ internalField       uniform 300;
 
 boundaryField
 {
-    "(bottom|top|walls)"
+    bottom
+    {
+        type               inletOutlet;
+        phi                phi.air;
+        inletValue         $internalField;
+        value              $internalField;
+    }
+    "(top|walls)"
     {
         type               zeroGradient;
     }

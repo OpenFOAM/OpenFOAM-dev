@@ -20,7 +20,16 @@ internalField       uniform 1e5;
 
 boundaryField
 {
-    "(bottom|top|walls)"
+    bottom
+    {
+        type            prghTotalPressure;
+        p0              $internalField;
+        U               U.air;
+        phi             phi.air;
+        rho             thermo:rho.air;
+        value           $internalField;
+    }
+    "(top|walls)"
     {
         type            fixedFluxPressure;
         value           $internalField;
