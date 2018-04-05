@@ -76,5 +76,6 @@ wallDampingModels/sine/sineWallDamping.C
 
 phaseTransferModels/phaseTransferModel/phaseTransferModel.C
 phaseTransferModels/phaseTransferModel/newPhaseTransferModel.C
+phaseTransferModels/deposition/deposition.C
 
 LIB = $(FOAM_LIBBIN)/libreactingEulerianInterfacialModels
