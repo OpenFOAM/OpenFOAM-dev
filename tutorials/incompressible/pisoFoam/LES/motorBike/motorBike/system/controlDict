@@ -54,7 +54,7 @@ functions
         type            streamLine;
         writeControl    writeTime;
         setFormat       vtk;
-        trackForward    true;
+        direction       forward;
         fields          (p U);
         lifeTime        10000;
         nSubCycle       5;
