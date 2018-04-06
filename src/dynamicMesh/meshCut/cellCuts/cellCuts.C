@@ -1354,12 +1354,11 @@ bool Foam::cellCuts::loopAnchorConsistent
     const labelList& anchorPoints
 ) const
 {
-    // Create identity face for ease of calculation of normal etc.
-    face f(identity(loopPts.size()));
+    // Create identity face for ease of calculation of area etc.
+    const face f(identity(loopPts.size()));
 
-    vector normal = f.normal(loopPts);
-    point ctr = f.centre(loopPts);
-
+    const vector a = f.area(loopPts);
+    const point ctr = f.centre(loopPts);
 
     // Get average position of anchor points.
     vector avg(Zero);
@@ -1370,8 +1369,7 @@ bool Foam::cellCuts::loopAnchorConsistent
     }
     avg /= anchorPoints.size();
 
-
-    if (((avg - ctr) & normal) > 0)
+    if (((avg - ctr) & a) > 0)
     {
         return true;
     }

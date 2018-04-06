@@ -38,7 +38,6 @@ sampledSurface/thresholdCellFaces/sampledThresholdCellFaces.C
 surfWriters = sampledSurface/writers
 
 $(surfWriters)/surfaceWriter.C
-$(surfWriters)/dx/dxSurfaceWriter.C
 $(surfWriters)/ensight/ensightSurfaceWriter.C
 $(surfWriters)/ensight/ensightPTraits.C
 $(surfWriters)/foam/foamSurfaceWriter.C

@@ -1333,7 +1333,7 @@ bool Foam::polyMesh::pointInCell
 
                     vector proj = p - faceTri.centre();
 
-                    if ((faceTri.normal() & proj) > 0)
+                    if ((faceTri.area() & proj) > 0)
                     {
                         return false;
                     }
@@ -1363,7 +1363,7 @@ bool Foam::polyMesh::pointInCell
 
                     vector proj = p - faceTri.centre();
 
-                    if ((faceTri.normal() & proj) > 0)
+                    if ((faceTri.area() & proj) > 0)
                     {
                         return false;
                     }

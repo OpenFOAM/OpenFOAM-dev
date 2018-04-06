@@ -56,29 +56,6 @@ const Foam::scalar Foam::externalToleranceCosAngle
 );
 
 
-Foam::scalar Foam::calcVertexNormalWeight
-(
-    const triFace& f,
-    const label pI,
-    const vector& fN,
-    const pointField& points
-)
-{
-    label index = findIndex(f, pI);
-
-    if (index == -1)
-    {
-        FatalErrorInFunction
-            << "Point not in face" << abort(FatalError);
-    }
-
-    const vector e1 = points[f[index]] - points[f[f.fcIndex(index)]];
-    const vector e2 = points[f[index]] - points[f[f.rcIndex(index)]];
-
-    return mag(fN)/(magSqr(e1)*magSqr(e2) + vSmall);
-}
-
-
 Foam::point Foam::randomPointInPlane(const plane& p)
 {
     // Perturb base point
@@ -184,48 +161,6 @@ Foam::triadField Foam::calcVertexCoordSys
 }
 
 
-Foam::vectorField Foam::calcVertexNormals(const triSurface& surf)
-{
-    // Weighted average of normals of faces attached to the vertex
-    // Weight = fA / (mag(e0)^2 * mag(e1)^2);
-
-    Info<< "Calculating vertex normals" << endl;
-
-    vectorField pointNormals(surf.nPoints(), Zero);
-
-    const pointField& points = surf.points();
-    const labelListList& pointFaces = surf.pointFaces();
-    const labelList& meshPoints = surf.meshPoints();
-
-    forAll(pointFaces, pI)
-    {
-        const labelList& pFaces = pointFaces[pI];
-
-        forAll(pFaces, fi)
-        {
-            const label facei = pFaces[fi];
-            const triFace& f = surf[facei];
-
-            vector fN = f.normal(points);
-
-            scalar weight = calcVertexNormalWeight
-            (
-                f,
-                meshPoints[pI],
-                fN,
-                points
-            );
-
-            pointNormals[pI] += weight*fN;
-        }
-
-        pointNormals[pI] /= mag(pointNormals[pI]) + vSmall;
-    }
-
-    return pointNormals;
-}
-
-
 Foam::triSurfacePointScalarField Foam::calcCurvature
 (
     const word& name,
@@ -286,7 +221,7 @@ Foam::triSurfacePointScalarField Foam::calcCurvature
 
         // Set up a local coordinate system for the face
         const vector& e0 = edgeVectors[0];
-        const vector eN = f.normal(points);
+        const vector eN = f.area(points);
         const vector e1 = (e0 ^ eN);
 
         if (magSqr(eN) < rootVSmall)
@@ -371,11 +306,11 @@ Foam::triSurfacePointScalarField Foam::calcCurvature
 
             // Calculate weight
             // TODO: Voronoi area weighting
-            scalar weight = calcVertexNormalWeight
+            const scalar weight = surf.pointNormalWeight
             (
                 f,
                 meshPoints[patchPointIndex],
-                f.normal(points),
+                f.area(points),
                 points
             );
 
@@ -384,22 +319,6 @@ Foam::triSurfacePointScalarField Foam::calcCurvature
                 weight*projectedFundamentalTensor;
 
             accumulatedWeights[patchPointIndex] += weight;
-        }
-
-        if (false)
-        {
-            Info<< "Points = " << points[f[0]] << " "
-                << points[f[1]] << " "
-                << points[f[2]] << endl;
-            Info<< "edgeVecs = " << edgeVectors[0] << " "
-                << edgeVectors[1] << " "
-                << edgeVectors[2] << endl;
-            Info<< "normDiff = " << normalDifferences[0] << " "
-                << normalDifferences[1] << " "
-                << normalDifferences[2] << endl;
-            Info<< "faceCoordSys = " << faceCoordSys << endl;
-            Info<< "T = " << T << endl;
-            Info<< "Z = " << Z << endl;
         }
     }
 

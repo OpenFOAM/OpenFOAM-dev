@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ inline Foam::scalar Foam::pyramid<Point, PointRef, polygonRef>::mag
     const pointField& points
 ) const
 {
-    return (1.0/3.0)*(base_.normal(points)&(height(points)));
+    return (1.0/3.0)*(base_.area(points)&(height(points)));
 }
 
 

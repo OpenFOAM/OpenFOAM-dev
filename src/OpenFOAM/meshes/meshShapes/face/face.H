@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,10 +188,13 @@ public:
         template<class Type>
         Type average(const pointField&, const Field<Type>&) const;
 
-        //- Magnitude of face area
+        //- Return vector area
+        vector area(const pointField&) const;
+
+        //- Return scalar magnitude
         inline scalar mag(const pointField&) const;
 
-        //- Vector normal; magnitude is equal to area of face
+        //- Return unit normal
         vector normal(const pointField&) const;
 
         //- Return face with reverse direction

@@ -2063,10 +2063,10 @@ void Foam::snappySnapDriver::detectWarpedFaces
                     //Info<< "Splitting face:" << f << " into f0:" << f0
                     //    << " f1:" << f1 << endl;
 
-                    vector n0 = f0.normal(localPoints);
-                    scalar n0Mag = mag(n0);
-                    vector n1 = f1.normal(localPoints);
-                    scalar n1Mag = mag(n1);
+                    const vector n0 = f0.area(localPoints);
+                    const scalar n0Mag = mag(n0);
+                    const vector n1 = f1.area(localPoints);
+                    const scalar n1Mag = mag(n1);
 
                     if (n0Mag > rootVSmall && n1Mag > rootVSmall)
                     {

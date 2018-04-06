@@ -93,16 +93,25 @@ inline Point Foam::triangle<Point, PointRef>::centre() const
 
 
 template<class Point, class PointRef>
+inline Foam::vector Foam::triangle<Point, PointRef>::area() const
+{
+    return 0.5*((b_ - a_)^(c_ - a_));
+}
+
+
+template<class Point, class PointRef>
 inline Foam::scalar Foam::triangle<Point, PointRef>::mag() const
 {
-    return Foam::mag(normal());
+    return Foam::mag(area());
 }
 
 
 template<class Point, class PointRef>
 inline Foam::vector Foam::triangle<Point, PointRef>::normal() const
 {
-    return 0.5*((b_ - a_)^(c_ - a_));
+    const vector a = area();
+    const scalar maga = Foam::mag(a);
+    return maga > 0 ? a/maga : Zero;
 }
 
 
@@ -317,16 +326,16 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
 {
     // Express triangle in terms of baseVertex (point a_) and
     // two edge vectors
-    vector E0 = b_ - a_;
-    vector E1 = c_ - a_;
+    const vector E0 = b_ - a_;
+    const vector E1 = c_ - a_;
 
     // Initialize intersection to miss.
     pointHit inter(p);
 
     vector n(0.5*(E0 ^ E1));
-    scalar area = Foam::mag(n);
+    const scalar magArea = Foam::mag(n);
 
-    if (area < vSmall)
+    if (magArea < vSmall)
     {
         // Ineligible miss.
         inter.setMiss(false);
@@ -342,17 +351,18 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
         return inter;
     }
 
-    vector q1 = q/Foam::mag(q);
+    const vector q1 = q/Foam::mag(q);
 
     if (dir == intersection::CONTACT_SPHERE)
     {
-        n /= area;
+        n /= magArea;
 
         return ray(p, q1 - n, alg, intersection::VECTOR);
     }
 
     // Intersection point with triangle plane
     point pInter;
+
     // Is intersection point inside triangle
     bool hit;
     {
@@ -374,7 +384,7 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
     }
 
     // Distance to intersection point
-    scalar dist = q1 & (pInter - p);
+    const scalar dist = q1 & (pInter - p);
 
     const scalar planarPointTol =
         Foam::min
@@ -392,7 +402,7 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
      || (alg == intersection::HALF_RAY && dist > -planarPointTol)
      || (
             alg == intersection::VISIBLE
-         && ((q1 & normal()) < -vSmall)
+         && ((q1 & area()) < -vSmall)
         );
 
     if (hit && eligible)
@@ -414,7 +424,6 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
         // original point and plane of intersection
         inter.setDistance(Foam::mag(pInter - p));
     }
-
 
     return inter;
 }

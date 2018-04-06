@@ -81,7 +81,7 @@ Foam::label Foam::face::mostConcaveAngle
     scalar& maxAngle
 ) const
 {
-    vector n(normal(points));
+    vector a(area(points));
 
     label index = 0;
     maxAngle = -great;
@@ -98,7 +98,7 @@ Foam::label Foam::face::mostConcaveAngle
 
         scalar angle;
 
-        if ((edgeNormal & n) > 0)
+        if ((edgeNormal & a) > 0)
         {
             // Concave angle.
             angle = constant::mathematical::pi + edgeAngle;
@@ -549,11 +549,11 @@ Foam::point Foam::face::centre(const pointField& points) const
 }
 
 
-Foam::vector Foam::face::normal(const pointField& p) const
+Foam::vector Foam::face::area(const pointField& p) const
 {
     const label nPoints = size();
 
-    // Calculate the normal by summing the face triangle normals.
+    // Calculate the area by summing the face triangle areas.
     // Changed to deal with small concavity by using a central decomposition
     //
 
@@ -567,7 +567,7 @@ Foam::vector Foam::face::normal(const pointField& p) const
             p[operator[](0)],
             p[operator[](1)],
             p[operator[](2)]
-        ).normal();
+        ).area();
     }
 
     label pI;
@@ -579,7 +579,7 @@ Foam::vector Foam::face::normal(const pointField& p) const
     }
     centrePoint /= nPoints;
 
-    vector n = Zero;
+    vector a = Zero;
 
     point nextPoint = centrePoint;
 
@@ -596,15 +596,23 @@ Foam::vector Foam::face::normal(const pointField& p) const
 
         // Note: for best accuracy, centre point always comes last
         //
-        n += triPointRef
+        a += triPointRef
         (
             p[operator[](pI)],
             nextPoint,
             centrePoint
-        ).normal();
+        ).area();
     }
 
-    return n;
+    return a;
+}
+
+
+Foam::vector Foam::face::normal(const pointField& points) const
+{
+    const vector a = area(points);
+    const scalar maga = Foam::mag(a);
+    return maga > 0 ? a/maga : Zero;
 }
 
 

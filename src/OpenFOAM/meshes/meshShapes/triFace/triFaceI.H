@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,20 +171,27 @@ inline Foam::point Foam::triFace::centre(const pointField& points) const
 }
 
 
-inline Foam::scalar Foam::triFace::mag(const pointField& points) const
-{
-    return ::Foam::mag(normal(points));
-}
-
-
-// could also delegate to triPointRef(...).normal()
-inline Foam::vector Foam::triFace::normal(const pointField& points) const
+inline Foam::vector Foam::triFace::area(const pointField& points) const
 {
     return 0.5*
     (
         (points[operator[](1)] - points[operator[](0)])
        ^(points[operator[](2)] - points[operator[](0)])
     );
+}
+
+
+inline Foam::scalar Foam::triFace::mag(const pointField& points) const
+{
+    return ::Foam::mag(area(points));
+}
+
+
+inline Foam::vector Foam::triFace::normal(const pointField& points) const
+{
+    const vector a = area(points);
+    const scalar maga = Foam::mag(a);
+    return maga > 0 ? a/maga : Zero;
 }
 
 

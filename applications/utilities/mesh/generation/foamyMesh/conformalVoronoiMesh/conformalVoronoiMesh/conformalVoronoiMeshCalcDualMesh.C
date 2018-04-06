@@ -1866,7 +1866,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
 
                         Info<< "    cN " << correctNormal << endl;
 
-                        vector fN = f.normal(pts);
+                        vector fN = f.area(pts);
 
                         if (mag(fN) < small)
                         {

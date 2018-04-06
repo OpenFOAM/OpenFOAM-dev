@@ -103,7 +103,7 @@ void Foam::conformationSurfaces::hasBoundedVolume
                  != extendedFeatureEdgeMesh::BOTH
                 )
                 {
-                    sum += triSurf[sI].normal(surfPts);
+                    sum += triSurf[sI].area(surfPts);
                 }
                 else
                 {

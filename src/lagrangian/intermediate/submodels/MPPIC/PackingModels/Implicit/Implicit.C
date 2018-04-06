@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -344,7 +344,7 @@ Foam::vector Foam::PackingModels::Implicit<CloudType>::velocityCorrection
     const vector U = uCorrect_()[celli];
 
     // face geometry
-    vector nHat = mesh.faces()[facei].normal(mesh.points());
+    vector nHat = mesh.faces()[facei].area(mesh.points());
     const scalar nMag = mag(nHat);
     nHat /= nMag;
 

@@ -315,10 +315,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
 
                 if (nearest.distance() < r)
                 {
-                    vector normal = rwf.normal(pts);
-
-                    normal /= mag(normal);
-
+                    const vector normal = rwf.normal(pts);
                     const vector& nearPt = nearest.rawPoint();
 
                     vector pW = nearPt - pos;

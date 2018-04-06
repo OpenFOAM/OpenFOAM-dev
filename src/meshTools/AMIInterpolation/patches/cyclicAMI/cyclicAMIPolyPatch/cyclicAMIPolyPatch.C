@@ -360,14 +360,14 @@ void Foam::cyclicAMIPolyPatch::calcTransforms()
     vectorField half0Areas(half0.size());
     forAll(half0, facei)
     {
-        half0Areas[facei] = half0[facei].normal(half0.points());
+        half0Areas[facei] = half0[facei].area(half0.points());
     }
 
     const cyclicAMIPolyPatch& half1 = neighbPatch();
     vectorField half1Areas(half1.size());
     forAll(half1, facei)
     {
-        half1Areas[facei] = half1[facei].normal(half1.points());
+        half1Areas[facei] = half1[facei].area(half1.points());
     }
 
     calcTransforms

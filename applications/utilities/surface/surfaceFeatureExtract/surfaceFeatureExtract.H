@@ -43,14 +43,6 @@ namespace Foam
     extern const scalar externalAngleTolerance;
     extern const scalar externalToleranceCosAngle;
 
-    scalar calcVertexNormalWeight
-    (
-        const triFace& f,
-        const label pI,
-        const vector& fN,
-        const pointField& points
-    );
-
     point randomPointInPlane(const plane& p);
 
     triadField calcVertexCoordSys
@@ -58,8 +50,6 @@ namespace Foam
         const triSurface& surf,
         const vectorField& pointNormals
     );
-
-    vectorField calcVertexNormals(const triSurface& surf);
 
     triSurfacePointScalarField calcCurvature
     (

@@ -92,7 +92,7 @@ Foam::label Foam::oldCyclicPolyPatch::findMaxArea
 
     forAll(faces, facei)
     {
-        scalar areaSqr = magSqr(faces[facei].normal(points));
+        scalar areaSqr = magSqr(faces[facei].area(points));
 
         if (areaSqr > maxAreaSqr)
         {
@@ -358,13 +358,11 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
 
             // Determine the face with max area on both halves. These
             // two faces are used to determine the transformation tensors
-            label max0I = findMaxArea(pp.points(), half0Faces);
-            vector n0 = half0Faces[max0I].normal(pp.points());
-            n0 /= mag(n0) + vSmall;
+            const label max0I = findMaxArea(pp.points(), half0Faces);
+            const vector n0 = half0Faces[max0I].normal(pp.points());
 
-            label max1I = findMaxArea(pp.points(), half1Faces);
-            vector n1 = half1Faces[max1I].normal(pp.points());
-            n1 /= mag(n1) + vSmall;
+            const label max1I = findMaxArea(pp.points(), half1Faces);
+            const vector n1 = half1Faces[max1I].normal(pp.points());
 
             if (mag(n0 & n1) < 1-matchTolerance())
             {

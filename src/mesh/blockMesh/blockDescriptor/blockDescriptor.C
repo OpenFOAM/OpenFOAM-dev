@@ -59,10 +59,10 @@ void Foam::blockDescriptor::check(const Istream& is)
     forAll(faces, i)
     {
         point faceCentre(faces[i].centre(vertices_));
-        vector faceNormal(faces[i].normal(vertices_));
-        if (mag(faceNormal) > small)
+        vector faceArea(faces[i].area(vertices_));
+        if (mag(faceArea) > small)
         {
-            if (((faceCentre - blockCentre) & faceNormal) > 0)
+            if (((faceCentre - blockCentre) & faceArea) > 0)
             {
                 outwardFaceCount++;
             }

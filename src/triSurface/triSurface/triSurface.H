@@ -42,6 +42,7 @@ SourceFiles
 #include "geometricSurfacePatchList.H"
 #include "surfacePatchList.H"
 #include "triFaceList.H"
+#include "triSurfaceFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -177,11 +178,6 @@ class triSurface
 
         //- Write to Ostream in AC3D format. Always sorted by patch.
         void writeAC(Ostream&) const;
-
-        //- For DX writing.
-        void writeDX(const bool, Ostream&) const;
-        void writeDXGeometry(const bool, Ostream&) const;
-        void writeDXTrailer(Ostream&) const;
 
 
     // Static private functions
@@ -399,6 +395,26 @@ public:
             faceList faces() const;
 
 
+        // Analysis
+
+            scalar pointNormalWeight
+            (
+                const triFace& f,
+                const label pi,
+                const vector& fa,
+                const pointField& points
+            ) const;
+
+            //- Return the surface point normals
+            tmp<vectorField> pointNormals2() const;
+
+            //- Return the curvature of surface at the points
+            tmp<triSurfacePointScalarField> pointCoordSys() const;
+
+            //- Return the curvature of surface at the points
+            tmp<triSurfacePointScalarField> curvature() const;
+
+
         // Write
 
             //- Write to Ostream in simple FOAM format
@@ -409,10 +425,6 @@ public:
 
             //- Write to database
             void write(const Time&) const;
-
-            //- Write to Ostream in OpenDX format
-            void writeDX(const scalarField&, Ostream&) const;
-            void writeDX(const vectorField&, Ostream&) const;
 
             //- Write some statistics
             void writeStats(Ostream&) const;

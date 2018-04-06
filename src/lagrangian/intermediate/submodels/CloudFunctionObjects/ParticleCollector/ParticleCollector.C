@@ -315,13 +315,13 @@ void Foam::ParticleCollector<CloudType>::collectParcelPolygon
         // the face's decomposed triangles does not work due to ambiguity along
         // the diagonals.
         const face& f = faces_[facei];
-        const vector n = f.normal(points_);
+        const vector a = f.area(points_);
         bool inside = true;
         for (label i = 0; i < f.size(); ++ i)
         {
             const label j = f.fcIndex(i);
             const triPointRef t(pIntersect, points_[f[i]], points_[f[j]]);
-            if ((n & t.normal()) < 0)
+            if ((a & t.area()) < 0)
             {
                 inside = false;
                 break;

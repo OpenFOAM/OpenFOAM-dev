@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,10 +249,8 @@ void Foam::molecule::hitProcessorPatch(moleculeCloud&, trackingData& td)
 
 void Foam::molecule::hitWallPatch(moleculeCloud&, trackingData&)
 {
-    vector nw = normal();
-    nw /= mag(nw);
-
-    scalar vn = v_ & nw;
+    const vector nw = normal();
+    const scalar vn = v_ & nw;
 
     // Specular reflection
     if (vn > 0)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,11 +104,10 @@ void Foam::solidParticle::hitProcessorPatch
 
 void Foam::solidParticle::hitWallPatch(solidParticleCloud& cloud, trackingData&)
 {
-    vector nw = normal();
-    nw /= mag(nw);
+    const vector nw = normal();
 
-    scalar Un = U_ & nw;
-    vector Ut = U_ - Un*nw;
+    const scalar Un = U_ & nw;
+    const vector Ut = U_ - Un*nw;
 
     if (Un > 0)
     {

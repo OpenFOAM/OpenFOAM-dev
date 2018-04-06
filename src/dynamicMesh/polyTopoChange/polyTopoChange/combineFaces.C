@@ -38,7 +38,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(combineFaces, 0);
+    defineTypeNameAndDebug(combineFaces, 0);
 }
 
 
@@ -56,8 +56,7 @@ bool Foam::combineFaces::convexFace
 )
 {
     // Get outwards pointing normal of f.
-    vector n = f.normal(points);
-    n /= mag(n);
+    const vector n = f.normal(points);
 
     // Get edge from f[0] to f[size-1];
     vector ePrev(points[f.first()] - points[f.last()]);

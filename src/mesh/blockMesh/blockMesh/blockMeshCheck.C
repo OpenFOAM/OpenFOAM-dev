@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,8 +187,8 @@ void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
                         if
                         (
                             (
-                                patchFace.normal(points)
-                              & faces[cellFaces[cellFacei]].normal(points)
+                                patchFace.area(points)
+                              & faces[cellFaces[cellFacei]].area(points)
                             ) < 0.0
                         )
                         {

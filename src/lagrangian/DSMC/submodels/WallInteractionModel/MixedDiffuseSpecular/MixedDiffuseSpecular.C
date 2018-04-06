@@ -66,8 +66,7 @@ void Foam::MixedDiffuseSpecular<CloudType>::correct
 
     label wppLocalFace = wpp.whichFace(p.face());
 
-    vector nw = p.normal();
-    nw /= mag(nw);
+    const vector nw = p.normal();
 
     // Normal velocity magnitude
     scalar U_dot_nw = U & nw;

@@ -285,10 +285,8 @@ Foam::pointIndexHit Foam::isoSurfaceCell::collapseSurface
 
         if (shared[0] != -1)
         {
-            vector n0 = tri0.normal(localPoints);
-            n0 /= mag(n0);
-            vector n1 = tri1.normal(localPoints);
-            n1 /= mag(n1);
+            const vector n0 = tri0.normal(localPoints);
+            const vector n1 = tri1.normal(localPoints);
 
             if ((n0 & n1) < 0)
             {

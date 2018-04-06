@@ -39,7 +39,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(intersectedSurface, 0);
+    defineTypeNameAndDebug(intersectedSurface, 0);
 }
 
 
@@ -1104,9 +1104,9 @@ Foam::faceList Foam::intersectedSurface::splitFace
     // See if normal needs flipping.
     faces.shrink();
 
-    vector n = faces[0].normal(eSurf.points());
+    vector a = faces[0].area(eSurf.points());
 
-    if ((n & surf.faceNormals()[facei]) < 0)
+    if ((a & surf.faceNormals()[facei]) < 0)
     {
         forAll(faces, i)
         {

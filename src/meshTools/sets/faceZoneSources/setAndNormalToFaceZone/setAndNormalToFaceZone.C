@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,8 +136,8 @@ void Foam::setAndNormalToFaceZone::applyToSet
                 {
                     newAddressing.append(facei);
 
-                    vector n = faces[facei].normal(points);
-                    if ((n & normal_) > 0)
+                    const vector a = faces[facei].area(points);
+                    if ((a & normal_) > 0)
                     {
                         newFlipMap.append(false);
                     }

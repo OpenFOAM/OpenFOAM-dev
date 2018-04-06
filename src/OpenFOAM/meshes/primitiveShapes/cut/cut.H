@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ public:
         //- Operate on a triangle
         result operator()(const FixedList<point, 3>& p) const
         {
-            return result(triPointRef(p[0], p[1], p[2]).normal());
+            return result(triPointRef(p[0], p[1], p[2]).area());
         }
 };
 

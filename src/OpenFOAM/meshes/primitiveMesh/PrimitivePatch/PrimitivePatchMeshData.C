@@ -381,7 +381,6 @@ calcFaceNormals() const
     forAll(n, facei)
     {
         n[facei] = this->operator[](facei).normal(points_);
-        n[facei] /= mag(n[facei]) + vSmall;
     }
 
     if (debug)

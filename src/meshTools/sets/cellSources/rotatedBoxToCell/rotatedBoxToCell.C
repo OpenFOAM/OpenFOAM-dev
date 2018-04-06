@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,10 +77,7 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
     vectorField boxFaceNormals(boxFaces.size());
     forAll(boxFaces, i)
     {
-        boxFaceNormals[i] = boxFaces[i].normal(boxPoints);
-
-        //Pout<< "Face:" << i << " position:" << boxFaces[i].centre(boxPoints)
-        //    << " normal:" << boxFaceNormals[i] << endl;
+        boxFaceNormals[i] = boxFaces[i].area(boxPoints);
     }
 
     // Check whether cell centre is inside all faces of box.

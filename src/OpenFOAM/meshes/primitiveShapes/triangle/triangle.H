@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::triangle
 
 Description
-    A triangle primitive used to calculate face normals and swept volumes.
+    A triangle primitive used to calculate face areas and swept volumes.
 
 SourceFiles
     triangleI.H
@@ -132,10 +132,13 @@ public:
             //- Return centre (centroid)
             inline Point centre() const;
 
+            //- Return vector area
+            inline vector area() const;
+
             //- Return scalar magnitude
             inline scalar mag() const;
 
-            //- Return vector normal
+            //- Return unit normal
             inline vector normal() const;
 
             //- Return circum-centre

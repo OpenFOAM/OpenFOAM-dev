@@ -1925,7 +1925,6 @@ void Foam::distributedTriSurfaceMesh::getNormal
     {
         label triI = triangleIndex[i];
         normal[i] = s[triI].normal(s.points());
-        normal[i] /= mag(normal[i]) + vSmall;
     }
 
 

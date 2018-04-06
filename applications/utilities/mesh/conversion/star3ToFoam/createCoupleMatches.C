@@ -88,7 +88,7 @@ void Foam::starMesh::createCoupleMatches()
          scalar faceAreaAngle =
              mag
              (
-                 -(masterFace.normal(points_) & slaveFace.normal(points_))/
+                 -(masterFace.area(points_) & slaveFace.area(points_))/
                  (masterFace.mag(points_)*slaveFace.mag(points_) + vSmall)
              );
 
@@ -162,7 +162,7 @@ void Foam::starMesh::createCoupleMatches()
             List<SLList<label>> slaveEdgePoints(slaveEdges.size());
 
             // Find common plane
-            vector n = masterFace.normal(points_);
+            vector n = masterFace.area(points_);
             n /= mag(n) + vSmall;
 
             // Loop through all edges of the master face. For every edge,
@@ -891,7 +891,7 @@ void Foam::starMesh::createCoupleMatches()
             // 2 for slave
             label startEdgeFound = 0;
 
-            vector masterProjDir = -newMasterFace.normal(points_);
+            vector masterProjDir = -newMasterFace.area(points_);
 
             forAll(newSlaveEdges, edgeI)
             {
@@ -934,7 +934,7 @@ void Foam::starMesh::createCoupleMatches()
 
             if (startEdgeFound == 0)
             {
-                vector slaveProjDir = -newSlaveFace.normal(points_);
+                vector slaveProjDir = -newSlaveFace.area(points_);
 
                 forAll(newMasterEdges, edgeI)
                 {
@@ -999,7 +999,7 @@ void Foam::starMesh::createCoupleMatches()
                 // complete; resize it to the number of active points
                 // and exit.
 
-                vector planeNormal = newMasterFace.normal(points_);
+                vector planeNormal = newMasterFace.area(points_);
                 planeNormal /= mag(planeNormal) + vSmall;
 
                 #ifdef DEBUG_RIGHT_HAND_WALK
@@ -1309,7 +1309,7 @@ void Foam::starMesh::createCoupleMatches()
 
             // Project all points of the intersected face
             // onto the master face to ensure closedness
-            vector pointProjectionNormal = -masterFace.normal(points_);
+            vector pointProjectionNormal = -masterFace.area(points_);
 
             forAll(intersectedFace, intPointi)
             {
@@ -1343,8 +1343,8 @@ void Foam::starMesh::createCoupleMatches()
             if
             (
                 (
-                    masterFace.normal(points_)
-                  & intersectedFace.normal(points_)
+                    masterFace.area(points_)
+                  & intersectedFace.area(points_)
                 ) < vSmall
             )
             {

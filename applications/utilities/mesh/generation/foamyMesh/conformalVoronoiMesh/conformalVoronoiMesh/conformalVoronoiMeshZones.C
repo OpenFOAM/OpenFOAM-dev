@@ -481,7 +481,7 @@ void Foam::conformalVoronoiMesh::calcFaceZones
                     norm
                 );
 
-                vector fN = faces[facei].normal(mesh.points());
+                vector fN = faces[facei].area(mesh.points());
                 fN /= mag(fN) + small;
 
                 if ((norm[0] & fN) < 0)

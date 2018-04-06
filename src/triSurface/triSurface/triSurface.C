@@ -463,10 +463,6 @@ void Foam::triSurface::write
     {
         writeTRI(sort, OFstream(name)());
     }
-    else if (ext == "dx")
-    {
-        writeDX(sort, OFstream(name)());
-    }
     else if (ext == "ac")
     {
         writeAC(OFstream(name)());
@@ -1041,6 +1037,67 @@ Foam::faceList Foam::triSurface::faces() const
     }
 
     return faces;
+}
+
+
+Foam::scalar Foam::triSurface::pointNormalWeight
+(
+    const triFace& f,
+    const label pi,
+    const vector& fa,
+    const pointField& points
+) const
+{
+    const label index = findIndex(f, pi);
+
+    if (index == -1)
+    {
+        FatalErrorInFunction
+            << "Point not in face" << abort(FatalError);
+    }
+
+    const vector e1 = points[f[index]] - points[f[f.fcIndex(index)]];
+    const vector e2 = points[f[index]] - points[f[f.rcIndex(index)]];
+
+    return mag(fa)/(magSqr(e1)*magSqr(e2) + vSmall);
+}
+
+
+Foam::tmp<Foam::vectorField> Foam::triSurface::pointNormals2() const
+{
+    // Weighted average of normals of faces attached to the vertex
+    // Weight = fA / (mag(e0)^2 * mag(e1)^2);
+
+    tmp<vectorField> tpointNormals
+    (
+        new vectorField(nPoints(), Zero)
+    );
+    vectorField& pointNormals = tpointNormals.ref();
+
+    const pointField& points = this->points();
+    const labelListList& pointFaces = this->pointFaces();
+    const labelList& meshPoints = this->meshPoints();
+
+    forAll(pointFaces, pi)
+    {
+        const labelList& pFaces = pointFaces[pi];
+
+        forAll(pFaces, fi)
+        {
+            const label facei = pFaces[fi];
+            const triFace& f = operator[](facei);
+
+            const vector fa = f.area(points);
+            const scalar weight =
+                pointNormalWeight(f, meshPoints[pi], fa, points);
+
+            pointNormals[pi] += weight*fa;
+        }
+
+        pointNormals[pi] /= mag(pointNormals[pi]) + vSmall;
+    }
+
+    return tpointNormals;
 }
 
 

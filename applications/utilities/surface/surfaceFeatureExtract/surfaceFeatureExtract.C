@@ -432,7 +432,7 @@ int main(int argc, char *argv[])
             Info<< nl << "Extracting curvature of surface at the points."
                 << endl;
 
-            vectorField pointNormals = calcVertexNormals(surf);
+            const vectorField pointNormals(surf.pointNormals2());
             triadField pointCoordSys = calcVertexCoordSys(surf, pointNormals);
 
             triSurfacePointScalarField k = calcCurvature

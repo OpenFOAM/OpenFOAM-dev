@@ -831,14 +831,14 @@ void Foam::hexRef8::checkInternalOrientation
     const face& newFace
 )
 {
-    face compactFace(identity(newFace.size()));
-    pointField compactPoints(meshMod.points(), newFace);
+    const face compactFace(identity(newFace.size()));
+    const pointField compactPoints(meshMod.points(), newFace);
 
-    vector n(compactFace.normal(compactPoints));
+    const vector a(compactFace.area(compactPoints));
 
-    vector dir(neiPt - ownPt);
+    const vector dir(neiPt - ownPt);
 
-    if ((dir & n) < 0)
+    if ((dir & a) < 0)
     {
         FatalErrorInFunction
             << "cell:" << celli << " old face:" << facei
@@ -849,9 +849,9 @@ void Foam::hexRef8::checkInternalOrientation
             << abort(FatalError);
     }
 
-    vector fcToOwn(compactFace.centre(compactPoints) - ownPt);
+    const vector fcToOwn(compactFace.centre(compactPoints) - ownPt);
 
-    scalar s = (fcToOwn&n) / (dir&n);
+    const scalar s = (fcToOwn & a) / (dir & a);
 
     if (s < 0.1 || s > 0.9)
     {
@@ -877,14 +877,14 @@ void Foam::hexRef8::checkBoundaryOrientation
     const face& newFace
 )
 {
-    face compactFace(identity(newFace.size()));
-    pointField compactPoints(meshMod.points(), newFace);
+    const face compactFace(identity(newFace.size()));
+    const pointField compactPoints(meshMod.points(), newFace);
 
-    vector n(compactFace.normal(compactPoints));
+    const vector a(compactFace.area(compactPoints));
 
-    vector dir(boundaryPt - ownPt);
+    const vector dir(boundaryPt - ownPt);
 
-    if ((dir & n) < 0)
+    if ((dir & a) < 0)
     {
         FatalErrorInFunction
             << "cell:" << celli << " old face:" << facei
@@ -895,9 +895,9 @@ void Foam::hexRef8::checkBoundaryOrientation
             << abort(FatalError);
     }
 
-    vector fcToOwn(compactFace.centre(compactPoints) - ownPt);
+    const vector fcToOwn(compactFace.centre(compactPoints) - ownPt);
 
-    scalar s = (fcToOwn&dir) / magSqr(dir);
+    const scalar s = (fcToOwn&dir) / magSqr(dir);
 
     if (s < 0.7 || s > 1.3)
     {
@@ -909,7 +909,6 @@ void Foam::hexRef8::checkBoundaryOrientation
             << " boundaryPt:" << boundaryPt
             << " s:" << s
             << endl;
-            //<< abort(FatalError);
     }
 }
 

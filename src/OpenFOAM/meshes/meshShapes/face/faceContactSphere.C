@@ -40,7 +40,7 @@ Foam::scalar Foam::face::contactSphereDiameter
     scalar magN = Foam::mag(n);
 
     vector n1 = n/(magN + small);
-    vector n2 = normal(meshPoints);
+    vector n2 = area(meshPoints);
 
     n2 /= Foam::mag(n2) + small;
 

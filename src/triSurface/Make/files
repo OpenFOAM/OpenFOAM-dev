@@ -22,7 +22,6 @@ $(interfaces)/OFF/readOFF.C
 $(interfaces)/OFF/writeOFF.C
 $(interfaces)/TRI/writeTRI.C
 $(interfaces)/TRI/readTRI.C
-$(interfaces)/DX/writeDX.C
 $(interfaces)/AC3D/readAC.C
 $(interfaces)/AC3D/writeAC.C
 $(interfaces)/VTK/readVTK.C

@@ -1046,7 +1046,7 @@ bool Foam::primitiveMeshGeometry::checkFaceTwist
                         p[f[fpI]],
                         p[f.nextLabel(fpI)],
                         fc
-                    ).normal()
+                    ).area()
                 );
 
                 scalar magTri = mag(triArea);

@@ -741,7 +741,7 @@ void Foam::triSurfaceMesh::getNormal
             if (info[i].hit())
             {
                 label facei = info[i].index();
-                normal[i] = s[facei].normal(pts);
+                normal[i] = s[facei].area(pts);
 
                 scalar qual = s[facei].tri(pts).quality();
 
@@ -757,7 +757,7 @@ void Foam::triSurfaceMesh::getNormal
                         if (nbrQual > qual)
                         {
                             qual = nbrQual;
-                            normal[i] = s[nbrI].normal(pts);
+                            normal[i] = s[nbrI].area(pts);
                         }
                     }
                 }
@@ -783,7 +783,6 @@ void Foam::triSurfaceMesh::getNormal
 
                 // Uncached
                 normal[i] = s[facei].normal(pts);
-                normal[i] /= mag(normal[i]) + vSmall;
             }
             else
             {
