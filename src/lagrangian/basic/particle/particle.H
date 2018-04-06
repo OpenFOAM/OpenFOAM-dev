@@ -471,11 +471,6 @@ public:
             //  current tet.
             inline vector normal() const;
 
-            //- Return the normal of the tri on tetFacei_ for the
-            //  current tet at the start of the timestep, i.e. based
-            //  on oldPoints
-            inline vector oldNormal() const;
-
             //- Is the particle on a face?
             inline bool onFace() const;
 
