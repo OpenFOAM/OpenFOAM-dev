@@ -289,6 +289,73 @@ Foam::FixedList<Foam::scalar, 4> Foam::plane::planeCoeffs() const
 }
 
 
+Foam::point Foam::plane::aPoint() const
+{
+    // Perturb base point
+    const point& refPt = refPoint();
+
+    // ax + by + cz + d = 0
+    FixedList<scalar, 4> planeCoeffs = this->planeCoeffs();
+
+    const scalar perturbX = refPt.x() + 1e-3;
+    const scalar perturbY = refPt.y() + 1e-3;
+    const scalar perturbZ = refPt.z() + 1e-3;
+
+    if (mag(planeCoeffs[2]) < small)
+    {
+        if (mag(planeCoeffs[1]) < small)
+        {
+            const scalar x =
+                -1.0
+                *(
+                     planeCoeffs[3]
+                   + planeCoeffs[1]*perturbY
+                   + planeCoeffs[2]*perturbZ
+                 )/planeCoeffs[0];
+
+            return point
+            (
+                x,
+                perturbY,
+                perturbZ
+            );
+        }
+
+        const scalar y =
+            -1.0
+            *(
+                 planeCoeffs[3]
+               + planeCoeffs[0]*perturbX
+               + planeCoeffs[2]*perturbZ
+             )/planeCoeffs[1];
+
+        return point
+        (
+            perturbX,
+            y,
+            perturbZ
+        );
+    }
+    else
+    {
+        const scalar z =
+            -1.0
+            *(
+                 planeCoeffs[3]
+               + planeCoeffs[0]*perturbX
+               + planeCoeffs[1]*perturbY
+             )/planeCoeffs[2];
+
+        return point
+        (
+            perturbX,
+            perturbY,
+            z
+        );
+    }
+}
+
+
 Foam::point Foam::plane::nearestPoint(const point& p) const
 {
     return p - normal_*((p - point_) & normal_);

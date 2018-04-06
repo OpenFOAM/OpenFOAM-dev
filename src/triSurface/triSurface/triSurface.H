@@ -42,7 +42,7 @@ SourceFiles
 #include "geometricSurfacePatchList.H"
 #include "surfacePatchList.H"
 #include "triFaceList.H"
-#include "triSurfaceFieldsFwd.H"
+#include "triadField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -124,6 +124,21 @@ class triSurface
             const scalar tol = small,
             const bool verbose = false
         );
+
+        scalar pointNormalWeight
+        (
+            const triFace& f,
+            const label pi,
+            const vector& fa,
+            const pointField& points
+        ) const;
+
+        //- Return the surface point normals
+        tmp<vectorField> weightedPointNormals() const;
+
+        //- Return the curvature of surface at the points
+        tmp<triadField> pointCoordSys(const vectorField& pointNormals) const;
+
 
         //- Read in Foam format
         bool read(Istream&);
@@ -397,22 +412,8 @@ public:
 
         // Analysis
 
-            scalar pointNormalWeight
-            (
-                const triFace& f,
-                const label pi,
-                const vector& fa,
-                const pointField& points
-            ) const;
-
-            //- Return the surface point normals
-            tmp<vectorField> pointNormals2() const;
-
             //- Return the curvature of surface at the points
-            tmp<triSurfacePointScalarField> pointCoordSys() const;
-
-            //- Return the curvature of surface at the points
-            tmp<triSurfacePointScalarField> curvature() const;
+            tmp<scalarField> curvature() const;
 
 
         // Write

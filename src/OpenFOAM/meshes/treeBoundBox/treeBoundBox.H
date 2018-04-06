@@ -349,10 +349,16 @@ public:
             //  and guarantees in any direction s*mag(span) minimum width
             inline treeBoundBox extend(Random&, const scalar s) const;
 
+    // Write
+
+        void writeOBJ(const fileName& fName) const;
+
+
     // Friend Operators
 
         friend bool operator==(const treeBoundBox&, const treeBoundBox&);
         friend bool operator!=(const treeBoundBox&, const treeBoundBox&);
+
 
     // IOstream operator
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,6 +161,9 @@ public:
         //- Return coefficients for the
         //  plane equation: ax + by + cz + d = 0
         FixedList<scalar, 4> planeCoeffs() const;
+
+        //- Return a point on the plane
+        point aPoint() const;
 
         //- Return nearest point in the plane for the given point
         point nearestPoint(const point& p) const;

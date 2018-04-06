@@ -45,21 +45,6 @@ namespace Foam
 
     point randomPointInPlane(const plane& p);
 
-    triadField calcVertexCoordSys
-    (
-        const triSurface& surf,
-        const vectorField& pointNormals
-    );
-
-    triSurfacePointScalarField calcCurvature
-    (
-        const word& name,
-        const Time& runTime,
-        const triSurface& surf,
-        const vectorField& pointNormals,
-        const triadField& pointCoordSys
-    );
-
     bool edgesConnected(const edge& e1, const edge& e2);
 
     scalar calcProximityOfFeaturePoints
@@ -74,8 +59,6 @@ namespace Foam
         const List<pointIndexHit>& hitList,
         const scalar defaultCellSize
     );
-
-    void dumpBox(const treeBoundBox& bb, const fileName& fName);
 
     //- Deletes all edges inside/outside bounding box from set.
     void deleteBox

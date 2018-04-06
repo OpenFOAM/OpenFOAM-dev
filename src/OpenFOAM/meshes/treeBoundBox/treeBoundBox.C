@@ -25,6 +25,7 @@ License
 
 #include "treeBoundBox.H"
 #include "ListOps.H"
+#include "OFstream.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -611,6 +612,31 @@ Foam::label Foam::treeBoundBox::distanceCmp
     {
         // Mixed bag
         return 0;
+    }
+}
+
+
+void Foam::treeBoundBox::writeOBJ(const fileName& fName) const
+{
+    OFstream str(fName);
+
+    Info<< "Dumping bounding box " << *this << " as lines to obj file "
+        << str.name() << endl;
+
+    pointField bbPoints(points());
+
+    forAll(bbPoints, i)
+    {
+        const point& pt = bbPoints[i];
+
+        str<< "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << endl;
+    }
+
+    forAll(treeBoundBox::edges, i)
+    {
+        const edge& e = treeBoundBox::edges[i];
+
+        str<< "l " << e[0]+1 <<  ' ' << e[1]+1 << nl;
     }
 }
 

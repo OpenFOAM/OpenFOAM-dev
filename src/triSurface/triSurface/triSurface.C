@@ -31,6 +31,10 @@ License
 #include "boundBox.H"
 #include "SortableList.H"
 #include "PackedBoolList.H"
+#include "plane.H"
+#include "tensor2D.H"
+#include "symmTensor2D.H"
+#include "transform.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -181,164 +185,105 @@ Foam::string Foam::triSurface::getLineNoComment(IFstream& is)
 }
 
 
-// Remove non-triangles, double triangles.
-void Foam::triSurface::checkTriangles(const bool verbose)
+Foam::scalar Foam::triSurface::pointNormalWeight
+(
+    const triFace& f,
+    const label pi,
+    const vector& fa,
+    const pointField& points
+) const
 {
-    // Simple check on indices ok.
-    const label maxPointi = points().size() - 1;
+    const label index = findIndex(f, pi);
 
-    forAll(*this, facei)
+    if (index == -1)
     {
-        const triSurface::FaceType& f = (*this)[facei];
-
-        forAll(f, fp)
-        {
-            if (f[fp] < 0 || f[fp] > maxPointi)
-            {
-                FatalErrorInFunction
-                    << "triangle " << f
-                    << " uses point indices outside point range 0.."
-                    << maxPointi
-                    << exit(FatalError);
-            }
-        }
+        FatalErrorInFunction
+            << "Point not in face" << abort(FatalError);
     }
 
-    // Two phase process
-    //   1. mark invalid faces
-    //   2. pack
-    // Done to keep numbering constant in phase 1
+    const vector e1 = points[f[index]] - points[f[f.fcIndex(index)]];
+    const vector e2 = points[f[index]] - points[f[f.rcIndex(index)]];
 
-    // List of valid triangles
-    boolList valid(size(), true);
-    bool hasInvalid = false;
-
-    forAll(*this, facei)
-    {
-        const labelledTri& f = (*this)[facei];
-
-        if ((f[0] == f[1]) || (f[0] == f[2]) || (f[1] == f[2]))
-        {
-            // 'degenerate' triangle check
-            valid[facei] = false;
-            hasInvalid = true;
-
-            if (verbose)
-            {
-                WarningInFunction
-                    << "triangle " << facei
-                    << " does not have three unique vertices:\n";
-                printTriangle(Warning, "    ", f, points());
-            }
-        }
-        else
-        {
-            // duplicate triangle check
-            const labelList& fEdges = faceEdges()[facei];
-
-            // Check if faceNeighbours use same points as this face.
-            // Note: discards normal information - sides of baffle are merged.
-
-            forAll(fEdges, fp)
-            {
-                const labelList& eFaces = edgeFaces()[fEdges[fp]];
-
-                forAll(eFaces, i)
-                {
-                    label neighbour = eFaces[i];
-
-                    if (neighbour > facei)
-                    {
-                        // lower numbered faces already checked
-                        const labelledTri& n = (*this)[neighbour];
-
-                        if
-                        (
-                            ((f[0] == n[0]) || (f[0] == n[1]) || (f[0] == n[2]))
-                         && ((f[1] == n[0]) || (f[1] == n[1]) || (f[1] == n[2]))
-                         && ((f[2] == n[0]) || (f[2] == n[1]) || (f[2] == n[2]))
-                        )
-                        {
-                            valid[facei] = false;
-                            hasInvalid = true;
-
-                            if (verbose)
-                            {
-                                WarningInFunction
-                                    << "triangles share the same vertices:\n"
-                                    << "    face 1 :" << facei << endl;
-                                printTriangle(Warning, "    ", f, points());
-
-                                Warning
-                                    << endl
-                                    << "    face 2 :"
-                                    << neighbour << endl;
-                                printTriangle(Warning, "    ", n, points());
-                            }
-
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if (hasInvalid)
-    {
-        // Pack
-        label newFacei = 0;
-        forAll(*this, facei)
-        {
-            if (valid[facei])
-            {
-                const labelledTri& f = (*this)[facei];
-                (*this)[newFacei++] = f;
-            }
-        }
-
-        if (verbose)
-        {
-            WarningInFunction
-                << "Removing " << size() - newFacei
-                << " illegal faces." << endl;
-        }
-        (*this).setSize(newFacei);
-
-        // Topology can change because of renumbering
-        clearOut();
-    }
+    return mag(fa)/(magSqr(e1)*magSqr(e2) + vSmall);
 }
 
 
-// Check/fix edges with more than two triangles
-void Foam::triSurface::checkEdges(const bool verbose)
+Foam::tmp<Foam::vectorField> Foam::triSurface::weightedPointNormals() const
 {
-    const labelListList& eFaces = edgeFaces();
+    // Weighted average of normals of faces attached to the vertex
+    // Weight = fA / (mag(e0)^2 * mag(e1)^2);
 
-    forAll(eFaces, edgeI)
+    tmp<vectorField> tpointNormals
+    (
+        new vectorField(nPoints(), Zero)
+    );
+    vectorField& pointNormals = tpointNormals.ref();
+
+    const pointField& points = this->points();
+    const labelListList& pointFaces = this->pointFaces();
+    const labelList& meshPoints = this->meshPoints();
+
+    forAll(pointFaces, pi)
     {
-        const labelList& myFaces = eFaces[edgeI];
+        const labelList& pFaces = pointFaces[pi];
 
-        if (myFaces.empty())
+        forAll(pFaces, fi)
         {
-            FatalErrorInFunction
-                << "Edge " << edgeI << " with vertices " << edges()[edgeI]
-                << " has no edgeFaces"
-                << exit(FatalError);
+            const label facei = pFaces[fi];
+            const triFace& f = operator[](facei);
+
+            const vector fa = f.area(points);
+            const scalar weight =
+                pointNormalWeight(f, meshPoints[pi], fa, points);
+
+            pointNormals[pi] += weight*fa;
         }
-        else if (myFaces.size() > 2 && verbose)
-        {
-            WarningInFunction
-                << "Edge " << edgeI << " with vertices " << edges()[edgeI]
-                << " has more than 2 faces connected to it : " << myFaces
-                << endl;
-        }
+
+        pointNormals[pi] /= mag(pointNormals[pi]) + vSmall;
     }
+
+    return tpointNormals;
 }
 
 
-// Read triangles, points from Istream
+Foam::tmp<Foam::triadField> Foam::triSurface::pointCoordSys
+(
+    const vectorField& pointNormals
+) const
+{
+    tmp<triadField> tpointCoordSys(new triadField(nPoints()));
+    triadField& pointCoordSys = tpointCoordSys.ref();
+
+    const pointField& points = this->points();
+    const labelList& meshPoints = this->meshPoints();
+
+    forAll(meshPoints, pi)
+    {
+        const point& pt = points[meshPoints[pi]];
+        const vector& normal = pointNormals[pi];
+
+        if (mag(normal) < small)
+        {
+            pointCoordSys[pi] = triad::unset;
+            continue;
+        }
+
+        plane p(pt, normal);
+
+        // Pick a point in plane
+        vector dir1 = pt - p.aPoint();
+        dir1 /= mag(dir1);
+
+        vector dir2 = dir1 ^ normal;
+        dir2 /= mag(dir2);
+
+        pointCoordSys[pi] = triad(dir1, dir2, normal);
+    }
+
+    return pointCoordSys;
+}
+
+
 bool Foam::triSurface::read(Istream& is)
 {
     is  >> patches_ >> storedPoints() >> storedFaces();
@@ -347,7 +292,6 @@ bool Foam::triSurface::read(Istream& is)
 }
 
 
-// Read from file in given format
 bool Foam::triSurface::read
 (
     const fileName& name,
@@ -421,7 +365,6 @@ bool Foam::triSurface::read
 }
 
 
-// Write to file in given format
 void Foam::triSurface::write
 (
     const fileName& name,
@@ -484,8 +427,6 @@ void Foam::triSurface::write
 }
 
 
-// Returns patch info. Sets faceMap to the indexing according to patch
-// numbers. Patch numbers start at 0.
 Foam::surfacePatchList Foam::triSurface::calcPatches(labelList& faceMap) const
 {
     // Sort according to region numbers of labelledTri
@@ -812,7 +753,161 @@ void Foam::triSurface::scalePoints(const scalar scaleFactor)
 }
 
 
-// Remove non-triangles, double triangles.
+void Foam::triSurface::checkTriangles(const bool verbose)
+{
+    // Simple check on indices ok.
+    const label maxPointi = points().size() - 1;
+
+    forAll(*this, facei)
+    {
+        const triSurface::FaceType& f = (*this)[facei];
+
+        forAll(f, fp)
+        {
+            if (f[fp] < 0 || f[fp] > maxPointi)
+            {
+                FatalErrorInFunction
+                    << "triangle " << f
+                    << " uses point indices outside point range 0.."
+                    << maxPointi
+                    << exit(FatalError);
+            }
+        }
+    }
+
+    // Two phase process
+    //   1. mark invalid faces
+    //   2. pack
+    // Done to keep numbering constant in phase 1
+
+    // List of valid triangles
+    boolList valid(size(), true);
+    bool hasInvalid = false;
+
+    forAll(*this, facei)
+    {
+        const labelledTri& f = (*this)[facei];
+
+        if ((f[0] == f[1]) || (f[0] == f[2]) || (f[1] == f[2]))
+        {
+            // 'degenerate' triangle check
+            valid[facei] = false;
+            hasInvalid = true;
+
+            if (verbose)
+            {
+                WarningInFunction
+                    << "triangle " << facei
+                    << " does not have three unique vertices:\n";
+                printTriangle(Warning, "    ", f, points());
+            }
+        }
+        else
+        {
+            // duplicate triangle check
+            const labelList& fEdges = faceEdges()[facei];
+
+            // Check if faceNeighbours use same points as this face.
+            // Note: discards normal information - sides of baffle are merged.
+
+            forAll(fEdges, fp)
+            {
+                const labelList& eFaces = edgeFaces()[fEdges[fp]];
+
+                forAll(eFaces, i)
+                {
+                    label neighbour = eFaces[i];
+
+                    if (neighbour > facei)
+                    {
+                        // lower numbered faces already checked
+                        const labelledTri& n = (*this)[neighbour];
+
+                        if
+                        (
+                            ((f[0] == n[0]) || (f[0] == n[1]) || (f[0] == n[2]))
+                         && ((f[1] == n[0]) || (f[1] == n[1]) || (f[1] == n[2]))
+                         && ((f[2] == n[0]) || (f[2] == n[1]) || (f[2] == n[2]))
+                        )
+                        {
+                            valid[facei] = false;
+                            hasInvalid = true;
+
+                            if (verbose)
+                            {
+                                WarningInFunction
+                                    << "triangles share the same vertices:\n"
+                                    << "    face 1 :" << facei << endl;
+                                printTriangle(Warning, "    ", f, points());
+
+                                Warning
+                                    << endl
+                                    << "    face 2 :"
+                                    << neighbour << endl;
+                                printTriangle(Warning, "    ", n, points());
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (hasInvalid)
+    {
+        // Pack
+        label newFacei = 0;
+        forAll(*this, facei)
+        {
+            if (valid[facei])
+            {
+                const labelledTri& f = (*this)[facei];
+                (*this)[newFacei++] = f;
+            }
+        }
+
+        if (verbose)
+        {
+            WarningInFunction
+                << "Removing " << size() - newFacei
+                << " illegal faces." << endl;
+        }
+        (*this).setSize(newFacei);
+
+        // Topology can change because of renumbering
+        clearOut();
+    }
+}
+
+
+void Foam::triSurface::checkEdges(const bool verbose)
+{
+    const labelListList& eFaces = edgeFaces();
+
+    forAll(eFaces, edgeI)
+    {
+        const labelList& myFaces = eFaces[edgeI];
+
+        if (myFaces.empty())
+        {
+            FatalErrorInFunction
+                << "Edge " << edgeI << " with vertices " << edges()[edgeI]
+                << " has no edgeFaces"
+                << exit(FatalError);
+        }
+        else if (myFaces.size() > 2 && verbose)
+        {
+            WarningInFunction
+                << "Edge " << edgeI << " with vertices " << edges()[edgeI]
+                << " has more than 2 faces connected to it : " << myFaces
+                << endl;
+        }
+    }
+}
+
+
 void Foam::triSurface::cleanup(const bool verbose)
 {
     // Merge points (already done for STL, TRI)
@@ -827,8 +922,6 @@ void Foam::triSurface::cleanup(const bool verbose)
 }
 
 
-// Finds area, starting at facei, delimited by borderEdge. Marks all visited
-// faces (from face-edge-face walk) with currentZone.
 void Foam::triSurface::markZone
 (
     const boolList& borderEdge,
@@ -892,8 +985,6 @@ void Foam::triSurface::markZone
 }
 
 
-// Finds areas delimited by borderEdge (or 'real' edges).
-// Fills faceZone accordingly
 Foam::label Foam::triSurface::markZones
 (
     const boolList& borderEdge,
@@ -1040,64 +1131,177 @@ Foam::faceList Foam::triSurface::faces() const
 }
 
 
-Foam::scalar Foam::triSurface::pointNormalWeight
-(
-    const triFace& f,
-    const label pi,
-    const vector& fa,
-    const pointField& points
-) const
+Foam::tmp<Foam::scalarField> Foam::triSurface::curvature() const
 {
-    const label index = findIndex(f, pi);
-
-    if (index == -1)
-    {
-        FatalErrorInFunction
-            << "Point not in face" << abort(FatalError);
-    }
-
-    const vector e1 = points[f[index]] - points[f[f.fcIndex(index)]];
-    const vector e2 = points[f[index]] - points[f[f.rcIndex(index)]];
-
-    return mag(fa)/(magSqr(e1)*magSqr(e2) + vSmall);
-}
-
-
-Foam::tmp<Foam::vectorField> Foam::triSurface::pointNormals2() const
-{
-    // Weighted average of normals of faces attached to the vertex
-    // Weight = fA / (mag(e0)^2 * mag(e1)^2);
-
-    tmp<vectorField> tpointNormals
-    (
-        new vectorField(nPoints(), Zero)
-    );
-    vectorField& pointNormals = tpointNormals.ref();
+    // Curvature calculation is an implementation of the algorithm from:
+    // "Estimating Curvatures and their Derivatives on Triangle Meshes"
+    // by S. Rusinkiewicz
 
     const pointField& points = this->points();
-    const labelListList& pointFaces = this->pointFaces();
     const labelList& meshPoints = this->meshPoints();
+    const Map<label>& meshPointMap = this->meshPointMap();
 
-    forAll(pointFaces, pi)
+    const vectorField pointNormals
+    (
+        this->weightedPointNormals()
+    );
+
+    const triadField pointCoordSys
+    (
+        this->pointCoordSys(pointNormals)
+    );
+
+    tmp<scalarField> tcurvaturePointField(new scalarField(nPoints(), 0.0));
+    scalarField& curvaturePointField = tcurvaturePointField.ref();
+
+    List<symmTensor2D> pointFundamentalTensors(nPoints(), Zero);
+    scalarList accumulatedWeights(nPoints(), 0.0);
+
+    forAll(*this, fi)
     {
-        const labelList& pFaces = pointFaces[pi];
+        const triFace& f = operator[](fi);
+        const edgeList fEdges = f.edges();
 
-        forAll(pFaces, fi)
+        // Calculate the edge vectors and the normal differences
+        vectorField edgeVectors(f.size(), Zero);
+        vectorField normalDifferences(f.size(), Zero);
+
+        forAll(fEdges, feI)
         {
-            const label facei = pFaces[fi];
-            const triFace& f = operator[](facei);
+            const edge& e = fEdges[feI];
 
-            const vector fa = f.area(points);
-            const scalar weight =
-                pointNormalWeight(f, meshPoints[pi], fa, points);
-
-            pointNormals[pi] += weight*fa;
+            edgeVectors[feI] = e.vec(points);
+            normalDifferences[feI] =
+               pointNormals[meshPointMap[e[0]]]
+             - pointNormals[meshPointMap[e[1]]];
         }
 
-        pointNormals[pi] /= mag(pointNormals[pi]) + vSmall;
+        // Set up a local coordinate system for the face
+        const vector& e0 = edgeVectors[0];
+        const vector eN = f.area(points);
+        const vector e1 = (e0 ^ eN);
+
+        if (magSqr(eN) < rootVSmall)
+        {
+            continue;
+        }
+
+        triad faceCoordSys(e0, e1, eN);
+        faceCoordSys.normalize();
+
+        // Construct the matrix to solve
+        scalarSymmetricSquareMatrix T(3, 0);
+        scalarDiagonalMatrix Z(3, 0);
+
+        // Least Squares
+        for (label i = 0; i < 3; ++i)
+        {
+            const scalar x = edgeVectors[i] & faceCoordSys[0];
+            const scalar y = edgeVectors[i] & faceCoordSys[1];
+
+            T(0, 0) += sqr(x);
+            T(1, 0) += x*y;
+            T(1, 1) += sqr(x) + sqr(y);
+            T(2, 1) += x*y;
+            T(2, 2) += sqr(y);
+
+            const scalar dndx = normalDifferences[i] & faceCoordSys[0];
+            const scalar dndy = normalDifferences[i] & faceCoordSys[1];
+
+            Z[0] += dndx*x;
+            Z[1] += dndx*y + dndy*x;
+            Z[2] += dndy*y;
+        }
+
+        // Perform Cholesky decomposition and back substitution.
+        // Decomposed matrix is in T and solution is in Z.
+        LUsolve(T, Z);
+        const symmTensor2D secondFundamentalTensor(Z[0], Z[1], Z[2]);
+
+        // Loop over the face points adding the contribution of the face
+        // curvature to the points.
+        forAll(f, fpi)
+        {
+            const label patchPointIndex = meshPointMap[f[fpi]];
+
+            const triad& ptCoordSys = pointCoordSys[patchPointIndex];
+
+            if (!ptCoordSys.set())
+            {
+                continue;
+            }
+
+            // Rotate faceCoordSys to ptCoordSys
+            const tensor rotTensor = rotationTensor
+            (
+                ptCoordSys[2],
+                faceCoordSys[2]
+            );
+            const triad rotatedFaceCoordSys = rotTensor & tensor(faceCoordSys);
+
+            // Project the face curvature onto the point plane
+
+            const vector2D cmp1
+            (
+                ptCoordSys[0] & rotatedFaceCoordSys[0],
+                ptCoordSys[0] & rotatedFaceCoordSys[1]
+            );
+            const vector2D cmp2
+            (
+                ptCoordSys[1] & rotatedFaceCoordSys[0],
+                ptCoordSys[1] & rotatedFaceCoordSys[1]
+            );
+
+            const tensor2D projTensor
+            (
+                cmp1,
+                cmp2
+            );
+
+            const symmTensor2D projectedFundamentalTensor
+            (
+                projTensor.x() & (secondFundamentalTensor & projTensor.x()),
+                projTensor.x() & (secondFundamentalTensor & projTensor.y()),
+                projTensor.y() & (secondFundamentalTensor & projTensor.y())
+            );
+
+            // Calculate weight
+            const scalar weight = pointNormalWeight
+            (
+                f,
+                meshPoints[patchPointIndex],
+                f.area(points),
+                points
+            );
+
+            // Sum contribution of face to this point
+            pointFundamentalTensors[patchPointIndex] +=
+                weight*projectedFundamentalTensor;
+
+            accumulatedWeights[patchPointIndex] += weight;
+        }
     }
 
-    return tpointNormals;
+    forAll(curvaturePointField, pi)
+    {
+        pointFundamentalTensors[pi] /= (accumulatedWeights[pi] + small);
+
+        const vector2D principalCurvatures =
+            eigenValues(pointFundamentalTensors[pi]);
+
+        //scalar curvature =
+        //    (principalCurvatures[0] + principalCurvatures[1])/2;
+        const scalar curvature = max
+        (
+            mag(principalCurvatures[0]),
+            mag(principalCurvatures[1])
+        );
+        //scalar curvature = principalCurvatures[0]*principalCurvatures[1];
+
+        curvaturePointField[meshPoints[pi]] = curvature;
+    }
+
+    return tcurvaturePointField;
 }
 
 

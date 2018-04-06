@@ -231,18 +231,18 @@ int main(int argc, char *argv[])
             {
                 treeBoundBox bb(subsetDict.lookup("insideBox")());
 
-                Info<< "Removing all edges outside bb " << bb << endl;
-                dumpBox(bb, "subsetBox.obj");
-
+                Info<< "Removing all edges outside bb " << bb
+                    << " see subsetBox.obj" << endl;
+                bb.writeOBJ("subsetBox.obj");
                 deleteBox(surf, bb, false, edgeStat);
             }
             else if (subsetDict.found("outsideBox"))
             {
                 treeBoundBox bb(subsetDict.lookup("outsideBox")());
 
-                Info<< "Removing all edges inside bb " << bb << endl;
-                dumpBox(bb, "deleteBox.obj");
-
+                Info<< "Removing all edges inside bb " << bb
+                    << " see deleteBox.obj" << endl;
+                bb.writeOBJ("deleteBox.obj");
                 deleteBox(surf, bb, true, edgeStat);
             }
 
@@ -432,16 +432,18 @@ int main(int argc, char *argv[])
             Info<< nl << "Extracting curvature of surface at the points."
                 << endl;
 
-            const vectorField pointNormals(surf.pointNormals2());
-            triadField pointCoordSys = calcVertexCoordSys(surf, pointNormals);
-
-            triSurfacePointScalarField k = calcCurvature
+            triSurfacePointScalarField k
             (
-                sFeatFileName,
-                runTime,
+                IOobject
+                (
+                    sFeatFileName + ".curvature",
+                    runTime.constant(),
+                    "triSurface",
+                    runTime
+                ),
                 surf,
-                pointNormals,
-                pointCoordSys
+                dimLength,
+                surf.curvature()
             );
 
             k.write();
