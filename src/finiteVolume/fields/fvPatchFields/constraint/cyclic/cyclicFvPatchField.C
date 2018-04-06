@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,6 +78,7 @@ Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
 )
 :
     coupledFvPatchField<Type>(ptf, p, iF, mapper),
+    cyclicLduInterfaceField(),
     cyclicPatch_(refCast<const cyclicFvPatch>(p))
 {
     if (!isA<cyclicFvPatch>(this->patch()))
@@ -98,8 +99,8 @@ Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
     const cyclicFvPatchField<Type>& ptf
 )
 :
-    cyclicLduInterfaceField(),
     coupledFvPatchField<Type>(ptf),
+    cyclicLduInterfaceField(),
     cyclicPatch_(ptf.cyclicPatch_)
 {}
 
@@ -112,6 +113,7 @@ Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
 )
 :
     coupledFvPatchField<Type>(ptf, iF),
+    cyclicLduInterfaceField(),
     cyclicPatch_(ptf.cyclicPatch_)
 {}
 

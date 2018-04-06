@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,8 +68,8 @@ namespace Foam
 template<class Type>
 class cyclicACMIFvPatchField
 :
-    virtual public cyclicACMILduInterfaceField,
-    public coupledFvPatchField<Type>
+    public coupledFvPatchField<Type>,
+    public cyclicACMILduInterfaceField
 {
     // Private data
 

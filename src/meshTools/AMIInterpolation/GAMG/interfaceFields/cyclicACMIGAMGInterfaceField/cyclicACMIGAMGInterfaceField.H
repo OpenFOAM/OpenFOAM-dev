@@ -52,7 +52,7 @@ namespace Foam
 class cyclicACMIGAMGInterfaceField
 :
     public GAMGInterfaceField,
-    virtual public cyclicACMILduInterfaceField
+    public cyclicACMILduInterfaceField
 {
     // Private data
 
