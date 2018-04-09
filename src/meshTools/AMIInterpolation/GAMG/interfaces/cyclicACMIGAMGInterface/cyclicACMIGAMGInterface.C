@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,144 +55,23 @@ Foam::cyclicACMIGAMGInterface::cyclicACMIGAMGInterface
     const label coarseComm
 )
 :
-    GAMGInterface
+    cyclicAMIGAMGInterface
     (
         index,
-        coarseInterfaces
-    ),
-    fineCyclicACMIInterface_
-    (
-        refCast<const cyclicACMILduInterface>(fineInterface)
+        coarseInterfaces,
+        fineInterface,
+        localRestrictAddressing,
+        neighbourRestrictAddressing,
+        fineLevelIndex,
+        coarseComm
     )
-{
-    // Construct face agglomeration from cell agglomeration
-    {
-        // From coarse face to cell
-        DynamicList<label> dynFaceCells(localRestrictAddressing.size());
-
-        // From face to coarse face
-        DynamicList<label> dynFaceRestrictAddressing
-        (
-            localRestrictAddressing.size()
-        );
-
-        Map<label> masterToCoarseFace(localRestrictAddressing.size());
-
-        forAll(localRestrictAddressing, ffi)
-        {
-            label curMaster = localRestrictAddressing[ffi];
-
-            Map<label>::const_iterator fnd = masterToCoarseFace.find
-            (
-                curMaster
-            );
-
-            if (fnd == masterToCoarseFace.end())
-            {
-                // New coarse face
-                label coarseI = dynFaceCells.size();
-                dynFaceRestrictAddressing.append(coarseI);
-                dynFaceCells.append(curMaster);
-                masterToCoarseFace.insert(curMaster, coarseI);
-            }
-            else
-            {
-                // Already have coarse face
-                dynFaceRestrictAddressing.append(fnd());
-            }
-        }
-
-        faceCells_.transfer(dynFaceCells);
-        faceRestrictAddressing_.transfer(dynFaceRestrictAddressing);
-    }
-
-
-    // On the owner side construct the AMI
-
-    if (fineCyclicACMIInterface_.owner())
-    {
-        // Construct the neighbour side agglomeration (as the neighbour would
-        // do it so it the exact loop above using neighbourRestrictAddressing
-        // instead of localRestrictAddressing)
-
-        labelList nbrFaceRestrictAddressing;
-        {
-            // From face to coarse face
-            DynamicList<label> dynNbrFaceRestrictAddressing
-            (
-                neighbourRestrictAddressing.size()
-            );
-
-            Map<label> masterToCoarseFace(neighbourRestrictAddressing.size());
-
-            forAll(neighbourRestrictAddressing, ffi)
-            {
-                label curMaster = neighbourRestrictAddressing[ffi];
-
-                Map<label>::const_iterator fnd = masterToCoarseFace.find
-                (
-                    curMaster
-                );
-
-                if (fnd == masterToCoarseFace.end())
-                {
-                    // New coarse face
-                    label coarseI = masterToCoarseFace.size();
-                    dynNbrFaceRestrictAddressing.append(coarseI);
-                    masterToCoarseFace.insert(curMaster, coarseI);
-                }
-                else
-                {
-                    // Already have coarse face
-                    dynNbrFaceRestrictAddressing.append(fnd());
-                }
-            }
-
-            nbrFaceRestrictAddressing.transfer(dynNbrFaceRestrictAddressing);
-        }
-
-        amiPtr_.reset
-        (
-            new AMIPatchToPatchInterpolation
-            (
-                fineCyclicACMIInterface_.AMI(),
-                faceRestrictAddressing_,
-                nbrFaceRestrictAddressing
-            )
-        );
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::cyclicACMIGAMGInterface::~cyclicACMIGAMGInterface()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::labelField>
-Foam::cyclicACMIGAMGInterface::internalFieldTransfer
-(
-    const Pstream::commsTypes,
-    const labelUList& iF
-) const
-{
-    const cyclicACMIGAMGInterface& nbr =
-        dynamic_cast<const cyclicACMIGAMGInterface&>(neighbPatch());
-    const labelUList& nbrFaceCells = nbr.faceCells();
-
-    tmp<labelField> tpnf(new labelField(nbrFaceCells.size()));
-    labelField& pnf = tpnf.ref();
-
-    forAll(pnf, facei)
-    {
-        pnf[facei] = iF[nbrFaceCells[facei]];
-    }
-
-    return tpnf;
-}
+Foam::cyclicACMIGAMGInterface::~cyclicACMIGAMGInterface()
+{}
 
 
 // ************************************************************************* //

@@ -36,9 +36,7 @@ SourceFiles
 #ifndef cyclicACMIGAMGInterfaceField_H
 #define cyclicACMIGAMGInterfaceField_H
 
-#include "GAMGInterfaceField.H"
-#include "cyclicACMIGAMGInterface.H"
-#include "cyclicACMILduInterfaceField.H"
+#include "cyclicAMIGAMGInterfaceField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,30 +49,8 @@ namespace Foam
 
 class cyclicACMIGAMGInterfaceField
 :
-    public GAMGInterfaceField,
-    public cyclicACMILduInterfaceField
+    public cyclicAMIGAMGInterfaceField
 {
-    // Private data
-
-        //- Local reference cast into the cyclic interface
-        const cyclicACMIGAMGInterface& cyclicACMIInterface_;
-
-        //- Is the transform required
-        bool doTransform_;
-
-        //- Rank of component for transformation
-        int rank_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cyclicACMIGAMGInterfaceField(const cyclicACMIGAMGInterfaceField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicACMIGAMGInterfaceField&);
-
-
 public:
 
     //- Runtime type information
@@ -101,57 +77,6 @@ public:
 
     //- Destructor
     virtual ~cyclicACMIGAMGInterfaceField();
-
-
-    // Member Functions
-
-        // Access
-
-            //- Return size
-            label size() const
-            {
-                return cyclicACMIInterface_.size();
-            }
-
-
-        // Interface matrix update
-
-            //- Update result field based on interface functionality
-            virtual void updateInterfaceMatrix
-            (
-                scalarField& result,
-                const scalarField& psiInternal,
-                const scalarField& coeffs,
-                const direction cmpt,
-                const Pstream::commsTypes commsType
-            ) const;
-
-
-        //- Cyclic interface functions
-
-            //- Does the interface field perform the transformation
-            virtual bool doTransform() const
-            {
-                return doTransform_;
-            }
-
-            //- Return face transformation tensor
-            virtual const tensorField& forwardT() const
-            {
-                return cyclicACMIInterface_.forwardT();
-            }
-
-            //- Return neighbour-cell transformation tensor
-            virtual const tensorField& reverseT() const
-            {
-                return cyclicACMIInterface_.reverseT();
-            }
-
-            //- Return rank of component for transform
-            virtual int rank() const
-            {
-                return rank_;
-            }
 };
 
 

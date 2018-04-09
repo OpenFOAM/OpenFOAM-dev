@@ -141,23 +141,28 @@ bool Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::processSourceFace
         nbrFaces
     );
 
+    const scalar srcArea = this->srcMagSf_[srcFacei];
+
     bool faceProcessed = false;
 
     do
     {
         // process new target face
-        label tgtFacei = nbrFaces.remove();
+        const label tgtFacei = nbrFaces.remove();
         visitedFaces.append(tgtFacei);
-        scalar area = interArea(srcFacei, tgtFacei);
+        const scalar tgtArea = this->tgtMagSf_[tgtFacei];
+
+        // calculate the intersection area
+        const scalar area = interArea(srcFacei, tgtFacei);
 
         // store when intersection fractional area > min weight
-        if (area/this->srcMagSf_[srcFacei] > minWeight())
+        if (area/srcArea > minWeight())
         {
             srcAddr[srcFacei].append(tgtFacei);
-            srcWght[srcFacei].append(area);
+            srcWght[srcFacei].append(area/srcArea);
 
             tgtAddr[tgtFacei].append(srcFacei);
-            tgtWght[tgtFacei].append(area);
+            tgtWght[tgtFacei].append(area/tgtArea);
 
             this->appendNbrFaces
             (
@@ -370,10 +375,9 @@ restartUncoveredSourceFace
     labelHashSet lowWeightFaces(100);
     forAll(srcWght, srcFacei)
     {
-        scalar s = sum(srcWght[srcFacei]);
-        scalar t = s/this->srcMagSf_[srcFacei];
+        const scalar s = sum(srcWght[srcFacei]);
 
-        if (t < 0.5)
+        if (s < 0.5)
         {
             lowWeightFaces.insert(srcFacei);
         }

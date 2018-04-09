@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,40 +66,12 @@ public:
 
     //- Destructor
     virtual ~cyclicACMILduInterfaceField();
-
-
-    // Member Functions
-
-        //- Transform given patch field
-        template<class Type>
-        void transformCoupleField(Field<Type>& f) const;
-
-        //- Transform given patch internal field
-        void transformCoupleField
-        (
-            scalarField& psiInternal,
-            const direction cmpt
-        ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "tensorField.H"
-
-template<class Type>
-void Foam::cyclicACMILduInterfaceField::transformCoupleField
-(
-    Field<Type>& f
-) const
-{
-    cyclicAMILduInterfaceField::transformCoupleField(f);
-}
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

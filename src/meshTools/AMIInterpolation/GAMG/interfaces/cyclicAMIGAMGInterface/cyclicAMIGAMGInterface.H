@@ -58,8 +58,11 @@ class cyclicAMIGAMGInterface
         //  agglomerated
         const cyclicAMILduInterface& fineCyclicAMIInterface_;
 
-        //- AMI interface
-        autoPtr<AMIPatchToPatchInterpolation> amiPtr_;
+        //- AMI interfaces
+        PtrList<AMIPatchToPatchInterpolation> AMIs_;
+
+        //- AMI transformations
+        List<vectorTensorTransform> AMITransforms_;
 
 
     // Private Member Functions
@@ -117,11 +120,13 @@ public:
                 return fineCyclicAMIInterface_.neighbPatchID();
             }
 
+            //- Does this side own the interface?
             virtual bool owner() const
             {
                 return fineCyclicAMIInterface_.owner();
             }
 
+            //- Return neighbour patch
             virtual const cyclicAMIGAMGInterface& neighbPatch() const
             {
                 return dynamic_cast<const cyclicAMIGAMGInterface&>
@@ -130,9 +135,16 @@ public:
                 );
             }
 
-            virtual const AMIPatchToPatchInterpolation& AMI() const
+            //- Return a reference to the AMI interpolators
+            virtual const PtrList<AMIPatchToPatchInterpolation>& AMIs() const
             {
-                return amiPtr_();
+                return AMIs_;
+            }
+
+            // Return a reference to the AMI transformations
+            virtual const List<vectorTensorTransform>& AMITransforms() const
+            {
+                return AMITransforms_;
             }
 
             //- Return face transformation tensor

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,118 +36,11 @@ Description
 #include "vtkSurfaceWriter.H"
 #include "cyclicAMIPolyPatch.H"
 #include "PatchTools.H"
+#include "checkGeometry.H"
 
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// Dump patch + weights to vtk file
-void writeWeights
-(
-    const polyMesh& mesh,
-    const scalarField& wghtSum,
-    const primitivePatch& patch,
-    const fileName& directory,
-    const fileName& prefix,
-    const word& timeName
-)
-{
-    vtkSurfaceWriter writer;
-
-    // Collect geometry
-    labelList pointToGlobal;
-    labelList uniqueMeshPointLabels;
-    autoPtr<globalIndex> globalPoints;
-    autoPtr<globalIndex> globalFaces;
-    faceList mergedFaces;
-    pointField mergedPoints;
-    Foam::PatchTools::gatherAndMerge
-    (
-        mesh,
-        patch.localFaces(),
-        patch.meshPoints(),
-        patch.meshPointMap(),
-
-        pointToGlobal,
-        uniqueMeshPointLabels,
-        globalPoints,
-        globalFaces,
-
-        mergedFaces,
-        mergedPoints
-    );
-    // Collect field
-    scalarField mergedWeights;
-    globalFaces().gather
-    (
-        UPstream::worldComm,
-        labelList(UPstream::procID(UPstream::worldComm)),
-        wghtSum,
-        mergedWeights
-    );
-
-    if (Pstream::master())
-    {
-        writer.write
-        (
-            directory,
-            prefix + "_" + timeName,
-            mergedPoints,
-            mergedFaces,
-            "weightsSum",
-            mergedWeights,
-            false
-        );
-    }
-}
-
-
-void writeWeights(const polyMesh& mesh)
-{
-    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
-
-    const word tmName(mesh.time().timeName());
-
-    forAll(pbm, patchi)
-    {
-        if (isA<cyclicAMIPolyPatch>(pbm[patchi]))
-        {
-            const cyclicAMIPolyPatch& cpp =
-                refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
-
-            if (cpp.owner())
-            {
-                Info<< "Calculating AMI weights between owner patch: "
-                    << cpp.name() << " and neighbour patch: "
-                    << cpp.neighbPatch().name() << endl;
-
-                const AMIPatchToPatchInterpolation& ami =
-                    cpp.AMI();
-
-                writeWeights
-                (
-                    mesh,
-                    ami.tgtWeightsSum(),
-                    cpp.neighbPatch(),
-                    "postProcessing",
-                    "tgt",
-                    tmName
-                );
-                writeWeights
-                (
-                    mesh,
-                    ami.srcWeightsSum(),
-                    cpp,
-                    "postProcessing",
-                    "src",
-                    tmName
-                );
-            }
-        }
-    }
-}
-
-
 
 int main(int argc, char *argv[])
 {
@@ -192,7 +85,7 @@ int main(int argc, char *argv[])
 
         if (checkAMI)
         {
-            writeWeights(mesh);
+            writeAMIWeightsSums(mesh);
         }
 
         runTime.write();

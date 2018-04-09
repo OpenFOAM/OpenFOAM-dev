@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,17 +55,8 @@ Foam::cyclicACMIGAMGInterfaceField::cyclicACMIGAMGInterfaceField
     const lduInterfaceField& fineInterface
 )
 :
-    GAMGInterfaceField(GAMGCp, fineInterface),
-    cyclicACMIInterface_(refCast<const cyclicACMIGAMGInterface>(GAMGCp)),
-    doTransform_(false),
-    rank_(0)
-{
-    const cyclicAMILduInterfaceField& p =
-        refCast<const cyclicAMILduInterfaceField>(fineInterface);
-
-    doTransform_ = p.doTransform();
-    rank_ = p.rank();
-}
+    cyclicAMIGAMGInterfaceField(GAMGCp, fineInterface)
+{}
 
 
 Foam::cyclicACMIGAMGInterfaceField::cyclicACMIGAMGInterfaceField
@@ -75,55 +66,14 @@ Foam::cyclicACMIGAMGInterfaceField::cyclicACMIGAMGInterfaceField
     const int rank
 )
 :
-    GAMGInterfaceField(GAMGCp, doTransform, rank),
-    cyclicACMIInterface_(refCast<const cyclicACMIGAMGInterface>(GAMGCp)),
-    doTransform_(doTransform),
-    rank_(rank)
+    cyclicAMIGAMGInterfaceField(GAMGCp, doTransform, rank)
 {}
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::cyclicACMIGAMGInterfaceField::~cyclicACMIGAMGInterfaceField()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::cyclicACMIGAMGInterfaceField::updateInterfaceMatrix
-(
-    scalarField& result,
-    const scalarField& psiInternal,
-    const scalarField& coeffs,
-    const direction cmpt,
-    const Pstream::commsTypes
-) const
-{
-    // Get neighbouring field
-    scalarField pnf
-    (
-        cyclicACMIInterface_.neighbPatch().interfaceInternalField(psiInternal)
-    );
-
-    // Transform according to the transformation tensors
-    transformCoupleField(pnf, cmpt);
-
-    if (cyclicACMIInterface_.owner())
-    {
-        pnf = cyclicACMIInterface_.AMI().interpolateToSource(pnf);
-    }
-    else
-    {
-        pnf = cyclicACMIInterface_.neighbPatch().AMI().interpolateToTarget(pnf);
-    }
-
-    const labelUList& faceCells = cyclicACMIInterface_.faceCells();
-
-    forAll(faceCells, elemI)
-    {
-        result[faceCells[elemI]] -= coeffs[elemI]*pnf[elemI];
-    }
-}
 
 
 // ************************************************************************* //

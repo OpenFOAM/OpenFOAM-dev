@@ -287,8 +287,6 @@ void Foam::cyclicAMIPolyPatch::resetAMI() const
 {
     if (owner())
     {
-        AMIPtr_.clear();
-
         const polyPatch& nbr = neighbPatch();
         pointField nbrPoints
         (
@@ -326,8 +324,10 @@ void Foam::cyclicAMIPolyPatch::resetAMI() const
         }
 
         // Construct/apply AMI interpolation to determine addressing and weights
-        AMIPtr_.reset
+        AMIs_.resize(1);
+        AMIs_.set
         (
+            0,
             new AMIPatchToPatchInterpolation
             (
                 *this,
@@ -341,13 +341,15 @@ void Foam::cyclicAMIPolyPatch::resetAMI() const
             )
         );
 
+        AMITransforms_.resize(1, vectorTensorTransform::I);
+
         if (debug)
         {
             Pout<< "cyclicAMIPolyPatch : " << name()
                 << " constructed AMI with " << nl
-                << "    " << "srcAddress:" << AMIPtr_().srcAddress().size()
+                << "    " << "srcAddress:" << AMIs_[0].srcAddress().size()
                 << nl
-                << "    " << "tgAddress :" << AMIPtr_().tgtAddress().size()
+                << "    " << "tgAddress :" << AMIs_[0].tgtAddress().size()
                 << nl << endl;
         }
     }
@@ -392,8 +394,9 @@ void Foam::cyclicAMIPolyPatch::calcTransforms()
 
 void Foam::cyclicAMIPolyPatch::initGeometry(PstreamBuffers& pBufs)
 {
-    // Clear the invalid AMI
-    AMIPtr_.clear();
+    // Clear the invalid AMIs and transforms
+    AMIs_.clear();
+    AMITransforms_.clear();
 
     polyPatch::initGeometry(pBufs);
 }
@@ -420,8 +423,9 @@ void Foam::cyclicAMIPolyPatch::initMovePoints
     const pointField& p
 )
 {
-    // Clear the invalid AMI
-    AMIPtr_.clear();
+    // Clear the invalid AMIs and transforms
+    AMIs_.clear();
+    AMITransforms_.clear();
 
     polyPatch::initMovePoints(pBufs, p);
 
@@ -444,8 +448,9 @@ void Foam::cyclicAMIPolyPatch::movePoints
 
 void Foam::cyclicAMIPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
 {
-    // Clear the invalid AMI
-    AMIPtr_.clear();
+    // Clear the invalid AMIs and transforms
+    AMIs_.clear();
+    AMITransforms_.clear();
 
     polyPatch::initUpdateMesh(pBufs);
 }
@@ -459,7 +464,10 @@ void Foam::cyclicAMIPolyPatch::updateMesh(PstreamBuffers& pBufs)
 
 void Foam::cyclicAMIPolyPatch::clearGeom()
 {
-    AMIPtr_.clear();
+    // Clear the invalid AMIs and transforms
+    AMIs_.clear();
+    AMITransforms_.clear();
+
     polyPatch::clearGeom();
 }
 
@@ -487,7 +495,8 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationAngleDefined_(false),
     rotationAngle_(0.0),
     separationVector_(Zero),
-    AMIPtr_(nullptr),
+    AMIs_(),
+    AMITransforms_(),
     AMIReverse_(false),
     AMIRequireMatch_(AMIRequireMatch),
     AMILowWeightCorrection_(-1.0),
@@ -520,7 +529,8 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationAngleDefined_(false),
     rotationAngle_(0.0),
     separationVector_(Zero),
-    AMIPtr_(nullptr),
+    AMIs_(),
+    AMITransforms_(),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
     AMIRequireMatch_(AMIRequireMatch),
     AMILowWeightCorrection_(dict.lookupOrDefault("lowWeightCorrection", -1.0)),
@@ -618,7 +628,8 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationAngleDefined_(pp.rotationAngleDefined_),
     rotationAngle_(pp.rotationAngle_),
     separationVector_(pp.separationVector_),
-    AMIPtr_(nullptr),
+    AMIs_(),
+    AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
@@ -650,7 +661,8 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationAngleDefined_(pp.rotationAngleDefined_),
     rotationAngle_(pp.rotationAngle_),
     separationVector_(pp.separationVector_),
-    AMIPtr_(nullptr),
+    AMIs_(),
+    AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
@@ -689,7 +701,8 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationAngleDefined_(pp.rotationAngleDefined_),
     rotationAngle_(pp.rotationAngle_),
     separationVector_(pp.separationVector_),
-    AMIPtr_(nullptr),
+    AMIs_(),
+    AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
@@ -788,21 +801,41 @@ Foam::cyclicAMIPolyPatch::surfPtr() const
 }
 
 
-const Foam::AMIPatchToPatchInterpolation& Foam::cyclicAMIPolyPatch::AMI() const
+const Foam::PtrList<Foam::AMIPatchToPatchInterpolation>&
+Foam::cyclicAMIPolyPatch::AMIs() const
 {
     if (!owner())
     {
         FatalErrorInFunction
-            << "AMI interpolator only available to owner patch"
+            << "AMI interpolators only available to owner patch"
             << abort(FatalError);
     }
 
-    if (!AMIPtr_.valid())
+    if (AMIs_.empty())
     {
         resetAMI();
     }
 
-    return AMIPtr_();
+    return AMIs_;
+}
+
+
+const Foam::List<Foam::vectorTensorTransform>&
+Foam::cyclicAMIPolyPatch::AMITransforms() const
+{
+    if (!owner())
+    {
+        FatalErrorInFunction
+            << "AMI transforms only available to owner patch"
+            << abort(FatalError);
+    }
+
+    if (AMIs_.empty())
+    {
+        resetAMI();
+    }
+
+    return AMITransforms_;
 }
 
 
@@ -810,11 +843,37 @@ bool Foam::cyclicAMIPolyPatch::applyLowWeightCorrection() const
 {
     if (owner())
     {
-        return AMI().applyLowWeightCorrection();
+        return AMILowWeightCorrection_ > 0;
     }
     else
     {
-        return neighbPatch().AMI().applyLowWeightCorrection();
+        return neighbPatch().AMILowWeightCorrection_ > 0;
+    }
+}
+
+
+const Foam::scalarField& Foam::cyclicAMIPolyPatch::weightsSum() const
+{
+    if (owner())
+    {
+        return AMIs()[0].srcWeightsSum();
+    }
+    else
+    {
+        return neighbPatch().AMIs()[0].tgtWeightsSum();
+    }
+}
+
+
+const Foam::scalarField& Foam::cyclicAMIPolyPatch::neighbWeightsSum() const
+{
+    if (owner())
+    {
+        return AMIs()[0].tgtWeightsSum();
+    }
+    else
+    {
+        return neighbPatch().AMIs()[0].srcWeightsSum();
     }
 }
 
@@ -950,6 +1009,45 @@ void Foam::cyclicAMIPolyPatch::reverseTransformDirection
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::cyclicAMIPolyPatch::interpolate
+(
+    const scalarField& fld,
+    const direction cmpt,
+    const direction rank,
+    const scalarUList& defaultValues
+) const
+{
+    const cyclicAMIPolyPatch& nei = neighbPatch();
+
+    tmp<scalarField> result(new scalarField(size(), Zero));
+
+    if (owner())
+    {
+        forAll(AMIs(), i)
+        {
+            const scalar r =
+                pow(inv(AMITransforms()[i]).R()(cmpt, cmpt), rank);
+
+            result.ref() +=
+                AMIs()[i].interpolateToSource(r*fld, defaultValues);
+        }
+    }
+    else
+    {
+        forAll(nei.AMIs(), i)
+        {
+            const scalar r =
+                pow(nei.AMITransforms()[i].R()(cmpt, cmpt), rank);
+
+            result.ref() +=
+                nei.AMIs()[i].interpolateToTarget(r*fld, defaultValues);
+        }
+    }
+
+    return result;
+}
+
+
 void Foam::cyclicAMIPolyPatch::calcGeometry
 (
     const primitivePatch& referPatch,
@@ -998,50 +1096,82 @@ bool Foam::cyclicAMIPolyPatch::order
 }
 
 
-Foam::label Foam::cyclicAMIPolyPatch::pointFace
+Foam::labelPair Foam::cyclicAMIPolyPatch::pointAMIAndFace
 (
     const label facei,
     const vector& n,
     point& p
 ) const
 {
-    point prt(p);
-    reverseTransformPosition(prt, facei);
+    point pt(p);
+    reverseTransformPosition(pt, facei);
 
-    vector nrt(n);
-    reverseTransformDirection(nrt, facei);
-
-    label nbrFacei = -1;
+    vector nt(n);
+    reverseTransformDirection(nt, facei);
 
     if (owner())
     {
-        nbrFacei = AMI().tgtPointFace
-        (
-            *this,
-            neighbPatch(),
-            nrt,
-            facei,
-            prt
-        );
+        forAll(AMIs(), i)
+        {
+            point ptt = AMITransforms()[i].transformPosition(pt);
+            const vector ntt = AMITransforms()[i].transform(nt);
+
+            const label nbrFacei =
+                AMIs()[i].tgtPointFace(*this, neighbPatch(), ntt, facei, ptt);
+
+            if (nbrFacei >= 0)
+            {
+                p = ptt;
+                return labelPair(i, nbrFacei);
+            }
+        }
     }
     else
     {
-        nbrFacei = neighbPatch().AMI().srcPointFace
-        (
-            neighbPatch(),
-            *this,
-            nrt,
-            facei,
-            prt
-        );
+        forAll(neighbPatch().AMIs(), i)
+        {
+            point ptt =
+                neighbPatch().AMITransforms()[i].invTransformPosition(pt);
+            const vector ntt =
+                neighbPatch().AMITransforms()[i].invTransform(nt);
+
+            const label nbrFacei =
+                neighbPatch().AMIs()[i].srcPointFace
+                (
+                    *this,
+                    neighbPatch(),
+                    ntt,
+                    facei,
+                    ptt
+                );
+
+            if (nbrFacei >= 0)
+            {
+                p = ptt;
+                return labelPair(i, nbrFacei);
+            }
+        }
     }
 
-    if (nbrFacei >= 0)
+    return labelPair(-1, -1);
+}
+
+
+Foam::label Foam::cyclicAMIPolyPatch::singlePatchProc() const
+{
+    const cyclicAMIPolyPatch& patch = owner() ? *this : neighbPatch();
+
+    const label proc = patch.AMIs()[0].singlePatchProc();
+
+    for (label i = 1; i < patch.AMIs().size(); ++ i)
     {
-        p = prt;
+        if (patch.AMIs()[i].singlePatchProc() != proc)
+        {
+            return -1;
+        }
     }
 
-    return nbrFacei;
+    return proc;
 }
 
 

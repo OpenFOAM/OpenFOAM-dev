@@ -1,0 +1,211 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.01;
+
+r1 4;
+r2 6;
+r3 8;
+r4 10;
+
+y1 3.86370330516;
+y2 5.79555495773;
+y3 7.72740661031;
+y4 9.65925826289;
+
+nz1 -1.03527618041;
+nz2 -1.55291427062;
+nz3 -2.07055236082;
+nz4 -2.58819045103;
+
+pz1 1.03527618041;
+pz2 1.55291427062;
+pz3 2.07055236082;
+pz4 2.58819045103;
+
+vertices
+(
+    (0 $y1 $nz1) (2 $y1 $nz1) (4 $y1 $nz1) (4 $y1 $nz1) (6 $y1 $nz1)
+    (0 $y2 $nz2) (2 $y2 $nz2) (4 $y2 $nz2) (4 $y2 $nz2) (6 $y2 $nz2)
+    (0 $y3 $nz3) (2 $y3 $nz3)
+    (0 $y3 $nz3) (2 $y3 $nz3)
+    (0 $y4 $nz4) (2 $y4 $nz4)
+
+    (0 $y1 $pz1) (2 $y1 $pz1) (4 $y1 $pz1) (4 $y1 $pz1) (6 $y1 $pz1)
+    (0 $y2 $pz2) (2 $y2 $pz2) (4 $y2 $pz2) (4 $y2 $pz2) (6 $y2 $pz2)
+    (0 $y3 $pz3) (2 $y3 $pz3)
+    (0 $y3 $pz3) (2 $y3 $pz3)
+    (0 $y4 $pz4) (2 $y4 $pz4)
+);
+
+blocks
+(
+    hex ( 0  1  6  5 16 17 22 21) rotating (11 11 17) simpleGrading (1 1 1)
+    hex ( 1  2  7  6 17 18 23 22) rotating (11 11 17) simpleGrading (1 1 1)
+    hex ( 3  4  9  8 19 20 25 24)          (10 10 16) simpleGrading (1 1 1)
+    hex ( 5  6 11 10 21 22 27 26) rotating (11 11 17) simpleGrading (1 1 1)
+    hex (12 13 15 14 28 29 31 30)          (10 10 16) simpleGrading (1 1 1)
+);
+
+edges
+(
+    arc  0 16 (0 $r1 0)
+    arc  1 17 (2 $r1 0)
+    arc  2 18 (4 $r1 0)
+    arc  3 19 (4 $r1 0)
+    arc  4 20 (6 $r1 0)
+
+    arc  5 21 (0 $r2 0)
+    arc  6 22 (2 $r2 0)
+    arc  7 23 (4 $r2 0)
+    arc  8 24 (4 $r2 0)
+    arc  9 25 (6 $r2 0)
+
+    arc 10 26 (0 $r3 0)
+    arc 11 27 (2 $r3 0)
+    arc 12 28 (0 $r3 0)
+    arc 13 29 (2 $r3 0)
+
+    arc 14 30 (0 $r4 0)
+    arc 15 31 (2 $r4 0)
+);
+
+defaultPatch
+{
+    name movingWalls;
+    type wall;
+}
+
+boundary
+(
+    stationaryWalls
+    {
+        type wall;
+        faces
+        (
+            (3 4 20 19)
+            (8 9 25 24)
+            (12 14 30 28)
+            (13 15 31 29)
+        );
+    }
+
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (4 9 25 20)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (14 15 31 30)
+        );
+    }
+
+    cyclicIn1
+    {
+        type cyclic;
+        neighbourPatch cyclicIn2;
+        faces
+        (
+            (3 4 9 8)
+        );
+    }
+
+    cyclicIn2
+    {
+        type cyclic;
+        neighbourPatch cyclicIn1;
+        faces
+        (
+            (19 20 25 24)
+        );
+    }
+
+    cyclicRepeatAMIIn1
+    {
+        type cyclicRepeatAMI;
+        neighbourPatch cyclicRepeatAMIIn2;
+        transformPatch cyclicIn1;
+        faces
+        (
+            (3 8 24 19)
+        );
+    }
+
+    cyclicRepeatAMIIn2
+    {
+        type cyclicRepeatAMI;
+        neighbourPatch cyclicRepeatAMIIn1;
+        transformPatch cyclicIn1;
+        faces
+        (
+            (2 7 23 18)
+        );
+    }
+
+    cyclicOut1
+    {
+        type cyclic;
+        neighbourPatch cyclicOut2;
+        faces
+        (
+            (12 14 15 13)
+        );
+    }
+
+    cyclicOut2
+    {
+        type cyclic;
+        neighbourPatch cyclicOut1;
+        faces
+        (
+            (28 30 31 29)
+        );
+    }
+
+    cyclicRepeatAMIOut1
+    {
+        type cyclicRepeatAMI;
+        neighbourPatch cyclicRepeatAMIOut2;
+        transformPatch cyclicIn1;
+        faces
+        (
+            (10 11 27 26)
+        );
+    }
+
+    cyclicRepeatAMIOut2
+    {
+        type cyclicRepeatAMI;
+        neighbourPatch cyclicRepeatAMIOut1;
+        transformPatch cyclicIn1;
+        faces
+        (
+            (12 13 29 28)
+        );
+    }
+);
+
+
+// ************************************************************************* //

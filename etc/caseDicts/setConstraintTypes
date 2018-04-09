@@ -37,6 +37,11 @@ nonuniformTransformCyclic
     type  nonuniformTransformCyclic;
 }
 
+cyclicRepeatAMI
+{
+    type  cyclicRepeatAMI;
+}
+
 processor
 {
     type  processor;

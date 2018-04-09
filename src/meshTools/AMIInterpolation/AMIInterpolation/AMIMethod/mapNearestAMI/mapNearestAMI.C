@@ -324,15 +324,13 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::calculate
     // transfer data to persistent storage
     forAll(srcAddr, i)
     {
-        scalar magSf = this->srcMagSf_[i];
         srcAddress[i].transfer(srcAddr[i]);
-        srcWeights[i] = scalarList(1, magSf);
+        srcWeights[i] = scalarList(1, 1.0);
     }
     forAll(tgtAddr, i)
     {
-        scalar magSf = this->tgtMagSf_[i];
         tgtAddress[i].transfer(tgtAddr[i]);
-        tgtWeights[i] = scalarList(1, magSf);
+        tgtWeights[i] = scalarList(1, 1.0);
     }
 }
 

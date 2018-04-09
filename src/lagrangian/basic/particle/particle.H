@@ -59,6 +59,7 @@ class polyPatch;
 class cyclicPolyPatch;
 class cyclicAMIPolyPatch;
 class cyclicACMIPolyPatch;
+class cyclicRepeatAMIPolyPatch;
 class processorPolyPatch;
 class symmetryPlanePolyPatch;
 class symmetryPolyPatch;
@@ -314,6 +315,16 @@ protected:
         //  cyclicACMIPatch
         template<class TrackCloudType>
         void hitCyclicACMIPatch(TrackCloudType&, trackingData&, const vector&);
+
+        //- Overridable function to handle the particle hitting an
+        //  cyclicRepeatAMIPolyPatch
+        template<class TrackCloudType>
+        void hitCyclicRepeatAMIPatch
+        (
+            TrackCloudType&,
+            trackingData&,
+            const vector&
+        );
 
         //- Overridable function to handle the particle hitting a processorPatch
         template<class TrackCloudType>

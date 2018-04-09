@@ -28,6 +28,7 @@ License
 #include "cyclicPolyPatch.H"
 #include "cyclicAMIPolyPatch.H"
 #include "cyclicACMIPolyPatch.H"
+#include "cyclicRepeatAMIPolyPatch.H"
 #include "processorPolyPatch.H"
 #include "symmetryPlanePolyPatch.H"
 #include "symmetryPolyPatch.H"
@@ -151,6 +152,10 @@ void Foam::particle::hitFace
             else if (isA<cyclicAMIPolyPatch>(patch))
             {
                 p.hitCyclicAMIPatch(cloud, ttd, direction);
+            }
+            else if (isA<cyclicRepeatAMIPolyPatch>(patch))
+            {
+                p.hitCyclicRepeatAMIPatch(cloud, ttd, direction);
             }
             else if (isA<processorPolyPatch>(patch))
             {
@@ -276,7 +281,9 @@ void Foam::particle::hitCyclicAMIPatch
         static_cast<const cyclicAMIPolyPatch&>(mesh_.boundaryMesh()[patch()]);
     const cyclicAMIPolyPatch& receiveCpp = cpp.neighbPatch();
     const label sendFacei = cpp.whichFace(facei_);
-    const label receiveFacei = cpp.pointFace(sendFacei, direction, pos);
+    const labelPair receiveIs = cpp.pointAMIAndFace(sendFacei, direction, pos);
+    const label receiveAMIi = receiveIs.first();
+    const label receiveFacei = receiveIs.second();
 
     if (receiveFacei < 0)
     {
@@ -287,6 +294,7 @@ void Foam::particle::hitCyclicAMIPatch
             << "Particle lost across " << cyclicAMIPolyPatch::typeName
             << " patches " << cpp.name() << " and " << receiveCpp.name()
             << " at position " << pos << endl;
+        return;
     }
 
     // Set the topology
@@ -331,6 +339,18 @@ void Foam::particle::hitCyclicAMIPatch
         );
         transformProperties(-s);
     }
+    const vectorTensorTransform& T =
+        cpp.owner()
+      ? cpp.AMITransforms()[receiveAMIi]
+      : cpp.neighbPatch().AMITransforms()[receiveAMIi];
+    if (T.hasR())
+    {
+        transformProperties(T.R());
+    }
+    else if (T.t() != vector::zero)
+    {
+        transformProperties(T.t());
+    }
 }
 
 
@@ -359,7 +379,7 @@ void Foam::particle::hitCyclicACMIPatch
     if (!couple && !nonOverlap)
     {
         vector pos = position();
-        couple = cpp.pointFace(localFacei, direction, pos) >= 0;
+        couple = cpp.pointAMIAndFace(localFacei, direction, pos).first() >= 0;
         nonOverlap = !couple;
     }
 
@@ -374,6 +394,18 @@ void Foam::particle::hitCyclicACMIPatch
         tetFacei_ = facei_ = cpp.nonOverlapPatch().start() + localFacei;
         hitFace(direction, cloud, td);
     }
+}
+
+
+template<class TrackCloudType>
+void Foam::particle::hitCyclicRepeatAMIPatch
+(
+    TrackCloudType& cloud,
+    trackingData& td,
+    const vector& direction
+)
+{
+    hitCyclicAMIPatch(cloud, td, direction);
 }
 
 

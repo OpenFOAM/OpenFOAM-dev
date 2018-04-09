@@ -221,79 +221,118 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::projectPointsToSurface
 
 
 template<class SourcePatch, class TargetPatch>
-void Foam::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::sumWeights
 (
-    const scalarField& patchAreas,
-    const word& patchName,
-    const labelListList& addr,
-    scalarListList& wght,
-    scalarField& wghtSum,
-    const bool conformal,
-    const bool output,
-    const scalar lowWeightTol
+    const scalarListList& wght,
+    scalarField& wghtSum
 )
 {
-    // Normalise the weights
-    wghtSum.setSize(wght.size(), 0.0);
-    label nLowWeight = 0;
+    wghtSum.setSize(wght.size());
+    wghtSum = Zero;
 
     forAll(wght, facei)
     {
+        wghtSum[facei] = sum(wght[facei]);
+    }
+}
+
+
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::sumWeights
+(
+    const UPtrList<scalarListList>& wghts,
+    scalarField& wghtSum
+)
+{
+    wghtSum.setSize(wghts[0].size());
+    wghtSum = Zero;
+
+    forAll(wghts[0], facei)
+    {
+        forAll(wghts, wghtsi)
+        {
+            forAll(wghts[wghtsi][facei], i)
+            {
+                wghtSum[facei] += wghts[wghtsi][facei][i];
+            }
+        }
+    }
+}
+
+
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::reportSumWeights
+(
+    const scalarField& patchAreas,
+    const word& patchName,
+    const scalarField& wghtSum,
+    const scalar lowWeightTol
+)
+{
+    if (returnReduce(wghtSum.size(), sumOp<label>()) == 0)
+    {
+        return;
+    }
+
+    label nLowWeight = 0;
+    forAll(wghtSum, facei)
+    {
+        if (wghtSum[facei] < lowWeightTol)
+        {
+            ++ nLowWeight;
+        }
+    }
+    reduce(nLowWeight, sumOp<label>());
+
+    Info<< indent << "AMI: Patch " << patchName
+        << " sum(weights) min/max/average = " << gMin(wghtSum) << ", "
+        << gMax(wghtSum) << ", "
+        << gSum(wghtSum*patchAreas)/gSum(patchAreas) << endl;
+
+    if (nLowWeight)
+    {
+        Info<< indent << "AMI: Patch " << patchName << " identified "
+            << nLowWeight << " faces with weights less than "
+            << lowWeightTol << endl;
+    }
+}
+
+
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
+(
+    scalarListList& wght,
+    const scalarField& wghtSum
+)
+{
+    forAll(wghtSum, facei)
+    {
         scalarList& w = wght[facei];
 
-        if (w.size())
+        forAll(w, i)
         {
-            scalar denom = patchAreas[facei];
+            w[i] /= wghtSum[facei];
+        }
+    }
+}
 
-            scalar s = sum(w);
-            scalar t = s/denom;
 
-            if (conformal)
-            {
-                denom = s;
-            }
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
+(
+    UPtrList<scalarListList>& wghts,
+    const scalarField& wghtSum
+)
+{
+    forAll(wghtSum, facei)
+    {
+        forAll(wghts, wghtsi)
+        {
+            scalarList& w = wghts[wghtsi][facei];
 
             forAll(w, i)
             {
-                w[i] /= denom;
-            }
-
-            wghtSum[facei] = t;
-
-            if (t < lowWeightTol)
-            {
-                nLowWeight++;
-            }
-        }
-        else
-        {
-            wghtSum[facei] = 0;
-        }
-    }
-
-
-    if (output)
-    {
-        const label nFace = returnReduce(wght.size(), sumOp<label>());
-
-        if (nFace)
-        {
-            Info<< indent
-                << "AMI: Patch " << patchName
-                << " sum(weights) min/max/average = "
-                << gMin(wghtSum) << ", "
-                << gMax(wghtSum) << ", "
-                << gSum(wghtSum*patchAreas)/gSum(patchAreas) << endl;
-
-            const label nLow = returnReduce(nLowWeight, sumOp<label>());
-
-            if (nLow)
-            {
-                Info<< indent
-                    << "AMI: Patch " << patchName
-                    << " identified " << nLow
-                    << " faces with weights less than " << lowWeightTol
-                    << endl;
+                w[i] /= wghtSum[facei];
             }
         }
     }
@@ -481,6 +520,8 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
 
             label coarseFacei = sourceRestrictAddressing[facei];
 
+            const scalar coarseArea = srcMagSf[coarseFacei];
+
             labelList& newElems = srcAddress[coarseFacei];
             scalarList& newWeights = srcWeights[coarseFacei];
 
@@ -493,11 +534,11 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
                 if (index == -1)
                 {
                     newElems.append(coarseElemI);
-                    newWeights.append(fineArea*weights[i]);
+                    newWeights.append(fineArea/coarseArea*weights[i]);
                 }
                 else
                 {
-                    newWeights[index] += fineArea*weights[i];
+                    newWeights[index] += fineArea/coarseArea*weights[i];
                 }
             }
         }
@@ -527,6 +568,8 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
 
             label coarseFacei = sourceRestrictAddressing[facei];
 
+            const scalar coarseArea = srcMagSf[coarseFacei];
+
             labelList& newElems = srcAddress[coarseFacei];
             scalarList& newWeights = srcWeights[coarseFacei];
 
@@ -539,28 +582,15 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
                 if (index == -1)
                 {
                     newElems.append(coarseElemI);
-                    newWeights.append(fineArea*weights[i]);
+                    newWeights.append(fineArea/coarseArea*weights[i]);
                 }
                 else
                 {
-                    newWeights[index] += fineArea*weights[i];
+                    newWeights[index] += fineArea/coarseArea*weights[i];
                 }
             }
         }
     }
-
-    // Weights normalisation
-    normaliseWeights
-    (
-        srcMagSf,
-        "source",
-        srcAddress,
-        srcWeights,
-        srcWeightsSum,
-        true,
-        false,
-        -1
-    );
 }
 
 
@@ -569,7 +599,8 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::constructFromSurface
 (
     const SourcePatch& srcPatch,
     const TargetPatch& tgtPatch,
-    const autoPtr<searchableSurface>& surfPtr
+    const autoPtr<searchableSurface>& surfPtr,
+    const bool report
 )
 {
     if (surfPtr.valid())
@@ -624,11 +655,11 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::constructFromSurface
 
 
         // Calculate AMI interpolation
-        update(srcPatch0, tgtPatch0);
+        update(srcPatch0, tgtPatch0, report);
     }
     else
     {
-        update(srcPatch, tgtPatch);
+        update(srcPatch, tgtPatch, report);
     }
 }
 
@@ -644,7 +675,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     const bool requireMatch,
     const interpolationMethod& method,
     const scalar lowWeightCorrection,
-    const bool reverseTarget
+    const bool reverseTarget,
+    const bool report
 )
 :
     methodName_(interpolationMethodToWord(method)),
@@ -662,7 +694,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
-    update(srcPatch, tgtPatch);
+    update(srcPatch, tgtPatch, report);
 }
 
 
@@ -675,7 +707,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     const bool requireMatch,
     const word& methodName,
     const scalar lowWeightCorrection,
-    const bool reverseTarget
+    const bool reverseTarget,
+    const bool report
 )
 :
     methodName_(methodName),
@@ -693,7 +726,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
-    update(srcPatch, tgtPatch);
+    update(srcPatch, tgtPatch, report);
 }
 
 
@@ -707,7 +740,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     const bool requireMatch,
     const interpolationMethod& method,
     const scalar lowWeightCorrection,
-    const bool reverseTarget
+    const bool reverseTarget,
+    const bool report
 )
 :
     methodName_(interpolationMethodToWord(method)),
@@ -725,7 +759,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
-    constructFromSurface(srcPatch, tgtPatch, surfPtr);
+    constructFromSurface(srcPatch, tgtPatch, surfPtr, report);
 }
 
 
@@ -739,7 +773,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     const bool requireMatch,
     const word& methodName,
     const scalar lowWeightCorrection,
-    const bool reverseTarget
+    const bool reverseTarget,
+    const bool report
 )
 :
     methodName_(methodName),
@@ -757,7 +792,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
-    constructFromSurface(srcPatch, tgtPatch, surfPtr);
+    constructFromSurface(srcPatch, tgtPatch, surfPtr, report);
 }
 
 
@@ -766,7 +801,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
 (
     const AMIInterpolation<SourcePatch, TargetPatch>& fineAMI,
     const labelList& sourceRestrictAddressing,
-    const labelList& targetRestrictAddressing
+    const labelList& targetRestrictAddressing,
+    const bool report
 )
 :
     methodName_(fineAMI.methodName_),
@@ -825,9 +861,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
             << exit(FatalError);
     }
 
-
     // Agglomerate addresses and weights
-
     agglomerate
     (
         fineAMI.tgtMapPtr_,
@@ -861,6 +895,17 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
         tgtWeightsSum_,
         srcMapPtr_
     );
+
+    // Weight summation and normalisation
+    sumWeights(*this);
+    if (report)
+    {
+        reportSumWeights(*this);
+    }
+    if (requireMatch_)
+    {
+        normaliseWeights(*this);
+    }
 }
 
 
@@ -877,7 +922,8 @@ template<class SourcePatch, class TargetPatch>
 void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
 (
     const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch
+    const TargetPatch& tgtPatch,
+    const bool report
 )
 {
     label srcTotalSize = returnReduce(srcPatch.size(), sumOp<label>());
@@ -894,11 +940,14 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
         return;
     }
 
-    Info<< indent
-        << "AMI: Creating addressing and weights between "
-        << srcTotalSize << " source faces and "
-        << tgtTotalSize << " target faces"
-        << endl;
+    if (report)
+    {
+        Info<< indent
+            << "AMI: Creating addressing and weights between "
+            << srcTotalSize << " source faces and "
+            << tgtTotalSize << " target faces"
+            << endl;
+    }
 
     // Calculate face areas
     srcMagSf_ = patchMagSf(srcPatch, triMode_);
@@ -948,6 +997,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
                 ),
                 newTgtPoints
             );
+        scalarField newTgtMagSf(patchMagSf(newTgtPatch, triMode_));
 
         // Calculate AMI interpolation
         autoPtr<AMIMethod<SourcePatch, TargetPatch>> AMIPtr
@@ -958,7 +1008,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
                 srcPatch,
                 newTgtPatch,
                 srcMagSf_,
-                tgtMagSf_,
+                newTgtMagSf,
                 triMode_,
                 reverseTarget_,
                 requireMatch_ && (lowWeightCorrection_ < 0)
@@ -1036,30 +1086,6 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
             scalarList()
         );
 
-        // Weights normalisation
-        normaliseWeights
-        (
-            srcMagSf_,
-            "source",
-            srcAddress_,
-            srcWeights_,
-            srcWeightsSum_,
-            AMIPtr->conformal(),
-            true,
-            lowWeightCorrection_
-        );
-        normaliseWeights
-        (
-            tgtMagSf_,
-            "target",
-            tgtAddress_,
-            tgtWeights_,
-            tgtWeightsSum_,
-            AMIPtr->conformal(),
-            true,
-            lowWeightCorrection_
-        );
-
         // Cache maps and reset addresses
         List<Map<label>> cMap;
         srcMapPtr_.reset(new mapDistribute(globalSrcFaces, tgtAddress_, cMap));
@@ -1095,29 +1121,17 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
             tgtAddress_,
             tgtWeights_
         );
+    }
 
-        normaliseWeights
-        (
-            srcMagSf_,
-            "source",
-            srcAddress_,
-            srcWeights_,
-            srcWeightsSum_,
-            AMIPtr->conformal(),
-            true,
-            lowWeightCorrection_
-        );
-        normaliseWeights
-        (
-            tgtMagSf_,
-            "target",
-            tgtAddress_,
-            tgtWeights_,
-            tgtWeightsSum_,
-            AMIPtr->conformal(),
-            true,
-            lowWeightCorrection_
-        );
+    // Weight summation and normalisation
+    sumWeights(*this);
+    if (report)
+    {
+        reportSumWeights(*this);
+    }
+    if (requireMatch_)
+    {
+        normaliseWeights(*this);
     }
 
     if (debug)
@@ -1130,6 +1144,110 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
             << "    tgtMagSf       :" << gSum(tgtMagSf_) << nl
             << endl;
     }
+}
+
+
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::sumWeights
+(
+    AMIInterpolation<SourcePatch, TargetPatch>& AMI
+)
+{
+    sumWeights(AMI.srcWeights_, AMI.srcWeightsSum_);
+    sumWeights(AMI.tgtWeights_, AMI.tgtWeightsSum_);
+}
+
+
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::sumWeights
+(
+    PtrList<AMIInterpolation<SourcePatch, TargetPatch>>& AMIs
+)
+{
+    UPtrList<scalarListList> srcWeights(AMIs.size());
+    forAll(AMIs, i)
+    {
+        srcWeights.set(i, &AMIs[i].srcWeights_);
+    }
+
+    sumWeights(srcWeights, AMIs[0].srcWeightsSum_);
+
+    for (label i = 1; i < AMIs.size(); ++ i)
+    {
+        AMIs[i].srcWeightsSum_ = AMIs[0].srcWeightsSum_;
+    }
+
+    UPtrList<scalarListList> tgtWeights(AMIs.size());
+    forAll(AMIs, i)
+    {
+        tgtWeights.set(i, &AMIs[i].tgtWeights_);
+    }
+
+    sumWeights(tgtWeights, AMIs[0].tgtWeightsSum_);
+
+    for (label i = 1; i < AMIs.size(); ++ i)
+    {
+        AMIs[i].tgtWeightsSum_ = AMIs[0].tgtWeightsSum_;
+    }
+}
+
+
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::reportSumWeights
+(
+    AMIInterpolation<SourcePatch, TargetPatch>& AMI
+)
+{
+    reportSumWeights
+    (
+        AMI.srcMagSf_,
+        "source",
+        AMI.srcWeightsSum_,
+        AMI.lowWeightCorrection_
+    );
+
+    reportSumWeights
+    (
+        AMI.tgtMagSf_,
+        "target",
+        AMI.tgtWeightsSum_,
+        AMI.lowWeightCorrection_
+    );
+}
+
+
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
+(
+    AMIInterpolation<SourcePatch, TargetPatch>& AMI
+)
+{
+    normaliseWeights(AMI.srcWeights_, AMI.srcWeightsSum_);
+    normaliseWeights(AMI.tgtWeights_, AMI.tgtWeightsSum_);
+}
+
+
+template<class SourcePatch, class TargetPatch>
+void Foam::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
+(
+    UPtrList<AMIInterpolation<SourcePatch, TargetPatch>>& AMIs
+)
+{
+    UPtrList<scalarListList> srcWeights(AMIs.size());
+    forAll(AMIs, i)
+    {
+        srcWeights.set(i, &AMIs[i].srcWeights_);
+    }
+
+    normaliseWeights(srcWeights, AMIs[0].srcWeightsSum_);
+
+    UPtrList<scalarListList> tgtWeights(AMIs.size());
+    forAll(AMIs, i)
+    {
+        tgtWeights.set(i, &AMIs[i].tgtWeights_);
+    }
+
+    normaliseWeights(tgtWeights, AMIs[0].tgtWeightsSum_);
 }
 
 

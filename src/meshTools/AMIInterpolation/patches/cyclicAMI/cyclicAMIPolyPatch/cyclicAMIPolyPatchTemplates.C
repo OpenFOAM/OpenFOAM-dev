@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,14 +32,36 @@ Foam::tmp<Foam::Field<Type>> Foam::cyclicAMIPolyPatch::interpolate
     const UList<Type>& defaultValues
 ) const
 {
+    const cyclicAMIPolyPatch& nei = neighbPatch();
+
+    tmp<Field<Type>> result(new Field<Type>(size(), Zero));
+
     if (owner())
     {
-        return AMI().interpolateToSource(fld, defaultValues);
+        forAll(AMIs(), i)
+        {
+            result.ref() +=
+                AMIs()[i].interpolateToSource
+                (
+                    AMITransforms()[i].invTransform(fld),
+                    defaultValues
+                );
+        }
     }
     else
     {
-        return neighbPatch().AMI().interpolateToTarget(fld, defaultValues);
+        forAll(nei.AMIs(), i)
+        {
+            result.ref() +=
+                nei.AMIs()[i].interpolateToTarget
+                (
+                    nei.AMITransforms()[i].transform(fld),
+                    defaultValues
+                );
+        }
     }
+
+    return result;
 }
 
 
@@ -51,38 +73,6 @@ Foam::tmp<Foam::Field<Type>> Foam::cyclicAMIPolyPatch::interpolate
 ) const
 {
     return interpolate(tFld(), defaultValues);
-}
-
-
-template<class Type, class CombineOp>
-void Foam::cyclicAMIPolyPatch::interpolate
-(
-    const UList<Type>& fld,
-    const CombineOp& cop,
-    List<Type>& result,
-    const UList<Type>& defaultValues
-) const
-{
-    if (owner())
-    {
-        AMI().interpolateToSource
-        (
-            fld,
-            cop,
-            result,
-            defaultValues
-        );
-    }
-    else
-    {
-        neighbPatch().AMI().interpolateToTarget
-        (
-            fld,
-            cop,
-            result,
-            defaultValues
-        );
-    }
 }
 
 

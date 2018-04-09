@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,23 +86,8 @@ protected:
         //- Initialise the calculation of the patch geometry
         virtual void initGeometry(PstreamBuffers&);
 
-        //- Calculate the patch geometry
-        virtual void calcGeometry(PstreamBuffers&);
-
         //- Initialise the patches for moving points
         virtual void initMovePoints(PstreamBuffers& pBufs, const pointField&);
-
-        //- Correct patches after moving points
-        virtual void movePoints(PstreamBuffers& pBufs, const pointField&);
-
-        //- Initialise the update of the patch topology
-        virtual void initUpdateMesh(PstreamBuffers&);
-
-        //- Update of the patch topology
-        virtual void updateMesh(PstreamBuffers&);
-
-        //- Clear geometry
-        virtual void clearGeom();
 
         //- Return the mask/weighting for the source patch
         virtual const scalarField& srcMask() const;

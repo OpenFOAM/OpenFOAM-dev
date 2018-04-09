@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,9 @@ Foam::cyclicAMIGAMGInterface::cyclicAMIGAMGInterface
     fineCyclicAMIInterface_
     (
         refCast<const cyclicAMILduInterface>(fineInterface)
-    )
+    ),
+    AMIs_(),
+    AMITransforms_()
 {
     // Construct face agglomeration from cell agglomeration
     {
@@ -151,20 +153,29 @@ Foam::cyclicAMIGAMGInterface::cyclicAMIGAMGInterface
             nbrFaceRestrictAddressing.transfer(dynNbrFaceRestrictAddressing);
         }
 
-        amiPtr_.reset
-        (
-            new AMIPatchToPatchInterpolation
+        AMIs_.resize(fineCyclicAMIInterface_.AMIs().size());
+        AMITransforms_.resize(fineCyclicAMIInterface_.AMITransforms().size());
+
+        forAll(AMIs(), i)
+        {
+            AMIs_.set
             (
-                fineCyclicAMIInterface_.AMI(),
-                faceRestrictAddressing_,
-                nbrFaceRestrictAddressing
-            )
-        );
+                i,
+                new AMIPatchToPatchInterpolation
+                (
+                    fineCyclicAMIInterface_.AMIs()[i],
+                    faceRestrictAddressing_,
+                    nbrFaceRestrictAddressing
+                )
+            );
+
+            AMITransforms_[i] = fineCyclicAMIInterface_.AMITransforms()[i];
+        }
     }
 }
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::cyclicAMIGAMGInterface::~cyclicAMIGAMGInterface()
 {}
@@ -180,6 +191,7 @@ Foam::tmp<Foam::labelField> Foam::cyclicAMIGAMGInterface::internalFieldTransfer
 {
     const cyclicAMIGAMGInterface& nbr =
         dynamic_cast<const cyclicAMIGAMGInterface&>(neighbPatch());
+
     const labelUList& nbrFaceCells = nbr.faceCells();
 
     tmp<labelField> tpnf(new labelField(nbrFaceCells.size()));

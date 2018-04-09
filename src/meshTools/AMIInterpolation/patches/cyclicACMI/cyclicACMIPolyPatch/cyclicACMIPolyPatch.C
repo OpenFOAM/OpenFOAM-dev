@@ -64,32 +64,21 @@ void Foam::cyclicACMIPolyPatch::resetAMI() const
                     << endl;
             }
 
-            //WarningInFunction
-            //    << "The mesh already has cellCentres calculated when"
-            //    << " resetting ACMI " << name() << "." << endl
-            //    << "This is a problem since ACMI adapts the face areas"
-            //    << " (to close cells) so this has" << endl
-            //    << "to be done before cell centre calculation." << endl
-            //    << "This can happen if e.g. the cyclicACMI is after"
-            //    << " any processor patches in the boundary." << endl;
             const_cast<polyMesh&>
             (
                 boundaryMesh().mesh()
             ).primitiveMesh::clearGeom();
         }
 
-
         // Trigger re-building of faceAreas
         (void)boundaryMesh().mesh().faceAreas();
-
 
         // Calculate the AMI using partial face-area-weighted. This leaves
         // the weights as fractions of local areas (sum(weights) = 1 means
         // face is fully covered)
         cyclicAMIPolyPatch::resetAMI();
 
-        AMIPatchToPatchInterpolation& AMI =
-            const_cast<AMIPatchToPatchInterpolation&>(this->AMI());
+        AMIPatchToPatchInterpolation& AMI = this->AMIs_[0];
 
         srcMask_ =
             min(scalar(1) - tolerance_, max(tolerance_, AMI.srcWeightsSum()));
@@ -174,25 +163,10 @@ void Foam::cyclicACMIPolyPatch::resetAMI() const
 
 void Foam::cyclicACMIPolyPatch::initGeometry(PstreamBuffers& pBufs)
 {
-    if (debug)
-    {
-        Pout<< "cyclicACMIPolyPatch::initGeometry : " << name() << endl;
-    }
-
     cyclicAMIPolyPatch::initGeometry(pBufs);
 
     // Initialise the AMI
     resetAMI();
-}
-
-
-void Foam::cyclicACMIPolyPatch::calcGeometry(PstreamBuffers& pBufs)
-{
-    if (debug)
-    {
-        Pout<< "cyclicACMIPolyPatch::calcGeometry : " << name() << endl;
-    }
-    cyclicAMIPolyPatch::calcGeometry(pBufs);
 }
 
 
@@ -202,58 +176,10 @@ void Foam::cyclicACMIPolyPatch::initMovePoints
     const pointField& p
 )
 {
-    if (debug)
-    {
-        Pout<< "cyclicACMIPolyPatch::initMovePoints : " << name() << endl;
-    }
     cyclicAMIPolyPatch::initMovePoints(pBufs, p);
 
     // Initialise the AMI
     resetAMI();
-}
-
-
-void Foam::cyclicACMIPolyPatch::movePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    if (debug)
-    {
-        Pout<< "cyclicACMIPolyPatch::movePoints : " << name() << endl;
-    }
-    cyclicAMIPolyPatch::movePoints(pBufs, p);
-}
-
-
-void Foam::cyclicACMIPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
-{
-    if (debug)
-    {
-        Pout<< "cyclicACMIPolyPatch::initUpdateMesh : " << name() << endl;
-    }
-    cyclicAMIPolyPatch::initUpdateMesh(pBufs);
-}
-
-
-void Foam::cyclicACMIPolyPatch::updateMesh(PstreamBuffers& pBufs)
-{
-    if (debug)
-    {
-        Pout<< "cyclicACMIPolyPatch::updateMesh : " << name() << endl;
-    }
-    cyclicAMIPolyPatch::updateMesh(pBufs);
-}
-
-
-void Foam::cyclicACMIPolyPatch::clearGeom()
-{
-    if (debug)
-    {
-        Pout<< "cyclicACMIPolyPatch::clearGeom : " << name() << endl;
-    }
-    cyclicAMIPolyPatch::clearGeom();
 }
 
 

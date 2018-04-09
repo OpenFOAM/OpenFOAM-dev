@@ -49,7 +49,7 @@ Description
 
     The surface is, in general, not flat. Any deviation between the two end
     normals generates expansion, contraction, and twist in the surface. The
-    surface connects with surfaces eminating from connected edges along the end
+    surface connects with surfaces emanating from connected edges along the end
     normals. This is what makes the projection fill space and generate
     consistent overlaps between neighbouring faces.
 

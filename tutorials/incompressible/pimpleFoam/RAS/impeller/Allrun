@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cd "${0%/*}" || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+
+runApplication decomposePar
+
+runParallel $(getApplication)
+
+runApplication reconstructPar
