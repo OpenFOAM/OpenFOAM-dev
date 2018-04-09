@@ -110,7 +110,7 @@ class NonRandomTwoLiquid
 public:
 
     //- Runtime type information
-    TypeName("NonRandomTwoLiquid");
+    TypeName("nonRandomTwoLiquid");
 
     // Constructors
 
