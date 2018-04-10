@@ -631,7 +631,7 @@ void Foam::extendedEdgeMesh::nearestFeatureEdge
 (
     const pointField& samples,
     const scalarField& searchDistSqr,
-    List<pointIndexHit>& info
+    pointIndexHitList& info
 ) const
 {
     info.setSize(samples.size());
@@ -652,7 +652,7 @@ void Foam::extendedEdgeMesh::nearestFeatureEdgeByType
 (
     const point& sample,
     const scalarField& searchDistSqr,
-    List<pointIndexHit>& info
+    pointIndexHitList& info
 ) const
 {
     const PtrList<indexedOctree<treeDataEdge>>& edgeTrees = edgeTreesByType();
@@ -688,7 +688,7 @@ void Foam::extendedEdgeMesh::allNearestFeaturePoints
 (
     const point& sample,
     scalar searchRadiusSqr,
-    List<pointIndexHit>& info
+    pointIndexHitList& info
 ) const
 {
     // Pick up all the feature points that intersect the search sphere
@@ -719,7 +719,7 @@ void Foam::extendedEdgeMesh::allNearestFeatureEdges
 (
     const point& sample,
     const scalar searchRadiusSqr,
-    List<pointIndexHit>& info
+    pointIndexHitList& info
 ) const
 {
     const PtrList<indexedOctree<treeDataEdge>>& edgeTrees = edgeTreesByType();
@@ -768,6 +768,56 @@ void Foam::extendedEdgeMesh::allNearestFeatureEdges
     }
 
     info.transfer(dynEdgeHit);
+}
+
+
+Foam::scalar Foam::extendedEdgeMesh::minDisconnectedDist
+(
+    const pointIndexHitList& hitList
+) const
+{
+    scalar minDist = GREAT;
+
+    for
+    (
+        label hi1 = 0;
+        hi1 < hitList.size() - 1;
+        ++hi1
+    )
+    {
+        const pointIndexHit& pHit1 = hitList[hi1];
+
+        if (pHit1.hit())
+        {
+            const edge& e1 = edges()[pHit1.index()];
+
+            for
+            (
+                label hi2 = hi1 + 1;
+                hi2 < hitList.size();
+                ++hi2
+            )
+            {
+                const pointIndexHit& pHit2 = hitList[hi2];
+
+                if (pHit2.hit())
+                {
+                    const edge& e2 = edges()[pHit2.index()];
+
+                    // Don't refine if the edges are connected to each other
+                    if (!e1.connected(e2))
+                    {
+                        scalar curDist =
+                            mag(pHit1.hitPoint() - pHit2.hitPoint());
+
+                        minDist = min(curDist, minDist);
+                    }
+                }
+            }
+        }
+    }
+
+    return minDist;
 }
 
 

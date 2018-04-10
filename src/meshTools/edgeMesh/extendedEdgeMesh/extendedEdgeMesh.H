@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,7 @@ SourceFiles
 #include "treeDataEdge.H"
 #include "treeDataPoint.H"
 #include "PrimitivePatch.H"
+#include "pointIndexHitList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -362,7 +363,7 @@ public:
             (
                 const pointField& samples,
                 const scalarField& searchDistSqr,
-                List<pointIndexHit>& info
+                pointIndexHitList& info
             ) const;
 
             //- Find the nearest point on each type of feature edge
@@ -370,7 +371,7 @@ public:
             (
                 const point& sample,
                 const scalarField& searchDistSqr,
-                List<pointIndexHit>& info
+                pointIndexHitList& info
             ) const;
 
             //- Find all the feature points within searchDistSqr of sample
@@ -378,7 +379,7 @@ public:
             (
                 const point& sample,
                 scalar searchRadiusSqr,
-                List<pointIndexHit>& info
+                pointIndexHitList& info
             ) const;
 
             //- Find all the feature edges within searchDistSqr of sample
@@ -386,8 +387,11 @@ public:
             (
                 const point& sample,
                 const scalar searchRadiusSqr,
-                List<pointIndexHit>& info
+                pointIndexHitList& info
             ) const;
+
+            //- Return the minimum distance between disconnected edges
+            scalar minDisconnectedDist(const pointIndexHitList& hitList) const;
 
 
         // Access

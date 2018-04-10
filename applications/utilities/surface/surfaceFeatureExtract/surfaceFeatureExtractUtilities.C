@@ -51,100 +51,6 @@ const Foam::scalar Foam::externalToleranceCosAngle
 );
 
 
-Foam::scalar Foam::calcProximityOfFeaturePoints
-(
-    const List<pointIndexHit>& hitList,
-    const scalar defaultCellSize
-)
-{
-    scalar minDist = defaultCellSize;
-
-    for
-    (
-        label hI1 = 0;
-        hI1 < hitList.size() - 1;
-        ++hI1
-    )
-    {
-        const pointIndexHit& pHit1 = hitList[hI1];
-
-        if (pHit1.hit())
-        {
-            for
-            (
-                label hI2 = hI1 + 1;
-                hI2 < hitList.size();
-                ++hI2
-            )
-            {
-                const pointIndexHit& pHit2 = hitList[hI2];
-
-                if (pHit2.hit())
-                {
-                    scalar curDist = mag(pHit1.hitPoint() - pHit2.hitPoint());
-
-                    minDist = min(curDist, minDist);
-                }
-            }
-        }
-    }
-
-    return minDist;
-}
-
-
-Foam::scalar Foam::calcProximityOfFeatureEdges
-(
-    const extendedFeatureEdgeMesh& efem,
-    const List<pointIndexHit>& hitList,
-    const scalar defaultCellSize
-)
-{
-    scalar minDist = defaultCellSize;
-
-    for
-    (
-        label hI1 = 0;
-        hI1 < hitList.size() - 1;
-        ++hI1
-    )
-    {
-        const pointIndexHit& pHit1 = hitList[hI1];
-
-        if (pHit1.hit())
-        {
-            const edge& e1 = efem.edges()[pHit1.index()];
-
-            for
-            (
-                label hI2 = hI1 + 1;
-                hI2 < hitList.size();
-                ++hI2
-            )
-            {
-                const pointIndexHit& pHit2 = hitList[hI2];
-
-                if (pHit2.hit())
-                {
-                    const edge& e2 = efem.edges()[pHit2.index()];
-
-                    // Don't refine if the edges are connected to each other
-                    if (!e1.connected(e2))
-                    {
-                        scalar curDist =
-                            mag(pHit1.hitPoint() - pHit2.hitPoint());
-
-                        minDist = min(curDist, minDist);
-                    }
-                }
-            }
-        }
-    }
-
-    return minDist;
-}
-
-
 void Foam::deleteBox
 (
     const triSurface& surf,
@@ -202,7 +108,7 @@ void Foam::drawHitProblem
     const point& start,
     const point& p,
     const point& end,
-    const List<pointIndexHit>& hitInfo
+    const pointIndexHitList& hitInfo
 )
 {
     Info<< nl << "# findLineAll did not hit its own face."
@@ -225,18 +131,18 @@ void Foam::drawHitProblem
 
     Info<< "f 4 5 6" << endl;
 
-    forAll(hitInfo, hI)
+    forAll(hitInfo, hi)
     {
-        label hFI = hitInfo[hI].index();
+        label hFI = hitInfo[hi].index();
 
         meshTools::writeOBJ(Info, surf.points()[surf[hFI][0]]);
         meshTools::writeOBJ(Info, surf.points()[surf[hFI][1]]);
         meshTools::writeOBJ(Info, surf.points()[surf[hFI][2]]);
 
         Info<< "f "
-            << 3*hI + 7 << " "
-            << 3*hI + 8 << " "
-            << 3*hI + 9
+            << 3*hi + 7 << " "
+            << 3*hi + 8 << " "
+            << 3*hi + 9
             << endl;
     }
 }

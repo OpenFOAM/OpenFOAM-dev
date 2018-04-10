@@ -32,6 +32,7 @@ Description
 #include "surfaceFeatures.H"
 #include "extendedFeatureEdgeMesh.H"
 #include "triSurfaceFields.H"
+#include "pointIndexHitList.H"
 #include "plane.H"
 #include "triadField.H"
 
@@ -42,19 +43,6 @@ namespace Foam
 
     extern const scalar externalAngleTolerance;
     extern const scalar externalToleranceCosAngle;
-
-    scalar calcProximityOfFeaturePoints
-    (
-        const List<pointIndexHit>& hitList,
-        const scalar defaultCellSize
-    );
-
-    scalar calcProximityOfFeatureEdges
-    (
-        const extendedFeatureEdgeMesh& efem,
-        const List<pointIndexHit>& hitList,
-        const scalar defaultCellSize
-    );
 
     //- Deletes all edges inside/outside bounding box from set.
     void deleteBox
@@ -84,7 +72,7 @@ namespace Foam
         const point& end,
         const vector& normal,
         const vectorField& normals,
-        const List<pointIndexHit>& hitInfo
+        const pointIndexHitList& hitInfo
     );
 
     void drawHitProblem
@@ -94,7 +82,7 @@ namespace Foam
         const point& start,
         const point& p,
         const point& end,
-        const List<pointIndexHit>& hitInfo
+        const pointIndexHitList& hitInfo
     );
 
     //- Unmark non-manifold edges if individual triangles are not features

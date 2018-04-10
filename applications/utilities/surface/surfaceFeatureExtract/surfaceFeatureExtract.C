@@ -475,9 +475,9 @@ int main(int argc, char *argv[])
 
             scalarField featureProximity(surf.size(), searchDistance);
 
-            forAll(surf, fI)
+            forAll(surf, fi)
             {
-                const triPointRef& tri = surf[fI].tri(surf.points());
+                const triPointRef& tri = surf[fi].tri(surf.points());
                 const point& triCentre = tri.circumCentre();
 
                 const scalar radiusSqr = min
@@ -486,26 +486,21 @@ int main(int argc, char *argv[])
                     sqr(searchDistance)
                 );
 
-                List<pointIndexHit> hitList;
+                pointIndexHitList hitList;
 
                 feMesh.allNearestFeatureEdges(triCentre, radiusSqr, hitList);
-
-                featureProximity[fI] =
-                    calcProximityOfFeatureEdges
-                    (
-                        feMesh,
-                        hitList,
-                        featureProximity[fI]
-                    );
+                featureProximity[fi] = min
+                (
+                    feMesh.minDisconnectedDist(hitList),
+                    featureProximity[fi]
+                );
 
                 feMesh.allNearestFeaturePoints(triCentre, radiusSqr, hitList);
-
-                featureProximity[fI] =
-                    calcProximityOfFeaturePoints
-                    (
-                        hitList,
-                        featureProximity[fI]
-                    );
+                featureProximity[fi] = min
+                (
+                    minDist(hitList),
+                    featureProximity[fi]
+                );
             }
 
             triSurfaceScalarField featureProximityField
