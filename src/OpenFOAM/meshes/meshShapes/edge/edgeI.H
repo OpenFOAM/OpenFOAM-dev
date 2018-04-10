@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,20 +100,21 @@ inline Foam::label& Foam::edge::end()
 }
 
 
-inline Foam::label Foam::edge::otherVertex(const label a) const
+inline bool Foam::edge::connected(const edge& a) const
 {
-    if (a == start())
+    if
+    (
+        start() == a.start()
+     || start() == a.end()
+     || end() == a.start()
+     || end() == a.end()
+    )
     {
-        return end();
-    }
-    else if (a == end())
-    {
-        return start();
+        return true;
     }
     else
     {
-        // The given vertex is not on the edge in the first place.
-        return -1;
+        return false;
     }
 }
 
@@ -135,6 +136,23 @@ inline Foam::label Foam::edge::commonVertex(const edge& a) const
     }
 }
 
+
+inline Foam::label Foam::edge::otherVertex(const label a) const
+{
+    if (a == start())
+    {
+        return end();
+    }
+    else if (a == end())
+    {
+        return start();
+    }
+    else
+    {
+        // The given vertex is not on the edge in the first place.
+        return -1;
+    }
+}
 
 inline void Foam::edge::flip()
 {

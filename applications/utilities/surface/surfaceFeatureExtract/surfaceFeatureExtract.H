@@ -43,10 +43,6 @@ namespace Foam
     extern const scalar externalAngleTolerance;
     extern const scalar externalToleranceCosAngle;
 
-    point randomPointInPlane(const plane& p);
-
-    bool edgesConnected(const edge& e1, const edge& e2);
-
     scalar calcProximityOfFeaturePoints
     (
         const List<pointIndexHit>& hitList,
@@ -64,12 +60,10 @@ namespace Foam
     void deleteBox
     (
         const triSurface& surf,
-        const treeBoundBox& bb,
+        const boundBox& bb,
         const bool removeInside,
         List<surfaceFeatures::edgeStatus>& edgeStat
     );
-
-    bool onLine(const point& p, const linePointRef& line);
 
     //- Deletes all edges inside/outside bounding box from set.
     void deleteEdges

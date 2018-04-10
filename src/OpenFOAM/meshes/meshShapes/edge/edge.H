@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,11 +97,14 @@ public:
         //- Return end vertex label
         inline label& end();
 
-        //- Given one vertex, return the other
-        inline label otherVertex(const label a) const;
+        //- Return true if connected to given edge
+        inline bool connected(const edge& a) const;
 
         //- Return common vertex
         inline label commonVertex(const edge& a) const;
+
+        //- Given one vertex, return the other
+        inline label otherVertex(const label a) const;
 
         //- Flip the edge in-place.
         inline void flip();

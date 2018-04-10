@@ -51,23 +51,6 @@ const Foam::scalar Foam::externalToleranceCosAngle
 );
 
 
-bool Foam::edgesConnected(const edge& e1, const edge& e2)
-{
-    if
-    (
-        e1.start() == e2.start()
-     || e1.start() == e2.end()
-     || e1.end() == e2.start()
-     || e1.end() == e2.end()
-    )
-    {
-        return true;
-    }
-
-    return false;
-}
-
-
 Foam::scalar Foam::calcProximityOfFeaturePoints
 (
     const List<pointIndexHit>& hitList,
@@ -146,7 +129,7 @@ Foam::scalar Foam::calcProximityOfFeatureEdges
                     const edge& e2 = efem.edges()[pHit2.index()];
 
                     // Don't refine if the edges are connected to each other
-                    if (!edgesConnected(e1, e2))
+                    if (!e1.connected(e2))
                     {
                         scalar curDist =
                             mag(pHit1.hitPoint() - pHit2.hitPoint());
@@ -165,7 +148,7 @@ Foam::scalar Foam::calcProximityOfFeatureEdges
 void Foam::deleteBox
 (
     const triSurface& surf,
-    const treeBoundBox& bb,
+    const boundBox& bb,
     const bool removeInside,
     List<surfaceFeatures::edgeStatus>& edgeStat
 )
@@ -179,25 +162,6 @@ void Foam::deleteBox
             edgeStat[edgeI] = surfaceFeatures::NONE;
         }
     }
-}
-
-
-bool Foam::onLine(const point& p, const linePointRef& line)
-{
-    const point& a = line.start();
-    const point& b = line.end();
-
-    if
-    (
-        ( p.x() < min(a.x(), b.x()) || p.x() > max(a.x(), b.x()) )
-     || ( p.y() < min(a.y(), b.y()) || p.y() > max(a.y(), b.y()) )
-     || ( p.z() < min(a.z(), b.z()) || p.z() > max(a.z(), b.z()) )
-    )
-    {
-        return false;
-    }
-
-    return true;
 }
 
 
@@ -223,7 +187,7 @@ void Foam::deleteEdges
 
         point featPoint = intersect * (p1 - p0) + p0;
 
-        if (!onLine(featPoint, line))
+        if (!line.insideBoundBox(featPoint))
         {
             edgeStat[edgeI] = surfaceFeatures::NONE;
         }

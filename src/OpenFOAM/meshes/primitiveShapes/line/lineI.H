@@ -257,6 +257,23 @@ Foam::scalar Foam::line<Point, PointRef>::nearestDist
 }
 
 
+template<class Point, class PointRef>
+bool Foam::line<Point, PointRef>::insideBoundBox(const Point& p) const
+{
+    if
+    (
+        ( p.x() < min(a_.x(), b_.x()) || p.x() > max(a_.x(), b_.x()) )
+     || ( p.y() < min(a_.y(), b_.y()) || p.y() > max(a_.y(), b_.y()) )
+     || ( p.z() < min(a_.z(), b_.z()) || p.z() > max(a_.z(), b_.z()) )
+    )
+    {
+        return false;
+    }
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * * //
 
 template<class Point, class PointRef>
