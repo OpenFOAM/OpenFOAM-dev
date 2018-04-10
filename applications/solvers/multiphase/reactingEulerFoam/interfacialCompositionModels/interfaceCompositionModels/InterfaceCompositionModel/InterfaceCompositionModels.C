@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,8 @@ namespace Foam
 {
     using namespace interfaceCompositionModels;
 
+    // Gas-side models
+
     // multi-component gas in the presence of a pure liquid
     makeInterfaceCompositionType
     (
@@ -99,6 +101,46 @@ namespace Foam
         multiComponentMixture,
         constFluidEThermoPhysics
     );
+    makeSpecieInterfaceCompositionType
+    (
+        NonRandomTwoLiquid,
+        heRhoThermo,
+        rhoReactionThermo,
+        multiComponentMixture,
+        constGasEThermoPhysics,
+        heRhoThermo,
+        rhoReactionThermo,
+        multiComponentMixture,
+        constFluidEThermoPhysics
+    );
+
+    // reacting gas in the presence of a multi-component liquid
+    makeSpecieInterfaceCompositionType
+    (
+        Saturated,
+        heRhoThermo,
+        rhoReactionThermo,
+        reactingMixture,
+        constGasEThermoPhysics,
+        heRhoThermo,
+        rhoReactionThermo,
+        multiComponentMixture,
+        constFluidEThermoPhysics
+    );
+    makeSpecieInterfaceCompositionType
+    (
+        NonRandomTwoLiquid,
+        heRhoThermo,
+        rhoReactionThermo,
+        reactingMixture,
+        constGasEThermoPhysics,
+        heRhoThermo,
+        rhoReactionThermo,
+        multiComponentMixture,
+        constFluidEThermoPhysics
+    );
+
+    // Liquid-side models
 
     // multi-component liquid in the presence of a multi-component gas
     makeSpecieInterfaceCompositionType
@@ -111,6 +153,44 @@ namespace Foam
         heRhoThermo,
         rhoReactionThermo,
         multiComponentMixture,
+        constGasEThermoPhysics
+    );
+    makeSpecieInterfaceCompositionType
+    (
+        Raoult,
+        heRhoThermo,
+        rhoReactionThermo,
+        multiComponentMixture,
+        constFluidEThermoPhysics,
+        heRhoThermo,
+        rhoReactionThermo,
+        multiComponentMixture,
+        constGasEThermoPhysics
+    );
+
+    // multi-component liquid in the presence of a reacting gas
+    makeSpecieInterfaceCompositionType
+    (
+        Henry,
+        heRhoThermo,
+        rhoReactionThermo,
+        multiComponentMixture,
+        constFluidEThermoPhysics,
+        heRhoThermo,
+        rhoReactionThermo,
+        reactingMixture,
+        constGasEThermoPhysics
+    );
+    makeSpecieInterfaceCompositionType
+    (
+        Raoult,
+        heRhoThermo,
+        rhoReactionThermo,
+        multiComponentMixture,
+        constFluidEThermoPhysics,
+        heRhoThermo,
+        rhoReactionThermo,
+        reactingMixture,
         constGasEThermoPhysics
     );
 }

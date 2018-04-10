@@ -155,7 +155,7 @@ update
     const volScalarField& Tf
 )
 {
-    volScalarField W(this->thermo_.composition().W());
+    volScalarField W(this->thermo_.W());
 
     volScalarField X1
     (

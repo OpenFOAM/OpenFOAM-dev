@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,8 +35,8 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    cyclicACMILduInterfaceField(),
     coupledFvPatchField<Type>(p, iF),
+    cyclicACMILduInterfaceField(),
     cyclicACMIPatch_(refCast<const cyclicACMIFvPatch>(p))
 {}
 
@@ -49,8 +49,8 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
     const dictionary& dict
 )
 :
-    cyclicACMILduInterfaceField(),
     coupledFvPatchField<Type>(p, iF, dict, dict.found("value")),
+    cyclicACMILduInterfaceField(),
     cyclicACMIPatch_(refCast<const cyclicACMIFvPatch>(p))
 {
     if (!isA<cyclicACMIFvPatch>(p))
@@ -82,8 +82,8 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    cyclicACMILduInterfaceField(),
     coupledFvPatchField<Type>(ptf, p, iF, mapper),
+    cyclicACMILduInterfaceField(),
     cyclicACMIPatch_(refCast<const cyclicACMIFvPatch>(p))
 {
     if (!isA<cyclicACMIFvPatch>(this->patch()))
@@ -105,8 +105,8 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
     const cyclicACMIFvPatchField<Type>& ptf
 )
 :
-    cyclicACMILduInterfaceField(),
     coupledFvPatchField<Type>(ptf),
+    cyclicACMILduInterfaceField(),
     cyclicACMIPatch_(ptf.cyclicACMIPatch_)
 {}
 
@@ -118,8 +118,8 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    cyclicACMILduInterfaceField(),
     coupledFvPatchField<Type>(ptf, iF),
+    cyclicACMILduInterfaceField(),
     cyclicACMIPatch_(ptf.cyclicACMIPatch_)
 {}
 

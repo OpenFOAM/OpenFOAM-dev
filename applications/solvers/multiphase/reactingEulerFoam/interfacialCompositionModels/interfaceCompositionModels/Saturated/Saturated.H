@@ -82,7 +82,7 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("Saturated");
+    TypeName("saturated");
 
     // Constructors
 

@@ -50,7 +50,7 @@ namespace Foam
 class cyclicACMIGAMGInterface
 :
     public GAMGInterface,
-    virtual public cyclicACMILduInterface
+    public cyclicACMILduInterface
 {
     // Private data
 

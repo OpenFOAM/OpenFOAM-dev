@@ -19,8 +19,8 @@ streamLines
 
     setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot; //csv; //ensight;
 
-    // Tracked forwards (+U) or backwards (-U)
-    trackForward    true;
+    // Track forward (+U) or backward (-U) or both
+    direction       forward;
 
     // Names of fields to sample. Should contain above velocity field!
     fields (p U k);
