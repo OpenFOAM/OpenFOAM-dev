@@ -83,6 +83,10 @@ public:
 
         typedef UPtrList<phaseModel> phaseModelPartialList;
 
+        typedef
+            HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
+            phasePairTable;
+
 
 protected:
 
@@ -91,10 +95,6 @@ protected:
         typedef
             HashTable<dictionary, phasePairKey, phasePairKey::hash>
             dictTable;
-
-        typedef
-            HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
-            phasePairTable;
 
         typedef
             HashTable<autoPtr<blendingMethod>, word, word::hash>

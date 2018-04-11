@@ -371,11 +371,20 @@ void Foam::phaseSystem::fillFields
 template<class modelType>
 const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const
 {
-    return
-        mesh().lookupObject<modelType>
-        (
-            IOobject::groupName(modelType::typeName, key.name())
-        );
+    const word name(IOobject::groupName(modelType::typeName, key.name()));
+
+    if (key.ordered() || mesh().foundObject<modelType>(name))
+    {
+        return mesh().lookupObject<modelType>(name);
+    }
+    else
+    {
+        return
+            mesh().lookupObject<modelType>
+            (
+                IOobject::groupName(modelType::typeName, key.otherName())
+            );
+    }
 }
 
 
@@ -394,11 +403,31 @@ template<class modelType>
 const Foam::BlendedInterfacialModel<modelType>&
 Foam::phaseSystem::lookupBlendedSubModel(const phasePair& key) const
 {
-    return
-        mesh().lookupObject<BlendedInterfacialModel<modelType>>
+    const word name
+    (
+        IOobject::groupName
         (
-            IOobject::groupName(modelType::typeName, key.name())
-        );
+            BlendedInterfacialModel<modelType>::typeName,
+            key.name()
+        )
+    );
+
+    if (mesh().foundObject<BlendedInterfacialModel<modelType>>(name))
+    {
+        return mesh().lookupObject<BlendedInterfacialModel<modelType>>(name);
+    }
+    else
+    {
+        return
+            mesh().lookupObject<BlendedInterfacialModel<modelType>>
+            (
+                IOobject::groupName
+                (
+                    BlendedInterfacialModel<modelType>::typeName,
+                    key.otherName()
+                )
+            );
+    }
 }
 
 

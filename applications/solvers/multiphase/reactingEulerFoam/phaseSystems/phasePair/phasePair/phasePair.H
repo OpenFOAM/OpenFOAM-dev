@@ -112,6 +112,9 @@ public:
         //- Pair name
         virtual word name() const;
 
+        //- Other pair name
+        virtual word otherName() const;
+
         //- Average density
         tmp<volScalarField> rho() const;
 

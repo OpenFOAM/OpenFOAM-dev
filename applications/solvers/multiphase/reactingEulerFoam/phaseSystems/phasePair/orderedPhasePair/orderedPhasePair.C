@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,16 @@ Foam::word Foam::orderedPhasePair::name() const
     word namec(second());
     namec[0] = toupper(namec[0]);
     return first() + "In" + namec;
+}
+
+
+Foam::word Foam::orderedPhasePair::otherName() const
+{
+    FatalErrorInFunction
+        << "Requested other name phase from an ordered pair."
+        << exit(FatalError);
+
+    return word::null;
 }
 
 

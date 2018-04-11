@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,14 @@ Foam::word Foam::phasePair::name() const
     word name2(second());
     name2[0] = toupper(name2[0]);
     return first() + "And" + name2;
+}
+
+
+Foam::word Foam::phasePair::otherName() const
+{
+    word name1(first());
+    name1[0] = toupper(name1[0]);
+    return second() + "And" + name1;
 }
 
 
