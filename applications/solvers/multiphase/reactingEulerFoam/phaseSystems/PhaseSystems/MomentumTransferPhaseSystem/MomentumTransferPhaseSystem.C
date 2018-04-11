@@ -396,7 +396,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
         }
     }
 
-    // Add the source term due to mass trasfer
+    // Add the source term due to mass transfer
     addMassTransferMomentumTransfer(eqns);
 
     return eqnsPtr;
@@ -472,7 +472,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransferf()
         }
     }
 
-    // Add the source term due to mass trasfer
+    // Add the source term due to mass transfer
     addMassTransferMomentumTransfer(eqns);
 
     return eqnsPtr;
