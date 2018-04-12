@@ -239,10 +239,10 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 {
     const label nMovingPhases = movingPhaseModels_.size();
 
-    volScalarField rho(movingPhaseModels_[0]*movingPhaseModels_[0].rho());
+    tmp<volScalarField> rho(movingPhaseModels_[0]*movingPhaseModels_[0].rho());
     for (label movingPhasei = 1; movingPhasei < nMovingPhases; ++ movingPhasei)
     {
-        rho +=
+        rho.ref() +=
             movingPhaseModels_[movingPhasei]
            *movingPhaseModels_[movingPhasei].rho();
     }
@@ -266,10 +266,10 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 {
     const label nMovingPhases = movingPhaseModels_.size();
 
-    volVectorField U(movingPhaseModels_[0]*movingPhaseModels_[0].U());
+    tmp<volVectorField> U(movingPhaseModels_[0]*movingPhaseModels_[0].U());
     for (label movingPhasei = 1; movingPhasei < nMovingPhases; ++ movingPhasei)
     {
-        U +=
+        U.ref() +=
             movingPhaseModels_[movingPhasei]
            *movingPhaseModels_[movingPhasei].U();
     }
