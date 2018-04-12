@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ SourceFiles
 #include "word.H"
 #include "contiguous.H"
 #include "pointField.H"
+#include "transformField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -147,6 +148,10 @@ public:
             //- Transform the given field
             template<class Type>
             tmp<Field<Type>> transform(const Field<Type>&) const;
+
+            //- Inverse transform the given field
+            template<class Type>
+            tmp<Field<Type>> invTransform(const Field<Type>&) const;
 
 
     // Member operators
