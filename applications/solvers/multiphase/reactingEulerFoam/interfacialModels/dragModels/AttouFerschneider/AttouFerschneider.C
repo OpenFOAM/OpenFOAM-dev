@@ -52,7 +52,10 @@ Foam::dragModels::AttouFerschneider::KGasLiquid
     const phaseModel& solid = gas.fluid().phases()[solidName_];
 
     const volScalarField oneMinusGas(max(1 - gas, liquid.residualAlpha()));
-    const volScalarField cbrtR(solid/oneMinusGas);
+    const volScalarField cbrtR
+    (
+        cbrt(max(solid, solid.residualAlpha())/oneMinusGas)
+    );
     const volScalarField magURel(mag(gas.U() - liquid.U()));
 
     return
@@ -70,7 +73,10 @@ Foam::dragModels::AttouFerschneider::KGasSolid
 ) const
 {
     const volScalarField oneMinusGas(max(1 - gas, solid.residualAlpha()));
-    const volScalarField cbrtR(solid/oneMinusGas);
+    const volScalarField cbrtR
+    (
+        cbrt(max(solid, solid.residualAlpha())/oneMinusGas)
+    );
 
     return
         E1_*gas.mu()*sqr(oneMinusGas/solid.d())*sqr(cbrtR)
