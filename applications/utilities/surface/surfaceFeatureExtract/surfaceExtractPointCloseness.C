@@ -25,157 +25,27 @@ License
 
 #include "surfaceFeatureExtract.H"
 #include "Time.H"
-#include "triSurfaceMesh.H"
 #include "vtkSurfaceWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::processHit
+Foam::Pair<Foam::tmp<Foam::triSurfacePointScalarField>>
+Foam::extractPointCloseness
 (
-    scalar& internalCloseness,
-    scalar& externalCloseness,
-    const label fi,
-    const triSurface& surf,
-    const point& start,
-    const point& p,
-    const point& end,
-    const vector& normal,
-    const vectorField& normals,
-    const List<pointIndexHit>& hitInfo
+    const triSurfaceMesh& surf
 )
 {
-    if (hitInfo.size() < 1)
-    {
-        drawHitProblem(fi, surf, start, p, end, hitInfo);
-    }
-    else if (hitInfo.size() == 1)
-    {
-        if (!hitInfo[0].hit())
-        {
-        }
-        else if (hitInfo[0].index() != fi)
-        {
-            drawHitProblem(fi, surf, start, p, end, hitInfo);
-        }
-    }
-    else
-    {
-        label ownHiti = -1;
-
-        forAll(hitInfo, hI)
-        {
-            // Find the hit on the triangle that launched the ray
-
-            if (hitInfo[hI].index() == fi)
-            {
-                ownHiti = hI;
-                break;
-            }
-        }
-
-        if (ownHiti < 0)
-        {
-            drawHitProblem(fi, surf, start, p, end, hitInfo);
-        }
-        else if (ownHiti == 0)
-        {
-            // There are no internal hits, the first hit is the
-            // closest external hit
-
-            if
-            (
-                (normal & normals[hitInfo[ownHiti + 1].index()])
-              < externalToleranceCosAngle
-            )
-            {
-                externalCloseness = min
-                (
-                    externalCloseness,
-                    mag(p - hitInfo[ownHiti + 1].hitPoint())
-                );
-            }
-        }
-        else if (ownHiti == hitInfo.size() - 1)
-        {
-            // There are no external hits, the last but one hit is
-            // the closest internal hit
-
-            if
-            (
-                (normal & normals[hitInfo[ownHiti - 1].index()])
-              < internalToleranceCosAngle
-            )
-            {
-                internalCloseness = min
-                (
-                    internalCloseness,
-                    mag(p - hitInfo[ownHiti - 1].hitPoint())
-                );
-            }
-        }
-        else
-        {
-            if
-            (
-                (normal & normals[hitInfo[ownHiti + 1].index()])
-              < externalToleranceCosAngle
-            )
-            {
-                externalCloseness = min
-                (
-                    externalCloseness,
-                    mag(p - hitInfo[ownHiti + 1].hitPoint())
-                );
-            }
-
-            if
-            (
-                (normal & normals[hitInfo[ownHiti - 1].index()])
-              < internalToleranceCosAngle
-            )
-            {
-                internalCloseness = min
-                (
-                    internalCloseness,
-                    mag(p - hitInfo[ownHiti - 1].hitPoint())
-                );
-            }
-        }
-    }
-}
-
-
-void Foam::extractPointCloseness
-(
-    const fileName &sFeatFileName,
-    const Time& runTime,
-    const triSurface &surf,
-    const bool writeVTK
-)
-{
-    // Searchable triSurface
-    const triSurfaceMesh searchSurf
-    (
-        IOobject
-        (
-            sFeatFileName + ".closeness",
-            runTime.constant(),
-            "triSurface",
-            runTime
-        ),
-        surf
-    );
-
+    const Time& runTime = surf.objectRegistry::time();
 
     // Prepare start and end points for intersection tests
 
-    const pointField& points = searchSurf.points();
-    const labelList& meshPoints = searchSurf.meshPoints();
-    const pointField& faceCentres = searchSurf.faceCentres();
-    const vectorField& normals = searchSurf.faceNormals();
-    const labelListList& pointFaces = searchSurf.pointFaces();
+    const pointField& points = surf.points();
+    const labelList& meshPoints = surf.meshPoints();
+    const pointField& faceCentres = surf.faceCentres();
+    const vectorField& normals = surf.faceNormals();
+    const labelListList& pointFaces = surf.pointFaces();
 
-    const scalar span = searchSurf.bounds().mag();
+    const scalar span = surf.bounds().mag();
 
     label nPointFaces = 0;
     forAll(pointFaces, pfi)
@@ -204,10 +74,10 @@ void Foam::extractPointCloseness
         }
     }
 
-    List<List<pointIndexHit>> allHitinfo;
+    List<pointIndexHitList> allHitinfo;
 
     // Find all intersections (in order)
-    searchSurf.findLineAll(start, end, allHitinfo);
+    surf.findLineAll(start, end, allHitinfo);
 
     scalarField internalCloseness(points.size(), great);
     scalarField externalCloseness(points.size(), great);
@@ -218,7 +88,7 @@ void Foam::extractPointCloseness
         forAll(pointFaces[pi], pfi)
         {
             const label fi = pointFaces[pi][pfi];
-            const List<pointIndexHit>& hitInfo = allHitinfo[i];
+            const pointIndexHitList& hitInfo = allHitinfo[i];
 
             processHit
             (
@@ -238,76 +108,42 @@ void Foam::extractPointCloseness
         }
     }
 
-    triSurfacePointScalarField internalClosenessPointField
+    return Pair<tmp<triSurfacePointScalarField>>
     (
-        IOobject
+        tmp<triSurfacePointScalarField>
         (
-            sFeatFileName + ".internalPointCloseness",
-            runTime.constant(),
-            "triSurface",
-            runTime
+            new triSurfacePointScalarField
+            (
+                IOobject
+                (
+                    surf.objectRegistry::name() + ".internalPointCloseness",
+                    runTime.constant(),
+                    "triSurface",
+                    runTime
+                ),
+                surf,
+                dimLength,
+                internalCloseness
+            )
         ),
-        surf,
-        dimLength,
-        internalCloseness
+
+        tmp<triSurfacePointScalarField>
+        (
+            new triSurfacePointScalarField
+            (
+                IOobject
+                (
+                    surf.objectRegistry::name() + ".externalPointCloseness",
+                    runTime.constant(),
+                    "triSurface",
+                    runTime
+                ),
+                surf,
+                dimLength,
+                externalCloseness
+            )
+        )
     );
-
-    internalClosenessPointField.write();
-
-    triSurfacePointScalarField externalClosenessPointField
-    (
-        IOobject
-        (
-            sFeatFileName + ".externalPointCloseness",
-            runTime.constant(),
-            "triSurface",
-            runTime
-        ),
-        surf,
-        dimLength,
-        externalCloseness
-    );
-
-    externalClosenessPointField.write();
-
-    if (writeVTK)
-    {
-        const faceList faces(surf.faces());
-        const Map<label>& meshPointMap = surf.meshPointMap();
-
-        forAll(meshPointMap, pi)
-        {
-            internalCloseness[pi] =
-                internalClosenessPointField[meshPointMap[pi]];
-
-            externalCloseness[pi] =
-                externalClosenessPointField[meshPointMap[pi]];
-        }
-
-        vtkSurfaceWriter().write
-        (
-            runTime.constantPath()/"triSurface",// outputDir
-            sFeatFileName,                      // surfaceName
-            surf.points(),
-            faces,
-            "internalPointCloseness",           // fieldName
-            internalCloseness,
-            true,                               // isNodeValues
-            true                                // verbose
-        );
-
-        vtkSurfaceWriter().write
-        (
-            runTime.constantPath()/"triSurface",// outputDir
-            sFeatFileName,                      // surfaceName
-            surf.points(),
-            faces,
-            "externalPointCloseness",           // fieldName
-            externalCloseness,
-            true,                               // isNodeValues
-            true                                // verbose
-        );
-    }
 }
 
 

@@ -32,24 +32,10 @@ Description
 
 #include "surfaceFeatureExtract.H"
 #include "Time.H"
-#include "meshTools.H"
 #include "tensor2D.H"
 #include "symmTensor2D.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-const Foam::scalar Foam::internalAngleTolerance(80);
-const Foam::scalar Foam::internalToleranceCosAngle
-(
-    cos(degToRad(180 - internalAngleTolerance))
-);
-
-const Foam::scalar Foam::externalAngleTolerance(10);
-const Foam::scalar Foam::externalToleranceCosAngle
-(
-    cos(degToRad(180 - externalAngleTolerance))
-);
-
 
 void Foam::deleteBox
 (
@@ -59,13 +45,13 @@ void Foam::deleteBox
     List<surfaceFeatures::edgeStatus>& edgeStat
 )
 {
-    forAll(edgeStat, edgeI)
+    forAll(edgeStat, edgei)
     {
-        const point eMid = surf.edges()[edgeI].centre(surf.localPoints());
+        const point eMid = surf.edges()[edgei].centre(surf.localPoints());
 
         if (removeInside ? bb.contains(eMid) : !bb.contains(eMid))
         {
-            edgeStat[edgeI] = surfaceFeatures::NONE;
+            edgeStat[edgei] = surfaceFeatures::NONE;
         }
     }
 }
@@ -81,9 +67,9 @@ void Foam::deleteEdges
     const pointField& points = surf.points();
     const labelList& meshPoints = surf.meshPoints();
 
-    forAll(edgeStat, edgeI)
+    forAll(edgeStat, edgei)
     {
-        const edge& e = surf.edges()[edgeI];
+        const edge& e = surf.edges()[edgei];
         const point& p0 = points[meshPoints[e.start()]];
         const point& p1 = points[meshPoints[e.end()]];
         const linePointRef line(p0, p1);
@@ -95,117 +81,22 @@ void Foam::deleteEdges
 
         if (!line.insideBoundBox(featPoint))
         {
-            edgeStat[edgeI] = surfaceFeatures::NONE;
+            edgeStat[edgei] = surfaceFeatures::NONE;
         }
     }
 }
 
 
-void Foam::drawHitProblem
-(
-    const label fi,
-    const triSurface& surf,
-    const point& start,
-    const point& p,
-    const point& end,
-    const pointIndexHitList& hitInfo
-)
-{
-    Info<< nl << "# findLineAll did not hit its own face."
-        << nl << "# fi " << fi
-        << nl << "# start " << start
-        << nl << "# point " << p
-        << nl << "# end " << end
-        << nl << "# hitInfo " << hitInfo
-        << endl;
-
-    meshTools::writeOBJ(Info, start);
-    meshTools::writeOBJ(Info, p);
-    meshTools::writeOBJ(Info, end);
-
-    Info<< "l 1 2 3" << endl;
-
-    meshTools::writeOBJ(Info, surf.points()[surf[fi][0]]);
-    meshTools::writeOBJ(Info, surf.points()[surf[fi][1]]);
-    meshTools::writeOBJ(Info, surf.points()[surf[fi][2]]);
-
-    Info<< "f 4 5 6" << endl;
-
-    forAll(hitInfo, hi)
-    {
-        label hFI = hitInfo[hi].index();
-
-        meshTools::writeOBJ(Info, surf.points()[surf[hFI][0]]);
-        meshTools::writeOBJ(Info, surf.points()[surf[hFI][1]]);
-        meshTools::writeOBJ(Info, surf.points()[surf[hFI][2]]);
-
-        Info<< "f "
-            << 3*hi + 7 << " "
-            << 3*hi + 8 << " "
-            << 3*hi + 9
-            << endl;
-    }
-}
-
-
-void Foam::unmarkBaffles
-(
-    const triSurface& surf,
-    const scalar includedAngle,
-    List<surfaceFeatures::edgeStatus>& edgeStat
-)
-{
-    scalar minCos = Foam::cos(degToRad(180.0 - includedAngle));
-
-    const labelListList& edgeFaces = surf.edgeFaces();
-
-    forAll(edgeFaces, edgeI)
-    {
-        const labelList& eFaces = edgeFaces[edgeI];
-
-        if (eFaces.size() > 2)
-        {
-            label i0 = eFaces[0];
-            //const labelledTri& f0 = surf[i0];
-            const Foam::vector& n0 = surf.faceNormals()[i0];
-
-            //Pout<< "edge:" << edgeI << " n0:" << n0 << endl;
-
-            bool same = true;
-
-            for (label i = 1; i < eFaces.size(); i++)
-            {
-                //const labelledTri& f = surf[i];
-                const Foam::vector& n = surf.faceNormals()[eFaces[i]];
-
-                //Pout<< "    mag(n&n0): " << mag(n&n0) << endl;
-
-                if (mag(n&n0) < minCos)
-                {
-                    same = false;
-                    break;
-                }
-            }
-
-            if (same)
-            {
-                edgeStat[edgeI] = surfaceFeatures::NONE;
-            }
-        }
-    }
-}
-
-
-Foam::surfaceFeatures::edgeStatus Foam::checkFlatRegionEdge
+Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
 (
     const triSurface& surf,
     const scalar tol,
     const scalar includedAngle,
-    const label edgeI
+    const label edgei
 )
 {
-    const edge& e = surf.edges()[edgeI];
-    const labelList& eFaces = surf.edgeFaces()[edgeI];
+    const edge& e = surf.edges()[edgei];
+    const labelList& eFaces = surf.edgeFaces()[edgei];
 
     // Bin according to normal
 
@@ -353,11 +244,38 @@ Foam::surfaceFeatures::edgeStatus Foam::checkFlatRegionEdge
             }
         }
 
-        // Passed all checks, two normal bins with the same contents.
-        //Pout<< "regionAndNormal:" << regionAndNormal << endl;
-        //Pout<< "myRegionAndNormal:" << regionAndNormal1 << endl;
-
         return surfaceFeatures::NONE;
+    }
+}
+
+
+void Foam::deleteNonManifoldEdges
+(
+    const triSurface& surf,
+    const scalar tol,
+    const scalar includedAngle,
+    List<surfaceFeatures::edgeStatus>& edgeStat
+)
+{
+    forAll(edgeStat, edgei)
+    {
+        const labelList& eFaces = surf.edgeFaces()[edgei];
+
+        if
+        (
+            eFaces.size() > 2
+            && edgeStat[edgei] == surfaceFeatures::REGION
+            && (eFaces.size() % 2) == 0
+        )
+        {
+            edgeStat[edgei] = checkNonManifoldEdge
+            (
+                surf,
+                tol,
+                includedAngle,
+                edgei
+            );
+        }
     }
 }
 
@@ -369,23 +287,23 @@ void Foam::writeStats(const extendedFeatureEdgeMesh& fem, Ostream& os)
         << "        convex             : "
         << fem.concaveStart() << nl
         << "        concave            : "
-        << (fem.mixedStart()-fem.concaveStart()) << nl
+        << (fem.mixedStart() - fem.concaveStart()) << nl
         << "        mixed              : "
-        << (fem.nonFeatureStart()-fem.mixedStart()) << nl
+        << (fem.nonFeatureStart() - fem.mixedStart()) << nl
         << "        non-feature        : "
-        << (fem.points().size()-fem.nonFeatureStart()) << nl
+        << (fem.points().size() - fem.nonFeatureStart()) << nl
         << "    edges  : " << fem.edges().size() << nl
         << "    of which" << nl
         << "        external edges     : "
         << fem.internalStart() << nl
         << "        internal edges     : "
-        << (fem.flatStart()- fem.internalStart()) << nl
+        << (fem.flatStart() - fem.internalStart()) << nl
         << "        flat edges         : "
-        << (fem.openStart()- fem.flatStart()) << nl
+        << (fem.openStart() - fem.flatStart()) << nl
         << "        open edges         : "
-        << (fem.multipleStart()- fem.openStart()) << nl
+        << (fem.multipleStart() - fem.openStart()) << nl
         << "        multiply connected : "
-        << (fem.edges().size()- fem.multipleStart()) << endl;
+        << (fem.edges().size() - fem.multipleStart()) << endl;
 }
 
 

@@ -26,6 +26,7 @@ License
 #include "surfaceFeatureExtract.H"
 #include "argList.H"
 #include "Time.H"
+#include "triSurfaceMesh.H"
 #include "featureEdgeMesh.H"
 #include "vtkSurfaceWriter.H"
 #include "IOdictionary.H"
@@ -255,26 +256,7 @@ int main(int argc, char *argv[])
                     << " (edges with > 2 connected faces) unless they"
                     << " cross multiple regions" << endl;
 
-                forAll(edgeStat, edgeI)
-                {
-                    const labelList& eFaces = surf.edgeFaces()[edgeI];
-
-                    if
-                    (
-                        eFaces.size() > 2
-                     && edgeStat[edgeI] == surfaceFeatures::REGION
-                     && (eFaces.size() % 2) == 0
-                    )
-                    {
-                        edgeStat[edgeI] = checkFlatRegionEdge
-                        (
-                            surf,
-                            1e-5,   //tol,
-                            includedAngle,
-                            edgeI
-                        );
-                    }
-                }
+                deleteNonManifoldEdges(surf, 1e-5, includedAngle, edgeStat);
             }
 
             const Switch openEdges =
@@ -285,11 +267,11 @@ int main(int argc, char *argv[])
                 Info<< "Removing all open edges"
                     << " (edges with 1 connected face)" << endl;
 
-                forAll(edgeStat, edgeI)
+                forAll(edgeStat, edgei)
                 {
-                    if (surf.edgeFaces()[edgeI].size() == 1)
+                    if (surf.edgeFaces()[edgei].size() == 1)
                     {
-                        edgeStat[edgeI] = surfaceFeatures::NONE;
+                        edgeStat[edgei] = surfaceFeatures::NONE;
                     }
                 }
             }
@@ -422,8 +404,115 @@ int main(int argc, char *argv[])
                 << "internalToleranceCosAngle: " << internalToleranceCosAngle
                 << endl;
 
-            extractCloseness(sFeatFileName, runTime, surf, writeVTK);
-            extractPointCloseness(sFeatFileName, runTime, surf, writeVTK);
+            // Searchable triSurface
+            const triSurfaceMesh searchSurf
+            (
+                IOobject
+                (
+                    sFeatFileName + ".closeness",
+                    runTime.constant(),
+                    "triSurface",
+                    runTime
+                ),
+                surf
+            );
+
+            {
+                Pair<tmp<triSurfaceScalarField>> closenessFields
+                (
+                    extractCloseness(searchSurf)
+                );
+
+                closenessFields.first()->write();
+                closenessFields.second()->write();
+
+                if (writeVTK)
+                {
+                    const faceList faces(searchSurf.faces());
+
+                    vtkSurfaceWriter().write
+                    (
+                        runTime.constantPath()/"triSurface",// outputDir
+                        searchSurf.objectRegistry::name(),  // surfaceName
+                        searchSurf.points(),
+                        faces,
+                        "internalCloseness",                // fieldName
+                        closenessFields.first(),
+                        false,                              // isNodeValues
+                        true                                // verbose
+                    );
+
+                    vtkSurfaceWriter().write
+                    (
+                        runTime.constantPath()/"triSurface",// outputDir
+                        searchSurf.objectRegistry::name(),  // surfaceName
+                        searchSurf.points(),
+                        faces,
+                        "externalCloseness",                // fieldName
+                        closenessFields.second(),
+                        false,                              // isNodeValues
+                        true                                // verbose
+                    );
+                }
+            }
+
+            {
+                Pair<tmp<triSurfacePointScalarField >> closenessFields
+                (
+                    extractPointCloseness(searchSurf)
+                );
+
+                closenessFields.first()->write();
+                closenessFields.second()->write();
+
+                if (writeVTK)
+                {
+                    const faceList faces(searchSurf.faces());
+                    const Map<label>& meshPointMap = searchSurf.meshPointMap();
+
+                    const triSurfacePointScalarField&
+                        internalClosenessPointField = closenessFields.first();
+
+                    const triSurfacePointScalarField&
+                        externalClosenessPointField = closenessFields.second();
+
+                    scalarField internalCloseness(searchSurf.nPoints(), great);
+                    scalarField externalCloseness(searchSurf.nPoints(), great);
+
+                    forAll(meshPointMap, pi)
+                    {
+                        internalCloseness[pi] =
+                            internalClosenessPointField[meshPointMap[pi]];
+
+                        externalCloseness[pi] =
+                            externalClosenessPointField[meshPointMap[pi]];
+                    }
+
+                    vtkSurfaceWriter().write
+                    (
+                        runTime.constantPath()/"triSurface",// outputDir
+                        searchSurf.objectRegistry::name(),  // surfaceName
+                        searchSurf.points(),
+                        faces,
+                        "internalPointCloseness",           // fieldName
+                        internalCloseness,
+                        true,                               // isNodeValues
+                        true                                // verbose
+                    );
+
+                    vtkSurfaceWriter().write
+                    (
+                        runTime.constantPath()/"triSurface",// outputDir
+                        searchSurf.objectRegistry::name(),  // surfaceName
+                        searchSurf.points(),
+                        faces,
+                        "externalPointCloseness",           // fieldName
+                        externalCloseness,
+                        true,                               // isNodeValues
+                        true                                // verbose
+                    );
+                }
+            }
         }
 
 
