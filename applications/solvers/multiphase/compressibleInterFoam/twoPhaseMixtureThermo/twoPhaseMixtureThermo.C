@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,12 +51,32 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
     thermo2_(nullptr)
 {
     {
-        volScalarField T1(IOobject::groupName("T", phase1Name()), T_);
+        volScalarField T1
+        (
+            IOobject
+            (
+                IOobject::groupName("T", phase1Name()),
+                U.mesh().time().timeName(),
+                U.mesh()
+            ),
+            T_,
+            calculatedFvPatchScalarField::typeName
+        );
         T1.write();
     }
 
     {
-        volScalarField T2(IOobject::groupName("T", phase2Name()), T_);
+        volScalarField T2
+        (
+            IOobject
+            (
+                IOobject::groupName("T", phase2Name()),
+                U.mesh().time().timeName(),
+                U.mesh()
+            ),
+            T_,
+            calculatedFvPatchScalarField::typeName
+        );
         T2.write();
     }
 
@@ -80,9 +100,11 @@ Foam::twoPhaseMixtureThermo::~twoPhaseMixtureThermo()
 
 void Foam::twoPhaseMixtureThermo::correctThermo()
 {
+    thermo1_->T() = T_;
     thermo1_->he() = thermo1_->he(p_, T_);
     thermo1_->correct();
 
+    thermo2_->T() = T_;
     thermo2_->he() = thermo2_->he(p_, T_);
     thermo2_->correct();
 }
