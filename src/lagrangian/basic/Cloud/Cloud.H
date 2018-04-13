@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,13 +75,8 @@ class Cloud
 {
     // Private data
 
+        //- Reference to the mesh
         const polyMesh& polyMesh_;
-
-        //- Temporary storage for addressing. Used in findTris.
-        mutable DynamicList<label> labels_;
-
-        //- Does the cell have wall faces
-        mutable autoPtr<PackedBoolList> cellWallFacesPtr_;
 
         //- Temporary storage for the global particle positions
         mutable autoPtr<vectorField> globalPositionsPtr_;
@@ -94,9 +89,6 @@ class Cloud
 
         //- Initialise cloud on IO constructor
         void initCloud(const bool checkClass);
-
-        //- Find all cells which have wall faces
-        void calcCellWallFaces() const;
 
         //- Read cloud properties dictionary
         void readCloudUniformProperties();
@@ -161,12 +153,6 @@ public:
             {
                 return IDLList<ParticleType>::size();
             };
-
-            //- Return temporary addressing
-            DynamicList<label>& labels() const
-            {
-                return labels_;
-            }
 
 
             // Iterators
