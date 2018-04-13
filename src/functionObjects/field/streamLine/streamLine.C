@@ -41,18 +41,19 @@ License
 
 namespace Foam
 {
-namespace functionObjects
-{
-    defineTypeNameAndDebug(streamLine, 0);
-    addToRunTimeSelectionTable(functionObject, streamLine, dictionary);
-
     template<>
-    const char* NamedEnum<streamLine::trackDirection, 3>::names[] =
+    const char*
+        NamedEnum<functionObjects::streamLine::trackDirection, 3>::names[] =
         {"forward", "backward", "both"};
 
-    const NamedEnum<streamLine::trackDirection, 3>
-        streamLine::trackDirectionNames_;
-}
+    namespace functionObjects
+    {
+        defineTypeNameAndDebug(streamLine, 0);
+        addToRunTimeSelectionTable(functionObject, streamLine, dictionary);
+
+        const NamedEnum<streamLine::trackDirection, 3>
+            streamLine::trackDirectionNames_;
+    }
 }
 
 
