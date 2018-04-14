@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,18 @@ thermophysicalPropertiesSelector
     {
         propertiesPtr_ = ThermophysicalProperties::New(name);
     }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermophysicalProperties>
+void Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::write
+(
+    Ostream& os
+) const
+{
+    propertiesPtr_->write(os);
 }
 
 

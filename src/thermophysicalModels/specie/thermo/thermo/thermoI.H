@@ -100,7 +100,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::word
 Foam::species::thermo<Thermo, Type>::heName()
 {
-    return Type<thermo<Thermo, Type>>::name();
+    return Type<thermo<Thermo, Type>>::energyName();
 }
 
 

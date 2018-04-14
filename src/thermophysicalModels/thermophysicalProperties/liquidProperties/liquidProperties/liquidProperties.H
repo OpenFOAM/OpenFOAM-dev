@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -291,7 +291,10 @@ public:
         inline void readIfPresent(Liquid& l, const dictionary& dict);
 
         //- Write the function coefficients
-        virtual void writeData(Ostream& os) const = 0;;
+        virtual void writeData(Ostream& os) const = 0;
+
+        //- Write dictionary to Ostream
+        void write(Ostream& os) const;
 
         //- Write the data for each of the property functions
         template<class Liquid>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,6 +118,14 @@ void Foam::thermophysicalProperties::readIfPresent(const dictionary &dict)
 void Foam::thermophysicalProperties::writeData(Ostream& os) const
 {
     os  << W_;
+}
+
+
+void Foam::thermophysicalProperties::write(Ostream& os) const
+{
+    dictionary dict("thermophysicalProperties");
+    dict.add("W", W_);
+    os  << indent << dict.dictName() << dict;
 }
 
 

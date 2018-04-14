@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class thermophysicalPropertiesSelector Declaration
+              Class thermophysicalPropertiesSelector Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermophysicalProperties>
@@ -133,6 +133,12 @@ public:
 
             // Entropy [J/(kg K)]
             inline scalar S(const scalar p, const scalar T) const;
+
+
+        // I-O
+
+            //- Write to Ostream
+            void write(Ostream& os) const;
 
 
         // Physical properties

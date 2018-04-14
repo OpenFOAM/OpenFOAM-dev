@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -257,6 +257,25 @@ void Foam::liquidProperties::writeData(Ostream& os) const
         << dipm_ << token::SPACE
         << omega_<< token::SPACE
         << delta_;
+}
+
+
+void Foam::liquidProperties::write(Ostream& os) const
+{
+    thermophysicalProperties::write(os);
+
+    dictionary dict("liquidProperties");
+    dict.add("Tc", Tc_);
+    dict.add("Pc", Pc_);
+    dict.add("Vc", Vc_);
+    dict.add("Zc", Zc_);
+    dict.add("Tt", Tt_);
+    dict.add("Pt", Pt_);
+    dict.add("Tb", Tb_);
+    dict.add("dipm", dipm_);
+    dict.add("omega", omega_);
+    dict.add("delta", delta_);
+    os  << indent << dict.dictName() << dict;
 }
 
 
