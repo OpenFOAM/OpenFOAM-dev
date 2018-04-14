@@ -80,6 +80,7 @@ doc/Doxygen/DTAGS
 /.cproject
 /.project
 /.dir-locals.el
+/.ycm*
 
 # Ignore the test directory
 /tutorialsTest
