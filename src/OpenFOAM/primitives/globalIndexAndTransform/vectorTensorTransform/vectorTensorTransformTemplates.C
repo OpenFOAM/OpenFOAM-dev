@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,24 @@ Foam::tmp<Foam::Field<Type>> Foam::vectorTensorTransform::transform
 {
     if (hasR_)
     {
-        return R() & fld;
+        return Foam::transform(R(), fld);
+    }
+    else
+    {
+        return fld;
+    }
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::vectorTensorTransform::invTransform
+(
+    const Field<Type>& fld
+) const
+{
+    if (hasR_)
+    {
+        return Foam::transform(R().T(), fld);
     }
     else
     {

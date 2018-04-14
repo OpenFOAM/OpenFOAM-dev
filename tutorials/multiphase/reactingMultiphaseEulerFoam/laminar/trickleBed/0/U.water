@@ -20,13 +20,7 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    bottom
-    {
-        type                pressureInletOutletVelocity;
-        phi                 phi.water;
-        value               $internalField;
-    }
-    "(top|walls)"
+    "(bottom|top|walls)"
     {
         type               noSlip;
     }
