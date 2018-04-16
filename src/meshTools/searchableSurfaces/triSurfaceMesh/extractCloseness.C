@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,36 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceFeatureExtract.H"
-#include "Time.H"
 #include "triSurfaceMesh.H"
-#include "vtkSurfaceWriter.H"
+#include "triSurfaceFields.H"
 #include "meshTools.H"
+#include "Time.H"
+#include "unitConversion.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::scalar Foam::internalAngleTolerance(80);
-const Foam::scalar Foam::internalToleranceCosAngle
-(
-    cos(degToRad(180 - internalAngleTolerance))
-);
-
-const Foam::scalar Foam::externalAngleTolerance(10);
-const Foam::scalar Foam::externalToleranceCosAngle
-(
-    cos(degToRad(180 - externalAngleTolerance))
-);
-
-void Foam::drawHitProblem
+void Foam::triSurfaceMesh::drawHitProblem
 (
     const label fi,
-    const triSurface& surf,
     const point& start,
     const point& p,
     const point& end,
     const pointIndexHitList& hitInfo
-)
+) const
 {
+    const List<labelledTri>& tris = *this;
+    const pointField& points = this->points();
+
     Info<< nl << "# findLineAll did not hit its own face."
         << nl << "# fi " << fi
         << nl << "# start " << start
@@ -67,19 +57,19 @@ void Foam::drawHitProblem
 
     Info<< "l 1 2 3" << endl;
 
-    meshTools::writeOBJ(Info, surf.points()[surf[fi][0]]);
-    meshTools::writeOBJ(Info, surf.points()[surf[fi][1]]);
-    meshTools::writeOBJ(Info, surf.points()[surf[fi][2]]);
+    meshTools::writeOBJ(Info, points[tris[fi][0]]);
+    meshTools::writeOBJ(Info, points[tris[fi][1]]);
+    meshTools::writeOBJ(Info, points[tris[fi][2]]);
 
     Info<< "f 4 5 6" << endl;
 
     forAll(hitInfo, hi)
     {
-        label hFI = hitInfo[hi].index();
+        label hfi = hitInfo[hi].index();
 
-        meshTools::writeOBJ(Info, surf.points()[surf[hFI][0]]);
-        meshTools::writeOBJ(Info, surf.points()[surf[hFI][1]]);
-        meshTools::writeOBJ(Info, surf.points()[surf[hFI][2]]);
+        meshTools::writeOBJ(Info, points[tris[hfi][0]]);
+        meshTools::writeOBJ(Info, points[tris[hfi][1]]);
+        meshTools::writeOBJ(Info, points[tris[hfi][2]]);
 
         Info<< "f "
             << 3*hi + 7 << " "
@@ -90,23 +80,24 @@ void Foam::drawHitProblem
 }
 
 
-void Foam::processHit
+void Foam::triSurfaceMesh::processHit
 (
     scalar& internalCloseness,
     scalar& externalCloseness,
+    const scalar internalToleranceCosAngle,
+    const scalar externalToleranceCosAngle,
     const label fi,
-    const triSurface& surf,
     const point& start,
     const point& p,
     const point& end,
     const vector& normal,
     const vectorField& normals,
     const pointIndexHitList& hitInfo
-)
+) const
 {
     if (hitInfo.size() < 1)
     {
-        drawHitProblem(fi, surf, start, p, end, hitInfo);
+        drawHitProblem(fi, start, p, end, hitInfo);
     }
     else if (hitInfo.size() == 1)
     {
@@ -115,7 +106,7 @@ void Foam::processHit
         }
         else if (hitInfo[0].index() != fi)
         {
-            drawHitProblem(fi, surf, start, p, end, hitInfo);
+            drawHitProblem(fi, start, p, end, hitInfo);
         }
     }
     else
@@ -135,7 +126,7 @@ void Foam::processHit
 
         if (ownHiti < 0)
         {
-            drawHitProblem(fi, surf, start, p, end, hitInfo);
+            drawHitProblem(fi, start, p, end, hitInfo);
         }
         else if (ownHiti == 0)
         {
@@ -205,27 +196,39 @@ void Foam::processHit
 }
 
 
-Foam::Pair<Foam::tmp<Foam::triSurfaceScalarField>> Foam::extractCloseness
+Foam::Pair<Foam::tmp<Foam::triSurfaceScalarField>>
+Foam::triSurfaceMesh::extractCloseness
 (
-    const triSurfaceMesh& surf
-)
+    const scalar internalAngleTolerance,
+    const scalar externalAngleTolerance
+) const
 {
-    const Time& runTime = surf.objectRegistry::time();
+    const scalar internalToleranceCosAngle
+    (
+        cos(degToRad(180 - internalAngleTolerance))
+    );
+
+    const scalar externalToleranceCosAngle
+    (
+        cos(degToRad(180 - externalAngleTolerance))
+    );
+
+    const Time& runTime = objectRegistry::time();
 
     // Prepare start and end points for intersection tests
 
-    const vectorField& normals = surf.faceNormals();
+    const vectorField& normals = faceNormals();
 
-    const scalar span = surf.bounds().mag();
+    const scalar span = bounds().mag();
 
-    const pointField start(surf.faceCentres() - span*normals);
-    const pointField end(surf.faceCentres() + span*normals);
-    const pointField& faceCentres = surf.faceCentres();
+    const pointField start(faceCentres() - span*normals);
+    const pointField end(faceCentres() + span*normals);
+    const pointField& faceCentres = this->faceCentres();
 
     List<List<pointIndexHit>> allHitinfo;
 
     // Find all intersections (in order)
-    surf.findLineAll(start, end, allHitinfo);
+    findLineAll(start, end, allHitinfo);
 
     scalarField internalCloseness(start.size(), great);
     scalarField externalCloseness(start.size(), great);
@@ -238,8 +241,9 @@ Foam::Pair<Foam::tmp<Foam::triSurfaceScalarField>> Foam::extractCloseness
         (
             internalCloseness[fi],
             externalCloseness[fi],
+            internalToleranceCosAngle,
+            externalToleranceCosAngle,
             fi,
-            surf,
             start[fi],
             faceCentres[fi],
             end[fi],
@@ -257,12 +261,12 @@ Foam::Pair<Foam::tmp<Foam::triSurfaceScalarField>> Foam::extractCloseness
             (
                 IOobject
                 (
-                    surf.objectRegistry::name() + ".internalCloseness",
+                    objectRegistry::name() + ".internalCloseness",
                     runTime.constant(),
                     "triSurface",
                     runTime
                 ),
-                surf,
+                *this,
                 dimLength,
                 internalCloseness
             )
@@ -274,12 +278,142 @@ Foam::Pair<Foam::tmp<Foam::triSurfaceScalarField>> Foam::extractCloseness
             (
                 IOobject
                 (
-                    surf.objectRegistry::name() + ".externalCloseness",
+                    objectRegistry::name() + ".externalCloseness",
                     runTime.constant(),
                     "triSurface",
                     runTime
                 ),
-                surf,
+                *this,
+                dimLength,
+                externalCloseness
+            )
+        )
+    );
+}
+
+
+Foam::Pair<Foam::tmp<Foam::triSurfacePointScalarField>>
+Foam::triSurfaceMesh::extractPointCloseness
+(
+    const scalar internalAngleTolerance,
+    const scalar externalAngleTolerance
+) const
+{
+    const scalar internalToleranceCosAngle
+    (
+        cos(degToRad(180 - internalAngleTolerance))
+    );
+
+    const scalar externalToleranceCosAngle
+    (
+        cos(degToRad(180 - externalAngleTolerance))
+    );
+
+    const Time& runTime = objectRegistry::time();
+
+    // Prepare start and end points for intersection tests
+
+    const pointField& points = this->points();
+    const labelList& meshPoints = this->meshPoints();
+    const pointField& faceCentres = this->faceCentres();
+    const vectorField& normals = this->faceNormals();
+    const labelListList& pointFaces = this->pointFaces();
+
+    const scalar span = bounds().mag();
+
+    label nPointFaces = 0;
+    forAll(pointFaces, pfi)
+    {
+        nPointFaces += pointFaces[pfi].size();
+    }
+
+    pointField facePoints(nPointFaces);
+    pointField start(nPointFaces);
+    pointField end(nPointFaces);
+
+    label i = 0;
+    forAll(points, pi)
+    {
+        forAll(pointFaces[pi], pfi)
+        {
+            const label fi = pointFaces[pi][pfi];
+
+            facePoints[i] = (0.9*points[meshPoints[pi]] + 0.1*faceCentres[fi]);
+            const vector& n = normals[fi];
+
+            start[i] = facePoints[i] - span*n;
+            end[i] = facePoints[i] + span*n;
+
+            i++;
+        }
+    }
+
+    List<pointIndexHitList> allHitinfo;
+
+    // Find all intersections (in order)
+    findLineAll(start, end, allHitinfo);
+
+    scalarField internalCloseness(points.size(), great);
+    scalarField externalCloseness(points.size(), great);
+
+    i = 0;
+    forAll(points, pi)
+    {
+        forAll(pointFaces[pi], pfi)
+        {
+            const label fi = pointFaces[pi][pfi];
+            const pointIndexHitList& hitInfo = allHitinfo[i];
+
+            processHit
+            (
+                internalCloseness[pi],
+                externalCloseness[pi],
+                internalToleranceCosAngle,
+                externalToleranceCosAngle,
+                fi,
+                start[i],
+                facePoints[i],
+                end[i],
+                normals[fi],
+                normals,
+                hitInfo
+            );
+
+            i++;
+        }
+    }
+
+    return Pair<tmp<triSurfacePointScalarField>>
+    (
+        tmp<triSurfacePointScalarField>
+        (
+            new triSurfacePointScalarField
+            (
+                IOobject
+                (
+                    objectRegistry::name() + ".internalPointCloseness",
+                    runTime.constant(),
+                    "triSurface",
+                    runTime
+                ),
+                *this,
+                dimLength,
+                internalCloseness
+            )
+        ),
+
+        tmp<triSurfacePointScalarField>
+        (
+            new triSurfacePointScalarField
+            (
+                IOobject
+                (
+                    objectRegistry::name() + ".externalPointCloseness",
+                    runTime.constant(),
+                    "triSurface",
+                    runTime
+                ),
+                *this,
                 dimLength,
                 externalCloseness
             )

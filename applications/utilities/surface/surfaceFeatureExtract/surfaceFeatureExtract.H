@@ -39,12 +39,6 @@ Description
 
 namespace Foam
 {
-    extern const scalar internalAngleTolerance;
-    extern const scalar internalToleranceCosAngle;
-
-    extern const scalar externalAngleTolerance;
-    extern const scalar externalToleranceCosAngle;
-
     //- Deletes all edges inside/outside bounding box from set.
     void deleteBox
     (
@@ -62,18 +56,6 @@ namespace Foam
         List<surfaceFeatures::edgeStatus>& edgeStat
     );
 
-    //- Divide into multiple normal bins
-    //  - return REGION if != 2 normals
-    //  - return REGION if 2 normals that make feature angle
-    //  - otherwise return NONE and set normals,bins
-    surfaceFeatures::edgeStatus checkNonManifoldEdge
-    (
-        const triSurface& surf,
-        const scalar tol,
-        const scalar includedAngle,
-        const label edgei
-    );
-
     void deleteNonManifoldEdges
     (
         const triSurface& surf,
@@ -83,41 +65,6 @@ namespace Foam
     );
 
     void writeStats(const extendedFeatureEdgeMesh& fem, Ostream& os);
-
-
-    void drawHitProblem
-    (
-        const label fi,
-        const triSurface& surf,
-        const point& start,
-        const point& p,
-        const point& end,
-        const pointIndexHitList& hitInfo
-    );
-
-    void processHit
-    (
-        scalar& internalCloseness,
-        scalar& externalCloseness,
-        const label fi,
-        const triSurface& surf,
-        const point& start,
-        const point& p,
-        const point& end,
-        const vector& normal,
-        const vectorField& normals,
-        const pointIndexHitList& hitInfo
-    );
-
-    Pair<tmp<triSurfaceScalarField>> extractCloseness
-    (
-        const triSurfaceMesh& surf
-    );
-
-    Pair<tmp<triSurfacePointScalarField>> extractPointCloseness
-    (
-        const triSurfaceMesh& surf
-    );
 }
 
 

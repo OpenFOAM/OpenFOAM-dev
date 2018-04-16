@@ -114,6 +114,7 @@ searchableSurfaces/searchableSurfaces/searchableSurfaces.C
 searchableSurfaces/searchableSurfacesQueries/searchableSurfacesQueries.C
 searchableSurfaces/searchableSurfaceWithGaps/searchableSurfaceWithGaps.C
 searchableSurfaces/triSurfaceMesh/triSurfaceMesh.C
+searchableSurfaces/triSurfaceMesh/extractCloseness.C
 searchableSurfaces/closedTriSurfaceMesh/closedTriSurfaceMesh.C
 searchableSurfaces/searchableExtrudedCircle/searchableExtrudedCircle.C
 

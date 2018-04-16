@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,12 +32,10 @@ Description
         externalStart_ .. internalStart_-1  : external edges
         internalStart_ .. size-1            : internal edges
 
-
     NOTE: angle is included angle, not feature angle and is in degrees.
     The included angle is the smallest angle between two planes. For coplanar
     faces it is 180, for straight angles it is 90. To pick up straight edges
     only use included angle of 91 degrees
-
 
 SourceFiles
     surfaceFeatures.C
@@ -418,9 +416,20 @@ public:
     // Member Operators
 
         void operator=(const surfaceFeatures&);
-
-
 };
+
+
+//- Divide into multiple normal bins
+//  - return REGION if != 2 normals
+//  - return REGION if 2 normals that make feature angle
+//  - otherwise return NONE and set normals,bins
+surfaceFeatures::edgeStatus checkNonManifoldEdge
+(
+    const triSurface& surf,
+    const scalar tol,
+    const scalar includedAngle,
+    const label edgei
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

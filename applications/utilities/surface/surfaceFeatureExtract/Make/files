@@ -1,5 +1,3 @@
-surfaceExtractCloseness.C
-surfaceExtractPointCloseness.C
 surfaceFeatureExtractUtilities.C
 surfaceFeatureExtract.C
 

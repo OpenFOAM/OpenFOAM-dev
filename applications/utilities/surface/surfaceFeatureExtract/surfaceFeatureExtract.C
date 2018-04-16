@@ -399,11 +399,6 @@ int main(int argc, char *argv[])
             Info<< nl << "Extracting internal and external closeness of "
                 << "surface." << endl;
 
-            Info<< "externalToleranceCosAngle: " << externalToleranceCosAngle
-                << nl
-                << "internalToleranceCosAngle: " << internalToleranceCosAngle
-                << endl;
-
             // Searchable triSurface
             const triSurfaceMesh searchSurf
             (
@@ -420,7 +415,7 @@ int main(int argc, char *argv[])
             {
                 Pair<tmp<triSurfaceScalarField>> closenessFields
                 (
-                    extractCloseness(searchSurf)
+                    searchSurf.extractCloseness()
                 );
 
                 closenessFields.first()->write();
@@ -459,7 +454,7 @@ int main(int argc, char *argv[])
             {
                 Pair<tmp<triSurfacePointScalarField >> closenessFields
                 (
-                    extractPointCloseness(searchSurf)
+                    searchSurf.extractPointCloseness()
                 );
 
                 closenessFields.first()->write();

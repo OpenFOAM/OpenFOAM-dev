@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,8 @@ SourceFiles
 #include "EdgeMap.H"
 #include "triSurface.H"
 #include "triSurfaceRegionSearch.H"
+#include "triSurfaceFieldsFwd.H"
+#include "pointIndexHitList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -130,6 +132,30 @@ class triSurfaceMesh
             const vector& smallVec,
             DynamicList<pointIndexHit, 1, 1>& hits
         );
+
+        void drawHitProblem
+        (
+            const label fi,
+            const point& start,
+            const point& p,
+            const point& end,
+            const pointIndexHitList& hitInfo
+        ) const;
+
+        void processHit
+        (
+            scalar& internalCloseness,
+            scalar& externalCloseness,
+            const scalar internalToleranceCosAngle,
+            const scalar externalToleranceCosAngle,
+            const label fi,
+            const point& start,
+            const point& p,
+            const point& end,
+            const vector& normal,
+            const vectorField& normals,
+            const pointIndexHitList& hitInfo
+        ) const;
 
         //- Disallow default bitwise copy construct
         triSurfaceMesh(const triSurfaceMesh&);
@@ -289,6 +315,18 @@ public:
             //- WIP. From a set of hits (points and
             //  indices) get the specified field. Misses do not get set.
             virtual void getField(const List<pointIndexHit>&, labelList&) const;
+
+            Pair<tmp<triSurfaceScalarField>> extractCloseness
+            (
+                const scalar internalAngleTolerance = 80,
+                const scalar externalAngleTolerance = 10
+            ) const;
+
+            Pair<tmp<triSurfacePointScalarField>> extractPointCloseness
+            (
+                const scalar internalAngleTolerance = 80,
+                const scalar externalAngleTolerance = 10
+            ) const;
 
 
         // regIOobject implementation
