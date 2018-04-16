@@ -28,6 +28,8 @@ License
 #include "Time.H"
 #include "triSurfaceMesh.H"
 #include "featureEdgeMesh.H"
+#include "extendedFeatureEdgeMesh.H"
+#include "triSurfaceFields.H"
 #include "vtkSurfaceWriter.H"
 #include "IOdictionary.H"
 

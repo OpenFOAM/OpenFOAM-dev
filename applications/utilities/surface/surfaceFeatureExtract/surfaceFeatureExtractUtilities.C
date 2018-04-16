@@ -31,6 +31,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFeatureExtract.H"
+#include "triSurface.H"
 #include "Time.H"
 #include "tensor2D.H"
 #include "symmTensor2D.H"

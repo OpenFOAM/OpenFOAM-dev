@@ -31,11 +31,7 @@ Description
 
 #include "surfaceFeatures.H"
 #include "extendedFeatureEdgeMesh.H"
-#include "triSurfaceMesh.H"
-#include "triSurfaceFields.H"
-#include "pointIndexHitList.H"
 #include "plane.H"
-#include "triadField.H"
 
 namespace Foam
 {
