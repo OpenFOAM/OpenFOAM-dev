@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -210,14 +210,12 @@ $(foreach S,$(SOURCE),$(eval $(OBJECTS_DIR)/$(basename $S).o : $(OBJECTS_DIR)/$S
 # Set dependency rule and include dependency lists
 #------------------------------------------------------------------------------
 
-.PHONY: dep updatedep
+.PHONY: dep
 dep: $(DEPENDENCIES)
 
-updatedep: dep
-
-ifeq ($(findstring lnInclude,$(MAKECMDGOALS))$(findstring updatedep,$(MAKECMDGOALS)),)
+ifeq ($(findstring lnInclude,$(MAKECMDGOALS)),)
 -include $(DEPENDENCIES)
 endif
 
 
-#----------------------------- vim: set ft=make: ------------------------------
+#------------------------------------------------------------------------------

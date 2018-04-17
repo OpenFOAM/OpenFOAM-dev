@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -98,7 +98,6 @@ or a special target:
   libo              Compile statically linked lib (.o)
   libso             Compile dynamically linked lib (.so)
   dep               Compile lnInclude and dependencies only
-  updatedep         Compile dependencies only (in case of broken dependencies)
   objects           Compile but not link
 
 USAGE
@@ -450,7 +449,7 @@ if [ -n "$WM_UPDATE_DEPENDENCIES" ]
 then
 
     $make -f $WM_DIR/makefiles/general MAKE_DIR=$MakeDir \
-        OBJECTS_DIR=$objectsDir updatedep
+        OBJECTS_DIR=$objectsDir dep
     makeExitCode=$?
 
     if [ $makeExitCode -ne 0 ]
