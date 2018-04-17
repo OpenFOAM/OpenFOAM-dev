@@ -23,17 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceFeatureExtract.H"
 #include "argList.H"
 #include "Time.H"
 #include "triSurfaceMesh.H"
 #include "featureEdgeMesh.H"
 #include "extendedFeatureEdgeMesh.H"
+#include "surfaceFeatures.H"
 #include "triSurfaceFields.H"
 #include "vtkSurfaceWriter.H"
 #include "IOdictionary.H"
 
 using namespace Foam;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    void writeStats(const extendedFeatureEdgeMesh& fem, Ostream& os)
+    {
+        os  << "    points : " << fem.points().size() << nl
+            << "    of which" << nl
+            << "        convex             : "
+            << fem.concaveStart() << nl
+            << "        concave            : "
+            << (fem.mixedStart() - fem.concaveStart()) << nl
+            << "        mixed              : "
+            << (fem.nonFeatureStart() - fem.mixedStart()) << nl
+            << "        non-feature        : "
+            << (fem.points().size() - fem.nonFeatureStart()) << nl
+            << "    edges  : " << fem.edges().size() << nl
+            << "    of which" << nl
+            << "        external edges     : "
+            << fem.internalStart() << nl
+            << "        internal edges     : "
+            << (fem.flatStart() - fem.internalStart()) << nl
+            << "        flat edges         : "
+            << (fem.openStart() - fem.flatStart()) << nl
+            << "        open edges         : "
+            << (fem.multipleStart() - fem.openStart()) << nl
+            << "        multiply connected : "
+            << (fem.edges().size() - fem.multipleStart()) << endl;
+    }
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -234,19 +265,19 @@ int main(int argc, char *argv[])
             {
                 treeBoundBox bb(subsetDict.lookup("insideBox")());
 
-                Info<< "Removing all edges outside bb " << bb
-                    << " see subsetBox.obj" << endl;
-                bb.writeOBJ("subsetBox.obj");
-                deleteBox(surf, bb, false, edgeStat);
+                Info<< "Selecting edges inside bb " << bb
+                    << " see insideBox.obj" << endl;
+                bb.writeOBJ("insideBox.obj");
+                selectBox(surf, bb, true, edgeStat);
             }
             else if (subsetDict.found("outsideBox"))
             {
                 treeBoundBox bb(subsetDict.lookup("outsideBox")());
 
                 Info<< "Removing all edges inside bb " << bb
-                    << " see deleteBox.obj" << endl;
-                bb.writeOBJ("deleteBox.obj");
-                deleteBox(surf, bb, true, edgeStat);
+                    << " see outsideBox.obj" << endl;
+                bb.writeOBJ("outsideBox.obj");
+                selectBox(surf, bb, false, edgeStat);
             }
 
             const Switch nonManifoldEdges =
@@ -258,7 +289,7 @@ int main(int argc, char *argv[])
                     << " (edges with > 2 connected faces) unless they"
                     << " cross multiple regions" << endl;
 
-                deleteNonManifoldEdges(surf, 1e-5, includedAngle, edgeStat);
+                selectManifoldEdges(surf, 1e-5, includedAngle, edgeStat);
             }
 
             const Switch openEdges =
@@ -280,9 +311,9 @@ int main(int argc, char *argv[])
 
             if (subsetDict.found("plane"))
             {
-                plane cutPlane(subsetDict.lookup("plane")());
+                const plane cutPlane(subsetDict.lookup("plane")());
 
-                deleteEdges(surf, cutPlane, edgeStat);
+                selectCutEdges(surf, cutPlane, edgeStat);
 
                 Info<< "Only edges that intersect the plane with normal "
                     << cutPlane.normal()

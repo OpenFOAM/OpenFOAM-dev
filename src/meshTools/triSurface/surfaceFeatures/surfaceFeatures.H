@@ -51,6 +51,8 @@ SourceFiles
 #include "pointIndexHit.H"
 #include "edgeList.H"
 #include "typeInfo.H"
+#include "boundBox.H"
+#include "plane.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -419,6 +421,23 @@ public:
 };
 
 
+//- Select edges inside or outside bounding box
+void selectBox
+(
+    const triSurface& surf,
+    const boundBox& bb,
+    const bool removeInside,
+    List<surfaceFeatures::edgeStatus>& edgeStat
+);
+
+//- Select edges that are intersected by the given plane
+void selectCutEdges
+(
+    const triSurface& surf,
+    const plane& cutPlane,
+    List<surfaceFeatures::edgeStatus>& edgeStat
+);
+
 //- Divide into multiple normal bins
 //  - return REGION if != 2 normals
 //  - return REGION if 2 normals that make feature angle
@@ -429,6 +448,15 @@ surfaceFeatures::edgeStatus checkNonManifoldEdge
     const scalar tol,
     const scalar includedAngle,
     const label edgei
+);
+
+//- Select manifold edges
+void selectManifoldEdges
+(
+    const triSurface& surf,
+    const scalar tol,
+    const scalar includedAngle,
+    List<surfaceFeatures::edgeStatus>& edgeStat
 );
 
 

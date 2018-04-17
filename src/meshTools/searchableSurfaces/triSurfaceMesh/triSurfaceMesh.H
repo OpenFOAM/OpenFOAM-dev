@@ -316,12 +316,16 @@ public:
             //  indices) get the specified field. Misses do not get set.
             virtual void getField(const List<pointIndexHit>&, labelList&) const;
 
+            //- Return a pair of triSurfaceScalarFields representing the
+            //  internal and external closeness of regions of the surface
             Pair<tmp<triSurfaceScalarField>> extractCloseness
             (
                 const scalar internalAngleTolerance = 80,
                 const scalar externalAngleTolerance = 10
             ) const;
 
+            //- Return a pair of triSurfaceScalarPointFields representing the
+            //  internal and external closeness of regions of the surface
             Pair<tmp<triSurfacePointScalarField>> extractPointCloseness
             (
                 const scalar internalAngleTolerance = 80,

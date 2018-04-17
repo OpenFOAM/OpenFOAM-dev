@@ -1501,6 +1501,56 @@ void Foam::surfaceFeatures::operator=(const surfaceFeatures& rhs)
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
+void Foam::selectBox
+(
+    const triSurface& surf,
+    const boundBox& bb,
+    const bool inside,
+    List<surfaceFeatures::edgeStatus>& edgeStat
+)
+{
+    forAll(edgeStat, edgei)
+    {
+        const point eMid = surf.edges()[edgei].centre(surf.localPoints());
+
+        if (!inside ? bb.contains(eMid) : !bb.contains(eMid))
+        {
+            edgeStat[edgei] = surfaceFeatures::NONE;
+        }
+    }
+}
+
+
+void Foam::selectCutEdges
+(
+    const triSurface& surf,
+    const plane& cutPlane,
+    List<surfaceFeatures::edgeStatus>& edgeStat
+)
+{
+    const pointField& points = surf.points();
+    const labelList& meshPoints = surf.meshPoints();
+
+    forAll(edgeStat, edgei)
+    {
+        const edge& e = surf.edges()[edgei];
+        const point& p0 = points[meshPoints[e.start()]];
+        const point& p1 = points[meshPoints[e.end()]];
+        const linePointRef line(p0, p1);
+
+        // If edge does not intersect the plane, delete.
+        const scalar intersect = cutPlane.lineIntersect(line);
+
+        const point featPoint = intersect*(p1 - p0) + p0;
+
+        if (!line.insideBoundBox(featPoint))
+        {
+            edgeStat[edgei] = surfaceFeatures::NONE;
+        }
+    }
+}
+
+
 Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
 (
     const triSurface& surf,
@@ -1658,6 +1708,37 @@ Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
         }
 
         return surfaceFeatures::NONE;
+    }
+}
+
+
+void Foam::selectManifoldEdges
+(
+    const triSurface& surf,
+    const scalar tol,
+    const scalar includedAngle,
+    List<surfaceFeatures::edgeStatus>& edgeStat
+)
+{
+    forAll(edgeStat, edgei)
+    {
+        const labelList& eFaces = surf.edgeFaces()[edgei];
+
+        if
+        (
+            eFaces.size() > 2
+            && edgeStat[edgei] == surfaceFeatures::REGION
+            && (eFaces.size() % 2) == 0
+        )
+        {
+            edgeStat[edgei] = checkNonManifoldEdge
+            (
+                surf,
+                tol,
+                includedAngle,
+                edgei
+            );
+        }
     }
 }
 

@@ -1,4 +1,3 @@
-surfaceFeatureExtractUtilities.C
 surfaceFeatureExtract.C
 
 EXE = $(FOAM_APPBIN)/surfaceFeatureExtract
