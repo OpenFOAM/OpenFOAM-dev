@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -425,6 +425,17 @@ inline scalar mag
 )
 {
     return ::sqrt(magSqr(static_cast<const Form&>(vs)));
+}
+
+
+template<class Form, class Cmpt, direction Ncmpts>
+inline VectorSpace<Form, Cmpt, Ncmpts> normalised
+(
+    const VectorSpace<Form, Cmpt, Ncmpts>& vs
+)
+{
+    const scalar magVs = mag(vs);
+    return magVs > 0 ? vs/magVs : Zero;
 }
 
 
