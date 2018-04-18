@@ -35,7 +35,7 @@ Description
     only once.  This is why this program is faster than cpp.
 
 Usage
-    wmkdep [ -Idir ... -Idir ] [ -iheader .. -iheader ] filename
+    wmkdep [ -Idir ... -Idir ] filename
 
 \*---------------------------------------------------------------------------*/
 
@@ -52,24 +52,21 @@ void nextFile(const char* fileName);
 void importFile(const char* fileName);
 void importDir(const char* dirName);
 
-#undef yywrap        /* sometimes a macro by default */
+#undef yywrap        /* Sometimes a macro by default */
 
 %}
 
-%x CMNT CFNAME SCFNAME JFNAME FFNAME
+%x CMNT CFNAME
 %%
 
-"//".*\n                  ;            /* remove c++ style one line comments */
+"//".*\n                  ;               /* Remove c++ style line comments */
 
-"/*"                      BEGIN(CMNT);    /* start removing c style comment */
+"/*"                      BEGIN(CMNT);    /* Start removing c style comment */
 <CMNT>.|\n                ;
-<CMNT>"*/"                BEGIN(INITIAL); /* end removing c style comment */
+<CMNT>"*/"                BEGIN(INITIAL); /* End removing c style comment */
 
 ^[ \t]*#[ \t]*include[ \t]+\"   BEGIN(CFNAME);  /* c-file name */
 <CFNAME>[^"\n ]*        { BEGIN(INITIAL); nextFile(yytext); } /*"*/
-
-"      "include[ \t]+\'   BEGIN(FFNAME);  /* FORTRAN-file name */
-<FFNAME>[^']*           { BEGIN(INITIAL); nextFile(yytext); } /*'*/
 
 .|\t|\n                   ;
 
@@ -85,9 +82,9 @@ struct HashEntry
 
 
 /*
- * lookup name in hash table.
- * if found - return 1
- * if not found - insert in table and return 0
+ * Lookup name in hash table.
+ * If found - return 1
+ * If not found - insert in table and return 0
  */
 int lookUp(struct HashEntry** hashTable, const char* p)
 {
@@ -95,29 +92,29 @@ int lookUp(struct HashEntry** hashTable, const char* p)
     struct HashEntry* n;
     struct HashEntry* nn;
 
-    /* hash */
+    /* Hash */
     const char* pp = p;
     while (*pp) ii = ii<<1 ^ *pp++;
     if (ii < 0) ii = -ii;
     ii %= HASH_TABLE_SIZE;
 
-    /* search */
+    /* Search */
     for (n=hashTable[ii]; n; n=n->next)
     {
         if (strcmp(p, n->name) == 0)
         {
-            /* entry found so return true */
+            /* Entry found so return true */
             return 1;
         }
     }
 
-    /* insert */
+    /* Insert */
     nn = (struct HashEntry*)malloc(sizeof(struct HashEntry));
     nn->name = strdup(p);
     nn->next = hashTable[ii];
     hashTable[ii] = nn;
 
-    /* entry not found, and therefore added. return false */
+    /* Entry not found, and therefore added. return false */
     return 0;
 }
 
@@ -145,7 +142,7 @@ const char* bufferPaths[FILE_STACK_SIZE];
 int main(int argc, char* argv[])
 {
     char *basePos, *dotPos;
-    int i, silent;
+    int i;
 
     if (argc == 1)
     {
@@ -179,7 +176,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    /* count number of -I directories */
+    /* Count number of -I directories */
     nDirectories = 0;
     for (i = 1; i < argc; i++)
     {
@@ -194,7 +191,7 @@ int main(int argc, char* argv[])
 
     directories = (char**)malloc(sizeof(char*)*nDirectories);
 
-    /* build list of -I directories and add -i ignores */
+    /* Build list of -I directories */
     nDirectories = 0;
     for (i = 1; i < argc; i++)
     {
@@ -205,17 +202,10 @@ int main(int argc, char* argv[])
                 directories[nDirectories++] = strdup(argv[i] + 2);
             }
         }
-        else if (strncmp(argv[i], "-i", 2) == 0)
-        {
-            if (strlen(argv[i]) > 2)
-            {
-                lookUp(visitedFiles, (argv[i] + 2));
-            }
-        }
     }
 
     /*
-     * initialise depFile to zero and use strncat rather than strncpy
+     * Initialise depFile to zero and use strncat rather than strncpy
      * because there is a bug in the SGI strncat that if 0 precedes the '.'
      * it inserts a space
      */
@@ -273,13 +263,13 @@ char* addDirectoryName(const char* dirName, const char* fileName)
 
 
 /*
- * open a file and create buffer and put on stack
+ * Open a file and create buffer and put on stack
  */
 void nextFile(const char* fileName)
 {
     if (lookUp(visitedFiles, fileName))
     {
-        return;   /* already existed (did not insert) */
+        return;   /* Already existed (did not insert) */
     }
 
     if (currentBuffer >= FILE_STACK_SIZE)
@@ -365,7 +355,7 @@ void nextFile(const char* fileName)
         fflush(stdout);
         fflush(stderr);
 
-        /* only report the first occurrence */
+        /* Only report the first occurrence */
         lookUp(visitedFiles, fileName);
     }
     else
@@ -413,20 +403,20 @@ int yywrap()
     /* Set buffer counter to previous buffer */
     currentBuffer--;
 
-    if (currentBuffer >= 0) /* if buffer counter refers to a valid file */
+    if (currentBuffer >= 0) /* If buffer counter refers to a valid file */
     {
-        /* reset input buffer to the previous buffer on the stack */
+        /* Reset input buffer to the previous buffer on the stack */
         yy_switch_to_buffer(buffers[currentBuffer]);
 
         /* Return to the normal state for the previous buffer on the stack */
         BEGIN(INITIAL);
 
-        /* return 0 to inform lex to continue reading */
+        /* Return 0 to inform lex to continue reading */
         return 0;
     }
-    else                 /* else there are no more buffers on the stack */
+    else                 /* Else there are no more buffers on the stack */
     {
-        /* return 1 to inform lex finish now that all buffers have been read */
+        /* Return 1 to inform lex finish now that all buffers have been read */
         return 1;
     }
 }
