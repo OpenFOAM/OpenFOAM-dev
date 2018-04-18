@@ -28,12 +28,9 @@ $(OBJECTS_DIR)/%.dep : %
 	$(call QUIET_MESSAGE,wmkdep,$(<F))
 	$(call VERBOSE_MESSAGE,Making dependency list for source file,$(<F))
 	@$(WM_SCRIPTS)/makeTargetDir $@
-	@$(WMAKE_BIN)/wmkdep -I$(*D) $(LIB_HEADER_DIRS) $< | \
-		sed -e 's,^$(WM_PROJECT_DIR)/,$$(WM_PROJECT_DIR)/,' \
-			-e 's,^$(WM_THIRD_PARTY_DIR)/,$$(WM_THIRD_PARTY_DIR)/,' > $@.tmp; \
-		cp $@.tmp $@; \
-		sed -e 's/^[^:]*: *//' -e 's/ *\\$$//' -e '/^$$/ d' -e 's/$$/ :/' \
-            $@.tmp >> $@; \
-		rm -f $@.tmp
+	@$(WMAKE_BIN)/wmkdep \
+		-R '$(WM_PROJECT_DIR)/' '$$(WM_PROJECT_DIR)/' \
+		-R '$(WM_THIRD_PARTY_DIR)/' '$$(WM_THIRD_PARTY_DIR)/' \
+		-I$(*D) $(LIB_HEADER_DIRS) $< > $@
 
 #------------------------------------------------------------------------------

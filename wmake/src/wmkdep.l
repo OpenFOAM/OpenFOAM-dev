@@ -41,6 +41,8 @@ Usage
 
 #define FILE_STACK_SIZE 300
 #define HASH_TABLE_SIZE 500
+#define REPLACEMENTS_SIZE 10
+#define INITIAL_MAX_N_FILES 1000
 
 #include <stdlib.h>
 #include <string.h>
@@ -51,6 +53,8 @@ Usage
 void nextFile(const char* fileName);
 void importFile(const char* fileName);
 void importDir(const char* dirName);
+void printFile(const char* pathName);
+void processFile(char* pathName);
 
 #undef yywrap        /* Sometimes a macro by default */
 
@@ -81,11 +85,10 @@ struct HashEntry
 };
 
 
-/*
- * Lookup name in hash table.
- * If found - return 1
- * If not found - insert in table and return 0
- */
+/* Lookup name in hash table.
+   If found - return 1
+   If not found - insert in table and return 0
+*/
 int lookUp(struct HashEntry** hashTable, const char* p)
 {
     int ii = 0;
@@ -119,12 +122,59 @@ int lookUp(struct HashEntry** hashTable, const char* p)
 }
 
 
+/* String search/replace pair */
+struct searchReplace
+{
+    char* search;
+    size_t searchLen;
+    char* replace;
+    size_t replaceLen;
+};
+
+
+/* String search/replace */
+char* strRep(char* str, struct searchReplace* sr)
+{
+    char* searchStart = strstr(str, sr->search);
+
+    if (searchStart  != NULL)
+    {
+        if (sr->replaceLen > sr->searchLen)
+        {
+            const size_t start = str - searchStart;
+            str = realloc
+            (
+                str,
+                strlen(str) + sr->replaceLen - sr->searchLen + 1
+            );
+            searchStart = str + start;
+        }
+
+        const size_t tailLen = strlen(searchStart + sr->searchLen);
+
+        memmove
+        (
+            searchStart + sr->replaceLen,
+            searchStart + sr->searchLen,
+            tailLen + 1
+        );
+
+        memcpy(searchStart, sr->replace, sr->replaceLen);
+    }
+
+    return str;
+}
+
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 int nDirectories = 0;
 char** directories;
 char* sourceFile = NULL;
 char* depFile = NULL;
+
+int nReplacements = 0;
+struct searchReplace replacements[REPLACEMENTS_SIZE];
 
 /* Set of files already visited */
 struct HashEntry* visitedFiles[HASH_TABLE_SIZE];
@@ -137,6 +187,11 @@ YY_BUFFER_STATE buffers[FILE_STACK_SIZE];
 
 /* Directory paths for the loaded files */
 const char* bufferPaths[FILE_STACK_SIZE];
+
+/* List of dependency files */
+int nFiles = 0;
+int maxNfiles = INITIAL_MAX_N_FILES;
+char** files;
 
 
 int main(int argc, char* argv[])
@@ -176,6 +231,24 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
+    /* Build list of string replacements */
+    nReplacements = 0;
+    for (i = 1; i < argc; i++)
+    {
+        if (strncmp(argv[i], "-R", 2) == 0)
+        {
+            replacements[nReplacements].search = strdup(argv[++i]);
+            replacements[nReplacements].searchLen =
+                strlen(replacements[nReplacements].search);
+
+            replacements[nReplacements].replace = strdup(argv[++i]);
+            replacements[nReplacements].replaceLen =
+                strlen(replacements[nReplacements].replace);
+
+            nReplacements++;
+        }
+    }
+
     /* Count number of -I directories */
     nDirectories = 0;
     for (i = 1; i < argc; i++)
@@ -204,16 +277,18 @@ int main(int argc, char* argv[])
         }
     }
 
-    /*
-     * Initialise depFile to zero and use strncat rather than strncpy
-     * because there is a bug in the SGI strncat that if 0 precedes the '.'
-     * it inserts a space
-     */
+    /* Initialise depFile to zero and use strncat rather than strncpy
+       because there is a bug in the SGI strncat that if 0 precedes the '.'
+       it inserts a space
+    */
     depFile = (char*)malloc(strlen(sourceFile) + 20);
     depFile[0] = 0;
     strcat(depFile, "$(OBJECTS_DIR)/");
     strcat(depFile, sourceFile);
     strcat(depFile, ".dep");
+
+    /* Initialise storage for the list of the dependencies */
+    files = (char**)malloc(sizeof(char*)*maxNfiles);
 
     char *objectFile = strdup(basePos);
     objectFile[(dotPos - basePos)/sizeof(char)] = 0;
@@ -230,6 +305,16 @@ int main(int argc, char* argv[])
 
     puts("\n");
 
+    /* Write the dummy rules for the dependencies */
+    for (i = 0; i < nFiles; i++)
+    {
+        printf("%s :\n", files[i]);
+    }
+
+    puts("\n");
+
+    /*  Clean-up storage */
+
     for (i = 0; i < nDirectories; i++)
     {
         free(directories[i]);
@@ -239,13 +324,17 @@ int main(int argc, char* argv[])
     free(sourceFile);
     free(depFile);
 
+    for (i = 0; i < nFiles; i++)
+    {
+        free(files[i]);
+    }
+    free(files);
+
     return 0;
 }
 
 
-/*
- * Add a directory name to the file name
- */
+/* Add a directory name to the file name */
 char* addDirectoryName(const char* dirName, const char* fileName)
 {
     char* pathName = (char*)malloc(strlen(dirName) + strlen(fileName) + 2);
@@ -262,9 +351,7 @@ char* addDirectoryName(const char* dirName, const char* fileName)
 }
 
 
-/*
- * Open a file and create buffer and put on stack
- */
+/* Open a file and create buffer and put on stack */
 void nextFile(const char* fileName)
 {
     if (lookUp(visitedFiles, fileName))
@@ -294,14 +381,12 @@ void nextFile(const char* fileName)
 
         if ((newyyin = fopen(pathName, "r")))
         {
-            printf("%s \\\n", pathName);
+            processFile(pathName);
 
             buffers[currentBuffer++] = YY_CURRENT_BUFFER;
             bufferPaths[currentBuffer] = bufferPaths[currentBuffer-1];
 
             yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
-
-            free(pathName);
 
             return;
         }
@@ -318,14 +403,12 @@ void nextFile(const char* fileName)
 
             if ((newyyin = fopen(pathName, "r")))
             {
-                printf("%s \\\n", pathName);
+                processFile(pathName);
 
                 buffers[currentBuffer++] = YY_CURRENT_BUFFER;
                 bufferPaths[currentBuffer] = directories[d];
 
                 yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
-
-                free(pathName);
 
                 return;
             }
@@ -360,7 +443,7 @@ void nextFile(const char* fileName)
     }
     else
     {
-        printf("%s \\\n", fileName);
+        printFile(fileName);
         fflush(stdout);
 
         buffers[currentBuffer++] = YY_CURRENT_BUFFER;
@@ -371,14 +454,41 @@ void nextFile(const char* fileName)
 }
 
 
-/*
- * Replace all '.' with '/'
- */
+void printFile(const char* pathName)
+{
+    printf("%s \\\n", pathName);
+}
+
+
+/* Replace path strings and print resulting path */
+void processFile(char* pathName)
+{
+    if (nFiles == maxNfiles - 1)
+    {
+        maxNfiles *= 2;
+        files = (char**)realloc(files, sizeof(char*)*maxNfiles);
+    }
+
+    if (nReplacements)
+    {
+        int i;
+        for (i=0; i<nReplacements; i++)
+        {
+            pathName = strRep(pathName, &replacements[i]);
+        }
+    }
+
+    printFile(pathName);
+    files[nFiles++] = pathName;
+}
+
+
+/* Replace all '.' with '/' */
 void dotToSlash(char* fileName)
 {
-    int i, len;
-    len = strlen(fileName);
+    const int len = strlen(fileName);
 
+    int i;
     for (i=0; i<len; i++)
     {
         if (fileName[i] == '.') fileName[i] = '/';
@@ -386,15 +496,13 @@ void dotToSlash(char* fileName)
 }
 
 
-/*
- * The lexer calls yywrap to handle EOF conditions
- */
+/* The lexer calls yywrap to handle EOF conditions */
 int yywrap()
 {
-    /* Close the file for the buffer which has just reached EOF */
-    /* This causes strange problems on some systems
-    fclose(yyin);
-    yyin = 0;
+    /* Close the file for the buffer which has just reached EOF
+       This causes strange problems on some systems
+       fclose(yyin);
+       yyin = 0;
     */
 
     /* Delete the buffer */
