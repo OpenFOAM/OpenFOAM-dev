@@ -161,14 +161,24 @@ update
     (
         this->thermo_.composition().Y(species1Index_)
        *W
-       /this->thermo_.composition().W(species1Index_)
+       /dimensionedScalar
+        (
+            "W",
+            dimMass/dimMoles,
+            this->thermo_.composition().W(species1Index_)
+        )
     );
 
     volScalarField X2
     (
         this->thermo_.composition().Y(species2Index_)
        *W
-       /this->thermo_.composition().W(species2Index_)
+       /dimensionedScalar
+        (
+            "W",
+            dimMass/dimMoles,
+            this->thermo_.composition().W(species2Index_)
+        )
     );
 
     volScalarField alpha12(alpha12_ + Tf*beta12_);
