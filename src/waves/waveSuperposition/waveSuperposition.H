@@ -78,6 +78,10 @@ class waveSuperposition
         //- Scaling perpendicular to the flow direction
         const autoPtr<Function1<scalar>> crossScale_;
 
+        //- Calculate wave properties using the height above the wave (true) or
+        //  the height above the origin (false)?
+        const Switch heightAboveWave_;
+
 
     // Private Member Functions
 

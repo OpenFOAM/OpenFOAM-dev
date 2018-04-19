@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,15 @@ Description
     This boundary condition provides a wavePressure condition. This sets the
     pressure to a value specified by a superposition of wave models. All the
     parameters are looked up from the corresponding velocity condition.
+
+    This functions like an outletInlet condition. Faces on which the flow is
+    leaving the domain have a value set by the wave model. Faces on which the
+    flow is entering the domain have the gradient set. This gradient is
+    calculated numerically by evaluating the wave model on both the patch face
+    and the adjacent cell.
+
+    Use of this boundary condition triggers a consistent behaviour in the
+    corresponding velocity and phase-fraction conditions.
 
 Usage
     \table

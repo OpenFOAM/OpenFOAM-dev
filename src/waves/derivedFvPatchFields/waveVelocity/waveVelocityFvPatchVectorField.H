@@ -30,32 +30,41 @@ Group
 Description
     This boundary condition provides a waveVelocity condition. This sets the
     velocity to that specified by a superposition of wave models. The
-    corresponding phase fraction condition looks this condition up and re-uses
-    the wave modelling.
+    corresponding phase fraction and pressure conditions look this condition up
+    and re-use the wave modelling.
 
     Flow reversal will occur in the event that the amplitude of the velocity
     oscillation is greater than the mean flow. This triggers special handling,
-    the form of which depends on whether a pressure field has been specified or
-    not.
+    the form of which depends on the inletOutlet flag and whether a wave
+    pressure condition is being used.
 
-    If a pressure field is not specified, then the proportion of the patch over
-    which the flow is reversed functions in a manner similar to the
-    flowRateOutletVelocity condition; i.e., the velocity is extrapolated and
-    then scaled to match the required outlet flow rate. Numerically, this is
-    still a fixedValue constraint on the normal velocity, just one which tends
-    to avoid instability. The corresponding pressure condition should be
+    If a wave pressure condition is not being used, and inletOutlet is false,
+    then this is a standard fixed value condition, with the value supplied by
+    the wave model. If flow reversal occurs this state may be unstable. The
+    corresponding pressure condition should be fixedFluxPressure.
+
+    If a wave pressure condition is not being used, and inletOutlet is true or
+    not specified then the proportion of the patch over which the flow is
+    reversed functions in a manner similar to the flowRateOutletVelocity
+    condition; i.e., the velocity is extrapolated and then scaled to match the
+    required outlet flow rate. Numerically, this is still a fixedValue
+    constraint on the normal velocity, just one which tends to avoid
+    instability. Again, the corresponding pressure condition should be
     fixedFluxPressure.
 
-    If a pressure field is specified, then the normal velocity condition becomes
-    fixedGradient on outlet faces. This gradient is calculated numerically by
-    evaluating the wave model on both the patch face and the adjacent cell. The
-    pressure boundary in this case should be a wavePressure condition. This will
-    do the opposite; it will fix the pressure value on outlet faces, and the
-    gradient otherwise.
+    If a wave pressure condition is being used, then the normal velocity
+    condition becomes fixedGradient on outlet faces. This gradient is
+    calculated numerically by evaluating the wave model on both the patch face
+    and the adjacent cell. The pressure boundary in this case should be a
+    wavePressure condition. This will do the opposite; it will fix the pressure
+    value on outlet faces, and the gradient otherwise.
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
+        phi         | Name of the flux field                 | no     | phi
+        p           | Name of the pressure field             | no     | p
+        inletOutlet | does the condition behave like inletOutlet | no | true
         origin      | origin of the wave coordinate system   | yes    |
         direction   | direction of the mean flow             | yes    |
         speed       | speed of the mean flow                 | yes    |
@@ -63,8 +72,7 @@ Usage
         ramp        | ramping function for the mean flow speed | no   | None
         scale       | scale factor along the mean flow direction | no | None
         crossScale  | scale factor across the mean flow direction | no | None
-        phi         | Name of the flux field                 | no     | phi
-        p           | Name of the pressure field             | no     |
+        heightAboveWave | use with the height above the wave | no     | false
     \endtable
 
     Example of the boundary condition specification:
@@ -131,6 +139,9 @@ class waveVelocityFvPatchVectorField
 
         //- Name of the pressure field
         const word pName_;
+
+        //- Act as an inlet/outlet patch?
+        const Switch inletOutlet_;
 
         //- Wave superposition
         const waveSuperposition waves_;

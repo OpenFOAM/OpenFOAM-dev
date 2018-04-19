@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,21 @@ Description
     This boundary condition provides a waveAlpha condition. This sets the phase
     fraction to that specified by a superposition of wave models. All the
     parameters are looked up from the corresponding velocity condition.
+
+    Flow reversal will occur in the event that the amplitude of the velocity
+    oscillation is greater than the mean flow. This triggers special handling,
+    the form of which depends on the inletOutlet flag and whether a wave
+    pressure condition is being used.
+
+    If a wave pressure condition is not being used, the inletOutlet switches
+    between a fixedValue and an inletOutlet condition, with the value given by
+    the wave model. If fixedValue, the result may be more accurate, but it
+    might also be unstable.
+
+    If a wave pressure condition is being used, then the normal phase fraction
+    condition becomes fixedGradient on outlet faces. This gradient is
+    calculated numerically by evaluating the wave model on both the patch face
+    and the adjacent cell.
 
 Usage
     \table
@@ -76,16 +91,12 @@ class waveAlphaFvPatchScalarField
     // Private data
 
         //- Name of the velocity field
-        word UName_;
+        const word UName_;
 
         //- Is this alpha field that of the liquid under the wave?
         const Switch liquid_;
 
-        //- Act as an inlet/outlet patch? If false, the alpha field will be set
-        //  by the wave model even during outflow. This may apply the wave model
-        //  more accurately, but it might also be unstable. If true, the alpha
-        //  boundary condition will be zero gradient when the flow reverses, as
-        //  is usual.
+        //- Act as an inlet/outlet patch?
         const Switch inletOutlet_;
 
 
@@ -171,6 +182,10 @@ public:
 
             //- Return the current modelled phase fraction field
             tmp<scalarField> alpha() const;
+
+            //- Return the current modelled phase fraction field in the
+            //  neighbour cell
+            tmp<scalarField> alphan() const;
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();

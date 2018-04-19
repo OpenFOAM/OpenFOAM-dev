@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "waveAlphaFvPatchScalarField.H"
+#include "wavePressureFvPatchScalarField.H"
 #include "waveVelocityFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "levelSet.H"
 #include "surfaceFields.H"
 #include "volFields.H"
+#include "fvMeshSubset.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -139,6 +141,50 @@ Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alpha() const
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alphan() const
+{
+    const waveVelocityFvPatchVectorField& Up =
+        refCast<const waveVelocityFvPatchVectorField>
+        (
+            patch().lookupPatchField<volVectorField, scalar>(UName_)
+        );
+
+    const scalar t = db().time().timeOutputValue();
+
+    const fvMeshSubset& subset = Up.faceCellSubset();
+    const fvMesh& meshs = subset.subMesh();
+    const label patchis = findIndex(subset.patchMap(), patch().index());
+
+    const scalarField alphas
+    (
+        levelSetFraction
+        (
+            meshs,
+            Up.waves().height(t, meshs.cellCentres())(),
+            Up.waves().height(t, meshs.points())(),
+            !liquid_
+        )
+    );
+
+    tmp<scalarField> tResult(new scalarField(patch().size()));
+    scalarField& result = tResult.ref();
+
+    if (patchis != -1)
+    {
+        forAll(meshs.boundary()[patchis], is)
+        {
+            const label fs = is + meshs.boundary()[patchis].patch().start();
+            const label cs = meshs.boundary()[patchis].faceCells()[is];
+            const label f = subset.faceMap()[fs];
+            const label i = patch().patch().whichFace(f);
+            result[i] = alphas[cs];
+        }
+    }
+
+    return tResult;
+}
+
+
 void Foam::waveAlphaFvPatchScalarField::updateCoeffs()
 {
     if (updated())
@@ -146,18 +192,49 @@ void Foam::waveAlphaFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    refValue() = alpha();
+    const fvPatchVectorField& Up =
+        patch().lookupPatchField<volVectorField, scalar>(UName_);
 
-    if (inletOutlet_)
+    if (!isA<waveVelocityFvPatchVectorField>(Up))
     {
-        const scalarField& phip =
-            patch().lookupPatchField<surfaceScalarField, scalar>("phi");
+        FatalErrorInFunction
+            << "The corresponding condition for the velocity "
+            << "field " << UName_ << " on patch " << patch().name()
+            << " is not of type " << waveVelocityFvPatchVectorField::typeName
+            << exit(FatalError);
+    }
 
-        valueFraction() = 1 - pos0(phip);
+    const waveVelocityFvPatchVectorField& Uwp =
+        refCast<const waveVelocityFvPatchVectorField>(Up);
+
+    const fvPatchScalarField& pp =
+        patch().lookupPatchField<volScalarField, scalar>(Uwp.pName());
+
+    if (isA<wavePressureFvPatchScalarField>(pp))
+    {
+        const scalarField alpha(this->alpha()), alphan(this->alphan());
+        const scalarField out(pos0(Uwp.U() & patch().Sf()));
+
+        valueFraction() = out;
+        refValue() = alpha;
+        refGrad() = (alpha - alphan)*patch().deltaCoeffs();
     }
     else
     {
-        valueFraction() = 1;
+        refValue() = alpha();
+
+        if (inletOutlet_)
+        {
+            const scalarField& phip =
+                patch().lookupPatchField<surfaceScalarField, scalar>("phi");
+            const scalarField out(pos0(phip));
+
+            valueFraction() = 1 - out;
+        }
+        else
+        {
+            valueFraction() = 1;
+        }
     }
 
     mixedFvPatchScalarField::updateCoeffs();

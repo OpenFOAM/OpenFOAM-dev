@@ -182,7 +182,8 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
     waveAngles_(),
     ramp_(),
     scale_(),
-    crossScale_()
+    crossScale_(),
+    heightAboveWave_(false)
 {}
 
 
@@ -196,7 +197,8 @@ Foam::waveSuperposition::waveSuperposition(const waveSuperposition& waves)
     waveAngles_(waves.waveAngles_),
     ramp_(waves.ramp_, false),
     scale_(waves.scale_, false),
-    crossScale_(waves.crossScale_, false)
+    crossScale_(waves.crossScale_, false),
+    heightAboveWave_(false)
 {}
 
 
@@ -229,7 +231,8 @@ Foam::waveSuperposition::waveSuperposition
         dict.found("crossScale")
       ? Function1<scalar>::New("crossScale", dict)
       : autoPtr<Function1<scalar>>()
-    )
+    ),
+    heightAboveWave_(dict.lookupOrDefault<Switch>("heightAboveWave", false))
 {
     const PtrList<entry> waveEntries(dict.lookup("waves"));
 
@@ -285,6 +288,11 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::ULiquid
     vectorField xyz(p.size());
     transformation(p, axes, u, xyz);
 
+    if (heightAboveWave_)
+    {
+        xyz.replace(2, height(t, p));
+    }
+
     return UMean(t) + (velocity(t, xyz) & axes);
 }
 
@@ -302,6 +310,11 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
 
     axes = tensor(- axes.x(), - axes.y(), axes.z());
 
+    if (heightAboveWave_)
+    {
+        xyz.replace(2, height(t, p));
+    }
+
     return UMean(t) + (velocity(t, xyz) & axes);
 }
 
@@ -316,6 +329,11 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pLiquid
     scalar u;
     vectorField xyz(p.size());
     transformation(p, axes, u, xyz);
+
+    if (heightAboveWave_)
+    {
+        xyz.replace(2, height(t, p));
+    }
 
     return pressure(t, xyz);
 }
@@ -357,6 +375,11 @@ void Foam::waveSuperposition::write(Ostream& os) const
     if (crossScale_.valid())
     {
         crossScale_->writeData(os);
+    }
+    if (heightAboveWave_)
+    {
+        os.writeKeyword("heightAboveWave") << heightAboveWave_
+            << token::END_STATEMENT << nl;
     }
 }
 
