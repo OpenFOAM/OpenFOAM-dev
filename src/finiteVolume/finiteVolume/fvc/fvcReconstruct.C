@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,10 +73,18 @@ reconstruct
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            inv(surfaceSum(SfHat*mesh.Sf()))&surfaceSum(SfHat*ssf),
+            mesh,
+            dimensioned<GradType>("0", ssf.dimensions()/dimArea, Zero),
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
+
+    if (!mesh.nGeometricD())
+    {
+        return treconField;
+    }
+
+    treconField.ref() = inv(surfaceSum(SfHat*mesh.Sf()))&surfaceSum(SfHat*ssf),
 
     treconField.ref().correctBoundaryConditions();
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,9 +62,15 @@ average
                 IOobject::NO_WRITE
             ),
             mesh,
-            ssf.dimensions()
+            dimensioned<Type>("0", ssf.dimensions(), Zero)
         )
     );
+
+    if (!mesh.nGeometricD())
+    {
+        return taverage;
+    }
+
     GeometricField<Type, fvPatchField, volMesh>& av = taverage.ref();
 
     av.primitiveFieldRef() =
