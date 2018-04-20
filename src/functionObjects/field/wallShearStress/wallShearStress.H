@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,6 @@ See also
     Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::logFiles
     Foam::functionObjects::writeLocalObjects
-    Foam::functionObjects::pressureTools
     Foam::functionObjects::timeControl
 
 SourceFiles
