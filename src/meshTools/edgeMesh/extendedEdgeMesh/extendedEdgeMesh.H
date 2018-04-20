@@ -520,7 +520,11 @@ public:
         // Write
 
             //- Write all components of the extendedEdgeMesh as obj files
-            void writeObj(const fileName& prefix) const;
+            void writeObj
+            (
+                const fileName& prefix,
+                const bool verbose = true
+            ) const;
 
             //- Dump some information
             virtual void writeStats(Ostream& os) const;

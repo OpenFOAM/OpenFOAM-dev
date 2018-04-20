@@ -1381,13 +1381,16 @@ void Foam::extendedEdgeMesh::flipNormals()
 
 void Foam::extendedEdgeMesh::writeObj
 (
-    const fileName& prefix
+    const fileName& prefix,
+    const bool verbose
 ) const
 {
     Info<< nl << "Writing extendedEdgeMesh components to " << prefix
         << endl;
 
     edgeMesh::write(prefix + "_edgeMesh.obj");
+
+    if (!verbose) return;
 
     OBJstream convexFtPtStr(prefix + "_convexFeaturePts.obj");
     Info<< "Writing convex feature points to " << convexFtPtStr.name() << endl;
@@ -1511,19 +1514,15 @@ void Foam::extendedEdgeMesh::writeStats(Ostream& os) const
     os  << incrIndent;
     os  << indent << "convex feature points          : "
         << setw(8) << concaveStart_-convexStart_
-        //<< setw(8) << convexStart_
         << nl;
     os  << indent << "concave feature points         : "
         << setw(8) << mixedStart_-concaveStart_
-        //<< setw(8) << concaveStart_
         << nl;
     os  << indent << "mixed feature points           : "
         << setw(8) << nonFeatureStart_-mixedStart_
-        //<< setw(8) << mixedStart_
         << nl;
     os  << indent << "other (non-feature) points     : "
         << setw(8) << points().size()-nonFeatureStart_
-        //<< setw(8) << nonFeatureStart_
         << nl;
     os  << decrIndent;
 
@@ -1531,23 +1530,18 @@ void Foam::extendedEdgeMesh::writeStats(Ostream& os) const
     os  << incrIndent;
     os  << indent << "external (convex angle) edges  : "
         << setw(8) << internalStart_-externalStart_
-        //<< setw(8) << externalStart_
         << nl;
     os  << indent << "internal (concave angle) edges : "
         << setw(8) << flatStart_-internalStart_
-        //<< setw(8) << internalStart_
         << nl;
     os  << indent << "flat region edges              : "
         << setw(8) << openStart_-flatStart_
-        //<< setw(8) << flatStart_
         << nl;
     os  << indent << "open edges                     : "
         << setw(8) << multipleStart_-openStart_
-        //<< setw(8) << openStart_
         << nl;
     os  << indent << "multiply connected edges       : "
         << setw(8) << edges().size()-multipleStart_
-        //<< setw(8) << multipleStart_
         << nl;
     os  << decrIndent;
 }

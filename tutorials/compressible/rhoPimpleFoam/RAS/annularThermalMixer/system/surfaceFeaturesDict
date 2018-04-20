@@ -10,22 +10,26 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      surfaceFeatureExtractDictDefaults;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-extractionMethod    extractFromSurface;
+surfaces
+(
+    "AMI.obj"
+    "shaft.obj"
+    "wall.obj"
+    "statorBlades.obj"
+    "rotorBlades.obj"
+);
 
-extractFromSurfaceCoeffs
-{
-    includedAngle   150;  // Identifes a feature when angle
-}                         // between faces < includedAngle
-
+includedAngle   150;  // Identifes a feature when angle
+                      // between faces < includedAngle
 trimFeatures
 {
     minElem         10;   // minimum edges within a feature
 }
 
-writeObj            yes;  // writes out .obj files to view features
+writeObj        yes;  // writes out _edgeMesh.obj files to view features
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //
