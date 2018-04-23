@@ -100,6 +100,8 @@ void Foam::phaseSystem::generatePairsAndSubModels
     (
         blendingMethods_.found(modelName)
       ? blendingMethods_[modelName]
+      : blendingMethods_.found(member(modelName))
+      ? blendingMethods_[member(modelName)]
       : blendingMethods_["default"]
     );
 

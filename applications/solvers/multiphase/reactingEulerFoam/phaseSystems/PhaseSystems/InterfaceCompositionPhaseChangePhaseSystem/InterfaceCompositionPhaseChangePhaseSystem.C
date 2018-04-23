@@ -352,19 +352,19 @@ correctInterfaceThermo()
 
     forAllConstIter
     (
-        massTransferModelTable,
-        massTransferModels_,
-        massTransferModelIter
+        typename BasePhaseSystem::heatTransferModelTable,
+        this->heatTransferModels_,
+        heatTransferModelIter
     )
     {
         const phasePair& pair =
-            this->phasePairs_[massTransferModelIter.key()];
+            this->phasePairs_[heatTransferModelIter.key()];
 
         const phasePairKey key12(pair.first(), pair.second(), true);
         const phasePairKey key21(pair.second(), pair.first(), true);
 
-        volScalarField H1(this->heatTransferModels_[pair].first()->K());
-        volScalarField H2(this->heatTransferModels_[pair].second()->K());
+        volScalarField H1(heatTransferModelIter().first()->K());
+        volScalarField H2(heatTransferModelIter().second()->K());
         dimensionedScalar HSmall("small", heatTransferModel::dimK, small);
 
         volScalarField mDotL
@@ -397,7 +397,7 @@ correctInterfaceThermo()
         {
             this->interfaceCompositionModels_[key12]->addMDotL
             (
-                massTransferModelIter().first()->K(),
+                massTransferModels_[pair].first()->K(),
                 Tf,
                 mDotL,
                 mDotLPrime
@@ -407,7 +407,7 @@ correctInterfaceThermo()
         {
             this->interfaceCompositionModels_[key21]->addMDotL
             (
-                massTransferModelIter().second()->K(),
+                massTransferModels_[pair].second()->K(),
                 Tf,
                 mDotL,
                 mDotLPrime

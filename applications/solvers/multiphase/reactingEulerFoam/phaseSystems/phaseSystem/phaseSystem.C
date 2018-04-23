@@ -209,9 +209,10 @@ Foam::phaseSystem::phaseSystem
     {
         blendingMethods_.insert
         (
-            iter().dict().dictName(),
+            iter().keyword(),
             blendingMethod::New
             (
+                iter().keyword(),
                 iter().dict(),
                 phaseModels_.toc()
             )
