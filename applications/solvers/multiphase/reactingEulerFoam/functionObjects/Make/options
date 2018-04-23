@@ -3,6 +3,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/functionObjects/field/lnInclude \
+    -I../interfacialModels/lnInclude \
     -I../phaseSystems/lnInclude
 
 LIB_LIBS = \

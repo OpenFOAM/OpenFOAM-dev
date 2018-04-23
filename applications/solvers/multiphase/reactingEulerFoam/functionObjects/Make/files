@@ -1,3 +1,4 @@
 sizeDistribution/sizeDistribution.C
+phaseForces/phaseForces.C
 
 LIB = $(FOAM_LIBBIN)/libreactingEulerFoamFunctionObjects
