@@ -30,7 +30,7 @@ populationBalanceModel/breakupModels/exponential/exponential.C
 populationBalanceModel/breakupModels/powerLaw/powerLaw.C
 
 populationBalanceModel/daughterSizeDistributionModels/daughterSizeDistributionModel/daughterSizeDistributionModel.C
-populationBalanceModel/daughterSizeDistributionModels/uniformBinaryDsd/uniformBinaryDsd.C
+populationBalanceModel/daughterSizeDistributionModels/uniformBinary/uniformBinary.C
 
 populationBalanceModel/driftModels/driftModel/driftModel.C
 populationBalanceModel/driftModels/constantDrift/constantDrift.C

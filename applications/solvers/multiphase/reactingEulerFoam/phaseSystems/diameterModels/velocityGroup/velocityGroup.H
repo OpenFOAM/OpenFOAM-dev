@@ -112,12 +112,6 @@ class velocityGroup
         //- Sum of sizeGroup volume fractions
         volScalarField fSum_;
 
-        //- Second moment of the distribution
-        volScalarField m2_;
-
-        //- Third moment of the distribution
-        volScalarField m3_;
-
         //- Number-based Sauter-mean diameter of the phase
         volScalarField d_;
 
@@ -132,10 +126,6 @@ class velocityGroup
 
 
     // Private member functions
-
-        tmp<volScalarField> secondMoment() const;
-
-        tmp<volScalarField> thirdMoment() const;
 
         tmp<volScalarField> dsm() const;
 
@@ -179,12 +169,6 @@ public:
 
         //- Return sizeGroups belonging to this velocityGroup
         inline const PtrList<sizeGroup>& sizeGroups() const;
-
-        //- Return second moment of the distribution
-        inline const volScalarField& m2() const;
-
-        //- Return third moment of the distribution
-        inline const volScalarField& m3() const;
 
         //- Return const-reference to multivariate convectionScheme
         inline const tmp<fv::convectionScheme<scalar>>& mvConvection() const;

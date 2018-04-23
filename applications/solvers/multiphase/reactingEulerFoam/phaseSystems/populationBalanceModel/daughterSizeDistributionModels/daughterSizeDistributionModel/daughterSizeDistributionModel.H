@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,11 @@ public:
 
         //- Calculate and return total number of particles assigned to class i
         //  when a particle of class k breaks
-        virtual dimensionedScalar n(const label i, const label k) const = 0;
+        virtual dimensionedScalar calcNik
+        (
+            const label i,
+            const label k
+        ) const = 0;
 };
 
 

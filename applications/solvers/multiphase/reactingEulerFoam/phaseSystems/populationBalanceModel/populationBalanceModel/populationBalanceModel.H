@@ -275,9 +275,6 @@ class populationBalanceModel
         //- Average velocity
         volVectorField U_;
 
-        //- Mean Sauter diameter
-        autoPtr<volScalarField> d_;
-
 
     // Private member functions
 
@@ -287,7 +284,7 @@ class populationBalanceModel
 
         void createPhasePairs();
 
-        void preSolve();
+        void correct();
 
         void birthByCoalescence(const label j, const label k);
 
@@ -314,8 +311,6 @@ class populationBalanceModel
         void calcAlphas();
 
         void calcVelocity();
-
-        tmp<volScalarField> dsm() const;
 
 
 public:

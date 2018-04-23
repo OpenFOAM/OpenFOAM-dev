@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "uniformBinaryDsd.H"
+#include "uniformBinary.H"
 #include "addToRunTimeSelectionTable.H"
 #include "breakupModel.H"
 
@@ -35,11 +35,11 @@ namespace diameterModels
 {
 namespace daughterSizeDistributionModels
 {
-    defineTypeNameAndDebug(uniformBinaryDsd, 0);
+    defineTypeNameAndDebug(uniformBinary, 0);
     addToRunTimeSelectionTable
     (
         daughterSizeDistributionModel,
-        uniformBinaryDsd,
+        uniformBinary,
         dictionary
     );
 }
@@ -49,8 +49,8 @@ namespace daughterSizeDistributionModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModels::uniformBinaryDsd::
-uniformBinaryDsd
+Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::
+uniformBinary
 (
     const breakupModel& breakup,
     const dictionary& dict
@@ -62,81 +62,35 @@ uniformBinaryDsd
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModels::uniformBinaryDsd::
-~uniformBinaryDsd()
+Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::
+~uniformBinary()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::dimensionedScalar
-Foam::diameterModels::daughterSizeDistributionModels::uniformBinaryDsd::n
+Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::calcNik
 (
     const label i,
     const label k
 ) const
 {
-    const sizeGroup& fi = *breakup_.popBal().sizeGroups()[i];
-    const sizeGroup& fk = *breakup_.popBal().sizeGroups()[k];
-
-    const dimensionedScalar& xi = fi.x();
-    const dimensionedScalar& xk = fk.x();
-    dimensionedScalar x("x", dimVolume, Zero);
-    dimensionedScalar xii("xii", dimVolume, Zero);
+    const dimensionedScalar& xi = breakup_.popBal().sizeGroups()[i]->x();
+    const dimensionedScalar& xk = breakup_.popBal().sizeGroups()[k]->x();
+    const List<sizeGroup*>& sizeGroups = breakup_.popBal().sizeGroups();
 
     if (i == 0)
     {
-       x = xi;
-    }
-    else
-    {
-       x = breakup_.popBal().sizeGroups()[i-1]->x();
-    }
-
-    if (i == breakup_.popBal().sizeGroups().size() - 1)
-    {
-        xii = fi.x();
-    }
-    else
-    {
-        xii = breakup_.popBal().sizeGroups()[i+1]->x();
-    }
-
-    if (i == 0)
-    {
-        return
-            1.0/(xii - xi)
-           *(
-                (xii*xii - 0.5*sqr(xii))
-              - (xi*xii - 0.5*sqr(xi))
-            )
-           *2.0/xk;
+        return (sizeGroups[i+1]->x() - xi)/xk;
     }
     else if (i == k)
     {
-        return
-            1.0/(xi - x)
-           *(
-                (0.5*sqr(xi) - xi*x)
-              - (0.5*sqr(x) - x*x)
-            )
-           *2.0/xk;
+        return (xi - sizeGroups[i-1]->x())/xk;
     }
     else
     {
-        return
-            1.0/(xii - xi)
-           *(
-                (xii*xii - 0.5*sqr(xii))
-              - (xi*xii - 0.5*sqr(xi))
-            )
-           *2.0/xk
-          + 1.0/(xi - x)
-           *(
-                (0.5*sqr(xi) - xi*x)
-              - (0.5*sqr(x) - x*x)
-            )
-           *2.0/xk;
+        return (sizeGroups[i+1]->x() - xi)/xk + (xi - sizeGroups[i-1]->x())/xk;
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::daughterSizeDistributionModels::uniformBinaryDsd
+    Foam::diameterModels::daughterSizeDistributionModels::uniformBinary
 
 Description
     Uniform binary daughter size distribution. Used for verification and
@@ -30,12 +30,12 @@ Description
     populationBalanceModel class.
 
 SourceFiles
-    uniformBinaryDsd.C
+    uniformBinary.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformBinaryDsd_H
-#define uniformBinaryDsd_H
+#ifndef uniformBinary_H
+#define uniformBinary_H
 
 #include "daughterSizeDistributionModel.H"
 
@@ -49,10 +49,10 @@ namespace daughterSizeDistributionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class uniformBinaryDsd Declaration
+                      Class uniformBinary Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformBinaryDsd
+class uniformBinary
 :
     public daughterSizeDistributionModel
 {
@@ -64,7 +64,7 @@ public:
 
     // Constructor
 
-        uniformBinaryDsd
+        uniformBinary
         (
             const breakupModel& breakup,
             const dictionary& dict
@@ -72,14 +72,14 @@ public:
 
 
     //- Destructor
-    virtual ~uniformBinaryDsd();
+    virtual ~uniformBinary();
 
 
     // Member Functions
 
         //- Return total number of particles assigned to class i when a particle
         //  of class k breaks
-        virtual dimensionedScalar n(const label i, const label k) const;
+        virtual dimensionedScalar calcNik(const label i, const label k) const;
 };
 
 

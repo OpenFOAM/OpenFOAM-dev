@@ -49,74 +49,33 @@ namespace diameterModels
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::velocityGroup::secondMoment() const
-{
-    tmp<volScalarField> tm2
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "m2",
-                phase_.time().timeName(),
-                phase_.mesh()
-            ),
-            phase_.mesh(),
-            dimensionedScalar("m2", inv(dimLength), Zero)
-        )
-    );
-
-    volScalarField& m2 = tm2.ref();
-
-    forAll(sizeGroups_, i)
-    {
-        const sizeGroup& fi = sizeGroups_[i];
-
-        m2 += sqr(fi.d())*formFactor()*fi
-           *max(fi.phase(), small)/fi.x();
-    }
-
-    return tm2;
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::velocityGroup::thirdMoment() const
-{
-    tmp<volScalarField> tm3
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "m3",
-                phase_.time().timeName(),
-                phase_.mesh()
-            ),
-            phase_.mesh(),
-            dimensionedScalar("m3", dimless, Zero)
-        )
-    );
-
-    volScalarField& m3 = tm3.ref();
-
-    forAll(sizeGroups_, i)
-    {
-        const sizeGroup& fi = sizeGroups_[i];
-
-        m3 += pow3(fi.d())*formFactor()*fi
-           *max(fi.phase(), small)/fi.x();
-    }
-
-    return tm3;
-}
-
-
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::dsm() const
 {
-    return
-        max(min(phase_/m2_, sizeGroups_.last().d()), sizeGroups_.first().d());
+    tmp<volScalarField> tInvDsm
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "invDsm",
+                phase_.time().timeName(),
+                phase_.mesh()
+            ),
+            phase_.mesh(),
+            dimensionedScalar("invDsm", inv(dimLength), Zero)
+        )
+    );
+
+    volScalarField& invDsm = tInvDsm.ref();
+
+    forAll(sizeGroups_, i)
+    {
+        const sizeGroup& fi = sizeGroups_[i];
+
+        invDsm += fi/fi.d();
+    }
+
+    return 1.0/tInvDsm;
 }
 
 
@@ -243,44 +202,6 @@ Foam::diameterModels::velocityGroup::velocityGroup
         ),
         fSum()
     ),
-    m2_
-    (
-        IOobject
-        (
-            IOobject::groupName
-            (
-                "m2",
-                IOobject::groupName
-                (
-                    phase.name(),
-                    popBalName_
-                )
-            ),
-            phase.time().timeName(),
-            phase.mesh()
-        ),
-        phase.mesh(),
-        dimensionedScalar("m2", inv(dimLength), Zero)
-    ),
-    m3_
-    (
-        IOobject
-        (
-            IOobject::groupName
-            (
-                "m3",
-                IOobject::groupName
-                (
-                    phase.name(),
-                    popBalName_
-                )
-            ),
-            phase.time().timeName(),
-            phase.mesh()
-        ),
-        phase.mesh(),
-        dimensionedScalar("m3", dimless, Zero)
-    ),
     d_
     (
         IOobject
@@ -354,10 +275,6 @@ Foam::diameterModels::velocityGroup::velocityGroup
         fields_.add(sizeGroups_[i]);
     }
 
-    m2_ = secondMoment();
-
-    m3_ = thirdMoment();
-
     d_ = dsm();
 }
 
@@ -379,10 +296,6 @@ void Foam::diameterModels::velocityGroup::preSolve()
 
 void Foam::diameterModels::velocityGroup::postSolve()
 {
-    m2_ = secondMoment();
-
-    m3_ = thirdMoment();
-
     d_ = dsm();
 
     Info<< this->phase().name() << " Sauter mean diameter, min, max = "

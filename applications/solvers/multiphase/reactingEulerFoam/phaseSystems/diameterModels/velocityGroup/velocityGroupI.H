@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,20 +50,6 @@ inline const Foam::PtrList<Foam::diameterModels::sizeGroup>&
 Foam::diameterModels::velocityGroup::sizeGroups() const
 {
     return sizeGroups_;
-}
-
-
-inline const Foam::volScalarField&
-Foam::diameterModels::velocityGroup::m2() const
-{
-    return m2_;
-}
-
-
-inline const Foam::volScalarField&
-Foam::diameterModels::velocityGroup::m3() const
-{
-    return m3_;
 }
 
 

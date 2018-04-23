@@ -143,9 +143,9 @@ void Foam::diameterModels::populationBalanceModel::add(sizeGroup* group)
             (
                 "Su",
                 fluid_.time().timeName(),
-                fluid_.mesh()
+                mesh_
             ),
-            fluid_.mesh(),
+            mesh_,
             dimensionedScalar
             (
                 "Su",
@@ -163,9 +163,9 @@ void Foam::diameterModels::populationBalanceModel::add(sizeGroup* group)
             (
                 "SuSp",
                 fluid_.time().timeName(),
-                fluid_.mesh()
+                mesh_
             ),
-            fluid_.mesh(),
+            mesh_,
             dimensionedScalar
             (
                 "SuSp",
@@ -217,7 +217,7 @@ void Foam::diameterModels::populationBalanceModel::createPhasePairs()
 }
 
 
-void Foam::diameterModels::populationBalanceModel::preSolve()
+void Foam::diameterModels::populationBalanceModel::correct()
 {
     calcDeltas();
 
@@ -264,8 +264,6 @@ birthByCoalescence
 {
     const sizeGroup& fj = *sizeGroups_[j];
     const sizeGroup& fk = *sizeGroups_[k];
-    const volScalarField& alphaj = fj.phase();
-    const volScalarField& alphak = fk.phase();
 
     dimensionedScalar Gamma;
     dimensionedScalar v = fj.x() + fk.x();
@@ -282,20 +280,22 @@ birthByCoalescence
         // Avoid double counting of events
         if (j == k)
         {
-            Sui_ = 0.5*fi.x()*coalescenceRate_()*fj*alphaj/fj.x()*fk*alphak
-               /fk.x()*Gamma;
+            Sui_ =
+                0.5*fi.x()*coalescenceRate_()*Gamma
+               *fj*fj.phase()/fj.x()
+               *fk*fk.phase()/fk.x();
         }
         else
         {
-            Sui_ = fi.x()*coalescenceRate_()*fj*alphaj/fj.x()*fk*alphak/fk.x()
-               *Gamma;
+            Sui_ =
+                fi.x()*coalescenceRate_()*Gamma
+               *fj*fj.phase()/fj.x()
+               *fk*fk.phase()/fk.x();
         }
 
         Su_[i] += Sui_;
 
         dimensionedScalar ratio = fj.x()/fi.x();
-
-        const volScalarField& rho = fi.phase().rho();
 
         const phasePairKey pairij
         (
@@ -310,7 +310,7 @@ birthByCoalescence
                 Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
             );
 
-            pDmdt_[pairij]->ref() += dmdtSign*ratio*Sui_*rho;
+            pDmdt_[pairij]->ref() += dmdtSign*ratio*Sui_*fi.phase().rho();
         }
 
         const phasePairKey pairik
@@ -326,7 +326,7 @@ birthByCoalescence
                 Pair<word>::compare(pDmdt_.find(pairik).key(), pairik)
             );
 
-            pDmdt_[pairik]->ref() += dmdtSign*(1 - ratio)*Sui_*rho;
+            pDmdt_[pairik]->ref() += dmdtSign*(1 - ratio)*Sui_*fi.phase().rho();
         }
     }
 }
@@ -341,20 +341,12 @@ deathByCoalescence
 {
     const sizeGroup& fi = *sizeGroups_[i];
     const sizeGroup& fj = *sizeGroups_[j];
-    const volScalarField& alphai = fi.phase();
-    const volScalarField& alphaj = fj.phase();
 
-    SuSp_[i] +=
-        coalescenceRate_()
-       *alphai
-       *fj*alphaj/fj.x();
+    SuSp_[i] += coalescenceRate_()*fi.phase()*fj*fj.phase()/fj.x();
 
     if (i != j)
     {
-        SuSp_[j] +=
-            coalescenceRate_()
-           *alphaj
-           *fi*alphai/fi.x();
+        SuSp_[j] += coalescenceRate_()*fj.phase()*fi*fi.phase()/fi.x();
     }
 }
 
@@ -372,12 +364,11 @@ birthByBreakup
     {
         const sizeGroup& fi = *sizeGroups_[i];
 
-        Sui_ = fi.x()*breakupRate_()*breakup_[model].dsdPtr()().nik(i, k)*fk
-           *fk.phase()/fk.x();
+        Sui_ =
+            fi.x()*breakupRate_()*breakup_[model].dsdPtr()().nik(i, k)
+           *fk*fk.phase()/fk.x();
 
         Su_[i] += Sui_;
-
-        const volScalarField& rho = fi.phase().rho();
 
         const phasePairKey pair
         (
@@ -392,7 +383,7 @@ birthByBreakup
                 Pair<word>::compare(pDmdt_.find(pair).key(), pair)
             );
 
-            pDmdt_[pair]->ref() += dmdtSign*Sui_*rho;
+            pDmdt_[pair]->ref() += dmdtSign*Sui_*fi.phase().rho();
         }
     }
 }
@@ -452,10 +443,8 @@ birthByBinaryBreakup
 {
     const sizeGroup& fj = *sizeGroups_[j];
     const sizeGroup& fi = *sizeGroups_[i];
-    const volScalarField& alphaj = fj.phase();
-    const volScalarField& rho = fj.phase().rho();
 
-    Sui_ = fi.x()*binaryBreakupRate_()*delta_[i][j]*fj*alphaj/fj.x();
+    Sui_ = fi.x()*binaryBreakupRate_()*delta_[i][j]*fj*fj.phase()/fj.x();
 
     Su_[i] += Sui_;
 
@@ -472,7 +461,7 @@ birthByBinaryBreakup
             Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
         );
 
-        pDmdt_[pairij]->ref() += dmdtSign*Sui_*rho;
+        pDmdt_[pairij]->ref() += dmdtSign*Sui_*fi.phase().rho();
     }
 
     dimensionedScalar Gamma;
@@ -489,8 +478,9 @@ birthByBinaryBreakup
 
         volScalarField& Suk = Sui_;
 
-        Suk = sizeGroups_[k]->x()*binaryBreakupRate_()*delta_[i][j]*fj*alphaj
-           /fj.x()*Gamma;
+        Suk =
+            sizeGroups_[k]->x()*binaryBreakupRate_()*delta_[i][j]*Gamma
+           *fj*fj.phase()/fj.x();
 
         Su_[k] += Suk;
 
@@ -511,7 +501,7 @@ birthByBinaryBreakup
                 )
             );
 
-            pDmdt_[pairkj]->ref() += dmdtSign*Suk*rho;
+            pDmdt_[pairkj]->ref() += dmdtSign*Suk*fi.phase().rho();
         }
     }
 }
@@ -533,7 +523,6 @@ deathByBinaryBreakup
 void Foam::diameterModels::populationBalanceModel::drift(const label i)
 {
     const sizeGroup& fi = *sizeGroups_[i];
-    const volScalarField& rho = fi.phase().rho();
 
     if (i == 0)
     {
@@ -545,11 +534,13 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
     }
     else
     {
-        rx_() = pos(driftRate_())*sizeGroups_[i+1]->x()/sizeGroups_[i]->x()
+        rx_() =
+            pos(driftRate_())*sizeGroups_[i+1]->x()/sizeGroups_[i]->x()
           + neg(driftRate_())*sizeGroups_[i-1]->x()/sizeGroups_[i]->x();
     }
 
-    SuSp_[i] += (neg(1 - rx_()) + neg(1 - rx_()/(1 - rx_())))*driftRate_()
+    SuSp_[i] +=
+        (neg(1 - rx_()) + neg(1 - rx_()/(1 - rx_())))*driftRate_()
        *fi.phase()/((rx_() - 1)*sizeGroups_[i]->x());
 
     rx_() *= 0.0;
@@ -559,26 +550,29 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
     {
         rx_() += pos(driftRate_())*sizeGroups_[i+2]->x()/sizeGroups_[i+1]->x();
 
-        rdx_() += pos(driftRate_())
+        rdx_() +=
+            pos(driftRate_())
            *(sizeGroups_[i+2]->x() - sizeGroups_[i+1]->x())
            /(sizeGroups_[i+1]->x() - sizeGroups_[i]->x());
     }
     else if (i == sizeGroups_.size() - 2)
     {
-        rx_() += pos(driftRate_())*sizeGroups_[i+1]->x()
-           /sizeGroups_[i]->x();
+        rx_() += pos(driftRate_())*sizeGroups_[i+1]->x()/sizeGroups_[i]->x();
 
-        rdx_() += pos(driftRate_())
+        rdx_() +=
+            pos(driftRate_())
            *(sizeGroups_[i+1]->x() - sizeGroups_[i]->x())
            /(sizeGroups_[i]->x() - sizeGroups_[i-1]->x());
     }
 
     if (i == 1)
     {
-        rx_() += neg(driftRate_())*sizeGroups_[i-1]->x()
+        rx_() +=
+            neg(driftRate_())*sizeGroups_[i-1]->x()
            /sizeGroups_[i]->x();
 
-        rdx_() += neg(driftRate_())
+        rdx_() +=
+            neg(driftRate_())
            *(sizeGroups_[i]->x() - sizeGroups_[i-1]->x())
            /(sizeGroups_[i+1]->x() - sizeGroups_[i]->x());
     }
@@ -586,7 +580,8 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
     {
         rx_() += neg(driftRate_())*sizeGroups_[i-2]->x()/sizeGroups_[i-1]->x();
 
-        rdx_() += neg(driftRate_())
+        rdx_() +=
+            neg(driftRate_())
            *(sizeGroups_[i-1]->x() - sizeGroups_[i-2]->x())
            /(sizeGroups_[i]->x() - sizeGroups_[i-1]->x());
     }
@@ -596,7 +591,9 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
         const sizeGroup& fj = *sizeGroups_[i+1];
         volScalarField& Suj = Sui_;
 
-        Suj = pos(driftRate_())*driftRate_()*rdx_()*fi*fi.phase()/fi.x()
+        Suj =
+            pos(driftRate_())*driftRate_()*rdx_()
+           *fi*fi.phase()/fi.x()
            /(rx_() - 1);
 
         Su_[i+1] += Suj;
@@ -614,7 +611,7 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
                 Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
             );
 
-            pDmdt_[pairij]->ref() -= dmdtSign*Suj*rho;
+            pDmdt_[pairij]->ref() -= dmdtSign*Suj*fi.phase().rho();
         }
     }
 
@@ -623,7 +620,9 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
         const sizeGroup& fh = *sizeGroups_[i-1];
         volScalarField& Suh = Sui_;
 
-        Suh = neg(driftRate_())*driftRate_()*rdx_()*fi*fi.phase()/fi.x()
+        Suh =
+            neg(driftRate_())*driftRate_()*rdx_()
+           *fi*fi.phase()/fi.x()
            /(rx_() - 1);
 
         Su_[i-1] += Suh;
@@ -641,7 +640,7 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
                 Pair<word>::compare(pDmdt_.find(pairih).key(), pairih)
             );
 
-            pDmdt_[pairih]->ref() -= dmdtSign*Suh*rho;
+            pDmdt_[pairih]->ref() -= dmdtSign*Suh*fi.phase().rho();
         }
     }
 }
@@ -796,9 +795,9 @@ void Foam::diameterModels::populationBalanceModel::calcAlphas()
 {
     alphas_ *= 0.0;
 
-    forAllIter(PtrListDictionary<velocityGroup>, velocityGroups_, iter)
+    forAll(velocityGroups_, v)
     {
-        alphas_ += iter().phase();
+        alphas_ += velocityGroups_[v]->phase();
     }
 }
 
@@ -807,77 +806,12 @@ void Foam::diameterModels::populationBalanceModel::calcVelocity()
 {
     U_ *= 0.0;
 
-    forAllIter(PtrListDictionary<velocityGroup>, velocityGroups_, iter)
+    forAll(velocityGroups_, v)
     {
-        U_ += iter().phase().U()
-           *max(iter().phase(), iter().phase().residualAlpha())
-           /max(alphas_, iter().phase().residualAlpha());
+        const phaseModel& phase = velocityGroups_[v]->phase();
+
+        U_ += phase*phase.U()/max(alphas_, phase.residualAlpha());
     }
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::populationBalanceModel::dsm() const
-{
-    tmp<volScalarField> tDsm
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "dsm",
-                fluid_.time().timeName(),
-                fluid_.mesh()
-            ),
-            fluid_.mesh(),
-            dimensionedScalar("dsm", dimLength, Zero)
-        )
-    );
-
-    volScalarField& dsm = tDsm.ref();
-
-    volScalarField m2
-    (
-        IOobject
-        (
-            "m2",
-            fluid_.time().timeName(),
-            fluid_.mesh()
-        ),
-        fluid_.mesh(),
-        dimensionedScalar("m2", inv(dimLength), Zero)
-    );
-
-    volScalarField m3
-    (
-        IOobject
-        (
-            "m3",
-            fluid_.time().timeName(),
-            fluid_.mesh()
-        ),
-        fluid_.mesh(),
-        dimensionedScalar("m3", dimless, Zero)
-    );
-
-    forAll(velocityGroups_, i)
-    {
-        const velocityGroup& velGroup = *velocityGroups_[i];
-
-        m2 += velGroup.m2();
-
-        m3 += velGroup.m3();
-    }
-
-    dsm = m3/m2;
-
-    Info<< this->name() << " Sauter mean diameter, min, max = "
-        << dsm.weightedAverage(dsm.mesh().V()).value()
-        << ' ' << min(dsm).value()
-        << ' ' << max(dsm).value()
-        << endl;
-
-    return tDsm;
 }
 
 
@@ -926,10 +860,10 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         IOobject
         (
             "Sui",
-            fluid_.time().timeName(),
-            fluid_.mesh()
+            fluid.time().timeName(),
+            fluid.mesh()
         ),
-        fluid_.mesh(),
+        mesh_,
         dimensionedScalar("Sui", inv(dimTime), Zero)
     ),
     coalescence_
@@ -986,7 +920,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     (
         IOobject
         (
-            IOobject::groupName("alpha", this->name()),
+            IOobject::groupName("U", this->name()),
             fluid.time().timeName(),
             fluid.mesh(),
             IOobject::NO_READ,
@@ -999,8 +933,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
             dimVelocity,
             Zero
         )
-    ),
-    d_()
+    )
 {
     this->registerVelocityAndSizeGroups();
 
@@ -1015,32 +948,6 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     << exit(FatalError);
     }
 
-    if (velocityGroups_.size() > 1)
-    {
-        d_.reset
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName("d", this->name()),
-                    fluid.time().timeName(),
-                    fluid.mesh(),
-                    IOobject::NO_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                fluid.mesh(),
-                dimensionedScalar
-                (
-                    IOobject::groupName("d", this->name()),
-                    dimLength,
-                    Zero
-                )
-            )
-        );
-
-
-    }
 
     if (coalescence_.size() != 0)
     {
@@ -1125,10 +1032,10 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     "r",
-                    fluid_.time().timeName(),
-                    fluid_.mesh()
+                    fluid.time().timeName(),
+                    fluid.mesh()
                 ),
-                fluid_.mesh(),
+                fluid.mesh(),
                 dimensionedScalar("r", dimless, Zero)
             )
         );
@@ -1140,10 +1047,10 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     "r",
-                    fluid_.time().timeName(),
-                    fluid_.mesh()
+                    fluid.time().timeName(),
+                    fluid.mesh()
                 ),
-                fluid_.mesh(),
+                fluid.mesh(),
                 dimensionedScalar("r", dimless, Zero)
             )
         );
@@ -1250,11 +1157,11 @@ void Foam::diameterModels::populationBalanceModel::solve()
             )
         );
 
+    calcAlphas();
+    calcVelocity();
+
     if (!solveOnFinalIterOnly || pimple_.finalIter())
     {
-        calcAlphas();
-        calcVelocity();
-
         label nCorr(readLabel(solutionControls.lookup("nCorr")));
         scalar tolerance
             (
@@ -1263,7 +1170,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
 
         if (nCorr > 0)
         {
-            preSolve();
+            correct();
         }
 
         int iCorr = 0;
@@ -1337,11 +1244,6 @@ void Foam::diameterModels::populationBalanceModel::solve()
             {
                 velocityGroups_[i]->postSolve();
             }
-        }
-
-        if (velocityGroups_.size() > 1)
-        {
-            d_() = dsm();
         }
 
         volScalarField fAlpha0
