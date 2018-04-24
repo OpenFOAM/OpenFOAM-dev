@@ -83,33 +83,25 @@ Foam::word Foam::Time::controlDictName("controlDict");
 
 void Foam::Time::adjustDeltaT()
 {
-    scalar timeToNextWrite = max
+    const scalar timeToNextWrite = min
     (
-        0.0,
-        (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
+        max
+        (
+            0,
+            (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
+        ),
+        functionObjects_.timeToNextWrite()
     );
 
-    timeToNextWrite = min(timeToNextWrite, functionObjects_.timeToNextWrite());
+    const scalar nSteps = timeToNextWrite/deltaT_;
 
-    scalar nSteps = timeToNextWrite/deltaT_;
-
-    // For tiny deltaT the label can overflow!
+    // Ensure nStepsToNextWrite does not overflow
     if (nSteps < labelMax)
     {
-        label nStepsToNextWrite = label(nSteps + 0.5);
-
-        scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
-
-        // Control the increase of the time step to within a factor of 2
-        // and the decrease within a factor of 5.
-        if (newDeltaT >= deltaT_)
-        {
-            deltaT_ = min(newDeltaT, 2.0*deltaT_);
-        }
-        else
-        {
-            deltaT_ = max(newDeltaT, 0.2*deltaT_);
-        }
+        // Allow the time-step to increase by up to 1%
+        // to accommodate the next write time before splitting
+        const label nStepsToNextWrite = label(max(nSteps, 1) + 0.99);
+        deltaT_ = timeToNextWrite/nStepsToNextWrite;
     }
 }
 
@@ -1024,7 +1016,7 @@ Foam::Time& Foam::Time::operator++()
         // If the time is very close to zero reset to zero
         if (mag(value()) < 10*small*deltaT_)
         {
-            setTime(0.0, timeIndex_);
+            setTime(0, timeIndex_);
         }
 
         if (sigStopAtWriteNow_.active() || sigWriteNow_.active())
