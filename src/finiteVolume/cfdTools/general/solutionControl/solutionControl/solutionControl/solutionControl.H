@@ -81,7 +81,7 @@ public:
 
     // Constructors
 
-        //- Construct from the time, a the name of the algorithm and a registry
+        //- Construct from the time, the name of the algorithm and a registry
         solutionControl
         (
             const objectRegistry& registry,

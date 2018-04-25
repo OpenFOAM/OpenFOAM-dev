@@ -302,11 +302,7 @@ bool Foam::pimpleMultiRegionControl::run(Time& time)
 {
     read();
 
-    if (converged())
-    {
-        time.writeAndEnd();
-    }
-    else
+    if (!endIfConverged(time))
     {
         forAll(pimpleControls_, i)
         {
@@ -326,11 +322,7 @@ bool Foam::pimpleMultiRegionControl::loop(Time& time)
 {
     read();
 
-    if (converged())
-    {
-        time.writeAndEnd();
-    }
-    else
+    if (!endIfConverged(time))
     {
         forAll(pimpleControls_, i)
         {

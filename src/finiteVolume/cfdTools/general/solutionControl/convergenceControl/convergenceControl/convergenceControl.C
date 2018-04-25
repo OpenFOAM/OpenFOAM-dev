@@ -96,4 +96,27 @@ bool Foam::convergenceControl::converged()
 }
 
 
+bool Foam::convergenceControl::endIfConverged(Time& time)
+{
+    if (converged())
+    {
+        if (time.writeTime())
+        {
+            time.stopAt(Time::saNoWriteNow);
+            time.setEndTime(time);
+        }
+        else
+        {
+            time.writeAndEnd();
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 // ************************************************************************* //

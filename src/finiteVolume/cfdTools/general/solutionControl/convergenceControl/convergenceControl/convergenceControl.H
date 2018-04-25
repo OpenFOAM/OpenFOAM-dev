@@ -154,6 +154,9 @@ public:
 
             //- Flag to indicate whether convergance has been reached
             bool converged();
+
+            //- End the run if convergance has been reached
+            bool endIfConverged(Time& time);
 };
 
 

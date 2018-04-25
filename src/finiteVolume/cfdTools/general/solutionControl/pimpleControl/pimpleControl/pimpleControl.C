@@ -103,11 +103,7 @@ bool Foam::pimpleControl::run(Time& time)
 {
     read();
 
-    if (converged())
-    {
-        time.writeAndEnd();
-    }
-    else
+    if (!endIfConverged(time))
     {
         storePrevIterFields();
     }
@@ -120,11 +116,7 @@ bool Foam::pimpleControl::loop(Time& time)
 {
     read();
 
-    if (converged())
-    {
-        time.writeAndEnd();
-    }
-    else
+    if (!endIfConverged(time))
     {
         storePrevIterFields();
     }

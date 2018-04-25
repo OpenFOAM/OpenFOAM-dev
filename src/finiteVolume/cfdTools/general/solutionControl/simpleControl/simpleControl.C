@@ -66,11 +66,7 @@ bool Foam::simpleControl::run(Time& time)
 {
     read();
 
-    if (converged())
-    {
-        time.writeAndEnd();
-    }
-    else
+    if (!endIfConverged(time))
     {
         storePrevIterFields();
     }
@@ -83,11 +79,7 @@ bool Foam::simpleControl::loop(Time& time)
 {
     read();
 
-    if (converged())
-    {
-        time.writeAndEnd();
-    }
-    else
+    if (!endIfConverged(time))
     {
         storePrevIterFields();
     }
