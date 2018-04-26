@@ -164,7 +164,7 @@ then
 fi
 
 # Clean up on termination and on Ctrl-C
-trap 'mv ${MAIN_CONTROL_DICT}.orig ${MAIN_CONTROL_DICT} 2>/dev/null; exit $runErr' \
+trap 'mv ${MAIN_CONTROL_DICT}.orig ${MAIN_CONTROL_DICT} 2>/dev/null; exit $retVal' \
     EXIT TERM INT
 cp ${MAIN_CONTROL_DICT} ${MAIN_CONTROL_DICT}.orig
 
@@ -204,9 +204,8 @@ then
     done
 fi
 
-#cp -f $FOAM_TUTORIALS/Allrun .
-./Allrun
-[ $? -gt 0 ] && runErr=1 || runErr=0
+cp -f $FOAM_TUTORIALS/Allrun .
+./Allrun || retVal=1
 
 sed -e :a -e '/\\$/N; s/\\\n//; ta' Allrun > temp
 APPLICATIONS=\
@@ -238,7 +237,6 @@ do
     echo "" >> $SOLVERS_FILE
 done
 
-echo $runErr
+exit $retVal
 
-exit $runErr
 #------------------------------------------------------------------------------

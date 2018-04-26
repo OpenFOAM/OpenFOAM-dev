@@ -33,13 +33,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-dir=${PWD##*/}
 
 # logReport <logfile>
-# Extracts useful info from log file.
+# Extracts useful info from log file
 logReport()
 {
-    err=0
     caseName=`dirname $1 | sed s/"\(.*\)\.\/"/""/g`
     app=`echo $1 | sed s/"\(.*\)log\."/""/g`
     appAndCase="Application $app - case $caseName"
@@ -53,11 +51,11 @@ logReport()
     if [ "$fatalError" ]
     then
         echo "$appAndCase: ** FOAM FATAL ERROR **"
-        err=1
+        return 1
     elif [ "$UxSS" -a "$UySS" -a "$UzSS" ]
     then
         echo "$appAndCase: ** Solution singularity **"
-        err=1
+        return 1
     elif [ "$completed" ]
     then
         completionTime=`tail -10 $log | grep Execution | cut -d= -f2 | sed 's/^[ \t]*//'`
@@ -66,12 +64,34 @@ logReport()
             completionTime="in $completionTime"
         fi
         echo "$appAndCase: completed $completionTime"
+        return 0
     else
         echo "$appAndCase: unconfirmed completion"
-        err=1
+        return 1
     fi
+}
 
-    return $err
+
+# logReportDir <directory>
+# Extracts useful info from all log files in a directory
+logReportDir()
+{
+    [ -d $1 ] || return 0
+
+    cd $1 || return 1
+
+    logs=`find . -name "log.*"`
+    [ -n "$logs" ] || return 0
+
+    retVal=0
+
+    for log in `echo $logs | xargs ls -rt`
+    do
+        logReport $log >> ../testLoopReport || retVal=1
+    done
+    echo "" >> ../testLoopReport
+
+    return $retVal
 }
 
 
@@ -80,33 +100,17 @@ foamRunTutorials -test -skipFirst
 
 
 # Analyse all log files
-rm testLoopReport > /dev/null 2>&1 &
-touch testLoopReport
-runErr=0
+rm -f testLoopReport && touch testLoopReport
+
+retVal=0
 
 for appDir in *
 do
-    appDirErr=$(
-        logErr=0
-        [ -d $appDir ] && cd $appDir || exit
-
-        logs=`find . -name "log.*"`
-        [ -n "$logs" ] || exit
-
-        for log in `echo $logs | xargs ls -rt`
-        do
-            logReport $log >> ../testLoopReport
-            [ $? -gt 0 ] && logErr=$((logErr+1))
-        done
-        echo "" >> ../testLoopReport
-        echo $logErr
-    )
-
-    [ -n "$appDirErr" ] && [ $appDirErr -gt 0 ] && runErr=1
+    logReportDir $appDir || retVal=1
 done
 
 find . -name "log.*" -exec cat {} \; >> logs
 
-exit $runErr
+exit $retVal
 
 #------------------------------------------------------------------------------
