@@ -225,20 +225,9 @@ corrCriteriaSatisfied() const
 
 void Foam::singleRegionCorrectorConvergenceControl::resetCorrSolveIndex()
 {
-    const dictionary& solverDict = mesh_.solverPerformanceDict();
-    forAllConstIter(dictionary, solverDict, iter)
+    forAll(corrResidualControl_, i)
     {
-        const word& variableName = iter().keyword();
-        const label fieldi =
-            convergenceControl::residualControlIndex
-            (
-                variableName,
-                corrResidualControl_
-            );
-        if (fieldi != -1)
-        {
-            corrResidualControl_[fieldi].solveIndex = 0;
-        }
+        corrResidualControl_[i].solveIndex = 0;
     }
 }
 
