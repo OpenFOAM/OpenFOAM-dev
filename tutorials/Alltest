@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -164,7 +164,7 @@ then
 fi
 
 # Clean up on termination and on Ctrl-C
-trap 'mv ${MAIN_CONTROL_DICT}.orig ${MAIN_CONTROL_DICT} 2>/dev/null; exit 0' \
+trap 'mv ${MAIN_CONTROL_DICT}.orig ${MAIN_CONTROL_DICT} 2>/dev/null; exit $runErr' \
     EXIT TERM INT
 cp ${MAIN_CONTROL_DICT} ${MAIN_CONTROL_DICT}.orig
 
@@ -204,9 +204,9 @@ then
     done
 fi
 
-cp -f $FOAM_TUTORIALS/Allrun .
+#cp -f $FOAM_TUTORIALS/Allrun .
 ./Allrun
-
+[ $? -gt 0 ] && runErr=1 || runErr=0
 
 sed -e :a -e '/\\$/N; s/\\\n//; ta' Allrun > temp
 APPLICATIONS=\
@@ -238,4 +238,7 @@ do
     echo "" >> $SOLVERS_FILE
 done
 
+echo $runErr
+
+exit $runErr
 #------------------------------------------------------------------------------
