@@ -75,7 +75,7 @@ logReport()
 # logReportDir <directory>
 # Extracts useful info from all log files in a directory
 logReportDir()
-{
+(
     [ -d $1 ] || return 0
 
     cd $1 || return 1
@@ -92,7 +92,7 @@ logReportDir()
     echo "" >> ../testLoopReport
 
     return $retVal
-}
+)
 
 
 # Recursively run all cases
