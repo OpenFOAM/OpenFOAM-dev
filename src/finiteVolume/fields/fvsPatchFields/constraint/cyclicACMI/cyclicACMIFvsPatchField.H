@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef cyclicACMIFvsPatchField_H
 #define cyclicACMIFvsPatchField_H
 
-#include "coupledFvsPatchField.H"
+#include "cyclicAMIFvsPatchField.H"
 #include "cyclicACMIFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,14 +50,8 @@ namespace Foam
 template<class Type>
 class cyclicACMIFvsPatchField
 :
-    public coupledFvsPatchField<Type>
+    public cyclicAMIFvsPatchField<Type>
 {
-    // Private data
-
-        //- Local reference cast into the cyclic patch
-        const cyclicACMIFvPatch& cyclicACMIPatch_;
-
-
 public:
 
     //- Runtime type information
@@ -66,35 +60,8 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        cyclicACMIFvsPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&
-        );
-
-        //- Construct from patch, internal field and dictionary
-        cyclicACMIFvsPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
-            const dictionary&
-        );
-
-        //- Construct by mapping given cyclicACMIFvsPatchField onto a new patch
-        cyclicACMIFvsPatchField
-        (
-            const cyclicACMIFvsPatchField<Type>&,
-            const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
-            const fvPatchFieldMapper&
-        );
-
-        //- Construct as copy
-        cyclicACMIFvsPatchField
-        (
-            const cyclicACMIFvsPatchField<Type>&
-        );
+        //- Inherit parent constructors
+        using cyclicAMIFvsPatchField<Type>::cyclicAMIFvsPatchField;
 
         //- Construct and return a clone
         virtual tmp<fvsPatchField<Type>> clone() const
@@ -104,13 +71,6 @@ public:
                 new cyclicACMIFvsPatchField<Type>(*this)
             );
         }
-
-        //- Construct as copy setting internal field reference
-        cyclicACMIFvsPatchField
-        (
-            const cyclicACMIFvsPatchField<Type>&,
-            const DimensionedField<Type, surfaceMesh>&
-        );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvsPatchField<Type>> clone
@@ -123,25 +83,12 @@ public:
                 new cyclicACMIFvsPatchField<Type>(*this, iF)
             );
         }
-
-    // Member functions
-
-        // Access
-
-            //- Return true if running parallel
-            virtual bool coupled() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "cyclicACMIFvsPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

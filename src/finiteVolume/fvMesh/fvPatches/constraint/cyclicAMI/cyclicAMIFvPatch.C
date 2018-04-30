@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,26 +37,24 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-bool Foam::cyclicAMIFvPatch::coupled() const
+Foam::tmp<Foam::scalarField> Foam::cyclicAMIFvPatch::deltan() const
 {
-    return Pstream::parRun() || (this->size() && neighbFvPatch().size());
+    return nf() & coupledFvPatch::delta();
 }
 
 
-void Foam::cyclicAMIFvPatch::makeWeights(scalarField& w) const
+Foam::tmp<Foam::scalarField> Foam::cyclicAMIFvPatch::nbrDeltan() const
 {
     if (coupled())
     {
         const cyclicAMIFvPatch& nbrPatch = neighbFvPatch();
 
-        const scalarField deltas(nf() & coupledFvPatch::delta());
-
-        tmp<scalarField> tnbrDeltas;
+        tmp<scalarField> tnbrDeltan;
         if (applyLowWeightCorrection())
         {
-            tnbrDeltas =
+            tnbrDeltan =
                 interpolate
                 (
                     nbrPatch.nf() & nbrPatch.coupledFvPatch::delta(),
@@ -65,16 +63,30 @@ void Foam::cyclicAMIFvPatch::makeWeights(scalarField& w) const
         }
         else
         {
-            tnbrDeltas =
+            tnbrDeltan =
                 interpolate(nbrPatch.nf() & nbrPatch.coupledFvPatch::delta());
         }
 
-        const scalarField& nbrDeltas = tnbrDeltas();
+        return tnbrDeltan;
+    }
+    else
+    {
+        return tmp<scalarField>();
+    }
+}
 
-        forAll(deltas, facei)
+
+void Foam::cyclicAMIFvPatch::makeWeights(scalarField& w) const
+{
+    if (coupled())
+    {
+        const scalarField deltan(this->deltan());
+        const scalarField nbrDeltan(this->nbrDeltan());
+
+        forAll(deltan, facei)
         {
-            scalar di = deltas[facei];
-            scalar dni = nbrDeltas[facei];
+            scalar di = deltan[facei];
+            scalar dni = nbrDeltan[facei];
 
             w[facei] = dni/(di + dni);
         }
@@ -84,6 +96,14 @@ void Foam::cyclicAMIFvPatch::makeWeights(scalarField& w) const
         // Behave as uncoupled patch
         fvPatch::makeWeights(w);
     }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::cyclicAMIFvPatch::coupled() const
+{
+    return Pstream::parRun() || (this->size() && neighbFvPatch().size());
 }
 
 
