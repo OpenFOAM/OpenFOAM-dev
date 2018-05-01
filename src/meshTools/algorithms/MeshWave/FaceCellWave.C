@@ -576,7 +576,7 @@ void Foam::FaceCellWave<Type, TrackingData>::handleProcPatches()
         }
 
         UOPstream toNeighbour(procPatch.neighbProcNo(), pBufs);
-        //writeFaces(nSendFaces, sendFaces, sendFacesInfo, toNeighbour);
+        // writeFaces(nSendFaces, sendFaces, sendFacesInfo, toNeighbour);
         toNeighbour
             << SubList<label>(sendFaces, nSendFaces)
             << SubList<Type>(sendFacesInfo, nSendFaces);

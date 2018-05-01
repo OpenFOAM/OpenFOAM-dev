@@ -103,7 +103,7 @@ void Foam::sigStopAtWriteNow::sigHandler(int)
     runTimePtr_->stopAt(Time::saWriteNow);
 
     //// Throw signal (to old handler)
-    //raise(signal_);
+    // raise(signal_);
 }
 
 

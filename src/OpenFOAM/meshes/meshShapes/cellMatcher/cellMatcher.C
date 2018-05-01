@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ Foam::label Foam::cellMatcher::calcLocalFaces
     }
 
     ////debug
-    //write(Info);
+    // write(Info);
 
     return newVertI;
 }
@@ -144,7 +144,7 @@ void Foam::cellMatcher::calcEdgeAddressing(const label numVert)
         const face& f = localFaces_[localFacei];
 
         label prevVertI = faceSize_[localFacei] - 1;
-        //forAll(f, fp)
+        // forAll(f, fp)
         for
         (
             label fp = 0;

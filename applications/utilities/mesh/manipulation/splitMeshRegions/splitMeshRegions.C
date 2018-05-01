@@ -631,7 +631,7 @@ autoPtr<mapPolyMesh> createRegionMesh
         );
 
         if (!io.typeHeaderOk<IOdictionary>(true))
-        //if (!exists(io.objectPath()))
+        // if (!exists(io.objectPath()))
         {
             Info<< "Writing dummy " << regionName/io.name() << endl;
             dictionary dummyDict;
@@ -926,7 +926,7 @@ void createAndWriteRegion
         }
     }
 
-    //reorderPatches(newMesh(), oldToNew, nNewPatches);
+    // reorderPatches(newMesh(), oldToNew, nNewPatches);
     fvMeshTools::reorderPatches(newMesh(), oldToNew, nNewPatches, true);
 
     // Rename shared patches with region name
@@ -1075,7 +1075,7 @@ labelList addRegionPatches
         const edge& e = interfaces[interI];
         const Pair<word>& names = interfaceNames[interI];
 
-        //Info<< "For interface " << interI
+        // Info<< "For interface " << interI
         //    << " between regions " << e
         //    << " trying to add patches " << names << endl;
 
@@ -1097,9 +1097,9 @@ labelList addRegionPatches
         (
             mesh,
             patch1,
-            dictionary(),   //optional per field value
+            dictionary(),   // optional per field value
             calculatedFvPatchField<scalar>::typeName,
-            true            //validBoundary
+            true            // validBoundary
         );
 
         mappedWallPolyPatch patch2
@@ -1118,9 +1118,9 @@ labelList addRegionPatches
         (
             mesh,
             patch2,
-            dictionary(),   //optional per field value
+            dictionary(),   // optional per field value
             calculatedFvPatchField<scalar>::typeName,
-            true            //validBoundary
+            true            // validBoundary
         );
 
         Info<< "For interface between region " << regionNames[e[0]]
@@ -1920,10 +1920,10 @@ int main(int argc, char *argv[])
                         zoneI,
                         new cellZone
                         (
-                            zoneName,           //name
-                            regionCells,        //addressing
-                            zoneI,              //index
-                            cellZones           //cellZoneMesh
+                            zoneName,           // name
+                            regionCells,        // addressing
+                            zoneI,              // index
+                            cellZones           // cellZoneMesh
                         )
                     );
                 }

@@ -1581,7 +1581,7 @@ Foam::Ostream& Foam::operator<<
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const extendedEdgeMesh& em)
 {
-    //fileFormats::extendedEdgeMeshFormat::write(os, em.points_, em.edges_);
+    // fileFormats::extendedEdgeMeshFormat::write(os, em.points_, em.edges_);
     os  << "// points" << nl
         << em.points() << nl
         << "// edges" << nl
@@ -1620,7 +1620,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const extendedEdgeMesh& em)
 
 Foam::Istream& Foam::operator>>(Istream& is, extendedEdgeMesh& em)
 {
-    //fileFormats::extendedEdgeMeshFormat::read(is, em.points_, em.edges_);
+    // fileFormats::extendedEdgeMeshFormat::read(is, em.points_, em.edges_);
     is  >> static_cast<edgeMesh&>(em)
         >> em.concaveStart_
         >> em.mixedStart_

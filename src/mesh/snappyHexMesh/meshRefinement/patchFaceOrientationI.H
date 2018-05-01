@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ inline bool Foam::patchFaceOrientation::updateEdge
     const face& f = patch.localFaces()[facei];
     const edge& e = patch.edges()[edgeI];
 
-    //Pout<< "Updating edge:" << edgeI << " verts:" << e << nl
+    // Pout<< "Updating edge:" << edgeI << " verts:" << e << nl
     //    << "    start:" << patch.localPoints()[e[0]] << nl
     //    << "      end:" << patch.localPoints()[e[1]] << endl;
 
@@ -173,7 +173,7 @@ inline bool Foam::patchFaceOrientation::updateFace
     const edge& e = patch.edges()[edgeI];
 
 
-    //Pout<< "Updating face:" << facei << nl
+    // Pout<< "Updating face:" << facei << nl
     //    << "    verts:" << f << nl
     //    << " with edge:" << edgeI << nl
     //    << "    start:" << patch.localPoints()[e[0]] << nl

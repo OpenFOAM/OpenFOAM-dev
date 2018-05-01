@@ -154,16 +154,16 @@ extrusion
     extrude         on;
 
     extrudeModel        linearDirection;
-    //extrudeModel        wedge;
+    // extrudeModel        wedge;
 
     patchInfo
     {
-        //type empty;
-        //startFace
+        // type empty;
+        // startFace
     }
 
     patchType           empty;
-    //patchType           wedge;
+    // patchType           wedge;
 
     nLayers             1;
 

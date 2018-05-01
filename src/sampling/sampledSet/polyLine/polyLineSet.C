@@ -65,7 +65,7 @@ bool Foam::polyLineSet::trackToBoundary
 
         if (singleParticle.onBoundaryFace())
         {
-            //Info<< "trackToBoundary : reached boundary"
+            // Info<< "trackToBoundary : reached boundary"
             //    << "  trackPt:" << trackPt << endl;
             if
             (
@@ -74,7 +74,7 @@ bool Foam::polyLineSet::trackToBoundary
             )
             {
                 // Reached samplePt on boundary
-                //Info<< "trackToBoundary : boundary. also sampling."
+                // Info<< "trackToBoundary : boundary. also sampling."
                 //    << "  trackPt:" << trackPt << " sampleI+1:" << sampleI+1
                 //    << endl;
                 samplingPts.append(trackPt);
@@ -104,7 +104,7 @@ bool Foam::polyLineSet::trackToBoundary
         if (sampleI == sampleCoords_.size() - 1)
         {
             // no more samples.
-            //Info<< "trackToBoundary : Reached end : sampleI now:" << sampleI
+            // Info<< "trackToBoundary : Reached end : sampleI now:" << sampleI
             //    << endl;
             return false;
         }
@@ -204,13 +204,13 @@ void Foam::polyLineSet::calcSamples
 
             if (isSample && (mag(lastSample - trackPt) > smallDist))
             {
-                //Info<< "calcSamples : getTrackingPoint returned valid sample "
-                //    << "  trackPt:" << trackPt
-                //    << "  trackFacei:" << trackFacei
-                //    << "  trackCelli:" << trackCelli
-                //    << "  sampleI:" << sampleI
-                //    << "  dist:" << dist
-                //    << endl;
+                // Info<< "calcSamples : getTrackingPoint returned valid sample"
+                //     << "  trackPt:" << trackPt
+                //     << "  trackFacei:" << trackFacei
+                //     << "  trackCelli:" << trackCelli
+                //     << "  sampleI:" << sampleI
+                //     << "  dist:" << dist
+                //     << endl;
 
                 samplingPts.append(trackPt);
                 samplingCells.append(trackCelli);
@@ -235,7 +235,7 @@ void Foam::polyLineSet::calcSamples
 
         if (sampleI == sampleCoords_.size() - 1)
         {
-            //Info<< "calcSamples : Reached end of samples: "
+            // Info<< "calcSamples : Reached end of samples: "
             //    << "  sampleI now:" << sampleI
             //    << endl;
             break;
@@ -272,7 +272,7 @@ void Foam::polyLineSet::calcSamples
 
         if (!bReached)
         {
-            //Info<< "calcSamples : Reached end of samples: "
+            // Info<< "calcSamples : Reached end of samples: "
             //    << "  sampleI now:" << sampleI
             //    << endl;
             break;
@@ -285,7 +285,7 @@ void Foam::polyLineSet::calcSamples
 
         if (sampleI == sampleCoords_.size() - 1)
         {
-            //Info<< "calcSamples : Reached end of samples: "
+            // Info<< "calcSamples : Reached end of samples: "
             //    << "  sampleI now:" << sampleI
             //    << endl;
             break;

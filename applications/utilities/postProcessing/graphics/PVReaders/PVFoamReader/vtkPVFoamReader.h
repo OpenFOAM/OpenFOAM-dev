@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -242,9 +242,9 @@ private:
     //- Cached data for output port0 (experimental!)
     vtkMultiBlockDataSet* output0_;
 
-    //BTX
+    // BTX
     Foam::vtkPVFoam* foamData_;
-    //ETX
+    // ETX
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

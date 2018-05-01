@@ -1074,7 +1074,7 @@ bool Foam::backgroundMeshDecomposition::overlapsThisProcessor
     const scalar radiusSqr
 ) const
 {
-    //return bFTreePtr_().findAnyOverlap(centre, radiusSqr);
+    // return bFTreePtr_().findAnyOverlap(centre, radiusSqr);
 
     return bFTreePtr_().findNearest(centre, radiusSqr).hit();
 }
@@ -1448,7 +1448,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 ////
 ////        if (flagOverlap)
 ////        {
-////            //if (vertexOctree.findAnyOverlap(c, rSqr))
+////            // if (vertexOctree.findAnyOverlap(c, rSqr))
 //////            if (vertexOctree.findNearest(c, rSqr*1.001).hit())
 //////            {
 //////                sphereOverlapsCandidate[sI] = true;
@@ -1565,7 +1565,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 //
 //        if (flagOverlap)
 //        {
-//            //if (vertexOctree.findAnyOverlap(c, rSqr))
+//            // if (vertexOctree.findAnyOverlap(c, rSqr))
 ////            if (vertexOctree.findNearest(c, rSqr*1.001).hit())
 ////            {
 ////                sphereOverlapsCandidate[sI] = true;

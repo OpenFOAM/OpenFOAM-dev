@@ -236,7 +236,7 @@ void Foam::distributedTriSurfaceMesh::distributeSegment
             // Alternative: any processor only gets clipped bit of
             // segment. This gives small problems with additional
             // truncation errors.
-            //splitSegment
+            // splitSegment
             //(
             //    segmentI,
             //    start,
@@ -870,7 +870,7 @@ Foam::distributedTriSurfaceMesh::independentlyDistributedBbs
     forAll(bbs, proci)
     {
         bbs[proci].setSize(1);
-        //bbs[proci][0] = boundBox::invertedBox;
+        // bbs[proci][0] = boundBox::invertedBox;
         bbs[proci][0].min() = point( vGreat,  vGreat,  vGreat);
         bbs[proci][0].max() = point(-vGreat, -vGreat, -vGreat);
     }
@@ -1416,7 +1416,7 @@ Foam::distributedTriSurfaceMesh::distributedTriSurfaceMesh
     const dictionary& dict
 )
 :
-    //triSurfaceMesh(io, dict),
+    // triSurfaceMesh(io, dict),
     triSurfaceMesh
     (
         IOobject
@@ -2133,7 +2133,7 @@ void Foam::distributedTriSurfaceMesh::distribute
 
         if (debug)
         {
-            //Pout<< "Overlapping with proc " << proci
+            // Pout<< "Overlapping with proc " << proci
             //    << " faces:" << faceSendMap[proci].size()
             //    << " points:" << pointSendMap[proci].size() << endl << endl;
         }
@@ -2254,7 +2254,7 @@ void Foam::distributedTriSurfaceMesh::distribute
                     )
                 );
 
-                //if (debug)
+                // if (debug)
                 //{
                 //    Pout<< "Sending to " << proci
                 //        << " faces:" << faceSendMap[proci].size()
@@ -2282,7 +2282,7 @@ void Foam::distributedTriSurfaceMesh::distribute
                 // Receive
                 triSurface subSurface(str);
 
-                //if (debug)
+                // if (debug)
                 //{
                 //    Pout<< "Received from " << proci
                 //        << " faces:" << subSurface.size()
@@ -2303,7 +2303,7 @@ void Foam::distributedTriSurfaceMesh::distribute
                     pointConstructMap[proci]
                 );
 
-                //if (debug)
+                // if (debug)
                 //{
                 //    Pout<< "Current merged surface : faces:" << allTris.size()
                 //        << " points:" << allPoints.size() << endl << endl;

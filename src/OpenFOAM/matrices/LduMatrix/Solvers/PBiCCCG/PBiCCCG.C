@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ Foam::PBiCCCG<Type, DType, LUType>::solve
     Field<Type> wT(nCells);
     Type* __restrict__ wTPtr = wT.begin();
 
-    scalar wArT = 1e15; //this->matrix_.great_;
+    scalar wArT = 1e15; // this->matrix_.great_;
     scalar wArTold = wArT;
 
     // --- Calculate A.psi and T.psi

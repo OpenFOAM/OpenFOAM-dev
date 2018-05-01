@@ -251,7 +251,7 @@ void Foam::primitiveMesh::calcEdges(const bool doFaceEdges) const
             nInternalEdges_ = es.size()-nExtEdges;
             nInternal1Edges_ = nInternal0Edges_+nInt1Edges;
 
-            //Pout<< "Edge overview:" << nl
+            // Pout<< "Edge overview:" << nl
             //    << "    total number of edges           : " << es.size()
             //    << nl
             //    << "    boundary edges                  : " << nExtEdges
@@ -503,7 +503,7 @@ const Foam::edgeList& Foam::primitiveMesh::edges() const
 {
     if (!edgesPtr_)
     {
-        //calcEdges(true);
+        // calcEdges(true);
         calcEdges(false);
     }
 
@@ -514,7 +514,7 @@ const Foam::labelListList& Foam::primitiveMesh::pointEdges() const
 {
     if (!pePtr_)
     {
-        //calcEdges(true);
+        // calcEdges(true);
         calcEdges(false);
     }
 
@@ -532,7 +532,7 @@ const Foam::labelListList& Foam::primitiveMesh::faceEdges() const
                 << "calculating faceEdges" << endl;
         }
 
-        //calcEdges(true);
+        // calcEdges(true);
         const faceList& fcs = faces();
         const labelListList& pe = pointEdges();
         const edgeList& es = edges();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,11 +55,11 @@ bool Foam::fileFormats::extendedEdgeMeshFormat::read
     // Construct dummy time to use as an objectRegistry
     Time dummyTime
     (
-        ".",        //rootPath,
-        ".",        //caseName,
-        "system",   //systemName,
-        "constant", //constantName,
-        false       //enableFunctionObjects
+        ".",        // rootPath,
+        ".",        // caseName,
+        "system",   // systemName,
+        "constant", // constantName,
+        false       // enableFunctionObjects
     );
 
     // Construct IOobject to re-use the headerOk & readHeader

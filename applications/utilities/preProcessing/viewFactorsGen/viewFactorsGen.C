@@ -330,8 +330,8 @@ int main(int argc, char *argv[])
     // Calculate total number of fine and coarse faces
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    label nCoarseFaces = 0;      //total number of coarse faces
-    label nFineFaces = 0;        //total number of fine faces
+    label nCoarseFaces = 0;      // total number of coarse faces
+    label nFineFaces = 0;        // total number of fine faces
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
     const polyBoundaryMesh& coarsePatches = coarseMesh.boundaryMesh();

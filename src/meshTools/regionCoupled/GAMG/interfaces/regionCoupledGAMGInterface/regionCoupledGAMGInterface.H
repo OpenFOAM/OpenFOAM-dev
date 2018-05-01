@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ public:
             //- Write to stream
             virtual void write(Ostream&) const
             {
-                //TBD. How to serialise the AMI such that we can stream
+                // TBD. How to serialise the AMI such that we can stream
                 // regionCoupledGAMGInterface.
                 NotImplemented;
             }

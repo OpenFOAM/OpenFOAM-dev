@@ -51,8 +51,8 @@ geometry
         type triSurfaceMesh;
         file "sphere.stl"
 
-        //tolerance   1E-5;   // optional:non-default tolerance on intersections
-        //maxTreeDepth 10;    // optional:depth of octree. Decrease only in case
+        // tolerance   1E-5;   // optional:non-default tolerance on intersections
+        // maxTreeDepth 10;    // optional:depth of octree. Decrease only in case
                               // of memory limitations.
 
         // Per region the patchname. If not provided will be <surface>_<region>.
@@ -130,7 +130,7 @@ castellatedMeshControls
     (
         //{
         //    file "someLine.eMesh";
-        //    //level 2;
+        //    // level 2;
         //    levels ((0.0 2) (1.0 3));
         //}
     );
@@ -171,13 +171,13 @@ castellatedMeshControls
 
 
             //- Optional increment (on top of max level) in small gaps
-            //gapLevelIncrement 2;
+            // gapLevelIncrement 2;
 
             //- Optional angle to detect small-large cell situation
             //  perpendicular to the surface. Is the angle of face w.r.t.
             //  the local surface normal. Use on flat(ish) surfaces only.
             //  Otherwise leave out or set to negative number.
-            //perpendicularAngle 10;
+            // perpendicularAngle 10;
 
             //- Optional faceZone and (for closed surface) cellZone with
             //  how to select the cells that are in the cellZone
@@ -186,9 +186,9 @@ castellatedMeshControls
             //  - if on cellZone(s) : point out of (maximum) cellZone
             //  - if freestanding   : oriented according to surface
 
-            //faceZone sphere;
-            //cellZone sphere;
-            //cellZoneInside inside;  //outside/insidePoint
+            // faceZone sphere;
+            // cellZone sphere;
+            // cellZoneInside inside;  // outside/insidePoint
 
             //- Optional specification of what to do with faceZone faces:
             //      internal : keep them as internal faces (default)
@@ -196,7 +196,7 @@ castellatedMeshControls
             //                 freedom in mesh motion
             //      boundary : create free-standing boundary faces (baffles
             //                 but without the shared points)
-            //faceType baffle;
+            // faceType baffle;
         }
     }
 
@@ -206,7 +206,7 @@ castellatedMeshControls
     resolveFeatureAngle 30;
 
     //- Optional increment (on top of max level) in small gaps
-    //gapLevelIncrement 2;
+    // gapLevelIncrement 2;
 
 
     // Planar angle:
@@ -243,7 +243,7 @@ castellatedMeshControls
             mode inside;
             levels ((1.0 4));
         }
-        //sphere
+        // sphere
         //{
         //    mode distance;
         //    levels ((1.0 5) (2.0 3));
@@ -271,7 +271,7 @@ castellatedMeshControls
 
     // Optional: switch off topological test for cells to-be-squashed
     //           and use geometric test instead
-    //useTopologicalSnapDetection false;
+    // useTopologicalSnapDetection false;
 }
 
 // Settings for the snapping.
@@ -344,12 +344,12 @@ addLayersControls
         // Wanted thickness of the layer next to the wall.
         // If relativeSizes this is relative to undistorted size of cell
         // outside layer.
-        //firstLayerThickness 0.3;
+        // firstLayerThickness 0.3;
 
         // Wanted overall thickness of layers.
         // If relativeSizes this is relative to undistorted size of cell
         // outside layer.
-        //thickness 0.5
+        // thickness 0.5
 
 
     // Minimum overall thickness of total layers. If for any reason layer
@@ -433,15 +433,15 @@ addLayersControls
 
         // Optional: limit the number of steps walking away from the surface.
         // Default is unlimited.
-        //nMedialAxisIter 10;
+        // nMedialAxisIter 10;
 
         // Optional: smooth displacement after medial axis determination.
         // default is 0.
-        //nSmoothDisplacement 90;
+        // nSmoothDisplacement 90;
 
         // (wip)Optional: do not extrude a point if none of the surrounding points is
         // not extruded. Default is false.
-        //detectExtrusionIsland true;
+        // detectExtrusionIsland true;
 
 
     // Mesh shrinking
@@ -473,7 +473,7 @@ addLayersControls
         // Additional reporting: if there are just a few faces where there
         // are mesh errors (after adding the layers) print their face centres.
         // This helps in tracking down problematic mesh areas.
-        //additionalReporting true;
+        // additionalReporting true;
 }
 
 // Generic mesh quality settings. At any undoable phase these determine

@@ -772,7 +772,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
             // cell sticking out which would get flattened.
 
             // Eugene: delete cell no matter what.
-            //if (nBfaces > 1)
+            // if (nBfaces > 1)
             {
                 if
                 (
@@ -781,7 +781,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
                 )
                 {
                     nPrevented++;
-                    //Pout<< "Preventing baffling/removal of 8 anchor point"
+                    // Pout<< "Preventing baffling/removal of 8 anchor point"
                     //    << " cell "
                     //    << celli << " at " << mesh_.cellCentres()[celli]
                     //    << " since new volume "
@@ -866,7 +866,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
                     )
                     {
                         nPrevented++;
-                        //Pout<< "Preventing baffling of 7 anchor cell "
+                        // Pout<< "Preventing baffling of 7 anchor cell "
                         //    << celli
                         //    << " at " << mesh_.cellCentres()[celli]
                         //    << " since new volume "
@@ -968,7 +968,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
                 )
                 {
                     nPrevented++;
-                    //Pout<< "Preventing baffling (to avoid collapse) of face "
+                    // Pout<< "Preventing baffling (to avoid collapse) of face "
                     //    << facei
                     //    << " with all boundary edges "
                     //    << " at " << mesh_.faceCentres()[facei]
@@ -1025,7 +1025,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
                         )
                         {
                             nPrevented++;
-                            //Pout<< "Preventing baffling of coupled face "
+                            // Pout<< "Preventing baffling of coupled face "
                             //    << facei
                             //    << " with all boundary edges "
                             //    << " at " << mesh_.faceCentres()[facei]
@@ -1152,7 +1152,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             *this,
             snapParams,
             nInitErrors,
-            List<labelPair>(0), //baffles
+            List<labelPair>(0), // baffles
             meshMover
         );
 
@@ -1202,7 +1202,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
     {
         faceSet wrongFaces(mesh_, "wrongFaces", 100);
         {
-            //motionSmoother::checkMesh(false, mesh_, motionDict, wrongFaces);
+            // motionSmoother::checkMesh(false, mesh_, motionDict, wrongFaces);
 
             // Just check the errors from squashing
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1210,8 +1210,8 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             const labelList allFaces(identity(mesh_.nFaces()));
             label nWrongFaces = 0;
 
-            //const scalar minV(readScalar(motionDict.lookup("minVol", true)));
-            //if (minV > -great)
+            // const scalar minV(readScalar(motionDict.lookup("minVol", true)));
+            // if (minV > -great)
             //{
             //    polyMeshGeometry::checkFacePyramids
             //    (
@@ -1304,7 +1304,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
                 facePatch[iter.key()] = nearestAdaptPatch[iter.key()];
                 nBaffleFaces++;
 
-                //Pout<< "    " << iter.key()
+                // Pout<< "    " << iter.key()
                 //    //<< " on patch " << mesh_.boundaryMesh()[patchi].name()
                 //    << " is destined for patch " << facePatch[iter.key()]
                 //    << endl;

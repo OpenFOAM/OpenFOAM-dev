@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Foam::faceAreaPairGAMGAgglomeration::faceAreaPairGAMGAgglomeration
 {
     const fvMesh& fvmesh = refCast<const fvMesh>(mesh);
 
-    //agglomerate(mesh, sqrt(fvmesh.magSf().primitiveField()));
+    // agglomerate(mesh, sqrt(fvmesh.magSf().primitiveField()));
     agglomerate
     (
         mesh,
@@ -73,7 +73,7 @@ Foam::faceAreaPairGAMGAgglomeration::faceAreaPairGAMGAgglomeration
                 fvmesh.Sf().primitiveField()
                /sqrt(fvmesh.magSf().primitiveField()),
                 vector(1, 1.01, 1.02)
-                //vector::one
+                // vector::one
             )
         )
     );
@@ -90,7 +90,7 @@ Foam::faceAreaPairGAMGAgglomeration::faceAreaPairGAMGAgglomeration
 :
     pairGAMGAgglomeration(mesh, controlDict)
 {
-    //agglomerate(mesh, sqrt(mag(faceAreas)));
+    // agglomerate(mesh, sqrt(mag(faceAreas)));
     agglomerate
     (
         mesh,
@@ -101,7 +101,7 @@ Foam::faceAreaPairGAMGAgglomeration::faceAreaPairGAMGAgglomeration
                 faceAreas
                /sqrt(mag(faceAreas)),
                 vector(1, 1.01, 1.02)
-                //vector::one
+                // vector::one
             )
         )
     );

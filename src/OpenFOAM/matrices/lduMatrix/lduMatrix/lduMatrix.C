@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -370,7 +370,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<lduMatrix>& ip)
     }
 
 
-    //if (hasLow)
+    // if (hasLow)
     //{
     //    os  << "lower contents:" << endl;
     //    forAll(ldum.lower(), i)
@@ -379,7 +379,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<lduMatrix>& ip)
     //    }
     //    os  << endl;
     //}
-    //if (hasDiag)
+    // if (hasDiag)
     //{
     //    os  << "diag contents:" << endl;
     //    forAll(ldum.diag(), i)
@@ -388,7 +388,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<lduMatrix>& ip)
     //    }
     //    os  << endl;
     //}
-    //if (hasUp)
+    // if (hasUp)
     //{
     //    os  << "upper contents:" << endl;
     //    forAll(ldum.upper(), i)

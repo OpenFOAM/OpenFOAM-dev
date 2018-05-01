@@ -1102,7 +1102,7 @@ bool Foam::dynamicIndexedOctree<Type>::walkToNeighbour
     // - the checked bits have to be  : wantedValue = ?01
     */
 
-    //Pout<< "For point " << facePoint << endl;
+    // Pout<< "For point " << facePoint << endl;
 
     // Go up until we have chance to cross to the wanted direction
     while (wantedValue != (octant & octantMask))
@@ -1176,13 +1176,13 @@ bool Foam::dynamicIndexedOctree<Type>::walkToNeighbour
             return false;
         }
 
-        //Pout<< "    walked from node:" << nodeI << " octant:" << octant
+        // Pout<< "    walked from node:" << nodeI << " octant:" << octant
         //    << " bb:" << nodes_[nodeI].bb_.subBbox(octant) << endl
         //    << "    to:" << parentNodeI << " octant:" << parentOctant
         //    << " bb:" << nodes_[parentNodeI].bb_.subBbox(parentOctant)
         //    << endl;
         //
-        //Pout<< "    octantMask:" << octantMask
+        // Pout<< "    octantMask:" << octantMask
         //    << " wantedValue:" << wantedValue << endl;
 
         nodeI = parentNodeI;
@@ -1194,7 +1194,7 @@ bool Foam::dynamicIndexedOctree<Type>::walkToNeighbour
     // right half we now jump to the left half.
     octant ^= octantMask;
 
-    //Pout<< "    to node:" << nodeI << " octant:" << octant
+    // Pout<< "    to node:" << nodeI << " octant:" << octant
     //    << " subBb:" <<subBbox(nodeI, octant) << endl;
 
 
@@ -1425,8 +1425,8 @@ void Foam::dynamicIndexedOctree<Type>::traverseNode
     point pt;
     bool intersected = octantBb.intersects
     (
-        end,            //treeStart,
-        (start-end),    //treeVec,
+        end,            // treeStart,
+        (start-end),    // treeVec,
 
         end,
         start,
@@ -1496,7 +1496,7 @@ Foam::pointIndexHit Foam::dynamicIndexedOctree<Type>::findLine
     // Current position. Initialize to miss
     pointIndexHit hitInfo(false, treeStart, -1);
 
-    //while (true)
+    // while (true)
     label i = 0;
     for (; i < 100000; i++)
     {
@@ -1629,7 +1629,7 @@ Foam::pointIndexHit Foam::dynamicIndexedOctree<Type>::findLine
                 treeEnd,
                 startNodeI,
                 startOctant,
-                true            //verbose
+                true            // verbose
             );
         }
         if (debug)
@@ -2697,7 +2697,7 @@ void Foam::dynamicIndexedOctree<Type>::print
         {
             const labelList& indices = contents_[getContent(index)];
 
-            if (false) //debug)
+            if (false) // debug)
             {
                 writeOBJ(nodeI, octant);
             }
@@ -2718,7 +2718,7 @@ void Foam::dynamicIndexedOctree<Type>::print
         }
         else
         {
-            if (false) //debug)
+            if (false) // debug)
             {
                 writeOBJ(nodeI, octant);
             }

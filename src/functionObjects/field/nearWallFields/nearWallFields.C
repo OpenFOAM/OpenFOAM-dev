@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     scalar maxTrackLen = 2.0*mesh_.bounds().mag();
 
 
-    //Debug: collect start points
+    // Debug: collect start points
     pointField start;
     if (debug)
     {

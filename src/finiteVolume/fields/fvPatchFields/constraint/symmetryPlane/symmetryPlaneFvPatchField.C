@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,7 @@ Foam::symmetryPlaneFvPatchField<Type>::snGradTransformDiag() const
             this->size(),
             transformMask<Type>
             (
-                //pow<vector, pTraits<Type>::rank>(diag)
+                // pow<vector, pTraits<Type>::rank>(diag)
                 pow
                 (
                     diag,

@@ -156,7 +156,7 @@ void simpleMarkFeatures
         {
             const edge& e = allBoundary.edges()[edgeI];
 
-            //Info<< "Detected non-manifold boundary edge:" << edgeI
+            // Info<< "Detected non-manifold boundary edge:" << edgeI
             //    << " coords:"
             //    << allBoundary.points()[meshPoints[e[0]]]
             //    << allBoundary.points()[meshPoints[e[1]]] << endl;

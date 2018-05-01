@@ -19,7 +19,7 @@ simulationType  RAS;
 
 RAS
 {
-    RASModel mixtureKEpsilon; //LaheyKEpsilon;
+    RASModel mixtureKEpsilon; // LaheyKEpsilon;
 
     turbulence      on;
     printCoeffs     on;

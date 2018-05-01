@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ bool Foam::regIOobject::writeObject
 
 
     //- uncomment this if you want to write global objects on master only
-    //bool isGlobal = global();
+    // bool isGlobal = global();
     bool isGlobal = false;
 
     if (instance() == time().timeName())
@@ -114,7 +114,7 @@ bool Foam::regIOobject::writeObject
 
     if (Pstream::master() || !masterOnly)
     {
-        //if (mkDir(path()))
+        // if (mkDir(path()))
         //{
         //    // Try opening an OFstream for object
         //    OFstream os(objectPath(), fmt, ver, cmp);

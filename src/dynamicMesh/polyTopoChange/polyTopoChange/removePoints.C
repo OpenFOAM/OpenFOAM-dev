@@ -198,7 +198,7 @@ Foam::label Foam::removePoints::countPointUsage
 
     pointCanBeDeleted.setSize(mesh_.nPoints());
     pointCanBeDeleted = false;
-    //label nDeleted = 0;
+    // label nDeleted = 0;
 
     forAll(edge0, pointi)
     {
@@ -222,14 +222,14 @@ Foam::label Foam::removePoints::countPointUsage
             if ((e0Vec & e1Vec) > minCos)
             {
                 pointCanBeDeleted[pointi] = true;
-                //nDeleted++;
+                // nDeleted++;
             }
         }
         else if (edge0[pointi] == -1)
         {
             // point not used at all
             pointCanBeDeleted[pointi] = true;
-            //nDeleted++;
+            // nDeleted++;
         }
     }
     edge0.clear();

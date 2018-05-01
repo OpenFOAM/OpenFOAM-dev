@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -426,7 +426,7 @@ void Foam::energyRegionCoupledFvPatchScalarField::updateInterfaceMatrix
     }
     else
     {
-        //NOTE: This is not correct for preconditioned solvers
+        // NOTE: This is not correct for preconditioned solvers
         // psiInternal is not the information needed of the slave
         forAll(*this, facei)
         {

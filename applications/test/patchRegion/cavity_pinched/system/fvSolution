@@ -19,8 +19,8 @@ solvers
 {
     p
     {
-        //solver          PCG;
-        //preconditioner  DIC;
+        // solver          PCG;
+        // preconditioner  DIC;
 
         solver          GAMG;
         smoother        GaussSeidel;
@@ -31,8 +31,8 @@ solvers
         nCellsInCoarsestLevel 3;
         mergeLevels     1;
 
-        processorAgglomerator   none;   //procFaces;
-        //nAgglomeratingCells     20;
+        processorAgglomerator   none;   // procFaces;
+        // nAgglomeratingCells     20;
 
         tolerance       1e-06;
         relTol          0;

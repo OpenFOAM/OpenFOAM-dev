@@ -307,7 +307,7 @@ void Foam::searchableCylinder::findLineAll
         {
             t1 = -b/(2*a);
 
-            //Pout<< "single solution t:" << t1
+            // Pout<< "single solution t:" << t1
             //    << " for start:" << start << " end:" << end
             //    << " c:" << c << endl;
 
@@ -332,7 +332,7 @@ void Foam::searchableCylinder::findLineAll
         else
         {
             // Aligned with axis. Check if outside radius
-            //Pout<< "small discriminant:" << disc
+            // Pout<< "small discriminant:" << disc
             //    << " for start:" << start << " end:" << end
             //    << " magV:" << magV
             //    << " c:" << c << endl;
@@ -381,7 +381,7 @@ void Foam::searchableCylinder::findLineAll
                     tFar = t2;
                 }
             }
-            //Pout<< "two solutions t1:" << t1 << " t2:" << t2
+            // Pout<< "two solutions t1:" << t1 << " t2:" << t2
             //    << " for start:" << start << " end:" << end
             //    << " magV:" << magV
             //    << " c:" << c << endl;
@@ -389,7 +389,7 @@ void Foam::searchableCylinder::findLineAll
         else
         {
             // Aligned with axis. Check if outside radius
-            //Pout<< "large discriminant:" << disc
+            // Pout<< "large discriminant:" << disc
             //    << " small a:" << a
             //    << " for start:" << start << " end:" << end
             //    << " magV:" << magV

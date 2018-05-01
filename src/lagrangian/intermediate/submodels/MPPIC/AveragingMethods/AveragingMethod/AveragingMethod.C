@@ -86,7 +86,7 @@ Foam::AveragingMethod<Type>::New
 {
     word averageType(dict.lookup(typeName));
 
-    //Info<< "Selecting averaging method "
+    // Info<< "Selecting averaging method "
     //    << averageType << endl;
 
     typename dictionaryConstructorTable::iterator cstrIter =

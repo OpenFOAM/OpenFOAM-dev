@@ -218,7 +218,7 @@ internalFieldTransfer
 ) const
 {
     /*
-    //const labelUList& nbrFaceCells = neighbPatch().faceCells();
+    // const labelUList& nbrFaceCells = neighbPatch().faceCells();
 
     const labelUList& nbrFaceCells = nbrLduInterface().faceCells();
 

@@ -1289,14 +1289,14 @@ Foam::tmp<Foam::scalarField> Foam::triSurface::curvature() const
         const vector2D principalCurvatures =
             eigenValues(pointFundamentalTensors[pi]);
 
-        //scalar curvature =
+        // scalar curvature =
         //    (principalCurvatures[0] + principalCurvatures[1])/2;
         const scalar curvature = max
         (
             mag(principalCurvatures[0]),
             mag(principalCurvatures[1])
         );
-        //scalar curvature = principalCurvatures[0]*principalCurvatures[1];
+        // scalar curvature = principalCurvatures[0]*principalCurvatures[1];
 
         curvaturePointField[meshPoints[pi]] = curvature;
     }
@@ -1319,7 +1319,7 @@ void Foam::triSurface::write(Ostream& os) const
 {
     os  << patches() << endl;
 
-    //Note: Write with global point numbering
+    // Note: Write with global point numbering
     os  << points() << nl
         << static_cast<const List<labelledTri>&>(*this) << endl;
 

@@ -97,7 +97,7 @@ static void splitTri
     DynamicList<labelledTri>& tris
 )
 {
-    //label oldNTris = tris.size();
+    // label oldNTris = tris.size();
 
     label fp = findIndex(f, e[0]);
     label fp1 = f.fcIndex(fp);
@@ -183,10 +183,10 @@ static void splitTri
             << abort(FatalError);
     }
 
-    //Pout<< "Split face " << f << " along edge " << e
+    // Pout<< "Split face " << f << " along edge " << e
     //    << " into triangles:" << endl;
     //
-    //for (label i = oldNTris; i < tris.size(); i++)
+    // for (label i = oldNTris; i < tris.size(); i++)
     //{
     //    Pout<< "   " << tris[i] << nl;
     //}
@@ -309,7 +309,7 @@ bool isSliver
         // Remove facei and split all other faces using this
         // edge. This is done by 'replacing' the edgeI with the
         // opposite0 vertex
-        //Pout<< "Splitting face " << facei << " since distance "
+        // Pout<< "Splitting face " << facei << " since distance "
         //    << pHit.distance()
         //    << " from vertex " << opposite0
         //    << " to edge " << edgeI
@@ -450,7 +450,7 @@ static label markRegions
     {
         if (collapseRegion[facei] == -1 && faceToEdge[facei] != -1)
         {
-            //Pout<< "markRegions : Marking region:" << regionI
+            // Pout<< "markRegions : Marking region:" << regionI
             //    << " starting from face " << facei << endl;
 
             // Collapsed face. Mark connected region with current region number
@@ -798,7 +798,7 @@ label collapseBase
 
         label nRegions = markRegions(surf, faceToEdge, collapseRegion);
 
-        //Pout<< "Detected " << nRegions << " regions of faces to be collapsed"
+        // Pout<< "Detected " << nRegions << " regions of faces to be collapsed"
         //    << nl << endl;
 
         // Pick up all vertices on outside of region
@@ -816,7 +816,7 @@ label collapseBase
         {
             spanPoints[regionI] = getSpanPoints(surf, outsideVerts[regionI]);
 
-            //Pout<< "For region " << regionI << " found extrema at points "
+            // Pout<< "For region " << regionI << " found extrema at points "
             //    << surf.localPoints()[spanPoints[regionI][0]]
             //    << surf.localPoints()[spanPoints[regionI][1]]
             //    << endl;
@@ -831,13 +831,13 @@ label collapseBase
                 orderedWeights[regionI]
             );
 
-            //Pout<< "For region:" << regionI
+            // Pout<< "For region:" << regionI
             //    << " span:" << spanPoints[regionI]
             //    << " orderedVerts:" << orderedVertices[regionI]
             //    << " orderedWeights:" << orderedWeights[regionI]
             //    << endl;
 
-            //writeRegionOBJ
+            // writeRegionOBJ
             //(
             //    surf,
             //    regionI,
@@ -845,7 +845,7 @@ label collapseBase
             //    outsideVerts[regionI]
             //);
 
-            //Pout<< endl;
+            // Pout<< endl;
         }
 
 
@@ -971,7 +971,7 @@ label collapseBase
         // Pack the triangles
         newTris.shrink();
 
-        //Pout<< "Resetting surface from " << surf.size() << " to "
+        // Pout<< "Resetting surface from " << surf.size() << " to "
         //    << newTris.size() << " triangles" << endl;
         surf = triSurface(newTris, surf.patches(), surf.localPoints());
 

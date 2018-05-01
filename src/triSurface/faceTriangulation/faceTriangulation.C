@@ -249,7 +249,7 @@ void Foam::faceTriangulation::findDiagonal
 
     if (minIndex == -1)
     {
-        //WarningInFunction
+        // WarningInFunction
         //    << "Could not find intersection starting from " << f[startIndex]
         //    << " for face " << f << endl;
 
@@ -580,16 +580,16 @@ bool Foam::faceTriangulation::split
         }
 
         // Decompose the split faces
-        //Pout<< "Split face:" << f << " into " << face1 << " and " << face2
+        // Pout<< "Split face:" << f << " into " << face1 << " and " << face2
         //    << endl;
-        //string oldPrefix(Pout.prefix());
-        //Pout.prefix() = "  " + oldPrefix;
+        // string oldPrefix(Pout.prefix());
+        // Pout.prefix() = "  " + oldPrefix;
 
         bool splitOk =
             split(fallBack, points, face1, normal, triI)
          && split(fallBack, points, face2, normal, triI);
 
-        //Pout.prefix() = oldPrefix;
+        // Pout.prefix() = oldPrefix;
 
         return splitOk;
     }

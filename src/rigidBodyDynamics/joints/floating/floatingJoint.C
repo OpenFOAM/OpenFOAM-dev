@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Foam::RBD::joints::floating::sixDoF()
 
     // The quaternion-based spherical joint could be used
     // but then w must be set appropriately
-    //cj.set(1, new joints::Rs());
+    // cj.set(1, new joints::Rs());
 
     // Alternatively the Euler-angle joint can be used
     cj.set(1, new joints::Rzyx());

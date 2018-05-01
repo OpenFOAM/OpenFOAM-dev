@@ -140,8 +140,8 @@ void Foam::fvMesh::makeC() const
         dimLength,
         cellCentres(),
         faceCentres(),
-        true,               //preserveCouples
-        true                //preserveProcOnly
+        true,               // preserveCouples
+        true                // preserveProcOnly
     );
 }
 

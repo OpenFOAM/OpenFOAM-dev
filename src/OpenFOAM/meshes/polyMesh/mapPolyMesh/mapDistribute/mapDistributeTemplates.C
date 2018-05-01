@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ void Foam::mapDistribute::applyTransforms
 
         forAll(transformFld, i)
         {
-            //cop(field[n++], transformFld[i]);
+            // cop(field[n++], transformFld[i]);
             field[n++] = transformFld[i];
         }
     }
@@ -118,7 +118,7 @@ void Foam::mapDistribute::applyInverseTransforms
 
         forAll(transformFld, i)
         {
-            //cop(field[elems[i]], transformFld[i]);
+            // cop(field[elems[i]], transformFld[i]);
             field[elems[i]] = transformFld[i];
         }
     }

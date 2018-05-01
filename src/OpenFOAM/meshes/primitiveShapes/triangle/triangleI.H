@@ -745,7 +745,7 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::nearestPoint
 
         point nearestEdgePoint;
         point nearestLinePoint;
-        //label minEdgeIndex = 0;
+        // label minEdgeIndex = 0;
         scalar minDist = ln.nearestDist
         (
             linePointRef(a_, b_),
@@ -767,7 +767,7 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::nearestPoint
                 minDist = dist;
                 nearestEdgePoint = triEdgePoint;
                 nearestLinePoint = linePoint;
-                //minEdgeIndex = 1;
+                // minEdgeIndex = 1;
             }
         }
 
@@ -785,7 +785,7 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::nearestPoint
                 minDist = dist;
                 nearestEdgePoint = triEdgePoint;
                 nearestLinePoint = linePoint;
-                //minEdgeIndex = 2;
+                // minEdgeIndex = 2;
             }
         }
 

@@ -221,7 +221,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
             fullData[meshPointi] = pt;
         }
 
-        //Pout<< "sparseData:" << sparseData << endl;
+        // Pout<< "sparseData:" << sparseData << endl;
 
         syncTools::syncPointMap
         (
@@ -306,7 +306,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
             fullData[meshEdgeI] = pt;
         }
 
-        //Pout<< "sparseData:" << sparseData << endl;
+        // Pout<< "sparseData:" << sparseData << endl;
 
         syncTools::syncEdgeMap
         (

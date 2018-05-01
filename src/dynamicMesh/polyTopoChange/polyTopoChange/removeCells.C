@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -235,7 +235,7 @@ void Foam::removeCells::setRefinement
 
         removedCell[celli] = true;
 
-        //Pout<< "Removing cell " << celli
+        // Pout<< "Removing cell " << celli
         //    << " cc:" << mesh_.cellCentres()[celli] << endl;
 
         meshMod.setAction(polyRemoveCell(celli));
@@ -276,7 +276,7 @@ void Foam::removeCells::setRefinement
             if (removedCell[nei])
             {
                 // Face no longer used
-                //Pout<< "Removing internal face " << facei
+                // Pout<< "Removing internal face " << facei
                 //    << " fc:" << mesh_.faceCentres()[facei] << endl;
 
                 meshMod.setAction(polyRemoveFace(facei));
@@ -306,7 +306,7 @@ void Foam::removeCells::setRefinement
                     zoneFlip = !fZone.flipMap()[fZone.whichFace(facei)];
                 }
 
-                //Pout<< "Putting exposed internal face " << facei
+                // Pout<< "Putting exposed internal face " << facei
                 //    << " fc:" << mesh_.faceCentres()[facei]
                 //    << " into patch " << newPatchID[facei] << endl;
 
@@ -338,7 +338,7 @@ void Foam::removeCells::setRefinement
                     << abort(FatalError);
             }
 
-            //Pout<< "Putting exposed internal face " << facei
+            // Pout<< "Putting exposed internal face " << facei
             //    << " fc:" << mesh_.faceCentres()[facei]
             //    << " into patch " << newPatchID[facei] << endl;
 
@@ -382,7 +382,7 @@ void Foam::removeCells::setRefinement
             {
                 if (newPatchID[facei] != -1)
                 {
-                    //Pout<< "Putting uncoupled coupled face " << facei
+                    // Pout<< "Putting uncoupled coupled face " << facei
                     //    << " fc:" << mesh_.faceCentres()[facei]
                     //    << " into patch " << newPatchID[facei] << endl;
 
@@ -414,7 +414,7 @@ void Foam::removeCells::setRefinement
                 else if (removedCell[faceOwner[facei]])
                 {
                     // Face no longer used
-                    //Pout<< "Removing boundary face " << facei
+                    // Pout<< "Removing boundary face " << facei
                     //    << " fc:" << mesh_.faceCentres()[facei]
                     //    << endl;
 
@@ -442,7 +442,7 @@ void Foam::removeCells::setRefinement
                 if (removedCell[faceOwner[facei]])
                 {
                     // Face no longer used
-                    //Pout<< "Removing boundary face " << facei
+                    // Pout<< "Removing boundary face " << facei
                     //    << " fc:" << mesh_.faceCentres()[facei]
                     //    << endl;
 
@@ -463,7 +463,7 @@ void Foam::removeCells::setRefinement
     {
         if (nFacesUsingPoint[pointi] == 0)
         {
-            //Pout<< "Removing unused point " << pointi
+            // Pout<< "Removing unused point " << pointi
             //    << " at:" << mesh_.points()[pointi] << endl;
 
             meshMod.setAction(polyRemovePoint(pointi));

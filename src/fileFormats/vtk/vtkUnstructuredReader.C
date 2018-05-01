@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,7 +162,7 @@ void Foam::vtkUnstructuredReader::extractCells
 
             case VTK_LINE:
             {
-                //warnUnhandledType(inFile, cellTypes[i], warningGiven);
+                // warnUnhandledType(inFile, cellTypes[i], warningGiven);
                 label nRead = cellVertData[dataIndex++];
                 if (nRead != 2)
                 {
@@ -182,7 +182,7 @@ void Foam::vtkUnstructuredReader::extractCells
 
             case VTK_POLY_LINE:
             {
-                //warnUnhandledType(inFile, cellTypes[i], warningGiven);
+                // warnUnhandledType(inFile, cellTypes[i], warningGiven);
                 label nRead = cellVertData[dataIndex++];
                 lineMap_[lineI] = i;
                 labelList& segment = lines_[lineI++];
@@ -750,7 +750,7 @@ void Foam::vtkUnstructuredReader::read(ISstream& inFile)
             IStringStream is(line);
             word dataName(is);
             word dataType(is);
-            //label numComp(readLabel(inFile));
+            // label numComp(readLabel(inFile));
 
             if (debug)
             {

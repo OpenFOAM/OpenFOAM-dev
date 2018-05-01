@@ -49,7 +49,7 @@ sampleMode      nearestPatchFace;
     oneD            false;
 
     //- If oneD: specify which boundary is wanted between the layers
-    //oneDPolyPatchType empty; //wedge
+    // oneDPolyPatchType empty; // wedge
 
     //- If oneD: specify whether to duplicate points (i.e. disconnect 1D
     //  columns) or only on non-manifold extrusion areas. Default is false.

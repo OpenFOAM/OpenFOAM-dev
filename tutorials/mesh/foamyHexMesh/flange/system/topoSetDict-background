@@ -61,10 +61,10 @@ FoamFile
 //    {
 //        set f0;             // Name of faceSet
 //
-//        //option neighbour; // cell with neighbour in faceSet
-//        //option owner;     //  ,,       owner
+//        // option neighbour; // cell with neighbour in faceSet
+//        // option owner;     //  ,,       owner
 //        option any;         // cell with any face in faceSet
-//        //option all;       // cell with all faces in faceSet
+//        // option all;       // cell with all faces in faceSet
 //    }
 //
 //    // Select based on pointSet
@@ -72,7 +72,7 @@ FoamFile
 //    {
 //        set p0;
 //        option any;         // cell with any point in pointSet
-//        //option all;       // cell with all points in pointSet
+//        // option all;       // cell with all points in pointSet
 //    }
 //
 //    // Select based on cellShape
@@ -164,7 +164,7 @@ FoamFile
 //    {
 //        set c0;
 //        option all;         // All faces of cells
-//        //option both;      // Only faces whose owner&neighbour are in cellSet
+//        // option both;      // Only faces whose owner&neighbour are in cellSet
 //    }
 //
 //    // Select based on pointSet
@@ -172,7 +172,7 @@ FoamFile
 //    {
 //        set p0;
 //        option any;         // Faces using any point in pointSet
-//        //option all        // Faces with all points in pointSet
+//        // option all        // Faces with all points in pointSet
 //    }
 //
 //    //  Select by explicitly providing face labels

@@ -244,7 +244,7 @@ void Foam::searchableExtrudedCircle::findParametricNearest
         label otherPointi = startE.otherVertex(pointi);
         curveLambdas[otherPointi] = -mag(points[otherPointi]-curvePoints[0]);
 
-        //Pout<< "for point:" << points[pointi] << " have distance "
+        // Pout<< "for point:" << points[pointi] << " have distance "
         //    << curveLambdas[pointi] << endl;
 
 
@@ -277,7 +277,7 @@ void Foam::searchableExtrudedCircle::findParametricNearest
             {
                 endDistance = curveLambdas[pointi] + mag(end-points[pointi]);
 
-                //Pout<< "Found end edge:" << edges[edgei].centre(points)
+                // Pout<< "Found end edge:" << edges[edgei].centre(points)
                 //    << " endPt:" << end
                 //    << " point before:" << points[pointi]
                 //    << " accumulated length:" << endDistance << endl;

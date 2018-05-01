@@ -1120,7 +1120,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
 
 
     //// Generate test field
-    //tmp<surfaceScalarField> sfld(generateTestField(mesh_));
+    // tmp<surfaceScalarField> sfld(generateTestField(mesh_));
 
     // Save internal fields (note: not as DimensionedFields since would
     // get mapped)
@@ -1154,7 +1154,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
 
 
     //// Test test field
-    //testField(sfld);
+    // testField(sfld);
 
 
     // Move mesh (since morphing does not do this)
@@ -1418,8 +1418,8 @@ void Foam::fvMeshDistribute::sendMesh
         }
     }
     ////- Assume full cell zones
-    //labelList cellZoneID;
-    //if (hasCellZones)
+    // labelList cellZoneID;
+    // if (hasCellZones)
     //{
     //    cellZoneID.setSize(mesh.nCells());
     //    cellZoneID = -1;
@@ -1651,7 +1651,6 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     }
 
 
-
     // Short circuit trivial case.
     if (!Pstream::parRun())
     {
@@ -1668,15 +1667,15 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
                 oldPatchStarts.xfer(),
                 oldPatchNMeshPoints.xfer(),
 
-                labelListList(1, identity(mesh_.nPoints())).xfer(),//subPointMap
-                labelListList(1, identity(mesh_.nFaces())).xfer(), //subFaceMap
-                labelListList(1, identity(mesh_.nCells())).xfer(), //subCellMap
-                labelListList(1, identity(patches.size())).xfer(), //subPatchMap
+                labelListList(1, identity(mesh_.nPoints())).xfer(),
+                labelListList(1, identity(mesh_.nFaces())).xfer(),
+                labelListList(1, identity(mesh_.nCells())).xfer(),
+                labelListList(1, identity(patches.size())).xfer(),
 
-                labelListList(1, identity(mesh_.nPoints())).xfer(),//pointMap
-                labelListList(1, identity(mesh_.nFaces())).xfer(), //faceMap
-                labelListList(1, identity(mesh_.nCells())).xfer(), //cellMap
-                labelListList(1, identity(patches.size())).xfer()  //patchMap
+                labelListList(1, identity(mesh_.nPoints())).xfer(),
+                labelListList(1, identity(mesh_.nFaces())).xfer(),
+                labelListList(1, identity(mesh_.nCells())).xfer(),
+                labelListList(1, identity(patches.size())).xfer()
             )
         );
     }
@@ -1686,7 +1685,6 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     const wordList pointZoneNames(mergeWordList(mesh_.pointZones().names()));
     const wordList faceZoneNames(mergeWordList(mesh_.faceZones().names()));
     const wordList cellZoneNames(mergeWordList(mesh_.cellZones().names()));
-
 
 
     // Local environment of all boundary faces
@@ -1920,7 +1918,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
             }
 
             // Pstream for sending mesh and fields
-            //OPstream str(Pstream::commsTypes::blocking, recvProc);
+            // OPstream str(Pstream::commsTypes::blocking, recvProc);
             UOPstream str(recvProc, pBufs);
 
             // Mesh subsetting engine
@@ -2567,7 +2565,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
             const labelList& oldPointMap = map().oldPointMap();
             const labelList& oldPatchMap = map().oldPatchMap();
 
-            //Note: old mesh faces never flipped!
+            // Note: old mesh faces never flipped!
             forAll(constructPatchMap, proci)
             {
                 if (proci != sendProc && constructPatchMap[proci].size())

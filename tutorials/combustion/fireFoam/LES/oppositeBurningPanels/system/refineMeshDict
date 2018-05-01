@@ -37,7 +37,7 @@ globalCoeffs
 
 patchLocalCoeffs
 {
-    patch patchName; //Normal direction is facenormal of zero'th face of patch
+    patch patchName; // Normal direction is facenormal of zero'th face of patch
     tan1 (0 1 0);
     tan2 (0 0 1);
 }

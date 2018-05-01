@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -905,10 +905,10 @@ void Foam::syncTools::syncEdgeMap
 //                    half1Values[i] = pointValues[nbrMeshPoints[e[1]]];
 //                }
 //
-//                //SubField<T> slice0(half0Values, half0Values.size());
-//                //SubField<T> slice1(half1Values, half1Values.size());
-//                //top(cycPatch, reinterpret_cast<Field<T>&>(slice1));
-//                //top(nbrPatch, reinterpret_cast<Field<T>&>(slice0));
+//                // SubField<T> slice0(half0Values, half0Values.size());
+//                // SubField<T> slice1(half1Values, half1Values.size());
+//                // top(cycPatch, reinterpret_cast<Field<T>&>(slice1));
+//                // top(nbrPatch, reinterpret_cast<Field<T>&>(slice0));
 //
 //                top(cycPatch, half1Values);
 //                top(nbrPatch, half0Values);
@@ -1130,7 +1130,7 @@ void Foam::syncTools::syncPointList
 //        gd.globalPointSlavesMap(),
 //        gd.globalTransforms(),
 //        cop,
-//        true,   //position?
+//        true,   // position?
 //        mapDistribute::transform()  // not used
 //    );
 //
@@ -1222,7 +1222,7 @@ void Foam::syncTools::syncEdgeList
 //        map,
 //        git,
 //        cop,
-//        true,       //position?
+//        true,       // position?
 //        mapDistribute::transform()  // not used
 //    );
 //

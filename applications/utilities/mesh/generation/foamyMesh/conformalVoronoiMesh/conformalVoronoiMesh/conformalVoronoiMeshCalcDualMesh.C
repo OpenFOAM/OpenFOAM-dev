@@ -824,7 +824,7 @@ void Foam::conformalVoronoiMesh::checkCellSizing()
     autoPtr<polyMesh> meshPtr = createPolyMeshFromPoints(ptsField);
     const polyMesh& pMesh = meshPtr();
 
-    //pMesh.write();
+    // pMesh.write();
 
     // Find cells with poor quality
     DynamicList<label> checkFaces(identity(pMesh.nFaces()));
@@ -921,7 +921,7 @@ void Foam::conformalVoronoiMesh::checkCellSizing()
         Info<< "    DISABLED: Automatically re-sizing " << cellsToResize.size()
             << " cells that are attached to the bad faces: " << endl;
 
-        //cellSizeControl_.setCellSizes(cellsToResize);
+        // cellSizeControl_.setCellSizes(cellsToResize);
     }
 
     timeCheck("End of Cell Sizing");
@@ -1291,9 +1291,9 @@ void Foam::conformalVoronoiMesh::indexDualVertices
         }
     }
 
-    //OBJstream snapping1("snapToSurface1.obj");
-    //OBJstream snapping2("snapToSurface2.obj");
-    //OFstream tetToSnapTo("tetsToSnapTo.obj");
+    // OBJstream snapping1("snapToSurface1.obj");
+    // OBJstream snapping2("snapToSurface2.obj");
+    // OFstream tetToSnapTo("tetsToSnapTo.obj");
 
     for
     (
@@ -1490,9 +1490,9 @@ void Foam::conformalVoronoiMesh::indexDualVertices
         }
     }
 
-    //pts.setSize(this->cellCount());
+    // pts.setSize(this->cellCount());
 
-    //boundaryPts.setSize(this->cellCount());
+    // boundaryPts.setSize(this->cellCount());
 }
 
 

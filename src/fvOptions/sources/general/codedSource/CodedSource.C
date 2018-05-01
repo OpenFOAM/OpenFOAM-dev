@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ void Foam::fv::CodedSource<Type>::prepare
     dynCode.setFilterVariable("TemplateType", sourceType);
     dynCode.setFilterVariable("SourceType", sourceType + "Source");
 
-    //dynCode.removeFilterVariable("code");
+    // dynCode.removeFilterVariable("code");
     dynCode.setFilterVariable("codeCorrect", codeCorrect_);
     dynCode.setFilterVariable("codeAddSup", codeAddSup_);
     dynCode.setFilterVariable("codeSetValue", codeSetValue_);

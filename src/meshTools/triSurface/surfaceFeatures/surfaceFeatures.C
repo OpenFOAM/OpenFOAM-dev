@@ -1003,7 +1003,7 @@ Foam::Map<Foam::label> Foam::surfaceFeatures::nearestSamples
 
     scalar maxSearchSqr = max(maxDistSqr);
 
-    //Note: cannot be done one the fly - gcc4.4 compiler bug.
+    // Note: cannot be done one the fly - gcc4.4 compiler bug.
     treeBoundBox bb(samples);
 
     indexedOctree<treeDataPoint> ppTree
@@ -1589,7 +1589,7 @@ Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
         else if (normals.size() >= 2)
         {
             // Would be third normal. Mark as feature.
-            //Pout<< "** at edge:" << surf.localPoints()[e[0]]
+            // Pout<< "** at edge:" << surf.localPoints()[e[0]]
             //    << surf.localPoints()[e[1]]
             //    << " have normals:" << normals
             //    << " and " << n << endl;
@@ -1607,7 +1607,7 @@ Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
     {
         // Note: should check here whether they are two sets of faces
         // that are planar or indeed 4 faces al coming together at an edge.
-        //Pout<< "** at edge:"
+        // Pout<< "** at edge:"
         //    << surf.localPoints()[e[0]]
         //    << surf.localPoints()[e[1]]
         //    << " have single normal:" << normals[0]
@@ -1618,7 +1618,7 @@ Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
     {
         // Two bins. Check if normals make an angle
 
-        //Pout<< "** at edge:"
+        // Pout<< "** at edge:"
         //    << surf.localPoints()[e[0]]
         //    << surf.localPoints()[e[1]] << nl
         //    << "    normals:" << normals << nl
@@ -1637,7 +1637,7 @@ Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
                     const Foam::vector& nj = surf.faceNormals()[eFaces[j]];
                     if (mag(ni & nj) < minCos)
                     {
-                        //Pout<< "have sharp feature between normal:" << ni
+                        // Pout<< "have sharp feature between normal:" << ni
                         //    << " and " << nj << endl;
 
                         // Is feature. Keep as region or convert to
@@ -1700,7 +1700,7 @@ Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
             if (index == -1)
             {
                 // Not found.
-                //Pout<< "cannot find region " << myRegionAndNormal
+                // Pout<< "cannot find region " << myRegionAndNormal
                 //    << " in regions " << regionAndNormal << endl;
 
                 return surfaceFeatures::REGION;

@@ -383,9 +383,9 @@ Foam::label Foam::ptscotchDecomp::decompose
                 Info<< "ptscotchDecomp : Using strategy " << strategy << endl;
             }
             SCOTCH_stratDgraphMap(&stradat, strategy.c_str());
-            //fprintf(stdout, "S\tStrat=");
-            //SCOTCH_stratSave(&stradat, stdout);
-            //fprintf(stdout, "\n");
+            // fprintf(stdout, "S\tStrat=");
+            // SCOTCH_stratSave(&stradat, stdout);
+            // fprintf(stdout, "\n");
         }
     }
 
@@ -604,8 +604,8 @@ Foam::label Foam::ptscotchDecomp::decompose
 
 
 
-    //finalDecomp.setSize(xadjSize-1);
-    //check
+    // finalDecomp.setSize(xadjSize-1);
+    // check
     //(
     //    SCOTCH_dgraphPart
     //    (

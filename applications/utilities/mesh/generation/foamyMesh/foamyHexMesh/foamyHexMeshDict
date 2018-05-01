@@ -179,7 +179,7 @@ surfaceConformation
     // Additional features.
     additionalFeatures
     {
-        //line
+        // line
         //{
         //    featureMethod extendedFeatureEdgeMesh; // or none;
         //    extendedFeatureEdgeMesh "line.extendedFeatureEdgeMesh";
@@ -309,7 +309,7 @@ motionControl
     // and lowers to 0 (at simulation endTime) to converge points.
     // adaptiveLinear is preferred choice.
     // Points move by e.g. 10% of tet size.
-    relaxationModel     adaptiveLinear; //rampHoldFall
+    relaxationModel     adaptiveLinear; // rampHoldFall
 
     adaptiveLinearCoeffs
     {
@@ -467,7 +467,7 @@ meshQualityControls
     //- minVolRatio (0 -> 1)
     minVolRatio 0.01;
 
-    //must be >0 for Fluent compatibility
+    // must be >0 for Fluent compatibility
     minTriangleTwist -1;
 }
 

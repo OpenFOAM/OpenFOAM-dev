@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -274,7 +274,7 @@ public:
         {
             return
             (
-                //this->point() == rhs.point()
+                // this->point() == rhs.point()
                 this->type_ == rhs.type()
              && this->index_ == rhs.index()
              && this->processor_ == rhs.procIndex()

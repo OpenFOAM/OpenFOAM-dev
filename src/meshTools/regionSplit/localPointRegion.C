@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -399,7 +399,7 @@ void Foam::localPointRegion::calcPointRegions
             }
         }
 
-        //Pout<< "nChanged:" << nChanged << endl;
+        // Pout<< "nChanged:" << nChanged << endl;
 
         if (returnReduce(nChanged, sumOp<label>()) == 0)
         {
@@ -432,7 +432,7 @@ void Foam::localPointRegion::calcPointRegions
 
 
     //// Print points with multiple regions. These points need to be duplicated.
-    //forAllConstIter(Map<label>, meshPointMap_, iter)
+    // forAllConstIter(Map<label>, meshPointMap_, iter)
     //{
     //    Pout<< "point:" << iter.key()
     //        << " coord:" << mesh.points()[iter.key()]
@@ -445,7 +445,7 @@ void Foam::localPointRegion::calcPointRegions
 
 Foam::localPointRegion::localPointRegion(const polyMesh& mesh)
 :
-    //nRegions_(0),
+    // nRegions_(0),
     meshPointMap_(0),
     pointRegions_(0),
     meshFaceMap_(0),
@@ -479,7 +479,7 @@ Foam::localPointRegion::localPointRegion
     const labelList& candidatePoints
 )
 :
-    //nRegions_(0),
+    // nRegions_(0),
     meshPointMap_(0),
     pointRegions_(0),
     meshFaceMap_(0),

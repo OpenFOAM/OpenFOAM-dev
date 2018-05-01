@@ -65,7 +65,7 @@ patches
         constructFrom set;
 
         // If constructFrom = patches : names of patches. Wildcards allowed.
-        //patches (periodic1);
+        // patches (periodic1);
 
         // If constructFrom = set : name of faceSet
         set fBurner;

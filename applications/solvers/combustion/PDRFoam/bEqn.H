@@ -30,7 +30,7 @@ if (ign.ignited())
     // Calculate flame normal etc.
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    //volVectorField n(fvc::grad(b));
+    // volVectorField n(fvc::grad(b));
     volVectorField n(fvc::reconstruct(fvc::snGrad(b)*mesh.magSf()));
 
     volScalarField mgb("mgb", mag(n));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,7 +212,7 @@ bool Foam::dynamicCode::createMakeFiles() const
     mkDir(dstFile.path());
 
     OFstream os(dstFile);
-    //Info<< "Writing to " << dstFile << endl;
+    // Info<< "Writing to " << dstFile << endl;
     if (!os.good())
     {
         FatalErrorInFunction
@@ -249,7 +249,7 @@ bool Foam::dynamicCode::createMakeOptions() const
     mkDir(dstFile.path());
 
     OFstream os(dstFile);
-    //Info<< "Writing to " << dstFile << endl;
+    // Info<< "Writing to " << dstFile << endl;
     if (!os.good())
     {
         FatalErrorInFunction
@@ -439,7 +439,7 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
         const fileName  dstFile(outputDir/srcFile.name());
 
         IFstream is(srcFile);
-        //Info<< "Reading from " << is.name() << endl;
+        // Info<< "Reading from " << is.name() << endl;
         if (!is.good())
         {
             FatalErrorInFunction
@@ -448,7 +448,7 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
         }
 
         OFstream os(dstFile);
-        //Info<< "Writing to " << dstFile.name() << endl;
+        // Info<< "Writing to " << dstFile.name() << endl;
         if (!os.good())
         {
             FatalErrorInFunction
@@ -471,7 +471,7 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
 
         mkDir(dstFile.path());
         OFstream os(dstFile);
-        //Info<< "Writing to " << createFiles_[fileI].first() << endl;
+        // Info<< "Writing to " << createFiles_[fileI].first() << endl;
         if (!os.good())
         {
             FatalErrorInFunction

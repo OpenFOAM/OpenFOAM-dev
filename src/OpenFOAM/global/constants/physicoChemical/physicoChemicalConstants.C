@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ defineDimensionedConstantWithDefault
         Foam::dimensionedScalar
         (
             "C",
-            dimensionSet(0, 0, 0, 0, 0),    //Foam::dimless,
+            dimensionSet(0, 0, 0, 0, 0),    // Foam::dimless,
             Foam::sqr(mathematical::pi)/60.0
         )
        *Foam::pow4(physicoChemical::k)
@@ -100,7 +100,7 @@ defineDimensionedConstantWithDefault
        /Foam::dimensionedScalar
         (
             "C",
-            dimensionSet(0, 0, 0, 0, 0),    //Foam::dimless
+            dimensionSet(0, 0, 0, 0, 0),    // Foam::dimless
             4.965114231
         )
     ),
@@ -119,7 +119,7 @@ defineDimensionedConstantWithDefault
         Foam::dimensionedScalar
         (
             "C",
-            dimensionSet(0, 0, 0, 0, 0),    //Foam::dimless,
+            dimensionSet(0, 0, 0, 0, 0),    // Foam::dimless,
             mathematical::twoPi
         )
        *universal::h*Foam::sqr(universal::c)

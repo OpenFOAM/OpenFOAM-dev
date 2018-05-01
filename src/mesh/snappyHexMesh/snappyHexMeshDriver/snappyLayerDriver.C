@@ -204,8 +204,8 @@ void Foam::snappyLayerDriver::checkMeshManifold() const
             //<< nonManifoldPoints.name()
             << endl;
 
-        //nonManifoldPoints.instance() = meshRefiner_.timeName();
-        //nonManifoldPoints.write();
+        // nonManifoldPoints.instance() = meshRefiner_.timeName();
+        // nonManifoldPoints.write();
     }
     Info<< endl;
 }
@@ -344,7 +344,7 @@ void Foam::snappyLayerDriver::handleNonManifolds
             {
                 // Edge of patch but no continuation across processor.
                 const edge& e = pp.edges()[edgeI];
-                //Pout<< "** Stopping extrusion on edge "
+                // Pout<< "** Stopping extrusion on edge "
                 //    << pp.localPoints()[e[0]]
                 //    << pp.localPoints()[e[1]] << endl;
                 nonManifoldPoints.insert(pp.meshPoints()[e[0]]);
@@ -737,7 +737,7 @@ void Foam::snappyLayerDriver::setNumLayers
     // Unmark any point with different min and max
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    //label nConflicts = 0;
+    // label nConflicts = 0;
 
     forAll(maxLayers, i)
     {
@@ -757,7 +757,7 @@ void Foam::snappyLayerDriver::setNumLayers
         else
         {
             // Inconsistent num layers between patch faces using point
-            //if
+            // if
             //(
             //    unmarkExtrusion
             //    (
@@ -792,9 +792,9 @@ void Foam::snappyLayerDriver::setNumLayers
     }
     reduce(nAddedCells, sumOp<label>());
 
-    //reduce(nConflicts, sumOp<label>());
+    // reduce(nConflicts, sumOp<label>());
     //
-    //Info<< "Set displacement to zero for " << nConflicts
+    // Info<< "Set displacement to zero for " << nConflicts
     //    << " points due to points being on multiple regions"
     //    << " with inconsistent nLayers specification." << endl;
 }
@@ -1255,7 +1255,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         );
     }
 
-    //Info<< "calculateLayerThickness : min:" << gMin(thickness)
+    // Info<< "calculateLayerThickness : min:" << gMin(thickness)
     //    << " max:" << gMax(thickness) << endl;
 
     // Print a bit
@@ -1465,7 +1465,7 @@ void Foam::snappyLayerDriver::syncPatchDisplacement
         }
     }
 
-    //Info<< "Prevented extrusion on "
+    // Info<< "Prevented extrusion on "
     //    << returnReduce(nChangedTotal, sumOp<label>())
     //    << " coupled patch points during syncPatchDisplacement." << endl;
 }
@@ -1972,7 +1972,7 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
 
         label nDiffering = 0;
 
-        //forAll(localFaces, i)
+        // forAll(localFaces, i)
         //{
         //    const face& localF = localFaces[i];
         //
@@ -2009,9 +2009,9 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
         //    }
         //}
         //
-        //reduce(nDiffering, sumOp<label>());
+        // reduce(nDiffering, sumOp<label>());
         //
-        //Info<< "truncateDisplacement : Unextruded " << nDiffering
+        // Info<< "truncateDisplacement : Unextruded " << nDiffering
         //    << " faces due to having differing number of layers." << endl;
 
         if (nPinched+nButterFly+nDiffering == 0)
@@ -2769,7 +2769,7 @@ bool Foam::snappyLayerDriver::writeLayerData
         Info<< decrIndent<< endl;
     }
 
-    //if (meshRefinement::outputLevel() & meshRefinement::OUTPUTLAYERINFO)
+    // if (meshRefinement::outputLevel() & meshRefinement::OUTPUTLAYERINFO)
     {
         printLayerData
         (
@@ -2809,7 +2809,7 @@ void Foam::snappyLayerDriver::mergePatchFacesUndo
 )
 {
     // Clip to 30 degrees. Not helpful!
-    //scalar planarAngle = min(30.0, layerParams.featureAngle());
+    // scalar planarAngle = min(30.0, layerParams.featureAngle());
     scalar planarAngle = layerParams.featureAngle();
     scalar minCos = Foam::cos(degToRad(planarAngle));
 
@@ -3025,7 +3025,7 @@ void Foam::snappyLayerDriver::addLayers
         //// Disable extrusion on cells with multiple patch faces
         //// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //
-        //handleMultiplePatchFaces
+        // handleMultiplePatchFaces
         //(
         //    pp,
         //
@@ -3341,7 +3341,7 @@ void Foam::snappyLayerDriver::addLayers
             newMeshPtr,
             IOobject
             (
-                //mesh.name()+"_layer",
+                // mesh.name()+"_layer",
                 mesh.name(),
                 static_cast<polyMesh&>(mesh).instance(),
                 mesh.time(),  // register with runTime
@@ -3695,7 +3695,7 @@ void Foam::snappyLayerDriver::doLayers
             // baffles.
             autoPtr<mapDistributePolyMesh> map = meshRefiner_.balance
             (
-                true,   //false,    // keepZoneFaces
+                true,   // false,    // keepZoneFaces
                 false,
                 cellWeights,
                 decomposer,

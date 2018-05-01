@@ -1352,12 +1352,12 @@ void Foam::boundaryMesh::setFeatureEdges(const scalar minCos)
 
                 ////- Uncomment below code if you want to include patch
                 ////  boundaries in feature edges.
-                //if (whichPatch(face0I) != whichPatch(face1I))
+                // if (whichPatch(face0I) != whichPatch(face1I))
                 //{
                 //    edgeToFeature_[edgeI] = featureI;
                 //    featureToEdge_[featureI++] = edgeI;
                 //}
-                //else
+                // else
                 {
                     const vector& n0 = mesh().faceNormals()[face0I];
 
@@ -1374,7 +1374,7 @@ void Foam::boundaryMesh::setFeatureEdges(const scalar minCos)
             }
             else
             {
-                //Should not occur: 0 or more than two faces
+                // Should not occur: 0 or more than two faces
                 edgeToFeature_[edgeI] = featureI;
                 featureToEdge_[featureI++] = edgeI;
             }

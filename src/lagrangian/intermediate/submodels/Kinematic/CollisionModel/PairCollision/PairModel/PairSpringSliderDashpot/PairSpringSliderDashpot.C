@@ -193,7 +193,7 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
 
     if (normalOverlapMag > 0)
     {
-        //Particles in collision
+        // Particles in collision
 
         vector rHat_AB = r_AB/(r_AB_mag + vSmall);
 

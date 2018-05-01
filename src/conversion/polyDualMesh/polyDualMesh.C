@@ -686,10 +686,10 @@ void Foam::polyDualMesh::dualPatch
             //- Either keep in one piece or split face according to feature.
 
             //// Keep face in one piece.
-            //dualFaces.append(face(dualFace));
-            //dualOwner.append(patch.meshPoints()[pointi]);
-            //dualNeighbour.append(-1);
-            //dualRegion.append(patch.index());
+            // dualFaces.append(face(dualFace));
+            // dualOwner.append(patch.meshPoints()[pointi]);
+            // dualNeighbour.append(-1);
+            // dualRegion.append(patch.index());
 
             splitFace
             (
@@ -1331,8 +1331,8 @@ void Foam::polyDualMesh::calcDual
         (
             boundaryMesh(),
             patchi,
-            0, //patchSizes[patchi],
-            0  //patchStarts[patchi]
+            0, // patchSizes[patchi],
+            0  // patchStarts[patchi]
         ).ptr();
     }
     addPatches(dualPatches);

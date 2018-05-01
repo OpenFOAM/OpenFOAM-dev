@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
         forAll(en, patchEdgeI)
         {
             const edge& patchE = pp.edges()[patchEdgeI];
-            //str.write(pp.localPoints()[pointi], en[pointi]);
+            // str.write(pp.localPoints()[pointi], en[pointi]);
             const point pt = patchE.centre(pp.localPoints());
             str.write(linePointRef(pt, pt + 0.1*en[patchEdgeI]));
         }

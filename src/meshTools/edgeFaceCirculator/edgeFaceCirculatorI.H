@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -327,13 +327,13 @@ bool Foam::edgeFaceCirculator::operator==(const edgeFaceCirculator& circ) const
 
     ////- Note: do I need full comparison? If not we now have that circulators
     ////  around same edge but in different direction are considered not equal
-    //if (faceLabel_ == -1 && circ.faceLabel_ == -1)
+    // if (faceLabel_ == -1 && circ.faceLabel_ == -1)
     //{
     //    // both endConstIter
     //    return true;
     //}
     //
-    //return
+    // return
     //    faceLabel_ == circ.faceLabel_
     // && ownerSide_ == circ.ownerSide_
     // && index_ == circ.index_;

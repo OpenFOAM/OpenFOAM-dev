@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,11 +66,11 @@ Foam::decompositionMethod::decompositionMethod
     wordList constraintTypes_;
     if (decompositionDict_.found("constraints"))
     {
-        //PtrList<dictionary> constraintsList
+        // PtrList<dictionary> constraintsList
         //(
         //    decompositionDict_.lookup("constraints")
         //);
-        //forAll(constraintsList, i)
+        // forAll(constraintsList, i)
         //{
         //    const dictionary& dict = constraintsList[i];
         const dictionary& constraintsList = decompositionDict_.subDict
@@ -472,7 +472,7 @@ void Foam::decompositionMethod::calcCellCells
 
     cellCells.m().setSize(newIndex);
 
-    //forAll(cellCells, celli)
+    // forAll(cellCells, celli)
     //{
     //    Pout<< "Original: Coarse cell " << celli << endl;
     //    forAll(mesh.cellCells()[celli], i)
@@ -1051,7 +1051,7 @@ void Foam::decompositionMethod::calcCellCells
 //
 //    cellCells.m().setSize(newIndex);
 //
-//    //forAll(cellCells, celli)
+//    // forAll(cellCells, celli)
 //    //{
 //    //    Pout<< "Original: Coarse cell " << celli << endl;
 //    //    forAll(mesh.cellCells()[celli], i)

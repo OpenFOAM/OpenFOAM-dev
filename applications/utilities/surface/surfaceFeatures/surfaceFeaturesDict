@@ -89,7 +89,7 @@ surface2
 
         // Optionally flip features (invert all normals, making
         // convex<->concave etc)
-        //flip                false;
+        // flip                false;
     }
 
     // Output the curvature of the surface

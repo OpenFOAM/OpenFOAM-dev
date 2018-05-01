@@ -155,8 +155,8 @@ rotating
 
     cellSizeFunction            uniform;
     uniformCoeffs{}
-    //cellSizeFunction            linearDistance;
-    //linearDistanceCoeffs
+    // cellSizeFunction            linearDistance;
+    // linearDistanceCoeffs
     //{
     //    distanceCellSizeCoeff   1;
     //    distanceCoeff           4;

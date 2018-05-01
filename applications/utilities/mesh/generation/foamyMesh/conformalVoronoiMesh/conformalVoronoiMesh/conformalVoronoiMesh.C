@@ -530,7 +530,7 @@ void Foam::conformalVoronoiMesh::buildCellSizeAndAlignmentMesh()
     for (label i = 0; i < nMaxIter; ++i)
     {
         label nAdded = meshRefinement.refineMesh(decomposition_);
-        //cellShapeControl_.refineMesh(decomposition_);
+        // cellShapeControl_.refineMesh(decomposition_);
         reduce(nAdded, sumOp<label>());
 
         if (Pstream::parRun())
@@ -572,7 +572,7 @@ void Foam::conformalVoronoiMesh::buildCellSizeAndAlignmentMesh()
 
     if (foamyHexMeshControls().writeCellShapeControlMesh())
     {
-        //cellSizeMesh.writeTriangulation();
+        // cellSizeMesh.writeTriangulation();
         cellSizeMesh.write();
     }
 

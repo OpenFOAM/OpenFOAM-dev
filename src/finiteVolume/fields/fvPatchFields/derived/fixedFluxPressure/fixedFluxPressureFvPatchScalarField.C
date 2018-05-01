@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
     {
         scalarField::operator=
         (
-            //patchInternalField() + gradient()/patch().deltaCoeffs()
+            // patchInternalField() + gradient()/patch().deltaCoeffs()
             // ***HGW Hack to avoid the construction of mesh.deltaCoeffs
             // which fails for AMI patches for some mapping operations
             patchInternalField() + gradient()*(patch().nf() & patch().delta())

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -882,8 +882,8 @@ void Foam::CV2D::newPoints()
                     {
                         w = magSqr(deltai.x()*ei.y() - deltai.y()*ei.x());
                         // alternative weights
-                        //w = mag(deltai.x()*ei.y() - deltai.y()*ei.x());
-                        //w = magSqr(ei)*mag(deltai);
+                        // w = mag(deltai.x()*ei.y() - deltai.y()*ei.x());
+                        // w = magSqr(ei)*mag(deltai);
 
                         // Use the following for an ~square mesh
                         // Find the coordinate contributions for this edge delta

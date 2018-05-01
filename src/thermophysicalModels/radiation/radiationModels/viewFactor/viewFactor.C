@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::radiation::viewFactor::initialise()
     label count = 0;
     forAll(qrp, patchi)
     {
-        //const polyPatch& pp = mesh_.boundaryMesh()[patchi];
+        // const polyPatch& pp = mesh_.boundaryMesh()[patchi];
         const fvPatchScalarField& qrPatchi = qrp[patchi];
 
         if ((isA<fixedValueFvPatchScalarField>(qrPatchi)))
@@ -556,7 +556,7 @@ void Foam::radiation::viewFactor::calculate()
             // Negative coming into the fluid
             LUsolve(C, q);
         }
-        else //Constant emissivity
+        else // Constant emissivity
         {
             // Initial iter calculates CLU and chaches it
             if (iterCounter_ == 0)

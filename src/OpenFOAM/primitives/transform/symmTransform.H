@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ inline Vector<Cmpt> transform(const symmTensor& stt, const Vector<Cmpt>& v)
 template<class Cmpt>
 inline Tensor<Cmpt> transform(const symmTensor& stt, const Tensor<Cmpt>& t)
 {
-    //return stt & t & stt.T();
+    // return stt & t & stt.T();
     return Tensor<Cmpt>
     (
         (stt.xx()*t.xx() + stt.xy()*t.yx() + stt.xz()*t.zx())*stt.xx()

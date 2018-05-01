@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -478,7 +478,7 @@ void Foam::mergeAndWrite
         mkDir(outputDir);
 
         fileName outputFile(outputDir/writer.getFileName(points, wordList()));
-        //fileName outputFile(outputDir/set.name());
+        // fileName outputFile(outputDir/set.name());
 
         OFstream os(outputFile);
 

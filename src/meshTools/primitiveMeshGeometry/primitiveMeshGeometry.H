@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,7 +196,7 @@ public:
                 labelHashSet* setPtr
             );
 
-            //static bool checkFaceFlatness
+            // static bool checkFaceFlatness
             //(
             //    const bool report,
             //    const scalar warnFlatness,
@@ -288,7 +288,7 @@ public:
                 labelHashSet* setPtr
             ) const;
 
-            //bool checkFaceFlatness
+            // bool checkFaceFlatness
             //(
             //    const bool report,
             //    const scalar warnFlatness,

@@ -124,8 +124,8 @@ Foam::fv::cellMDLimitedGrad<Foam::scalar>::calcGrad
         maxVsf += maxMinVsf;
         minVsf -= maxMinVsf;
 
-        //maxVsf *= 1.0/k_;
-        //minVsf *= 1.0/k_;
+        // maxVsf *= 1.0/k_;
+        // minVsf *= 1.0/k_;
     }
 
 
@@ -266,8 +266,8 @@ Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
         maxVsf += maxMinVsf;
         minVsf -= maxMinVsf;
 
-        //maxVsf *= 1.0/k_;
-        //minVsf *= 1.0/k_;
+        // maxVsf *= 1.0/k_;
+        // minVsf *= 1.0/k_;
     }
 
 

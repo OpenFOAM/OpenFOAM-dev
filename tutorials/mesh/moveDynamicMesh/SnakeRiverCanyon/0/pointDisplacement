@@ -57,7 +57,7 @@ boundaryField
         wedgePlane      -1;
 
         //- Points that should remain fixed
-        //frozenPointsZone fixedPointsZone;
+        // frozenPointsZone fixedPointsZone;
     }
 
 //    minZ
@@ -79,7 +79,7 @@ boundaryField
 //        wedgePlane      -1;
 //
 //        //- Points that should remain fixed
-//        //frozenPointsZone fixedPointsZone;
+//        // frozenPointsZone fixedPointsZone;
 //    }
 
     maxX

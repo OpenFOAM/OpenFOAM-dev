@@ -389,7 +389,7 @@ void Foam::conformalVoronoiMesh::buildSurfaceConformation()
         // Re-index the point pairs
         ptPairs_.reIndex(oldToNewIndices);
 
-        //writePointPairs("pointPairs_initial.obj");
+        // writePointPairs("pointPairs_initial.obj");
 
         // Remove location from surface/edge tree
 
@@ -630,7 +630,7 @@ void Foam::conformalVoronoiMesh::buildSurfaceConformation()
             // Reindex the point pairs
             ptPairs_.reIndex(oldToNewIndices);
 
-            //writePointPairs("pointPairs_" + name(iterationNo) + ".obj");
+            // writePointPairs("pointPairs_" + name(iterationNo) + ".obj");
 
             if (Pstream::parRun())
             {
@@ -1955,8 +1955,8 @@ bool Foam::conformalVoronoiMesh::nearFeatureEdgeLocation
              && (mag(lineBetweenPoints) > pointPairDistance(pt))
             )
             {
-                //pt = edgeHit.hitPoint();
-                //pHit.setPoint(pt);
+                // pt = edgeHit.hitPoint();
+                // pHit.setPoint(pt);
                 closeToFeatureEdge = false;
             }
             else

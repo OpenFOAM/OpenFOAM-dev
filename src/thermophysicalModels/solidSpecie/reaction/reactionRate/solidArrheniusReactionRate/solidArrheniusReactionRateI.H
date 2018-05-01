@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ inline Foam::solidArrheniusReactionRate::solidArrheniusReactionRate
     const scalar A,
     const scalar Ta,
     const scalar Tcrit
-    //const scalar nReact
+    // const scalar nReact
 )
 :
     A_(A),

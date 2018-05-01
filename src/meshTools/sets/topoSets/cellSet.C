@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ cellSet::cellSet
             name,
             runTime.findInstance
             (
-                polyMesh::meshSubDir/"sets",    //polyMesh::meshSubDir,
+                polyMesh::meshSubDir/"sets",    // polyMesh::meshSubDir,
                 word::null,                     //"faces"
                 IOobject::MUST_READ,
                 runTime.findInstance
@@ -153,7 +153,7 @@ cellSet::cellSet
             name,
             runTime.findInstance
             (
-                polyMesh::meshSubDir/"sets",    //polyMesh::meshSubDir,
+                polyMesh::meshSubDir/"sets",    // polyMesh::meshSubDir,
                 word::null,                     //"faces"
                 IOobject::NO_READ,
                 runTime.findInstance
@@ -188,7 +188,7 @@ cellSet::cellSet
             name,
             runTime.findInstance
             (
-                polyMesh::meshSubDir/"sets",    //polyMesh::meshSubDir,
+                polyMesh::meshSubDir/"sets",    // polyMesh::meshSubDir,
                 word::null,                     //"faces"
                 IOobject::NO_READ,
                 runTime.findInstance

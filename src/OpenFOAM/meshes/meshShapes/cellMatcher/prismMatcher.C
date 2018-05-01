@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ bool Foam::prismMatcher::matchShape
 
     vertLabels_[0] = pointMap_[face0[face0vert0]];
     faceLabels_[0] = faceMap_[face0I];
-    //Info<< endl << "Prism vertex 0: vertex " <<  face0[face0vert0]
+    // Info<< endl << "Prism vertex 0: vertex " <<  face0[face0vert0]
     //    << " at position " << face0vert0 << " in face " << face0
     //    << endl;
 
@@ -125,7 +125,7 @@ bool Foam::prismMatcher::matchShape
             !(owner[faceMap_[face0I]] == celli)
         );
     vertLabels_[1] = pointMap_[face0[face0vert1]];
-    //Info<< "Prism vertex 1: vertex " <<  face0[face0vert1]
+    // Info<< "Prism vertex 1: vertex " <<  face0[face0vert1]
     //    << " at position " << face0vert1 << " in face " << face0
     //    << endl;
 
@@ -139,14 +139,14 @@ bool Foam::prismMatcher::matchShape
             face0I
         );
     const face& face4 = localFaces_[face4I];
-    //Info<< "Stepped to prism face 4 " << face4
+    // Info<< "Stepped to prism face 4 " << face4
     //    << " across edge " << face0[face0vert0] << " "
     //    << face0[face0vert1]
     //    << endl;
 
     if (faceSize_[face4I] != 4)
     {
-        //Info<< "Cannot be Prism Face 4 since size="
+        // Info<< "Cannot be Prism Face 4 since size="
         //    << faceSize_[face4I] << endl;
         return false;
     }
@@ -154,7 +154,7 @@ bool Foam::prismMatcher::matchShape
 
     label face4vert1 = pointFaceIndex_[face0[face0vert1]][face4I];
 
-    //Info<< "Prism vertex 1 also: vertex " <<  face4[face4vert1]
+    // Info<< "Prism vertex 1 also: vertex " <<  face4[face4vert1]
     //    << " at position " << face4vert1 << " in face " << face4
     //    << endl;
 
@@ -167,7 +167,7 @@ bool Foam::prismMatcher::matchShape
             (owner[faceMap_[face4I]] == celli)
         );
     vertLabels_[4] = pointMap_[face4[face4vert4]];
-    //Info<< "Prism vertex 4: vertex " <<  face4[face4vert4]
+    // Info<< "Prism vertex 4: vertex " <<  face4[face4vert4]
     //    << " at position " << face4vert4 << " in face " << face4
     //    << endl;
 
@@ -180,7 +180,7 @@ bool Foam::prismMatcher::matchShape
             (owner[faceMap_[face4I]] == celli)
         );
     vertLabels_[3] = pointMap_[face4[face4vert3]];
-    //Info<< "Prism vertex 3: vertex " <<  face4[face4vert3]
+    // Info<< "Prism vertex 3: vertex " <<  face4[face4vert3]
     //    << " at position " << face4vert3 << " in face " << face4
     //    << endl;
 
@@ -193,15 +193,15 @@ bool Foam::prismMatcher::matchShape
             face4[face4vert4],
             face4I
         );
-    //const face& face1 = localFaces_[face1I];
-    //Info<< "Stepped to prism face 1 " << face1
+    // const face& face1 = localFaces_[face1I];
+    // Info<< "Stepped to prism face 1 " << face1
     //    << " across edge " << face4[face4vert3] << " "
     //    << face4[face4vert4]
     //    << endl;
 
     if (faceSize_[face1I] != 3)
     {
-        //Info<< "Cannot be Prism Face 1 since size="
+        // Info<< "Cannot be Prism Face 1 since size="
         //    << faceSize_[face1I] << endl;
         return false;
     }
@@ -229,7 +229,7 @@ bool Foam::prismMatcher::matchShape
             !(owner[faceMap_[face0I]] == celli)
         );
     vertLabels_[2] = pointMap_[face0[face0vert2]];
-    //Info<< "Prism vertex 2: vertex " <<  face0[face0vert2]
+    // Info<< "Prism vertex 2: vertex " <<  face0[face0vert2]
     //    << " at position " << face0vert2 << " in face " << face0
     //    << endl;
 
@@ -244,14 +244,14 @@ bool Foam::prismMatcher::matchShape
         );
     faceLabels_[3] = faceMap_[face3I];
     const face& face3 = localFaces_[face3I];
-    //Info<< "Stepped to prism face 3 " << face3
+    // Info<< "Stepped to prism face 3 " << face3
     //    << " across edge " << face0[face0vert1] << " "
     //    << face0[face0vert2]
     //    << endl;
 
     label face3vert2 = pointFaceIndex_[face0[face0vert2]][face3I];
 
-    //Info<< "Prism vertex 2 also: vertex " <<  face3[face3vert2]
+    // Info<< "Prism vertex 2 also: vertex " <<  face3[face3vert2]
     //    << " at position " << face3vert2 << " in face " << face3
     //    << endl;
 
@@ -263,7 +263,7 @@ bool Foam::prismMatcher::matchShape
             (owner[faceMap_[face3I]] == celli)
         );
     vertLabels_[5] = pointMap_[face3[face3vert5]];
-    //Info<< "Prism vertex 5: vertex " <<  face3[face3vert5]
+    // Info<< "Prism vertex 5: vertex " <<  face3[face3vert5]
     //    << " at position " << face3vert5 << " in face " << face3
     //    << endl;
 
@@ -277,14 +277,14 @@ bool Foam::prismMatcher::matchShape
             face0I
         );
     faceLabels_[2] = faceMap_[face2I];
-    //const face& face2 = localFaces_[face2I];
-    //Info<< "Stepped to prism face 2 " << face2
+    // const face& face2 = localFaces_[face2I];
+    // Info<< "Stepped to prism face 2 " << face2
     //    << " across edge " << face0[face0vert2] << " "
     //    << face0[face0vert0]
     //    << endl;
 
-    //label face2vert2 = pointFaceIndex_[face0[face0vert2]][face2I];
-    //Info<< "Prism vertex 2 also: vertex " <<  face2[face2vert2]
+    // label face2vert2 = pointFaceIndex_[face0[face0vert2]][face2I];
+    // Info<< "Prism vertex 2 also: vertex " <<  face2[face2vert2]
     //    << " at position " << face2vert2 << " in face " << face2
     //    << endl;
 

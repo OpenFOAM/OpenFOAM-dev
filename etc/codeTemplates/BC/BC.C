@@ -90,7 +90,7 @@ CONSTRUCT
     PARENT::evaluate();
 
     /*
-    //Initialise with the value entry if evaluation is not possible
+    // Initialise with the value entry if evaluation is not possible
     FVPATCHF::operator=
     (
         FIELD("value", dict, p.size())

@@ -562,8 +562,8 @@ int main(int argc, char *argv[])
         autoPtr<mapDistributePolyMesh> map = distributor.distribute(decomp);
 
         // Print some statistics
-        //Info<< "After distribution:" << endl;
-        //printMeshData(mesh);
+        // Info<< "After distribution:" << endl;
+        // printMeshData(mesh);
 
         mesh.setInstance(runTime.constant());
         Info<< "Writing redistributed mesh" << nl << endl;
@@ -721,8 +721,8 @@ int main(int argc, char *argv[])
             fvm,
             cellDistance,
             pointDistance,
-            0,      //distance,
-            false   //regularise
+            0,      // distance,
+            false   // regularise
         );
 
         isoFaces.setSize(iso.size());

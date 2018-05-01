@@ -974,7 +974,7 @@ Foam::autoPtr<Foam::refinementHistory> Foam::refinementHistory::clone
         }
     }
 
-    //forAll(oldToNewSplit, index)
+    // forAll(oldToNewSplit, index)
     //{
     //    Pout<< "old:" << index << " new:" << oldToNewSplit[index]
     //        << endl;
@@ -1090,7 +1090,7 @@ Foam::autoPtr<Foam::refinementHistory> Foam::refinementHistory::clone
             decomposition,
             splitCellProc,
             splitCellNum,
-            1,      //procI,
+            1,      // procI,
             oldToNewSplit
         );
     }
@@ -1274,9 +1274,9 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
     // Remove unreferenced history.
     compact();
 
-    //Pout<< nl << "--BEFORE:" << endl;
-    //writeDebug();
-    //Pout<< "---------" << nl << endl;
+    // Pout<< nl << "--BEFORE:" << endl;
+    // writeDebug();
+    // Pout<< "---------" << nl << endl;
 
 
     // Distribution is only partially functional.
@@ -1327,10 +1327,10 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
         }
     }
 
-    //Pout<< "refinementHistory::distribute :"
+    // Pout<< "refinementHistory::distribute :"
     //    << " splitCellProc:" << splitCellProc << endl;
     //
-    //Pout<< "refinementHistory::distribute :"
+    // Pout<< "refinementHistory::distribute :"
     //    << " splitCellNum:" << splitCellNum << endl;
 
 
@@ -1338,7 +1338,7 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
     // move in their whole to other processor.
     for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        //Pout<< "-- Subetting for processor " << proci << endl;
+        // Pout<< "-- Subetting for processor " << proci << endl;
 
         // From uncompacted to compacted splitCells.
         labelList oldToNew(splitCells_.size(), -1);
@@ -1374,7 +1374,7 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
             }
         }
 
-        //forAll(oldToNew, index)
+        // forAll(oldToNew, index)
         //{
         //    Pout<< "old:" << index << " new:" << oldToNew[index]
         //        << endl;
@@ -1423,9 +1423,9 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
             }
         }
 
-        //Pout<< nl << "--Subset for domain:" << proci << endl;
-        //writeDebug(newVisibleCells, newSplitCells);
-        //Pout<< "---------" << nl << endl;
+        // Pout<< nl << "--Subset for domain:" << proci << endl;
+        // writeDebug(newVisibleCells, newSplitCells);
+        // Pout<< "---------" << nl << endl;
 
 
         // Send to neighbours
@@ -1451,16 +1451,16 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
         List<splitCell8> newSplitCells(fromNbr);
         labelList newVisibleCells(fromNbr);
 
-        //Pout<< nl << "--Received from domain:" << proci << endl;
-        //writeDebug(newVisibleCells, newSplitCells);
-        //Pout<< "---------" << nl << endl;
+        // Pout<< nl << "--Received from domain:" << proci << endl;
+        // writeDebug(newVisibleCells, newSplitCells);
+        // Pout<< "---------" << nl << endl;
 
 
         // newSplitCells contain indices only into newSplitCells so
         // renumbering can be done here.
         label offset = splitCells_.size();
 
-        //Pout<< "**Renumbering data from proc " << proci << " with offset "
+        // Pout<< "**Renumbering data from proc " << proci << " with offset "
         //    << offset << endl;
 
         forAll(newSplitCells, index)
@@ -1501,9 +1501,9 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
     }
     splitCells_.shrink();
 
-    //Pout<< nl << "--AFTER:" << endl;
-    //writeDebug();
-    //Pout<< "---------" << nl << endl;
+    // Pout<< nl << "--AFTER:" << endl;
+    // writeDebug();
+    // Pout<< "---------" << nl << endl;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,8 +146,8 @@ int main(int argc, char *argv[])
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //    {
-//        //const FECCellToFaceStencil cfcStencil(mesh);
-//        //const extendedCentredCellToFaceStencil addressing
+//        // const FECCellToFaceStencil cfcStencil(mesh);
+//        // const extendedCentredCellToFaceStencil addressing
 //        //(
 //        //    cfcStencil
 //        //);
@@ -249,25 +249,25 @@ int main(int argc, char *argv[])
 //    // ~~~~~~~~~~~~~~~~~~~~~~
 //
 //    {
-//        //const extendedCentredCellToFaceStencil& addressing =
-//        //centredCPCStencilObject::New
+//        // const extendedCentredCellToFaceStencil& addressing =
+//        // centredCPCStencilObject::New
 //        //(
 //        //    mesh
 //        //);
 //        //
-//        //Info<< "cellPointCell:" << endl;
-//        //writeStencilStats(addressing.stencil());
+//        // Info<< "cellPointCell:" << endl;
+//        // writeStencilStats(addressing.stencil());
 //        //
 //        //
 //        //// Collect stencil cell centres
-//        //List<List<point>> stencilPoints(mesh.nFaces());
-//        //addressing.collectData
+//        // List<List<point>> stencilPoints(mesh.nFaces());
+//        // addressing.collectData
 //        //(
 //        //    mesh.C(),
 //        //    stencilPoints
 //        //);
 //        //
-//        //forAll(stencilPoints, facei)
+//        // forAll(stencilPoints, facei)
 //        //{
 //        //    writeStencilOBJ
 //        //    (
@@ -284,25 +284,25 @@ int main(int argc, char *argv[])
 //    // ~~~~~~~~~~~~~~~~~~~~~~
 //
 //    {
-//        //const extendedCentredCellToFaceStencil& addressing =
-//        //centredCECStencilObject::New
+//        // const extendedCentredCellToFaceStencil& addressing =
+//        // centredCECStencilObject::New
 //        //(
 //        //    mesh
 //        //);
 //        //
-//        //Info<< "cellEdgeCell:" << endl;
-//        //writeStencilStats(addressing.stencil());
+//        // Info<< "cellEdgeCell:" << endl;
+//        // writeStencilStats(addressing.stencil());
 //        //
 //        //
 //        //// Collect stencil cell centres
-//        //List<List<point>> stencilPoints(mesh.nFaces());
-//        //addressing.collectData
+//        // List<List<point>> stencilPoints(mesh.nFaces());
+//        // addressing.collectData
 //        //(
 //        //    mesh.C(),
 //        //    stencilPoints
 //        //);
 //        //
-//        //forAll(stencilPoints, facei)
+//        // forAll(stencilPoints, facei)
 //        //{
 //        //    writeStencilOBJ
 //        //    (

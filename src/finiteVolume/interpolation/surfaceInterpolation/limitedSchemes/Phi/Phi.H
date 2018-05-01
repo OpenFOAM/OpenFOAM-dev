@@ -95,7 +95,7 @@ public:
         scalar phiCD = cdWeight*phiP + (1 - cdWeight)*phiN;
 
         // Calculate the effective limiter for the Phi interpolation
-        //scalar PLimiter =
+        // scalar PLimiter =
         //    (1.0 - k_) + k_*(faceFlux - phiU)/stabilise(phiCD - phiU, small);
 
         scalar PLimiter =

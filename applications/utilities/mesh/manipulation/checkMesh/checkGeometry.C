@@ -343,7 +343,7 @@ bool Foam::checkCoupledPoints
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
     // Zero'th point on coupled faces
-    //pointField nbrZeroPoint(fcs.size()-mesh.nInternalFaces(), vector::max);
+    // pointField nbrZeroPoint(fcs.size()-mesh.nInternalFaces(), vector::max);
     List<pointField> nbrPoints(fcs.size() - mesh.nInternalFaces());
 
     // Exchange zero point
@@ -395,7 +395,7 @@ bool Foam::checkCoupledPoints
                 (
                     cpp.calcFaceTol
                     (
-                        //cpp.matchTolerance(),
+                        // cpp.matchTolerance(),
                         cpp,
                         cpp.points(),
                         cpp.faceCentres()
@@ -869,7 +869,7 @@ Foam::label Foam::checkGeometry
         pointSet points(mesh, "shortEdges", mesh.nPoints()/1000 + 1);
         if (mesh.checkEdgeLength(true, minDistSqr, &points))
         {
-            //noFailedChecks++;
+            // noFailedChecks++;
 
             label nPoints = returnReduce(points.size(), sumOp<label>());
 
@@ -891,7 +891,7 @@ Foam::label Foam::checkGeometry
 
         if (mesh.checkPointNearness(false, minDistSqr, &points))
         {
-            //noFailedChecks++;
+            // noFailedChecks++;
 
             label nPoints = returnReduce(points.size(), sumOp<label>());
 
@@ -916,7 +916,7 @@ Foam::label Foam::checkGeometry
         faceSet faces(mesh, "concaveFaces", mesh.nFaces()/100 + 1);
         if (mesh.checkFaceAngles(true, 10, &faces))
         {
-            //noFailedChecks++;
+            // noFailedChecks++;
 
             label nFaces = returnReduce(faces.size(), sumOp<label>());
 
@@ -940,7 +940,7 @@ Foam::label Foam::checkGeometry
         faceSet faces(mesh, "warpedFaces", mesh.nFaces()/100 + 1);
         if (mesh.checkFaceFlatness(true, 0.8, &faces))
         {
-            //noFailedChecks++;
+            // noFailedChecks++;
 
             label nFaces = returnReduce(faces.size(), sumOp<label>());
 

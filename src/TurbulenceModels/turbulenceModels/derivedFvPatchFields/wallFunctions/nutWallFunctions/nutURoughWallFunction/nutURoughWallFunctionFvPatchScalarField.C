@@ -105,7 +105,7 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcYPlus
         static const scalar c_3 = 2.0*atan(1.0)/log(90/2.25);
         static const scalar c_4 = c_3*log(2.25);
 
-        //if (KsPlusBasedOnYPlus_)
+        // if (KsPlusBasedOnYPlus_)
         {
             // If KsPlus is based on YPlus the extra term added to the law
             // of the wall will depend on yPlus

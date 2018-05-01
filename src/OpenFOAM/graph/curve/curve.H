@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ public:
     // Constructors
 
         //- Construct as interpolation of an existing curve
-        //curve(const curve&, const label);
+        // curve(const curve&, const label);
 
         //- Construct from name, style and size
         curve
@@ -167,7 +167,7 @@ public:
     // Friend functions
 
         //- Gradient of the curve
-        //friend curve grad(const curve&);
+        // friend curve grad(const curve&);
 
 
     // Ostream operator

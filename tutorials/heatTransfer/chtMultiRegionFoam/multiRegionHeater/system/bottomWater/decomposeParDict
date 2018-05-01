@@ -42,15 +42,15 @@ hierarchicalCoeffs
 
 scotchCoeffs
 {
-    //processorWeights
+    // processorWeights
     //(
     //    1
     //    1
     //    1
     //    1
     //);
-    //writeGraph  true;
-    //strategy "b";
+    // writeGraph  true;
+    // strategy "b";
 }
 
 manualCoeffs

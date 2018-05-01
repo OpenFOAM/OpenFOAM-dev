@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -225,7 +225,7 @@ void Foam::GAMGAgglomeration::agglomerateLduAddressing
             }
             else if (cOwn == rmLowerAddr && cNei == rmUpperAddr)
             {
-                //faceFlipMap[fineFacei] = false;
+                // faceFlipMap[fineFacei] = false;
             }
             else
             {
@@ -482,7 +482,7 @@ void Foam::GAMGAgglomeration::procAgglomerateRestrictAddressing
         procRestrictAddressing,
 
         UPstream::msgType(),
-        Pstream::commsTypes::nonBlocking    //Pstream::commsTypes::scheduled
+        Pstream::commsTypes::nonBlocking    // Pstream::commsTypes::scheduled
     );
 
 

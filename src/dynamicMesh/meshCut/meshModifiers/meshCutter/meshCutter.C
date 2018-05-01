@@ -573,7 +573,7 @@ void Foam::meshCutter::setRefinement
                     << " it is cut\n"
                     << "edge:" << edgeI << " verts:" << e
                     << " at:" << e.line(mesh().points())
-                    << endl;    //abort(FatalError);
+                    << endl;    // abort(FatalError);
             }
         }
     }

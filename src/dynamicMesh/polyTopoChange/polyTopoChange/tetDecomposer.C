@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -374,9 +374,9 @@ void Foam::tetDecomposer::setRefinement
                             triangle,
                             addedOwn[fp],
                             addedNei[fp],
-                            -1,                 //point
-                            -1,                 //edge
-                            facei,              //face
+                            -1,                 // point
+                            -1,                 // edge
+                            facei,              // face
                             patchi,
                             zoneI,
                             zoneFlip
@@ -400,10 +400,10 @@ void Foam::tetDecomposer::setRefinement
                         triangle,
                         newOwn,
                         newNei,
-                        f[fp],      //point
-                        -1,         //edge
-                        -1,         //face
-                        -1,         //patchi
+                        f[fp],      // point
+                        -1,         // edge
+                        -1,         // face
+                        -1,         // patchi
                         zoneI,
                         zoneFlip
                     );
@@ -424,10 +424,10 @@ void Foam::tetDecomposer::setRefinement
                         triangle,
                         newOwn,
                         newNei,
-                        f[fp],      //point
-                        -1,         //edge
-                        -1,         //face
-                        -1,         //patchi
+                        f[fp],      // point
+                        -1,         // edge
+                        -1,         // face
+                        -1,         // patchi
                         zoneI,
                         zoneFlip
                     );
@@ -481,9 +481,9 @@ void Foam::tetDecomposer::setRefinement
                             triangle,
                             addedOwn[triI],
                             addedNei[triI],
-                            -1,                 //point
-                            -1,                 //edge
-                            facei,              //face
+                            -1,                 // point
+                            -1,                 // edge
+                            facei,              // face
                             patchi,
                             zoneI,
                             zoneFlip
@@ -508,10 +508,10 @@ void Foam::tetDecomposer::setRefinement
                         triangle,
                         newOwn,
                         newNei,
-                        f[fp],      //point
-                        -1,         //edge
-                        -1,         //face
-                        -1,         //patchi
+                        f[fp],      // point
+                        -1,         // edge
+                        -1,         // face
+                        -1,         // patchi
                         zoneI,
                         zoneFlip
                     );
@@ -533,10 +533,10 @@ void Foam::tetDecomposer::setRefinement
                             triangle,
                             newOwn,
                             newNei,
-                            f[fp],      //point
-                            -1,         //edge
-                            -1,         //face
-                            -1,         //patchi
+                            f[fp],      // point
+                            -1,         // edge
+                            -1,         // face
+                            -1,         // patchi
                             zoneI,
                             zoneFlip
                         );
@@ -573,7 +573,7 @@ void Foam::tetDecomposer::setRefinement
             }
 
             const face& f = mesh_.faces()[facei];
-            //const labelList& fEdges = mesh_.faceEdges()[facei];
+            // const labelList& fEdges = mesh_.faceEdges()[facei];
             forAll(f, fp)
             {
                 label p0 = f[fp];
@@ -680,10 +680,10 @@ void Foam::tetDecomposer::setRefinement
                         triangle,
                         otherTet,
                         thisTet,
-                        -1,         //masterPoint
-                        -1,         //fEdges[fp], //masterEdge
-                        facei,      //masterFace
-                        -1,         //patchi
+                        -1,         // masterPoint
+                        -1,         // fEdges[fp], // masterEdge
+                        facei,      // masterFace
+                        -1,         // patchi
                         zoneI,
                         zoneFlip
                     );

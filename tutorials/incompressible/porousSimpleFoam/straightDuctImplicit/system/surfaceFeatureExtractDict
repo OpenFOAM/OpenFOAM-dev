@@ -27,7 +27,7 @@ boundaryAndFaceZones.stl
 
     // Write options
 
-        writeObj        no; //yes;
+        writeObj        no; // yes;
 }
 
 

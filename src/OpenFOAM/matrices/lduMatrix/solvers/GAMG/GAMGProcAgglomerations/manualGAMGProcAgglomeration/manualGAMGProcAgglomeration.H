@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,16 +37,16 @@ Description
         processorAgglomeration
         (
             (
-                3           //at level 3
+                3           // at level 3
                 (
-                    (0 1)   //coarse 0 from 0,1 (and moved onto 0)
-                    (3 2)   //coarse 1 from 2,3 (and moved onto 3)
+                    (0 1)   // coarse 0 from 0,1 (and moved onto 0)
+                    (3 2)   // coarse 1 from 2,3 (and moved onto 3)
                 )
             )
             (
-                6           //at level6
+                6           // at level6
                 (
-                    (0 1)   //coarse 0 from 0,1 (and moved onto 0)
+                    (0 1)   // coarse 0 from 0,1 (and moved onto 0)
                 )
             )
         );

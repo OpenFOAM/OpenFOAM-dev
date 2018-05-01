@@ -95,7 +95,7 @@ class backgroundMeshDecomposition
     // Private data
 
         //- Method details dictionary
-        //dictionary coeffsDict_;
+        // dictionary coeffsDict_;
 
         //- Reference to runtime
         const Time& runTime_;

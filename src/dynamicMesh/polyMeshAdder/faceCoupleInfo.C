@@ -517,7 +517,7 @@ void Foam::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
     {
         const edge& masterE = masterPatch().edges()[masterEdgeI];
 
-        //Pout<< "Master:" << masterPatch().localPoints()[masterE[0]] << ' '
+        // Pout<< "Master:" << masterPatch().localPoints()[masterE[0]] << ' '
         //    << masterPatch().localPoints()[masterE[1]] << endl;
 
         const labelList& stringedEdges = masterToCutEdges[masterEdgeI];
@@ -570,7 +570,7 @@ void Foam::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
                     {
                         const edge& e = cutEdges[edgeI];
 
-                        //Pout<< "    cut:" << e << " at:"
+                        // Pout<< "    cut:" << e << " at:"
                         //    << cutFaces().localPoints()[e[0]]
                         //    << ' ' << cutFaces().localPoints()[e[1]] << endl;
 
@@ -608,7 +608,7 @@ void Foam::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
                 }
             }
 
-            //Pout<< "For master edge:"
+            // Pout<< "For master edge:"
             //    << unsplitEdge
             //    << " Found stringed points "
             //    <<  UIndirectList<point>
@@ -735,7 +735,7 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
     {
         const face& patchF = patchFaces[patchFacei];
 
-        //const face& cutF = cutFaces[patchToCutFaces[patchFacei]];
+        // const face& cutF = cutFaces[patchToCutFaces[patchFacei]];
         const face& cutF = cutFaces[patchFacei];
 
         // Do geometric matching to get position of cutF[0] in patchF
@@ -754,9 +754,9 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
             label cutPointi = cutF[cutFp];
             label patchPointi = patchF[patchFp];
 
-            //const point& cutPt = cutPoints[cutPointi];
-            //const point& patchPt = patchPoints[patchPointi];
-            //if (mag(cutPt - patchPt) > small)
+            // const point& cutPt = cutPoints[cutPointi];
+            // const point& patchPt = patchPoints[patchPointi];
+            // if (mag(cutPt - patchPt) > small)
             //{
             //    FatalErrorInFunction
             //    << "cutP:" << cutPt
@@ -774,7 +774,7 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
                 // Check if already have region & region master for this set
                 label otherCutPointi = patchToCutPoints[patchPointi];
 
-                //Pout<< "PatchPoint:" << patchPt
+                // Pout<< "PatchPoint:" << patchPt
                 //    << " matches to:" << cutPointi
                 //    << " coord:" << cutPoints[cutPointi]
                 //    << " and to:" << otherCutPointi
@@ -1307,7 +1307,7 @@ Foam::label Foam::faceCoupleInfo::matchEdgeFaces
                         else
                         {
                             // Should not happen?
-                            //Pout<< "On edge:" << cutEdgeI
+                            // Pout<< "On edge:" << cutEdgeI
                             //    << " have connected masterFaces:"
                             //    << masterEFaces
                             //    << " and from previous edge we have"
@@ -1626,7 +1626,7 @@ void Foam::faceCoupleInfo::subDivisionMatch
         findMappedEdges
         (
             cutFaces().edges(),
-            slaveToCutPoints_,  //note:should be cutToSlavePoints but since iden
+            slaveToCutPoints_,
             slavePatch()
         )
     );

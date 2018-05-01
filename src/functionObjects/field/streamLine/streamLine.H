@@ -58,7 +58,7 @@ Description
         seedSampleSet
         {
             type        uniform;
-            axis        x;  //distance;
+            axis        x;  // distance;
             start       (-0.0205 0.0001 0.00001);
             end         (-0.0205 0.0005 0.00001);
             nPoints     100;

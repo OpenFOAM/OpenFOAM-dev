@@ -430,7 +430,7 @@ void Foam::refinementSurfaces::setMinLevelFields
                 // From the region get the surface-wise refinement level
                 forAll(minLevelField, i)
                 {
-                    if (info[i].hit()) //Note: should not be necessary
+                    if (info[i].hit()) // Note: should not be necessary
                     {
                         minLevelField[i] = minLevel(surfI, region[i]);
                     }

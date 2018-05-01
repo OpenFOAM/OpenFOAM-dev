@@ -48,12 +48,12 @@ greyMeanAbsorptionEmissionCoeffs
 
     CO2
     {
-        Tcommon         200;   //Common Temp
-        invTemp         true;   //Is the polynomio using inverse temperature.
-        Tlow            200;   //Low Temp
-        Thigh           2500;  //High Temp
+        Tcommon         200;   // Common Temp
+        invTemp         true;   // Is the polynomio using inverse temperature.
+        Tlow            200;   // Low Temp
+        Thigh           2500;  // High Temp
 
-        loTcoeffs       //coefss for T < Tcommon
+        loTcoeffs       // coefss for T < Tcommon
         (
             0           //  a0            +
             0           //  a1*T          +
@@ -62,7 +62,7 @@ greyMeanAbsorptionEmissionCoeffs
             0           //  a4*T^(+/-)4   +
             0           //  a5*T^(+/-)5   +
         );
-        hiTcoeffs        //coefss for T > Tcommon
+        hiTcoeffs        // coefss for T > Tcommon
         (
             18.741
             -121.31e3

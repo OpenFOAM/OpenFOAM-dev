@@ -265,7 +265,7 @@ Foam::MGridGenGAMGAgglomeration::MGridGenGAMGAgglomeration
 
             //- Note: in-place update of weights is more effective it seems?
             //        Should not be. fluke?
-            //scalarField weights(*faceWeightsPtr);
+            // scalarField weights(*faceWeightsPtr);
             scalarField weights = *magSfPtr;
             forAllConstIter(labelHashSet, sharedFaces, iter)
             {

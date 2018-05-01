@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ void Foam::sammMesh::fillSammCellShapeTable()
     sammShapeLookup[64]  = sammTrim1Ptr_;
     sammShapeLookup[128] = sammTrim1Ptr_;
 
-    //SAMM trim type 2: 12 models
+    // SAMM trim type 2: 12 models
     sammShapeLookup[3]   = sammTrim2Ptr_;
     sammShapeLookup[12]  = sammTrim2Ptr_;
     sammShapeLookup[192] = sammTrim2Ptr_;

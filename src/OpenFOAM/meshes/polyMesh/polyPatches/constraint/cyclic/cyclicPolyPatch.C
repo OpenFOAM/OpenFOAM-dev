@@ -1356,7 +1356,7 @@ bool Foam::cyclicPolyPatch::order
                 << endl;
 
             // Recalculate untransformed face centres
-            //pointField rawHalf0Ctrs =
+            // pointField rawHalf0Ctrs =
             //    calcFaceCentres(half0Faces, pp.points());
             label vertI = 0;
 

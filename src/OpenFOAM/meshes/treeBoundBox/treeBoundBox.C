@@ -87,7 +87,7 @@ const Foam::label edgesArray[12][2] =
 
 const Foam::edgeList Foam::treeBoundBox::edges
 (
-    //initListList<edge, label, 12, 2>(edgesArray)
+    // initListList<edge, label, 12, 2>(edgesArray)
     calcEdges(edgesArray)
 );
 

@@ -653,7 +653,7 @@ Foam::fileNameList Foam::readDir
 
     if (POSIX::debug)
     {
-        //InfoInFunction
+        // InfoInFunction
         Pout<< FUNCTION_NAME << " : reading directory " << directory << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -901,7 +901,7 @@ bool Foam::ln(const fileName& src, const fileName& dst)
 {
     if (POSIX::debug)
     {
-        //InfoInFunction
+        // InfoInFunction
         Pout<< FUNCTION_NAME
             << " : Create softlink from : " << src << " to " << dst << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
@@ -942,7 +942,7 @@ bool Foam::mv(const fileName& src, const fileName& dst, const bool followLink)
 {
     if (POSIX::debug)
     {
-        //InfoInFunction
+        // InfoInFunction
         Pout<< FUNCTION_NAME << " : Move : " << src << " to " << dst << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -971,7 +971,7 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
 {
     if (POSIX::debug)
     {
-        //InfoInFunction
+        // InfoInFunction
         Pout<< FUNCTION_NAME
             << " : moving : " << src << " to extension " << ext << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
@@ -1013,7 +1013,7 @@ bool Foam::rm(const fileName& file)
 {
     if (POSIX::debug)
     {
-        //InfoInFunction
+        // InfoInFunction
         Pout<< FUNCTION_NAME << " : Removing : " << file << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -1037,7 +1037,7 @@ bool Foam::rmDir(const fileName& directory)
 {
     if (POSIX::debug)
     {
-        //InfoInFunction
+        // InfoInFunction
         Pout<< FUNCTION_NAME << " : removing directory " << directory << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -1201,7 +1201,7 @@ bool Foam::ping
         {
             return true;
         }
-        //perror("connect");
+        // perror("connect");
 
         return false;
     }

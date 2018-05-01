@@ -21,9 +21,9 @@ radiationModel  viewFactor;
 
 viewFactorCoeffs
 {
-    smoothing true; //Smooth view factor matrix (use when in a close surface
-                    //to force Sum(Fij = 1)
-    constantEmissivity true; //constant emissivity on surfaces.
+    smoothing true; // Smooth view factor matrix (use when in a close surface
+                    // to force Sum(Fij = 1)
+    constantEmissivity true; // constant emissivity on surfaces.
 }
 
 // Number of flow iterations per radiation iteration

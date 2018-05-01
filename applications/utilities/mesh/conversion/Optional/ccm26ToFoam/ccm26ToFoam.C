@@ -204,12 +204,12 @@ void ReadVertices
     );
     CCMIOReadMap(&err, mapID, mapData.begin(), offset, offsetPlusSize);
 
-    //CCMIOSize size;
-    //CCMIOEntityDescription(&err, vertices, &size, nullptr);
-    //char *desc = new char[size + 1];
-    //CCMIOEntityDescription(&err, vertices, nullptr, desc);
-    //Pout<< "label: '" << desc << "'" << endl;
-    //delete [] desc;
+    // CCMIOSize size;
+    // CCMIOEntityDescription(&err, vertices, &size, nullptr);
+    // char *desc = new char[size + 1];
+    // CCMIOEntityDescription(&err, vertices, nullptr, desc);
+    // Pout<< "label: '" << desc << "'" << endl;
+    // delete [] desc;
 
     // Convert to foamPoints
     foamPoints.setSize(nVertices);
@@ -336,7 +336,7 @@ void ReadProblem
             }
 
 
-            //foamPatchMap.append(prostarI);
+            // foamPatchMap.append(prostarI);
 
 
             // Read boundary name:

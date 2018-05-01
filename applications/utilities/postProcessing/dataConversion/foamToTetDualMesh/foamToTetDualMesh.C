@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ void ReadAndMapFields
                     );
                     fld[pointi] = readField.boundaryField()[patchi][localFacei];
                 }
-                //else
+                // else
                 //{
                 //    FatalErrorInFunction
                 //        << "Face " << facei << " from index " << index
@@ -125,7 +125,7 @@ void ReadAndMapFields
                 //}
 
             }
-            //else
+            // else
             //{
             //    WarningInFunction
             //        << "Point " << pointi << " at "

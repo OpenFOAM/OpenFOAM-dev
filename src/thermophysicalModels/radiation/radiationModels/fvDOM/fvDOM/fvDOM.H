@@ -42,7 +42,7 @@ Description
                                     //(from Y to X)
             nTheta      0;          // polar angles in PI (from Z to X-Y plane)
             convergence 1e-3;       // convergence criteria for radiation
-                                    //iteration
+                                    // iteration
             maxIter     4;          // maximum number of iterations
         }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -283,7 +283,7 @@ void Foam::meshStructure::correct
                 if (levelI != -1)
                 {
                     // All same level
-                    //Pout<< "Horizontal boundary face " << facei
+                    // Pout<< "Horizontal boundary face " << facei
                     //    << " at:" << mesh.faceCentres()[facei]
                     //    << " data:" << faceData[facei]
                     //    << " pointDatas:"

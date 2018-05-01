@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ public:
         {
             ANY,    // Cells using any point in set
             EDGE    // Cells using an edge with both points in set
-            //ALL   // Possible extension: cells whose all points are in set
+            // ALL   // Possible extension: cells whose all points are in set
         };
 
 private:

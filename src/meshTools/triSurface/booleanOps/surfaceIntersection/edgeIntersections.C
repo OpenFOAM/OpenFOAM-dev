@@ -329,7 +329,7 @@ bool Foam::edgeIntersections::rotatePerturb
 
             // Endpoint to modify. Choose either start or end.
             label pointi = e[rndGen.bit()];
-            //label pointi = e[0];
+            // label pointi = e[0];
 
             // Generate random vector slightly larger than tolerance.
             vector rndVec = rndGen.vector01() - vector(0.5, 0.5, 0.5);

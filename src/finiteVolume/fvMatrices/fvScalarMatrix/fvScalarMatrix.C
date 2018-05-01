@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -262,7 +262,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H1() const
     volScalarField& H1_ = tH1.ref();
 
     H1_.primitiveFieldRef() = lduMatrix::H1();
-    //addBoundarySource(Hphi.primitiveField());
+    // addBoundarySource(Hphi.primitiveField());
 
     H1_.primitiveFieldRef() /= psi_.mesh().V();
     H1_.correctBoundaryConditions();

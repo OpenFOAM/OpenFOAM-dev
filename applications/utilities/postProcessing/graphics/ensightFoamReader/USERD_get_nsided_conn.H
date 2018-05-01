@@ -18,8 +18,8 @@ int USERD_get_nsided_conn
     }
     else if (part_number < nPatches+2)
     {
-        //const cellList& cells = meshPtr->cells();
-        //const faceList& faces = meshPtr->faces();
+        // const cellList& cells = meshPtr->cells();
+        // const faceList& faces = meshPtr->faces();
 
         label patchi = part_number - 2;
         const polyBoundaryMesh& bMesh = meshPtr->boundaryMesh();

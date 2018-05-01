@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ Foam::labelPairList Foam::globalPoints::addSendTransform
 
     forAll(info, i)
     {
-        //Pout<< "    adding send transform to" << nl
+        // Pout<< "    adding send transform to" << nl
         //    << "    proc:" << globalTransforms_.processor(info[i])
         //    << nl
         //    << "    index:" << globalTransforms_.index(info[i]) << nl
@@ -429,7 +429,7 @@ void Foam::globalPoints::initOwnPoints
                         )
                     );
 
-                    //Pout<< "For point "<< pp.points()[meshPointi]
+                    // Pout<< "For point "<< pp.points()[meshPointi]
                     //    << " inserting info " << knownInfo
                     //    << endl;
 
@@ -651,7 +651,7 @@ void Foam::globalPoints::receivePatchPoints
             const cyclicPolyPatch& cycPatch =
                 refCast<const cyclicPolyPatch>(pp);
 
-            //Pout<< "Patch:" << patchi << " name:" << pp.name() << endl;
+            // Pout<< "Patch:" << patchi << " name:" << pp.name() << endl;
 
             const labelList& meshPoints = pp.meshPoints();
             const labelList coupledMeshPoints(reverseMeshPoints(cycPatch));
@@ -663,7 +663,7 @@ void Foam::globalPoints::receivePatchPoints
 
                 if (meshPointA != meshPointB)
                 {
-                    //Pout<< "Connection between point " << meshPointA
+                    // Pout<< "Connection between point " << meshPointA
                     //    << " at " << mesh_.points()[meshPointA]
                     //    << " and " << meshPointB
                     //    << " at " << mesh_.points()[meshPointB] << endl;
@@ -774,14 +774,14 @@ void Foam::globalPoints::remove
                 // Normal faceNeighbours
                 if (proc0 == Pstream::myProcNo())
                 {
-                    //Pout<< "Removing direct neighbour:"
+                    // Pout<< "Removing direct neighbour:"
                     //    << mesh_.points()
                     //       [globalTransforms_.index(pointInfo[0])]
                     //    << endl;
                 }
                 else if (proc1 == Pstream::myProcNo())
                 {
-                    //Pout<< "Removing direct neighbour:"
+                    // Pout<< "Removing direct neighbour:"
                     //    << mesh_.points()
                     //       [globalTransforms_.index(pointInfo[1])]
                     //    << endl;
@@ -967,8 +967,8 @@ void Foam::globalPoints::calculateSharedPoints
     } while (changed);
 
 
-    //Pout<< "**ALL** connected points:" << endl;
-    //forAllConstIter(Map<label>, meshToProcPoint_, iter)
+    // Pout<< "**ALL** connected points:" << endl;
+    // forAllConstIter(Map<label>, meshToProcPoint_, iter)
     //{
     //    label localI = iter.key();
     //    const labelPairList& pointInfo = procPoints_[iter()];

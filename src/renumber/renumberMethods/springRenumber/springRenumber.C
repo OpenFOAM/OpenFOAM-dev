@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,11 +97,11 @@ Foam::labelList Foam::springRenumber::renumber
 
     for (label iter = 0; iter < maxIter_; iter++)
     {
-        //Pout<< "Iteration : " << iter << nl
+        // Pout<< "Iteration : " << iter << nl
         //    << "------------"
         //    << endl;
 
-        //Pout<< "Position :" << nl
+        // Pout<< "Position :" << nl
         //    << "    min : " << min(position) << nl
         //    << "    max : " << max(position) << nl
         //    << "    avg : " << average(position) << nl
@@ -122,7 +122,7 @@ Foam::labelList Foam::springRenumber::renumber
             }
         }
 
-        //Pout<< "Force :" << nl
+        // Pout<< "Force :" << nl
         //    << "    min    : " << min(sumForce) << nl
         //    << "    max    : " << max(sumForce) << nl
         //    << "    avgMag : " << average(mag(sumForce)) << nl
@@ -140,7 +140,7 @@ Foam::labelList Foam::springRenumber::renumber
         // Determine displacement.
         scalarField displacement(deltaT*sumForce);
 
-        //Pout<< "Displacement :" << nl
+        // Pout<< "Displacement :" << nl
         //    << "    min    : " << min(displacement) << nl
         //    << "    max    : " << max(displacement) << nl
         //    << "    avgMag : " << average(mag(displacement)) << nl
@@ -156,7 +156,7 @@ Foam::labelList Foam::springRenumber::renumber
         maxCo *= freezeFraction_;
     }
 
-    //writeOBJ("endPosition.obj", cellCells, position);
+    // writeOBJ("endPosition.obj", cellCells, position);
 
     // Move cells to new position
     labelList shuffle;

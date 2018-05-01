@@ -339,7 +339,7 @@ void Foam::topoCellLooper::walkAcrossFace
     }
     else
     {
-        //Should choose acc. to geometry!
+        // Should choose acc. to geometry!
         label index = sz/2;
 
         if (debug)

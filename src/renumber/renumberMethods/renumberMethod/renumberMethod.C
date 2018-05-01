@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::autoPtr<Foam::renumberMethod> Foam::renumberMethod::New
 {
     const word methodType(renumberDict.lookup("method"));
 
-    //Info<< "Selecting renumberMethod " << methodType << endl;
+    // Info<< "Selecting renumberMethod " << methodType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(methodType);

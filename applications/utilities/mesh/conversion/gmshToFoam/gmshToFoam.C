@@ -1001,7 +1001,7 @@ int main(int argc, char *argv[])
     Info<< endl;
 
 
-    //Get polyMesh to write to constant
+    // Get polyMesh to write to constant
 
     runTime.setTime(instant(runTime.constant()), 0);
 

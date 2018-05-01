@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,7 +203,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
             );
 
         pointConstraints::New(pMesh).constrain(scale);
-        //scale.write();
+        // scale.write();
     }
 }
 

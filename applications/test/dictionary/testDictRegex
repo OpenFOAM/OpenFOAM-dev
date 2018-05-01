@@ -24,7 +24,7 @@ keyY        parentValue5;
 "(.*)Dict"
 {
     foo         subdictValue0;
-    //bar         $f.*;         // should this really match 'foo'?
+    // bar         $f.*;         // should this really match 'foo'?
 
     // result is dependent on insert order!
     "a.*c"      subdictValue3;

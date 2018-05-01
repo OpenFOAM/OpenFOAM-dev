@@ -677,7 +677,7 @@ void Foam::snappySnapDriver::preSmoothPatch
         }
 
         pointField patchDisp(smoothPatchDisplacement(meshMover, baffles));
-        //pointField patchDisp
+        // pointField patchDisp
         //(
         //  smoothLambdaMuPatchDisplacement(meshMover, baffles)
         //);
@@ -865,7 +865,7 @@ void Foam::snappySnapDriver::detectNearSurfaces
     const fvMesh& mesh = meshRefiner_.mesh();
 
     //// Get local edge length based on refinement level
-    //const scalarField edgeLen(calcEdgeLen(pp));
+    // const scalarField edgeLen(calcEdgeLen(pp));
     //
     //// Generate rays for every surface point
     //// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1226,7 +1226,7 @@ void Foam::snappySnapDriver::detectNearSurfaces
 
             bool override = false;
 
-            //if (hit1[pointi].hit())
+            // if (hit1[pointi].hit())
             //{
             //    if
             //    (
@@ -1244,7 +1244,7 @@ void Foam::snappySnapDriver::detectNearSurfaces
             //        override = true;
             //    }
             //}
-            //if (hit2[pointi].hit())
+            // if (hit2[pointi].hit())
             //{
             //    if
             //    (
@@ -1368,7 +1368,7 @@ void Foam::snappySnapDriver::detectNearSurfaces
 
                 bool override = false;
 
-                //if (hit1[i].hit())
+                // if (hit1[i].hit())
                 //{
                 //    if
                 //    (
@@ -1386,7 +1386,7 @@ void Foam::snappySnapDriver::detectNearSurfaces
                 //        override = true;
                 //    }
                 //}
-                //if (hit2[i].hit())
+                // if (hit2[i].hit())
                 //{
                 //    if
                 //    (
@@ -1710,8 +1710,8 @@ void Foam::snappySnapDriver::smoothDisplacement
 
     // Set edge diffusivity as inverse of distance to patch
     scalarField edgeGamma(1.0/(edgePatchDist(meshMover.pMesh(), pp) + small));
-    //scalarField edgeGamma(mesh.nEdges(), 1.0);
-    //scalarField edgeGamma(wallGamma(mesh, pp, 10, 1));
+    // scalarField edgeGamma(mesh.nEdges(), 1.0);
+    // scalarField edgeGamma(wallGamma(mesh, pp, 10, 1));
 
     // Get displacement field
     pointVectorField& disp = meshMover.displacement();
@@ -2060,7 +2060,7 @@ void Foam::snappySnapDriver::detectWarpedFaces
                     }
                     f1[i1++] = f[startFp];
 
-                    //Info<< "Splitting face:" << f << " into f0:" << f0
+                    // Info<< "Splitting face:" << f << " into f0:" << f0
                     //    << " f1:" << f1 << endl;
 
                     const vector n0 = f0.area(localPoints);
@@ -2343,7 +2343,7 @@ void Foam::snappySnapDriver::doSnap
 
         if (newBaffles.size() < baffles.size())
         {
-            //Info<< "Splitting baffles into" << nl
+            // Info<< "Splitting baffles into" << nl
             //    << "    internal : " << newBaffles.size() << nl
             //    << "    baffle   : " << baffles.size()-newBaffles.size()
             //    << nl << endl;
@@ -2442,7 +2442,7 @@ void Foam::snappySnapDriver::doSnap
 
         for (label iter = 0; iter < nFeatIter; iter++)
         {
-            //if (doFeatures && (iter == 0 || iter == nFeatIter/2))
+            // if (doFeatures && (iter == 0 || iter == nFeatIter/2))
             //{
             //    Info<< "Splitting diagonal attractions" << endl;
             //
@@ -2583,8 +2583,8 @@ void Foam::snappySnapDriver::doSnap
             //        );
             //    }
             //}
-            //else
-            //if
+            // else
+            // if
             //(
             //    doFeatures
             // && (iter == 1 || iter == nFeatIter/2+1 || iter == nFeatIter-1)

@@ -192,7 +192,7 @@ snapControls
     //- Highly experimental and wip: number of feature edge snapping
     //  iterations. Leave out altogether to disable.
     //  Do not use here since mesh resolution too low and baffles present
-    //nFeatureSnapIter 10;
+    // nFeatureSnapIter 10;
 }
 
 

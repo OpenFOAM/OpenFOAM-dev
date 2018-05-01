@@ -336,7 +336,7 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
         }
         //- Problem: usually specified translation is not accurate enough
         //- To get proper match so keep automatic determination over here.
-        //case TRANSLATIONAL:
+        // case TRANSLATIONAL:
         //{
         //    // Transform 0 points.
         //
@@ -837,16 +837,16 @@ bool Foam::oldCyclicPolyPatch::order
             << endl;
 
         // Recalculate untransformed face centres
-        //pointField rawHalf0Ctrs = calcFaceCentres(half0Faces, pp.points());
+        // pointField rawHalf0Ctrs = calcFaceCentres(half0Faces, pp.points());
         label vertI = 0;
 
         forAll(half1Ctrs, i)
         {
-            //if (from1To0[i] != -1)
+            // if (from1To0[i] != -1)
             {
                 // Write edge between c1 and c0
-                //const point& c0 = rawHalf0Ctrs[from1To0[i]];
-                //const point& c0 = half0Ctrs[from1To0[i]];
+                // const point& c0 = rawHalf0Ctrs[from1To0[i]];
+                // const point& c0 = half0Ctrs[from1To0[i]];
                 const point& c0 = half0Ctrs[i];
                 const point& c1 = half1Ctrs[i];
                 writeOBJ(ccStr, c0, c1, vertI);
@@ -1155,7 +1155,7 @@ bool Foam::oldCyclicPolyPatch::order
             << endl;
 
         // Recalculate untransformed face centres
-        //pointField rawHalf0Ctrs = calcFaceCentres(half0Faces, pp.points());
+        // pointField rawHalf0Ctrs = calcFaceCentres(half0Faces, pp.points());
         label vertI = 0;
 
         forAll(half1Ctrs, i)
@@ -1163,7 +1163,7 @@ bool Foam::oldCyclicPolyPatch::order
             if (from1To0[i] != -1)
             {
                 // Write edge between c1 and c0
-                //const point& c0 = rawHalf0Ctrs[from1To0[i]];
+                // const point& c0 = rawHalf0Ctrs[from1To0[i]];
                 const point& c0 = half0Ctrs[from1To0[i]];
                 const point& c1 = half1Ctrs[i];
                 writeOBJ(ccStr, c0, c1, vertI);

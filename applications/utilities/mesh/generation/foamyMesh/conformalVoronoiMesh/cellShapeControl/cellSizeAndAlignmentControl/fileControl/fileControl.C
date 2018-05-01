@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ Foam::fileControl::~fileControl()
 //    tensor alignment = Zero;
 //    forAll(bary, pI)
 //    {
-//        //alignment += bary[pI]*ch->vertex(pI)->alignment();
+//        // alignment += bary[pI]*ch->vertex(pI)->alignment();
 //
 //        // Find nearest point
 //        if (bary[pI] > nearest)

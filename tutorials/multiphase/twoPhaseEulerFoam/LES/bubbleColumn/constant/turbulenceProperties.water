@@ -19,7 +19,7 @@ simulationType  LES;
 
 LES
 {
-    LESModel NicenoKEqn; //SmagorinskyZhang;
+    LESModel NicenoKEqn; // SmagorinskyZhang;
 
     turbulence      on;
     printCoeffs     on;

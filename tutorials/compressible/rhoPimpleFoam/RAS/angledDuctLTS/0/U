@@ -45,7 +45,7 @@ boundaryField
     }
     outlet
     {
-        type            fluxCorrectedVelocity; //inletOutlet;
+        type            fluxCorrectedVelocity; // inletOutlet;
         value           uniform (0 0 0);
         inletValue      uniform (0 0 0);
     }

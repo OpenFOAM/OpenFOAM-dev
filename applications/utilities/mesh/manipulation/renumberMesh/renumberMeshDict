@@ -93,8 +93,8 @@ springCoeffs
 blockCoeffs
 {
     method          scotch;
-    //method hierarchical;
-    //hierarchicalCoeffs
+    // method hierarchical;
+    // hierarchicalCoeffs
     //{
     //    n           (1 2 1);
     //    delta       0.001;

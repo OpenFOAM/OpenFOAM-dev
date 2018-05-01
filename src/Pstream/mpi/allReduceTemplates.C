@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ void Foam::allReduce
                         &value,
                         MPICount,
                         MPIType,
-                        slave,  //UPstream::procID(slave),
+                        slave,  // UPstream::procID(slave),
                         tag,
                         PstreamGlobals::MPICommunicators_[communicator],
                         MPI_STATUS_IGNORE
@@ -117,7 +117,7 @@ void Foam::allReduce
                         &Value,
                         MPICount,
                         MPIType,
-                        slave,      //UPstream::procID(slave),
+                        slave,      // UPstream::procID(slave),
                         tag,
                         PstreamGlobals::MPICommunicators_[communicator]
                     )

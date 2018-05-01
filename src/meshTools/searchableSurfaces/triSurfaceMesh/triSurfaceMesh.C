@@ -779,7 +779,7 @@ void Foam::triSurfaceMesh::getNormal
             {
                 label facei = info[i].index();
                 // Cached:
-                //normal[i] = faceNormals()[facei];
+                // normal[i] = faceNormals()[facei];
 
                 // Uncached
                 normal[i] = s[facei].normal(pts);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ void Foam::featurePointConformer::addMasterAndSlavePoints
 
         const label masterIndex = pts.last().index();
 
-        //meshTools::writeOBJ(strMasters, masterPt);
+        // meshTools::writeOBJ(strMasters, masterPt);
 
         const planeDynList& masterPointPlanes = masterPointReflections[pI];
 
@@ -186,7 +186,7 @@ void Foam::featurePointConformer::addMasterAndSlavePoints
                 pts.last().index()
             );
 
-            //meshTools::writeOBJ(strSlaves, slavePt);
+            // meshTools::writeOBJ(strSlaves, slavePt);
         }
     }
 }
@@ -279,7 +279,7 @@ void Foam::featurePointConformer::createMasterAndSlavePoints
               : Vb::vtInternalFeaturePoint // false
             );
 
-            //Info<< "    " << " " << firstPlane << endl;
+            // Info<< "    " << " " << firstPlane << endl;
 
 //            const Foam::point reflectedPoint = reflectPointInPlane
 //            (
@@ -500,7 +500,7 @@ void Foam::featurePointConformer::createFeaturePoints(DynamicList<Vb>& pts)
         {
             for
             (
-                //label ptI = feMesh.convexStart();
+                // label ptI = feMesh.convexStart();
                 label ptI = feMesh.mixedStart();
                 ptI < feMesh.nonFeatureStart();
                 ptI++
@@ -561,7 +561,7 @@ Foam::featurePointConformer::featurePointConformer
     {
         Vb& pt = pts[pI];
 
-        //if (pt.featureEdgePoint())
+        // if (pt.featureEdgePoint())
         {
             if (pt.internalBoundaryPoint())
             {

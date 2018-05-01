@@ -88,7 +88,7 @@ void Foam::sigWriteNow::sigHandler(int)
     runTimePtr_->writeOnce();
 
     //// Throw signal (to old handler)
-    //raise(signal_);
+    // raise(signal_);
 }
 
 

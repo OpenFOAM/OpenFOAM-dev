@@ -61,10 +61,10 @@ dynamicRefineFvMeshCoeffs
     nBufferLayers 1;
 
     // Newly introduced patch points optionally get projected onto a surface
-    //projectSurfaces ("fixedWalls4.stl");
-    //projectPatches (fixedWalls);
+    // projectSurfaces ("fixedWalls4.stl");
+    // projectPatches (fixedWalls);
     // Maximum project distance
-    //projectDistance 1;
+    // projectDistance 1;
 
     // Fluxes to adapt. For newly created faces or split faces the flux
     // gets estimated from an interpolated volVectorField ('velocity')

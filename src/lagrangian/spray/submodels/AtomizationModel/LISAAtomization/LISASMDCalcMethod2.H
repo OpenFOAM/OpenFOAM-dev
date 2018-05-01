@@ -3,7 +3,7 @@
     // distribution. Calculation of the mean radius based on SMR rs.
     // Coefficient factorGamma depends on nExp. Note that Reitz either used
     // (Schmidt et al., 1999-01-0496) or skipped (Senecal et al.) this factor!
-    // scalar factorGamma = 0.75*sqrt(mathematicalConstant::pi);   //nExp=2
+    // scalar factorGamma = 0.75*sqrt(mathematicalConstant::pi);   // nExp=2
     scalar factorGamma = 1.;
     scalar delta = dD/factorGamma;
 

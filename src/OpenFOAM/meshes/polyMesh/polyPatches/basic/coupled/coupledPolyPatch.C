@@ -560,7 +560,7 @@ Foam::coupledPolyPatch::~coupledPolyPatch()
 void Foam::coupledPolyPatch::write(Ostream& os) const
 {
     polyPatch::write(os);
-    //if (matchTolerance_ != defaultMatchTol_)
+    // if (matchTolerance_ != defaultMatchTol_)
     {
         os.writeKeyword("matchTolerance") << matchTolerance_
             << token::END_STATEMENT << nl;

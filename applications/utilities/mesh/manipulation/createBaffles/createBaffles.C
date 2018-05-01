@@ -661,7 +661,7 @@ int main(int argc, char *argv[])
     // Pass 1: add patches
     // ~~~~~~~~~~~~~~~~~~~
 
-    //HashSet<word> addedPatches;
+    // HashSet<word> addedPatches;
     {
         const polyBoundaryMesh& pbm = mesh.boundaryMesh();
         forAll(selectors, selectorI)
@@ -685,7 +685,7 @@ int main(int argc, char *argv[])
                         // Note: do not set coupleGroup if constructed from
                         //       baffles so you have freedom specifying it
                         //       yourself.
-                        //patchDict.set("coupleGroup", groupName);
+                        // patchDict.set("coupleGroup", groupName);
 
                         addPatch(mesh, patchName, groupName, patchDict);
                     }

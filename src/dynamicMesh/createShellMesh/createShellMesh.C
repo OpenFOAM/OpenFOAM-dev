@@ -114,8 +114,8 @@ void Foam::createShellMesh::syncEdges
         globalData.globalEdgeSlaves(),
         (
             syncNonCollocated
-          ? globalData.globalEdgeTransformedSlaves()    // transformed elems
-          : labelListList(globalData.globalEdgeSlaves().size()) //no transformed
+          ? globalData.globalEdgeTransformedSlaves()
+          : labelListList(globalData.globalEdgeSlaves().size())
         ),
         map,
         minEqOp<labelPair>()
@@ -524,7 +524,7 @@ void Foam::createShellMesh::setRefinement
     // Original point numbers in local point ordering so no need to store.
     forAll(patch_.localPoints(), pointi)
     {
-        //label addedPointi =
+        // label addedPointi =
         meshMod.addPoint
         (
             patch_.localPoints()[pointi],   // point
@@ -534,7 +534,7 @@ void Foam::createShellMesh::setRefinement
         );
         pointToPointMap.append(pointi);
 
-        //Pout<< "Added bottom point " << addedPointi
+        // Pout<< "Added bottom point " << addedPointi
         //    << " at " << patch_.localPoints()[pointi]
         //    << "  from point " << pointi
         //    << endl;
@@ -588,8 +588,8 @@ void Foam::createShellMesh::setRefinement
         faceToFaceMap.append(-facei-1); // points to flipped original face
         faceToEdgeMap.append(-1);
 
-        //const face newF(patch_.localFaces()[facei].reverseFace());
-        //Pout<< "Added bottom face "
+        // const face newF(patch_.localFaces()[facei].reverseFace());
+        // Pout<< "Added bottom face "
         //    << newF
         //    << " coords:" << UIndirectList<point>(meshMod.points(), newF)
         //    << " own " << addedCells[facei]
@@ -645,7 +645,7 @@ void Foam::createShellMesh::setRefinement
             faceToFaceMap.append(facei+1);  // unflipped
             faceToEdgeMap.append(-1);
 
-            //Pout<< "Added in between face " << newF
+            // Pout<< "Added in between face " << newF
             //    << " coords:" << UIndirectList<point>(meshMod.points(), newF)
             //    << " at layer " << layerI
             //    << " own " << own

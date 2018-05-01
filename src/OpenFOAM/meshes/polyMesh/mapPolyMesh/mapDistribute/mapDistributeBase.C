@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ Foam::List<Foam::labelPair> Foam::mapDistributeBase::schedule
     return List<labelPair>(UIndirectList<labelPair>(allComms, mySchedule));
 
 
-    //if (debug)
+    // if (debug)
     //{
     //    Pout<< "I need to:" << endl;
     //    const List<labelPair>& comms = schedule();
@@ -454,7 +454,7 @@ void Foam::mapDistributeBase::exchangeAddressing
         wantedRemoteElements,
         subMap_,
         tag,
-        Pstream::worldComm  //TBD
+        Pstream::worldComm  // TBD
     );
 
     // Renumber elements
@@ -532,7 +532,7 @@ void Foam::mapDistributeBase::exchangeAddressing
         wantedRemoteElements,
         subMap_,
         tag,
-        Pstream::worldComm      //TBD
+        Pstream::worldComm      // TBD
     );
 
     // Renumber elements
@@ -675,7 +675,7 @@ Foam::mapDistributeBase::mapDistributeBase
     );
 
     //// Sort remote elements needed (not really necessary)
-    //forAll(compactMap, proci)
+    // forAll(compactMap, proci)
     //{
     //    if (proci != Pstream::myProcNo())
     //    {
@@ -735,7 +735,7 @@ Foam::mapDistributeBase::mapDistributeBase
     );
 
     //// Sort remote elements needed (not really necessary)
-    //forAll(compactMap, proci)
+    // forAll(compactMap, proci)
     //{
     //    if (proci != Pstream::myProcNo())
     //    {

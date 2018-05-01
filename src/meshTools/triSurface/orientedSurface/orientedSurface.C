@@ -276,7 +276,7 @@ void Foam::orientedSurface::findZoneSide
             {
                 pointField end(1, fc + d);
 
-                //Info<< "Zone " << zoneI << " : Shooting ray"
+                // Info<< "Zone " << zoneI << " : Shooting ray"
                 //    << " from " << outsidePoint
                 //    << " to " << end
                 //    << " to pierce triangle " << facei

@@ -790,7 +790,7 @@ Foam::label Foam::snappyRefineDriver::shellRefine
             findIndices(meshRefiner_.userFaceData()[0].second(), 0)
         );
 
-        //Info<< "Collected boundary faces : "
+        // Info<< "Collected boundary faces : "
         //    << returnReduce(bFaces.size(), sumOp<label>()) << endl;
 
         labelList cellsToRefine;
@@ -1232,7 +1232,7 @@ void Foam::snappyRefineDriver::doRefine
             << "---------------------" << nl
             << endl;
 
-        //if (debug)
+        // if (debug)
         //{
         //    const_cast<Time&>(mesh.time())++;
         //}

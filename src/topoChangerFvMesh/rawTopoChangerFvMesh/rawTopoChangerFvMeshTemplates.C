@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ void Foam::rawTopoChangerFvMesh::setUnmappedValues
     const GeometricField<Type, PatchField, GeoMesh>& baseFld
 )
 {
-    //Pout<< "Checking field " << fld.name() << endl;
+    // Pout<< "Checking field " << fld.name() << endl;
 
     forAll(fld.boundaryField(), patchi)
     {
@@ -50,7 +50,7 @@ void Foam::rawTopoChangerFvMesh::setUnmappedValues
         {
             if (!mappedFace[start+i])
             {
-                //Pout<< "** Resetting unassigned value on patch "
+                // Pout<< "** Resetting unassigned value on patch "
                 //    << fvp.patch().name()
                 //    << " localface:" << i
                 //    << " to:" << baseFld.boundaryField()[patchi][i] << endl;
@@ -73,7 +73,7 @@ void Foam::rawTopoChangerFvMesh::zeroUnmappedValues
 
     forAll(fldNames, i)
     {
-        //Pout<< "Checking field " << fldNames[i] << endl;
+        // Pout<< "Checking field " << fldNames[i] << endl;
 
         FieldType& fld = lookupObjectRef<FieldType>(fldNames[i]);
 

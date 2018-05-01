@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,9 +50,9 @@ void Foam::tecplotWriter::writeField(const Field<Type>& fld) const
         }
 
         INTEGER4 size = INTEGER4(floats.size());
-        INTEGER4 IsDouble = 0;  //float
+        INTEGER4 IsDouble = 0;  // float
 
-        //Pout<< "Writing component:" << cmpt << " of size:" << size
+        // Pout<< "Writing component:" << cmpt << " of size:" << size
         //    << " floats." << endl;
 
         if (!TECDAT112(&size, floats.begin(), &IsDouble))

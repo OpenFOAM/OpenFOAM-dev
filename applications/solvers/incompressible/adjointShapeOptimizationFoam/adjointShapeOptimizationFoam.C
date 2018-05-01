@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
         laminarTransport.lookup("lambda") >> lambda;
 
-        //alpha +=
+        // alpha +=
         //    mesh.relaxationFactor("alpha")
         //   *(lambda*max(Ua & U, zeroSensitivity) - alpha);
         alpha +=
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
            *(min(max(alpha + lambda*(Ua & U), zeroAlpha), alphaMax) - alpha);
 
         zeroCells(alpha, inletCells);
-        //zeroCells(alpha, outletCells);
+        // zeroCells(alpha, outletCells);
 
         // Pressure-velocity SIMPLE corrector
         {
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
             // Adjoint Momentum predictor
 
             volVectorField adjointTransposeConvection((fvc::grad(Ua) & U));
-            //volVectorField adjointTransposeConvection
+            // volVectorField adjointTransposeConvection
             //(
             //    fvc::reconstruct
             //    (

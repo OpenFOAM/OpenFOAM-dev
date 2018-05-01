@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class localPointRegion
     // Private data
 
         ////- (global) number of regions
-        //label nRegions_;
+        // label nRegions_;
 
         //- Per point that is to duplicated to the local index
         Map<label> meshPointMap_;
@@ -157,7 +157,7 @@ public:
         // Access
 
             ////- Global number of regions. TBD. regions not compacted yet.
-            //label nRegions() const
+            // label nRegions() const
             //{
             //    return nRegions_;
             //}

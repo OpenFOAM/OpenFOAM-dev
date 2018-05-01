@@ -185,7 +185,7 @@ void Foam::edgeCollapser::collapseToEdge
     // Negative half
 
     Foam::point collapseToPtA(great, great, great);
-        //collapseAxis*(sum(dNeg)/dNeg.size() - dShift) + fC;
+        // collapseAxis*(sum(dNeg)/dNeg.size() - dShift) + fC;
 
     label maxPriority = labelMin;
     DynamicList<label> maxPriorityPts(max(dNeg.size(), dPos.size()));

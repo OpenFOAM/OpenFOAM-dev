@@ -51,7 +51,7 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
                     result,
                     psiif,
                     interfaceCoeffs[interfacei],
-                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
+                    // Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                     Pstream::defaultCommsType
                 );
             }
@@ -77,7 +77,7 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
                     result,
                     psiif,
                     interfaceCoeffs[interfacei],
-                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
+                    // Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                     Pstream::commsTypes::blocking
                 );
             }
@@ -123,7 +123,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
                     result,
                     psiif,
                     interfaceCoeffs[interfacei],
-                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
+                    // Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                     Pstream::defaultCommsType
                 );
             }
@@ -147,7 +147,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
                         result,
                         psiif,
                         interfaceCoeffs[interfacei],
-                      //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
+                      // Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                         Pstream::commsTypes::scheduled
                     );
                 }
@@ -158,7 +158,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
                         result,
                         psiif,
                         interfaceCoeffs[interfacei],
-                      //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
+                      // Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                         Pstream::commsTypes::scheduled
                     );
                 }
@@ -181,7 +181,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
                     result,
                     psiif,
                     interfaceCoeffs[interfacei],
-                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
+                    // Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                     Pstream::commsTypes::blocking
                 );
             }

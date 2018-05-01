@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     (
         "Re-sample surfaces used in foamyHexMesh operation"
     );
-    //argList::validArgs.append("inputFile");
+    // argList::validArgs.append("inputFile");
     argList::validArgs.append("(nx ny nz)");
     argList::validArgs.append("outputName");
 

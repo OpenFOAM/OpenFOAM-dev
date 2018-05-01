@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,7 +161,7 @@ void Foam::attachDetach::detachInterface
                         true                       // supports a cell
                     )
                 );
-            //Pout<< "Adding point " << addedPoints[pointi]
+            // Pout<< "Adding point " << addedPoints[pointi]
             //    << " coord1:" << points[mp[pointi]]
             //    << " coord2:" << masterFaceLayer.localPoints()[pointi]
             //    << " for original point " << mp[pointi] << endl;
@@ -212,7 +212,7 @@ void Foam::attachDetach::detachInterface
             );
 
             // Add renumbered face into the slave patch
-            //label addedFacei =
+            // label addedFacei =
             ref.setAction
             (
                 polyAddFace
@@ -231,7 +231,7 @@ void Foam::attachDetach::detachInterface
             );
             //{
             //    pointField newPts(ref.points());
-            //Pout<< "Flip.  Modifying face: " << ref.faces()[curFaceID]
+            // Pout<< "Flip.  Modifying face: " << ref.faces()[curFaceID]
             //    << " fc:" <<  ref.faces()[curFaceID].centre(newPts)
             //    << " next to cell: " << nei[curFaceID]
             //    << " and adding face: " << newFace
@@ -259,7 +259,7 @@ void Foam::attachDetach::detachInterface
             );
 
             // Add renumbered face into the slave patch
-            //label addedFacei =
+            // label addedFacei =
             ref.setAction
             (
                 polyAddFace
@@ -278,7 +278,7 @@ void Foam::attachDetach::detachInterface
             );
             //{
             //    pointField newPts(ref.points());
-            //Pout<< "No flip.  Modifying face: " << ref.faces()[curFaceID]
+            // Pout<< "No flip.  Modifying face: " << ref.faces()[curFaceID]
             //    << " fc:" <<  ref.faces()[curFaceID].centre(newPts)
             //    << " next to cell: " << own[curFaceID]
             //    << " and adding face: " << newFace

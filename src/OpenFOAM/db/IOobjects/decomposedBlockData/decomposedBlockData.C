@@ -581,8 +581,8 @@ Foam::autoPtr<Foam::ISstream> Foam::decomposedBlockData::readBlocks
     headerIO.rename(name);
     Pstream::scatter(headerIO.headerClassName(), Pstream::msgType(), comm);
     Pstream::scatter(headerIO.note(), Pstream::msgType(), comm);
-    //Pstream::scatter(headerIO.instance(), Pstream::msgType(), comm);
-    //Pstream::scatter(headerIO.local(), Pstream::msgType(), comm);
+    // Pstream::scatter(headerIO.instance(), Pstream::msgType(), comm);
+    // Pstream::scatter(headerIO.local(), Pstream::msgType(), comm);
 
     return realIsPtr;
 }
@@ -987,13 +987,13 @@ bool Foam::decomposedBlockData::writeData(Ostream& os) const
         Pstream::scatter(formatString, Pstream::msgType(), comm_);
     }
 
-    //word masterName(name());
-    //Pstream::scatter(masterName, Pstream::msgType(), comm_);
+    // word masterName(name());
+    // Pstream::scatter(masterName, Pstream::msgType(), comm_);
 
     Pstream::scatter(io.headerClassName(), Pstream::msgType(), comm_);
     Pstream::scatter(io.note(), Pstream::msgType(), comm_);
-    //Pstream::scatter(io.instance(), Pstream::msgType(), comm);
-    //Pstream::scatter(io.local(), Pstream::msgType(), comm);
+    // Pstream::scatter(io.instance(), Pstream::msgType(), comm);
+    // Pstream::scatter(io.local(), Pstream::msgType(), comm);
 
     fileName masterLocation(instance()/db().dbDir()/local());
     Pstream::scatter(masterLocation, Pstream::msgType(), comm_);

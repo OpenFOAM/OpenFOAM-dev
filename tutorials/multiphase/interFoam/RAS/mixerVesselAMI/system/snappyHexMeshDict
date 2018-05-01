@@ -401,12 +401,12 @@ addLayersControls
         // Wanted thickness of the layer next to the wall.
         // If relativeSizes this is relative to undistorted size of cell
         // outside layer.
-        //firstLayerThickness 0.3;
+        // firstLayerThickness 0.3;
 
         // Wanted overall thickness of layers.
         // If relativeSizes this is relative to undistorted size of cell
         // outside layer.
-        //thickness 0.5
+        // thickness 0.5
 
 
     // Minimum overall thickness of total layers. If for any reason layer
@@ -488,7 +488,7 @@ addLayersControls
     // Additional reporting: if there are just a few faces where there
     // are mesh errors (after adding the layers) print their face centres.
     // This helps in tracking down problematic mesh areas.
-    //additionalReporting true;
+    // additionalReporting true;
 }
 
 // Generic mesh quality settings. At any undoable phase these determine
@@ -546,7 +546,7 @@ meshQualityControls
     //  resulting volume after snapping (by approximation) is larger than
     //  minVolCollapseRatio times old volume (i.e. not collapsed to flat cell).
     //  If <0 : delete always.
-    //minVolCollapseRatio 0.5;
+    // minVolCollapseRatio 0.5;
 
     // Advanced
 

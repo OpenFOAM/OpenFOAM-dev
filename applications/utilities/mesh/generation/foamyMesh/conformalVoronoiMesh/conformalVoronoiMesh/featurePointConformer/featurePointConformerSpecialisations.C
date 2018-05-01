@@ -394,7 +394,7 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
         if (totalAngle > foamyHexMeshControls_.maxQuadAngle())
         {
             // Add additional mitreing points
-            //scalar angleSign = 1.0;
+            // scalar angleSign = 1.0;
 
 
             vector convexEdgesPlaneNormal =
@@ -828,7 +828,7 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
         if (totalAngle > foamyHexMeshControls_.maxQuadAngle())
         {
             // Add additional mitreing points
-            //scalar angleSign = 1.0;
+            // scalar angleSign = 1.0;
 
 
             vector convexEdgesPlaneNormal =

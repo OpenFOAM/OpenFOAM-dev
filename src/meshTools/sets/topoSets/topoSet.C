@@ -333,7 +333,7 @@ Foam::topoSet::topoSet
             (
                 mesh.dbDir()/polyMesh::meshSubDir/"sets",
                 word::null,
-                r,  //IOobject::MUST_READ,
+                r,  // IOobject::MUST_READ,
                 mesh.facesInstance()
             ),
             polyMesh::meshSubDir/"sets",

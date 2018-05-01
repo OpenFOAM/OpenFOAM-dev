@@ -599,7 +599,7 @@ Foam::fileOperations::masterUncollatedFileOperation::read
 {
     autoPtr<ISstream> isPtr;
 
-    //const bool uniform = uniformFile(filePaths);
+    // const bool uniform = uniformFile(filePaths);
 
     PstreamBuffers pBufs
     (
@@ -1502,7 +1502,7 @@ Foam::fileOperations::masterUncollatedFileOperation::findInstance
 
     word foundInstance;
 
-    //if (Pstream::master(comm_))
+    // if (Pstream::master(comm_))
     if (Pstream::master(UPstream::worldComm))
     {
         if (exists(pDirs, io))
@@ -1512,7 +1512,7 @@ Foam::fileOperations::masterUncollatedFileOperation::findInstance
     }
 
     // Do parallel early exit to avoid calling time.times()
-    //Pstream::scatter(foundInstance, Pstream::msgType(), comm_);
+    // Pstream::scatter(foundInstance, Pstream::msgType(), comm_);
     Pstream::scatter(foundInstance, Pstream::msgType(), UPstream::worldComm);
     if (!foundInstance.empty())
     {
@@ -1531,7 +1531,7 @@ Foam::fileOperations::masterUncollatedFileOperation::findInstance
     // closest to and lower than current time
 
     instantList ts = time.times();
-    //if (Pstream::master(comm_))
+    // if (Pstream::master(comm_))
     if (Pstream::master(UPstream::worldComm))
     {
         label instanceI;
@@ -1656,7 +1656,7 @@ Foam::fileOperations::masterUncollatedFileOperation::findInstance
         }
     }
 
-    //Pstream::scatter(foundInstance, Pstream::msgType(), comm_);
+    // Pstream::scatter(foundInstance, Pstream::msgType(), comm_);
     Pstream::scatter(foundInstance, Pstream::msgType(), UPstream::worldComm);
     io.instance() = foundInstance;
     if (debug)
@@ -1691,7 +1691,7 @@ Foam::fileOperations::masterUncollatedFileOperation::readObjects
     // Note: readObjects uses WORLD to make sure order of objects is the
     //       same everywhere
 
-    if (Pstream::master())  //comm_))
+    if (Pstream::master())  // comm_))
     {
         // Avoid fileOperation::readObjects from triggering parallel ops
         // (through call to filePath which triggers parallel )
@@ -1905,7 +1905,7 @@ Foam::fileOperations::masterUncollatedFileOperation::readStream
 
     // Detect collated format. This could be done on the local communicator
     // but we do it on the master node only for now.
-    if (UPstream::master()) //comm_))
+    if (UPstream::master()) // comm_))
     {
         if (!fName.empty())
         {
@@ -2132,7 +2132,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
         }
 
         bool ok = false;
-        if (Pstream::master())  //comm_))
+        if (Pstream::master())  // comm_))
         {
             // Do master-only reading always.
             bool oldParRun = UPstream::parRun();
@@ -2152,13 +2152,13 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
         // scatter operation for regIOobjects
 
         // Get my communication order
-        //const List<Pstream::commsStruct>& comms =
+        // const List<Pstream::commsStruct>& comms =
         //(
         //    (Pstream::nProcs(comm_) < Pstream::nProcsSimpleSum)
         //  ? Pstream::linearCommunication(comm_)
         //  : Pstream::treeCommunication(comm_)
         //);
-        //const Pstream::commsStruct& myComm = comms[Pstream::myProcNo(comm_)];
+        // const Pstream::commsStruct& myComm = comms[Pstream::myProcNo(comm_)];
         const List<Pstream::commsStruct>& comms =
         (
             (Pstream::nProcs(Pstream::worldComm) < Pstream::nProcsSimpleSum)
@@ -2177,7 +2177,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 myComm.above(),
                 0,
                 Pstream::msgType(),
-                Pstream::worldComm, //comm_,
+                Pstream::worldComm, // comm_,
                 format
             );
             ok = io.readData(fromAbove);
@@ -2192,7 +2192,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 myComm.below()[belowI],
                 0,
                 Pstream::msgType(),
-                Pstream::worldComm, //comm_,
+                Pstream::worldComm, // comm_,
                 format
             );
             bool okWrite = io.writeData(toBelow);
@@ -2290,7 +2290,7 @@ Foam::instantList Foam::fileOperations::masterUncollatedFileOperation::findTimes
     else
     {
         instantList times;
-        if (Pstream::master())  //comm_))
+        if (Pstream::master())  // comm_))
         {
             // Do master-only reading always.
             bool oldParRun = UPstream::parRun();
@@ -2538,7 +2538,7 @@ Foam::label Foam::fileOperations::masterUncollatedFileOperation::addWatch
 ) const
 {
     label watchFd;
-    if (Pstream::master())      //comm_))
+    if (Pstream::master())      // comm_))
     {
         watchFd = monitor().addWatch(fName);
     }
@@ -2553,7 +2553,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::removeWatch
 ) const
 {
     bool ok;
-    if (Pstream::master())  //comm_))
+    if (Pstream::master())  // comm_))
     {
         ok = monitor().removeWatch(watchIndex);
     }
@@ -2570,7 +2570,7 @@ Foam::label Foam::fileOperations::masterUncollatedFileOperation::findWatch
 {
     label index = -1;
 
-    if (Pstream::master())  //comm_))
+    if (Pstream::master())  // comm_))
     {
         forAll(watchIndices, i)
         {
@@ -2630,7 +2630,7 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::getFile
 ) const
 {
     fileName fName;
-    if (Pstream::master())  //comm_))
+    if (Pstream::master())  // comm_))
     {
         fName = monitor().getFile(watchIndex);
     }
@@ -2645,7 +2645,7 @@ void Foam::fileOperations::masterUncollatedFileOperation::updateStates
     const bool syncPar
 ) const
 {
-    if (Pstream::master())  //comm_))
+    if (Pstream::master())  // comm_))
     {
         monitor().updateStates(true, false);
     }
@@ -2659,7 +2659,7 @@ Foam::fileOperations::masterUncollatedFileOperation::getState
 ) const
 {
     unsigned int state = fileMonitor::UNMODIFIED;
-    if (Pstream::master())  //comm_))
+    if (Pstream::master())  // comm_))
     {
         state = monitor().getState(watchFd);
     }
@@ -2673,7 +2673,7 @@ void Foam::fileOperations::masterUncollatedFileOperation::setUnmodified
     const label watchFd
 ) const
 {
-    if (Pstream::master())  //comm_))
+    if (Pstream::master())  // comm_))
     {
         monitor().setUnmodified(watchFd);
     }

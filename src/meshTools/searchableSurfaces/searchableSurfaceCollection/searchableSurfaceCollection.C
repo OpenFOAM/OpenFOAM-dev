@@ -208,7 +208,7 @@ Foam::searchableSurfaceCollection::searchableSurfaceCollection
             );
 
             const word subGeomName(subDict.lookup("surface"));
-            //Pout<< "Trying to find " << subGeomName << endl;
+            // Pout<< "Trying to find " << subGeomName << endl;
 
             const searchableSurface& s =
                 io.db().lookupObject<searchableSurface>(subGeomName);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ class searchableSurfaces
         List<wordList> regionNames_;
 
         ////- From global region name to surface and region on surface
-        //HashTable<labelPair> regionNames_;
+        // HashTable<labelPair> regionNames_;
 
         //- Indices of all surfaces. Precalculated and stored.
         labelList allSurfaces_;
@@ -100,7 +100,7 @@ public:
 
 
         ////- Construct from list of dictionaries
-        //searchableSurfaces(const IOobject&, const PtrList<dictionary>&);
+        // searchableSurfaces(const IOobject&, const PtrList<dictionary>&);
 
         //- Construct from dictionary and whether to construct names always
         //  as surfaceName "_" regionName (singleRegionName false) or
@@ -138,12 +138,12 @@ public:
 
 
         ////- If adding surfaces 'by hand'
-        //HashTable<labelPair>& regionNames()
+        // HashTable<labelPair>& regionNames()
         //{
         //    return regionNames_;
         //}
         ////- Get surface and region for a name
-        //const labelPair& surfaceRegion(const word& globalRegion) const
+        // const labelPair& surfaceRegion(const word& globalRegion) const
         //{
         //    return regionNames_[globalRegion];
         //}
@@ -180,7 +180,7 @@ public:
                 List<List<pointIndexHit>>&
             ) const;
 
-            //Find intersections of edge nearest to both endpoints.
+            // Find intersections of edge nearest to both endpoints.
             void findNearestIntersection
             (
                 const pointField& start,

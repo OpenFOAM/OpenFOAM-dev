@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -645,7 +645,7 @@ bool Foam::GAMGAgglomeration::checkRestriction
 
     if (nNewCoarse > nCoarse)
     {
-        //WarningInFunction
+        // WarningInFunction
         //    << "Have " << nCoarse
         //    << " agglomerated cells but " << nNewCoarse
         //    << " disconnected regions" << endl;

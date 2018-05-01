@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 {
     argList args(argc, argv);
 
-    //Pout.prefix() = '[' + name(Pstream::myProcNo()) + "] ";
+    // Pout.prefix() = '[' + name(Pstream::myProcNo()) + "] ";
 
     List<vector> list(IStringStream("1 ((0 1 2))")());
     Info<< list << endl;

@@ -137,15 +137,15 @@ castellatedMeshControls
             //  perpendicular to the surface. Is the angle of face w.r.t.
             //  the local surface normal. Use on flat(ish) surfaces only.
             //  Otherwise leave out or set to negative number.
-            //perpendicularAngle 10;
+            // perpendicularAngle 10;
 
 
             //- Optional faceZone and (for closed surface) cellZone with
             //  how to select the cells that are in the cellZone
             //  (inside / outside / specified insidePoint)
-            //faceZone sphere;
-            //cellZone sphere;
-            //cellZoneInside inside;  //outside/insidePoint
+            // faceZone sphere;
+            // cellZone sphere;
+            // cellZoneInside inside;  // outside/insidePoint
         }
     }
 
@@ -179,7 +179,7 @@ castellatedMeshControls
             mode inside;
             levels ((6 6));
         }
-        //sphere.stl
+        // sphere.stl
         //{
         //    mode distance;
         //    levels ((1.0 5) (2.0 3));
@@ -356,14 +356,14 @@ meshQualityControls
     //- minVolRatio (0 -> 1)
     minVolRatio 0.01;
 
-    //must be >0 for Fluent compatibility
+    // must be >0 for Fluent compatibility
     minTriangleTwist -1;
 
     //- If >0 : preserve single cells with all points on the surface if the
     //  resulting volume after snapping (by approximation) is larger than
     //  minVolCollapseRatio times old volume (i.e. not collapsed to flat cell).
     //  If <0 : delete always.
-    //minVolCollapseRatio 0.5;
+    // minVolCollapseRatio 0.5;
 
 
     // Advanced

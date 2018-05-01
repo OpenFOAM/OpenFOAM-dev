@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,7 +238,7 @@ void rewriteBoundary
     {
         if (isTestRun)
         {
-            //Info<< "-test option: no changes made" << nl << endl;
+            // Info<< "-test option: no changes made" << nl << endl;
         }
         else
         {
@@ -337,13 +337,13 @@ void rewriteField
         }
     }
 
-    //Info<< "New boundaryField:" << boundaryField << endl;
+    // Info<< "New boundaryField:" << boundaryField << endl;
 
     if (returnReduce(nChanged, sumOp<label>()) > 0)
     {
         if (isTestRun)
         {
-            //Info<< "-test option: no changes made" << endl;
+            // Info<< "-test option: no changes made" << endl;
         }
         else
         {

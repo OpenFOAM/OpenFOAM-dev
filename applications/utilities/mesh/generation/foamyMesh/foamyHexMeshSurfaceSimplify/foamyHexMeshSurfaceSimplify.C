@@ -199,14 +199,14 @@ public:
 
 
             ////- Surface intersects bb (but not using intersection test)
-            //scalar ccDist = signedDistance(bb.midpoint());
-            //scalar ccVal = ccDist - _iso_val;
-            //if (mag(ccVal) < small)
+            // scalar ccDist = signedDistance(bb.midpoint());
+            // scalar ccVal = ccDist - _iso_val;
+            // if (mag(ccVal) < small)
             //{
             //    return true;
             //}
-            //const pointField points(bb.points());
-            //forAll(points, pointi)
+            // const pointField points(bb.points());
+            // forAll(points, pointi)
             //{
             //    scalar pointVal = signedDistance(points[pointi]) - _iso_val;
             //    if (ccVal*pointVal < 0)
@@ -214,24 +214,24 @@ public:
             //        return true;
             //    }
             //}
-            //return false;
+            // return false;
 
 
             ////- Refinement based on intersection with multiple planes.
             ////  Does not work well - too high a ratio between
             ////  neighbouring cubes.
-            //const pointField points(bb.points());
-            //const edgeList& edges = treeBoundBox::edges;
-            //pointField start(edges.size());
-            //pointField end(edges.size());
-            //forAll(edges, i)
+            // const pointField points(bb.points());
+            // const edgeList& edges = treeBoundBox::edges;
+            // pointField start(edges.size());
+            // pointField end(edges.size());
+            // forAll(edges, i)
             //{
             //    start[i] = points[edges[i][0]];
             //    end[i] = points[edges[i][1]];
             //}
-            //Foam::List<Foam::List<pointIndexHit>> hitInfo;
-            //labelListList hitSurfaces;
-            //searchableSurfacesQueries::findAllIntersections
+            // Foam::List<Foam::List<pointIndexHit>> hitInfo;
+            // labelListList hitSurfaces;
+            // searchableSurfacesQueries::findAllIntersections
             //(
             //    geometry,
             //    surfaces,
@@ -242,13 +242,13 @@ public:
             //);
             //
             //// Count number of intersections
-            //label nInt = 0;
-            //forAll(hitSurfaces, edgeI)
+            // label nInt = 0;
+            // forAll(hitSurfaces, edgeI)
             //{
             //    nInt += hitSurfaces[edgeI].size();
             //}
             //
-            //if (nInt == 0)
+            // if (nInt == 0)
             //{
             //    // No surface intersected. See if there is one inside
             //    forAll(surfaces, i)
@@ -262,8 +262,8 @@ public:
             //}
             //
             //// Check multiple surfaces
-            //label baseSurfI = -1;
-            //forAll(hitSurfaces, edgeI)
+            // label baseSurfI = -1;
+            // forAll(hitSurfaces, edgeI)
             //{
             //    const labelList& hSurfs = hitSurfaces[edgeI];
             //    forAll(hSurfs, i)
@@ -281,8 +281,8 @@ public:
             //}
             //
             //// Get normals
-            //DynamicList<pointIndexHit> baseInfo(nInt);
-            //forAll(hitInfo, edgeI)
+            // DynamicList<pointIndexHit> baseInfo(nInt);
+            // forAll(hitInfo, edgeI)
             //{
             //    const Foam::List<pointIndexHit>& hits = hitInfo[edgeI];
             //    forAll(hits, i)
@@ -291,62 +291,62 @@ public:
             //        baseInfo.append(hits[i]);
             //    }
             //}
-            //vectorField normals;
-            //geometry[surfaces[baseSurfI]].getNormal(baseInfo, normals);
-            //for (label i = 1; i < normals.size(); ++i)
+            // vectorField normals;
+            // geometry[surfaces[baseSurfI]].getNormal(baseInfo, normals);
+            // for (label i = 1; i < normals.size(); ++i)
             //{
             //    if ((normals[0] & normals[i]) < 0.9)
             //    {
             //        return true;
             //    }
             //}
-            //labelList regions;
-            //geometry[surfaces[baseSurfI]].getRegion(baseInfo, regions);
-            //for (label i = 1; i < regions.size(); ++i)
+            // labelList regions;
+            // geometry[surfaces[baseSurfI]].getRegion(baseInfo, regions);
+            // for (label i = 1; i < regions.size(); ++i)
             //{
             //    if (regions[0] != regions[i])
             //    {
             //        return true;
             //    }
             //}
-            //return false;
+            // return false;
 
 
 
-            //samples[0] = point(c.xmin(), c.ymin(), c.zmin());
-            //samples[1] = point(c.xmax(), c.ymin(), c.zmin());
-            //samples[2] = point(c.xmax(), c.ymax(), c.zmin());
-            //samples[3] = point(c.xmin(), c.ymax(), c.zmin());
+            // samples[0] = point(c.xmin(), c.ymin(), c.zmin());
+            // samples[1] = point(c.xmax(), c.ymin(), c.zmin());
+            // samples[2] = point(c.xmax(), c.ymax(), c.zmin());
+            // samples[3] = point(c.xmin(), c.ymax(), c.zmin());
             //
-            //samples[4] = point(c.xmin(), c.ymin(), c.zmax());
-            //samples[5] = point(c.xmax(), c.ymin(), c.zmax());
-            //samples[6] = point(c.xmax(), c.ymax(), c.zmax());
-            //samples[7] = point(c.xmin(), c.ymax(), c.zmax());
+            // samples[4] = point(c.xmin(), c.ymin(), c.zmax());
+            // samples[5] = point(c.xmax(), c.ymin(), c.zmax());
+            // samples[6] = point(c.xmax(), c.ymax(), c.zmax());
+            // samples[7] = point(c.xmin(), c.ymax(), c.zmax());
 
-            //scalarField nearestDistSqr(8, great);
+            // scalarField nearestDistSqr(8, great);
             //
-            //Foam::List<pointIndexHit> nearestInfo;
-            //surf_.findNearest(samples, nearestDistSqr, nearestInfo);
-            //vectorField normals;
-            //surf_.getNormal(nearestInfo, normals);
+            // Foam::List<pointIndexHit> nearestInfo;
+            // surf_.findNearest(samples, nearestDistSqr, nearestInfo);
+            // vectorField normals;
+            // surf_.getNormal(nearestInfo, normals);
             //
-            //for (label i = 1; i < normals.size(); ++i)
+            // for (label i = 1; i < normals.size(); ++i)
             //{
             //    if ((normals[0] & normals[i]) < 0.5)
             //    {
             //        return true;
             //    }
             //}
-            //return false;
+            // return false;
 
             //// Check if surface octree same level
-            //const labelList elems(surf_.tree().findBox(bb));
+            // const labelList elems(surf_.tree().findBox(bb));
             //
-            //if (elems.size() > 1)
+            // if (elems.size() > 1)
             //{
             //    return true;
             //}
-            //else
+            // else
             //{
             //  return false;
             //}
@@ -470,9 +470,9 @@ int main(int argc, char *argv[])
 
     distanceCalc ref
     (
-        8,          //maxLevel
-        0.0,        //distance
-        minLevel,   //minLevel
+        8,          // maxLevel
+        0.0,        // distance
+        minLevel,   // minLevel
         geometryToConformTo,
         converter
     );

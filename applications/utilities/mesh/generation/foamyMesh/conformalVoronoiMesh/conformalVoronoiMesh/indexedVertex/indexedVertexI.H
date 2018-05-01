@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -230,7 +230,7 @@ inline bool CGAL::indexedVertex<Gt, Vb>::referred() const
 {
     // Can't be zero as the first few points are far points which won't be
     // referred
-    //return index_ < 0;
+    // return index_ < 0;
 
     // processor_ will be take the value of the processor that this vertex is
     // from, so it cannot be on this processor.

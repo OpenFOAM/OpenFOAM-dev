@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,8 +195,8 @@ inline void Foam::CV2D::movePoint(const Vertex_handle& vh, const Point& P)
     // move(vh, P);
     // vh->index() = i;
 
-     //vh->set_point(P);
-     //fast_restore_Delaunay(vh);
+     // vh->set_point(P);
+     // fast_restore_Delaunay(vh);
 }
 
 

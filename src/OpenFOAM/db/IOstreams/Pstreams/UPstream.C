@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -334,7 +334,7 @@ void Foam::UPstream::freeCommunicator
         freePstreamCommunicator(communicator);
     }
     myProcNo_[communicator] = -1;
-    //procIDs_[communicator].clear();
+    // procIDs_[communicator].clear();
     parentCommunicator_[communicator] = -1;
     linearCommunication_[communicator].clear();
     treeCommunication_[communicator].clear();

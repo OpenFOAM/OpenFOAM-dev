@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,8 +89,8 @@ int main(int argc, char *argv[])
                     DEqn += fvc::grad(threeKalpha*T);
                 }
 
-                //DEqn.setComponentReference(1, 0, vector::X, 0);
-                //DEqn.setComponentReference(1, 0, vector::Z, 0);
+                // DEqn.setComponentReference(1, 0, vector::X, 0);
+                // DEqn.setComponentReference(1, 0, vector::Z, 0);
 
                 initialResidual = DEqn.solve().max().initialResidual();
 

@@ -155,10 +155,10 @@ bool Foam::uniformSet::trackToBoundary
 
         if (singleParticle.onBoundaryFace())
         {
-            //Pout<< "trackToBoundary : reached boundary" << endl;
+            // Pout<< "trackToBoundary : reached boundary" << endl;
             if (mag(trackPt - samplePt) < smallDist)
             {
-                //Pout<< "trackToBoundary : boundary is also sampling point"
+                // Pout<< "trackToBoundary : boundary is also sampling point"
                 //    << endl;
                 // Reached samplePt on boundary
                 samplingPts.append(trackPt);
@@ -170,7 +170,7 @@ bool Foam::uniformSet::trackToBoundary
             return true;
         }
 
-        //Pout<< "trackToBoundary : reached internal sampling point" << endl;
+        // Pout<< "trackToBoundary : reached internal sampling point" << endl;
         // Reached samplePt in cell or on internal face
         samplingPts.append(trackPt);
         samplingCells.append(singleParticle.cell());

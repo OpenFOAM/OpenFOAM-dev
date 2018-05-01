@@ -475,7 +475,7 @@ void Foam::surfaceIntersection::classifyHit
                 // otherVert on outside of surf2
 
                 // Shift hitPoint a bit along edge.
-                //point hitPt = nearPt + 0.1*eVec;
+                // point hitPt = nearPt + 0.1*eVec;
                 point hitPt = nearPt;
 
                 if (debug&2)

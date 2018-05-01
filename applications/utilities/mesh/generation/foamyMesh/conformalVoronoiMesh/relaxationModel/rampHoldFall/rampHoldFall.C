@@ -89,7 +89,7 @@ scalar rampHoldFall::relaxation()
     }
     else
     {
-        //Hold
+        // Hold
 
         return holdRelaxation_;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     triSurface surf2 = triSurfaceTools::redGreenRefine
     (
         surf1,
-        identity(surf1.size())  //Hack: refine all
+        identity(surf1.size())  // Hack: refine all
     );
 
     Info<< "Original surface:" << endl

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ Pout<< endl
     << " of type:" << tecplotFileType
     << endl;
 
-    INTEGER4 IsDouble = 0;  //float
-    INTEGER4 Debug = 0;     //nodebug
+    INTEGER4 IsDouble = 0;  // float
+    INTEGER4 Debug = 0;     // nodebug
     if
     (
         !TECINI112

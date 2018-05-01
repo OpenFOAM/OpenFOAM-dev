@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     hmm(2, 1) = 6.0;
     hmm(2, 2) = 1.0;
 
-    //Info<< hmm << endl << hmm - 2.0*(-hmm) << endl;
+    // Info<< hmm << endl << hmm - 2.0*(-hmm) << endl;
     Info<< max(hmm) << endl;
     Info<< min(hmm) << endl;
 
@@ -60,9 +60,9 @@ int main(int argc, char *argv[])
 
     Info<< hmm << endl;
 
-    //SquareMatrix<scalar> hmm3(Sin);
+    // SquareMatrix<scalar> hmm3(Sin);
 
-    //Info<< hmm3 << endl;
+    // Info<< hmm3 << endl;
 
     SquareMatrix<scalar> hmm4;
 

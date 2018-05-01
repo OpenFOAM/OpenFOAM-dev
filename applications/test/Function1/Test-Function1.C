@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,11 @@ int main(int argc, char *argv[])
     samples[3] = 3;
     scalarField values(4);
     values = 1.0;
-    //values[0] = 0.0;
-    //values[1] = 1.0;
+    // values[0] = 0.0;
+    // values[1] = 1.0;
 
     linearInterpolationWeights interpolator
-    //splineInterpolationWeights interpolator
+    // splineInterpolationWeights interpolator
     (
         samples
     );
@@ -84,9 +84,9 @@ int main(int argc, char *argv[])
 //
 //
 //    interpolator.integrationWeights(-0.01, 1, indices, weights);
-//    //Pout<< "samples:" << samples << endl;
-//    //Pout<< "indices:" << indices << endl;
-//    //Pout<< "weights:" << weights << endl;
+//    // Pout<< "samples:" << samples << endl;
+//    // Pout<< "indices:" << indices << endl;
+//    // Pout<< "weights:" << weights << endl;
 //    scalar sum = interpolator.weightedSum
 //    (
 //        weights,

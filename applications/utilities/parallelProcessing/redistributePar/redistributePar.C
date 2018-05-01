@@ -346,7 +346,7 @@ void readFields
             );
 
             //// Write it for next time round (since mesh gets written as well)
-            //fields[i].write();
+            // fields[i].write();
         }
     }
     else
@@ -725,7 +725,7 @@ int main(int argc, char *argv[])
 
     // Debugging: Create additional volField that will be mapped.
     // Used to test correctness of mapping
-    //volVectorField mapCc("mapCc", 1*mesh.C());
+    // volVectorField mapCc("mapCc", 1*mesh.C());
 
     // Global matching tolerance
     const scalar tolDim = getMergeDistance
@@ -738,14 +738,14 @@ int main(int argc, char *argv[])
     // Mesh distribution engine
     fvMeshDistribute distributor(mesh, tolDim);
 
-    //Pout<< "Wanted distribution:"
+    // Pout<< "Wanted distribution:"
     //    << distributor.countCells(finalDecomp) << nl << endl;
 
     // Do actual sending/receiving of mesh
     autoPtr<mapDistributePolyMesh> map = distributor.distribute(finalDecomp);
 
     //// Distribute any non-registered data accordingly
-    //map().distributeFaceData(faceCc);
+    // map().distributeFaceData(faceCc);
 
 
     // Print some statistics
@@ -766,7 +766,7 @@ int main(int argc, char *argv[])
 
 
     // Debugging: test mapped cellcentre field.
-    //compareFields(tolDim, mesh.C(), mapCc);
+    // compareFields(tolDim, mesh.C(), mapCc);
 
     // Print nice message
     // ~~~~~~~~~~~~~~~~~~

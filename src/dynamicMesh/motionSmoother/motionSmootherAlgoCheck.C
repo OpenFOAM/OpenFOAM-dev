@@ -113,7 +113,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     label nWrongFaces = 0;
 
     Info<< "Checking faces in error :" << endl;
-    //Pout.setf(ios_base::left);
+    // Pout.setf(ios_base::left);
 
     if (maxNonOrtho < 180.0-small)
     {
@@ -308,7 +308,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minTwist > -1)
     {
-        //Pout<< "Checking face twist: dot product of face normal "
+        // Pout<< "Checking face twist: dot product of face normal "
         //    << "with face triangle normals" << endl;
         polyMeshGeometry::checkFaceTwist
         (
@@ -335,7 +335,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minTriangleTwist > -1)
     {
-        //Pout<< "Checking triangle twist: dot product of consecutive triangle"
+        // Pout<< "Checking triangle twist: dot product of consecutive triangle"
         //    << " normals resulting from face-centre decomposition" << endl;
         polyMeshGeometry::checkTriangleTwist
         (
@@ -405,7 +405,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    //Pout.setf(ios_base::right);
+    // Pout.setf(ios_base::right);
 
     return nWrongFaces > 0;
 }
@@ -482,11 +482,11 @@ bool Foam::motionSmootherAlgo::checkMesh
     (
         readScalar(dict.lookup("minArea", true))
     );
-    //const scalar maxIntSkew
+    // const scalar maxIntSkew
     //(
     //    readScalar(dict.lookup("maxInternalSkewness", true))
     //);
-    //const scalar maxBounSkew
+    // const scalar maxBounSkew
     //(
     //    readScalar(dict.lookup("maxBoundarySkewness", true))
     //);
@@ -516,7 +516,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     label nWrongFaces = 0;
 
     Info<< "Checking faces in error :" << endl;
-    //Pout.setf(ios_base::left);
+    // Pout.setf(ios_base::left);
 
     if (maxNonOrtho < 180.0-small)
     {
@@ -619,7 +619,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     //- Note: cannot check the skewness without the points and don't want
     //  to store them on polyMeshGeometry.
-    //if (maxIntSkew > 0 || maxBounSkew > 0)
+    // if (maxIntSkew > 0 || maxBounSkew > 0)
     //{
     //    meshGeom.checkFaceSkewness
     //    (
@@ -685,7 +685,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minTwist > -1)
     {
-        //Pout<< "Checking face twist: dot product of face normal "
+        // Pout<< "Checking face twist: dot product of face normal "
         //    << "with face triangle normals" << endl;
         meshGeom.checkFaceTwist
         (
@@ -708,7 +708,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minTriangleTwist > -1)
     {
-        //Pout<< "Checking triangle twist: dot product of consecutive triangle"
+        // Pout<< "Checking triangle twist: dot product of consecutive triangle"
         //    << " normals resulting from face-centre decomposition" << endl;
         meshGeom.checkTriangleTwist
         (
@@ -770,7 +770,7 @@ bool Foam::motionSmootherAlgo::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    //Pout.setf(ios_base::right);
+    // Pout.setf(ios_base::right);
 
     return nWrongFaces > 0;
 }

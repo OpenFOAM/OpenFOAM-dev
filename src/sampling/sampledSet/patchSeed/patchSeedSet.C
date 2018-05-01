@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,8 +217,8 @@ Foam::patchSeedSet::patchSeedSet
             wordReList(dict.lookup("patches"))
         )
     ),
-    //searchDist_(readScalar(dict.lookup("maxDistance"))),
-    //offsetDist_(readScalar(dict.lookup("offsetDist"))),
+    // searchDist_(readScalar(dict.lookup("maxDistance"))),
+    // offsetDist_(readScalar(dict.lookup("offsetDist"))),
     maxPoints_(readLabel(dict.lookup("maxPoints")))
 {
     genSamples();

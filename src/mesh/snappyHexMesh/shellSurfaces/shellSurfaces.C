@@ -185,7 +185,7 @@ void Foam::shellSurfaces::orient()
     {
         const point outsidePt = overallBb.max() + overallBb.span();
 
-        //Info<< "Using point " << outsidePt << " to orient shells" << endl;
+        // Info<< "Using point " << outsidePt << " to orient shells" << endl;
 
         forAll(shells_, shellI)
         {

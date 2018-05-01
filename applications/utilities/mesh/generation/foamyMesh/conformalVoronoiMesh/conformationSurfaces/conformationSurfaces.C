@@ -558,7 +558,7 @@ Foam::conformationSurfaces::conformationSurfaces
 
     // Extend the global bounds to stop the bound box sitting on the surfaces
     // to be conformed to
-    //globalBounds_ = globalBounds_.extend(rndGen_, 1e-4);
+    // globalBounds_ = globalBounds_.extend(rndGen_, 1e-4);
 
     vector newSpan = 1e-4*globalBounds_.span();
 
@@ -652,7 +652,7 @@ bool Foam::conformationSurfaces::outside
 ) const
 {
     return wellOutside(pointField(1, samplePt), scalarField(1, 0))[0];
-    //return !inside(samplePt);
+    // return !inside(samplePt);
 }
 
 
@@ -693,7 +693,7 @@ Foam::Field<bool> Foam::conformationSurfaces::wellInOutSide
     // Assume that the point is wellInside until demonstrated otherwise.
     Field<bool> insideOutsidePoint(samplePts.size(), testForInside);
 
-    //Check if the points are inside the surface by the given distance squared
+    // Check if the points are inside the surface by the given distance squared
 
     labelList hitSurfaces;
     List<pointIndexHit> hitInfo;
@@ -1182,9 +1182,9 @@ void Foam::conformationSurfaces::findAllNearestEdges
 ) const
 {
     // Initialise
-    //featuresHit.setSize(features_.size());
-    //featuresHit = -1;
-    //edgeHitsByFeature.setSize(features_.size());
+    // featuresHit.setSize(features_.size());
+    // featuresHit = -1;
+    // edgeHitsByFeature.setSize(features_.size());
 
     // Work arrays
     List<pointIndexHit> hitInfo(extendedFeatureEdgeMesh::nEdgeTypes);

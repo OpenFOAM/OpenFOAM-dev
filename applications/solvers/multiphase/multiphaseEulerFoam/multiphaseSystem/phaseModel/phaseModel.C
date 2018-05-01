@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,7 +210,7 @@ Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::clone() const
 
 void Foam::phaseModel::correct()
 {
-    //nuModel_->correct();
+    // nuModel_->correct();
 }
 
 
@@ -218,7 +218,7 @@ bool Foam::phaseModel::read(const dictionary& phaseDict)
 {
     phaseDict_ = phaseDict;
 
-    //if (nuModel_->read(phaseDict_))
+    // if (nuModel_->read(phaseDict_))
     {
         phaseDict_.lookup("nu") >> nu_.value();
         phaseDict_.lookup("kappa") >> kappa_.value();

@@ -218,7 +218,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
         {
             scalar ftCell = ft_[celli];
 
-            if (ftVar[celli] > ftVarMin_) //sub-grid beta pdf of ft_
+            if (ftVar[celli] > ftVarMin_) // sub-grid beta pdf of ft_
             {
                 scalar ftVarc = ftVar[celli];
                 scalar a =

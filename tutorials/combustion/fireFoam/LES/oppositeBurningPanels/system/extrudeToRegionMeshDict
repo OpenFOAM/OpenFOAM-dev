@@ -22,7 +22,7 @@ oneD            true;
 
 sampleMode      nearestPatchFace;
 
-oneDPolyPatchType empty; //wedge
+oneDPolyPatchType empty; // wedge
 
 extrudeModel    linearNormal;
 

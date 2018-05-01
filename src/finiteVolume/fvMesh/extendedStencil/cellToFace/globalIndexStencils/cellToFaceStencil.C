@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -370,7 +370,7 @@ void Foam::cellToFaceStencil::calcFaceStencil
             }
         }
     }
-    //syncTools::swapBoundaryFaceList(mesh_, neiGlobalCellCells);
+    // syncTools::swapBoundaryFaceList(mesh_, neiGlobalCellCells);
     syncTools::syncBoundaryFaceList
     (
         mesh_,
@@ -420,7 +420,7 @@ void Foam::cellToFaceStencil::calcFaceStencil
                 faceStencil[facei][n++] = iter.key();
             }
         }
-        //Pout<< "internalface:" << facei << " toc:" << faceStencilSet.toc()
+        // Pout<< "internalface:" << facei << " toc:" << faceStencilSet.toc()
         //    << " faceStencil:" << faceStencil[facei] << endl;
     }
     forAll(patches, patchi)
@@ -463,7 +463,7 @@ void Foam::cellToFaceStencil::calcFaceStencil
                     }
                 }
 
-                //Pout<< "coupledface:" << facei
+                // Pout<< "coupledface:" << facei
                 //    << " toc:" << faceStencilSet.toc()
                 //    << " faceStencil:" << faceStencil[facei] << endl;
 
@@ -495,7 +495,7 @@ void Foam::cellToFaceStencil::calcFaceStencil
                     }
                 }
 
-                //Pout<< "boundaryface:" << facei
+                // Pout<< "boundaryface:" << facei
                 //    << " toc:" << faceStencilSet.toc()
                 //    << " faceStencil:" << faceStencil[facei] << endl;
 

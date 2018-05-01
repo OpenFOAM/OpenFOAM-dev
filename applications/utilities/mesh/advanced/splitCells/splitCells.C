@@ -662,7 +662,7 @@ int main(int argc, char *argv[])
         {
             if (cuts.cellLoops()[celli].size())
             {
-                //Info<< "Removing cut cell " << celli << " from wishlist"
+                // Info<< "Removing cut cell " << celli << " from wishlist"
                 //    << endl;
                 cellsToCut.erase(celli);
             }

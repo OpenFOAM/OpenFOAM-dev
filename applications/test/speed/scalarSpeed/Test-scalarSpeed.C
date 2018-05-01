@@ -177,7 +177,7 @@ int main()
 
         for (int j=0; j<nIter; j++)
         {
-            //sf4 = sf1 + sf2 - sf3;
+            // sf4 = sf1 + sf2 - sf3;
             sf4 = sf1;
             sf4 += sf2;
             sf4 -= sf3;

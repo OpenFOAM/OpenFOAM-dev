@@ -14,7 +14,7 @@ streamLines
     writeControl    writeTime;
     // writeInterval 10;
 
-    setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot; //csv; //ensight;
+    setFormat       vtk; // gnuplot; // xmgr; //raw; //jplot; //csv; //ensight;
 
     // Track forward (+U) or backward (-U) or both
     direction       forward;
@@ -35,7 +35,7 @@ streamLines
     seedSampleSet
     {
         type        uniform;
-        axis        x;  //distance;
+        axis        x;  // distance;
 
         // Note: tracks slightly offset so as not to be on a face
         start       (-1.001 1e-7 0.0011);

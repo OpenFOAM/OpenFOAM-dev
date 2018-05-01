@@ -248,11 +248,11 @@ Foam::label Foam::hexRef8::addInternalFace
 
         ////- Inflate-from-point:
         //// Check if point has any internal faces we can use.
-        //label masterPointi = -1;
+        // label masterPointi = -1;
         //
-        //const labelList& pFaces = mesh_.pointFaces()[meshPointi];
+        // const labelList& pFaces = mesh_.pointFaces()[meshPointi];
         //
-        //forAll(pFaces, i)
+        // forAll(pFaces, i)
         //{
         //    if (mesh_.isInternalFace(pFaces[i]))
         //    {
@@ -263,7 +263,7 @@ Foam::label Foam::hexRef8::addInternalFace
         //    }
         //}
         //
-        //return meshMod.setAction
+        // return meshMod.setAction
         //(
         //    polyAddFace
         //    (
@@ -2036,7 +2036,7 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
 
     // Check initial mesh for consistency
 
-    //if (debug)
+    // if (debug)
     {
         checkMesh();
     }
@@ -2145,7 +2145,7 @@ Foam::hexRef8::hexRef8
 
     // Check initial mesh for consistency
 
-    //if (debug)
+    // if (debug)
     {
         checkMesh();
     }
@@ -2245,7 +2245,7 @@ Foam::hexRef8::hexRef8
 
     // Check initial mesh for consistency
 
-    //if (debug)
+    // if (debug)
     {
         checkMesh();
     }
@@ -3064,7 +3064,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
     );
 
 
-    //if (debug)
+    // if (debug)
     //{
     //    // Dump wanted level
     //    volScalarField wantedLevel
@@ -3252,7 +3252,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
         checkMesh();
         // Cannot call checkRefinementlevels since hanging points might
         // get triggered by the mesher after subsetting.
-        //checkRefinementLevels(-1, labelList(0));
+        // checkRefinementLevels(-1, labelList(0));
     }
 
     // Clear any saved point/cell data.
@@ -3906,7 +3906,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
                     // Convert dynamiclist to face.
                     newFace.transfer(faceVerts);
 
-                    //Pout<< "Split face:" << facei << " verts:" << f
+                    // Pout<< "Split face:" << facei << " verts:" << f
                     //    << " into quad:" << newFace << endl;
 
                     // Get new owner/neighbour
@@ -4380,7 +4380,7 @@ void Foam::hexRef8::updateMesh
             cellLevel_[newCelli] = fnd();
         }
 
-        //if (findIndex(cellLevel_, -1) != -1)
+        // if (findIndex(cellLevel_, -1) != -1)
         //{
         //    WarningInFunction
         //        << "Problem : "
@@ -4416,7 +4416,7 @@ void Foam::hexRef8::updateMesh
 
                 if (oldPointi == -1)
                 {
-                    //FatalErrorInFunction
+                    // FatalErrorInFunction
                     //    << "Problem : point " << newPointi
                     //    << " at " << mesh_.points()[newPointi]
                     //    << " does not originate from another point"
@@ -4454,7 +4454,7 @@ void Foam::hexRef8::updateMesh
             pointLevel_[newPointi] = fnd();
         }
 
-        //if (findIndex(pointLevel_, -1) != -1)
+        // if (findIndex(pointLevel_, -1) != -1)
         //{
         //    WarningInFunction
         //        << "Problem : "
@@ -4561,7 +4561,7 @@ void Foam::hexRef8::subset
     setInstance(mesh_.facesInstance());
 
     // Nothing needs doing to faceRemover.
-    //faceRemover_.subset(pointMap, faceMap, cellMap);
+    // faceRemover_.subset(pointMap, faceMap, cellMap);
 
     // Clear cell shapes
     cellShapesPtr_.clear();
@@ -5031,7 +5031,7 @@ void Foam::hexRef8::checkRefinementLevels
     //        false                   // no separation
     //    );
     //
-    //    //OFstream str(mesh_.time().path()/"hangingPoints.obj");
+    //    // OFstream str(mesh_.time().path()/"hangingPoints.obj");
     //
     //    label nHanging = 0;
     //
@@ -5044,7 +5044,7 @@ void Foam::hexRef8::checkRefinementLevels
     //            Pout<< "Hanging boundary point " << pointi
     //                << " at " << mesh_.points()[pointi]
     //                << endl;
-    //            //meshTools::writeOBJ(str, mesh_.points()[pointi]);
+    //            // meshTools::writeOBJ(str, mesh_.points()[pointi]);
     //        }
     //    }
     //
@@ -5148,7 +5148,7 @@ Foam::labelList Foam::hexRef8::getSplitPoints() const
     labelList splitMasterLevel(mesh_.nPoints(), 0);
 
     // Unmark all with not 8 cells
-    //const labelListList& pointCells = mesh_.pointCells();
+    // const labelListList& pointCells = mesh_.pointCells();
 
     for (label pointi = 0; pointi < mesh_.nPoints(); pointi++)
     {
@@ -5674,7 +5674,7 @@ void Foam::hexRef8::setUnrefinement
 
         // Check that the lowest numbered pCells is the master of the region
         // (should be guaranteed by directRemoveFaces)
-        //if (debug)
+        // if (debug)
         {
             label masterCelli = min(pCells);
 

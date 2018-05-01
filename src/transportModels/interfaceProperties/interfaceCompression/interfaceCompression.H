@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ public:
     ) const
     {
         // Quadratic compression scheme
-        //return min(max(4*min(phiP*(1 - phiP), phiN*(1 - phiN)), 0), 1);
+        // return min(max(4*min(phiP*(1 - phiP), phiN*(1 - phiN)), 0), 1);
 
         // Quartic compression scheme
         return

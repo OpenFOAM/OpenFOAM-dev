@@ -44,7 +44,7 @@ linearNormalCoeffs
 
 // Do front and back need to be merged? Usually only makes sense for 360
 // degree wedges.
-mergeFaces false;   //true;
+mergeFaces false;   // true;
 
 // Merge small edges. Fraction of bounding box.
 mergeTol 0;

@@ -356,9 +356,9 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
     }
 
 
-    //OFstream mixedStr("mixed.obj");
+    // OFstream mixedStr("mixed.obj");
     //
-    //forAll(pointSide, pointi)
+    // forAll(pointSide, pointi)
     //{
     //    if (pointSide[pointi] == MIXED)
     //    {

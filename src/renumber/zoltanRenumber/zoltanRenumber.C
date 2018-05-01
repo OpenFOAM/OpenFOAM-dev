@@ -327,13 +327,13 @@ Foam::labelList Foam::zoltanRenumber::renumber
 
 
 
-    //Note: !global indices
+    // Note: !global indices
     List<ZOLTAN_ID_TYPE> wantedCells(mesh.nCells());
 
     globalIndex globalCells(mesh.nCells());
     forAll(wantedCells, i)
     {
-        //wantedCells[i] = i;
+        // wantedCells[i] = i;
         wantedCells[i] = globalCells.toGlobal(i);
     }
 
@@ -342,8 +342,8 @@ Foam::labelList Foam::zoltanRenumber::renumber
     int err = Zoltan_Order
     (
         zz,
-        1,                                //int num_gid_entries,
-        mesh.globalData().nTotalCells(),  //int num_obj,
+        1,                                // int num_gid_entries,
+        mesh.globalData().nTotalCells(),  // int num_obj,
         wantedCells.begin(),
         oldToNew.begin()
     );

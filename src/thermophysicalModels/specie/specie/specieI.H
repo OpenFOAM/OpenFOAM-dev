@@ -96,7 +96,7 @@ inline scalar specie::R() const
 
 inline void specie::operator=(const specie& st)
 {
-    //name_ = st.name_;
+    // name_ = st.name_;
     Y_ = st.Y_;
     molWeight_ = st.molWeight_;
 }

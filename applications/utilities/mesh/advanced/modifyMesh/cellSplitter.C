@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ void Foam::cellSplitter::setRefinement
             );
         addedPoints_.insert(celli, addedPointi);
 
-        //Pout<< "Added point " << addedPointi
+        // Pout<< "Added point " << addedPointi
         //    << iter() << " in cell " << celli << " with centre "
         //    << mesh_.cellCentres()[celli] << endl;
     }
@@ -226,7 +226,7 @@ void Foam::cellSplitter::setRefinement
 
         cellToCells.insert(celli, newCells);
 
-        //Pout<< "Split cell " << celli
+        // Pout<< "Split cell " << celli
         //    << " with centre " << mesh_.cellCentres()[celli] << nl
         //    << " faces:" << cFaces << nl
         //    << " into :" << newCells << endl;

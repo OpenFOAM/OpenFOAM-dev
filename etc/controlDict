@@ -70,7 +70,7 @@ OptimisationSwitches
     //  Default: 2e9
     maxMasterFileBufferSize 2e9;
 
-    commsType       nonBlocking; //scheduled; //blocking;
+    commsType       nonBlocking; // scheduled; // blocking;
     floatTransfer   0;
     nProcsSimpleSum 0;
 
@@ -1020,7 +1020,7 @@ DimensionSets
 
         // Set of units used for printing. Can be any basic or derived
         // but not scaled (only supported for dimensionedScalar, etc)
-        //writeUnits (kg m s K mol A Cd);
+        // writeUnits (kg m s K mol A Cd);
     }
 
     USCSCoeffs
@@ -1036,7 +1036,7 @@ DimensionSets
 
         // Set of units used for printing. Can be any basic or derived
         // but not scaled (only supported for dimensionedScalar, etc)
-        //writeUnits (lb ft s R mol A Cd);
+        // writeUnits (lb ft s R mol A Cd);
     }
 }
 

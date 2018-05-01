@@ -429,7 +429,7 @@ void Foam::controlMeshRefinement::initialMeshPopulation
             }
         }
 
-        //mesh_.rangeInsertWithInfo(vertices.begin(), vertices.end());
+        // mesh_.rangeInsertWithInfo(vertices.begin(), vertices.end());
 
         Info<< "    Inserted "
             << returnReduce
@@ -623,7 +623,7 @@ void Foam::controlMeshRefinement::initialMeshPopulation
             }
         }
 
-       //mesh_.rangeInsertWithInfo(vertices.begin(), vertices.end());
+       // mesh_.rangeInsertWithInfo(vertices.begin(), vertices.end());
 
         Info<< "    Inserted extra points "
             << returnReduce

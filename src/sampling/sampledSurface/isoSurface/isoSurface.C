@@ -597,7 +597,7 @@ void Foam::isoSurface::calcSnappedCc
                     snappedCc[celli] = snappedPoints.size();
                     snappedPoints.append(otherPointSum/nOther);
 
-                    //Pout<< "    point:" << pointi
+                    // Pout<< "    point:" << pointi
                     //    << " replacing coord:" << mesh_.points()[pointi]
                     //    << " by average:" << collapsedPoint[pointi] << endl;
                 }
@@ -610,7 +610,7 @@ void Foam::isoSurface::calcSnappedCc
                 snappedCc[celli] = snappedPoints.size();
                 snappedPoints.append(sum(points)/points.size());
 
-                //Pout<< "    point:" << pointi
+                // Pout<< "    point:" << pointi
                 //    << " replacing coord:" << mesh_.points()[pointi]
                 //    << " by average:" << collapsedPoint[pointi] << endl;
             }
@@ -643,7 +643,7 @@ void Foam::isoSurface::calcSnappedCc
                 {
                     snappedCc[celli] = snappedPoints.size();
                     snappedPoints.append(calcCentre(surf));
-                    //Pout<< "    point:" << pointi << " nZones:" << nZones
+                    // Pout<< "    point:" << pointi << " nZones:" << nZones
                     //    << " replacing coord:" << mesh_.points()[pointi]
                     //    << " by average:" << collapsedPoint[pointi] << endl;
                 }
@@ -959,7 +959,7 @@ Foam::triSurface Foam::isoSurface::stitchTriPoints
 
                 if (nbrTriI > triI && (tris[nbrTriI] == tri))
                 {
-                    //Pout<< "Duplicate : " << triI << " verts:" << tri
+                    // Pout<< "Duplicate : " << triI << " verts:" << tri
                     //    << " to " << nbrTriI << " verts:" << tris[nbrTriI]
                     //    << endl;
                     dupTriI = nbrTriI;

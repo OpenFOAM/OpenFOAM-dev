@@ -123,7 +123,7 @@ void print(Ostream& os, const wordList& flds)
 labelList getSelectedPatches
 (
     const polyBoundaryMesh& patches,
-    const List<wordRe>& excludePatches  //HashSet<word>& excludePatches
+    const List<wordRe>& excludePatches  // HashSet<word>& excludePatches
 )
 {
     DynamicList<label> patchIDs(patches.size());
@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
 
         Info<< "Time: " << runTime.timeName() << endl;
 
-        const word timeDesc = name(timeI);    //name(runTime.timeIndex());
+        const word timeDesc = name(timeI);    // name(runTime.timeIndex());
 
         // Check for new polyMesh/ and update mesh, fvMeshSubset and cell
         // decomposition.
@@ -378,22 +378,22 @@ int main(int argc, char *argv[])
 
         PtrList<pointScalarField> psf;
         PtrList<pointVectorField> pvf;
-        //PtrList<pointSphericalTensorField> pSpheretf;
-        //PtrList<pointSymmTensorField> pSymmtf;
-        //PtrList<pointTensorField> ptf;
+        // PtrList<pointSphericalTensorField> pSpheretf;
+        // PtrList<pointSymmTensorField> pSymmtf;
+        // PtrList<pointTensorField> ptf;
 
 
         if (!noPointValues)
         {
             //// Add interpolated volFields
-            //const volPointInterpolation& pInterp = volPointInterpolation::New
+            // const volPointInterpolation& pInterp = volPointInterpolation::New
             //(
             //    mesh
             //);
             //
-            //label nPsf = psf.size();
-            //psf.setSize(nPsf+vsf.size());
-            //forAll(vsf, i)
+            // label nPsf = psf.size();
+            // psf.setSize(nPsf+vsf.size());
+            // forAll(vsf, i)
             //{
             //    Info<< "Interpolating " << vsf[i].name() << endl;
             //    tmp<pointScalarField> tvsf(pInterp.interpolate(vsf[i]));
@@ -402,9 +402,9 @@ int main(int argc, char *argv[])
             //    nPsf++;
             //}
             //
-            //label nPvf = pvf.size();
-            //pvf.setSize(vvf.size());
-            //forAll(vvf, i)
+            // label nPvf = pvf.size();
+            // pvf.setSize(vvf.size());
+            // forAll(vvf, i)
             //{
             //    Info<< "Interpolating " << vvf[i].name() << endl;
             //    tmp<pointVectorField> tvvf(pInterp.interpolate(vvf[i]));
@@ -433,7 +433,7 @@ int main(int argc, char *argv[])
             );
             print("    pointVectorFields          :", Info, pvf);
 
-            //readFields
+            // readFields
             //(
             //    vMesh,
             //    pointMesh::New(vMesh.baseMesh()),
@@ -441,9 +441,9 @@ int main(int argc, char *argv[])
             //    selectedFields,
             //    pSpheretf
             //);
-            //print("    pointSphericalTensorFields :", Info, pSpheretf);
+            // print("    pointSphericalTensorFields :", Info, pSpheretf);
             //
-            //readFields
+            // readFields
             //(
             //    vMesh,
             //    pointMesh::New(vMesh.baseMesh()),
@@ -451,9 +451,9 @@ int main(int argc, char *argv[])
             //    selectedFields,
             //    pSymmtf
             //);
-            //print("    pointSymmTensorFields      :", Info, pSymmtf);
+            // print("    pointSymmTensorFields      :", Info, pSymmtf);
             //
-            //readFields
+            // readFields
             //(
             //    vMesh,
             //    pointMesh::New(vMesh.baseMesh()),
@@ -461,7 +461,7 @@ int main(int argc, char *argv[])
             //    selectedFields,
             //    ptf
             //);
-            //print("    pointTensorFields          :", Info, ptf);
+            // print("    pointTensorFields          :", Info, ptf);
         }
         Info<< endl;
 
@@ -938,7 +938,7 @@ int main(int argc, char *argv[])
         {
             label patchID = patchIDs[i];
             const polyPatch& pp = patches[patchID];
-            //INTEGER4 strandID = 1 + i;
+            // INTEGER4 strandID = 1 + i;
 
             if (pp.size() > 0)
             {
@@ -954,7 +954,7 @@ int main(int argc, char *argv[])
                 writer.writePolygonalZone
                 (
                     pp.name(),
-                    strandID++,     //strandID,
+                    strandID++,     // strandID,
                     ipp,
                     allVarLocation
                 );
@@ -1120,7 +1120,7 @@ int main(int argc, char *argv[])
                     writer.writePolygonalZone
                     (
                         pp.name(),
-                        strandID++, //1+patchIDs.size()+zoneI,    //strandID,
+                        strandID++, //1+patchIDs.size()+zoneI,    // strandID,
                         ipp,
                         allVarLocation
                     );
@@ -1252,32 +1252,32 @@ int main(int argc, char *argv[])
                 Info<< "        vectors           :";
                 print(Info, vectorNames);
 
-                //wordList sphereNames
+                // wordList sphereNames
                 //(
                 //    sprayObjs.names
                 //    (
                 //        sphericalTensorIOField::typeName
                 //    )
                 //);
-                //Info<< "        spherical tensors :";
-                //print(Info, sphereNames);
+                // Info<< "        spherical tensors :";
+                // print(Info, sphereNames);
                 //
-                //wordList symmNames
+                // wordList symmNames
                 //(
                 //    sprayObjs.names
                 //    (
                 //        symmTensorIOField::typeName
                 //    )
                 //);
-                //Info<< "        symm tensors      :";
-                //print(Info, symmNames);
+                // Info<< "        symm tensors      :";
+                // print(Info, symmNames);
                 //
-                //wordList tensorNames
+                // wordList tensorNames
                 //(
                 //    sprayObjs.names(tensorIOField::typeName)
                 //);
-                //Info<< "        tensors           :";
-                //print(Info, tensorNames);
+                // Info<< "        tensors           :";
+                // print(Info, tensorNames);
 
 
                 // Load cloud positions
@@ -1336,7 +1336,7 @@ int main(int argc, char *argv[])
                 writer.writeOrderedZone
                 (
                     cloudDirs[cloudI],
-                    strandID++,     //strandID,
+                    strandID++,     // strandID,
                     parcels.size(),
                     allVarLocation
                 );

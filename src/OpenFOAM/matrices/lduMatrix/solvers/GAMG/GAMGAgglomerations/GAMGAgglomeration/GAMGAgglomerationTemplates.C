@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ void Foam::GAMGAgglomeration::restrictField
             procIDs,
             cf,
             UPstream::msgType(),
-            Pstream::commsTypes::nonBlocking    //Pstream::commsTypes::scheduled
+            Pstream::commsTypes::nonBlocking // Pstream::commsTypes::scheduled
         );
     }
 }
@@ -201,7 +201,7 @@ void Foam::GAMGAgglomeration::prolongField
             cf,
             allCf,
             UPstream::msgType(),
-            Pstream::commsTypes::nonBlocking    //Pstream::commsTypes::scheduled
+            Pstream::commsTypes::nonBlocking // Pstream::commsTypes::scheduled
         );
 
         forAll(fineToCoarse, i)

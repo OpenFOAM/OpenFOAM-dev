@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ private:
         );
 
         ////- Disallow default bitwise copy construct
-        //SlicedGeometricField(const SlicedGeometricField&);
+        // SlicedGeometricField(const SlicedGeometricField&);
 
         //- Disallow default bitwise assignment
         void operator=(const SlicedGeometricField&);

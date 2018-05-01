@@ -424,7 +424,7 @@ Foam::volPointInterpolation::interpolate
                     name
                 );
 
-            if (pf.upToDate(vf))    //TBD: , vf.mesh().points()))
+            if (pf.upToDate(vf))    // TBD: , vf.mesh().points()))
             {
                 solution::cachePrintMessage("Reusing", name, vf);
                 return pf;

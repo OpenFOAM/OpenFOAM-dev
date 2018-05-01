@@ -111,7 +111,7 @@ void PDRkEpsilon::correct()
 
         // Re-calculate thermal diffusivity
         //***HGWalphat_ = mut_/Prt_;
-        //alphat_.correctBoundaryConditions();
+        // alphat_.correctBoundaryConditions();
 
         return;
     }
@@ -192,7 +192,7 @@ void PDRkEpsilon::correct()
 
     // Re-calculate thermal diffusivity
     //***HGWalphat_ = mut_/Prt_;
-    //alphat_.correctBoundaryConditions();
+    // alphat_.correctBoundaryConditions();
 }
 
 

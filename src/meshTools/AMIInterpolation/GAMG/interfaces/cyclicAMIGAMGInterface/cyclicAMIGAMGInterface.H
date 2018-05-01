@@ -165,7 +165,7 @@ public:
             //- Write to stream
             virtual void write(Ostream&) const
             {
-                //TBD. How to serialise the AMI such that we can stream
+                // TBD. How to serialise the AMI such that we can stream
                 // cyclicAMIGAMGInterface.
                 NotImplemented;
             }

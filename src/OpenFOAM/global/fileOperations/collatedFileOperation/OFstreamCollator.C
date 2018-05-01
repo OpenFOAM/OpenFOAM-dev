@@ -233,7 +233,7 @@ void* Foam::OFstreamCollator::writeAll(void *threadarg)
 
             delete ptr;
         }
-        //sleep(1);
+        // sleep(1);
     }
 
     if (debug)

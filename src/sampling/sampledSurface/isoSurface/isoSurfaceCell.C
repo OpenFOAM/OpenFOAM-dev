@@ -413,7 +413,7 @@ void Foam::isoSurfaceCell::calcSnappedCc
                 snappedCc[celli] = snappedPoints.size();
                 snappedPoints.append(localPoints[0]);
 
-                //Pout<< "cell:" << celli
+                // Pout<< "cell:" << celli
                 //    << " at " << mesh_.cellCentres()[celli]
                 //    << " collapsing " << localPoints
                 //    << " intersections down to "
@@ -425,7 +425,7 @@ void Foam::isoSurfaceCell::calcSnappedCc
                 snappedCc[celli] = snappedPoints.size();
                 snappedPoints.append(0.5*(localPoints[0]+localPoints[1]));
 
-                //Pout<< "cell:" << celli
+                // Pout<< "cell:" << celli
                 //    << " at " << mesh_.cellCentres()[celli]
                 //    << " collapsing " << localPoints
                 //    << " intersections down to "
@@ -513,7 +513,7 @@ void Foam::isoSurfaceCell::calcSnappedCc
                     snappedCc[celli] = snappedPoints.size();
                     snappedPoints.append(info.hitPoint());
 
-                    //Pout<< "cell:" << celli
+                    // Pout<< "cell:" << celli
                     //    << " at " << mesh_.cellCentres()[celli]
                     //    << " collapsing " << surfPoints
                     //    << " intersections down to "
@@ -642,7 +642,7 @@ void Foam::isoSurfaceCell::genPointTris
     label b = f[f.fcIndex(index)];
     label c = f[f.rcIndex(index)];
 
-    //Pout<< " p0:" << pointi << " b:" << b << " c:" << c
+    // Pout<< " p0:" << pointi << " b:" << b << " c:" << c
     //<< " d:" << ccPointi << endl;
 
     // Get fractions for the three edges emanating from point
@@ -821,7 +821,7 @@ void Foam::isoSurfaceCell::calcSnappedPoint
             points.transfer(localTriPoints);
             collapsedPoint[pointi] = sum(points)/points.size();
 
-            //Pout<< "    point:" << pointi
+            // Pout<< "    point:" << pointi
             //    << " replacing coord:" << mesh_.points()[pointi]
             //    << " by average:" << collapsedPoint[pointi] << endl;
         }
@@ -1189,7 +1189,7 @@ void Foam::isoSurfaceCell::calcAddressing
         }
         else
         {
-            //WarningInFunction
+            // WarningInFunction
             //    << "Edge " << edgeI << " with centre " << mergedCentres[edgeI]
             //    << " used by more than two triangles: " << edgeFace0[edgeI]
             //    << ", "

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -467,15 +467,15 @@ void Foam::GAMGSolver::procAgglomerateMatrix
         // Agglomerate all matrix
         // ~~~~~~~~~~~~~~~~~~~~~~
 
-        //Pout<< "Own matrix:" << coarsestMatrix.info() << endl;
+        // Pout<< "Own matrix:" << coarsestMatrix.info() << endl;
         //
-        //forAll(otherMats, i)
+        // forAll(otherMats, i)
         //{
         //    Pout<< "** otherMats " << i << " "
         //        << otherMats[i].info()
         //        << endl;
         //}
-        //Pout<< endl;
+        // Pout<< endl;
 
 
         const lduMesh& allMesh = agglomeration_.meshLevel(levelI+1);
@@ -700,9 +700,9 @@ void Foam::GAMGSolver::procAgglomerateMatrix
             }
         }
 
-        //Pout<< "** Assembled allMatrix:" << allMatrix.info() << endl;
+        // Pout<< "** Assembled allMatrix:" << allMatrix.info() << endl;
         //
-        //forAll(allInterfaces, intI)
+        // forAll(allInterfaces, intI)
         //{
         //    if (allInterfaces.set(intI))
         //    {
@@ -713,9 +713,9 @@ void Foam::GAMGSolver::procAgglomerateMatrix
         //                faceCells().size()
         //            << endl;
         //
-        //        //const scalarField& bouCoeffs = allInterfaceBouCoeffs[intI];
-        //        //const scalarField& intCoeffs = allInterfaceIntCoeffs[intI];
-        //        //forAll(bouCoeffs, facei)
+        //        // const scalarField& bouCoeffs = allInterfaceBouCoeffs[intI];
+        //        // const scalarField& intCoeffs = allInterfaceIntCoeffs[intI];
+        //        // forAll(bouCoeffs, facei)
         //        //{
         //        //    Pout<< "        " << facei
         //        //        << "\tbou:" << bouCoeffs[facei]

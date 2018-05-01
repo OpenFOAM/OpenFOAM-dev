@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ class sampledCuttingPlane
         scalarField pointDistance_;
 
         //- Constructed iso surface
-        //autoPtr<isoSurfaceCell> isoSurfPtr_;
+        // autoPtr<isoSurfaceCell> isoSurfPtr_;
         autoPtr<isoSurface> isoSurfPtr_;
 
         //- Triangles converted to faceList
@@ -174,7 +174,7 @@ public:
         }
 
 
-        //const isoSurfaceCell& surface() const
+        // const isoSurfaceCell& surface() const
         const isoSurface& surface() const
         {
             return isoSurfPtr_();

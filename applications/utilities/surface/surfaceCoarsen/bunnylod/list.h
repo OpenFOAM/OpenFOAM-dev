@@ -75,8 +75,8 @@ void List<Type>::Add(Type t){
         if(num==array_size) {
                 allocate((array_size)?array_size *2:16);
         }
-        //int i;
-        //for(i=0;i<num;i++) {
+        // int i;
+        // for(i=0;i<num;i++) {
                 // dissallow duplicates
         //      assert(element[i] != t);
         //}

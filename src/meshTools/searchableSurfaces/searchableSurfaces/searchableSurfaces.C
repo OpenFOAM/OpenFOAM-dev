@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -592,7 +592,7 @@ bool Foam::searchableSurfaces::checkIntersection
         Info<< "Checking for intersection." << endl;
     }
 
-    //cpuTime timer;
+    // cpuTime timer;
 
     bool hasError = false;
 
@@ -667,7 +667,7 @@ bool Foam::searchableSurfaces::checkIntersection
                             << " locations."
                             << endl;
 
-                        //vtkSetWriter<scalar> setWriter;
+                        // vtkSetWriter<scalar> setWriter;
                         if (setWriter.valid())
                         {
                             scalarField dist(mag(intersections));

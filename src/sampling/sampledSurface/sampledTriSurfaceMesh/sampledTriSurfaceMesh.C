@@ -200,11 +200,8 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
     }
     else
     {
-        // Search for nearest boundaryFace
+        // Search on all non-coupled boundary faces
 
-        ////- Search on all (including coupled) boundary faces
-        //const indexedOctree<treeDataFace>& bTree = meshSearcher.boundaryTree()
-        //- Search on all non-coupled boundary faces
         const indexedOctree<treeDataFace>& bTree = nonCoupledboundaryTree();
 
         forAll(fc, triI)

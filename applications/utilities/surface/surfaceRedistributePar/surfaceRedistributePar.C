@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     IOobject io
     (
         surfFileName,         // name
-        //runTime.findInstance("triSurface", surfFileName),   // instance
+        // runTime.findInstance("triSurface", surfFileName),   // instance
         runTime.constant(),   // instance
         "triSurface",         // local
         runTime,              // registry

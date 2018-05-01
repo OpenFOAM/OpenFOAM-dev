@@ -384,7 +384,7 @@ bool Foam::pointToPointPlanarInterpolation::findTime
 
     if (lo == -1)
     {
-        //FatalErrorInFunction
+        // FatalErrorInFunction
         //    << "Cannot find starting sampling values for current time "
         //    << timeVal << nl
         //    << "Have sampling values for times "

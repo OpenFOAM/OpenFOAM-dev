@@ -70,7 +70,7 @@ patches
 
             // Optional non-default tolerance to be able to define cyclics
             // on bad meshes
-            //matchTolerance 1E-2;
+            // matchTolerance 1E-2;
         }
 
         // How to construct: either from 'patches' or 'set'

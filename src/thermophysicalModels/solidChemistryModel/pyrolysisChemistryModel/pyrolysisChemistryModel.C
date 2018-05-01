@@ -312,7 +312,7 @@ derivatives
 
     dcdt = omega(c, T, p);
 
-    //Total mass concentration
+    // Total mass concentration
     scalar cTot = 0.0;
     for (label i=0; i<this->nSolids_; i++)
     {

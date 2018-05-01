@@ -302,7 +302,7 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
                 << " at index " << i
                 << " differs from that of predecessor "
                 << currentComm
-                << endl;    //exit(FatalError);
+                << endl;    // exit(FatalError);
         }
     }
 
@@ -734,7 +734,7 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
         (
             upperTriOrder
             (
-                cellOffsets.last(), //nCells
+                cellOffsets.last(), // nCells
                 lowerAddr_,
                 upperAddr_
             )
@@ -988,7 +988,7 @@ void Foam::lduPrimitiveMesh::gather
         // Slave meshes
         for (label i = 1; i < procIDs.size(); i++)
         {
-            //Pout<< "on master :"
+            // Pout<< "on master :"
             //    << " receiving from slave " << procIDs[i] << endl;
 
             IPstream fromSlave

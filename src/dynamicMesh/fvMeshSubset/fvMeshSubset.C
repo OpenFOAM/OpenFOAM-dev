@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -669,9 +669,9 @@ void Foam::fvMeshSubset::setCellSubset
         globalPointMap[pointMap_[pointi]] = pointi;
     }
 
-    //Pout<< "Number of cells in new mesh: " << nCellsInSet << endl;
-    //Pout<< "Number of faces in new mesh: " << globalFaceMap.size() << endl;
-    //Pout<< "Number of points in new mesh: " << globalPointMap.size() << endl;
+    // Pout<< "Number of cells in new mesh: " << nCellsInSet << endl;
+    // Pout<< "Number of faces in new mesh: " << globalFaceMap.size() << endl;
+    // Pout<< "Number of points in new mesh: " << globalPointMap.size() << endl;
 
     // Make a new mesh
     pointField newPoints(globalPointMap.size());
@@ -1198,9 +1198,9 @@ void Foam::fvMeshSubset::setLargeCellSubset
         }
     }
 
-    //Pout<< "Number of cells in new mesh : " << cellMap_.size() << endl;
-    //Pout<< "Number of faces in new mesh : " << faceMap_.size() << endl;
-    //Pout<< "Number of points in new mesh: " << pointMap_.size() << endl;
+    // Pout<< "Number of cells in new mesh : " << cellMap_.size() << endl;
+    // Pout<< "Number of faces in new mesh : " << faceMap_.size() << endl;
+    // Pout<< "Number of points in new mesh: " << pointMap_.size() << endl;
 
     // Make a new mesh
     pointField newPoints(pointMap_.size());
@@ -1422,7 +1422,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
                 emptyPolyPatch::typeName
             );
 
-            //Pout<< "    oldInternalFaces : "
+            // Pout<< "    oldInternalFaces : "
             //    << boundaryPatchSizes[oldInternalPatchID] << endl;
 
             // The index for the first patch is -1 as it originates from
@@ -1453,7 +1453,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
             patchStart
         ).ptr();
 
-        //Pout<< "    " << oldPatches[oldPatchi].name() << " : "
+        // Pout<< "    " << oldPatches[oldPatchi].name() << " : "
         //    << newSize << endl;
 
         patchStart += newSize;

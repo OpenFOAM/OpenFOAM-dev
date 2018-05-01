@@ -80,7 +80,7 @@ if (ign.ignited())
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     volScalarField up(uPrimeCoef*sqrt((2.0/3.0)*turbulence->k()));
-  //volScalarField up(sqrt(mag(diag(n * n) & diag(turbulence->r()))));
+  // volScalarField up(sqrt(mag(diag(n * n) & diag(turbulence->r()))));
 
     volScalarField epsilon(pow(uPrimeCoef, 3)*turbulence->epsilon());
 
@@ -95,8 +95,8 @@ if (ign.ignited())
         )
     );
 
-  //volScalarField l = 0.337*k*sqrt(k)/epsilon;
-  //Reta *= max((l - dimensionedScalar("dl", dimLength, 1.5e-3))/l, 0.0);
+  // volScalarField l = 0.337*k*sqrt(k)/epsilon;
+  // Reta *= max((l - dimensionedScalar("dl", dimLength, 1.5e-3))/l, 0.0);
 
     // Calculate Xi flux
     // ~~~~~~~~~~~~~~~~~
@@ -226,7 +226,7 @@ if (ign.ignited())
         volScalarField R(Gstar*XiEqStar/(XiEqStar - scalar(1)));
         volScalarField G(R*(XiEq - scalar(1.001))/XiEq);
 
-        //R *= (Gstar + 2*mag(dev(symm(fvc::grad(U)))))/Gstar;
+        // R *= (Gstar + 2*mag(dev(symm(fvc::grad(U)))))/Gstar;
 
         // Solve for the flame wrinkling
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

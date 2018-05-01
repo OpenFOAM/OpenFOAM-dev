@@ -261,7 +261,7 @@ public:
             //  bounding boxes. The bounds are hints to the surface as for
             //  the range of queries it can expect. faceMap/pointMap can be
             //  set if the surface has done any redistribution.
-            //virtual void distribute
+            // virtual void distribute
             //(
             //    const List<treeBoundBox>& bbs,
             //    const bool keepNonLocal,

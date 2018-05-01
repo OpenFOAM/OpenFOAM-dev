@@ -23,7 +23,7 @@ int main()
     Info<< t1.x() << t1.y() << t1.z() << endl;
 
     tensor t6(1,0,-4,0,5,4,-4,4,3);
-    //tensor t6(1,2,0,2,5,0,0,0,0);
+    // tensor t6(1,2,0,2,5,0,0,0,0);
 
     Info<< "tensor " << t6 << endl;
     vector e = eigenValues(t6);

@@ -67,7 +67,7 @@ void Foam::UPstream::addValidParOptions(HashTable<string>& validParOptions)
 
 bool Foam::UPstream::init(int& argc, char**& argv, const bool needsThread)
 {
-    //MPI_Init(&argc, &argv);
+    // MPI_Init(&argc, &argv);
     int provided_thread_support;
     MPI_Init_thread
     (
@@ -140,12 +140,12 @@ bool Foam::UPstream::init(int& argc, char**& argv, const bool needsThread)
     }
     #endif
 
-    //int processorNameLen;
-    //char processorName[MPI_MAX_PROCESSOR_NAME];
+    // int processorNameLen;
+    // char processorName[MPI_MAX_PROCESSOR_NAME];
     //
-    //MPI_Get_processor_name(processorName, &processorNameLen);
-    //processorName[processorNameLen] = '\0';
-    //Pout<< "Processor name:" << processorName << endl;
+    // MPI_Get_processor_name(processorName, &processorNameLen);
+    // processorName[processorNameLen] = '\0';
+    // Pout<< "Processor name:" << processorName << endl;
 
     return true;
 }
@@ -306,7 +306,7 @@ void Foam::reduce
         1,
         MPI_SCALAR,
         MPI_SUM,
-        0,              //root
+        0,              // root
         PstreamGlobals::MPICommunicators_[communicator],
         &request
     );
@@ -619,7 +619,7 @@ void Foam::UPstream::allocatePstreamCommunicator
         int numProcs;
         MPI_Comm_size(PstreamGlobals::MPICommunicators_[index], &numProcs);
 
-        //procIDs_[index] = identity(numProcs);
+        // procIDs_[index] = identity(numProcs);
         procIDs_[index].setSize(numProcs);
         forAll(procIDs_[index], i)
         {
@@ -837,7 +837,7 @@ int Foam::UPstream::allocateTag(const char* s)
 
     if (debug)
     {
-        //if (UPstream::lateBlocking > 0)
+        // if (UPstream::lateBlocking > 0)
         //{
         //    string& poutp = Pout.prefix();
         //    poutp[poutp.size()-2*(UPstream::lateBlocking+2)+tag] = 'X';
@@ -866,7 +866,7 @@ int Foam::UPstream::allocateTag(const word& s)
 
     if (debug)
     {
-        //if (UPstream::lateBlocking > 0)
+        // if (UPstream::lateBlocking > 0)
         //{
         //    string& poutp = Pout.prefix();
         //    poutp[poutp.size()-2*(UPstream::lateBlocking+2)+tag] = 'X';
@@ -885,7 +885,7 @@ void Foam::UPstream::freeTag(const char* s, const int tag)
 {
     if (debug)
     {
-        //if (UPstream::lateBlocking > 0)
+        // if (UPstream::lateBlocking > 0)
         //{
         //    string& poutp = Pout.prefix();
         //    poutp[poutp.size()-2*(UPstream::lateBlocking+2)+tag] = ' ';
@@ -901,7 +901,7 @@ void Foam::UPstream::freeTag(const word& s, const int tag)
 {
     if (debug)
     {
-        //if (UPstream::lateBlocking > 0)
+        // if (UPstream::lateBlocking > 0)
         //{
         //    string& poutp = Pout.prefix();
         //    poutp[poutp.size()-2*(UPstream::lateBlocking+2)+tag] = ' ';

@@ -258,7 +258,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
 
     // Zone info comes from any side patch face. Otherwise -1 since we
     // don't know what to put it in - inherit from the extruded faces?
-    label zoneI = -1;   //mesh_.faceZones().whichZone(meshFacei);
+    label zoneI = -1;   // mesh_.faceZones().whichZone(meshFacei);
     bool flip = false;
 
     label addedFacei = -1;
@@ -324,7 +324,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
         }
 
 
-        //Pout<< "Added boundary face:" << newFace
+        // Pout<< "Added boundary face:" << newFace
         //    << " own:" << addedCells[ownFacei][layerOwn]
         //    << " patch:" << newPatchID
         //    << endl;
@@ -412,7 +412,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             )
         );
 
-       //Pout<< "Added internal face:" << newFace
+       // Pout<< "Added internal face:" << newFace
         //    << " own:" << addedCells[ownFacei][layerOwn]
         //    << " nei:" << addedCells[nbrFacei][layerNbr]
         //    << endl;
@@ -1173,7 +1173,7 @@ void Foam::addPatchCellLayer::setRefinement
                         -1,             // master edge
                         -1,             // master face
                         (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1),
-                                        //master
+                                        // master
                         ownZoneI        // zone for cell
                     )
                 );
@@ -1299,8 +1299,8 @@ void Foam::addPatchCellLayer::setRefinement
                         addedCells[patchFacei][0],      // neighbour
                         false,                          // face flip
                         -1,                             // patch for face
-                        true, //false,                  // remove from zone
-                        -1, //zoneI,                    // zone for face
+                        true, // false,                  // remove from zone
+                        -1, // zoneI,                    // zone for face
                         false                           // face flip in zone
                     )
                 );
@@ -1436,7 +1436,7 @@ void Foam::addPatchCellLayer::setRefinement
                 )
             );
 
-            //Pout<< "Found unextruded edges in edges:" << fEdges
+            // Pout<< "Found unextruded edges in edges:" << fEdges
             //    << " start:" << indexPair[0]
             //    << " end:" << indexPair[1]
             //    << endl;

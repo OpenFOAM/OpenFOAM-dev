@@ -191,7 +191,7 @@ class hexRef8
         ) const;
 
         ////- Print levels of list of points.
-        //void printLevels(Ostream&, const labelList&) const;
+        // void printLevels(Ostream&, const labelList&) const;
 
         //- debug:check orientation of added internal face
         static void checkInternalOrientation

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,11 +59,11 @@ bool Foam::primitiveMesh::checkPointNearness
             if (magSqr(points[pti] - points[prevPtI]) < reportDistSqr)
             {
                 //// Check if unconnected.
-                //const labelList& pEdges = pointEdges()[pti];
+                // const labelList& pEdges = pointEdges()[pti];
                 //
-                //bool connected = false;
+                // bool connected = false;
                 //
-                //forAll(pEdges, pEdgei)
+                // forAll(pEdges, pEdgei)
                 //{
                 //    if (edges()[pEdges[pEdgei]].otherVertex(prevPtI) != -1)
                 //    {
@@ -72,7 +72,7 @@ bool Foam::primitiveMesh::checkPointNearness
                 //    }
                 //}
                 //
-                //if (!connected)
+                // if (!connected)
                 {
                     nClose++;
 

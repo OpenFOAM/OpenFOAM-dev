@@ -27,7 +27,7 @@ boundaryField
     inlet
     {
         type            zeroGradient;
-        //type            mixed;
+        // type            mixed;
         refValue        uniform 110000;
         refGradient     uniform 0;
         valueFraction   uniform 0.3;
@@ -37,16 +37,16 @@ boundaryField
         type            fixedValue;
         value           uniform 110000;
 
-        //type            mixed;
-        //refValue        uniform 110000;
-        //refGradient     uniform 0;
-        //valueFraction   uniform 1;
-        //type            transonicOutletPressure;
-        //U               U;
-        //phi             phi;
-        //gamma           1.4;
-        //psi             psi;
-        //pInf            uniform 110000;
+        // type            mixed;
+        // refValue        uniform 110000;
+        // refGradient     uniform 0;
+        // valueFraction   uniform 1;
+        // type            transonicOutletPressure;
+        // U               U;
+        // phi             phi;
+        // gamma           1.4;
+        // psi             psi;
+        // pInf            uniform 110000;
     }
 }
 

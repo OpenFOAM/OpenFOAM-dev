@@ -272,7 +272,7 @@ Foam::tmp<Foam::triSurfacePointScalarField> Foam::automatic::load()
         }
     }
 
-    //smoothField(surfaceCellSize);
+    // smoothField(surfaceCellSize);
 
     pointCellSize.write();
 

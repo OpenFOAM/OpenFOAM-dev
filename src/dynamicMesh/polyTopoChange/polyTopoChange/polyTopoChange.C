@@ -724,7 +724,7 @@ void Foam::polyTopoChange::getFaceOrder
         label nFaces = cellFaceOffsets[celli+1] - startOfCell;
 
         // Neighbouring cells
-        //SortableList<label> nbr(nFaces);
+        // SortableList<label> nbr(nFaces);
         nbr.setSize(nFaces);
 
         for (label i = 0; i < nFaces; i++)
@@ -764,11 +764,11 @@ void Foam::polyTopoChange::getFaceOrder
             }
         }
 
-        //nbr.sort();
+        // nbr.sort();
         order.setSize(nFaces);
         sortedOrder(nbr, order);
 
-        //forAll(nbr, i)
+        // forAll(nbr, i)
         //{
         //    if (nbr[i] != -1)
         //    {
@@ -814,7 +814,7 @@ void Foam::polyTopoChange::getFaceOrder
         }
     }
 
-    //if (debug)
+    // if (debug)
     //{
     //    Pout<< "patchSizes:" << patchSizes << nl
     //        << "patchStarts:" << patchStarts << endl;
@@ -1082,7 +1082,7 @@ void Foam::polyTopoChange::compact
         {
             face& f = faces_[facei];
 
-            //labelList oldF(f);
+            // labelList oldF(f);
             renumberCompact(localPointMap, f);
 
             if (!faceRemoved(facei) && f.size() < 3)
@@ -2830,7 +2830,7 @@ Foam::label Foam::polyTopoChange::addFace
     else
     {
         // Allow inflate-from-nothing?
-        //FatalErrorInFunction
+        // FatalErrorInFunction
         //    << "Need to specify a master point, edge or face"
         //    << "face:" << f << " own:" << own << " nei:" << nei
         //    << abort(FatalError);

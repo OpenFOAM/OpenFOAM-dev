@@ -1185,7 +1185,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             nOrphanedMasters++;
 
             //// Recover original orientation
-            //ref.setAction
+            // ref.setAction
             //(
             //    polyModifyFace
             //    (
@@ -1201,7 +1201,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             //    )
             //);
 
-            //Pout<< "**MJ:deleting master face " << masterPatchAddr[facei]
+            // Pout<< "**MJ:deleting master face " << masterPatchAddr[facei]
             //    << " old verts:" << masterPatch[facei] << endl;
             ref.setAction(polyRemoveFace(masterPatchAddr[facei]));
         }
@@ -1216,7 +1216,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             nOrphanedSlaves++;
 
             //// Recover original orientation
-            //ref.setAction
+            // ref.setAction
             //(
             //    polyModifyFace
             //    (
@@ -1232,7 +1232,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             //    )
             //);
 
-            //Pout<< "**MJ:deleting slave face " << slavePatchAddr[facei]
+            // Pout<< "**MJ:deleting slave face " << slavePatchAddr[facei]
             //    << " old verts:" << slavePatch[facei] << endl;
             ref.setAction(polyRemoveFace(slavePatchAddr[facei]));
         }
@@ -1872,7 +1872,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             //        false                                // in a cell
             //    )
             // );
-            //Pout<< "MJ retire slave point " << slaveMeshPoints[pointi]
+            // Pout<< "MJ retire slave point " << slaveMeshPoints[pointi]
             //    << " coord " << points[slaveMeshPoints[pointi]]
             //    << endl;
             ref.setAction

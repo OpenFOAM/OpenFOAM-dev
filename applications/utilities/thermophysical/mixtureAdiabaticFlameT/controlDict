@@ -21,7 +21,7 @@ T0  300;
 reactants
 3
 (
-    //reactant  volume fraction
+    // reactant  volume fraction
     H2          0.29577
     O2          0.14788
     N2          0.55635

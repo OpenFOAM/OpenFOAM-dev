@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,7 +211,7 @@ public:
             ////  - label: relevant index in surface
             ////  - label: region in surface
             ////  - point: actual nearest point found
-            //virtual pointIndexHit findNearest
+            // virtual pointIndexHit findNearest
             //(
             //    const point& sample,
             //    const scalar nearestDistSqr
@@ -222,7 +222,7 @@ public:
             ////  - label: relevant index in surface
             ////  - label: region in surface
             ////  - point: actual nearest point found
-            //virtual pointIndexHit findNearestOnEdge
+            // virtual pointIndexHit findNearestOnEdge
             //(
             //    const point& sample,
             //    const scalar nearestDistSqr
@@ -236,7 +236,7 @@ public:
             ////  sets:
             ////  - tightest  : bounding box
             ////  - linePoint : corresponding nearest point on line
-            //virtual pointIndexHit findNearest
+            // virtual pointIndexHit findNearest
             //(
             //    const linePointRef& ln,
             //    treeBoundBox& tightest,
@@ -244,14 +244,14 @@ public:
             //) const = 0;
             //
             ////- Find nearest intersection of line between start and end.
-            //virtual pointIndexHit findLine
+            // virtual pointIndexHit findLine
             //(
             //    const point& start,
             //    const point& end
             //) const = 0;
             //
             ////- Find any intersection of line between start and end.
-            //virtual pointIndexHit findLineAny
+            // virtual pointIndexHit findLineAny
             //(
             //    const point& start,
             //    const point& end

@@ -62,7 +62,7 @@ baffles
         surface     triSurfaceMesh;
         name        baffle1D.stl;
         //- Optional flip
-        //flip        false;
+        // flip        false;
 
 
         // Generate patchGroup baffle1 with two patches:

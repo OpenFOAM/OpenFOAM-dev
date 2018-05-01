@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -588,7 +588,7 @@ Foam::label Foam::checkTopology
             points.write();
         }
 
-        //Info.setf(ios_base::right);
+        // Info.setf(ios_base::right);
     }
 
     // Force creation of all addressing if requested.

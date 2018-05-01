@@ -529,7 +529,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
         {
             nGrowth_++;
             growthOrAddFlag = 0;
-            //the structure of the tree is not modified, return false
+            // the structure of the tree is not modified, return false
             return growthOrAddFlag;
         }
     }

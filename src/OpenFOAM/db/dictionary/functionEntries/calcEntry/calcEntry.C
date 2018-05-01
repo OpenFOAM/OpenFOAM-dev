@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ bool Foam::functionEntries::calcEntry::execute
     // Read string
     string s(is);
     // Make sure we stop this entry
-    //is.putBack(token(token::END_STATEMENT, is.lineNumber()));
+    // is.putBack(token(token::END_STATEMENT, is.lineNumber()));
 
     // Construct codeDict for codeStream
     // must reference parent for stringOps::expand to work nicely.
@@ -122,7 +122,7 @@ bool Foam::functionEntries::calcEntry::execute
     // Read string
     string s(is);
     // Make sure we stop this entry
-    //is.putBack(token(token::END_STATEMENT, is.lineNumber()));
+    // is.putBack(token(token::END_STATEMENT, is.lineNumber()));
 
     // Construct codeDict for codeStream
     // must reference parent for stringOps::expand to work nicely.

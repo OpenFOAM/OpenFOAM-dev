@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,14 +161,32 @@ void Foam::fv::solidificationMeltingSource::update(const volScalarField& Cp)
 
     forAll(cells_, i)
     {
-        label celli = cells_[i];
+        const label celli = cells_[i];
 
-        scalar Tc = T[celli];
-        scalar Cpc = Cp[celli];
-        scalar alpha1New = alpha1_[celli] + relax_*Cpc*(Tc - Tmelt_)/L_;
+        const scalar Tc = T[celli];
+        const scalar Cpc = Cp[celli];
+        const scalar alpha1New =
+            alpha1_[celli]
+          + relax_*Cpc
+           *(
+                Tc
+              - max
+                (
+                    Tsol_,
+                    Tsol_
+                  + (Tliq_ - Tsol_)*(alpha1_[celli] - alpha1e_)/(1 - alpha1e_)
+                )
+            )/L_;
 
         alpha1_[celli] = max(0, min(alpha1New, 1));
-        deltaT_[i] = Tc - Tmelt_;
+        deltaT_[i] =
+            Tc
+          - max
+            (
+                Tsol_,
+                Tsol_
+              + (Tliq_ - Tsol_)*(alpha1_[celli] - alpha1e_)/(1 - alpha1e_)
+            );
     }
 
     alpha1_.correctBoundaryConditions();
@@ -188,7 +206,9 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
 )
 :
     cellSetOption(sourceName, modelType, dict, mesh),
-    Tmelt_(readScalar(coeffs_.lookup("Tmelt"))),
+    Tsol_(readScalar(coeffs_.lookup("Tsol"))),
+    Tliq_(coeffs_.lookupOrDefault("Tliq", Tsol_)),
+    alpha1e_(coeffs_.lookupOrDefault("alpha1e", 0)),
     L_(readScalar(coeffs_.lookup("L"))),
     relax_(coeffs_.lookupOrDefault("relax", 0.9)),
     mode_(thermoModeTypeNames_.read(coeffs_.lookup("thermoMode"))),
@@ -211,7 +231,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("alpha1", dimless, 0.0),
+        dimensionedScalar("alpha1", dimless, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
     curTimeIndex_(-1),
@@ -293,13 +313,13 @@ void Foam::fv::solidificationMeltingSource::addSup
 
     forAll(cells_, i)
     {
-        label celli = cells_[i];
+        const label celli = cells_[i];
 
-        scalar Vc = V[celli];
-        scalar alpha1c = alpha1_[celli];
+        const scalar Vc = V[celli];
+        const scalar alpha1c = alpha1_[celli];
 
-        scalar S = -Cu_*sqr(1.0 - alpha1c)/(pow3(alpha1c) + q_);
-        vector Sb = rhoRef_*g*beta_*deltaT_[i];
+        const scalar S = -Cu_*sqr(1.0 - alpha1c)/(pow3(alpha1c) + q_);
+        const vector Sb = rhoRef_*g*beta_*deltaT_[i];
 
         Sp[celli] += Vc*S;
         Su[celli] += Vc*Sb;

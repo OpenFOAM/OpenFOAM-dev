@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     Map<bool>::const_iterator bananaIter = banana.find(5);
 
     // This works but now I can change the value.
-    //Map<bool>::iterator bananaIter = banana.find(5);
+    // Map<bool>::iterator bananaIter = banana.find(5);
 
     if (bananaIter == banana.end())
     {

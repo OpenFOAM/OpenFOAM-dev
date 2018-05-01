@@ -108,7 +108,7 @@ void Foam::csvTableReader<Type>::operator()
     List<Tuple2<scalar, Type>>& data
 )
 {
-    //IFstream in(fName);
+    // IFstream in(fName);
     autoPtr<ISstream> inPtr(fileHandler().NewIFstream(fName));
     ISstream& in = inPtr();
 

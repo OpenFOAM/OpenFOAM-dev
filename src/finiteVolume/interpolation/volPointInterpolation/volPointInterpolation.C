@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -275,7 +275,7 @@ void Foam::volPointInterpolation::makeWeights()
     makeBoundaryWeights(sumWeights);
 
 
-    //forAll(boundary.meshPoints(), i)
+    // forAll(boundary.meshPoints(), i)
     //{
     //    label pointi = boundary.meshPoints()[i];
     //

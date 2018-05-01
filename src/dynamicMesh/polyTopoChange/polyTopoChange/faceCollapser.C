@@ -146,7 +146,7 @@ void Foam::faceCollapser::filterFace
     }
     face newF(newFace.shrink());
 
-    //Pout<< "Modifying face:" << facei << " from " << f << " to " << newFace
+    // Pout<< "Modifying face:" << facei << " from " << f << " to " << newFace
     //    << endl;
 
     if (newF != f)

@@ -683,7 +683,7 @@ int main(int argc, char *argv[])
 
 
     // Switch on additional debug info
-    const bool verbose = false; //true;
+    const bool verbose = false; // true;
 
     // Unit scale factors
     scalar lengthScale = 1;

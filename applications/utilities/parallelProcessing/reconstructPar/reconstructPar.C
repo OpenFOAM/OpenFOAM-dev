@@ -743,7 +743,7 @@ int main(int argc, char *argv[])
                     IOobjectList objects
                     (
                         procMesh,
-                        databases[0].timeName(),    //procMesh.facesInstance()
+                        databases[0].timeName(),    // procMesh.facesInstance()
                         polyMesh::meshSubDir/"sets"
                     );
 

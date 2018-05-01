@@ -402,9 +402,9 @@ Foam::regionSplit::regionSplit(const polyMesh& mesh, const bool doGlobalRegions)
 {
     globalNumberingPtr_ = calcRegionSplit
     (
-        doGlobalRegions,    //do global regions
-        boolList(0, false), //blockedFaces
-        List<labelPair>(0), //explicitConnections,
+        doGlobalRegions,    // do global regions
+        boolList(0, false), // blockedFaces
+        List<labelPair>(0), // explicitConnections,
         *this
     );
 }
@@ -423,8 +423,8 @@ Foam::regionSplit::regionSplit
     globalNumberingPtr_ = calcRegionSplit
     (
         doGlobalRegions,
-        blockedFace,        //blockedFaces
-        List<labelPair>(0), //explicitConnections,
+        blockedFace,        // blockedFaces
+        List<labelPair>(0), // explicitConnections,
         *this
     );
 }
@@ -444,8 +444,8 @@ Foam::regionSplit::regionSplit
     globalNumberingPtr_ = calcRegionSplit
     (
         doGlobalRegions,
-        blockedFace,            //blockedFaces
-        explicitConnections,    //explicitConnections,
+        blockedFace,            // blockedFaces
+        explicitConnections,    // explicitConnections,
         *this
     );
 }

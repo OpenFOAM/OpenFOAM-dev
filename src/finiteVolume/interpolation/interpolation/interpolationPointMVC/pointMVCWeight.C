@@ -102,7 +102,7 @@ void Foam::pointMVCWeight::calcWeights
         label facei = cFaces[iter];
         const face& f = mesh.faces()[facei];
 
-        //Pout<< "face:" << facei << " at:"
+        // Pout<< "face:" << facei << " at:"
         //    << pointField(mesh.points(), f)
         //    << endl;
 
@@ -116,7 +116,7 @@ void Foam::pointMVCWeight::calcWeights
         forAll(f, j)
         {
             label jPlus1 = f.fcIndex(j);
-            //Pout<< "    uj:" << u[j] << " ujPlus1:" << u[jPlus1] << endl;
+            // Pout<< "    uj:" << u[j] << " ujPlus1:" << u[jPlus1] << endl;
 
             vector temp = u[j] ^ u[jPlus1];
 
@@ -129,13 +129,13 @@ void Foam::pointMVCWeight::calcWeights
 
             temp /= magTemp;
 
-            //Pout<< "    uj:" << u[j] << " ujPlus1:" << u[jPlus1]
+            // Pout<< "    uj:" << u[j] << " ujPlus1:" << u[jPlus1]
             //    << " temp:" << temp << endl;
 
             scalar l = min(mag(u[j] - u[jPlus1]), 2.0);
             scalar angle = 2.0*Foam::asin(l/2.0);
 
-            //Pout<< "    j:" << j << " l:" << l << " angle:" << angle << endl;
+            // Pout<< "    j:" << j << " l:" << l << " angle:" << angle << endl;
 
             v += 0.5*angle*temp;
         }
@@ -148,13 +148,13 @@ void Foam::pointMVCWeight::calcWeights
             v = -v;
         }
 
-        //Pout<< "    v:" << v << endl;
+        // Pout<< "    v:" << v << endl;
 
         // angles between edges
         forAll(f, j)
         {
             label jPlus1 = f.fcIndex(j);
-            //Pout<< "    uj:" << u[j] << " ujPlus1:" << u[jPlus1] << endl;
+            // Pout<< "    uj:" << u[j] << " ujPlus1:" << u[jPlus1] << endl;
 
             vector n0 = u[j]^v;
             n0 /= mag(n0);
@@ -162,7 +162,7 @@ void Foam::pointMVCWeight::calcWeights
             n1 /= mag(n1);
 
             scalar l = min(mag(n0 - n1), 2.0);
-            //Pout<< "    l:" << l << endl;
+            // Pout<< "    l:" << l << endl;
             alpha(j) = 2.0*Foam::asin(l/2.0);
 
             vector temp = n0^n1;
@@ -172,7 +172,7 @@ void Foam::pointMVCWeight::calcWeights
             }
 
             l = min(mag(u[j] - v), 2.0);
-            //Pout<< "    l:" << l << endl;
+            // Pout<< "    l:" << l << endl;
             theta(j) = 2.0*Foam::asin(l/2.0);
         }
 

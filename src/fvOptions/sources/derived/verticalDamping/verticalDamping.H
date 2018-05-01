@@ -80,8 +80,8 @@ Usage
         direction       (1 0 0);
 
         // Or, define multiple lines
-        //origins         ((1200 0 0) (1200 -300 0) (1200 300 0));
-        //directions      ((1 0 0) (0 -1 0) (0 1 0));
+        // origins         ((1200 0 0) (1200 -300 0) (1200 300 0));
+        // directions      ((1 0 0) (0 -1 0) (0 1 0));
 
         ramp
         {

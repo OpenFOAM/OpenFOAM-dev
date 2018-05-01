@@ -50,8 +50,8 @@ void Foam::snappyLayerDriver::averageNeighbours
         if (isMasterEdge.get(meshEdges[edgeI]) == 1)
         {
             const edge& e = edges[edgeI];
-            //scalar eWeight = edgeWeights[edgeI];
-            //scalar eWeight =  1.0;
+            // scalar eWeight = edgeWeights[edgeI];
+            // scalar eWeight =  1.0;
             scalar eMag = max
             (
                 vSmall,

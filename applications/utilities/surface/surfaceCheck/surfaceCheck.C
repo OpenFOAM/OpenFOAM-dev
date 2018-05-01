@@ -321,7 +321,7 @@ int main(int argc, char *argv[])
 
             if (f[0] == f[1] || f[0] == f[2] || f[1] == f[2])
             {
-                //WarningIn(args.executable())
+                // WarningIn(args.executable())
                 //    << "Illegal triangle " << facei << " vertices " << f
                 //    << " coords " << f.points(surf.points()) << endl;
             }
@@ -754,13 +754,13 @@ int main(int argc, char *argv[])
                 << endl;
         }
 
-        //surfaceIntersection inter(querySurf);
+        // surfaceIntersection inter(querySurf);
         //
-        //if (inter.cutEdges().empty() && inter.cutPoints().empty())
+        // if (inter.cutEdges().empty() && inter.cutPoints().empty())
         //{
         //    Info<< "Surface is not self-intersecting" << endl;
         //}
-        //else
+        // else
         //{
         //    Info<< "Surface is self-intersecting" << endl;
         //    Info<< "Writing edges of intersection to selfInter.obj" << endl;

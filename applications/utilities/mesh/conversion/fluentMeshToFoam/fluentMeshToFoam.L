@@ -1151,7 +1151,7 @@ int main(int argc, char *argv[])
     }
 
 
-    //make patchless mesh before analysing boundaries
+    // make patchless mesh before analysing boundaries
 
     faceListList patches(0);
     wordList patchNames(0);
@@ -1191,9 +1191,9 @@ int main(int argc, char *argv[])
 
 
     Info<< endl << "Building boundary and internal patches." << endl;
-    //adding patches after mesh construction allows topological checks
-    //on whether a patch is internal or external, something fluent
-    //doesn't seem to mind
+    // adding patches after mesh construction allows topological checks
+    // on whether a patch is internal or external, something fluent
+    // doesn't seem to mind
 
     // Make boundary patches
 
@@ -1223,7 +1223,7 @@ int main(int argc, char *argv[])
 
     label nPatches = 0;
 
-    //colate information for all patches (internal and external)
+    // colate information for all patches (internal and external)
     for
     (
         ;
@@ -1271,7 +1271,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        //inlets and outlets
+        // inlets and outlets
         if
         (
             curPatchType == "pressure"
@@ -1293,7 +1293,7 @@ int main(int argc, char *argv[])
 
             nPatches++;
         }
-        else if (curPatchType == "wall" ) //wall boundaries
+        else if (curPatchType == "wall" ) // wall boundaries
         {
             patches[nPatches] = patchFaces;
             patchTypes[nPatches] = wallPolyPatch::typeName;
@@ -1305,7 +1305,7 @@ int main(int argc, char *argv[])
         (
             curPatchType == "symmetry"
          || curPatchType == "axis"
-        ) //symmetry planes
+        ) // symmetry planes
         {
             patches[nPatches] = patchFaces;
             patchTypes[nPatches] = symmetryPolyPatch::typeName;
@@ -1322,7 +1322,7 @@ int main(int argc, char *argv[])
          || curPatchType == "fan"
          || curPatchType == "radiator"
          || curPatchType == "porous-jump"
-        ) //interior boundaries - will not be added as patches
+        ) // interior boundaries - will not be added as patches
         {
             patches[nPatches] = patchFaces;
             patchTypes[nPatches] = "internal";
@@ -1333,7 +1333,7 @@ int main(int argc, char *argv[])
         else if
         (
             curPatchType == ""
-        ) //unnamed face regions default to interior patches
+        ) // unnamed face regions default to interior patches
         {
             Info<< "Patch " << faceGroupZoneIDIter()
                 << ": Faces are defined but "
@@ -1347,7 +1347,7 @@ int main(int argc, char *argv[])
 
             nPatches++;
         }
-        else //unknown face regions are not handled
+        else // unknown face regions are not handled
         {
             FatalErrorInFunction
                 << "fluent patch type " << curPatchType << " not recognised."
@@ -1355,7 +1355,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    //add front and back boundaries for 2D meshes
+    // add front and back boundaries for 2D meshes
     if (dimensionOfGrid == 2)
     {
         Info<< "Creating patch for front and back planes" << endl << endl;
@@ -1367,16 +1367,16 @@ int main(int argc, char *argv[])
         nPatches++;
     }
 
-    //Now have all patch information,
-    //check whether each patch is internal or external
-    //and add boundaries to mesh
-    //also write face sets of all patches
+    // Now have all patch information,
+    // check whether each patch is internal or external
+    // and add boundaries to mesh
+    // also write face sets of all patches
     patches.setSize(nPatches);
     patchTypes.setSize(nPatches);
     patchNames.setSize(nPatches);
 
 
-    //old polyBoundary
+    // old polyBoundary
     const polyBoundaryMesh& oPatches = pShapeMesh.boundaryMesh();
     // new patches.
     DynamicList<polyPatch*> newPatches(nPatches);
@@ -1403,12 +1403,12 @@ int main(int argc, char *argv[])
         }
 
 
-        //check if patch is internal
-        //also check internal/external-ness of first patch face
-        //internal faces cannot become foam boundaries
-        //if a face is defined as internal but is actually external
-        //it will be put in a default wall boundary
-        //internal boundaries are simply ignored
+        // check if patch is internal
+        // also check internal/external-ness of first patch face
+        // internal faces cannot become foam boundaries
+        // if a face is defined as internal but is actually external
+        // it will be put in a default wall boundary
+        // internal boundaries are simply ignored
 
         if
         (
@@ -1416,10 +1416,10 @@ int main(int argc, char *argv[])
          && !pShapeMesh.isInternalFace(meshFaces[0])
         )
         {
-            //first face is external and has valid non-internal type
+            // first face is external and has valid non-internal type
 
-            //check all faces for externalness just to be sure
-            //and mark patch number to global list
+            // check all faces for externalness just to be sure
+            // and mark patch number to global list
             forAll(meshFaces, i)
             {
                 label facei = meshFaces[i];
@@ -1446,7 +1446,7 @@ int main(int argc, char *argv[])
                 facePatchID[facei - pShapeMesh.nInternalFaces()] = nBoundaries;
             }
 
-            //add to boundary patch
+            // add to boundary patch
 
             Info<< "Adding new patch " << patchNames[patchi]
                 << " of type " << patchTypes[patchi]

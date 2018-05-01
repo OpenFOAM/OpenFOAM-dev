@@ -931,7 +931,7 @@ void Foam::combineFaces::setUnrefinement
                 << abort(FatalError);
         }
 
-        //Pout<< "Restoring new master face " << masterFacei
+        // Pout<< "Restoring new master face " << masterFacei
         //    << " to vertices " << faces[0] << endl;
 
         // Modify the master face.
@@ -955,7 +955,7 @@ void Foam::combineFaces::setUnrefinement
         // Add the previously removed faces
         for (label i = 1; i < faces.size(); i++)
         {
-            //Pout<< "Restoring removed face with vertices " << faces[i]
+            // Pout<< "Restoring removed face with vertices " << faces[i]
             //    << endl;
 
             label facei = meshMod.setAction

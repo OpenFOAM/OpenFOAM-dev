@@ -58,7 +58,7 @@ functions
         writeControl    writeTime;
         // writeInterval 10;
 
-        setFormat       vtk; //gnuplot;//xmgr;//raw;//jplot;//csv;//ensight;
+        setFormat       vtk; // gnuplot;//xmgr;//raw;//jplot;//csv;//ensight;
 
         // Track forward (+U) or backward (-U) or both
         direction       forward;
@@ -80,7 +80,7 @@ functions
         {
             type        uniform;
 
-            axis        x;  //distance;
+            axis        x;  // distance;
             start       (-0.0205 0.001  0.00001);
             end         (-0.0205 0.0251 0.00001);
             nPoints     10;

@@ -1018,11 +1018,11 @@ Foam::faceList Foam::intersectedSurface::splitFace
             break;
         }
 
-        //Pout<< "splitFace: starting walk from edge:" << startEdgeI
+        // Pout<< "splitFace: starting walk from edge:" << startEdgeI
         //    << ' ' << edges[startEdgeI] << " vertex:" << startVertI << endl;
 
         //// Print current visited state.
-        //printVisit(eSurf.edges(), fEdges, visited);
+        // printVisit(eSurf.edges(), fEdges, visited);
 
         //{
         //    Pout<< "Writing face:" << facei << " to face.obj" << endl;

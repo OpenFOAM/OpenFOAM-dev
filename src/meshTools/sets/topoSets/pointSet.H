@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ public:
         virtual void updateMesh(const mapPolyMesh& morphMap);
 
         //- Update any stored data for new labels
-        //virtual void updateMesh(const polyTopoChange& meshMod);
+        // virtual void updateMesh(const polyTopoChange& meshMod);
 
         //- Write maxLen items with label and coordinates.
         virtual void writeDebug

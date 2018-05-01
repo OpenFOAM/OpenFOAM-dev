@@ -52,7 +52,7 @@ boundary
         type wall;
         faces
         (
-            //side walls
+            // side walls
             (0 7 15 8)
             (1 0 8 9)
             (13 14 6 5)
@@ -67,7 +67,7 @@ boundary
         type wall;
         faces
         (
-            //front and back walls
+            // front and back walls
             (4 5 0 1)
             (5 6 7 0)
             (15 14 13 8)

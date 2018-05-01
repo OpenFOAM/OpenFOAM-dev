@@ -461,7 +461,7 @@ void syncPoints
 
     //- Note: hasTransformation is only used for warning messages so
     //  reduction not strictly necessary.
-    //reduce(hasTransformation, orOp<bool>());
+    // reduce(hasTransformation, orOp<bool>());
 
     // Synchronize multiple shared points.
     const globalMeshData& pd = mesh.globalData();

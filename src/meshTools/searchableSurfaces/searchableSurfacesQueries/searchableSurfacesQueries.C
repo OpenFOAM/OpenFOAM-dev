@@ -71,7 +71,7 @@ void Foam::searchableSurfacesQueries::mergeHits
         if (index >= 0)
         {
             // Same. Do not count.
-            //Pout<< "point:" << surfHits[i].hitPoint()
+            // Pout<< "point:" << surfHits[i].hitPoint()
             //    << " considered same as:" << allInfo[index].hitPoint()
             //    << " within tol:" << mergeDist
             //    << endl;
@@ -83,7 +83,7 @@ void Foam::searchableSurfacesQueries::mergeHits
 
             if (next < allDistSqr.size())
             {
-                //Pout<< "point:" << surfHits[i].hitPoint()
+                // Pout<< "point:" << surfHits[i].hitPoint()
                 //    << " considered same as:" << allInfo[next].hitPoint()
                 //    << " within tol:" << mergeDist
                 //    << endl;

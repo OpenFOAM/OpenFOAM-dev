@@ -17,7 +17,7 @@ streamLines
     writeControl    writeTime;
     // writeInterval 10;
 
-    setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot; //csv; //ensight;
+    setFormat       vtk; // gnuplot; // xmgr; //raw; //jplot; //csv; //ensight;
 
     // Track forward (+U) or backward (-U) or both
     direction       forward;
@@ -32,7 +32,7 @@ streamLines
     //  of subcycling steps per cell (nSubCycle)
 
         // Size of single track segment [m]
-        //trackLength 1e-3;
+        // trackLength 1e-3;
 
         // Number of steps per cell (estimate). Set to 1 to disable subcycling.
         nSubCycle 5;
@@ -45,7 +45,7 @@ streamLines
     seedSampleSet
     {
         type        uniform;
-        axis        x;  //distance;
+        axis        x;  // distance;
 
         // Note: tracks slightly offset so as not to be on a face
         start       (-1.001 -0.05 0.0011);

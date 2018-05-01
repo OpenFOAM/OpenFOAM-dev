@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,9 @@ bool Foam::fv::solidificationMeltingSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
-        coeffs_.lookup("Tmelt") >> Tmelt_;
+        coeffs_.lookup("Tsol") >> Tsol_;
+        coeffs_.readIfPresent("Tliq", Tliq_);
+        coeffs_.readIfPresent("alpha1e", alpha1e_);
         coeffs_.lookup("L") >> L_;
 
         coeffs_.readIfPresent("relax", relax_);

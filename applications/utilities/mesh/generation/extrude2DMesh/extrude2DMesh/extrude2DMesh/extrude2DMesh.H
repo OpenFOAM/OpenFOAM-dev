@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class extrude2DMesh
 
         const dictionary dict_;
 
-        //const dictionary patchDict_;
+        // const dictionary patchDict_;
 
         const extrudeModel& model_;
 
@@ -85,7 +85,7 @@ class extrude2DMesh
         void check2D() const;
 
         //- Find extrusion direction
-        //void findExtrudeDirection();
+        // void findExtrudeDirection();
 
         //- Disallow default bitwise copy construct
         extrude2DMesh(const extrude2DMesh&);

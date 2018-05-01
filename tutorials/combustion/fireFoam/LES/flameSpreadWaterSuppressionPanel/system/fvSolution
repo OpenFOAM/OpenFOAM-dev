@@ -47,7 +47,7 @@ solvers
         tolerance           1e-6;
         relTol              0;
         smoother            GaussSeidel;
-        //nCellsInCoarsestLevel 1;
+        // nCellsInCoarsestLevel 1;
     };
 
     ph_rgh

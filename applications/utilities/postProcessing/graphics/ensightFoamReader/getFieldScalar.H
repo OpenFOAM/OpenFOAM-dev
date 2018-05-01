@@ -38,7 +38,7 @@ const cellShapeList& cellShapes = meshPtr->cellShapes();
 if (which_type == Z_HEX08)
 {
     const cellModel& hex = *(cellModeller::lookup("hex"));
-    //const cellModel& wedge = *(cellModeller::lookup("wedge"));
+    // const cellModel& wedge = *(cellModeller::lookup("wedge"));
 
     label counter = 1;
     for (label celli=0; celli<nCells; celli++)

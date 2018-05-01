@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ class STLLexer
         word startError_;
 
         DynamicList<floatVector> STLpoints_;
-        //DynamicList<floatVector > STLnormals_;
+        // DynamicList<floatVector > STLnormals_;
         DynamicList<label> STLlabels_;
         HashTable<label, word> STLsolidNames_;
 
@@ -110,7 +110,7 @@ public:
             return STLpoints_;
         }
 
-        //DynamicList<floatVector>& STLnormals()
+        // DynamicList<floatVector>& STLnormals()
         //{
         //    return STLnormals_;
         //}
@@ -138,7 +138,7 @@ STLLexer::STLLexer(istream* is, const label approxNpoints)
     lineNo_(1),
 
     STLpoints_(approxNpoints),
-    //STLnormals_(approxNpoints),
+    // STLnormals_(approxNpoints),
     STLlabels_(approxNpoints)
 {}
 
@@ -385,10 +385,10 @@ bool triSurface::readSTLASCII(const fileName& STLfileName)
             << exit(FatalError);
     }
 
-    //memInfo memStat;
+    // memInfo memStat;
 
-    //memStat.update();
-    //Pout<< "At start:" << memStat.rss() << endl;
+    // memStat.update();
+    // Pout<< "At start:" << memStat.rss() << endl;
 
     // Create the lexer obtaining the approximate number of vertices in the STL
     // from the file size
@@ -396,8 +396,8 @@ bool triSurface::readSTLASCII(const fileName& STLfileName)
     while (lexer.lex() != 0)
     {}
 
-    //memStat.update();
-    //Pout<< "After lexing:" << memStat.rss() << endl;
+    // memStat.update();
+    // Pout<< "After lexing:" << memStat.rss() << endl;
 
     DynamicList<floatVector>& STLpoints = lexer.STLpoints();
     DynamicList<label>& STLlabels = lexer.STLlabels();
@@ -424,8 +424,8 @@ bool triSurface::readSTLASCII(const fileName& STLfileName)
         pointMap
     );
 
-    //memStat.update();
-    //Pout<< "After merging:" << memStat.rss() << endl;
+    // memStat.update();
+    // Pout<< "After merging:" << memStat.rss() << endl;
 
 
     pointField& sp = storedPoints();
@@ -453,8 +453,8 @@ bool triSurface::readSTLASCII(const fileName& STLfileName)
         operator[](i).region() = STLlabels[i];
     }
 
-    //memStat.update();
-    //Pout<< "After assigning:" << memStat.rss() << endl;
+    // memStat.update();
+    // Pout<< "After assigning:" << memStat.rss() << endl;
 
 
     STLpoints.clear();
@@ -478,8 +478,8 @@ bool triSurface::readSTLASCII(const fileName& STLfileName)
     // Fill in the missing information in the patches
     setDefaultPatches();
 
-    //memStat.update();
-    //Pout<< "After patchifying:" << memStat.rss() << endl;
+    // memStat.update();
+    // Pout<< "After patchifying:" << memStat.rss() << endl;
 
     return true;
 }

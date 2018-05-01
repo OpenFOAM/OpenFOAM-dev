@@ -73,10 +73,10 @@ FoamFile
 //    {
 //        set f0;             // Name of faceSet
 //
-//        //option neighbour; // cell with neighbour in faceSet
-//        //option owner;     //  ,,       owner
+//        // option neighbour; // cell with neighbour in faceSet
+//        // option owner;     //  ,,       owner
 //        option any;         // cell with any face in faceSet
-//        //option all;       // cell with all faces in faceSet
+//        // option all;       // cell with all faces in faceSet
 //    }
 //
 //    // Select based on pointSet
@@ -85,7 +85,7 @@ FoamFile
 //    {
 //        set p0;
 //        option any;         // cell with any point in pointSet
-//        //option edge;      // cell with an edge with both points in pointSet
+//        // option edge;      // cell with an edge with both points in pointSet
 //    }
 //
 //    // Select based on cellShape
@@ -100,7 +100,7 @@ FoamFile
 //    sourceInfo
 //    {
 //       box   (0 0 0) (1 1 1);
-//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
+//       // boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
 //    }
 //
 //    // Cells with cell centre within box
@@ -203,7 +203,7 @@ FoamFile
 //    {
 //        set c0;
 //        option all;         // All faces of cells
-//        //option both;      // Only faces whose owner&neighbour are in cellSet
+//        // option both;      // Only faces whose owner&neighbour are in cellSet
 //    }
 //
 //    // Select based on pointSet
@@ -212,8 +212,8 @@ FoamFile
 //    {
 //        set p0;
 //        option any;         // Faces using any point in pointSet
-//        //option all        // Faces with all points in pointSet
-//        //option edge       // Faces with two consecutive points in pointSet
+//        // option all        // Faces with all points in pointSet
+//        // option edge       // Faces with two consecutive points in pointSet
 //    }
 //
 //    //  Select by explicitly providing face labels
@@ -249,7 +249,7 @@ FoamFile
 //    sourceInfo
 //    {
 //        box  (0 0 0) (1 1 1);
-//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
+//       // boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
 //    }
 //
 //    // Faces with normal to within certain angle aligned with vector.
@@ -322,7 +322,7 @@ FoamFile
 //    sourceInfo
 //    {
 //       box   (0 0 0) (1 1 1);
-//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
+//       // boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
 //    }
 //
 //    // Select based on surface
@@ -390,7 +390,7 @@ FoamFile
 //            surface searchableSphere;
 //            centre  (0.05 0.05 0.005);
 //            radius  0.025;
-//            //name  sphere.stl; // Optional name if surface triSurfaceMesh
+//            // name  sphere.stl; // Optional name if surface triSurfaceMesh
 //        }
 //    }
 //

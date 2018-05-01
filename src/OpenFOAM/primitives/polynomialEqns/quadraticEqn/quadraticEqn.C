@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::Roots<2> Foam::quadraticEqn::roots() const
     // How many roots of what types are available?
     const bool oneReal = disc == 0;
     const bool twoReal = disc > 0;
-    //const bool twoComplex = disc < 0;
+    // const bool twoComplex = disc < 0;
 
     if (oneReal)
     {

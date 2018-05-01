@@ -248,7 +248,7 @@ void Foam::extendedUpwindCellToFaceStencil::transportStencils
             minOpposedness,
             facei,
             own[facei],
-            true,                   //stencilHasNeighbour
+            true,                   // stencilHasNeighbour
             oppositeFaces,
             faceStencilSet,
             ownStencil[facei]
@@ -271,7 +271,7 @@ void Foam::extendedUpwindCellToFaceStencil::transportStencils
                     minOpposedness,
                     facei,
                     own[facei],
-                    true,                   //stencilHasNeighbour
+                    true,                   // stencilHasNeighbour
 
                     oppositeFaces,
                     faceStencilSet,
@@ -292,7 +292,7 @@ void Foam::extendedUpwindCellToFaceStencil::transportStencils
                     minOpposedness,
                     facei,
                     own[facei],
-                    false,                  //stencilHasNeighbour
+                    false,                  // stencilHasNeighbour
 
                     oppositeFaces,
                     faceStencilSet,
@@ -312,7 +312,7 @@ void Foam::extendedUpwindCellToFaceStencil::transportStencils
     {
         neiBndStencil[facei-mesh_.nInternalFaces()] = ownStencil[facei];
     }
-    //syncTools::swapBoundaryFaceList(mesh_, neiBndStencil);
+    // syncTools::swapBoundaryFaceList(mesh_, neiBndStencil);
     syncTools::syncBoundaryFaceList
     (
         mesh_,
@@ -341,7 +341,7 @@ void Foam::extendedUpwindCellToFaceStencil::transportStencils
             minOpposedness,
             facei,
             nei[facei],
-            true,                   //stencilHasNeighbour
+            true,                   // stencilHasNeighbour
 
             oppositeFaces,
             faceStencilSet,
@@ -386,7 +386,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     extendedCellToFaceStencil(stencil.mesh()),
     pureUpwind_(pureUpwind)
 {
-    //forAll(stencil, facei)
+    // forAll(stencil, facei)
     //{
     //    const labelList& fCells = stencil[facei];
     //
@@ -411,7 +411,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     //        }
     //    }
     //}
-    //Pout<< endl << endl;
+    // Pout<< endl << endl;
 
 
     // Transport centred stencil to upwind/downwind face

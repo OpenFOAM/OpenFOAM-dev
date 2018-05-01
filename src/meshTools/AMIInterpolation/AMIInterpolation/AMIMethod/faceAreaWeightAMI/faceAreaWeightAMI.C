@@ -435,7 +435,7 @@ restartUncoveredSourceFace
             label tgtFacei = this->findTargetFace(srcFacei);
             if (tgtFacei != -1)
             {
-                //bool faceProcessed =
+                // bool faceProcessed =
                 processSourceFace
                 (
                     srcFacei,

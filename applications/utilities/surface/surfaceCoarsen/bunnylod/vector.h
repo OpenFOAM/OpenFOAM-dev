@@ -68,7 +68,7 @@ class Quaternion{
              return Vector(  2*(x*z+r*y),  2*(y*z-r*x),1-2*(x*x+y*y));
          }
          matrix  getmatrix(){return matrix(xdir(),ydir(),zdir());}
-         //operator matrix(){return getmatrix();}
+         // operator matrix(){return getmatrix();}
 };
 Quaternion operator-(Quaternion q);
 Quaternion operator*(Quaternion a,Quaternion b);

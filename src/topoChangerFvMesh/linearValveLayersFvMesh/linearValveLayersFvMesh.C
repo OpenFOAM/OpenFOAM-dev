@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -417,9 +417,9 @@ void Foam::linearValveLayersFvMesh::update()
     setMorphTimeIndex(3*time().timeIndex() + 2);
     updateMesh();
 
-    //Info<< "Moving points post slider attach" << endl;
-    //const pointField p = allPoints();
-    //movePoints(p);
+    // Info<< "Moving points post slider attach" << endl;
+    // const pointField p = allPoints();
+    // movePoints(p);
 
     Info<< "Sliding interfaces coupled: " << attached() << endl;
 }

@@ -23,6 +23,7 @@ chemistryType
 chemistry       on;
 
 initialChemicalTimeStep 1e-7;
+maxChemicalTimeStep     1e-4;
 
 odeCoeffs
 {

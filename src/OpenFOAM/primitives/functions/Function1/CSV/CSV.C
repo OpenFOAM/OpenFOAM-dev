@@ -92,7 +92,7 @@ template<class Type>
 void Foam::Function1Types::CSV<Type>::read()
 {
     fileName expandedFile(fName_);
-    //IFstream is(expandedFile.expand());
+    // IFstream is(expandedFile.expand());
     autoPtr<ISstream> isPtr(fileHandler().NewIFstream(expandedFile.expand()));
     ISstream& is = isPtr();
 

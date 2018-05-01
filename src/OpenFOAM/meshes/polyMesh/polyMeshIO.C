@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
     // Find the point and cell instance
     fileName pointsInst(time().findInstance(meshDir(), "points"));
     fileName facesInst(time().findInstance(meshDir(), "faces"));
-    //fileName boundaryInst(time().findInstance(meshDir(), "boundary"));
+    // fileName boundaryInst(time().findInstance(meshDir(), "boundary"));
 
     if (debug)
     {

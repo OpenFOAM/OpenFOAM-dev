@@ -810,8 +810,8 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
             normal2
         );
 
-        //mkDir(mesh_.time().path()/timeName());
-        //OBJstream str
+        // mkDir(mesh_.time().path()/timeName());
+        // OBJstream str
         //(
         //    mesh_.time().path()/timeName()/"flatBaffles.obj"
         //);
@@ -834,7 +834,7 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
             )
             {
                 // Two different hits. Check angle.
-                //str.write
+                // str.write
                 //(
                 //    linePointRef(hit1[i].hitPoint(), hit2[i].hitPoint()),
                 //    normal1[i],
@@ -1089,7 +1089,7 @@ void Foam::meshRefinement::findCellZoneGeometric
             }
             else
             {
-                //const point& neiFc = mesh_.faceCentres()[facei];
+                // const point& neiFc = mesh_.faceCentres()[facei];
                 const point& neiFc = neiCc[facei-mesh_.nInternalFaces()];
 
                 // Perturbed cc
@@ -1229,7 +1229,7 @@ void Foam::meshRefinement::findCellZoneInsideWalk
 {
     // Analyse regions. Reuse regionsplit
     boolList blockedFace(mesh_.nFaces());
-    //selectSeparatedCoupledFaces(blockedFace);
+    // selectSeparatedCoupledFaces(blockedFace);
 
     forAll(namedSurfaceIndex, facei)
     {
@@ -1883,7 +1883,7 @@ Foam::label Foam::meshRefinement::markPatchZones
                 nProtected++;
             }
         }
-        //Info<< "Protected from visiting "
+        // Info<< "Protected from visiting "
         //    << returnReduce(nProtected, sumOp<label>())
         //    << " non-manifold edges" << nl << endl;
     }
@@ -1931,7 +1931,7 @@ Foam::label Foam::meshRefinement::markPatchZones
         label proci = globalFaces.whichProcID(globalSeed);
         label seedFacei = globalFaces.toLocal(proci, globalSeed);
 
-        //Info<< "Seeding zone " << currentZoneI
+        // Info<< "Seeding zone " << currentZoneI
         //    << " from processor " << proci << " face " << seedFacei
         //    << endl;
 
@@ -2054,7 +2054,7 @@ void Foam::meshRefinement::consistentOrientation
                 nProtected++;
             }
         }
-        //Info<< "Protected from visiting "
+        // Info<< "Protected from visiting "
         //    << returnReduce(nProtected, sumOp<label>())
         //    << " slaves of coupled faces" << nl << endl;
     }
@@ -2113,7 +2113,7 @@ void Foam::meshRefinement::consistentOrientation
         label proci = globalFaces.whichProcID(globalSeed);
         label seedFacei = globalFaces.toLocal(proci, globalSeed);
 
-        //Info<< "Seeding from processor " << proci << " face " << seedFacei
+        // Info<< "Seeding from processor " << proci << " face " << seedFacei
         //    << endl;
 
         if (proci == Pstream::myProcNo())

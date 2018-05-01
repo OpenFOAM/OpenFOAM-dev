@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,12 +212,12 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
             scalar Xipi = 0.0;
             if (specieIndex_[n] != 0)
             {
-                //Specie found in the lookUpTable.
+                // Specie found in the lookUpTable.
                 const volScalarField& ft =
                     mesh_.lookupObject<volScalarField>("ft");
 
                 const List<scalar>& Ynft = lookUpTablePtr_().lookUp(ft[celli]);
-                //moles x pressure [atm]
+                // moles x pressure [atm]
                 Xipi = Ynft[specieIndex_[n]]*paToAtm(p[celli]);
             }
             else

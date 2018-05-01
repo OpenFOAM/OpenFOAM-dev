@@ -24,7 +24,7 @@ geometry
 
 initialPoints
 {
-    //initialPointsMethod         pointFile;
+    // initialPointsMethod         pointFile;
     initialPointsMethod         autoDensity;
 
     autoDensityCoeffs

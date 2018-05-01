@@ -62,7 +62,7 @@ void surfaceSlipDisplacementPointPatchVectorField::calcProjection
     const pointField& localPoints = patch().localPoints();
     const labelList& meshPoints = patch().meshPoints();
 
-    //const scalar deltaT = mesh.time().deltaTValue();
+    // const scalar deltaT = mesh.time().deltaTValue();
 
     // Construct large enough vector in direction of projectDir so
     // we're guaranteed to hit something.
@@ -421,7 +421,7 @@ void surfaceSlipDisplacementPointPatchVectorField::evaluate
     // Get internal field to insert values into
     Field<vector>& iF = const_cast<Field<vector>&>(this->primitiveField());
 
-    //setInInternalField(iF, motionU);
+    // setInInternalField(iF, motionU);
     setInInternalField(iF, displacement);
 
     pointPatchVectorField::evaluate(commsType);

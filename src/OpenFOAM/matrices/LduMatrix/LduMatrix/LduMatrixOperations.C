@@ -448,8 +448,8 @@ void Foam::LduMatrix<Type, DType, LUType>::operator*=
            "require special transfers"
         << abort(FatalError);
 
-    //interfacesUpper_ *= ;
-    //interfacesLower_ *= sf;
+    // interfacesUpper_ *= ;
+    // interfacesLower_ *= sf;
 }
 
 

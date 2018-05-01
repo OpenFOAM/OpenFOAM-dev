@@ -123,8 +123,8 @@ void Foam::refinementFeatures::read
                     oldToNew[pointi] = newPoints.size();
                     newPoints.append(eMesh.points()[pointi]);
                 }
-                //else if (pointEdges[pointi].size() == 2)
-                //MEJ: do something based on a feature angle?
+                // else if (pointEdges[pointi].size() == 2)
+                // MEJ: do something based on a feature angle?
             }
             label nFeatures = newPoints.size();
             forAll(oldToNew, pointi)
@@ -174,10 +174,10 @@ void Foam::refinementFeatures::read
                 identity(newEdges.size())   // regionEdges
             );
 
-            //Info<< "Constructed extendedFeatureEdgeMesh " << featObj.name()
+            // Info<< "Constructed extendedFeatureEdgeMesh " << featObj.name()
             //    << nl << incrIndent;
-            //eeMesh.writeStats(Info);
-            //Info<< decrIndent << endl;
+            // eeMesh.writeStats(Info);
+            // Info<< decrIndent << endl;
 
             set(featI, new extendedFeatureEdgeMesh(featObj, eeMesh));
         }
@@ -514,7 +514,7 @@ Foam::refinementFeatures::refinementFeatures
 //
 //        Info<< "Detected " << featurePoints.size()
 //            << " featurePoints out of " << points.size()
-//            << " points on feature " << i   //eMesh.name()
+//            << " points on feature " << i   // eMesh.name()
 //            << " when using feature cos " << minCos << endl;
 //
 //        buildTrees(i, featurePoints);

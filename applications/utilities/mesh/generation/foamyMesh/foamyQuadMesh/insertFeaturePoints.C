@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -227,7 +227,7 @@ void Foam::CV2D::insertFeaturePoints()
                         int(totalAngle/meshControls().maxQuadAngle()) + 1;
 
                     // The number of additional master points needed to
-                    //obtain the required number of quadrants.
+                    // obtain the required number of quadrants.
                     int nAddPoints = min(max(nQuads - 2, 0), 2);
 
                     // index of reflMaster

@@ -38,8 +38,8 @@ inline bool Foam::wallPoint::update
     TrackingData& td
 )
 {
-    //Already done in calling algorithm
-    //if (w2.origin() == origin_)
+    // Already done in calling algorithm
+    // if (w2.origin() == origin_)
     //{
     //    // Shortcut. Same input so same distance.
     //    return false;

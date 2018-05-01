@@ -729,17 +729,17 @@ patches
         quad2D(R6, R7)
         quad2D(R7, R0)
 
-        //quad2D(R1, Rb1)
-        //quad2D(R1, Rb1)
+        // quad2D(R1, Rb1)
+        // quad2D(R1, Rb1)
 
-        //quad2D(R3, Rb3)
-        //quad2D(R3, Rb3)
+        // quad2D(R3, Rb3)
+        // quad2D(R3, Rb3)
 
-        //quad2D(R5, Rb5)
-        //quad2D(R5, Rb5)
+        // quad2D(R5, Rb5)
+        // quad2D(R5, Rb5)
 
-        //quad2D(R7, Rb7)
-        //quad2D(R7, Rb7)
+        // quad2D(R7, Rb7)
+        // quad2D(R7, Rb7)
     )
 
     empty front
