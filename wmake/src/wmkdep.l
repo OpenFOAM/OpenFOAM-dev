@@ -39,7 +39,6 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#define FILE_STACK_SIZE 300
 #define HASH_TABLE_SIZE 500
 #define REPLACEMENTS_SIZE 10
 #define INITIAL_MAX_N_FILES 1000
@@ -50,11 +49,54 @@ Usage
 #include <dirent.h>
 #include <errno.h>
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/* char* entry in hash table */
+struct HashEntry
+{
+    char* name;
+    struct HashEntry* next;
+};
+
+/* String search/replace pair */
+struct searchReplace
+{
+    char* search;
+    size_t searchLen;
+    char* replace;
+    size_t replaceLen;
+};
+
+int nDirectories = 0;
+char** directories;
+char* sourceFile = NULL;
+char* depFilePath = NULL;
+char* depFileName = NULL;
+
+int nReplacements = 0;
+struct searchReplace replacements[REPLACEMENTS_SIZE];
+
+/* Set of files already visited */
+struct HashEntry* visitedFiles[HASH_TABLE_SIZE];
+
+/* List of dependency files */
+int nFiles = 0;
+int currentFile = 0;
+int maxNfiles = INITIAL_MAX_N_FILES;
+char** files;
+
+/* Current path of the dependency file */
+const char* currentPath = NULL;
+
 void nextFile(const char* fileName);
-void importFile(const char* fileName);
-void importDir(const char* dirName);
-void printFile(const char* pathName);
-void processFile(char* pathName);
+int lookUp(struct HashEntry** hashTable, const char* p);
+void addFile(char* pathName);
+void openFile(const char* pathName);
+char* strRep(char* str, struct searchReplace* sr);
+char* substitutePath(char* pathName);
+void printFile(FILE* file, const char* pathName);
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #undef yywrap        /* Sometimes a macro by default */
 
@@ -77,12 +119,236 @@ void processFile(char* pathName);
 %%
 
 
-/* char* entry in hash table */
-struct HashEntry
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int main(int argc, char* argv[])
 {
-    char* name;
-    struct HashEntry* next;
-};
+    if (argc == 1)
+    {
+        fprintf(stderr, "input file not supplied\n");
+        exit(1);
+    }
+
+    sourceFile = strdup(argv[argc-2]);
+    depFilePath = strdup(argv[argc-1]);
+
+    char* basePos = strrchr(sourceFile, '/');
+    if (basePos == NULL)
+    {
+        basePos = sourceFile;
+    }
+    else
+    {
+        basePos++;
+    }
+
+    char* dotPos = strrchr(sourceFile, '.');
+    if(dotPos == NULL || dotPos < basePos)
+    {
+        fprintf
+        (
+            stderr,
+            "cannot find extension in source file name %s\n",
+            sourceFile
+        );
+        exit(1);
+    }
+
+    /* Build list of string replacements */
+    int i;
+    for (i = 1; i < argc - 1; i++)
+    {
+        if (strncmp(argv[i], "-R", 2) == 0)
+        {
+            replacements[nReplacements].search = strdup(argv[++i]);
+            replacements[nReplacements].searchLen =
+                strlen(replacements[nReplacements].search);
+
+            replacements[nReplacements].replace = strdup(argv[++i]);
+            replacements[nReplacements].replaceLen =
+                strlen(replacements[nReplacements].replace);
+
+            nReplacements++;
+        }
+    }
+
+    /* Count number of -I directories */
+    nDirectories = 0;
+    for (i = 1; i < argc - 1; i++)
+    {
+        if (strncmp(argv[i], "-I", 2) == 0)
+        {
+            if (strlen(argv[i]) > 2)
+            {
+                nDirectories++;
+            }
+        }
+    }
+
+    directories = (char**)malloc(sizeof(char*)*nDirectories);
+
+    /* Build list of -I directories */
+    nDirectories = 0;
+    for (i = 1; i < argc - 1; i++)
+    {
+        if (strncmp(argv[i], "-I", 2) == 0)
+        {
+            if (strlen(argv[i]) > 2)
+            {
+                directories[nDirectories++] = strdup(argv[i] + 2);
+            }
+        }
+    }
+
+    depFileName = substitutePath(strdup(depFilePath));
+
+    /* Initialise storage for the list of the dependencies */
+    files = (char**)malloc(sizeof(char*)*maxNfiles);
+
+    openFile(sourceFile);
+    yylex();
+
+
+    /* Write dependencies file */
+
+    FILE* depFile;
+    if (!(depFile = fopen(depFilePath, "w")))
+    {
+        fprintf
+        (
+            stderr,
+            "could not open dependencies file %s "
+            "for source file %s due to %s\n",
+            depFilePath, sourceFile, strerror(errno)
+        );
+        exit(1);
+    }
+
+    fprintf(depFile, "%s: \\\n", depFileName);
+    printFile(depFile, sourceFile);
+    for (i = 0; i < nFiles; i++)
+    {
+        files[i] = substitutePath(files[i]);
+        printFile(depFile, files[i]);
+    }
+
+    fputs("\n", depFile);
+
+    /* Write the dummy rules for the dependencies */
+    for (i = 0; i < nFiles; i++)
+    {
+        fprintf(depFile, "%s :\n", files[i]);
+    }
+
+    fputs("\n", depFile);
+
+    /* Clean-up storage */
+
+    for (i = 0; i < nDirectories; i++)
+    {
+        free(directories[i]);
+    }
+    free(directories);
+
+    free(sourceFile);
+    free(depFilePath);
+    free(depFileName);
+
+    for (i = 0; i < nFiles; i++)
+    {
+        free(files[i]);
+    }
+    free(files);
+
+    return 0;
+}
+
+
+/* Add a directory name to the file name */
+char* addDirectoryName(const char* dirName, const char* fileName)
+{
+    char* pathName = (char*)malloc(strlen(dirName) + strlen(fileName) + 2);
+    strcpy(pathName, dirName);
+
+    if (dirName[strlen(dirName)-1] != '/')
+    {
+        strcat(pathName, "/");
+    }
+
+    strcat(pathName, fileName);
+
+    return pathName;
+}
+
+
+/* Find path to next file and add it to the list */
+void nextFile(const char* fileName)
+{
+    if (lookUp(visitedFiles, fileName))
+    {
+        return;   /* Already existed (did not insert) */
+    }
+
+    /* Check if the file has same path as the last file read */
+    if (currentPath != NULL)
+    {
+        char* pathName = addDirectoryName(currentPath, fileName);
+
+        if (access(pathName, R_OK ) != -1)
+        {
+            addFile(pathName);
+            return;
+        }
+
+        free(pathName);
+    }
+
+    if (access(fileName, R_OK ) != -1)
+    {
+        addFile(strdup(fileName));
+        currentPath = NULL;
+    }
+    else
+    {
+        int i;
+        for (i = 0; i < nDirectories; i++)
+        {
+            char* pathName = addDirectoryName(directories[i], fileName);
+
+            if (access(pathName, R_OK ) != -1)
+            {
+                addFile(pathName);
+                currentPath = directories[i];
+
+                return;
+            }
+
+            free(pathName);
+        }
+
+        if (nDirectories == 0)
+        {
+            fprintf
+            (
+                stderr,
+                "could not open file %s for source file %s\n",
+                fileName, sourceFile
+            );
+        }
+        else
+        {
+            fprintf
+            (
+                stderr,
+                "could not open file %s for source file %s due to %s\n",
+                fileName, sourceFile, strerror(errno)
+            );
+        }
+
+        /* Only report error on the first occurrence */
+        lookUp(visitedFiles, fileName);
+    }
+}
 
 
 /* Lookup name in hash table.
@@ -102,7 +368,7 @@ int lookUp(struct HashEntry** hashTable, const char* p)
     ii %= HASH_TABLE_SIZE;
 
     /* Search */
-    for (n=hashTable[ii]; n; n=n->next)
+    for (n = hashTable[ii]; n; n = n->next)
     {
         if (strcmp(p, n->name) == 0)
         {
@@ -122,14 +388,32 @@ int lookUp(struct HashEntry** hashTable, const char* p)
 }
 
 
-/* String search/replace pair */
-struct searchReplace
+/* Add file to list */
+void addFile(char* pathName)
 {
-    char* search;
-    size_t searchLen;
-    char* replace;
-    size_t replaceLen;
-};
+    if (nFiles == maxNfiles - 1)
+    {
+        maxNfiles *= 2;
+        files = (char**)realloc(files, sizeof(char*)*maxNfiles);
+    }
+
+    files[nFiles++] = pathName;
+}
+
+
+/* Open file and set yyin */
+void openFile(const char* pathName)
+{
+    if (!(yyin = fopen(pathName, "r")))
+    {
+        fprintf
+        (
+            stderr,
+            "could not open file %s for source file %s due to %s\n",
+            pathName, sourceFile, strerror(errno)
+        );
+    }
+}
 
 
 /* String search/replace */
@@ -166,366 +450,50 @@ char* strRep(char* str, struct searchReplace* sr)
 }
 
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-int nDirectories = 0;
-char** directories;
-char* sourceFile = NULL;
-char* depFile = NULL;
-
-int nReplacements = 0;
-struct searchReplace replacements[REPLACEMENTS_SIZE];
-
-/* Set of files already visited */
-struct HashEntry* visitedFiles[HASH_TABLE_SIZE];
-
-/* Buffer pointer stack counter */
-int currentBuffer = 0;
-
-/* Buffer pointer stack */
-YY_BUFFER_STATE buffers[FILE_STACK_SIZE];
-
-/* Directory paths for the loaded files */
-const char* bufferPaths[FILE_STACK_SIZE];
-
-/* List of dependency files */
-int nFiles = 0;
-int maxNfiles = INITIAL_MAX_N_FILES;
-char** files;
-
-
-int main(int argc, char* argv[])
+/* Substitute path components with command-line replacements */
+char* substitutePath(char* pathName)
 {
-    char *basePos, *dotPos;
-    int i;
-
-    if (argc == 1)
-    {
-        fprintf(stderr, "input file not supplied\n");
-        exit(1);
-    }
-
-    sourceFile = strdup(argv[argc-1]);
-
-    if ((basePos = strrchr(sourceFile, '/')) == NULL)
-    {
-        basePos = sourceFile;
-    }
-    else
-    {
-        basePos++;
-    }
-
-    if
-    (
-        (dotPos = strrchr(sourceFile, '.')) == NULL
-     || (dotPos < basePos)
-    )
-    {
-        fprintf
-        (
-            stderr,
-            "cannot find extension in source file name %s\n",
-            sourceFile
-        );
-        exit(1);
-    }
-
-    /* Build list of string replacements */
-    nReplacements = 0;
-    for (i = 1; i < argc; i++)
-    {
-        if (strncmp(argv[i], "-R", 2) == 0)
-        {
-            replacements[nReplacements].search = strdup(argv[++i]);
-            replacements[nReplacements].searchLen =
-                strlen(replacements[nReplacements].search);
-
-            replacements[nReplacements].replace = strdup(argv[++i]);
-            replacements[nReplacements].replaceLen =
-                strlen(replacements[nReplacements].replace);
-
-            nReplacements++;
-        }
-    }
-
-    /* Count number of -I directories */
-    nDirectories = 0;
-    for (i = 1; i < argc; i++)
-    {
-        if (strncmp(argv[i], "-I", 2) == 0)
-        {
-            if (strlen(argv[i]) > 2)
-            {
-                nDirectories++;
-            }
-        }
-    }
-
-    directories = (char**)malloc(sizeof(char*)*nDirectories);
-
-    /* Build list of -I directories */
-    nDirectories = 0;
-    for (i = 1; i < argc; i++)
-    {
-        if (strncmp(argv[i], "-I", 2) == 0)
-        {
-            if (strlen(argv[i]) > 2)
-            {
-                directories[nDirectories++] = strdup(argv[i] + 2);
-            }
-        }
-    }
-
-    /* Initialise depFile to zero and use strncat rather than strncpy
-       because there is a bug in the SGI strncat that if 0 precedes the '.'
-       it inserts a space
-    */
-    depFile = (char*)malloc(strlen(sourceFile) + 20);
-    depFile[0] = 0;
-    strcat(depFile, "$(OBJECTS_DIR)/");
-    strcat(depFile, sourceFile);
-    strcat(depFile, ".dep");
-
-    /* Initialise storage for the list of the dependencies */
-    files = (char**)malloc(sizeof(char*)*maxNfiles);
-
-    char *objectFile = strdup(basePos);
-    objectFile[(dotPos - basePos)/sizeof(char)] = 0;
-
-    /* printf("$(OBJECTS_DIR)/%s.o: %s\n", objectFile, depFile); */
-    printf("%s: \\\n", depFile);
-    free(objectFile);
-
-    /* Initialize buffer path for currentBuffer */
-    bufferPaths[currentBuffer] = NULL;
-
-    nextFile(sourceFile);
-    yylex();
-
-    puts("\n");
-
-    /* Write the dummy rules for the dependencies */
-    for (i = 0; i < nFiles; i++)
-    {
-        printf("%s :\n", files[i]);
-    }
-
-    puts("\n");
-
-    /*  Clean-up storage */
-
-    for (i = 0; i < nDirectories; i++)
-    {
-        free(directories[i]);
-    }
-    free(directories);
-
-    free(sourceFile);
-    free(depFile);
-
-    for (i = 0; i < nFiles; i++)
-    {
-        free(files[i]);
-    }
-    free(files);
-
-    return 0;
-}
-
-
-/* Add a directory name to the file name */
-char* addDirectoryName(const char* dirName, const char* fileName)
-{
-    char* pathName = (char*)malloc(strlen(dirName) + strlen(fileName) + 2);
-    strcpy(pathName, dirName);
-
-    if (dirName[strlen(dirName)-1] != '/')
-    {
-        strcat(pathName, "/");
-    }
-
-    strcat(pathName, fileName);
-
-    return pathName;
-}
-
-
-/* Open a file and create buffer and put on stack */
-void nextFile(const char* fileName)
-{
-    if (lookUp(visitedFiles, fileName))
-    {
-        return;   /* Already existed (did not insert) */
-    }
-
-    if (currentBuffer >= FILE_STACK_SIZE)
-    {
-        fprintf
-        (
-            stderr,
-            "depth of file search exceeds stack size %d "
-            "while opening %s for file %s\n",
-            FILE_STACK_SIZE, fileName, sourceFile
-        );
-        exit(1);
-    }
-
-    /* Pointer to new file which is set if the file is successfully opened */
-    FILE* newyyin = NULL;
-
-    /* Check if the file has same path as the file in the current buffer */
-    if (bufferPaths[currentBuffer] != NULL)
-    {
-        char* pathName = addDirectoryName(bufferPaths[currentBuffer], fileName);
-
-        if ((newyyin = fopen(pathName, "r")))
-        {
-            processFile(pathName);
-
-            buffers[currentBuffer++] = YY_CURRENT_BUFFER;
-            bufferPaths[currentBuffer] = bufferPaths[currentBuffer-1];
-
-            yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
-
-            return;
-        }
-
-        free(pathName);
-    }
-
-    if (!(newyyin = fopen(fileName, "r")))
-    {
-        int d;
-        for (d=0; d<nDirectories; d++)
-        {
-            char* pathName = addDirectoryName(directories[d], fileName);
-
-            if ((newyyin = fopen(pathName, "r")))
-            {
-                processFile(pathName);
-
-                buffers[currentBuffer++] = YY_CURRENT_BUFFER;
-                bufferPaths[currentBuffer] = directories[d];
-
-                yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
-
-                return;
-            }
-
-            free(pathName);
-        }
-
-        if (nDirectories == 0)
-        {
-            fprintf
-            (
-                stderr,
-                "could not open file %s for source file %s\n",
-                fileName, sourceFile
-            );
-        }
-        else
-        {
-            fprintf
-            (
-                stderr,
-                "could not open file %s for source file %s due to %s\n",
-                fileName, sourceFile, strerror(errno)
-            );
-        }
-
-        fflush(stdout);
-        fflush(stderr);
-
-        /* Only report the first occurrence */
-        lookUp(visitedFiles, fileName);
-    }
-    else
-    {
-        printFile(fileName);
-        fflush(stdout);
-
-        buffers[currentBuffer++] = YY_CURRENT_BUFFER;
-        bufferPaths[currentBuffer] = NULL;
-
-        yy_switch_to_buffer(yy_create_buffer(newyyin, YY_BUF_SIZE));
-    }
-}
-
-
-void printFile(const char* pathName)
-{
-    printf("%s \\\n", pathName);
-}
-
-
-/* Replace path strings and print resulting path */
-void processFile(char* pathName)
-{
-    if (nFiles == maxNfiles - 1)
-    {
-        maxNfiles *= 2;
-        files = (char**)realloc(files, sizeof(char*)*maxNfiles);
-    }
-
     if (nReplacements)
     {
         int i;
-        for (i=0; i<nReplacements; i++)
+        for (i = 0; i < nReplacements; i++)
         {
             pathName = strRep(pathName, &replacements[i]);
         }
     }
 
-    printFile(pathName);
-    files[nFiles++] = pathName;
+    return pathName;
 }
 
 
-/* Replace all '.' with '/' */
-void dotToSlash(char* fileName)
+/* Print file path to the dependencies file */
+void printFile(FILE* file, const char* pathName)
 {
-    const int len = strlen(fileName);
-
-    int i;
-    for (i=0; i<len; i++)
-    {
-        if (fileName[i] == '.') fileName[i] = '/';
-    }
+    fprintf(file, "%s \\\n", pathName);
 }
 
 
 /* The lexer calls yywrap to handle EOF conditions */
 int yywrap()
 {
-    /* Close the file for the buffer which has just reached EOF
-       This causes strange problems on some systems
-       fclose(yyin);
-       yyin = 0;
-    */
+    /* Close the current file which has just reached EOF */
+    fclose(yyin);
 
-    /* Delete the buffer */
-    yy_delete_buffer(YY_CURRENT_BUFFER);
-
-    /* Set buffer counter to previous buffer */
-    currentBuffer--;
-
-    if (currentBuffer >= 0) /* If buffer counter refers to a valid file */
+    if (currentFile == nFiles) /* There are no more files in the list */
     {
-        /* Reset input buffer to the previous buffer on the stack */
-        yy_switch_to_buffer(buffers[currentBuffer]);
+        /* Return 1 to inform lex finish now that all files have been read */
+        return 1;
+    }
+    else
+    {
+        /* Open the next file on the list */
+        openFile(files[currentFile++]);
 
-        /* Return to the normal state for the previous buffer on the stack */
+        /* Return to the normal state for the next file */
         BEGIN(INITIAL);
 
         /* Return 0 to inform lex to continue reading */
         return 0;
-    }
-    else                 /* Else there are no more buffers on the stack */
-    {
-        /* Return 1 to inform lex finish now that all buffers have been read */
-        return 1;
     }
 }
 

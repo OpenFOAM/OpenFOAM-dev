@@ -29,8 +29,9 @@ $(OBJECTS_DIR)/%.dep : %
 	$(call VERBOSE_MESSAGE,Making dependency list for source file,$(<F))
 	@$(WM_SCRIPTS)/makeTargetDir $@
 	@$(WMAKE_BIN)/wmkdep \
+		-R '$(OBJECTS_DIR)/' '$$(OBJECTS_DIR)/' \
 		-R '$(WM_PROJECT_DIR)/' '$$(WM_PROJECT_DIR)/' \
 		-R '$(WM_THIRD_PARTY_DIR)/' '$$(WM_THIRD_PARTY_DIR)/' \
-		-I$(*D) $(LIB_HEADER_DIRS) $< > $@
+		-I$(*D) $(LIB_HEADER_DIRS) $< $@
 
 #------------------------------------------------------------------------------
