@@ -30,12 +30,15 @@ Description
     output of cpp -M. However, the output contains no duplicates and
     is approx. 40% faster than cpp.
 
-    The algorithm uses flex to scan for includes and searches the files
-    found.  Each file is entered into a hash table so that files are scanned
-    only once.  This is why this program is faster than cpp.
+    The algorithm uses flex to scan the directories specified with '-Idir'
+    options for include files and searches the files found.  Each file is
+    entered into a hash table so that files are scanned only once.  The
+    resulting file paths are added to the dependencies file after replacing
+    strings specified with the '-R string replacement' options.
 
 Usage
-    wmkdep [ -Idir ... -Idir ] filename
+    wmkdep [ -R string replacement ... -R string replacement ] \
+        [ -Idir ... -Idir ] <source file> <dependencies file>
 
 \*---------------------------------------------------------------------------*/
 
