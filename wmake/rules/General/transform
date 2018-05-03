@@ -32,6 +32,6 @@ $(OBJECTS_DIR)/%.dep : %
 		-R '$(OBJECTS_DIR)/' '$$(OBJECTS_DIR)/' \
 		-R '$(WM_PROJECT_DIR)/' '$$(WM_PROJECT_DIR)/' \
 		-R '$(WM_THIRD_PARTY_DIR)/' '$$(WM_THIRD_PARTY_DIR)/' \
-		-I$(*D) $(LIB_HEADER_DIRS) $< $@
+		$(LIB_HEADER_DIRS) $< $@
 
 #------------------------------------------------------------------------------

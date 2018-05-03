@@ -36,8 +36,6 @@ wmakeMpiLib()
     done
 }
 
-wmakeLnInclude decompositionMethods
-
 if [ -n "$SCOTCH_ARCH_PATH" ]
 then
     wmake $targetType scotchDecomp

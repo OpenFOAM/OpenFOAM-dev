@@ -21,8 +21,6 @@ wmakeCheckPwd "$WM_PROJECT_DIR/src" || {
 # Update OpenFOAM version strings if required
 wmakePrintBuild -check || wrmo OpenFOAM/global/global.o 2>/dev/null
 
-wmakeLnInclude OpenFOAM
-wmakeLnInclude OSspecific/${WM_OSTYPE:-POSIX}
 Pstream/Allwmake $targetType $*
 
 OSspecific/${WM_OSTYPE:-POSIX}/Allwmake $targetType $*
@@ -35,10 +33,7 @@ wmake $targetType meshTools
 
 # Decomposition methods needed by dummyThirdParty
 # (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
-parallel/decompose/AllwmakeLnInclude
 dummyThirdParty/Allwmake $targetType $*
-
-wmakeLnInclude fvOptions
 
 wmake $targetType finiteVolume
 wmake $targetType lagrangian/basic

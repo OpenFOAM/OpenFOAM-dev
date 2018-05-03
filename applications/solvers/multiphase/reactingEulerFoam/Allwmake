@@ -4,15 +4,10 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-wmakeLnInclude interfacialModels
-wmakeLnInclude interfacialCompositionModels
-wmakeLnInclude derivedFvPatchFields
 wmake $targetType phaseSystems
 wmake $targetType interfacialModels
 wmake $targetType interfacialCompositionModels
 wmake $targetType derivedFvPatchFields
-wmakeLnInclude reactingTwoPhaseEulerFoam/twoPhaseCompressibleTurbulenceModels
-wmakeLnInclude reactingMultiphaseEulerFoam/multiphaseCompressibleTurbulenceModels
 reactingTwoPhaseEulerFoam/Allwmake $targetType $*
 reactingMultiphaseEulerFoam/Allwmake $targetType $*
 wmake $targetType functionObjects

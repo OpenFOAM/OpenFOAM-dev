@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -68,6 +68,9 @@ nCores=0
 # Default 'wmakeLnInclude' option
 wmLnOpt=
 
+# Option to execute 'wmakeLnInclude' on all dependent libraries
+depOpt=
+
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -76,6 +79,10 @@ do
             ;;
         -u | -update)
             wmLnOpt="-update"
+            ;;
+         -d | -dep)
+            depOpt=true
+            shift
             ;;
         # Parallel execution on WM_NCOMPPROCS cores
         -j)
@@ -98,69 +105,106 @@ do
 done
 
 
-FAIL=0
-
-if [ "$nCores" -gt 0 ]
+if [ "$depOpt" = true ]
 then
-    echo "$Script: starting wmakeLnInclude processes on $nCores cores"
+
+    MakeDir=Make
+
+    [ -r $MakeDir/options ] || {
+        echo "$Script error: file '$MakeDir/options' does not exist" 1>&2
+        exit 1
+    }
+
+    LIB_SRC="$WM_PROJECT_DIR/src"
+
+    includeDirs="
+        $WM_PROJECT_DIR/src/$WM_PROJECT
+        $WM_PROJECT_DIR/src/OSspecific/$WM_OSTYPE
+        $(grep -e '-I.*lnInclude' $MakeDir/options |
+        sed -e 's%-I\([.$(a-zA-Z0-9_)/]*\)/lnInclude.*%\1%' -e 's/$(\(.*\))/$\1/')"
+
+    printed=
+    for d in $includeDirs
+    do [ ! -d "$d" ]
+       path=$(eval echo $d)
+       if [ ! -d $path/lnInclude ]
+       then
+           [ $printed ] || echo "$Script: running wmakeLnInclude on dependent libraries:"
+           printed=true
+           echo -n "    "
+           eval wmakeLnInclude $wmLnOpt $d
+       fi
+    done
+
+    unset MakeDir LIB_SRC printed
+
 else
-    echo "$Script: running wmakeLnInclude"
-fi
 
+    FAIL=0
 
-# Defaults to searching from CWD
-[ "$#" -gt 0 ] || set -- .
-
-for checkDir
-do
-    if [ -d $checkDir ]
+    if [ "$nCores" -gt 0 ]
     then
-        echo "    searching $checkDir for 'Make' directories"
+        echo "$Script: starting wmakeLnInclude processes on $nCores cores"
     else
-        echo "    skipping non-dir $checkDir"
-        continue
+        echo "$Script: running wmakeLnInclude"
     fi
 
-    find $checkDir -depth -type d -name Make -print | while read MakeDir
+    # Defaults to searching from CWD
+    [ "$#" -gt 0 ] || set -- .
+
+    for checkDir
     do
-        topDir=${MakeDir%/Make}    # trim /Make from the end
-        if [ -d "$topDir" ]
+        if [ -d $checkDir ]
         then
-            if grep -e '^ *LIB *=' "$MakeDir/files" >/dev/null 2>&1
-            then
-                # If running in parallel start wmakeLnInclude on nCores
-                # and more as the cores become free
-                if [ "$nCores" -gt 0 ]
-                then
-                    joblist=($(jobs -p))
-                    while (( ${#joblist[*]} > $nCores ))
-                    do
-                        # When the job limit is reached wait for a job to finish
-                        wait -n
-                        joblist=($(jobs -p))
-                    done
-                    wmakeLnInclude $wmLnOpt $topDir &
-                else
-                    wmakeLnInclude $wmLnOpt $topDir
-                fi
-            elif [ -d "$topDir/lnInclude" ]
-            then
-                echo "    removing spurious $topDir/lnInclude"
-                rm -rf "$topDir/lnInclude"
-            fi
+            echo "    searching $checkDir for 'Make' directories"
+        else
+            echo "    skipping non-dir $checkDir"
+            continue
         fi
+
+        find $checkDir -depth -type d -name Make -print | while read MakeDir
+        do
+            topDir=${MakeDir%/Make}    # trim /Make from the end
+            if [ -d "$topDir" ]
+            then
+                if grep -e '^ *LIB *=' "$MakeDir/files" >/dev/null 2>&1
+                then
+                    # If running in parallel start wmakeLnInclude on nCores
+                    # and more as the cores become free
+                    if [ "$nCores" -gt 0 ]
+                    then
+                        joblist=($(jobs -p))
+                        while (( ${#joblist[*]} > $nCores ))
+                        do
+                            # When the job limit is reached wait for a job to finish
+                            wait -n
+                            joblist=($(jobs -p))
+                        done
+                        wmakeLnInclude $wmLnOpt $topDir &
+                    else
+                        wmakeLnInclude $wmLnOpt $topDir
+                    fi
+                elif [ -d "$topDir/lnInclude" ]
+                then
+                    echo "    removing spurious $topDir/lnInclude"
+                    rm -rf "$topDir/lnInclude"
+                fi
+            fi
+        done
     done
-done
 
-if [ "$nCores" -gt 0 ]
-then
-    # Wait for all of the wmakeLnInclude jobs to finish
-    wait
+    if [ "$nCores" -gt 0 ]
+    then
+        # Wait for all of the wmakeLnInclude jobs to finish
+        wait
 
-    # Synchronize the file system to ensure that all of the links exist
-    # before compilation
-    # sync
-    sleep 2
+        # Synchronize the file system to ensure that all of the links exist
+        # before compilation
+        # sync
+        sleep 3
+    fi
+
+    unset FAIL joblist
 fi
 
 
@@ -168,7 +212,7 @@ fi
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage error
+unset Script usage error findName nCores wmLnOpt depOpt
 
 
 #------------------------------------------------------------------------------

@@ -289,6 +289,9 @@ then
     wmakeLnIncludeAll -update $parOpt
     wclean empty
     export WM_UPDATE_DEPENDENCIES=yes
+elif  [ -z "$all" ]
+then
+    wmakeLnIncludeAll -dep "$parOpt"
 fi
 
 
@@ -313,6 +316,7 @@ then
                           && echo "$d"; \
                        done | xargs \
                  )
+
         if [ ! "$FOAM_APPS" = "" ]
         then
             # Compile all applications in sub-directories
