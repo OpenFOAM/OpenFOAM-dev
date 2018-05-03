@@ -72,7 +72,8 @@ Foam::cylindricalCS Foam::blockEdges::arcEdge::calcAngle()
     vector r3(p3_ - centre);
 
     // find angles
-    angle_ = radToDeg(acos((r3 & r1)/(mag(r3) * mag(r1))));
+    const scalar cosAngle = (r3 & r1)/(mag(r3) * mag(r1));
+    angle_ = radToDeg(acos(max(-1, min(cosAngle, 1))));
 
     // check if the vectors define an exterior or an interior arcEdge
     if (((r1 ^ r2) & (r1 ^ r3)) < 0.0)
