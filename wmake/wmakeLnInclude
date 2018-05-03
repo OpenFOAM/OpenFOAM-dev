@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -69,9 +69,6 @@ error() {
 #------------------------------------------------------------------------------
 # Parse arguments and options
 #------------------------------------------------------------------------------
-
-# Default 'find' option
-unset findOpt
 
 # Default 'ln' option
 lnOpt="-s"
@@ -141,7 +138,7 @@ fi
 
 cd $incDir || exit 1
 
-if [ "$silentOpt" = true -o -n "$WM_QUIET" ]
+if [ "$silentOpt" = true ] || [ -n "$WM_QUIET" ]
 then
     echo "    ln: $incDir" 1>&2
 else
@@ -152,14 +149,14 @@ fi
 #------------------------------------------------------------------------------
 # Remove any broken links first (this helps when file locations have moved)
 #------------------------------------------------------------------------------
-find -L . -type l | xargs rm -f
+find -L . -type l -print0 | xargs -0 rm -f
 
 
 #------------------------------------------------------------------------------
 # Create links, avoid recreating links unless necessary
 # things placed in the 'noLink' directory are skipped
 #------------------------------------------------------------------------------
-find .. $findOpt \
+find .. \
      \( -name lnInclude -o -name Make -o -name config -o -name noLink \) \
      -prune \
      -o \( \

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -79,16 +79,16 @@ USAGE
 }
 
 # Print help message
-if [ "$1" = "-h" -o "$1" = "-help" ]; then
+if [ "$1" = "-h" ] || [ "$1" = "-help" ]; then
     usage && exit 0
 fi
 
 # Check the script is executed from the project top-level directory
 [ "$PWD" = "$WM_PROJECT_DIR" ] || \
-    error "Not in the project top-level directory " $WM_PROJECT_DIR
+    error "Not in the project top-level directory " "$WM_PROJECT_DIR"
 
 # Get the platforms from the arguments
-platforms="$@"
+platforms="$*"
 
 # If no arguments are provided select the current platform
 if [ "$#" -lt 1 ]; then
@@ -100,7 +100,7 @@ if [ "$platforms" = "-all" ]; then
     rm -rf platforms/*
 
     echo "Removing lnInclude directories"
-    find . -depth -type d \( -name lnInclude \) | xargs rm -rf
+    find . -depth -type d \( -name lnInclude \) -print0 | xargs -0 rm -rf
 
     tutorials/Allclean
 else
@@ -114,10 +114,10 @@ else
             [ -n "$platform" ] || continue
         fi
 
-        if [ -d platforms/${platform} ]
+        if [ -d platforms/"${platform}" ]
         then
             echo "Cleaning platform $platform"
-            rm -rf platforms/${platform}*
+            rm -rf platforms/"${platform}"*
         else
             echo "Platform $platform not built"
         fi

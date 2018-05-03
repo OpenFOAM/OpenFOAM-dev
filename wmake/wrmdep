@@ -54,6 +54,7 @@
 Script=${0##*/}
 
 # Source the wmake functions
+# shellcheck source=scripts/wmakeFunctions
 . ${0%/*}/scripts/wmakeFunctions
 
 usage() {
@@ -146,16 +147,16 @@ files)
     # With the -a/-all option replace the current platform with a wildcard
     if [ "$all" = "all" ]
     then
-        objectsDir=$(echo $objectsDir | sed s%$WM_OPTIONS%*% )
+        objectsDir=$(echo "$objectsDir" | sed s%"$WM_OPTIONS"%*% )
     fi
 
     if [ "$#" -eq 0 ]
     then
         echo "removing all .dep files ..."
-        find $objectsDir -name '*.dep' -print | xargs -t rm 2>/dev/null
+        find "$objectsDir" -name '*.dep' -print0 | xargs -0t rm 2>/dev/null
     else
         echo "removing .dep files referring to $1 ..."
-        find $objectsDir -name '*.dep' -exec grep -q "$1" '{}' \; \
+        find "$objectsDir" -name '*.dep' -exec grep -q "$1" '{}' \; \
              -exec rm '{}' \; -print
     fi
 
@@ -170,9 +171,9 @@ oldFolders)
 
     for checkDir
     do
-        findObjectDir $checkDir
+        findObjectDir "$checkDir"
 
-        if [ -d $objectsDir ]
+        if [ -d "$objectsDir" ]
         then
             echo "    searching: $objectsDir"
         else
@@ -180,15 +181,15 @@ oldFolders)
             continue
         fi
 
-        find $objectsDir -name '*.dep' -print | while read depFile
+        find "$objectsDir" -name '*.dep' -print | while read -r depFile
         do
-            depToSource $depFile
+            depToSource "$depFile"
 
             # Check C++ or Flex source file exists
             if [ ! -r "$sourceFile" ];
             then
                 echo "    rm $depFile"
-                rm -f $depFile 2>/dev/null
+                rm -f "$depFile" 2>/dev/null
             fi
         done
     done
@@ -208,19 +209,19 @@ updateMode)
 
     for filePathAndName in $fileNameList
     do
-        fileName=$(basename $filePathAndName)
+        fileName=$(basename "$filePathAndName")
         echo "    'src': $fileName"
-        cd src
-        $Script -a $fileName
+        (
+            cd src || exit
+            $Script -a "$fileName"
 
-        echo "    'applications': $fileName"
-        cd ../applications
-        $Script -a $fileName
-
-        cd ..
+            echo "    'applications': $fileName"
+            cd ../applications || exit
+            $Script -a "$fileName"
+        )
 
         # Just in case, remove the symbolic link as the last step
-        unlink $filePathAndName
+        unlink "$filePathAndName"
     done
 
     ;;

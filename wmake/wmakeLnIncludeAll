@@ -62,7 +62,6 @@ error() {
 # Parse arguments and options
 #------------------------------------------------------------------------------
 
-findName=lnInclude
 nCores=0
 
 # Default 'wmakeLnInclude' option
@@ -87,7 +86,7 @@ do
         # Parallel execution on WM_NCOMPPROCS cores
         -j)
             nCores=$WM_NCOMPPROCS
-            test $# -ge 2 && expr $2 + 1 > /dev/null 2>&1 \
+            test $# -ge 2 && (($2 + 1)) > /dev/null 2>&1 \
                 && shift && nCores=$1
             ;;
         # Parallel compilation on specified number of cores
@@ -115,8 +114,10 @@ then
         exit 1
     }
 
+    # shellcheck disable=SC2034
     LIB_SRC="$WM_PROJECT_DIR/src"
 
+    # shellcheck disable=SC2016
     includeDirs="
         $WM_PROJECT_DIR/src/$WM_PROJECT
         $WM_PROJECT_DIR/src/OSspecific/$WM_OSTYPE
@@ -126,21 +127,19 @@ then
     printed=
     for d in $includeDirs
     do [ ! -d "$d" ]
-       path=$(eval echo $d)
-       if [ ! -d $path/lnInclude ]
+       path=$(eval echo "$d")
+       if [ ! -d "$path/lnInclude" ]
        then
            [ $printed ] || echo "$Script: running wmakeLnInclude on dependent libraries:"
            printed=true
            echo -n "    "
-           eval wmakeLnInclude $wmLnOpt $d
+           eval wmakeLnInclude $wmLnOpt "$d"
        fi
     done
 
     unset MakeDir LIB_SRC printed
 
 else
-
-    FAIL=0
 
     if [ "$nCores" -gt 0 ]
     then
@@ -154,7 +153,7 @@ else
 
     for checkDir
     do
-        if [ -d $checkDir ]
+        if [ -d "$checkDir" ]
         then
             echo "    searching $checkDir for 'Make' directories"
         else
@@ -162,7 +161,7 @@ else
             continue
         fi
 
-        find $checkDir -depth -type d -name Make -print | while read MakeDir
+        find "$checkDir" -depth -type d -name Make -print | while read -r MakeDir
         do
             topDir=${MakeDir%/Make}    # trim /Make from the end
             if [ -d "$topDir" ]
@@ -173,16 +172,18 @@ else
                     # and more as the cores become free
                     if [ "$nCores" -gt 0 ]
                     then
+                        # shellcheck disable=SC2207
                         joblist=($(jobs -p))
-                        while (( ${#joblist[*]} > $nCores ))
+                        while (( ${#joblist[*]} > "$nCores" ))
                         do
                             # When the job limit is reached wait for a job to finish
                             wait -n
+                            # shellcheck disable=SC2207
                             joblist=($(jobs -p))
                         done
-                        wmakeLnInclude $wmLnOpt $topDir &
+                        wmakeLnInclude $wmLnOpt "$topDir" &
                     else
-                        wmakeLnInclude $wmLnOpt $topDir
+                        wmakeLnInclude $wmLnOpt "$topDir"
                     fi
                 elif [ -d "$topDir/lnInclude" ]
                 then
@@ -204,7 +205,7 @@ else
         sleep 3
     fi
 
-    unset FAIL joblist
+    unset joblist
 fi
 
 
@@ -212,7 +213,7 @@ fi
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage error findName nCores wmLnOpt depOpt
+unset Script usage error nCores wmLnOpt depOpt
 
 
 #------------------------------------------------------------------------------

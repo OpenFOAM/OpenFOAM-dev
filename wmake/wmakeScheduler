@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -51,24 +51,24 @@
 Script=${0##*/}
 
 # csh sets HOST, bash sets HOSTNAME
-: ${HOST:=$HOSTNAME}
+: "${HOST:=$HOSTNAME}"
 
 lockDir=$HOME/.$WM_PROJECT/.wmake
 
 # Fallback - 1 core on current host
-: ${WM_HOSTS:=$HOST:1}
+: "${WM_HOSTS:=$HOST:1}"
 
 # Count the total number of slots available and exit
 if [ "$1" = "-count" ]
 then
-    expr $(
+    (( $(
         for slotGroup in $WM_HOSTS
         do
             n=${slotGroup##*:}
             [ "$n" = "${slotGroup%%:*}" ] && n=1  # missing ':'
             echo "+ ${n:-1}"
         done
-    )
+    ) ))
     exit 0
 fi
 
@@ -127,7 +127,7 @@ case $sourceFoam in
 esac
 
 # Quote double-quotes for remote command line
-rcmd=$(echo $* | sed -e s/\"/\'\"\'/g)
+rcmd=${*//\"/\'\"\'}
 # The same, without forking (not ksh, maybe not /bin/sh either)
 # rcmd=$(while [ "$#" -gt 0 ]; do echo "${1//\"/'\"'}"; shift; done)
 
@@ -138,7 +138,7 @@ nColours=0
 for col in $WM_COLOURS
 do
     colourList[$nColours]=$col
-    ((nColours = $nColours + 1))
+    ((nColours = nColours + 1))
 done
 
 # Bashism: make pipe fail early.
@@ -156,9 +156,9 @@ colourPipe()
     if tty -s <&1       #    [ "$1" ]
     then
     (
-        while read line
+        while read -r line
         do
-            setterm -foreground $1
+            setterm -foreground "$1"
             echo "$line"
         done
         setterm -foreground default
@@ -200,17 +200,17 @@ do
                     colour="${colourList[$colourIndex]}"
 
                     if [ "$host" = "$HOST" ]; then
-                        eval $* 2>&1 | colourPipe "$colour"
+                        eval "$*" 2>&1 | colourPipe "$colour"
                     else
-                        ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" \
+                        ssh "$host" "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" \
                             2>&1 | colourPipe "$colour"
                     fi
                     retval=$?
                 else
                     if [ "$host" = "$HOST" ]; then
-                        eval $* 2>&1
+                        eval "$*" 2>&1
                     else
-                        ssh $host "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" \
+                        ssh "$host" "$sourceFoam 2>/dev/null; cd $PWD && $rcmd" \
                             2>&1
                     fi
                     retval=$?
@@ -220,10 +220,10 @@ do
                 rm -f "$lockFile" 2>/dev/null
                 exit $retval
             fi
-            i=$(expr $i + 1)
+            i=$((i + 1))
 
             # Cycle through colours. Note: outside lock clause!
-            colourIndex=$(expr $colourIndex + 1)
+            colourIndex=$((colourIndex + 1))
             [ "$colourIndex" -lt "$nColours" ] || colourIndex=0
 
         done

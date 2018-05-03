@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -104,7 +104,7 @@ dirName="$1"
 
 # Use /bin/pwd to get the absolute path (could be linked)
 thisDir=$(/bin/pwd)
-target=$(cd $dirName 2>/dev/null && /bin/pwd)
+target=$(cd "$dirName" 2>/dev/null && /bin/pwd)
 
 # Return 0 if this directory is <dir>
 [ "$thisDir" = "$target" ] && exit 0

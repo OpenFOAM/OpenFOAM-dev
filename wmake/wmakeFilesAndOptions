@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -98,12 +98,12 @@ fi
 
 [ -e Make/files ] || {
     echo "$Script: Creating Make/files"
-    $WM_DIR/scripts/makeFiles
+    "$WM_DIR/scripts/makeFiles"
 }
 
 [ -e Make/options ] || {
     echo "$Script: Creating Make/options"
-    $WM_DIR/scripts/makeOptions
+    "$WM_DIR/scripts/makeOptions"
 }
 
 

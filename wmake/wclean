@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 #------------------------------------------------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -37,6 +37,7 @@
 Script=${0##*/}
 
 # Source the wmake functions
+# shellcheck source=scripts/wmakeFunctions
 . ${0%/*}/scripts/wmakeFunctions
 
 error() {
@@ -120,7 +121,7 @@ then
 
     if [ "$dir" ]
     then
-        cd $dir 2>/dev/null || {
+        cd "$dir" 2>/dev/null || {
             echo "$Script error: could not change to directory '$dir'" 1>&2
             exit 1
         }
@@ -152,61 +153,61 @@ then
     echo "Removing empty directories..."
 
     # Get sub-directories avoiding particular directories
+    # shellcheck disable=SC2044
     for dir in $(find . -mindepth 1 -maxdepth 1 \
                         -type d \( -name .git -prune -o -print \) )
     do
         echo "    searching: $dir"
-        find $dir -depth -type d -empty -exec rmdir {} \; -print
+        find "$dir" -depth -type d -empty -exec rmdir {} \; -print
     done
 
     # Second pass: clean up object directories with WM_PROJECT_DIR that don't
     # have respective source code folders, along with the respective binaries
 
-    expandPath $PWD
+    expandPath "$PWD"
     if [ "$exPath" = "$WM_PROJECT_DIR" ]
     then
-        findObjectDir $PWD
+        findObjectDir "$PWD"
 
-        if [ -d $objectsDir ]
+        if [ -d "$objectsDir" ]
         then
             echo "    Removing redundant object directories in $objectsDir"
 
-            find $objectsDir -name 'variables' -print | \
-            while read variablesFile
+            find "$objectsDir" -name 'variables' -print | \
+            while read -r variablesFile
             do
                 # Hack'ish way of getting the original source code path
-                depFile=$(dirname $variablesFile)
-                depToSource $depFile
+                depFile=$(dirname "$variablesFile")
+                depToSource "$depFile"
 
                 # Check if the original source code directory exists
                 if [ ! -r "$sourceFile" ]
                 then
                     # Delete the respective binary first
-                    binaryFile=$(cat $variablesFile |
-                                grep -e '^ *\(EXE\|LIB\) *= *' )
+                    binaryFile=$(grep -e '^ *\(EXE\|LIB\) *= *' "$variablesFile")
 
                     # Catch all file extension (o,a,so,?+) for libraries
-                    if echo $binaryFile | grep -qe '^ *LIB *= *'
+                    if echo "$binaryFile" | grep -qe '^ *LIB *= *'
                     then
                         binaryFile="${binaryFile}.*"
                     fi
 
                     # Isolate path and translate environment variables
-                    binaryFile=$(echo $binaryFile | \
+                    binaryFile=$(echo "$binaryFile" | \
                                  sed -e 's/^ *\(EXE\|LIB\) *= *//' \
                                      -e 's/(/{/g' -e 's/)/}/g' )
 
                     # Expand environment variables for path
-                    binaryFile=$(eval echo $binaryFile)
+                    binaryFile=$(eval echo "$binaryFile")
 
                     # Verbosely remove binary file
-                    if [ -n "$binaryFile" -a -e "$binaryFile" ]
+                    if [ -n "$binaryFile" ] && [ -e "$binaryFile" ]
                     then
-                        rm -vf $binaryFile 2>/dev/null
+                        rm -vf "$binaryFile" 2>/dev/null
                     fi
 
                     # Remove the deprecated object directory
-                    rm -rvf $depFile 2>/dev/null
+                    rm -rvf "$depFile" 2>/dev/null
                 fi
             done
         fi
@@ -232,16 +233,17 @@ then
         exit $?
     else
         # For all the sub-directories containing a 'Make' directory
-        for dir in `find . \( -type d -a -name Make \)`
+        # shellcheck disable=SC2044
+        for dir in $(find . \( -type d -a -name Make \))
         do
             dir=${dir%/Make} # Parent directory - trim /Make from the end
 
             # If Allwclean exists execute otherwise wclean
             if [ -e "$dir/Allwclean" ]
             then
-                $dir/Allwclean
+                "$dir/Allwclean"
             else
-                $0 $dir
+                $0 "$dir"
             fi
         done
     fi
@@ -255,15 +257,15 @@ unset targetType
 # Clean the 'Make' directory if present
 #------------------------------------------------------------------------------
 
-if [ -d $MakeDir ]
+if [ -d "$MakeDir" ]
 then
     objectsDir=$MakeDir/$WM_OPTIONS
-    if [ $(echo $PWD | grep "$WM_PROJECT_DIR") ]
+    if [[ "$PWD" = *"$WM_PROJECT_DIR"* ]]
     then
         platformPath=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}
-        objectsDir=$platformPath$(echo $PWD | sed s%$WM_PROJECT_DIR%% )
+        objectsDir=$platformPath${PWD//$WM_PROJECT_DIR/}
     fi
-    rm -rf $objectsDir 2>/dev/null
+    rm -rf "$objectsDir" 2>/dev/null
 fi
 
 

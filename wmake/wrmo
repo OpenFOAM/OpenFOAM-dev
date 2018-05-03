@@ -38,6 +38,7 @@
 Script=${0##*/}
 
 # Source the wmake functions
+# shellcheck source=scripts/wmakeFunctions
 . ${0%/*}/scripts/wmakeFunctions
 
 usage() {
@@ -100,16 +101,16 @@ findObjectDir .
 # With the -a/-all option replace the current platform with a wildcard
 if [ "$all" = "all" ]
 then
-    objectsDir=$(echo $objectsDir | sed s%$WM_OPTIONS%*% )
+    objectsDir=$(echo "$objectsDir" | sed s%"$WM_OPTIONS"%*% )
 fi
 
 if [ "$#" -eq 0 ]
 then
     echo "removing all .o files ..."
-    find $objectsDir -name '*.o' -print | xargs -t rm 2>/dev/null
+    find "$objectsDir" -name '*.o' -print0 | xargs -0t rm 2>/dev/null
 else
     echo "removing .o files corresponding to $1 ..."
-    rm $objectsDir/${1%%.*}.o
+    rm "$objectsDir/${1%%.*}.o"
 fi
 
 

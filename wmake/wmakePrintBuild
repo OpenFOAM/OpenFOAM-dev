@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -78,7 +78,7 @@ do
         shift
         ;;
     -major)
-        echo ${WM_PROJECT_VERSION:-unknown}
+        echo "${WM_PROJECT_VERSION:-unknown}"
         exit 0
         ;;
     -u | -update)
@@ -119,10 +119,10 @@ build="$WM_PROJECT_DIR/.build"
 unset oldPackage oldVersion
 getOldValues()
 {
-    set -- $(tail -1 $build 2>/dev/null)
+    set -- "$(tail -1 "$build" 2>/dev/null)"
     oldVersion="$1"
     [ "$#" -gt 0 ] && shift
-    oldPackage="$@"
+    oldPackage="$*"
     [ "${oldPackage:-none}" = none ] && unset oldPackage
 }
 
@@ -153,7 +153,7 @@ else
     # if there are multiple values (eg, HEAD, origin/HEAD, ...)
     # only take the first one, which is 'HEAD'
     version=$(
-        cd $WM_PROJECT_DIR 2>/dev/null && \
+        cd "$WM_PROJECT_DIR" 2>/dev/null && \
         git show-ref --hash=12 --head HEAD 2>/dev/null | head -1
     )
 
@@ -181,11 +181,11 @@ fi
 #------------------------------------------------------------------------------
 # Update persistent build tag if possible
 #------------------------------------------------------------------------------
-if [ $rc -eq 0 -a -n "$update" ]
+if [ $rc -eq 0 ] && [ -n "$update" ]
 then
     if [ "$version:$package" != "$oldVersion:$oldPackage" ]
     then
-        if [ -w "$build" -o \( -w "$WM_PROJECT_DIR" -a ! -e "$build" \) ]
+        if [ -w "$build" ] || { [ -w "$WM_PROJECT_DIR" ] && [ ! -e "$build" ]; }
         then
             printTag >| "$build" 2>/dev/null
         fi

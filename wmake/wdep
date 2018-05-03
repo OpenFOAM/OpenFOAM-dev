@@ -38,6 +38,7 @@
 Script=${0##*/}
 
 # Source the wmake functions
+# shellcheck source=scripts/wmakeFunctions
 . ${0%/*}/scripts/wmakeFunctions
 
 usage() {
@@ -90,9 +91,9 @@ checkEnv
 
 sourceFile=$1
 
-if [ ! -e $1 ]
+if [ ! -e "$1" ]
 then
-    sourceFile=$(find . -name $sourceFile -print -quit)
+    sourceFile=$(find . -name "$sourceFile" -print -quit)
     if [ -z "$sourceFile" ]
     then
         echo "$Script: cannot find source file $1" 1>&2
@@ -106,11 +107,11 @@ fi
 # and echo path for the dep file corresponding to the specified source file
 #------------------------------------------------------------------------------
 
-findObjectDir $sourceFile
+findObjectDir "$sourceFile"
 
 fileName=${1##*/}
 
-echo $objectsDir/$fileName.dep
+echo "$objectsDir/$fileName.dep"
 
 
 #------------------------------------------------------------------------------
