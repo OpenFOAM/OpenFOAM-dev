@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ void Foam::RBD::rigidBodyModel::initializeRootBody()
     bodies_.append(new masslessBody("root"));
     lambda_.append(0);
     bodyIDs_.insert("root", 0);
-    joints_.append(new joints::null());
+    joints_.append(new joints::null(*this));
     XT_.append(spatialTransform());
 
     nDoF_ = 0;
@@ -198,7 +198,7 @@ Foam::RBD::rigidBodyModel::rigidBodyModel(const dictionary& dict)
             (
                 bodyID(bodyDict.lookup("parent")),
                 bodyDict.lookup("transform"),
-                joint::New(bodyDict.subDict("joint")),
+                joint::New(*this, bodyDict.subDict("joint")),
                 rigidBody::New(iter().keyword(), bodyDict)
             );
         }

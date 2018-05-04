@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,7 @@ Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joint::New(joint* jointPtr)
 
 Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joint::New
 (
+    const rigidBodyModel& model,
     const dictionary& dict
 )
 {
@@ -66,7 +67,7 @@ Foam::autoPtr<Foam::RBD::joint> Foam::RBD::joint::New
             << exit(FatalError);
     }
 
-    return autoPtr<joint>(cstrIter()(dict));
+    return autoPtr<joint>(cstrIter()(model, dict));
 }
 
 

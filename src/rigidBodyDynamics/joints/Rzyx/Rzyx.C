@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Rzyx.H"
-#include "rigidBodyModel.H"
+#include "rigidBodyModelState.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,9 +50,9 @@ namespace joints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Rzyx::Rzyx()
+Foam::RBD::joints::Rzyx::Rzyx(const rigidBodyModel& model)
 :
-    joint(3)
+    joint(model, 3)
 {
     S_[0] = spatialVector(0, 0, 1, 0, 0, 0);
     S_[1] = spatialVector(0, 1, 0, 0, 0, 0);
@@ -60,9 +60,13 @@ Foam::RBD::joints::Rzyx::Rzyx()
 }
 
 
-Foam::RBD::joints::Rzyx::Rzyx(const dictionary& dict)
+Foam::RBD::joints::Rzyx::Rzyx
+(
+    const rigidBodyModel& model,
+    const dictionary& dict
+)
 :
-    joint(3)
+    joint(model, 3)
 {
     S_[0] = spatialVector(0, 0, 1, 0, 0, 0);
     S_[1] = spatialVector(0, 1, 0, 0, 0, 0);
@@ -87,11 +91,10 @@ Foam::RBD::joints::Rzyx::~Rzyx()
 void Foam::RBD::joints::Rzyx::jcalc
 (
     joint::XSvc& J,
-    const scalarField& q,
-    const scalarField& qDot
+    const rigidBodyModelState& state
 ) const
 {
-    vector qj(q.block<vector>(qIndex_));
+    vector qj(state.q().block<vector>(qIndex_));
 
     scalar s0 = sin(qj.x());
     scalar c0 = cos(qj.x());
@@ -116,7 +119,7 @@ void Foam::RBD::joints::Rzyx::jcalc
     J.S.zx() = c1*c2;
     J.S.zy() = -s2;
 
-    vector qDotj(qDot.block<vector>(qIndex_));
+    vector qDotj(state.qDot().block<vector>(qIndex_));
     J.v = J.S & qDotj;
 
     J.c = spatialVector

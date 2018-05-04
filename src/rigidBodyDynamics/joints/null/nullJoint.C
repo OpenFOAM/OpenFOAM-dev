@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,15 +50,19 @@ namespace joints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::null::null()
+Foam::RBD::joints::null::null(const rigidBodyModel& model)
 :
-    joint(0)
+    joint(model, 0)
 {}
 
 
-Foam::RBD::joints::null::null(const dictionary& dict)
+Foam::RBD::joints::null::null
+(
+    const rigidBodyModel& model,
+    const dictionary& dict
+)
 :
-    joint(0)
+    joint(model, 0)
 {}
 
 
@@ -79,8 +83,7 @@ Foam::RBD::joints::null::~null()
 void Foam::RBD::joints::null::jcalc
 (
     joint::XSvc& J,
-    const scalarField& q,
-    const scalarField& qDot
+    const rigidBodyModelState& state
 ) const
 {
     FatalErrorInFunction

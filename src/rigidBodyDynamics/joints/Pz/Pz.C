@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Pz.H"
-#include "rigidBodyModel.H"
+#include "rigidBodyModelState.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,17 +50,17 @@ namespace joints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Pz::Pz()
+Foam::RBD::joints::Pz::Pz(const rigidBodyModel& model)
 :
-    joint(1)
+    joint(model, 1)
 {
     S_[0] = spatialVector(0, 0, 0, 0, 0, 1);
 }
 
 
-Foam::RBD::joints::Pz::Pz(const dictionary& dict)
+Foam::RBD::joints::Pz::Pz(const rigidBodyModel& model, const dictionary& dict)
 :
-    joint(1)
+    joint(model, 1)
 {
     S_[0] = spatialVector(0, 0, 0, 0, 0, 1);
 }
@@ -83,13 +83,12 @@ Foam::RBD::joints::Pz::~Pz()
 void Foam::RBD::joints::Pz::jcalc
 (
     joint::XSvc& J,
-    const scalarField& q,
-    const scalarField& qDot
+    const rigidBodyModelState& state
 ) const
 {
-    J.X = Xt(S_[0].l()*q[qIndex_]);
+    J.X = Xt(S_[0].l()*state.q()[qIndex_]);
     J.S1 = S_[0];
-    J.v = S_[0]*qDot[qIndex_];
+    J.v = S_[0]*state.qDot()[qIndex_];
     J.c = Zero;
 }
 

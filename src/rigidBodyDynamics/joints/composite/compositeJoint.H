@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ public:
         composite(const PtrList<joint>& joints);
 
         //- Construct for given model from dictionary
-        composite(const dictionary& dict);
+        composite(const rigidBodyModel& model, const dictionary& dict);
 
         //- Clone this joint
         virtual autoPtr<joint> clone() const;
@@ -105,8 +105,7 @@ public:
         virtual void jcalc
         (
             joint::XSvc& J,
-            const scalarField& q,
-            const scalarField& qDot
+            const rigidBodyModelState& state
         ) const;
 
         //- Write

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,11 @@ void Foam::RBD::rigidBodyModel::forwardDynamics
     const Field<spatialVector>& fx
 ) const
 {
-    const scalarField& q = state.q();
-    const scalarField& qDot = state.qDot();
     scalarField& qDdot = state.qDdot();
 
     DebugInFunction
-        << "q = " << q << nl
-        << "qDot = " << qDot << nl
+        << "q = " << state.q() << nl
+        << "qDot = " << state.qDot() << nl
         << "tau = " << tau << endl;
 
     // Joint state returned by jcalc
@@ -74,7 +72,7 @@ void Foam::RBD::rigidBodyModel::forwardDynamics
     for (label i=1; i<nBodies(); i++)
     {
         const joint& jnt = joints()[i];
-        jnt.jcalc(J, q, qDot);
+        jnt.jcalc(J, state);
 
         S_[i] = J.S;
         S1_[i] = J.S1;
@@ -108,7 +106,28 @@ void Foam::RBD::rigidBodyModel::forwardDynamics
         const joint& jnt = joints()[i];
         const label qi = jnt.qIndex();
 
-        if (jnt.nDoF() == 1)
+        if (jnt.nDoF() == 0)
+        {
+            U1_[i] = Zero;
+            u_[i] = Zero;
+
+            const label lambdai = lambda_[i];
+
+            if (lambdai != 0)
+            {
+                const spatialTensor Ia(IA_[i]);
+
+                const spatialVector pa(pA_[i] + (Ia & c_[i]));
+
+                IA_[lambdai] +=
+                    spatialTensor(Xlambda_[i].T())
+                  & Ia
+                  & spatialTensor(Xlambda_[i]);
+
+                pA_[lambdai] += Xlambda_[i].T() & pa;
+            }
+        }
+        else if (jnt.nDoF() == 1)
         {
             U1_[i] = IA_[i] & S1_[i];
             Dinv_[i].xx() = 1/(S1_[i] && U1_[i]);
@@ -140,24 +159,20 @@ void Foam::RBD::rigidBodyModel::forwardDynamics
         {
             U_[i] = IA_[i] & S_[i];
             Dinv_[i] = (S_[i].T() & U_[i]).inv();
-
             u_[i] = tau.block<vector>(qi) - (S_[i].T() & pA_[i]);
 
             const label lambdai = lambda_[i];
 
             if (lambdai != 0)
             {
-                spatialTensor Ia
+                const spatialTensor Ia
                 (
-                    IA_[i]
-                  - (U_[i] & Dinv_[i] & U_[i].T())
+                    IA_[i] - (U_[i] & Dinv_[i] & U_[i].T())
                 );
 
-                spatialVector pa
+                const spatialVector pa
                 (
-                    pA_[i]
-                  + (Ia & c_[i])
-                  + (U_[i] & Dinv_[i] & u_[i])
+                    pA_[i] + (Ia & c_[i]) + (U_[i] & Dinv_[i] & u_[i])
                 );
 
                 IA_[lambdai] +=
@@ -179,7 +194,11 @@ void Foam::RBD::rigidBodyModel::forwardDynamics
 
         a_[i] = (Xlambda_[i] & a_[lambda_[i]]) + c_[i];
 
-        if (jnt.nDoF() == 1)
+        if (jnt.nDoF() == 0)
+        {
+            // do nothing
+        }
+        else if (jnt.nDoF() == 1)
         {
             qDdot[qi] = Dinv_[i].xx()*(u_[i].x() - (U1_[i] && a_[i]));
             a_[i] += S1_[i]*qDdot[qi];
@@ -208,11 +227,9 @@ void Foam::RBD::rigidBodyModel::forwardDynamicsCorrection
     const rigidBodyModelState& state
 ) const
 {
-    DebugInFunction << endl;
-
-    const scalarField& q = state.q();
-    const scalarField& qDot = state.qDot();
     const scalarField& qDdot = state.qDdot();
+
+    DebugInFunction << endl;
 
     // Joint state returned by jcalc
     joint::XSvc J;
@@ -225,7 +242,7 @@ void Foam::RBD::rigidBodyModel::forwardDynamicsCorrection
         const joint& jnt = joints()[i];
         const label qi = jnt.qIndex();
 
-        jnt.jcalc(J, q, qDot);
+        jnt.jcalc(J, state);
 
         S_[i] = J.S;
         S1_[i] = J.S1;
@@ -247,7 +264,11 @@ void Foam::RBD::rigidBodyModel::forwardDynamicsCorrection
         c_[i] = J.c + (v_[i] ^ J.v);
         a_[i] = (Xlambda_[i] & a_[lambdai]) + c_[i];
 
-        if (jnt.nDoF() == 1)
+        if (jnt.nDoF() == 0)
+        {
+            // do nothing
+        }
+        else if (jnt.nDoF() == 1)
         {
             a_[i] += S1_[i]*qDdot[qi];
         }

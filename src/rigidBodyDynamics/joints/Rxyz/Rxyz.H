@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,10 +73,10 @@ public:
     // Constructors
 
         //- Construct for given model
-        Rxyz();
+        Rxyz(const rigidBodyModel& model);
 
         //- Construct for given model from dictionary
-        Rxyz(const dictionary& dict);
+        Rxyz(const rigidBodyModel& model, const dictionary& dict);
 
         //- Clone this joint
         virtual autoPtr<joint> clone() const;
@@ -92,8 +92,7 @@ public:
         virtual void jcalc
         (
             joint::XSvc& J,
-            const scalarField& q,
-            const scalarField& qDot
+            const rigidBodyModelState& state
         ) const;
 };
 

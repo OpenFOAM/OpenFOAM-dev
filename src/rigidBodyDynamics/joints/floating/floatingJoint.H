@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class floating
     // Private member functions
 
         //- Return a list of joints needed to emulate a floating body
-        static autoPtr<composite> sixDoF();
+        static autoPtr<composite> sixDoF(const rigidBodyModel& model);
 
 
 public:
@@ -77,10 +77,10 @@ public:
     // Constructors
 
         //- Construct
-        floating();
+        floating(const rigidBodyModel& model);
 
         //- Construct for given model from dictionary
-        floating(const dictionary& dict);
+        floating(const rigidBodyModel& model, const dictionary& dict);
 
         //- Clone this joint
         virtual autoPtr<joint> clone() const;

@@ -55,17 +55,17 @@ namespace joints
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::RBD::joints::composite>
-Foam::RBD::joints::floating::sixDoF()
+Foam::RBD::joints::floating::sixDoF(const rigidBodyModel& model)
 {
     PtrList<joint> cj(2);
-    cj.set(0, new joints::Pxyz());
+    cj.set(0, new joints::Pxyz(model));
 
     // The quaternion-based spherical joint could be used
     // but then w must be set appropriately
-    // cj.set(1, new joints::Rs());
+    // cj.set(1, new joints::Rs(model));
 
     // Alternatively the Euler-angle joint can be used
-    cj.set(1, new joints::Rzyx());
+    cj.set(1, new joints::Rzyx(model));
 
     return autoPtr<composite>(new composite(cj));
 }
@@ -73,15 +73,19 @@ Foam::RBD::joints::floating::sixDoF()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::floating::floating()
+Foam::RBD::joints::floating::floating(const rigidBodyModel& model)
 :
-    composite(sixDoF())
+    composite(sixDoF(model))
 {}
 
 
-Foam::RBD::joints::floating::floating(const dictionary& dict)
+Foam::RBD::joints::floating::floating
+(
+    const rigidBodyModel& model,
+    const dictionary& dict
+)
 :
-    composite(sixDoF())
+    composite(sixDoF(model))
 {}
 
 

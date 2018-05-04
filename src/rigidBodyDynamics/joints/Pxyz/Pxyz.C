@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Pxyz.H"
-#include "rigidBodyModel.H"
+#include "rigidBodyModelState.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,9 +50,9 @@ namespace joints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Pxyz::Pxyz()
+Foam::RBD::joints::Pxyz::Pxyz(const rigidBodyModel& model)
 :
-    joint(3)
+    joint(model, 3)
 {
     S_[0] = spatialVector(0, 0, 0, 1, 0, 0);
     S_[1] = spatialVector(0, 0, 0, 0, 1, 0);
@@ -60,9 +60,13 @@ Foam::RBD::joints::Pxyz::Pxyz()
 }
 
 
-Foam::RBD::joints::Pxyz::Pxyz(const dictionary& dict)
+Foam::RBD::joints::Pxyz::Pxyz
+(
+    const rigidBodyModel& model,
+    const dictionary& dict
+)
 :
-    joint(3)
+    joint(model, 3)
 {
     S_[0] = spatialVector(0, 0, 0, 1, 0, 0);
     S_[1] = spatialVector(0, 0, 0, 0, 1, 0);
@@ -87,19 +91,18 @@ Foam::RBD::joints::Pxyz::~Pxyz()
 void Foam::RBD::joints::Pxyz::jcalc
 (
     joint::XSvc& J,
-    const scalarField& q,
-    const scalarField& qDot
+    const rigidBodyModelState& state
 ) const
 {
     J.X.E() = tensor::I;
-    J.X.r() = q.block<vector>(qIndex_);
+    J.X.r() = state.q().block<vector>(qIndex_);
 
     J.S = Zero;
     J.S(3,0) = 1;
     J.S(4,1) = 1;
     J.S(5,2) = 1;
 
-    J.v = spatialVector(Zero, qDot.block<vector>(qIndex_));
+    J.v = spatialVector(Zero, state.qDot().block<vector>(qIndex_));
     J.c = Zero;
 }
 

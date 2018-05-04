@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Rs.H"
-#include "rigidBodyModel.H"
+#include "rigidBodyModelState.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,9 +50,9 @@ namespace joints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::RBD::joints::Rs::Rs()
+Foam::RBD::joints::Rs::Rs(const rigidBodyModel& model)
 :
-    joint(3)
+    joint(model, 3)
 {
     S_[0] = spatialVector(1, 0, 0, 0, 0, 0);
     S_[1] = spatialVector (0, 1, 0, 0, 0, 0);
@@ -60,9 +60,9 @@ Foam::RBD::joints::Rs::Rs()
 }
 
 
-Foam::RBD::joints::Rs::Rs(const dictionary& dict)
+Foam::RBD::joints::Rs::Rs(const rigidBodyModel& model, const dictionary& dict)
 :
-    joint(3)
+    joint(model, 3)
 {
     S_[0] = spatialVector(1, 0, 0, 0, 0, 0);
     S_[1] = spatialVector (0, 1, 0, 0, 0, 0);
@@ -93,11 +93,10 @@ bool Foam::RBD::joints::Rs::unitQuaternion() const
 void Foam::RBD::joints::Rs::jcalc
 (
     joint::XSvc& J,
-    const scalarField& q,
-    const scalarField& qDot
+    const rigidBodyModelState& state
 ) const
 {
-    J.X.E() = joint::unitQuaternion(q).R().T();
+    J.X.E() = joint::unitQuaternion(state.q()).R().T();
     J.X.r() = Zero;
 
     J.S = Zero;
@@ -105,7 +104,7 @@ void Foam::RBD::joints::Rs::jcalc
     J.S.yy() = 1;
     J.S.zz() = 1;
 
-    J.v = spatialVector(qDot.block<vector>(qIndex_), Zero);
+    J.v = spatialVector(state.qDot().block<vector>(qIndex_), Zero);
     J.c = Zero;
 }
 

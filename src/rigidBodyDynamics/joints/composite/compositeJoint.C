@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace joints
 
 void Foam::RBD::joints::composite::setLastJoint()
 {
-    last().joint::operator=(*this);
+    //last().joint::operator=(*this);
 }
 
 
@@ -65,9 +65,13 @@ Foam::RBD::joints::composite::composite(const PtrList<joint>& joints)
 {}
 
 
-Foam::RBD::joints::composite::composite(const dictionary& dict)
+Foam::RBD::joints::composite::composite
+(
+    const rigidBodyModel& model,
+    const dictionary& dict
+)
 :
-    PtrList<joint>(dict.lookup("joints")),
+    PtrList<joint>(dict.lookup("joints"), joint::iNew(model)),
     joint(last())
 {}
 
@@ -89,11 +93,10 @@ Foam::RBD::joints::composite::~composite()
 void Foam::RBD::joints::composite::jcalc
 (
     joint::XSvc& J,
-    const scalarField& q,
-    const scalarField& qDot
+    const rigidBodyModelState& state
 ) const
 {
-    last().jcalc(J, q, qDot);
+    last().jcalc(J, state);
 }
 
 
