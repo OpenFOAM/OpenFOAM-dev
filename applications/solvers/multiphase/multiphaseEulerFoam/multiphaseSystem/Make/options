@@ -1,5 +1,4 @@
 EXE_INC = \
-    -I../phaseModel/lnInclude \
     -I../interfacialModels/lnInclude \
     -IalphaContactAngle \
     -I$(LIB_SRC)/transportModels \

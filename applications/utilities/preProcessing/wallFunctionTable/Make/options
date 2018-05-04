@@ -1,6 +1,5 @@
 EXE_INC = \
     -I./tabulatedWallFunction/lnInclude \
-    -I$(LIB_SRC)/turbulenceModels/incompressible/RAS/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
