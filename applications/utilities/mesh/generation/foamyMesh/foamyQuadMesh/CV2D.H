@@ -146,8 +146,8 @@ class CV2D
 :
     public Delaunay
 {
-
-private:
+    //- Use the Foam::point in preference to the CGAL point
+    typedef Foam::point point;
 
     // Private data
 
