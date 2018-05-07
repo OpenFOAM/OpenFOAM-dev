@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::subModelBase
+    Foam::regionModels::surfaceFilmModels::filmSubModelBase
 
 Description
     Base class for surface film sub-models

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::primaryRadiation
+    Foam::regionModels::surfaceFilmModels::primaryRadiation
 
 Description
     Radiation model whereby the radiative heat flux is mapped from the primary

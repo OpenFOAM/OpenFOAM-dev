@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::drippingInjection
+    Foam::regionModels::surfaceFilmModels::drippingInjection
 
 Description
     Film Dripping mass transfer model.
