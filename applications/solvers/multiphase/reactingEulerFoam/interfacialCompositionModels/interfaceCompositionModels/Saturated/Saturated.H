@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Saturated
+    Foam::interfaceCompositionModels::Saturated
 
 Description
     Model which uses a saturation pressure model for a single species to

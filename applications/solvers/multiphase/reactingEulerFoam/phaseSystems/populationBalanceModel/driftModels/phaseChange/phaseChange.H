@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::driftModels::isothermal
+    Foam::diameterModels::driftModels::phaseChange
 
 Description
     Drift induced by interfacial phaseChange.

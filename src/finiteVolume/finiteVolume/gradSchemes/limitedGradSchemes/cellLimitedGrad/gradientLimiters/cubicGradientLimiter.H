@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::gradientLimiters::minmod
+    Foam::fv::gradientLimiters::cubic
 
 Description
     Cubic gradient limiter

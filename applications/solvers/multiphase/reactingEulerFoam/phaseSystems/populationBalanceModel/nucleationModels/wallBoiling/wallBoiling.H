@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::nucleationModels::wall
+    Foam::diameterModels::nucleationModels::wallBoiling
 
 Description
     Wall-boiling model which requires a velocityGroup (i.e. phase) to be

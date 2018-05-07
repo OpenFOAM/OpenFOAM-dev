@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::driftModels::constant
+    Foam::diameterModels::driftModels::constantDrift
 
 Description
     Constant drift rate within all classes. Used for verification and

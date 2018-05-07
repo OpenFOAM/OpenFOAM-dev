@@ -1083,6 +1083,9 @@ void addInterZonePatches
         cyclicPolyPatch::transformTypeNames[cyclicPolyPatch::NOORDERING]
     );
 
+    // Allow arbitrary matching for nonuniformTransformCyclicPolyPatch
+    transformDict.add("matchTolerance", 1e6);
+
     label nOldPatches = newPatches.size();
 
     if (!oneD)

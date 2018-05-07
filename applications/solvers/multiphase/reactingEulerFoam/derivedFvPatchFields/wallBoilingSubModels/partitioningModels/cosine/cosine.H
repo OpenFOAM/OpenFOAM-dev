@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallBoilingModels::cosine
+    Foam::wallBoilingModels::partitioningModels::cosine
 
 Description
     Cosine wall heat flux partitioning model.

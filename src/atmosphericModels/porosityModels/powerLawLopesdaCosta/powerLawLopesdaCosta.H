@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::powerLawLopesdaCosta
+    Foam::porosityModels::powerLawLopesdaCosta
 
 Description
     Variant of the power law porosity model with spatially varying

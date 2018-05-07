@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::reactingOneDim
+    Foam::regionModels::pyrolysisModels::reactingOneDim
 
 Description
     Reacting, 1-D pyrolysis model

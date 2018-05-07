@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fileOperations::masterUncollatedFileOperation
+    Foam::fileOperations::masterUncollatedFileOperationInitialise
 
 Description
     fileOperations that performs all file operations on the master processor.

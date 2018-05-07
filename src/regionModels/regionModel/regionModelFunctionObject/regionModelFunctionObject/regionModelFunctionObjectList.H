@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModelFunctionObjectList
+    Foam::regionModels::regionModelFunctionObjectList
 
 Description
     List of cloud function objects

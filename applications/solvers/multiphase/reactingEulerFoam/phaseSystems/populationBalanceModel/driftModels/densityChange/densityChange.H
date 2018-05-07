@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::driftModels::densityChange
+    Foam::diameterModels::driftModels::densityChangeDrift
 
 Description
     Drift rate induced by changes in density.

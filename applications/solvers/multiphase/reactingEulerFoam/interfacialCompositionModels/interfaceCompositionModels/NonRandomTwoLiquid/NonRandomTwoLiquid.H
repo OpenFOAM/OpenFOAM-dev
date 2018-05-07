@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::NonRandomTwoLiquid
+    Foam::interfaceCompositionModels::NonRandomTwoLiquid
 
 Description
     Non ideal law for the mixing of two species. A separate composition model

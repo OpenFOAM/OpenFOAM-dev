@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallBoilingModels::linear
+    Foam::wallBoilingModels::partitioningModels::linear
 
 Description
     Linear wall heat flux partitioning model.

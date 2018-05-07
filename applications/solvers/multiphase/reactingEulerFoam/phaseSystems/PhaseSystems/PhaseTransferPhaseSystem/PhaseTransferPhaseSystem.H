@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::MassTransferTransferPhaseSystem
+    Foam::PhaseTransferPhaseSystem
 
 Description
     Class which models non-thermally-coupled mass transfers; i.e.,

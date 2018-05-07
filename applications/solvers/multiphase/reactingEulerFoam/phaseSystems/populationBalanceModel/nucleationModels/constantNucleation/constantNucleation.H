@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::nucleationModels::constant
+    Foam::diameterModels::nucleationModels::constantNucleation
 
 Description
     Constant nucleation rate within all classes. Used for verification and

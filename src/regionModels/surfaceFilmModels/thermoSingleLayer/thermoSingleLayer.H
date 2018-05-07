@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermoSingleLayer
+    Foam::regionModels::surfaceFilmModels::thermoSingleLayer
 
 Description
     Thermodynamic form of single-cell layer surface film model
