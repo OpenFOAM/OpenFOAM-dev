@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -56,6 +56,9 @@ OpenFOAM | ThirdParty)
         ;;
     Gcc61)
         gcc_version=gcc-6.1.0
+        ;;
+    Gcc81)
+        gcc_version=gcc-8.1.0
         ;;
     Clang)
         # Using clang - not gcc

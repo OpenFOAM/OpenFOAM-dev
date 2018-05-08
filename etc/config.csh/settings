@@ -240,6 +240,9 @@ case ThirdParty:
     case Gcc61:
         set gcc_version=gcc-6.1.0
         breaksw
+    case Gcc81:
+        set gcc_version=gcc-8.1.0
+        breaksw
     case Clang:
         # Using clang - not gcc
         setenv WM_CC 'clang'

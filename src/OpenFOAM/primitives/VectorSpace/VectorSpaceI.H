@@ -49,16 +49,6 @@ inline VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace(const Foam::zero)
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace
-(
-    const VectorSpace<Form, Cmpt, Ncmpts>& vs
-)
-{
-    VectorSpaceOps<Ncmpts,0>::eqOp(*this, vs, eqOp<Cmpt>());
-}
-
-
-template<class Form, class Cmpt, direction Ncmpts>
 template<class Form2, class Cmpt2>
 inline VectorSpace<Form, Cmpt, Ncmpts>::VectorSpace
 (
@@ -282,16 +272,6 @@ ConstBlock<SubVector, BStart>::operator()
     #endif
 
     return vs_[BStart + i];
-}
-
-
-template<class Form, class Cmpt, direction Ncmpts>
-inline void VectorSpace<Form, Cmpt, Ncmpts>::operator=
-(
-    const VectorSpace<Form, Cmpt, Ncmpts>& vs
-)
-{
-    VectorSpaceOps<Ncmpts,0>::eqOp(*this, vs, eqOp<Cmpt>());
 }
 
 
