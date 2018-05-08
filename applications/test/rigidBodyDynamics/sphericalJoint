@@ -3,9 +3,6 @@ solver
     type Newmark;
 }
 
-// It is necessary to iterate for the Newmark solver
-nIter 2;
-
 bodies
 {
     pendulum
@@ -20,5 +17,17 @@ bodies
         {
             type            Rs;
         }
+        outline         ((0 0 0) (0 -2 0));
     }
 }
+
+g (0 -9.81 0);
+
+q (0 0 0.149438);
+
+deltaT 0.01;
+
+// It is necessary to iterate for the Newmark solver
+nIter 2;
+
+endTime 4.1;

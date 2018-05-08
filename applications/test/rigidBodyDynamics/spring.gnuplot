@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -53,8 +53,9 @@ A*exp(-zeta*omega*t)*\
 - zeta*omega*sin(sqrt(1-zeta**2)*omega*t + phi) \
 )
 
-set xlabel "Time/[s]"
-set ylabel "Position"
+set xlabel "Time (s)"
+set ylabel "Position (m)"
+set y2label "Velocity (m/s)"
 
 set ytics nomirror
 set y2tics
@@ -68,9 +69,9 @@ set terminal postscript eps color enhanced solid
 set output "spring.eps"
 
 plot \
-    "qVsTime" u 1:($2 - 0.1) w l t "Simulation, centre of mass relative to start", \
+    "spring.dat" u 1:($2 - 0.1) w l t "Simulation, centre of mass relative to start", \
     pos(A, x, omega, phi, zeta) w l t "Analytical solution, centre of mass", \
-    "qDotVsTime" u 1:2 w l axes x1y2 t "Simulation, vertical velocity", \
+    "spring.dat" u 1:3 w l axes x1y2 t "Simulation, vertical velocity", \
     vel(A, x, omega, phi, zeta) w l axes x1y2 t "Analytical solution, vertical velocity"
 
 #------------------------------------------------------------------------------

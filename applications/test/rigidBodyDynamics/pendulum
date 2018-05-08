@@ -1,0 +1,52 @@
+solver
+{
+    type symplectic;
+}
+
+bodies
+{
+    hinge
+    {
+        type            masslessBody;
+        parent          root;
+        transform       (1 0 0 0 1 0 0 0 1) (0 0 0);
+        joint
+        {
+            type            Rz;
+        }
+        outline
+        (
+            (0 0 0)
+            (0 -0.95 0)
+            (0.025 -0.95669873 0)
+            (0.04330127 -0.975 0)
+            (0.05 -1 0)
+            (0.04330127 -1.025 0)
+            (0.025 -1.04330127 0)
+            (0 -1.05 0)
+            (-0.025 -1.04330127 0)
+            (-0.04330127 -1.025 0)
+            (-0.05 -1 0)
+            (-0.04330127 -0.975 0)
+            (-0.025 -0.95669873 0)
+            (0 -0.95 0)
+        );
+    }
+    weight
+    {
+        type            sphere;
+        mass            1;
+        radius          0.05;
+        centreOfMass    (0 0 0);
+        transform       (1 0 0 0 1 0 0 0 1) (0 -1 0);
+        mergeWith       hinge;
+    }
+}
+
+g (0 -9.81 0);
+
+q (0.3);
+
+deltaT 0.01;
+
+endTime 4.1;

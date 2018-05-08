@@ -3,9 +3,6 @@ solver
     type Newmark;
 }
 
-// It is necessary to iterate for the Newmark solver
-nIter 2;
-
 bodies
 {
     weight
@@ -36,3 +33,12 @@ restraints
         restLength      0.4;
     }
 }
+
+g (0 0 0);
+
+deltaT 0.002;
+
+// It is necessary to iterate for the Newmark solver
+nIter 2;
+
+endTime 4;

@@ -3,9 +3,6 @@ solver
     type Newmark;
 }
 
-// It is necessary to iterate for the Newmark solver
-nIter 2;
-
 bodies
 {
     M
@@ -14,6 +11,7 @@ bodies
         parent          root;
         mass            6e4;
         radius          0.01;
+        centreOfMass    (0 0 0);
         transform       (1 0 0 0 1 0 0 0 1) (0 0 0);
         joint
         {
@@ -29,6 +27,21 @@ bodies
                 }
             );
         }
+        outline
+        (
+            (0 0.01 0)
+            (0.005 0.00866025 0)
+            (0.00866025 0.005 0)
+            (0.01 0 0)
+            (0.00866025 -0.005 0)
+            (0.005 -0.00866025 0)
+            (0 -0.01 0)
+            (-0.00866025 -0.005 0)
+            (-0.01 0 0)
+            (-0.00866025 0.005 0)
+            (-0.005 0.00866025 0)
+            (0 0.01 0)
+        );
     }
 
     m
@@ -37,8 +50,24 @@ bodies
         parent          M;
         mass            6e3;
         radius          0.01;
+        centreOfMass    (0 0 0);
         transform       (1 0 0 0 1 0 0 0 1) (0 -5 0);
         mergeWith       M;
+        outline
+        (
+            (0 0.01 0)
+            (0.005 0.00866025 0)
+            (0.00866025 0.005 0)
+            (0.01 0 0)
+            (0.00866025 -0.005 0)
+            (0.005 -0.00866025 0)
+            (0 -0.01 0)
+            (-0.00866025 -0.005 0)
+            (-0.01 0 0)
+            (-0.00866025 0.005 0)
+            (-0.005 0.00866025 0)
+            (0 0.01 0)
+        );
     }
 }
 
@@ -62,3 +91,10 @@ g (0 -9.81 0);
 // Set the initial offset of the pendulum to 1.5m
 // and the angle of the pendulum to 30deg
 q (1.5 0.5235987);
+
+deltaT 0.01;
+
+// It is necessary to iterate for the Newmark solver
+nIter 2;
+
+endTime 20;

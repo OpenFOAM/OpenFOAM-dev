@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -47,7 +47,7 @@ set terminal postscript eps color enhanced solid
 set output "pendulumAndSpring.eps"
 
 plot \
-    "xVsTime" u 1:2 w l t "x", \
-    "omegaVsTime" u 1:(57.29578*$2) w l axes x1y2 t "omega"
+    "pendulumAndSpring.dat" u 1:2 w l t "x", \
+    "pendulumAndSpring.dat" u 1:(57.29578*$2) w l axes x1y2 t "omega"
 
 #------------------------------------------------------------------------------
