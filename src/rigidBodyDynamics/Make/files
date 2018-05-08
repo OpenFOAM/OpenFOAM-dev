@@ -26,6 +26,10 @@ joints/Pz/Pz.C
 joints/Pa/Pa.C
 joints/Pxyz/Pxyz.C
 
+joints/rigid/rigid.C
+joints/function/function.C
+joints/functionDot/functionDot.C
+
 restraints/restraint/rigidBodyRestraint.C
 restraints/restraint/rigidBodyRestraintNew.C
 restraints/linearSpring/linearSpring.C

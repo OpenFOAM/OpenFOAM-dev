@@ -23,3 +23,8 @@
 #include "Pz.H"
 #include "Pa.H"
 #include "Pxyz.H"
+
+// 0-DoF joints
+#include "rigid.H"
+#include "function.H"
+#include "functionDot.H"
