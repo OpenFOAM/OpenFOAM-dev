@@ -1,5 +1,7 @@
 EXE_INC = \
     -I. \
+    -IVoFPatchTransfer \
+    -IVoFSolidificationMeltingSource \
     -I.. \
     -I../../VoF \
     -I../twoPhaseMixtureThermo \

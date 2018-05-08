@@ -1,6 +1,6 @@
 EXE_INC = \
     -I. \
-    -ItractionDisplacement/lnInclude \
+    -ItractionDisplacement \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 

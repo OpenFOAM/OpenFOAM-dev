@@ -1,8 +1,23 @@
 EXE_INC = \
+    -IXiModels/transport \
+    -IXiModels/fixed \
+    -IXiModels/algebraic \
     -IXiModels/XiModel \
     -IXiModels/XiEqModels/XiEqModel \
     -IXiModels/XiGModels/XiGModel \
+    -IXiModels/XiEqModels/Gulder \
+    -IXiModels/XiEqModels/instabilityXiEq \
+    -IXiModels/XiEqModels/SCOPEBlendXiEq \
+    -IXiModels/XiEqModels/SCOPEXiEq \
+    -IXiModels/XiEqModels/XiEqModel \
+    -IXiModels/XiGModels/instabilityG \
+    -IXiModels/XiGModels/KTS \
+    -IXiModels/XiGModels/XiGModel \
+    -IPDRModels/dragModels/basic \
     -IPDRModels/dragModels/PDRDragModel \
+    -IPDRModels/XiEqModels/basicXiSubXiEq \
+    -IPDRModels/XiGModels/basicXiSubG \
+    -IPDRModels/turbulence/PDRkEpsilon \
     -IlaminarFlameSpeed/SCOPE \
     -I$(LIB_SRC)/engine/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
