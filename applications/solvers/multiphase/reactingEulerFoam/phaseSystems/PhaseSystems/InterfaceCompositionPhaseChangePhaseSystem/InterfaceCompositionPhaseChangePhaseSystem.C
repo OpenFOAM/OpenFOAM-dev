@@ -101,7 +101,7 @@ InterfaceCompositionPhaseChangePhaseSystem
         if (!massTransferModels_[key][pair.index(pair.phase1())].valid())
         {
             FatalErrorInFunction
-                << "A species transfer model for the " << pair.phase1().name()
+                << "A mass transfer model for the " << pair.phase1().name()
                 << " side of the " << key << " pair is not specified. This is "
                 << "required by the corresponding interface composition model."
                 << exit(FatalError);
@@ -120,7 +120,7 @@ InterfaceCompositionPhaseChangePhaseSystem
         if (!this->heatTransferModels_.found(pair))
         {
              FatalErrorInFunction
-                 << "A Heat transfer model for " << pair << " pair is not "
+                 << "A heat transfer model for " << pair << " pair is not "
                  << "specified. This is required by the corresponding species "
                  << "transfer model"
                  << exit(FatalError);
