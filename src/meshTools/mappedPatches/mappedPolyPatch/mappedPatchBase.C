@@ -648,26 +648,47 @@ void Foam::mappedPatchBase::calcMapping() const
     }
 
     // Now we have all the data we need:
-    // - where sample originates from (so destination when mapping):
-    //   patchFaces, patchFaceProcs.
-    // - cell/face sample is in (so source when mapping)
-    //   sampleIndices, sampleProcs.
+    //   - where sample originates from (so destination when mapping):
+    //     patchFaces, patchFaceProcs.
+    //   - cell/face sample is in (so source when mapping)
+    //     sampleIndices, sampleProcs.
 
     // forAll(samples, i)
-    //{
-    //    Info<< i << " need data in region "
-    //        << patch_.boundaryMesh().mesh().name()
-    //        << " for proc:" << patchFaceProcs[i]
-    //        << " face:" << patchFaces[i]
-    //        << " at:" << patchFc[i] << endl
-    //        << "Found data in region " << sampleRegion()
-    //        << " at proc:" << sampleProcs[i]
-    //        << " face:" << sampleIndices[i]
-    //        << " at:" << sampleLocations[i]
-    //        << nl << endl;
-    //}
+    // {
+    //     Info<< i << " need data in region "
+    //         << patch_.boundaryMesh().mesh().name()
+    //         << " for proc:" << patchFaceProcs[i]
+    //         << " face:" << patchFaces[i]
+    //         << " at:" << patchFc[i] << endl
+    //         << "Found data in region " << sampleRegion()
+    //         << " at proc:" << sampleProcs[i]
+    //         << " face:" << sampleIndices[i]
+    //         << " at:" << sampleLocations[i]
+    //         << nl << endl;
+    // }
 
+    bool mapSucceeded = true;
 
+    forAll(samples, i)
+    {
+        if (sampleProcs[i] == -1)
+        {
+            mapSucceeded = false;
+            break;
+        }
+    }
+
+    if (!mapSucceeded)
+    {
+        FatalErrorInFunction
+            << "Mapping failed for " << nl
+            << "    patch: " << patch_.name() << nl
+            << "    sampleRegion: " << sampleRegion() << nl
+            << "    mode: " << sampleModeNames_[mode_] << nl
+            << "    samplePatch: " << samplePatch() << nl
+            << "    offsetMode: " << offsetModeNames_[offsetMode_]
+            << exit(FatalError);
+    }
 
     if (debug && Pstream::master())
     {
