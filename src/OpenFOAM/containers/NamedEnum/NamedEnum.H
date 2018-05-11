@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,6 @@ SourceFiles
 #include "HashTable.H"
 #include "stringList.H"
 #include "wordList.H"
-#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -108,10 +107,7 @@ public:
         }
 
         //- Return the name of the given enumeration element
-        const char* operator[](const Enum e) const
-        {
-            return names[unsigned(e)];
-        }
+        const char* operator[](const Enum e) const;
 };
 
 

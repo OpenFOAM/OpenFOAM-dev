@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -44,7 +44,6 @@ usage() {
         cat <<USAGE
 
 Usage: ${0##*/} [OPTIONS] ...
-options:
 options:
   -case | -c <dir>    specify case directory (default = local dir)
   -dir  | -d <dir>    post-processing directory <dir> (default = postProcessing)
