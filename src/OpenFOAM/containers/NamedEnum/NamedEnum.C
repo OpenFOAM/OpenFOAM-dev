@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,6 +117,27 @@ Foam::wordList Foam::NamedEnum<Enum, nEnum>::words()
 
     lst.setSize(nElem);
     return lst;
+}
+
+
+template<class Enum, unsigned int nEnum>
+const char* Foam::NamedEnum<Enum, nEnum>::operator[](const Enum e) const
+{
+    unsigned int ue = unsigned(e);
+
+    if (ue < nEnum)
+    {
+        return names[ue];
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "names array index " << ue << " out of range 0-"
+            << nEnum - 1
+            << exit(FatalError);
+
+        return names[0];
+    }
 }
 
 
