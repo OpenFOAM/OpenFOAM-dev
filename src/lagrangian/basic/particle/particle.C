@@ -570,6 +570,23 @@ Foam::scalar Foam::particle::track
 }
 
 
+Foam::scalar Foam::particle::trackToCell
+(
+    const vector& displacement,
+    const scalar fraction
+)
+{
+    const scalar f = trackToFace(displacement, fraction);
+
+    if (onInternalFace())
+    {
+        changeCell();
+    }
+
+    return f;
+}
+
+
 Foam::scalar Foam::particle::trackToFace
 (
     const vector& displacement,
