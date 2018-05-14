@@ -513,16 +513,23 @@ public:
             const scalar fraction
         );
 
-        //- As particle::track, but also stops on internal faces.
+        //- As particle::track, but stops when a new cell is reached.
+        scalar trackToCell
+        (
+            const vector& displacement,
+            const scalar fraction
+        );
+
+        //- As particle::track, but stops when a face is hit.
         scalar trackToFace
         (
             const vector& displacement,
             const scalar fraction
         );
 
-        //- As particle::trackToFace, but also stops on tet triangles. On
-        //  exit, tetTriI is set to the index of the tet triangle that was
-        //  hit, or -1 if the end position was reached.
+        //- As particle::trackToFace, but stops when a tet triangle is hit. On
+        //  exit, tetTriI is set to the index of the tet triangle that was hit,
+        //  or -1 if the end position was reached.
         scalar trackToTri
         (
             const vector& displacement,
