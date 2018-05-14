@@ -28,7 +28,7 @@ graph
     (
         centreline
         {
-            type    uniform;
+            type    lineUniform;
             axis    x;
             start   ( 0  1e-6 0);
             end     (25  1e-6 0);

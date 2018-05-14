@@ -61,7 +61,7 @@ functions
         cloudName       particleTracks;
         seedSampleSet
         {
-            type            uniform;
+            type            lineUniform;
             axis            x;
             start           (-1.001 1e-07 0.0011);
             end             (-1.001 1e-07 1.0011);

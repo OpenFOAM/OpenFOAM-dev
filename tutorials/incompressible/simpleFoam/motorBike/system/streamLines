@@ -44,7 +44,7 @@ streamLines
     // Seeding method.
     seedSampleSet
     {
-        type        uniform;
+        type        lineUniform;
         axis        x;  // distance;
 
         // Note: tracks slightly offset so as not to be on a face

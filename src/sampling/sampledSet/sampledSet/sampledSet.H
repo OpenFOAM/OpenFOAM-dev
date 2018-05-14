@@ -27,8 +27,8 @@ Class
 Description
     Holds list of sampling points which is filled at construction time.
     Various implementations of this base class to e.g. get sampling points
-    at uniform distance along a line (uniformSet) or directly specified
-    (cloudSet)
+    at uniform distance along a line (lineUniformSet) or directly specified
+    (pointsSet)
 
     Each 'sampledSet' has a name and a specifier of how the axis should be
     write (x/y/z component or all 3 components)
@@ -85,52 +85,6 @@ protected:
 
 
     // Protected Member Functions
-
-        //- Returns cell next to boundary face
-        label getBoundaryCell(const label) const;
-
-        //- Returns the neighbour cell or the owner if face in on the boundary
-        label getNeighbourCell(const label) const;
-
-        //- Return the cell in which the point on the sample line
-        //  resides if found otherwise return -1
-        label pointInCell(const point& p, const label samplei) const;
-
-        //- Calculates inproduct of face normal and vector sample-face centre
-        //  <0 if sample inside.
-        scalar calcSign(const label facei, const point& sample) const;
-
-        //- Returns face label (or -1) of face which is close to sample
-        label findNearFace
-        (
-            const label celli,
-            const point& sample,
-            const scalar smallDist
-        ) const;
-
-        //- Moves sample in direction of -n to it is 'inside' of facei
-        point pushIn
-        (
-            const point& sample,
-            const label facei
-        ) const;
-
-        //- Calculates start of tracking given samplePt and first boundary
-        //  intersection
-        //  (bPoint, bFacei) (bFacei == -1 if no boundary intersection)
-        //  Returns true if trackPt is valid sampling point. Sets trackPt,
-        //  trackFacei, trackCelli (-1 if no tracking point found)
-        bool getTrackingPoint
-        (
-            const point& samplePt,
-            const point& bPoint,
-            const label bFacei,
-            const scalar smallDist,
-
-            point& trackPt,
-            label& trackCelli,
-            label& trackFacei
-        ) const;
 
         //- Sets sample data
         void setSamples

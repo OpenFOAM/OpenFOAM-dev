@@ -78,7 +78,7 @@ functions
         // Seeding method.
         seedSampleSet
         {
-            type        uniform;
+            type        lineUniform;
 
             axis        x;  // distance;
             start       (-0.0205 0.001  0.00001);

@@ -6,40 +6,16 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Writes graph data for specified fields along a line, specified by start
-    and end points.
+    Writes out values of fields interpolated to a specified list of points.
 
 \*---------------------------------------------------------------------------*/
 
-
-// Sampling and I/O settings
-#includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
-
-type            sets;
-libs            ("libsampling.so");
-
-writeControl    writeTime;
-
-interpolationScheme cellPoint;
-
-setFormat   raw;
-
-setConfig
-{
-    type    lineCell;
-    axis    distance;  // x, y, z, xyz
-}
-
-sets
+fields (p U);
+points
 (
-    line
-    {
-        $setConfig;
-        start (0 0 0);
-        end   (0 1 0);
-    }
+    (0 0 0)
 );
 
-fields  (U);
+#includeEtc "caseDicts/postProcessing/probes/internalPoints.cfg"
 
 // ************************************************************************* //
