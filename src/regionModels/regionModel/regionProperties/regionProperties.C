@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ License
 
 #include "regionProperties.H"
 #include "IOdictionary.H"
+#include "argList.H"
+#include "polyMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -51,6 +53,55 @@ Foam::regionProperties::regionProperties(const Time& runTime)
 
 Foam::regionProperties::~regionProperties()
 {}
+
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+const Foam::word& Foam::regionDir(const word& regionName)
+{
+    return
+        regionName == polyMesh::defaultRegion
+      ? word::null
+      : regionName;
+}
+
+
+Foam::wordList Foam::selectRegionNames(const argList& args, const Time& runTime)
+{
+    const bool allRegions = args.optionFound("allRegions");
+
+    wordList regionNames;
+
+    if (allRegions)
+    {
+        const regionProperties rp(runTime);
+        forAllConstIter(HashTable<wordList>, rp, iter)
+        {
+            const wordList& regions = iter();
+            forAll(regions, i)
+            {
+                if (findIndex(regionNames, regions[i]) == -1)
+                {
+                    regionNames.append(regions[i]);
+                }
+            }
+        }
+    }
+    else
+    {
+        word regionName;
+        if (args.optionReadIfPresent("region", regionName))
+        {
+            regionNames = wordList(1, regionName);
+        }
+        else
+        {
+            regionNames = wordList(1, polyMesh::defaultRegion);
+        }
+    }
+
+    return regionNames;
+}
 
 
 // ************************************************************************* //
