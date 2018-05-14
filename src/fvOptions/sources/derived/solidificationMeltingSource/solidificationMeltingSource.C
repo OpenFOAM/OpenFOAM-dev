@@ -208,7 +208,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
     cellSetOption(sourceName, modelType, dict, mesh),
     Tsol_(readScalar(coeffs_.lookup("Tsol"))),
     Tliq_(coeffs_.lookupOrDefault("Tliq", Tsol_)),
-    alpha1e_(coeffs_.lookupOrDefault("alpha1e", 0)),
+    alpha1e_(coeffs_.lookupOrDefault("alpha1e", 0.0)),
     L_(readScalar(coeffs_.lookup("L"))),
     relax_(coeffs_.lookupOrDefault("relax", 0.9)),
     mode_(thermoModeTypeNames_.read(coeffs_.lookup("thermoMode"))),
