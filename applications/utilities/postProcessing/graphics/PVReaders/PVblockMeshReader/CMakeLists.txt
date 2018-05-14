@@ -1,5 +1,5 @@
 # Set up the environment
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 FIND_PACKAGE(ParaView REQUIRED)
 INCLUDE(${PARAVIEW_USE_FILE})
@@ -12,7 +12,6 @@ LINK_DIRECTORIES(
 INCLUDE_DIRECTORIES(
     $ENV{WM_PROJECT_DIR}/src/OpenFOAM/lnInclude
     $ENV{WM_PROJECT_DIR}/src/OSspecific/$ENV{WM_OSTYPE}/lnInclude
-    $ENV{WM_PROJECT_DIR}/src/meshing/blockMesh/lnInclude
     ${PROJECT_SOURCE_DIR}/../vtkPVblockMesh
 )
 
@@ -31,12 +30,12 @@ SET(
 
 # Add the plugin. ParaView-4.0.? requires a GUI_RESOURCE_FILES XML file. As of
 # version 4.1.? this is no longer needed.
-IF("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
+IF(${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR} VERSION_LESS 4.1)
     ADD_PARAVIEW_PLUGIN(
         PVblockMeshReader_SM
         "1.0"
         SERVER_MANAGER_XML PVblockMeshReader_SM.xml
-        SERVER_MANAGER_SOURCES  vtkPVblockMeshReader.cxx
+        SERVER_MANAGER_SOURCES vtkPVblockMeshReader.cxx
         GUI_RESOURCE_FILES PVblockMeshReader.xml
         )
 ELSE()
@@ -44,15 +43,26 @@ ELSE()
         PVblockMeshReader_SM
         "1.0"
         SERVER_MANAGER_XML PVblockMeshReader_SM.xml
-        SERVER_MANAGER_SOURCES  vtkPVblockMeshReader.cxx
+        SERVER_MANAGER_SOURCES vtkPVblockMeshReader.cxx
     )
 ENDIF()
 
-# Build the client-side plugin
-TARGET_LINK_LIBRARIES(
-    PVblockMeshReader_SM
-    LINK_PUBLIC
-    vtkPVblockMesh
-    blockMesh
-    OpenFOAM
-)
+# Build the client-side plugin. Paraview-5.5.? needs QT-5 libraries listed in
+# the link command in order for the headers to be available.
+IF(${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR} VERSION_LESS 5.5)
+    TARGET_LINK_LIBRARIES(
+        PVblockMeshReader_SM
+        LINK_PUBLIC
+        vtkPVblockMesh
+        OpenFOAM
+    )
+ELSE()
+    TARGET_LINK_LIBRARIES(
+        PVblockMeshReader_SM
+        LINK_PUBLIC
+        vtkPVblockMesh
+        OpenFOAM
+        Qt5::Core
+        Qt5::Gui
+    )
+ENDIF()

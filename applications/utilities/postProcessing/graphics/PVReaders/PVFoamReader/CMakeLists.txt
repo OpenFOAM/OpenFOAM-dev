@@ -22,8 +22,7 @@ ADD_DEFINITIONS(
     -DWM_LABEL_SIZE=$ENV{WM_LABEL_SIZE}
 )
 
-
-# Set output library destination to plugin directory
+# Set the output library destination to the plugin directory
 SET(
     LIBRARY_OUTPUT_PATH $ENV{PV_PLUGIN_PATH}
     CACHE INTERNAL
@@ -32,7 +31,7 @@ SET(
 
 # Add the plugin. ParaView-4.0.? requires a GUI_RESOURCE_FILES XML file. As of
 # version 4.1.? this is no longer needed.
-IF("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
+IF(${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR} VERSION_LESS 4.1)
     ADD_PARAVIEW_PLUGIN(
         PVFoamReader_SM
         "1.0"
@@ -49,13 +48,24 @@ ELSE()
     )
 ENDIF()
 
-# Build the client-side plugin
-TARGET_LINK_LIBRARIES(
-    PVFoamReader_SM
-    LINK_PUBLIC
-    vtkPVFoam
-    finiteVolume
-    OpenFOAM
-)
-
-#-----------------------------------------------------------------------------
+# Build the client-side plugin. Paraview-5.5.? needs QT-5 libraries listed in
+# the link command in order for the headers to be available.
+IF(${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR} VERSION_LESS 5.5)
+    TARGET_LINK_LIBRARIES(
+        PVFoamReader_SM
+        LINK_PUBLIC
+        vtkPVFoam
+        finiteVolume
+        OpenFOAM
+    )
+ELSE()
+    TARGET_LINK_LIBRARIES(
+        PVFoamReader_SM
+        LINK_PUBLIC
+        vtkPVFoam
+        finiteVolume
+        OpenFOAM
+        Qt5::Core
+        Qt5::Gui
+    )
+ENDIF()
