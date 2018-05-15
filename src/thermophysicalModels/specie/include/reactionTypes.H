@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,14 @@ namespace Foam
 
     typedef Reaction<icoPoly8HThermoPhysics> icoPoly8HReaction;
 
+    typedef Reaction<constFluidHThermoPhysics> constFluidHReaction;
+
+    typedef Reaction<constAdiabaticFluidHThermoPhysics>
+        constAdiabaticFluidHReaction;
+
+    typedef Reaction<constHThermoPhysics> constHReaction;
+
+
     // internal ennergy based reactions
     typedef Reaction<constGasEThermoPhysics> constGasEReaction;
 
@@ -68,6 +76,13 @@ namespace Foam
         incompressibleGasEReaction;
 
     typedef Reaction<icoPoly8EThermoPhysics> icoPoly8EReaction;
+
+    typedef Reaction<constFluidEThermoPhysics> constFluidEReaction;
+
+    typedef Reaction<constAdiabaticFluidEThermoPhysics>
+        constAdiabaticFluidEReaction;
+
+    typedef Reaction<constEThermoPhysics> constEReaction;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

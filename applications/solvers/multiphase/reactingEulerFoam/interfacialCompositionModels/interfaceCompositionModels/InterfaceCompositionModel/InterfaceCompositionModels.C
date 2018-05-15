@@ -54,143 +54,122 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#define makeSpecieInterfaceCompositionModel(Model, Thermo1, Thermo2)           \
+                                                                               \
+    /* Composition at an interface with a multi-component mixture */           \
+    makeSpecieInterfaceCompositionType                                         \
+    (                                                                          \
+        Model,                                                                 \
+        heRhoThermo, rhoReactionThermo,                                        \
+        multiComponentMixture, Thermo1,                                        \
+        heRhoThermo, rhoReactionThermo,                                        \
+        multiComponentMixture, Thermo2                                         \
+    );                                                                         \
+    makeSpecieInterfaceCompositionType                                         \
+    (                                                                          \
+        Model,                                                                 \
+        heRhoThermo, rhoReactionThermo,                                        \
+        reactingMixture, Thermo1,                                              \
+        heRhoThermo, rhoReactionThermo,                                        \
+        multiComponentMixture, Thermo2                                         \
+    );                                                                         \
+                                                                               \
+    /* Composition at an interface with a reacting mixture */                  \
+    makeSpecieInterfaceCompositionType                                         \
+    (                                                                          \
+        Model,                                                                 \
+        heRhoThermo, rhoReactionThermo,                                        \
+        multiComponentMixture, Thermo1,                                        \
+        heRhoThermo, rhoReactionThermo,                                        \
+        reactingMixture, Thermo2                                               \
+    );                                                                         \
+    makeSpecieInterfaceCompositionType                                         \
+    (                                                                          \
+        Model,                                                                 \
+        heRhoThermo, rhoReactionThermo,                                        \
+        reactingMixture, Thermo1,                                              \
+        heRhoThermo, rhoReactionThermo,                                        \
+        reactingMixture, Thermo2                                               \
+    );
+
+#define makeInterfaceCompositionModel(Model, Thermo1, Thermo2)                 \
+                                                                               \
+    /* Composition at an interface with a pure mixture */                      \
+    makeInterfaceCompositionType                                               \
+    (                                                                          \
+        Model,                                                                 \
+        heRhoThermo, rhoReactionThermo,                                        \
+        multiComponentMixture, Thermo1,                                        \
+        heRhoThermo, rhoThermo,                                                \
+        pureMixture, Thermo2                                                   \
+    );                                                                         \
+    makeInterfaceCompositionType                                               \
+    (                                                                          \
+        Model,                                                                 \
+        heRhoThermo, rhoReactionThermo,                                        \
+        reactingMixture, Thermo1,                                              \
+        heRhoThermo, rhoThermo,                                                \
+        pureMixture, Thermo2                                                   \
+    );                                                                         \
+                                                                               \
+    /* Composition at an interface with non-pure mixtures */                   \
+    makeSpecieInterfaceCompositionModel(Model, Thermo1, Thermo2)
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 namespace Foam
 {
     using namespace interfaceCompositionModels;
 
     // Gas-side models
-
-    // multi-component gas in the presence of a pure liquid
-    makeInterfaceCompositionType
+    makeInterfaceCompositionModel
     (
         Saturated,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
         gasEThermoPhysics,
-        heRhoThermo,
-        rhoThermo,
-        pureMixture,
         constFluidEThermoPhysics
     );
-
-    // reacting gas in the presence of a pure liquid
-    makeInterfaceCompositionType
+    makeInterfaceCompositionModel
     (
         Saturated,
-        heRhoThermo,
-        rhoReactionThermo,
-        reactingMixture,
-        gasEThermoPhysics,
-        heRhoThermo,
-        rhoThermo,
-        pureMixture,
-        constFluidEThermoPhysics
-    );
-
-    // multi-component gas in the presence of a multi-component liquid
-    makeSpecieInterfaceCompositionType
-    (
-        Saturated,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
         constGasEThermoPhysics,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
         constFluidEThermoPhysics
     );
-    makeSpecieInterfaceCompositionType
+    makeSpecieInterfaceCompositionModel
     (
         NonRandomTwoLiquid,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
-        constGasEThermoPhysics,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
+        gasEThermoPhysics,
         constFluidEThermoPhysics
     );
-
-    // reacting gas in the presence of a multi-component liquid
-    makeSpecieInterfaceCompositionType
-    (
-        Saturated,
-        heRhoThermo,
-        rhoReactionThermo,
-        reactingMixture,
-        constGasEThermoPhysics,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
-        constFluidEThermoPhysics
-    );
-    makeSpecieInterfaceCompositionType
+    makeSpecieInterfaceCompositionModel
     (
         NonRandomTwoLiquid,
-        heRhoThermo,
-        rhoReactionThermo,
-        reactingMixture,
         constGasEThermoPhysics,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
         constFluidEThermoPhysics
     );
 
     // Liquid-side models
-
-    // multi-component liquid in the presence of a multi-component gas
-    makeSpecieInterfaceCompositionType
+    makeSpecieInterfaceCompositionModel
     (
         Henry,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
         constFluidEThermoPhysics,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
-        constGasEThermoPhysics
+        gasEThermoPhysics
     );
-    makeSpecieInterfaceCompositionType
-    (
-        Raoult,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
-        constFluidEThermoPhysics,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
-        constGasEThermoPhysics
-    );
-
-    // multi-component liquid in the presence of a reacting gas
-    makeSpecieInterfaceCompositionType
+    makeSpecieInterfaceCompositionModel
     (
         Henry,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
         constFluidEThermoPhysics,
-        heRhoThermo,
-        rhoReactionThermo,
-        reactingMixture,
         constGasEThermoPhysics
     );
-    makeSpecieInterfaceCompositionType
+    makeSpecieInterfaceCompositionModel
     (
         Raoult,
-        heRhoThermo,
-        rhoReactionThermo,
-        multiComponentMixture,
         constFluidEThermoPhysics,
-        heRhoThermo,
-        rhoReactionThermo,
-        reactingMixture,
+        gasEThermoPhysics
+    );
+    makeSpecieInterfaceCompositionModel
+    (
+        Raoult,
+        constFluidEThermoPhysics,
         constGasEThermoPhysics
     );
 }
