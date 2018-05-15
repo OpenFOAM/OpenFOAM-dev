@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,43 +29,48 @@ Description
     translate, rotate and scale options.
 
 Usage
-    Options are:
+    \b transformPoints [OPTION]
 
-    -translate vector
-        Translates the points by the given vector,
+    Options:
+      - \par -translate \<vector\> \n
+        Translates the points by the given vector.
 
-    -rotate (vector vector)
-        Rotates the points from the first vector to the second,
+      - \par -rotate (\<vector\> \<vector\>) \n
+        Rotates the points from the first vector to the second.
 
-     or -yawPitchRoll (yawdegrees pitchdegrees rolldegrees)
-     or -rollPitchYaw (rolldegrees pitchdegrees yawdegrees)
+      - \par -yawPitchRoll (\<yawdegrees\> \<pitchdegrees\> \<rolldegrees\>) \n
+        Alternative rotation specification:
+            yaw (rotation about z)
+            pitch (rotation about y)
+            roll (rotation about x)
 
-    -scale vector
+      - \par -rollPitchYaw (\<rolldegrees\> \<pitchdegrees\> \<yawdegrees\>) \n
+        Alternative rotation specification:
+            roll (rotation about x)
+            pitch (rotation about y)
+            yaw (rotation about z)
+
+      - \par -rotateFields \n
+        In combination with \a -rotate, \a -yawPitchRoll or \a -rollPitchYaw
+        additionally transform vector and tensor fields.
+
+      - \par -scale \<vector\> \n
         Scales the points by the given vector.
 
-    The any or all of the three options may be specified and are processed
-    in the above order.
-
-    With -rotateFields (in combination with -rotate/yawPitchRoll/rollPitchYaw)
-    it will also read & transform vector & tensor fields.
-
-    Note:
-    yaw (rotation about z)
-    pitch (rotation about y)
-    roll (rotation about x)
+    Any or all of the three transformation option types may be specified and are
+    processed in the above order.
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "Time.H"
 #include "fvMesh.H"
+#include "regionProperties.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "ReadFields.H"
 #include "pointFields.H"
 #include "transformField.H"
 #include "transformGeometricField.H"
-#include "IStringStream.H"
 #include "mathematicalConstants.H"
 
 using namespace Foam;
@@ -137,6 +142,7 @@ void rotateFields(const argList& args, const Time& runTime, const tensor& T)
 }
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
@@ -179,134 +185,133 @@ int main(int argc, char *argv[])
     );
 
     #include "addRegionOption.H"
+    #include "addAllRegionsOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
 
-    word regionName = polyMesh::defaultRegion;
-    fileName meshDir;
+    const wordList regionNames(selectRegionNames(args, runTime));
 
-    if (args.optionReadIfPresent("region", regionName))
+    forAll(regionNames, regioni)
     {
-        meshDir = regionName/polyMesh::meshSubDir;
-    }
-    else
-    {
-        meshDir = polyMesh::meshSubDir;
-    }
+        const word& regionName = regionNames[regioni];
+        const word& regionDir = Foam::regionDir(regionName);
 
-    pointIOField points
-    (
-        IOobject
+        fileName meshDir(regionDir/polyMesh::meshSubDir);
+
+        pointIOField points
         (
-            "points",
-            runTime.findInstance(meshDir, "points"),
-            meshDir,
-            runTime,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE,
-            false
-        )
-    );
-
-    const bool doRotateFields = args.optionFound("rotateFields");
-
-    // this is not actually stringent enough:
-    if (args.options().empty())
-    {
-        FatalErrorInFunction
-            << "No options supplied, please use one or more of "
-               "-translate, -rotate or -scale options."
-            << exit(FatalError);
-    }
-
-    vector v;
-    if (args.optionReadIfPresent("translate", v))
-    {
-        Info<< "Translating points by " << v << endl;
-
-        points += v;
-    }
-
-    if (args.optionFound("rotate"))
-    {
-        Pair<vector> n1n2
-        (
-            args.optionLookup("rotate")()
+            IOobject
+            (
+                "points",
+                runTime.findInstance(meshDir, "points"),
+                meshDir,
+                runTime,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            )
         );
-        n1n2[0] /= mag(n1n2[0]);
-        n1n2[1] /= mag(n1n2[1]);
-        tensor T = rotationTensor(n1n2[0], n1n2[1]);
 
-        Info<< "Rotating points by " << T << endl;
+        const bool doRotateFields = args.optionFound("rotateFields");
 
-        points = transform(T, points);
-
-        if (doRotateFields)
+        // this is not actually stringent enough:
+        if (args.options().empty())
         {
-            rotateFields(args, runTime, T);
+            FatalErrorInFunction
+                << "No options supplied, please use one or more of "
+                   "-translate, -rotate or -scale options."
+                << exit(FatalError);
         }
-    }
-    else if (args.optionReadIfPresent("rollPitchYaw", v))
-    {
-        Info<< "Rotating points by" << nl
-            << "    roll  " << v.x() << nl
-            << "    pitch " << v.y() << nl
-            << "    yaw   " << v.z() << nl;
 
-        // Convert to radians
-        v *= pi/180.0;
-
-        quaternion R(quaternion::rotationSequence::XYZ, v);
-
-        Info<< "Rotating points by quaternion " << R << endl;
-        points = transform(R, points);
-
-        if (doRotateFields)
+        vector v;
+        if (args.optionReadIfPresent("translate", v))
         {
-            rotateFields(args, runTime, R.R());
+            Info<< "Translating points by " << v << endl;
+
+            points += v;
         }
-    }
-    else if (args.optionReadIfPresent("yawPitchRoll", v))
-    {
-        Info<< "Rotating points by" << nl
-            << "    yaw   " << v.x() << nl
-            << "    pitch " << v.y() << nl
-            << "    roll  " << v.z() << nl;
 
-        // Convert to radians
-        v *= pi/180.0;
-
-        scalar yaw = v.x();
-        scalar pitch = v.y();
-        scalar roll = v.z();
-
-        quaternion R = quaternion(vector(0, 0, 1), yaw);
-        R *= quaternion(vector(0, 1, 0), pitch);
-        R *= quaternion(vector(1, 0, 0), roll);
-
-        Info<< "Rotating points by quaternion " << R << endl;
-        points = transform(R, points);
-
-        if (doRotateFields)
+        if (args.optionFound("rotate"))
         {
-            rotateFields(args, runTime, R.R());
+            Pair<vector> n1n2
+            (
+                args.optionLookup("rotate")()
+            );
+            n1n2[0] /= mag(n1n2[0]);
+            n1n2[1] /= mag(n1n2[1]);
+            tensor T = rotationTensor(n1n2[0], n1n2[1]);
+
+            Info<< "Rotating points by " << T << endl;
+
+            points = transform(T, points);
+
+            if (doRotateFields)
+            {
+                rotateFields(args, runTime, T);
+            }
         }
+        else if (args.optionReadIfPresent("rollPitchYaw", v))
+        {
+            Info<< "Rotating points by" << nl
+                << "    roll  " << v.x() << nl
+                << "    pitch " << v.y() << nl
+                << "    yaw   " << v.z() << nl;
+
+            // Convert to radians
+            v *= pi/180.0;
+
+            quaternion R(quaternion::rotationSequence::XYZ, v);
+
+            Info<< "Rotating points by quaternion " << R << endl;
+            points = transform(R, points);
+
+            if (doRotateFields)
+            {
+                rotateFields(args, runTime, R.R());
+            }
+        }
+        else if (args.optionReadIfPresent("yawPitchRoll", v))
+        {
+            Info<< "Rotating points by" << nl
+                << "    yaw   " << v.x() << nl
+                << "    pitch " << v.y() << nl
+                << "    roll  " << v.z() << nl;
+
+            // Convert to radians
+            v *= pi/180.0;
+
+            scalar yaw = v.x();
+            scalar pitch = v.y();
+            scalar roll = v.z();
+
+            quaternion R = quaternion(vector(0, 0, 1), yaw);
+            R *= quaternion(vector(0, 1, 0), pitch);
+            R *= quaternion(vector(1, 0, 0), roll);
+
+            Info<< "Rotating points by quaternion " << R << endl;
+            points = transform(R, points);
+
+            if (doRotateFields)
+            {
+                rotateFields(args, runTime, R.R());
+            }
+        }
+
+        if (args.optionReadIfPresent("scale", v))
+        {
+            Info<< "Scaling points by " << v << endl;
+
+            points.replace(vector::X, v.x()*points.component(vector::X));
+            points.replace(vector::Y, v.y()*points.component(vector::Y));
+            points.replace(vector::Z, v.z()*points.component(vector::Z));
+        }
+
+        // Set the precision of the points data to 10
+        IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+
+        Info<< "Writing points into directory " << points.path() << nl << endl;
+        points.write();
     }
-
-    if (args.optionReadIfPresent("scale", v))
-    {
-        Info<< "Scaling points by " << v << endl;
-
-        points.replace(vector::X, v.x()*points.component(vector::X));
-        points.replace(vector::Y, v.y()*points.component(vector::Y));
-        points.replace(vector::Z, v.z()*points.component(vector::Z));
-    }
-
-    // Set the precision of the points data to 10
-    IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
-
-    Info<< "Writing points into directory " << points.path() << nl << endl;
-    points.write();
 
     Info<< "End\n" << endl;
 
