@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -298,11 +298,8 @@ int main(int argc, char *argv[])
         Foam::functionEntries::includeEntry::log = true;
     }
 
-    const bool disableEntries = args.optionFound("disableFunctionEntries");
-    if (disableEntries)
+    if (args.optionFound("disableFunctionEntries"))
     {
-        Info<< "Not expanding variables or dictionary directives"
-            << endl;
         entry::disableFunctionEntries = true;
     }
 
