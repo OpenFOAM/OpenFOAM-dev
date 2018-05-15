@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -48,6 +48,7 @@ Searches the <directory> for files named <filename> and extracts entries with
 Examples:
   * Default ddtSchemes entries in the fvSchemes files in all tutorials:
       foamSearch $FOAM_TUTORIALS fvSchemes  ddtSchemes.default
+
   * Relaxations factors for U in fvSolutions files in all tutorials:
       foamSearch -c $FOAM_TUTORIALS fvSolution  relaxationFactors.equations.U
 USAGE
@@ -75,19 +76,14 @@ esac
 [ "$#" -eq 3 ] || error "Wrong number of arguments: expected 3, found $#"
 [ -d "$1" ] || error "$1 is not a directory"
 
-tmp=$(mktemp tmp.XXXXXX)
 files=$(find "$1" -name "$2")
 [ -n "$files" ] || error "No file $2 found in $1"
 
 for f in $files
 do
-    foamDictionary -entry "$3" "$f" 2>/dev/null >> "$tmp"
-done
-
-[ -s "$tmp" ] && \
-    sort "$tmp" | uniq $count | sed '/^[\t 1-9]*$/d' || \
+    foamDictionary -entry "$3" "$f" 2>/dev/null
+done | \
+    sort | uniq $count | sed '/^[\t 1-9]*$/d' || \
     echo "No keyword $3 found in $2 files"
-
-rm "$tmp" 2>/dev/null
 
 #------------------------------------------------------------------------------
