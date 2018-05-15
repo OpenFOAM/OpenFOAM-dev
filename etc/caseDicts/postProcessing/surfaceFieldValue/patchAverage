@@ -13,7 +13,7 @@ Description
 name    <patchName>;
 fields  (<field names>);
 
-operation average;
+operation areaAverage;
 #includeEtc "caseDicts/postProcessing/surfaceFieldValue/patch.cfg"
 
 // ************************************************************************* //
