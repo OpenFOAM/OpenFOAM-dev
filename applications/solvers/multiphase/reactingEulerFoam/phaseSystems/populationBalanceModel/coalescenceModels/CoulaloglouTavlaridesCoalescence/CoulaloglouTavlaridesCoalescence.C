@@ -25,6 +25,7 @@ License
 
 #include "CoulaloglouTavlaridesCoalescence.H"
 #include "addToRunTimeSelectionTable.H"
+#include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -79,11 +80,11 @@ addToCoalescenceRate
     coalescenceRate +=
         C1_*(pow(fi.x(), 2.0/3.0) + pow(fj.x(), 2.0/3.0))
        *sqrt(pow(fi.x(), 2.0/9.0) + pow(fj.x(), 2.0/9.0))
-       *cbrt(continuousTurbulence().epsilon())/(1 + popBal_.alphas())
+       *cbrt(popBal_.continuousTurbulence().epsilon())/(1 + popBal_.alphas())
        *exp
         (
           - C2_*continuousPhase.mu()*continuousPhase.rho()
-           *continuousTurbulence().epsilon()
+           *popBal_.continuousTurbulence().epsilon()
            /sqr(popBal_.sigmaWithContinuousPhase(fi.phase()))
            /pow3(1 + popBal_.alphas())
            *pow4(cbrt(fi.x())*cbrt(fj.x())/(cbrt(fi.x()) + cbrt(fj.x())))

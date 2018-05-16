@@ -78,21 +78,6 @@ Foam::diameterModels::binaryBreakupModel::binaryBreakupModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::phaseCompressibleTurbulenceModel&
-Foam::diameterModels::binaryBreakupModel::continuousTurbulence() const
-{
-    return
-        popBal_.mesh().lookupObject<phaseCompressibleTurbulenceModel>
-        (
-            IOobject::groupName
-            (
-                turbulenceModel::propertiesName,
-                popBal_.continuousPhase().name()
-            )
-        );
-}
-
-
 void Foam::diameterModels::binaryBreakupModel::correct()
 {}
 

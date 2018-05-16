@@ -154,6 +154,7 @@ SourceFiles
 #include "sizeGroup.H"
 #include "phasePair.H"
 #include "pimpleControl.H"
+#include "phaseCompressibleTurbulenceModelFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -418,6 +419,9 @@ public:
         (
             const phaseModel& dispersedPhase
         ) const;
+
+        //- Return reference to turbulence model of the continuous phase
+        const phaseCompressibleTurbulenceModel& continuousTurbulence() const;
 
         //- Solve the population balance equation
         void solve();

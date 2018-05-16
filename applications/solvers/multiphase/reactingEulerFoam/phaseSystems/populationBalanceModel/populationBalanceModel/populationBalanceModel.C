@@ -34,6 +34,7 @@ License
 #include "fvcDdt.H"
 #include "fvmSup.H"
 #include "fvcDiv.H"
+#include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
@@ -1158,6 +1159,21 @@ Foam::diameterModels::populationBalanceModel::sigmaWithContinuousPhase
     );
 
     return fluid_.sigma(key);
+}
+
+
+const Foam::phaseCompressibleTurbulenceModel&
+Foam::diameterModels::populationBalanceModel::continuousTurbulence() const
+{
+    return
+        mesh_.lookupObject<phaseCompressibleTurbulenceModel>
+        (
+            IOobject::groupName
+            (
+                turbulenceModel::propertiesName,
+                continuousPhase_.name()
+            )
+        );
 }
 
 

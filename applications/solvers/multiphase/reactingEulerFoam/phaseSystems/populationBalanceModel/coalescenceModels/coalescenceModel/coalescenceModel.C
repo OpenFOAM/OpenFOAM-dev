@@ -78,21 +78,6 @@ Foam::diameterModels::coalescenceModel::coalescenceModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::phaseCompressibleTurbulenceModel&
-Foam::diameterModels::coalescenceModel::continuousTurbulence() const
-{
-    return
-        popBal_.mesh().lookupObject<phaseCompressibleTurbulenceModel>
-        (
-            IOobject::groupName
-            (
-                turbulenceModel::propertiesName,
-                popBal_.continuousPhase().name()
-            )
-        );
-}
-
-
 void Foam::diameterModels::coalescenceModel::correct()
 {}
 

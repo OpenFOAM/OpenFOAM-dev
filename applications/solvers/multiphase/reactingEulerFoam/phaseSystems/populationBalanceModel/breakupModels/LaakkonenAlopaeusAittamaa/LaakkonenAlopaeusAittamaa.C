@@ -81,7 +81,7 @@ Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa::setBreakupRate
     const sizeGroup& fi = *popBal_.sizeGroups()[i];
 
     breakupRate =
-        C1_*cbrt(continuousTurbulence().epsilon())
+        C1_*cbrt(popBal_.continuousTurbulence().epsilon())
        *erfc
         (
             sqrt
@@ -89,12 +89,13 @@ Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa::setBreakupRate
                 C2_*popBal_.sigmaWithContinuousPhase(fi.phase())
                /(
                     continuousPhase.rho()*pow(fi.d(), 5.0/3.0)
-                   *pow(continuousTurbulence().epsilon(), 2.0/3.0)
+                   *pow(popBal_.continuousTurbulence().epsilon(), 2.0/3.0)
                 )
               + C3_*continuousPhase.mu()
                /(
                     sqrt(continuousPhase.rho()*fi.phase().rho())
-                   *cbrt(continuousTurbulence().epsilon())*pow(fi.d(), 4.0/3.0)
+                   *cbrt(popBal_.continuousTurbulence().epsilon())
+                   *pow(fi.d(), 4.0/3.0)
                 )
             )
         );

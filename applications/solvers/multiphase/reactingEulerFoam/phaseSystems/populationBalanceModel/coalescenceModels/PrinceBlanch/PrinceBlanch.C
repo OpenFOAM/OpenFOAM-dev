@@ -26,6 +26,7 @@ License
 #include "PrinceBlanch.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
+#include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -95,7 +96,7 @@ addToCoalescenceRate
                /(16.0*popBal_.sigmaWithContinuousPhase(fi.phase()))
             )
            *log(h0_/hf_)
-           *cbrt(continuousTurbulence().epsilon())/pow(rij, 2.0/3.0)
+           *cbrt(popBal_.continuousTurbulence().epsilon())/pow(rij, 2.0/3.0)
         );
 
     if (turbulentCollisions_)
@@ -103,7 +104,7 @@ addToCoalescenceRate
         coalescenceRate +=
             (
                 C1_*pi*sqr(fi.d() + fj.d())
-               *cbrt(continuousTurbulence().epsilon())
+               *cbrt(popBal_.continuousTurbulence().epsilon())
                *sqrt(pow(fi.d(), 2.0/3.0) + pow(fj.d(), 2.0/3.0))
             )
            *collisionEfficiency;

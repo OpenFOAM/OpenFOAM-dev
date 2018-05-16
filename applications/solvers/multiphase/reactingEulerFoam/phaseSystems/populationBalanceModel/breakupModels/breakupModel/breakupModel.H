@@ -38,7 +38,6 @@ SourceFiles
 
 #include "populationBalanceModel.H"
 #include "daughterSizeDistributionModel.H"
-#include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -147,9 +146,6 @@ public:
         {
             return popBal_;
         }
-
-        //- Return a reference to the turbulence model for the continuous phase
-        const phaseCompressibleTurbulenceModel& continuousTurbulence() const;
 
         //- Return const-reference to daughter size distribution pointer
         const autoPtr<daughterSizeDistributionModel>& dsdPtr() const

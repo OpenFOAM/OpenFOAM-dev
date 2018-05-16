@@ -36,7 +36,6 @@ SourceFiles
 #define coalescenceModel_H
 
 #include "populationBalanceModel.H"
-#include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -133,9 +132,6 @@ public:
 
 
     // Member Functions
-
-        //- Return a reference to the turbulence model for the continuous phase
-        const phaseCompressibleTurbulenceModel& continuousTurbulence() const;
 
         //- Correct diameter independent expressions
         virtual void correct();
