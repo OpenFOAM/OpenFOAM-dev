@@ -8,6 +8,7 @@ cd ${0%/*} || exit 1    # run from this directory
 application=`getApplication`
 
 runApplication blockMesh
+runApplication topoSet
 runApplication setFields
 runApplication $application
 
