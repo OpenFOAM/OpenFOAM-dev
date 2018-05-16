@@ -32,10 +32,10 @@ Description
     mass conservation following Kumar and Ramkrishna (1996). Also the internal
     coordinate was changed to particle volume, which gives
 
-        \f[
-            \frac{60}{v_j} \left(\frac{v_i}{v_j}\right)^{2}
-            \left(1 - \frac{v_i}{v_j}\right)^{2}
-        \f]
+    \f[
+        \frac{60}{v_j} \left(\frac{v_i}{v_j}\right)^{2}
+        \left(1 - \frac{v_i}{v_j}\right)^{2}
+    \f]
 
     where
 

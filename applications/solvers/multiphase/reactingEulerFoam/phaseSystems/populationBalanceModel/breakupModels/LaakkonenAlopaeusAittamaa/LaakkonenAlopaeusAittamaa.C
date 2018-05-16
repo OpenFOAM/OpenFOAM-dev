@@ -26,7 +26,6 @@ License
 #include "LaakkonenAlopaeusAittamaa.H"
 #include "addToRunTimeSelectionTable.H"
 #include "phaseCompressibleTurbulenceModel.H"
-#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -80,10 +79,6 @@ Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa::setBreakupRate
 {
     const phaseModel& continuousPhase = popBal_.continuousPhase();
     const sizeGroup& fi = *popBal_.sizeGroups()[i];
-    const volScalarField sigma
-    (
-        popBal_.fluid().sigma(phasePair(fi.phase(), continuousPhase))
-    );
 
     breakupRate =
         C1_*cbrt(continuousTurbulence().epsilon())
@@ -91,7 +86,7 @@ Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa::setBreakupRate
         (
             sqrt
             (
-                C2_*sigma
+                C2_*popBal_.sigmaWithContinuousPhase(fi.phase())
                /(
                     continuousPhase.rho()*pow(fi.d(), 5.0/3.0)
                    *pow(continuousTurbulence().epsilon(), 2.0/3.0)

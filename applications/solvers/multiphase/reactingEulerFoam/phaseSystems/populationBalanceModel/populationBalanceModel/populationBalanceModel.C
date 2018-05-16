@@ -1145,6 +1145,22 @@ Foam::diameterModels::populationBalanceModel::gamma
 }
 
 
+const Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::populationBalanceModel::sigmaWithContinuousPhase
+(
+    const phaseModel& dispersedPhase
+) const
+{
+    const phasePairKey key
+    (
+        dispersedPhase.name(),
+        continuousPhase_.name()
+    );
+
+    return fluid_.sigma(key);
+}
+
+
 void Foam::diameterModels::populationBalanceModel::solve()
 {
     const dictionary& solutionControls = mesh_.solverDict(name_);

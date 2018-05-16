@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coalescenceModel.H"
-#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,25 +34,6 @@ namespace diameterModels
     defineTypeNameAndDebug(coalescenceModel, 0);
     defineRunTimeSelectionTable(coalescenceModel, dictionary);
 }
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-const Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::coalescenceModel::sigma
-(
-    const word& phase1,
-    const word& phase2
-) const
-{
-    const phasePairKey key
-    (
-        phase1,
-        phase2
-    );
-
-    return popBal_.fluid().sigma(key);
 }
 
 

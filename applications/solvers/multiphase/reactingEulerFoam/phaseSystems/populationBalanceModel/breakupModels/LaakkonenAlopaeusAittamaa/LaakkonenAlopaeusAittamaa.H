@@ -27,18 +27,18 @@ Class
 Description
     Model of Laakkonen et al. (2006). The total breakup rate is calculated by
 
-        \f[
-            C_1 \epsilon_c^{1/3}
-            \mathrm{erfc}
-            \left(
-                \sqrt
-                {
-                    C_2 \frac{\sigma}{\rho_c \epsilon_c^{2/3} (6v_i/\pi)^{5/9}}
-                  + C_3 \frac{\mu_c}{\sqrt{\rho_c \rho_d}
-                    \epsilon_c^{1/3} (6v_i/\pi)^{4/9}}
-                }
-            \right)
-        \f]
+    \f[
+        C_1 \epsilon_c^{1/3}
+        \mathrm{erfc}
+        \left(
+            \sqrt
+            {
+                C_2 \frac{\sigma}{\rho_c \epsilon_c^{2/3} (6v_i/\pi)^{5/9}}
+              + C_3 \frac{\mu_c}{\sqrt{\rho_c \rho_d}
+                \epsilon_c^{1/3} (6v_i/\pi)^{4/9}}
+            }
+        \right)
+    \f]
 
     where
 

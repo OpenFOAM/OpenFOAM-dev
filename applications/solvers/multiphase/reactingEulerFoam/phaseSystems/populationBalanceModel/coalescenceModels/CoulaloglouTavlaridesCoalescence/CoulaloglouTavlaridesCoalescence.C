@@ -84,7 +84,7 @@ addToCoalescenceRate
         (
           - C2_*continuousPhase.mu()*continuousPhase.rho()
            *continuousTurbulence().epsilon()
-           /sqr(sigma(fi.phase().name(), continuousPhase.name()))
+           /sqr(popBal_.sigmaWithContinuousPhase(fi.phase()))
            /pow3(1 + popBal_.alphas())
            *pow4(cbrt(fi.x())*cbrt(fj.x())/(cbrt(fi.x()) + cbrt(fj.x())))
         );

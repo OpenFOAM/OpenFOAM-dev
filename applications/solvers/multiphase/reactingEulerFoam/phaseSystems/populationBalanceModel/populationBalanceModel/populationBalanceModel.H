@@ -412,6 +412,13 @@ public:
             const dimensionedScalar& v
         ) const;
 
+        //- Return the surface tension coefficient between a given dispersed
+        //  and the continuous phase
+        const tmp<volScalarField> sigmaWithContinuousPhase
+        (
+            const phaseModel& dispersedPhase
+        ) const;
+
         //- Solve the population balance equation
         void solve();
 };

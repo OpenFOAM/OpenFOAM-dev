@@ -59,16 +59,6 @@ protected:
         const populationBalanceModel& popBal_;
 
 
-    // Protected member functions
-
-        //- Return the surface tension coefficient
-        const tmp<volScalarField> sigma
-        (
-            const word& phase1,
-            const word& phase2
-        ) const;
-
-
 public:
 
     //- Runtime type information
