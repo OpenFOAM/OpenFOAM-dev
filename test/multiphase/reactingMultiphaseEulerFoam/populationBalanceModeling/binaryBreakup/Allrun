@@ -16,6 +16,6 @@ sed -i -e '1d' -e 's/# /#/g' numberDensity.dat
 transposeFile numberDensity.dat > numberDensity.transposed.dat
 
 # Create plot
-./plot
+( cd validation && ./createGraphs )
 
 #------------------------------------------------------------------------------

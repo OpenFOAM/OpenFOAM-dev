@@ -20,6 +20,6 @@ sed -i -e '1d' -e 's/# /#/g' volumeDensity.dat
 transposeFile volumeDensity.dat > volumeDensity.transposed.dat
 
 # Create plot
-./plot
+( cd validation && ./createGraphs )
 
 #------------------------------------------------------------------------------
