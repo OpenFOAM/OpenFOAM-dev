@@ -1174,15 +1174,9 @@ void Foam::diameterModels::populationBalanceModel::solve()
         }
 
         int iCorr = 0;
-        scalar initialResidual = 0;
         scalar maxInitialResidual = 1;
 
-        while
-        (
-            maxInitialResidual > tolerance
-            &&
-            ++iCorr <= nCorr
-        )
+        while (++iCorr <= nCorr && maxInitialResidual > tolerance)
         {
             Info<< "populationBalance "
                 << this->name()
@@ -1193,6 +1187,8 @@ void Foam::diameterModels::populationBalanceModel::solve()
             sources();
 
             dmdt();
+
+            maxInitialResidual = 0;
 
             forAll(sizeGroups_, i)
             {
@@ -1223,16 +1219,11 @@ void Foam::diameterModels::populationBalanceModel::solve()
                   - fvm::ddt(residualAlpha*rho, fi)
                 );
 
-                sizeGroupEqn.relax
-                (
-                    fi.mesh().equationRelaxationFactor("f")
-                );
-
-                initialResidual = sizeGroupEqn.solve().initialResidual();
+                sizeGroupEqn.relax();
 
                 maxInitialResidual = max
                 (
-                    initialResidual,
+                    sizeGroupEqn.solve().initialResidual(),
                     maxInitialResidual
                 );
             }
