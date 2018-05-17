@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -66,6 +66,7 @@ done
 #export ParaView_VERSION=5.0.0
 #export ParaView_VERSION=5.0.1
 export ParaView_VERSION=5.4.0
+#export ParaView_VERSION=5.5.0
 export ParaView_MAJOR=detect
 
 
