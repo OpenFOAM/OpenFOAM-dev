@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,12 +49,12 @@ Description
             Y_{i,n}   | mass fraction on the neighbour patch []
         \endvartable
 
-    A species that the baffle is permable to will, therefore, have a
+    A species that the baffle is permeable to will, therefore, have a
     coefficient greater than zero, whilst a species that does not transfer will
     have a coefficient equal to zero.
 
     This condition calculates the species flux. The fluxes are summed up by the
-    velocity consition to generate the net mass transfer across the baffle.
+    velocity condition to generate the net mass transfer across the baffle.
     This mass-fraction condition then generates a corrective diffusive flux to
     ensure that the correct amounts of the permeable species are transferred.
 
