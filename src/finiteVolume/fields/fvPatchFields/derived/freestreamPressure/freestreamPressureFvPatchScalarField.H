@@ -36,9 +36,10 @@ Description
 
 Usage
     \table
-        Property        | Description             | Required    | Default value
-        U               | velocity field name     | no          | U
-        freestreamValue | freestream pressure     | yes         |
+        Property        | Description                | Required | Default value
+        U               | velocity field name        | no       | U
+        freestreamValue | freestream pressure        | yes      |
+        supersonic      | Switch for supersonic flow | no       | false
     \endtable
 
     Example of the boundary condition specification:
@@ -85,6 +86,9 @@ class freestreamPressureFvPatchScalarField
 
         //- Name of the velocity field
         word UName_;
+
+        //- Set true for supersonic freestream
+        Switch supersonic_;
 
 
 public:
