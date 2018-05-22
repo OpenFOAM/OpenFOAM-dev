@@ -198,7 +198,7 @@ Foam::waveSuperposition::waveSuperposition(const waveSuperposition& waves)
     ramp_(waves.ramp_, false),
     scale_(waves.scale_, false),
     crossScale_(waves.crossScale_, false),
-    heightAboveWave_(false)
+    heightAboveWave_(waves.heightAboveWave_)
 {}
 
 
