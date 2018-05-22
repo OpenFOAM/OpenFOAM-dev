@@ -29,7 +29,6 @@ boundaryField
     wall
     {
         type            nutkWallFunction;
-        type            nutkWallFunction;
         value           uniform 0;
     }
 
