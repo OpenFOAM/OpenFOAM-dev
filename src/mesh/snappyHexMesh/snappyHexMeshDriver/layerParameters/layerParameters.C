@@ -45,16 +45,17 @@ Foam::scalar Foam::layerParameters::layerExpansionRatio
 {
     if (n <= 1)
     {
-        return 1.0;
+        return 1;
     }
 
-    const label maxIters = 20;
     const scalar tol = 1e-8;
 
-    if (mag(n-totalOverFirst) < tol)
+    if (mag(n - totalOverFirst) < tol)
     {
-        return 1.0;
+        return 1;
     }
+
+    const label maxIters = 100;
 
     // Calculate the bounds of the solution
     scalar minR;
@@ -62,7 +63,7 @@ Foam::scalar Foam::layerParameters::layerExpansionRatio
 
     if (totalOverFirst < n)
     {
-        minR = 0.0;
+        minR = 0;
         maxR = pow(totalOverFirst/n, 1/(n-1));
     }
     else
@@ -77,9 +78,9 @@ Foam::scalar Foam::layerParameters::layerExpansionRatio
     for (label i = 0; i < maxIters; ++i)
     {
         const scalar prevr = r;
-
         const scalar fx = pow(r, n) - totalOverFirst*r - (1 - totalOverFirst);
         const scalar dfx = n*pow(r, n - 1) - totalOverFirst;
+
         r -= fx/dfx;
 
         if (mag(r - prevr) < tol)
@@ -87,6 +88,7 @@ Foam::scalar Foam::layerParameters::layerExpansionRatio
             break;
         }
     }
+
     return r;
 }
 
@@ -274,7 +276,7 @@ Foam::layerParameters::layerParameters
 
                 forAllConstIter(labelHashSet, patchIDs, patchiter)
                 {
-                    label patchi = patchiter.key();
+                    const label patchi = patchiter.key();
 
                     numLayers_[patchi] =
                         readLabel(layerDict.lookup("nSurfaceLayers"));
@@ -396,8 +398,8 @@ Foam::scalar Foam::layerParameters::layerThickness
             else
             {
                 return firstLayerThickess
-                   *(1.0 - pow(expansionRatio, nLayers))
-                   /(1.0 - expansionRatio);
+                   *(1 - pow(expansionRatio, nLayers))
+                   /(1 - expansionRatio);
             }
         }
         break;
@@ -410,10 +412,11 @@ Foam::scalar Foam::layerParameters::layerThickness
             }
             else
             {
-                scalar invExpansion = 1.0 / expansionRatio;
+                const scalar invExpansion = 1.0/expansionRatio;
+
                 return finalLayerThickess
-                   *(1.0 - pow(invExpansion, nLayers))
-                   /(1.0 - invExpansion);
+                   *(1 - pow(invExpansion, nLayers))
+                   /(1 - invExpansion);
             }
         }
         break;
@@ -504,7 +507,7 @@ Foam::scalar Foam::layerParameters::firstLayerThickness
 
         case FINAL_AND_TOTAL:
         {
-            scalar r = layerExpansionRatio
+            const scalar r = layerExpansionRatio
             (
                 nLayers,
                 firstLayerThickess,
@@ -512,18 +515,21 @@ Foam::scalar Foam::layerParameters::firstLayerThickness
                 totalThickness,
                 expansionRatio
             );
+
             return finalLayerThickess/pow(r, nLayers-1);
         }
         break;
 
         case TOTAL_AND_EXPANSION:
         {
-            scalar r = finalLayerThicknessRatio
+            const scalar r = finalLayerThicknessRatio
             (
                 nLayers,
                 expansionRatio
             );
-            scalar finalThickness = r*totalThickness;
+
+            const scalar finalThickness = r*totalThickness;
+
             return finalThickness/pow(expansionRatio, nLayers-1);
         }
         break;
@@ -554,13 +560,13 @@ Foam::scalar Foam::layerParameters::finalLayerThicknessRatio
         {
             return
                 pow(expansionRatio, nLayers - 1)
-               *(1.0 - expansionRatio)
-               /(1.0 - pow(expansionRatio, nLayers));
+               *(1 - expansionRatio)
+               /(1 - pow(expansionRatio, nLayers));
         }
     }
     else
     {
-        return 0.0;
+        return 0;
     }
 }
 
