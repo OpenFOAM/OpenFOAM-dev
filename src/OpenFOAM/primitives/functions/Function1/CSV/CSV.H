@@ -39,7 +39,7 @@ Description
             componentColumns    (1 2 3);    // component column indices
             separator           ",";        // optional (defaults to ",")
             mergeSeparators     no;         // merge multiple separators
-            fileName            "fileXYZ";  // name of csv data file
+            file                "fileXYZ";  // name of csv data file
             outOfBounds         clamp;      // optional out-of-bounds handling
             interpolationScheme linear;     // optional interpolation scheme
         }

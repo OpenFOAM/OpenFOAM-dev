@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        fileName     | fan curve file name     | yes         |
+        file         | fan curve file name     | yes         |
         outOfBounds  | out of bounds handling  | yes         |
         direction    | direction of flow through fan [in/out] | yes |
         p0           | environmental total pressure | yes    |
@@ -45,7 +45,7 @@ Usage
     inlet
     {
         type            fanPressure;
-        fileName        "fanCurve";
+        file            "fanCurve";
         outOfBounds     clamp;
         direction       in;
         p0              uniform 0;
@@ -55,7 +55,7 @@ Usage
     outlet
     {
         type            fanPressure;
-        fileName        "fanCurve";
+        file            "fanCurve";
         outOfBounds     clamp;
         direction       out;
         p0              uniform 0;

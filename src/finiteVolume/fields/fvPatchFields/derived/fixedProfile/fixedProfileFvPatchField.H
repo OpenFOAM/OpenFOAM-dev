@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Usage
     <patchName>
     {
         type            fixedProfile;
-        profile    csvFile;
+        profile         csvFile;
 
         profileCoeffs
         {
@@ -52,7 +52,7 @@ Usage
             componentColumns    (1 2 3);    // Component column indices
             separator           ",";        // Optional (defaults to ",")
             mergeSeparators     no;         // Merge multiple separators
-            fileName            "Uprofile.csv";  // name of csv data file
+            file                "Uprofile.csv";  // name of csv data file
             outOfBounds         clamp;      // Optional out-of-bounds handling
             interpolationScheme linear;     // Optional interpolation scheme
         }

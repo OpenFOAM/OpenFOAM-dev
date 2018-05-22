@@ -43,7 +43,7 @@ Usage
 
     pressureData
     {
-        fileName        "pressureData"
+        file                "pressureData";
         nHeaderLine         1;          // number of header lines
         refColumn           0;          // reference column index
         componentColumns    (1);        // component column indices

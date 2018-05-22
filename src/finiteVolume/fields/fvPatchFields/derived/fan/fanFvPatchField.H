@@ -56,7 +56,7 @@ Usage
             refColumn       0;
             componentColumns 1(1);
             separator       ",";
-            fileName        "$FOAM_CASE/constant/pressureVsU";
+            file           "$FOAM_CASE/constant/pressureVsU";
         }
         value           uniform 0;
     }

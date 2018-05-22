@@ -75,7 +75,7 @@ Usage
         primaryInletT           293;
         faceZone                facesZoneInletOriented;
         outOfBounds             clamp;
-        fileName                "effTable";
+        file                    "effTable";
     }
     \endverbatim
 

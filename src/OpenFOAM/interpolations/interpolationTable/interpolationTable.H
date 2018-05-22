@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Description
     Read csv format:
     \verbatim
         readerType      csv;
-        fileName        "$FOAM_CASE/constant/p0vsTime.csv";
+        file            "$FOAM_CASE/constant/p0vsTime.csv";
         hasHeaderLine   true;   // skip first line
         timeColumn      0;      // time is in column 0
         valueColumns    (1);    // value starts in column 1
