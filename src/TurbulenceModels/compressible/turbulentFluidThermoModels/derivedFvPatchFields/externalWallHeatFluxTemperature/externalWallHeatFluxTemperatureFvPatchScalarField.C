@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -405,14 +405,14 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
                     scalarField lambdaTa4(pow4((1 - TpLambda)*Ta));
 
                     hp += emissivity_*sigma.value()*(pow4(Ts) - lambdaTa4)/Tp;
-                    hpTa += sigma.value()*(emissivity_*lambdaTa4 + pow4(Ta));
+                    hpTa += emissivity_*sigma.value()*(lambdaTa4 + pow4(Ta));
                 }
                 else
                 {
                     // ... if there is no solid wall thermal resistance use
                     // the current wall temperature
                     hp += emissivity_*sigma.value()*pow3(Tp);
-                    hpTa += sigma.value()*pow4(Ta);
+                    hpTa += emissivity_*sigma.value()*pow4(Ta);
                 }
             }
 
