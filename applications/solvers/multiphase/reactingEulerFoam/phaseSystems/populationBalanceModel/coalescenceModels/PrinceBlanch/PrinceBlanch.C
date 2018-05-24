@@ -47,6 +47,7 @@ namespace coalescenceModels
 }
 }
 
+using Foam::constant::mathematical::pi;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -69,8 +70,7 @@ PrinceBlanch
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void
-Foam::diameterModels::coalescenceModels::PrinceBlanch::
+void Foam::diameterModels::coalescenceModels::PrinceBlanch::
 addToCoalescenceRate
 (
     volScalarField& coalescenceRate,
@@ -81,13 +81,13 @@ addToCoalescenceRate
     const phaseModel& continuousPhase = popBal_.continuousPhase();
     const sizeGroup& fi = *popBal_.sizeGroups()[i];
     const sizeGroup& fj = *popBal_.sizeGroups()[j];
-    scalar pi = constant::mathematical::pi;
     const uniformDimensionedVectorField& g =
         popBal_.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
-    dimensionedScalar rij = 1.0/(1.0/fi.d() + 1.0/fj.d());
+    dimensionedScalar rij(1.0/(1.0/fi.d() + 1.0/fj.d()));
 
-    volScalarField collisionEfficiency =
+    const volScalarField collisionEfficiency
+    (
         exp
         (
           - sqrt
@@ -97,7 +97,8 @@ addToCoalescenceRate
             )
            *log(h0_/hf_)
            *cbrt(popBal_.continuousTurbulence().epsilon())/pow(rij, 2.0/3.0)
-        );
+        )
+    );
 
     if (turbulentCollisions_)
     {
@@ -112,7 +113,7 @@ addToCoalescenceRate
 
     if (buoyantCollisions_)
     {
-        dimensionedScalar Sij = pi/4.0*sqr(fi.d() + fj.d());
+        dimensionedScalar Sij(pi/4.0*sqr(fi.d() + fj.d()));
 
         coalescenceRate +=
             (
