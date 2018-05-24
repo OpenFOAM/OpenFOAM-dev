@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,14 +147,21 @@ Foam::regIOobject::~regIOobject()
 {
     if (objectRegistry::debug)
     {
-        Pout<< "Destroying regIOobject called " << name()
-            << " of type " << type()
-            << " in directory " << path()
-            << endl;
+        if (this == &db())
+        {
+            Pout<< "Destroying objectRegistry " << name()
+                << " in directory " << rootPath()/caseName()/instance()
+                << endl;
+        }
+        else
+        {
+            Pout<< "Destroying regIOobject " << name()
+                << " in directory " << path()
+                << endl;
+        }
     }
 
     // Check out of objectRegistry if not owned by the registry
-
     if (!ownedByRegistry_)
     {
         checkOut();
