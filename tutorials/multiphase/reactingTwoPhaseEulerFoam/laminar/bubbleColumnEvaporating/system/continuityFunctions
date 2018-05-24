@@ -26,7 +26,7 @@ inletMassFlowRate
 
     operation       sum;
 
-    writeControl   timeStep;
+    writeControl    timeStep;
 }
 
 outletMassFlowRate
@@ -49,16 +49,16 @@ outletMassFlowRate
 
     operation       sum;
 
-    writeControl   timeStep;
+    writeControl    timeStep;
 }
 
 totalMass
 {
     type            coded;
     libs            ("libutilityFunctionObjects.so");
-    name    error;
+    name            error;
 
-    code
+    codeExecute
     #{
         const volScalarField& alphaGas =
             mesh().lookupObject<volScalarField>("alpha.gas");
@@ -70,9 +70,6 @@ totalMass
         const volScalarField& rhoLiquid =
             mesh().lookupObject<volScalarField>("thermo:rho.liquid");
 
-        const volScalarField& dmdt =
-            mesh().lookupObject<volScalarField>("dmdt.gasAndLiquid");
-
         const scalarField& v = mesh().V();
 
         Info<< "coded totalMass output:" << endl
@@ -80,8 +77,6 @@ totalMass
             << gSum(alphaGas*rhoGas*v) << endl
             << "    volIntegrate(all) for alpha.liquid*rho.liquid = "
             << gSum(alphaLiquid*rhoLiquid*v) << endl
-            << "    volIntegrate(all) for dmdt = "
-            << gSum(dmdt*v) << endl
             << endl;
     #};
 }
