@@ -77,6 +77,14 @@ protected:
             phasePairKey::hash
         > massTransferModelTable;
 
+        typedef HashPtrTable
+        <
+            HashPtrTable<volScalarField>,
+            phasePairKey,
+            phasePairKey::hash
+        >
+        iDmdtSuSpTable;
+
         typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
             iDmdtTable;
 
@@ -85,17 +93,20 @@ protected:
 
         // Sub Models
 
+            //- The number of interface correctors
+            const label nInterfaceCorrectors_;
+
             //- Mass transfer models
             massTransferModelTable massTransferModels_;
 
             //- Interface composition models
             interfaceCompositionModelTable interfaceCompositionModels_;
 
-            //- Interfacial Mass transfer rate
-            iDmdtTable iDmdt_;
+            //- The explicit part of the interfacial mass transfer rates
+            iDmdtSuSpTable iDmdtSu_;
 
-            //- Explicit part of the mass transfer rate
-            iDmdtTable iDmdtExplicit_;
+            //- The implicit part of the interfacial mass transfer rates
+            iDmdtSuSpTable iDmdtSp_;
 
 
     // Protected member functions
@@ -127,7 +138,7 @@ public:
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
 
-        //- Correct the thermodynamics
+        //- Correct the interface temperatures
         virtual void correctInterfaceThermo();
 
         //- Read base phaseProperties dictionary

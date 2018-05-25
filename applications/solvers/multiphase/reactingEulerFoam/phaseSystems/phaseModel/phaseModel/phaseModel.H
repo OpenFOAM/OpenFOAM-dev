@@ -246,6 +246,9 @@ public:
             //- Return the species mass fractions
             virtual const PtrList<volScalarField>& Y() const = 0;
 
+            //- Return a species mass fraction by name
+            virtual const volScalarField& Y(const word& name) const = 0;
+
             //- Access the species mass fractions
             virtual PtrList<volScalarField>& YRef() = 0;
 

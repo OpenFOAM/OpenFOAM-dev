@@ -27,6 +27,4 @@
             YiEqn.solve(mesh.solver("Yi"));
         }
     }
-
-    fluid.massTransfer(); // updates interfacial mass flow rates
 }

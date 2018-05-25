@@ -180,6 +180,14 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::Y() const
 
 
 template<class BasePhaseModel>
+const Foam::volScalarField&
+Foam::MultiComponentPhaseModel<BasePhaseModel>::Y(const word& name) const
+{
+    return this->thermo_->composition().Y(name);
+}
+
+
+template<class BasePhaseModel>
 Foam::PtrList<Foam::volScalarField>&
 Foam::MultiComponentPhaseModel<BasePhaseModel>::YRef()
 {

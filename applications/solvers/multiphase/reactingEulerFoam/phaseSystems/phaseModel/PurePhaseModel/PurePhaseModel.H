@@ -89,6 +89,9 @@ public:
             //- Return the species mass fractions
             virtual const PtrList<volScalarField>& Y() const;
 
+            //- Return a species mass fraction by name
+            virtual const volScalarField& Y(const word& name) const;
+
             //- Access the species mass fractions
             virtual PtrList<volScalarField>& YRef();
 
