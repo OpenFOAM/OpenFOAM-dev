@@ -167,6 +167,10 @@ addMassTransferMomentumTransfer(phaseSystem::momentumTransferTable& eqns) const
             continue;
         }
 
+        // Note that the phase UEqn contains a continuity error term, which
+        // implicitly adds a mass transfer term of fvm::Sp(dmdt, U). These
+        // additions do not include this term.
+
         const volScalarField dmdt(this->dmdt(pair));
 
         if (!pair.phase1().stationary())

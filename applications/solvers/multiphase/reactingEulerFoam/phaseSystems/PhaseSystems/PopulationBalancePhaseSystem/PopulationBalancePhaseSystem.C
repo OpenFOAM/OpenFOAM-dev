@@ -192,6 +192,9 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::massTransfer() const
         const phaseModel& phase = pair.phase1();
         const phaseModel& otherPhase = pair.phase2();
 
+        // Note that the phase YiEqn does not contain a continuity error term,
+        // so these additions represent the entire mass transfer
+
         const volScalarField dmdt(this->pDmdt(pair));
         const volScalarField dmdt12(negPart(dmdt));
         const volScalarField dmdt21(posPart(dmdt));
@@ -212,11 +215,11 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::massTransfer() const
 
             *eqns[name] +=
                 dmdt21*eqns[otherName]->psi()
-              - fvm::Sp(dmdt21, eqns[name]->psi());
+              + fvm::Sp(dmdt12, eqns[name]->psi());
 
             *eqns[otherName] -=
                 dmdt12*eqns[name]->psi()
-              - fvm::Sp(dmdt12, eqns[otherName]->psi());
+              + fvm::Sp(dmdt21, eqns[otherName]->psi());
         }
     }
 

@@ -129,6 +129,10 @@ heatTransfer() const
         const volScalarField K1(phase1.K());
         const volScalarField K2(phase2.K());
 
+        // Note that the phase heEqn contains a continuity error term, which
+        // implicitly adds a mass transfer term of fvm::Sp(dmdt, he). These
+        // additions do not include this term.
+
         const volScalarField dmdt(this->dmdt(pair));
         const volScalarField dmdt21(posPart(dmdt));
         const volScalarField dmdt12(negPart(dmdt));

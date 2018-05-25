@@ -155,7 +155,6 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
     (
         fvm::ddt(alpha, rho, Yi)
       + fvm::div(alphaRhoPhi, Yi, "div(" + alphaRhoPhi.name() + ",Yi)")
-      - fvm::Sp(this->continuityError(), Yi)
 
       - fvm::laplacian
         (
