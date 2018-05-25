@@ -1,0 +1,100 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+gasSpecies="air H2O C3H8O none"
+liquidSpecies="H2O C3H8O none"
+
+runApplication blockMesh
+
+function setArg()
+{
+    [ $1 != "none" ] && echo -set $1 || echo -remove
+}
+
+for g in $gasSpecies
+do
+    foamDictionary -entry inertSpecie $(setArg $g) constant/thermophysicalProperties.gas
+    for l in $liquidSpecies
+    do
+        foamDictionary -entry inertSpecie $(setArg $l) constant/thermophysicalProperties.liquid
+        runApplication -s $g.gas_$l.liquid $(getApplication)
+        mv postProcessing postProcessing_$g.gas_$l.liquid
+    done
+done
+
+gnuplot << EOF
+
+set terminal eps enhanced size 5.83,8.27
+set output 'postProcessing.eps'
+
+set lmargin at screen 0.15
+set rmargin at screen 0.84
+
+gasSpecies = '$gasSpecies'
+liquidSpecies = '$liquidSpecies'
+
+set multiplot layout 4,1
+
+set xlabel "Time (s)"
+
+set ytics nomirror
+set y2tics
+set ylabel 'Gas volume fraction'
+set y2label 'Liquid volume fraction'
+
+plot \
+    'postProcessing_none.gas_none.liquid/plot/0/alpha.gas' w l lc 1 t 'Gas', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/alpha.gas' w l lc 1 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/alpha.liquid' w l axes x1y2 lc 2 t 'Liquid', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/alpha.liquid' w l axes x1y2 lc 2 notitle
+
+set ytics mirror
+unset y2tics
+set ylabel 'Temperature (K)'
+unset y2label
+
+plot \
+    'postProcessing_none.gas_none.liquid/plot/0/T.gas' w l lc 1 t 'Gas', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/T.gas' w l lc 1 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/T.liquid' w l lc 2 t 'Liquid', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/T.liquid' w l lc 2 notitle
+
+set ytics nomirror
+set y2tics
+set ylabel "Vapour mass fraction"
+set y2label "Air mass fraction"
+
+plot \
+    'postProcessing_none.gas_none.liquid/plot/0/H2O.gas' w l lc 1 t 'H2O', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/H2O.gas' w l lc 1 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/C3H8O.gas' w l lc 2 t 'C3H8O', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/C3H8O.gas' w l lc 2 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/air.gas' w l axes x1y2 lc 3 t 'Air', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/air.gas' w l axes x1y2 lc 3 notitle
+
+set ytics mirror
+unset y2tics
+set ylabel "Liquid mass fraction"
+unset y2label
+
+plot \
+    'postProcessing_none.gas_none.liquid/plot/0/H2O.liquid' w l lc 1 t 'H2O', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/H2O.liquid' w l lc 1 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/C3H8O.liquid' w l lc 2 t 'C3H8O', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/C3H8O.liquid' w l lc 2 notitle
+
+unset multiplot
+
+EOF
