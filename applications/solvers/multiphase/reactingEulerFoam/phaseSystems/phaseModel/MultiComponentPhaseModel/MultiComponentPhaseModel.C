@@ -149,7 +149,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
 {
     const volScalarField& alpha = *this;
     const surfaceScalarField alphaRhoPhi(this->alphaRhoPhi());
-    const volScalarField rho(this->rho());
+    const volScalarField& rho = this->thermo().rho();
 
     return
     (
