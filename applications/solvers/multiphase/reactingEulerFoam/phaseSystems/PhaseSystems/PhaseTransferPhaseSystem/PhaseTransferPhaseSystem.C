@@ -162,8 +162,8 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::massTransfer() const
         const phaseModel& otherPhase = pair.phase2();
 
         const volScalarField dmdt(this->rDmdt(pair));
-        const volScalarField dmdt12(posPart(dmdt));
-        const volScalarField dmdt21(negPart(dmdt));
+        const volScalarField dmdt12(negPart(dmdt));
+        const volScalarField dmdt21(posPart(dmdt));
 
         const PtrList<volScalarField>& Yi = phase.Y();
 

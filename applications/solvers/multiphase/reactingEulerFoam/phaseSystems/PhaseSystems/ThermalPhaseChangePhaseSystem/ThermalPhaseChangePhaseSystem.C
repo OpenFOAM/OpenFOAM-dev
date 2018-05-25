@@ -283,11 +283,6 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::massTransfer() const
 
         forAll(Yi, i)
         {
-            if (Yi[i].member() != volatile_)
-            {
-                continue;
-            }
-
             const word name
             (
                 IOobject::groupName(volatile_, phase.name())
@@ -299,12 +294,15 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::massTransfer() const
             );
 
             const volScalarField dmdt(this->iDmdt(pair) + this->wDmdt(pair));
-            const volScalarField dmdt12(posPart(dmdt));
-            const volScalarField dmdt21(negPart(dmdt));
 
-            *eqns[name] += fvm::Sp(dmdt21, eqns[name]->psi()) - dmdt21;
-            *eqns[otherName] +=
-                dmdt12 - fvm::Sp(dmdt12, eqns[otherName]->psi());
+            *eqns[name] -= fvm::Sp(dmdt, eqns[name]->psi());
+            *eqns[otherName] += fvm::Sp(dmdt, eqns[otherName]->psi());
+
+            if (Yi[i].member() == volatile_)
+            {
+                *eqns[name] += dmdt;
+                *eqns[otherName] -= dmdt;
+            }
         }
     }
 
