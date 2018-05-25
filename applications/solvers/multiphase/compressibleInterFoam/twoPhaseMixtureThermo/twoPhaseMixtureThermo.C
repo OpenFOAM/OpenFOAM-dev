@@ -365,8 +365,7 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::kappaEff
 {
     return
         alpha1().boundaryField()[patchi]*thermo1_->kappaEff(alphat, patchi)
-      + alpha2().boundaryField()[patchi]*thermo2_->kappaEff(alphat, patchi)
-    ;
+      + alpha2().boundaryField()[patchi]*thermo2_->kappaEff(alphat, patchi);
 }
 
 
@@ -389,8 +388,7 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::alphaEff
 {
     return
         alpha1().boundaryField()[patchi]*thermo1_->alphaEff(alphat, patchi)
-      + alpha2().boundaryField()[patchi]*thermo2_->alphaEff(alphat, patchi)
-    ;
+      + alpha2().boundaryField()[patchi]*thermo2_->alphaEff(alphat, patchi);
 }
 
 

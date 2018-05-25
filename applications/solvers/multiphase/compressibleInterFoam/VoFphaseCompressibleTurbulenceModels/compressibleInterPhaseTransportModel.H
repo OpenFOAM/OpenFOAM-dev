@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,10 +84,16 @@ class compressibleInterPhaseTransportModel
         autoPtr<compressible::turbulenceModel> turbulence_;
 
         //- Phase-1 transport model (constructed for two-phase transport)
-        autoPtr<PhaseCompressibleTurbulenceModel<fluidThermo>> turbulence1_;
+        autoPtr
+        <
+            ThermalDiffusivity<PhaseCompressibleTurbulenceModel<fluidThermo>>
+        > turbulence1_;
 
         //- Phase-2 transport model (constructed for two-phase transport)
-        autoPtr<PhaseCompressibleTurbulenceModel<fluidThermo>> turbulence2_;
+        autoPtr
+        <
+            ThermalDiffusivity<PhaseCompressibleTurbulenceModel<fluidThermo>>
+        > turbulence2_;
 
 
     // Private Member Functions

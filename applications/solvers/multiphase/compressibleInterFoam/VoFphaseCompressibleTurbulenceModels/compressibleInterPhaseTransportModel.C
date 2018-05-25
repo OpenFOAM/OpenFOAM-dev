@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,8 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
 
         turbulence1_ =
         (
-            PhaseCompressibleTurbulenceModel<fluidThermo>::New
+            ThermalDiffusivity<PhaseCompressibleTurbulenceModel<fluidThermo>>
+            ::New
             (
                 alpha1,
                 rho1,
@@ -107,7 +108,8 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
 
         turbulence2_ =
         (
-            PhaseCompressibleTurbulenceModel<fluidThermo>::New
+            ThermalDiffusivity<PhaseCompressibleTurbulenceModel<fluidThermo>>
+            ::New
             (
                 alpha2,
                 rho2,
@@ -141,12 +143,18 @@ Foam::compressibleInterPhaseTransportModel::alphaEff() const
     if (twoPhaseTransport_)
     {
         return
-            mixture_.alpha1()*mixture_.thermo1().alphaEff(turbulence1_->mut())
-          + mixture_.alpha2()*mixture_.thermo2().alphaEff(turbulence2_->mut());
+            mixture_.alpha1()*mixture_.thermo1().alphaEff
+            (
+                turbulence1_->alphat()
+            )
+          + mixture_.alpha2()*mixture_.thermo2().alphaEff
+            (
+                turbulence2_->alphat()
+            );
     }
     else
     {
-        return turbulence_->mut();
+        return mixture_.alphaEff(turbulence_->alphat());
     }
 }
 
