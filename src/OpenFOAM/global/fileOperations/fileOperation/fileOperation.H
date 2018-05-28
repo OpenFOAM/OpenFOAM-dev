@@ -50,13 +50,6 @@ class regIOobject;
 class objectRegistry;
 class Time;
 
-// Description of processor directory naming:
-//  - processor directory naming
-//  - whether directory contains a range (so differs on different processors)
-//  - index in range
-//typedef Tuple2<fileName, Tuple2<bool, label>> dirIndex;
-//typedef List<dirIndex> dirIndexList;
-
 /*---------------------------------------------------------------------------*\
                          Class fileOperation Declaration
 \*---------------------------------------------------------------------------*/
@@ -83,9 +76,16 @@ public:
             PROCBASEINSTANCE,       // as PROCBASEOBJECT but with instance
             PROCINSTANCE            // as PROCOBJECT but with instance
         };
+
         static const NamedEnum<pathType, 12> pathTypeNames_;
 
+        //- Description of processor directory naming:
+        //  - processor directory naming
+        //  - whether directory contains a range
+        //    (so differs on different processors)
+        //  - index in range
         typedef Tuple2<fileName, Tuple2<pathType, label>> dirIndex;
+
         typedef List<dirIndex> dirIndexList;
 
 
@@ -298,13 +298,13 @@ public:
             //- Remove a directory and its contents
             virtual bool rmDir(const fileName&) const = 0;
 
-//            //- Open a shared library. Return handle to library. Print error
-//            //  message if library cannot be loaded (check = true)
-//            virtual void* dlOpen
-//            (
-//                const fileName& lib,
-//                const bool check = true
-//            ) const = 0;
+            // //- Open a shared library. Return handle to library. Print error
+            // //  message if library cannot be loaded (check = true)
+            // virtual void* dlOpen
+            // (
+            //     const fileName& lib,
+            //     const bool check = true
+            // ) const = 0;
 
 
         // (reg)IOobject functinality

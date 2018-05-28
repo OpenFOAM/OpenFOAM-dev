@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -423,6 +423,19 @@ Foam::fileName Foam::search(const word& file, const fileName& directory)
     }
 
     return fileName::null;
+}
+
+
+void Foam::cpFiles(const fileName& srcDir, const fileName& targetDir)
+{
+    mkDir(targetDir);
+
+    const fileNameList srcFiles(readDir(srcDir, fileName::FILE, true));
+
+    forAll(srcFiles, filei)
+    {
+        cp(srcDir/srcFiles[filei], targetDir);
+    }
 }
 
 
