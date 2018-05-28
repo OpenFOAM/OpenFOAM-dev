@@ -6,6 +6,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 runApplication dsmcInitialise
-runApplication `getApplication`
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

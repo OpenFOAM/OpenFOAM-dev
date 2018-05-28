@@ -8,6 +8,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication blockMesh
 runApplication topoSet
 runApplication createPatch -overwrite
-runApplication `getApplication`
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

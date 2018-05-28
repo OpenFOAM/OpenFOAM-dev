@@ -17,7 +17,7 @@ do
     sed "s/XXX/$e/g" constant/transportProperties.template \
         > constant/transportProperties
 
-    runApplication -s $e  `getApplication`
+    runApplication -s $e  $(getApplication)
 
     # extract y+, U+
     # note: both must be added to foamLog.db

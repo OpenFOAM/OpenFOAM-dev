@@ -8,7 +8,7 @@ runApplication blockMesh
 
 # Serial
 runApplication snappyHexMesh -overwrite
-runApplication `getApplication`
+runApplication $(getApplication)
 
 ## Parallel
 #runApplication decomposePar -fileHandler collated
@@ -20,7 +20,7 @@ runApplication `getApplication`
 #    foamDictionary "$f" > "../processors/0/$f"; done \
 #)
 #
-#runParallel `getApplication` -fileHandler collated
+#runParallel $(getApplication) -fileHandler collated
 #runApplication reconstructParMesh -constant  -mergeTol 1e-6
 #runApplication reconstructPar
 

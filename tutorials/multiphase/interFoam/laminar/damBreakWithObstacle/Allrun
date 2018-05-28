@@ -8,6 +8,6 @@ runApplication blockMesh
 runApplication topoSet
 runApplication subsetMesh -overwrite c0 -patch walls
 runApplication setFields
-runApplication `getApplication`
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

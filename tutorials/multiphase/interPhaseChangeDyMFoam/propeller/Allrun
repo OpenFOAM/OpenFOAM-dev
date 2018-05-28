@@ -8,7 +8,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication decomposePar
 
-runParallel `getApplication`
+runParallel $(getApplication)
 
 runApplication reconstructPar
 

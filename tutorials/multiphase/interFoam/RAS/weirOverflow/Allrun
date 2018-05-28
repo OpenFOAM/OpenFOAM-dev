@@ -5,6 +5,6 @@
 
 runApplication blockMesh
 runApplication setFields
-runApplication `getApplication`
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

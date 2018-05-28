@@ -39,7 +39,7 @@ cloneCase decompressionTank decompressionTankFine
 
     # And execute
     runApplication blockMesh
-    runApplication `getApplication`
+    runApplication $(getApplication)
 )
 
 #------------------------------------------------------------------------------

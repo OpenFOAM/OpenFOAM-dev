@@ -39,7 +39,7 @@ cloneCase moriyoshiHomogeneous moriyoshiHomogeneousPart2
     cp -r ../moriyoshiHomogeneous/$lastTimeStep .
 
     setControlDict
-    runApplication `getApplication`
+    runApplication $(getApplication)
 )
 
 # Clone case for hydrogen
@@ -54,7 +54,7 @@ cloneCase moriyoshiHomogeneous moriyoshiHomogeneousHydrogen
        constant/thermophysicalProperties.propane
     mv constant/thermophysicalProperties.hydrogen \
        constant/thermophysicalProperties
-    runApplication `getApplication`
+    runApplication $(getApplication)
 )
 
 #------------------------------------------------------------------------------

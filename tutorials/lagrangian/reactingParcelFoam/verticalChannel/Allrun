@@ -13,6 +13,6 @@ runApplication potentialFoam
 rm -f 0/phi
 
 # Run the solver
-runApplication `getApplication`
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

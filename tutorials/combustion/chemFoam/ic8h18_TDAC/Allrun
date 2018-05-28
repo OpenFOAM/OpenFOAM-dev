@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Set application name
-application=`getApplication`
+application=$(getApplication)
 
 runApplication $application
 

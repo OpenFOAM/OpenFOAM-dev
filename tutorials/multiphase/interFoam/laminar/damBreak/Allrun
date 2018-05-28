@@ -39,7 +39,7 @@ cloneCase damBreak damBreakFine
     runApplication blockMesh
     runApplication setFields
     runApplication decomposePar
-    runParallel `getApplication`
+    runParallel $(getApplication)
     runApplication reconstructPar
 )
 

@@ -83,7 +83,7 @@ do
     esac
 
     previousCase="$caseName"
-    ( cd $caseName && runApplication `getApplication` )
+    ( cd $caseName && runApplication $(getApplication) )
 done
 
 #------------------------------------------------------------------------------

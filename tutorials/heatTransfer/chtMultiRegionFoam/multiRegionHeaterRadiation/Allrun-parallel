@@ -30,7 +30,7 @@ do
 done
 
 # Run
-runParallel `getApplication`
+runParallel $(getApplication)
 
 # Reconstruct
 runApplication reconstructPar -allRegions

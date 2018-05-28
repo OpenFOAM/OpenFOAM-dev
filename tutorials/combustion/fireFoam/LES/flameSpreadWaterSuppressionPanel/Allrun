@@ -34,7 +34,7 @@ rm log.createPatch
 runApplication createPatch -region filmRegion -overwrite
 
 # Run
-runApplication `getApplication`
+runApplication $(getApplication)
 
 paraFoam -touchAll
 

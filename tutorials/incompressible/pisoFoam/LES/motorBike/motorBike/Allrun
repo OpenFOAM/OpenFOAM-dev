@@ -20,6 +20,6 @@ runParallel renumberMesh -overwrite
 
 runParallel potentialFoam -initialiseUBCs
 
-runParallel `getApplication`
+runParallel $(getApplication)
 
 #------------------------------------------------------------------------------

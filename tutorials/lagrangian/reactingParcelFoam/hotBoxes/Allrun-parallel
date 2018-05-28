@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 ./Allrun.pre
 
-application=`getApplication`
+application=$(getApplication)
 
 runApplication -s primaryRegion  decomposePar
 runApplication -s wallFilmRegion decomposePar -region wallFilmRegion

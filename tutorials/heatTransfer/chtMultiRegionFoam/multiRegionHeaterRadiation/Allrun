@@ -26,7 +26,7 @@ do
         viewFactorsGen -region $i
 done
 
-runApplication `getApplication`
+runApplication $(getApplication)
 
 
 

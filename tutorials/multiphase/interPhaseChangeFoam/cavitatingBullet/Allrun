@@ -17,6 +17,6 @@ runApplication snappyHexMesh -overwrite
 runApplication potentialFoam -pName p_rgh
 
 # Run the solver
-runApplication `getApplication`
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

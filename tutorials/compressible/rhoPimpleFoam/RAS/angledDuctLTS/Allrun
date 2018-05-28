@@ -7,4 +7,4 @@ m4 system/blockMeshDict.m4 > system/blockMeshDict
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication blockMesh
-runApplication `getApplication`
+runApplication $(getApplication)

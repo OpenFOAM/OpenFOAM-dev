@@ -2,7 +2,7 @@
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Get application name
-application=`getApplication`
+application=$(getApplication)
 
 runApplication blockMesh
 

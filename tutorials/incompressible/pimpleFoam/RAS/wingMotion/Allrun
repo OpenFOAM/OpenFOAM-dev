@@ -22,7 +22,7 @@ cp -r ../wingMotion2D_simpleFoam/constant/polyMesh constant
 runApplication mapFields ../wingMotion2D_simpleFoam -sourceTime latestTime -consistent
 cp pointDisplacement 0/pointDisplacement
 runApplication decomposePar
-runParallel `getApplication`
+runParallel $(getApplication)
 runApplication reconstructPar
 
 #------------------------------------------------------------------------------

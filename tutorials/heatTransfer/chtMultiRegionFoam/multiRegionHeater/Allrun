@@ -23,13 +23,13 @@ done
 
 
 #-- Run on single processor
-#runApplication `getApplication`
+#runApplication $(getApplication)
 
 # Decompose
 runApplication decomposePar -allRegions
 
 # Run
-runParallel `getApplication`
+runParallel $(getApplication)
 
 # Reconstruct
 runApplication reconstructPar -allRegions

@@ -17,7 +17,7 @@ mv $CONST/polyMesh/boundary $CONST/polyMesh/boundary.bak
 sed -f $CONST/wedgeScr $CONST/polyMesh/boundary.bak > $CONST/polyMesh/boundary
 rm $CONST/polyMesh/boundary.bak
 
-runApplication `getApplication`
+runApplication $(getApplication)
 
 
 #------------------------------------------------------------------------------
