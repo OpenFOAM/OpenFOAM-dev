@@ -10,40 +10,76 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      surfaceFeatureExtractDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-DTC-scaled.stl
+shaftRotating
 {
-    // How to obtain raw features (extractFromFile || extractFromSurface)
-    extractionMethod    extractFromSurface;
+    surfaces ("shaftRotating.stl");
 
-    extractFromSurfaceCoeffs
-    {
-        // Mark edges whose adjacent surface normals are at an angle less
-        // than includedAngle as features
-        // - 0  : selects no edges
-        // - 180: selects all edges
-        includedAngle   150;
-    }
+    includedAngle   100;
 
     subsetFeatures
     {
-        // Keep nonManifold edges (edges with >2 connected faces)
-        nonManifoldEdges       yes;
-
-        // Keep open edges (edges with 1 connected face)
-        openEdges       yes;
+        // Remove the top feature
+        insideBox       (-0.1 -0.1 -0.1)(0.1 0.1 0.1);
     }
-
-
-    // Write options
-
-        // Write features to obj format for postprocessing
-        writeObj                yes;
 }
 
+vessel
+{
+    surfaces ("vessel.stl");
+
+    includedAngle       120;
+
+    subsetFeatures
+    {
+        // Keep nonManifold edges (edges with >2 connected faces where
+        // the faces form more than two different normal planes)
+        nonManifoldEdges    no;
+
+        // Keep open edges (edges with 1 connected face)
+        openEdges           no;
+    }
+}
+
+spargerInletStirrer
+{
+    surfaces
+    (
+        "spargerInlet.stl"
+        "stirrer.stl"
+    );
+
+    includedAngle       120;
+}
+
+stirrerBaffles
+{
+    surfaces ("stirrer_baffles.stl");
+
+    includedAngle   120;
+
+    baffles (stirrer);
+}
+
+rotating
+{
+    surfaces ("rotating.stl");
+
+    includedAngle   120;
+
+    baffles (MRF);
+}
+
+baffles
+{
+    surfaces ("baffles.stl");
+
+    includedAngle   120;
+
+    baffles (baffles);
+}
 
 // ************************************************************************* //

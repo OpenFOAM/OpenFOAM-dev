@@ -9,42 +9,32 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      T;
+    class       dictionary;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+surfaces
+(
+    "unit_cube.stl"
+);
 
-internalField   uniform 1;
+// Identify a feature when angle between faces < includedAngle
+includedAngle   175;
 
-boundaryField
+subsetFeatures
 {
-    inlet
-    {
-        type            fixedValue;
-        value           uniform 1;
-    }
+    // Use a plane to select feature edges
+    // (normal)(point)
+    // Keep only edges that intersect the plane will be included
+    plane               (0 0 1)(0 0 0);
 
-    outlet
-    {
-        type            zeroGradient;
-    }
+    // Keep nonManifold edges (edges with >2 connected faces where
+    // the faces form more than two different normal planes)
+    nonManifoldEdges    no;
 
-    bottom
-    {
-        type            zeroGradient;
-    }
-
-    top
-    {
-        type            zeroGradient;
-    }
-
-    letters
-    {
-        type            zeroGradient;
-    }
+    // Keep open edges (edges with 1 connected face)
+    openEdges           yes;
 }
 
 // ************************************************************************* //

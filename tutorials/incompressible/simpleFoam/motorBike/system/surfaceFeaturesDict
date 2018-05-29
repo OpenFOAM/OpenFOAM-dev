@@ -10,36 +10,22 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      decomposeParDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-numberOfSubdomains 8;
+surfaces ("motorBike.obj");
 
-method          hierarchical;
+// Identify a feature when angle between faces < includedAngle
+includedAngle       150;
 
-simpleCoeffs
+subsetFeatures
 {
-    n               (2 2 1);
-    delta           0.001;
+    // Keep nonManifold edges (edges with >2 connected faces)
+    nonManifoldEdges       no;
+
+    // Keep open edges (edges with 1 connected face)
+    openEdges       yes;
 }
-
-hierarchicalCoeffs
-{
-    n               (2 2 2);
-    delta           0.001;
-    order           xyz;
-}
-
-manualCoeffs
-{
-    dataFile        "";
-}
-
-distributed     no;
-
-roots           ( );
-
 
 // ************************************************************************* //

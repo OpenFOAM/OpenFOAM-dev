@@ -10,18 +10,31 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      surfaceFeatureExtractDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fixed.obj
-{
-    #includeEtc "caseDicts/surface/surfaceFeatureExtractDict.cfg"
-}
+surfaces
+(
+    "jaggedBoundary.stl"
+);
 
-rotatingZone.obj
+// Identify a feature when angle between faces < includedAngle
+includedAngle   175;
+
+subsetFeatures
 {
-    #includeEtc "caseDicts/surface/surfaceFeatureExtractDict.cfg"
+    // Use a plane to select feature edges
+    // (normal)(point)
+    // Keep only edges that intersect the plane will be included
+    plane               (0 0 1)(-0.6 0.3 0.0);
+
+    // Keep nonManifold edges (edges with >2 connected faces where
+    // the faces form more than two different normal planes)
+    nonManifoldEdges    no;
+
+    // Keep open edges (edges with 1 connected face)
+    openEdges           no;
 }
 
 // ************************************************************************* //

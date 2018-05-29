@@ -73,7 +73,7 @@ runApplication blockMesh -region backgroundMeshDecomposition
 runApplication -s backgroundMeshDecomposition \
     decomposePar -region backgroundMeshDecomposition
 
-runApplication surfaceFeatureExtract
+runApplication surfaceFeatures
 
 runParallel foamyHexMesh
 

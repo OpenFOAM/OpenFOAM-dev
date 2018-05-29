@@ -10,39 +10,27 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      surfaceFeatureExtractDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-DTC-scaled.stl
+surfaces
+(
+    "innerCylinderSmall.obj"
+    "outerCylinder.obj"
+    "propellerStem1.obj"
+    "propellerStem2.obj"
+    "propellerStem3.obj"
+    "propellerTip.obj"
+);
+
+// Identify a feature when angle between faces < includedAngle
+includedAngle   150;
+
+trimFeatures
 {
-    // How to obtain raw features (extractFromFile || extractFromSurface)
-    extractionMethod    extractFromSurface;
-
-    extractFromSurfaceCoeffs
-    {
-        // Mark edges whose adjacent surface normals are at an angle less
-        // than includedAngle as features
-        // - 0  : selects no edges
-        // - 180: selects all edges
-        includedAngle   150;
-    }
-
-    subsetFeatures
-    {
-        // Keep nonManifold edges (edges with >2 connected faces)
-        nonManifoldEdges       yes;
-
-        // Keep open edges (edges with 1 connected face)
-        openEdges       yes;
-    }
-
-
-    // Write options
-
-        // Write features to obj format for postprocessing
-        writeObj                yes;
+    // Remove features with fewer than the specified number of edges
+    minElem         10;
 }
-
 
 // ************************************************************************* //

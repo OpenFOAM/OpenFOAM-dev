@@ -19,7 +19,7 @@ constant/triSurface/boundaryAndFaceZones.stl
         surfaceMeshTriangulate -faceZones '(porosityFaces)' boundaryAndFaceZones.stl
     )
 
-surfaceFeatureExtract
+surfaceFeatures
 
 
 

@@ -9,43 +9,16 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      p;
+    class       dictionary;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -1 -2 0 0 0 0];
+surfaces ("boundaryAndFaceZones.stl");
 
-internalField   uniform 1;
+// Identify a feature when angle between faces < includedAngle
+includedAngle   120;
 
-boundaryField
-{
-    inlet
-    {
-        type            fixedValue;
-        value           uniform 1;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
-
-    bottom
-    {
-        type            zeroGradient;
-    }
-
-    top
-    {
-        type            zeroGradient;
-    }
-
-    letters
-    {
-        type            zeroGradient;
-    }
-}
-
+baffles (porosityFaces);
 
 // ************************************************************************* //

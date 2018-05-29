@@ -7,7 +7,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 # copy DTC hull surface from resources folder
 cp $FOAM_TUTORIALS/resources/geometry/DTC-scaled.stl.gz constant/triSurface/
 
-runApplication surfaceFeatureExtract
+runApplication surfaceFeatures
 
 runApplication blockMesh
 

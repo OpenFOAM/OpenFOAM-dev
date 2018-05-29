@@ -9,7 +9,7 @@ cp $FOAM_TUTORIALS/resources/geometry/propellerTip.obj.gz constant/triSurface/
 
 # Meshing
 runApplication blockMesh
-runApplication surfaceFeatureExtract
+runApplication surfaceFeatures
 runApplication snappyHexMesh -overwrite
 
 # Generate face/cell sets and zones

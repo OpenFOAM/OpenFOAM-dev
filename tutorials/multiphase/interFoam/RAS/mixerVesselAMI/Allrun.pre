@@ -9,7 +9,7 @@ application=$(getApplication)
 
 # Meshing
 runApplication blockMesh
-runApplication surfaceFeatureExtract
+runApplication surfaceFeatures
 runApplication snappyHexMesh -overwrite
 runApplication createBaffles -overwrite
 runApplication mergeOrSplitBaffles -split -overwrite

@@ -21,10 +21,7 @@ surface1
         "surface1.stl"
     );
 
-    // Mark edges whose adjacent surface normals are at an angle less
-    // than includedAngle as features
-    // - 0  : selects no edges
-    // - 180: selects all edges
+    // Identify a feature when angle between faces < includedAngle
     includedAngle   120;
 
     // Do not mark region edges

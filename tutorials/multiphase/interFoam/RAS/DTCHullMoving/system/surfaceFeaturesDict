@@ -10,46 +10,22 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoCentralFoam;
+surfaces ("DTC-scaled.stl");
 
-startFrom       startTime;
+// Identify a feature when angle between faces < includedAngle
+includedAngle   150;
 
-startTime       0;
+subsetFeatures
+{
+    // Keep nonManifold edges (edges with >2 connected faces)
+    nonManifoldEdges       yes;
 
-stopAt          endTime;
-
-endTime         10;
-
-deltaT          0.001;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.25;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  12;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  yes;
-
-maxCo           0.5;
-
-maxDeltaT       1;
-
+    // Keep open edges (edges with 1 connected face)
+    openEdges       yes;
+}
 
 // ************************************************************************* //

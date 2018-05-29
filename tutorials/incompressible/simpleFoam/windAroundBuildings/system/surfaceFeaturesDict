@@ -10,33 +10,12 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      extrude2DMeshDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-extrudeModel        linearDirection;
+surfaces ("buildings.obj");
 
-patchInfo
-{}
-
-patchType           empty;
-
-nLayers             1;
-
-expansionRatio      1.0;
-
-linearDirectionCoeffs
-{
-    direction       (0 0 1);
-    thickness       0.1;
-}
-
-wedgeCoeffs
-{
-    axisPt          (0 0 0);
-    axis            (1 0 0);
-    angle           10;
-}
-
+#includeEtc "caseDicts/surface/surfaceFeaturesDict.cfg"
 
 // ************************************************************************* //

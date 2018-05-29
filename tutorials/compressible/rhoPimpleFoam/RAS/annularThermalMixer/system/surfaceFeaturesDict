@@ -23,8 +23,9 @@ surfaces
     "rotorBlades.obj"
 );
 
-includedAngle   150;  // Identifes a feature when angle
-                      // between faces < includedAngle
+// Identify a feature when angle between faces < includedAngle
+includedAngle   150;
+
 trimFeatures
 {
     minElem         10;   // minimum edges within a feature

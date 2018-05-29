@@ -10,29 +10,19 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      surfaceFeatureExtractDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-flange.stl
-{
-    // How to obtain raw features (extractFromFile || extractFromSurface)
-    extractionMethod    extractFromSurface;
+surfaces
+(
+    "vessel.stl"
+    "gasInlet.stl"
+    "stirrer.stl"
+    "outlet.stl"
+);
 
-    extractFromSurfaceCoeffs
-    {
-        // Mark edges whose adjacent surface normals are at an angle less
-        // than includedAngle as features
-        // - 0  : selects no edges
-        // - 180: selects all edges
-        includedAngle   150;
-    }
-
-    // Write options
-
-        // Write features to obj format for postprocessing
-        writeObj                yes;
-}
-
+// Identify a feature when angle between faces < includedAngle
+includedAngle       120;
 
 // ************************************************************************* //

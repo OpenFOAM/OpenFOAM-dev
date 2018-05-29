@@ -10,50 +10,16 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      surfaceFeatureExtractDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//innerCylinder.obj
-//{
-//    #include "surfaceFeatureExtractDictDefaults"
-//}
+surfaces
+(
+    "fixed.obj"
+    "rotatingZone.obj"
+);
 
-
-innerCylinderSmall.obj
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-
-
-outerCylinder.obj
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-
-
-propellerStem1.obj
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-
-
-propellerStem2.obj
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-
-
-propellerStem3.obj
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-
-
-propellerTip.obj
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-
+#includeEtc "caseDicts/surface/surfaceFeaturesDict.cfg"
 
 // ************************************************************************* //

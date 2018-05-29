@@ -10,13 +10,22 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      surfaceFeatureExtractDict;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-buildings.obj
+surfaces ("DTC-scaled.stl");
+
+// Identify a feature when angle between faces < includedAngle
+includedAngle   150;
+
+subsetFeatures
 {
-    #includeEtc "caseDicts/surface/surfaceFeatureExtractDict.cfg"
+    // Keep nonManifold edges (edges with >2 connected faces)
+    nonManifoldEdges       yes;
+
+    // Keep open edges (edges with 1 connected face)
+    openEdges       yes;
 }
 
 // ************************************************************************* //

@@ -10,33 +10,13 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      thermophysicalProperties;
+    object      surfaceFeaturesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType      hePsiThermo<pureMixture<const<hConst<perfectGas<specie>>,sensibleEnthalpy>>>;
+surfaces ("flange.stl");
 
-// Note: these are the properties for a "normalised" inviscid gas
-//       for which the speed of sound is 1 m/s at a temperature of 1K
-//       and gamma = 7/5
-mixture
-{
-    specie
-    {
-        molWeight       11640.3;
-    }
-    thermodynamics
-    {
-        Cp              2.5;
-        Hf              0;
-    }
-    transport
-    {
-        mu              0;
-        Pr              1;
-    }
-}
-
+// Identify a feature when angle between faces < includedAngle
+includedAngle   150;
 
 // ************************************************************************* //
