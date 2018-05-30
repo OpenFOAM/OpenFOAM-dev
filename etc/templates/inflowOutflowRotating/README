@@ -31,7 +31,7 @@ Background Mesh
 
 Features
 ========
-+ Run surfaceFeatureExtract to extract features for explicit feature capturing
++ Run surfaceFeatures to extract features for explicit feature capturing
 
 Castellated Mesh
 ================

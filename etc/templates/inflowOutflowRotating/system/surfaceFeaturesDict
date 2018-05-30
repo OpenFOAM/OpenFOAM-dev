@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeaturesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaces
+(
+    "fixed.obj"
+    "rotating.obj"
+    "rotatingZone.obj"
+);
+
+includedAngle   150;
+
+subsetFeatures
+{
+    nonManifoldEdges yes;
+    openEdges        yes;
+}
+
+trimFeatures
+{
+    minElem         0;
+    minLen          0;
+}
+
+writeObj        yes;
+
+// ************************************************************************* //
