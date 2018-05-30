@@ -27,7 +27,6 @@ License
 #include "wordList.H"
 #include "DynamicList.H"
 #include "OSspecific.H"
-#include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -393,48 +392,6 @@ Foam::fileName Foam::operator/(const string& a, const string& b)
         {
             return fileName();
         }
-    }
-}
-
-
-// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
-
-Foam::fileName Foam::search(const word& file, const fileName& directory)
-{
-    // Search the current directory for the file
-    fileNameList files(fileHandler().readDir(directory));
-    forAll(files, i)
-    {
-        if (files[i] == file)
-        {
-            return directory/file;
-        }
-    }
-
-    // If not found search each of the sub-directories
-    fileNameList dirs(fileHandler().readDir(directory, fileName::DIRECTORY));
-    forAll(dirs, i)
-    {
-        fileName path = search(file, directory/dirs[i]);
-        if (path != fileName::null)
-        {
-            return path;
-        }
-    }
-
-    return fileName::null;
-}
-
-
-void Foam::cpFiles(const fileName& srcDir, const fileName& targetDir)
-{
-    mkDir(targetDir);
-
-    const fileNameList srcFiles(readDir(srcDir, fileName::FILE, true));
-
-    forAll(srcFiles, filei)
-    {
-        cp(srcDir/srcFiles[filei], targetDir);
     }
 }
 

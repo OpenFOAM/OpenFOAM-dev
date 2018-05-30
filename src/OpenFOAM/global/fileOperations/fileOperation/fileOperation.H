@@ -536,6 +536,14 @@ const fileOperation& fileHandler();
 //- Reset file handler
 void fileHandler(autoPtr<fileOperation>&);
 
+//- Recursively search the given directory for the file
+//  returning the path relative to the directory or
+//  fileName::null if not found
+fileName search(const word& file, const fileName& directory);
+
+//- Copy all the files from the source to the target directory
+void cpFiles(const fileName& srcDir, const fileName& targetDir);
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
