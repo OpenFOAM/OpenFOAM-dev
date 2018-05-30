@@ -1,0 +1,61 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     surfaceFeatureExtract
+#
+# Description
+#     Script to suggest using the new "surfaceFeatures" utility.
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+announcement() {
+cat <<EOF
+$Script has been superseded by the "surfaceFeatures" utility.
+
+surfaceFeatures reads a surfaceFeaturesDict input file with a much
+simpler, more convenient format.  Example surfaceFeaturesDict files
+can be found in the tutorial and template cases, e.g. located as
+follows:
+find \$FOAM_TUTORIALS -name surfaceFeaturesDict
+find \$FOAM_ETC -name surfaceFeaturesDict
+
+If you wish to run the old surfaceFeatureExtract application,
+- EITHER run with full path, e.g.:
+  $FOAM_APPBIN/surfaceFeatureExtract ...
+- OR run with the additional -f | -force option, e.g.:
+  surfaceFeatureExtract -force ...
+
+EOF
+exit 0
+}
+
+echo "$*" | grep -qE "\-(f|force)( |$)" || announcement
+
+# shellcheck disable=SC2046
+"$FOAM_APPBIN/surfaceFeatureExtract" \
+    $(echo "$*" | sed -E "s/\-(f|force)( |$)//g")
+
+#------------------------------------------------------------------------------
