@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "mappedPatchBase.H"
 #include "fvPatchFieldMapper.H"
 #include "radiationModel.H"
+#include "noRadiation.H"
 #include "absorptionEmissionModel.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
@@ -35,11 +36,7 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(radiationCoupledBase, 0);
-}
 
-
-namespace Foam
-{
     template<>
     const char* Foam::NamedEnum
     <
@@ -51,7 +48,6 @@ namespace Foam
         "lookup"
     };
 }
-
 
 const Foam::NamedEnum<Foam::radiationCoupledBase::emissivityMethodType, 2>
     Foam::radiationCoupledBase::emissivityMethodTypeNames_;
@@ -161,6 +157,16 @@ Foam::scalarField Foam::radiationCoupledBase::emissivity() const
                     "radiationProperties"
                 );
 
+            if (isType<radiation::noRadiation>(radiation))
+            {
+                FatalErrorInFunction
+                    << "No radiation model defined for region "
+                    << nbrMesh.name() << nl
+                    << "    required for option 'solidRadiation' "
+                       "of patchField type " << type()
+                    << " on patch " << patch_.name()
+                    << abort(FatalError);
+            }
 
             const fvMesh& nbrFvMesh = refCast<const fvMesh>(nbrMesh);
 
