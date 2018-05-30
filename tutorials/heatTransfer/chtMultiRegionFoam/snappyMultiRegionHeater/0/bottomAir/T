@@ -9,22 +9,33 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    object      U;
+    class       volScalarField;
+    location    "0/bottomAir";
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [ 0 0 0 1 0 0 0 ];
 
-internalField   uniform (0.01 0 0);
+internalField   uniform 300;
 
 boundaryField
 {
-    ".*"
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    "(min|max)(X|Y|Z)"
     {
-        type            calculated;
-        value           uniform (0.01 0 0);
+        type            zeroGradient;
+        value           $internalField;
+    }
+    ".*_to_.*"
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        value           $internalField;
+        Tnbr            T;
+        kappaMethod     fluidThermo;
     }
 }
+
 
 // ************************************************************************* //

@@ -10,21 +10,53 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
+    location    "0/topAir";
     object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [ 0 0 0 1 0 0 0 ];
 
 internalField   uniform 300;
 
 boundaryField
 {
-    ".*"
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    maxY
     {
-        type            calculated;
-        value           uniform 300;
+        type            zeroGradient;
+        value           $internalField;
+    }
+    minX
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    maxX
+    {
+        type            inletOutlet;
+        value           $internalField;
+        inletValue      $internalField;
+    }
+    minZ
+    {
+        type            zeroGradient;
+        value           $internalField;
+    }
+    maxZ
+    {
+        type            zeroGradient;
+        value           $internalField;
+    }
+    ".*_to_.*"
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        value           $internalField;
+        Tnbr            T;
+        kappaMethod     fluidThermo;
     }
 }
+
 
 // ************************************************************************* //

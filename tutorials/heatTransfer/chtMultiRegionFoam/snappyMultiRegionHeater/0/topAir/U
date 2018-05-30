@@ -9,51 +9,47 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      changeDictionaryDict;
+    class       volVectorField;
+    location    "0/topAir";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-boundary
+dimensions      [ 0 1 -1 0 0 0 0 ];
+
+internalField   uniform (0.1 0 0);
+
+boundaryField
 {
-    minY
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    maxY
     {
-        type            patch;
+        type            noSlip;
+    }
+    minX
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    maxX
+    {
+        type            pressureInletOutletVelocity;
+        value           $internalField;
     }
     minZ
     {
-        type            patch;
+        type            noSlip;
     }
     maxZ
     {
-        type            patch;
+        type            noSlip;
     }
-}
-
-T
-{
-    internalField   uniform 300;
-
-    boundaryField
+    ".*_to_.*"
     {
-        ".*"
-        {
-            type            zeroGradient;
-            value           uniform 300;
-        }
-        "heater_to_.*"
-        {
-            type            compressible::turbulentTemperatureCoupledBaffleMixed;
-            Tnbr            T;
-            kappaMethod     solidThermo;
-            value           uniform 300;
-        }
-        minY
-        {
-            type            fixedValue;
-            value           uniform 500;
-        }
+        type            noSlip;
     }
 }
+
 
 // ************************************************************************* //

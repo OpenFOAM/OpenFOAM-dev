@@ -1,48 +1,27 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
-
+cd ${0%/*} || exit 1 # Run from this directory
 
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-rm -rf constant/polyMesh/sets
-
+# Meshing
 runApplication blockMesh
 runApplication surfaceFeatures
+runApplication decomposePar -copyZero
+runParallel snappyHexMesh -overwrite
+runParallel splitMeshRegions -cellZones -overwrite
 
-runApplication snappyHexMesh -overwrite
-runApplication splitMeshRegions -cellZones -overwrite
+# Simulation
+runParallel $(getApplication)
 
-# remove fluid fields from solid regions (important for post-processing)
-for i in heater leftSolid rightSolid
+# Reconstruct
+for region in bottomAir topAir heater leftSolid rightSolid
 do
-   rm -f 0*/$i/{nut,alphat,epsilon,k,U,p_rgh}
+    runApplication -s $region reconstructParMesh -constant -region $region
 done
+reconstructPar -allRegions
 
-
-for i in bottomAir topAir heater leftSolid rightSolid
-do
-   runApplication -s $i  changeDictionary -region $i
-done
-
-
-#-- Run on single processor
-runApplication $(getApplication)
-
-
-## Decompose
-#runApplication decomposePar -allRegions
-#
-## Run
-#runParallel $(getApplication)
-#
-## Reconstruct
-#runApplication reconstructPar -allRegions
-
-
-echo
-echo "creating files for paraview post-processing"
-echo
+# Post-process
 paraFoam -touchAll
 
 #------------------------------------------------------------------------------

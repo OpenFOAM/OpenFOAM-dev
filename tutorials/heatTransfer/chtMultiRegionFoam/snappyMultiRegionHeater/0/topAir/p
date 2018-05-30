@@ -10,20 +10,23 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      epsilon;
+    location    "0/topAir";
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
+dimensions      [ 1 -1 -2 0 0 0 0 ];
 
-internalField   uniform 0.01;
+internalField   uniform 100000;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     ".*"
     {
         type            calculated;
-        value           uniform 0.01;
+        value           $internalField;
     }
 }
 

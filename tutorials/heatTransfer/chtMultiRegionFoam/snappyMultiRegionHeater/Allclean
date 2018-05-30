@@ -1,26 +1,13 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
+cd ${0%/*} || exit 1 # Run from this directory
 
 # Source tutorial clean functions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
-rm -f constant/triSurface/*.eMesh > /dev/null 2>&1
-rm -f constant/polyMesh/boundary
-
 cleanCase
-rm -rf VTK
-rm -rf constant/cellToRegion constant/polyMesh/sets
-rm -rf 0/bottomAir
-rm -rf 0/topAir
-rm -rf 0/heater
-rm -rf 0/leftSolid
-rm -rf 0/rightSolid
-rm -f 0/cellToRegion
-rm -rf constant/bottomAir/polyMesh
-rm -rf constant/topAir/polyMesh
-rm -rf constant/heater/polyMesh
-rm -rf constant/leftSolid/polyMesh
-rm -rf constant/rightSolid/polyMesh
+rm -rf \
+    constant/*/polyMesh \
+    constant/extendedFeatureEdgeMesh \
+    constant/triSurface/*.eMesh
 
 #------------------------------------------------------------------------------

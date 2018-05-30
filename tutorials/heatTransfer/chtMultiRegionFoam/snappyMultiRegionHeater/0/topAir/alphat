@@ -9,12 +9,26 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      meshQualityDict;
+    class       volScalarField;
+    location    "0/topAir";
+    object      alphat;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeEtc "caseDicts/meshQualityDict"
+dimensions      [1 -1 -1 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    ".*"
+    {
+        type            calculated;
+        value           $internalField;
+    }
+}
 
 
 // ************************************************************************* //
