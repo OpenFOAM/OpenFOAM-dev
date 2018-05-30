@@ -10,14 +10,14 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0/topAir";
-    object      epsilon;
+    location    "0/bottomAir";
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 2 -3 0 0 0 0 ];
+dimensions      [ 1 -1 -2 0 0 0 0 ];
 
-internalField   uniform 0.01;
+internalField   uniform 0;
 
 boundaryField
 {
@@ -25,23 +25,22 @@ boundaryField
 
     minX
     {
-        type            fixedValue;
+        type            fixedFluxPressure;
         value           $internalField;
     }
     maxX
     {
-        type            inletOutlet;
+        type            fixedValue;
         value           $internalField;
-        inletValue      $internalField;
     }
     "(min|max)(Y|Z)"
     {
-        type            epsilonWallFunction;
+        type            fixedFluxPressure;
         value           $internalField;
     }
     ".*_to_.*"
     {
-        type            epsilonWallFunction;
+        type            fixedFluxPressure;
         value           $internalField;
     }
 }

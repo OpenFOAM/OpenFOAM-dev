@@ -1,43 +1,26 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
-
+cd ${0%/*} || exit 1 # Run from this directory
 
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
+# Meshing
 runApplication blockMesh
 runApplication topoSet
-runApplication splitMeshRegions -cellZones -overwrite
+runApplication decomposePar -copyZero
+runParallel splitMeshRegions -cellZones -overwrite
 
-# remove fluid fields from solid regions (important for post-processing)
-for i in heater leftSolid rightSolid
-do
-   rm -f 0*/$i/{nut,alphat,epsilon,k,U,p_rgh}
-done
-
-
-for i in bottomWater topAir heater leftSolid rightSolid
-do
-   runApplication -s $i changeDictionary -region $i
-done
-
-
-#-- Run on single processor
-#runApplication $(getApplication)
-
-# Decompose
-runApplication decomposePar -allRegions
-
-# Run
+# Simulation
 runParallel $(getApplication)
 
 # Reconstruct
+for region in bottomWater topAir heater leftSolid rightSolid
+do
+    runApplication -s $region reconstructParMesh -constant -region $region
+done
 runApplication reconstructPar -allRegions
 
-
-echo
-echo "creating files for paraview post-processing"
-echo
+# Post-process
 paraFoam -touchAll
 
 #------------------------------------------------------------------------------

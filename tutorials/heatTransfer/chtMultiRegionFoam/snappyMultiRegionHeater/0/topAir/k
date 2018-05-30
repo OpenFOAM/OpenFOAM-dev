@@ -23,11 +23,6 @@ boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
 
-    maxY
-    {
-        type            kqRWallFunction;
-        value           $internalField;
-    }
     minX
     {
         type            fixedValue;
@@ -39,12 +34,7 @@ boundaryField
         value           $internalField;
         inletValue      $internalField;
     }
-    minZ
-    {
-        type            kqRWallFunction;
-        value           $internalField;
-    }
-    maxZ
+    "(min|max)(Y|Z)"
     {
         type            kqRWallFunction;
         value           $internalField;

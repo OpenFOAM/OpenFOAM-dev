@@ -10,21 +10,41 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      T;
+    location    "0/topAir";
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [ 0 2 -2 0 0 0 0 ];
 
-internalField   uniform 300;
+internalField   uniform 0.1;
 
 boundaryField
 {
-    ".*"
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    minX
     {
-        type            calculated;
-        value           uniform 300;
+        type            fixedValue;
+        value           $internalField;
+    }
+    maxX
+    {
+        type            inletOutlet;
+        value           $internalField;
+        inletValue      $internalField;
+    }
+    "(min|max)(Y|Z)"
+    {
+        type            kqRWallFunction;
+        value           $internalField;
+    }
+    ".*_to_.*"
+    {
+        type            kqRWallFunction;
+        value           $internalField;
     }
 }
+
 
 // ************************************************************************* //

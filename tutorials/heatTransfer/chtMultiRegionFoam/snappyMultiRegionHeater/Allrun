@@ -19,7 +19,7 @@ for region in bottomAir topAir heater leftSolid rightSolid
 do
     runApplication -s $region reconstructParMesh -constant -region $region
 done
-reconstructPar -allRegions
+runApplication reconstructPar -allRegions
 
 # Post-process
 paraFoam -touchAll

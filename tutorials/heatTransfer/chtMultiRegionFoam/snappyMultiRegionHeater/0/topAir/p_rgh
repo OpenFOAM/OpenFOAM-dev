@@ -23,11 +23,6 @@ boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
 
-    maxY
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
     minX
     {
         type            fixedFluxPressure;
@@ -38,12 +33,7 @@ boundaryField
         type            fixedValue;
         value           $internalField;
     }
-    minZ
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-    maxZ
+    "(min|max)(Y|Z)"
     {
         type            fixedFluxPressure;
         value           $internalField;

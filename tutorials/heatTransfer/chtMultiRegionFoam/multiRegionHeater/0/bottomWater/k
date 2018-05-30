@@ -10,14 +10,14 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0/topAir";
-    object      epsilon;
+    location    "0/bottomAir";
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 2 -3 0 0 0 0 ];
+dimensions      [ 0 2 -2 0 0 0 0 ];
 
-internalField   uniform 0.01;
+internalField   uniform 0.1;
 
 boundaryField
 {
@@ -36,12 +36,12 @@ boundaryField
     }
     "(min|max)(Y|Z)"
     {
-        type            epsilonWallFunction;
+        type            kqRWallFunction;
         value           $internalField;
     }
     ".*_to_.*"
     {
-        type            epsilonWallFunction;
+        type            kqRWallFunction;
         value           $internalField;
     }
 }
