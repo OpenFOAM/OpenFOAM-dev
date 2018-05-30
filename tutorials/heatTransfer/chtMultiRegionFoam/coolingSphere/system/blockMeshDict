@@ -1,0 +1,150 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+bp   0.4;
+bn  -0.4;
+
+dp   4;
+dn  -4;
+dl  10;
+
+nb  15;
+nd  30;
+nl  20;
+
+gd   20;
+gl   1;
+
+geometry
+{
+    sphere
+    {
+        type searchableSphere;
+        centre (0 0 0);
+        radius 0.5;
+    }
+}
+
+convertToMeters 1;
+
+vertices
+(
+
+    project ($bn $bn $bn) (sphere)
+    project ($bp $bn $bn) (sphere)
+    project ($bn $bp $bn) (sphere)
+    project ($bp $bp $bn) (sphere)
+
+    project ($bn $bn $bp) (sphere)
+    project ($bp $bn $bp) (sphere)
+    project ($bn $bp $bp) (sphere)
+    project ($bp $bp $bp) (sphere)
+
+    ($dn $dn $dn)
+    ($dp $dn $dn)
+    ($dn $dp $dn)
+    ($dp $dp $dn)
+
+    ($dn $dn $dp)
+    ($dp $dn $dp)
+    ($dn $dp $dp)
+    ($dp $dp $dp)
+
+    ($dl $dn $dn)
+    ($dl $dp $dn)
+    ($dl $dn $dp)
+    ($dl $dp $dp)
+);
+
+blocks
+(
+    hex (1 0 8 9 5 4 12 13) ($nb $nd $nb) simpleGrading (1 $gd 1)
+    hex (0 2 10 8 4 6 14 12) ($nb $nd $nb) simpleGrading (1 $gd 1)
+    hex (2 3 11 10 6 7 15 14) ($nb $nd $nb) simpleGrading (1 $gd 1)
+    hex (3 1 9 11 7 5 13 15) ($nb $nd $nb) simpleGrading (1 $gd 1)
+    hex (0 1 9 8 2 3 11 10) ($nb $nd $nb) simpleGrading (1 $gd 1)
+    hex (5 4 12 13 7 6 14 15) ($nb $nd $nb) simpleGrading (1 $gd 1)
+    hex (9 16 17 11 13 18 19 15) ($nl $nb $nb) simpleGrading (1 1 1)
+
+    // Solid region
+    hex (0 1 3 2 4 5 7 6) ($nb $nb $nb) simpleGrading (1 1 1)
+);
+
+edges
+(
+    project  0 2  (sphere)
+    project  2 3  (sphere)
+    project  3 1  (sphere)
+    project  1 0  (sphere)
+    project  4 6  (sphere)
+    project  6 7  (sphere)
+    project  7 5  (sphere)
+    project  5 4  (sphere)
+    project  0 4  (sphere)
+    project  2 6  (sphere)
+    project  3 7  (sphere)
+    project  1 5  (sphere)
+);
+
+faces
+(
+    project (0 2 6 4) sphere
+    project (2 3 7 6) sphere
+    project (3 1 5 7) sphere
+    project (1 0 4 5) sphere
+    project (0 1 3 2) sphere
+    project (4 5 7 6) sphere
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (8 10 14 12)
+        );
+    }
+
+    walls
+    {
+        type wall;
+        inGroups (externalWall);
+        faces
+        (
+            (8 9 11 10)
+            (12 13 15 14)
+            (10 11 15 14)
+            (11 17 19 15)
+            (9 16 17 11)
+            (13 18 19 15)
+            (8 9 13 12)
+            (9 16 18 13)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (16 17 19 18)
+        );
+    }
+);
+
+// ************************************************************************* //

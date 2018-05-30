@@ -1,0 +1,3 @@
+foamSetupCHT.C
+
+EXE = $(FOAM_APPBIN)/foamSetupCHT

@@ -1,0 +1,24 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allmesh
+
+runApplication foamSetupCHT
+
+runApplication foamDictionary -disableFunctionEntries \
+    -entry internalField -set "uniform 348" 0/solid/T
+
+runApplication decomposePar -allRegions -dict system/decomposeParDict
+
+printf "\n%s\n" "Creating files for paraview post-processing"
+paraFoam -touchAll
+echo
+
+runParallel $(getApplication)
+
+runApplication reconstructPar -allRegions
+
+#------------------------------------------------------------------------------
