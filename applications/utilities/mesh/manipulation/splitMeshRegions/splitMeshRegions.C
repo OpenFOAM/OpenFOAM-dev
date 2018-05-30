@@ -109,6 +109,10 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Standard default region base name
+const word standardRegionName("region");
+
+
 // Prepend prefix to selected patches.
 void renamePatches
 (
@@ -249,12 +253,12 @@ void subsetSurfaceFields
 }
 
 // Select all cells not in the region
-labelList getNonRegionCells(const labelList& cellRegion, const label regionI)
+labelList getNonRegionCells(const labelList& cellRegion, const label regioni)
 {
     DynamicList<label> nonRegionCells(cellRegion.size());
     forAll(cellRegion, celli)
     {
-        if (cellRegion[celli] != regionI)
+        if (cellRegion[celli] != regioni)
         {
             nonRegionCells.append(celli);
         }
@@ -579,7 +583,7 @@ autoPtr<mapPolyMesh> createRegionMesh
     const fvMesh& mesh,
     // Region info
     const labelList& cellRegion,
-    const label regionI,
+    const label regioni,
     const word& regionName,
     // Interface info
     const labelList& interfacePatches,
@@ -658,7 +662,7 @@ autoPtr<mapPolyMesh> createRegionMesh
     removeCells cellRemover(mesh);
 
     // Select all but region cells
-    labelList cellsToRemove(getNonRegionCells(cellRegion, regionI));
+    labelList cellsToRemove(getNonRegionCells(cellRegion, regioni));
 
     // Find out which faces will get exposed. Note that this
     // gets faces in mesh face order. So both regions will get same
@@ -689,11 +693,11 @@ autoPtr<mapPolyMesh> createRegionMesh
 
         label otherRegion = -1;
 
-        if (ownRegion == regionI && neiRegion != regionI)
+        if (ownRegion == regioni && neiRegion != regioni)
         {
             otherRegion = neiRegion;
         }
-        else if (ownRegion != regionI && neiRegion == regionI)
+        else if (ownRegion != regioni && neiRegion == regioni)
         {
             otherRegion = ownRegion;
         }
@@ -704,12 +708,12 @@ autoPtr<mapPolyMesh> createRegionMesh
                 << " fc:" << mesh.faceCentres()[facei]
                 << " has owner region " << ownRegion
                 << " and neighbour region " << neiRegion
-                << " when handling region:" << regionI
+                << " when handling region:" << regioni
                 << exit(FatalError);
         }
 
         // Find the patch.
-        if (regionI < otherRegion)
+        if (regioni < otherRegion)
         {
             exposedPatchIDs[i] = interfacePatches[interfacei];
         }
@@ -754,20 +758,20 @@ void createAndWriteRegion
     const bool prefixRegion,
     const labelList& faceToInterface,
     const labelList& interfacePatches,
-    const label regionI,
+    const label regioni,
     const word& newMeshInstance
 )
 {
-    Info<< "Creating mesh for region " << regionI
-        << ' ' << regionNames[regionI] << endl;
+    Info<< "Creating mesh for region " << regioni
+        << ' ' << regionNames[regioni] << endl;
 
     autoPtr<fvMesh> newMesh;
     autoPtr<mapPolyMesh> map = createRegionMesh
     (
         mesh,
         cellRegion,
-        regionI,
-        regionNames[regionI],
+        regioni,
+        regionNames[regioni],
         interfacePatches,
         faceToInterface,
         newMesh
@@ -934,7 +938,7 @@ void createAndWriteRegion
     {
         Info<< "Prefixing patches with region name" << endl;
 
-        renamePatches(newMesh(), regionNames[regionI], sharedPatches);
+        renamePatches(newMesh(), regionNames[regioni], sharedPatches);
     }
 
 
@@ -961,7 +965,7 @@ void createAndWriteRegion
         map().pointMap()
     );
     Info<< "Writing map " << pointProcAddressing.name()
-        << " from region" << regionI
+        << " from region" << regioni
         << " points back to base mesh." << endl;
     pointProcAddressing.write();
 
@@ -999,7 +1003,7 @@ void createAndWriteRegion
         }
     }
     Info<< "Writing map " << faceProcAddressing.name()
-        << " from region" << regionI
+        << " from region" << regioni
         << " faces back to base mesh." << endl;
     faceProcAddressing.write();
 
@@ -1018,7 +1022,7 @@ void createAndWriteRegion
         map().cellMap()
     );
     Info<< "Writing map " <<cellProcAddressing.name()
-        << " from region" << regionI
+        << " from region" << regioni
         << " cells back to base mesh." << endl;
     cellProcAddressing.write();
 
@@ -1048,7 +1052,7 @@ void createAndWriteRegion
         }
     }
     Info<< "Writing map " << boundaryProcAddressing.name()
-        << " from region" << regionI
+        << " from region" << regioni
         << " boundary back to base mesh." << endl;
     boundaryProcAddressing.write();
 }
@@ -1161,32 +1165,32 @@ label findCorrespondingRegion
     Pstream::listCombineScatter(cellsInZone);
 
     // Pick region with largest overlap of zoneI
-    label regionI = findMax(cellsInZone);
+    label regioni = findMax(cellsInZone);
 
 
-    if (cellsInZone[regionI] < minOverlapSize)
+    if (cellsInZone[regioni] < minOverlapSize)
     {
         // Region covers too little of zone. Not good enough.
-        regionI = -1;
+        regioni = -1;
     }
     else
     {
         // Check that region contains no cells that aren't in cellZone.
         forAll(cellRegion, celli)
         {
-            if (cellRegion[celli] == regionI && existingZoneID[celli] != zoneI)
+            if (cellRegion[celli] == regioni && existingZoneID[celli] != zoneI)
             {
-                // celli in regionI but not in zoneI
-                regionI = -1;
+                // celli in regioni but not in zoneI
+                regioni = -1;
                 break;
             }
         }
         // If one in error, all should be in error. Note that branch gets taken
         // on all procs.
-        reduce(regionI, minOp<label>());
+        reduce(regioni, minOp<label>());
     }
 
-    return regionI;
+    return regioni;
 }
 
 
@@ -1248,6 +1252,8 @@ void matchRegions
     const label nCellRegions,
     const labelList& cellRegion,
 
+    const word& defaultRegionName,
+
     labelList& regionToZone,
     wordList& regionNames,
     labelList& zoneToRegion
@@ -1303,7 +1309,7 @@ void matchRegions
 
         forAll(cellZones, zoneI)
         {
-            label regionI = findCorrespondingRegion
+            label regioni = findCorrespondingRegion
             (
                 zoneID,
                 cellRegion,
@@ -1312,15 +1318,15 @@ void matchRegions
                 label(0.5*zoneSizes[zoneI]) // minimum overlap
             );
 
-            if (regionI != -1)
+            if (regioni != -1)
             {
-                Info<< "Sloppily matched region " << regionI
-                    //<< " size " << regionSizes[regionI]
+                Info<< "Sloppily matched region " << regioni
+                    //<< " size " << regionSizes[regioni]
                     << " to zone " << zoneI << " size " << zoneSizes[zoneI]
                     << endl;
-                zoneToRegion[zoneI] = regionI;
-                regionToZone[regionI] = zoneI;
-                regionNames[regionI] = cellZones[zoneI].name();
+                zoneToRegion[zoneI] = regioni;
+                regionToZone[regioni] = zoneI;
+                regionNames[regioni] = cellZones[zoneI].name();
             }
         }
     }
@@ -1330,7 +1336,7 @@ void matchRegions
 
         forAll(cellZones, zoneI)
         {
-            label regionI = findCorrespondingRegion
+            label regioni = findCorrespondingRegion
             (
                 zoneID,
                 cellRegion,
@@ -1339,20 +1345,48 @@ void matchRegions
                 1               // minimum overlap
             );
 
-            if (regionI != -1)
+            if (regioni != -1)
             {
-                zoneToRegion[zoneI] = regionI;
-                regionToZone[regionI] = zoneI;
-                regionNames[regionI] = cellZones[zoneI].name();
+                zoneToRegion[zoneI] = regioni;
+                regionToZone[regioni] = zoneI;
+                regionNames[regioni] = cellZones[zoneI].name();
             }
         }
     }
-    // Allocate region names for unmatched regions.
-    forAll(regionToZone, regionI)
+
+    label nUnmatchedRegions = 0;
+
+    forAll(regionToZone, regioni)
     {
-        if (regionToZone[regionI] == -1)
+        if (regionToZone[regioni] == -1)
         {
-            regionNames[regionI] = "domain" + Foam::name(regionI);
+            nUnmatchedRegions++;
+        }
+    }
+
+    if (nUnmatchedRegions)
+    {
+        label nUnmatchedi = 1;
+
+        // Allocate region names for unmatched regions.
+        forAll(regionToZone, regioni)
+        {
+            if (regionToZone[regioni] == -1)
+            {
+                if
+                (
+                    nUnmatchedRegions == 1
+                 && defaultRegionName != standardRegionName
+                )
+                {
+                    regionNames[regioni] = defaultRegionName;
+                }
+                else
+                {
+                    regionNames[regioni] =
+                        defaultRegionName + Foam::name(nUnmatchedi++);
+                }
+            }
         }
     }
 }
@@ -1477,11 +1511,20 @@ int main(int argc, char *argv[])
         "prefixRegion",
         "prefix region name to all patches, not just coupling patches"
     );
+    argList::addOption
+    (
+        "defaultRegionName",
+        "name",
+        "base name of the unspecified regions, defaults to \"region\""
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
+
     runTime.functionObjects().off();
+
     #include "createNamedMesh.H"
+
     const word oldInstance = mesh.pointsInstance();
 
     word blockedFacesName;
@@ -1502,7 +1545,6 @@ int main(int argc, char *argv[])
     const bool sloppyCellZones  = args.optionFound("sloppyCellZones");
     const bool useFaceZones     = args.optionFound("useFaceZones");
     const bool prefixRegion     = args.optionFound("prefixRegion");
-
 
     if
     (
@@ -1532,7 +1574,6 @@ int main(int argc, char *argv[])
     }
 
 
-
     if (insidePoint && largestOnly)
     {
         FatalErrorInFunction
@@ -1542,6 +1583,10 @@ int main(int argc, char *argv[])
             << exit(FatalError);
     }
 
+    const word defaultRegionName
+    (
+        args.optionLookupOrDefault("defaultRegionName", standardRegionName)
+    );
 
     const cellZoneMesh& cellZones = mesh.cellZones();
 
@@ -1588,11 +1633,11 @@ int main(int argc, char *argv[])
         regionToZone.setSize(nCellRegions);
         regionNames.setSize(nCellRegions);
         zoneToRegion.setSize(cellZones.size(), -1);
-        for (label regionI = 0; regionI < nCellRegions; regionI++)
+        for (label regioni = 0; regioni < nCellRegions; regioni++)
         {
-            regionToZone[regionI] = regionI;
-            zoneToRegion[regionI] = regionI;
-            regionNames[regionI] = cellZones[regionI].name();
+            regionToZone[regioni] = regioni;
+            zoneToRegion[regioni] = regioni;
+            regionNames[regioni] = cellZones[regioni].name();
         }
     }
     else if (useCellZonesFile)
@@ -1637,11 +1682,11 @@ int main(int argc, char *argv[])
         zoneToRegion.setSize(newCellZones.size(), -1);
         regionToZone.setSize(nCellRegions);
         regionNames.setSize(nCellRegions);
-        for (label regionI = 0; regionI < nCellRegions; regionI++)
+        for (label regioni = 0; regioni < nCellRegions; regioni++)
         {
-            regionToZone[regionI] = regionI;
-            zoneToRegion[regionI] = regionI;
-            regionNames[regionI] = newCellZones[regionI].name();
+            regionToZone[regioni] = regioni;
+            zoneToRegion[regioni] = regioni;
+            regionNames[regioni] = newCellZones[regioni].name();
         }
     }
     else
@@ -1708,6 +1753,7 @@ int main(int argc, char *argv[])
             mesh,
             nCellRegions,
             cellRegion,
+            defaultRegionName,
 
             regionToZone,
             regionNames,
@@ -1717,21 +1763,21 @@ int main(int argc, char *argv[])
         // Override any default region names if single region selected
         if (largestOnly || insidePoint)
         {
-            forAll(regionToZone, regionI)
+            forAll(regionToZone, regioni)
             {
-                if (regionToZone[regionI] == -1)
+                if (regionToZone[regioni] == -1)
                 {
                     if (overwrite)
                     {
-                        regionNames[regionI] = polyMesh::defaultRegion;
+                        regionNames[regioni] = polyMesh::defaultRegion;
                     }
                     else if (insidePoint)
                     {
-                        regionNames[regionI] = "insidePoint";
+                        regionNames[regioni] = "insidePoint";
                     }
                     else if (largestOnly)
                     {
-                        regionNames[regionI] = "largestOnly";
+                        regionNames[regioni] = "largestOnly";
                     }
                 }
             }
@@ -1755,17 +1801,17 @@ int main(int argc, char *argv[])
     {
         regionSizes[cellRegion[celli]]++;
     }
-    forAll(regionSizes, regionI)
+    forAll(regionSizes, regioni)
     {
-        reduce(regionSizes[regionI], sumOp<label>());
+        reduce(regionSizes[regioni], sumOp<label>());
     }
 
     Info<< "Region\tCells" << nl
         << "------\t-----" << endl;
 
-    forAll(regionSizes, regionI)
+    forAll(regionSizes, regioni)
     {
-        Info<< regionI << '\t' << regionSizes[regionI] << nl;
+        Info<< regioni << '\t' << regionSizes[regioni] << nl;
     }
     Info<< endl;
 
@@ -1774,10 +1820,10 @@ int main(int argc, char *argv[])
     // Print region to zone
     Info<< "Region\tZone\tName" << nl
         << "------\t----\t----" << endl;
-    forAll(regionToZone, regionI)
+    forAll(regionToZone, regioni)
     {
-        Info<< regionI << '\t' << regionToZone[regionI] << '\t'
-            << regionNames[regionI] << nl;
+        Info<< regioni << '\t' << regionToZone[regioni] << '\t'
+            << regionNames[regioni] << nl;
     }
     Info<< endl;
 
@@ -1892,22 +1938,22 @@ int main(int argc, char *argv[])
 
         // Check if region overlaps with existing zone. If so keep.
 
-        for (label regionI = 0; regionI < nCellRegions; regionI++)
+        for (label regioni = 0; regioni < nCellRegions; regioni++)
         {
-            label zoneI = regionToZone[regionI];
+            label zoneI = regionToZone[regioni];
 
             if (zoneI != -1)
             {
-                Info<< "    Region " << regionI << " : corresponds to existing"
+                Info<< "    Region " << regioni << " : corresponds to existing"
                     << " cellZone "
                     << zoneI << ' ' << cellZones[zoneI].name() << endl;
             }
             else
             {
                 // Create new cellZone.
-                labelList regionCells = findIndices(cellRegion, regionI);
+                labelList regionCells = findIndices(cellRegion, regioni);
 
-                word zoneName = "region" + Foam::name(regionI);
+                word zoneName = "region" + Foam::name(regioni);
 
                 zoneI = cellZones.findZoneID(zoneName);
 
@@ -1932,7 +1978,7 @@ int main(int argc, char *argv[])
                     mesh.cellZones()[zoneI].clearAddressing();
                     mesh.cellZones()[zoneI] = regionCells;
                 }
-                Info<< "    Region " << regionI << " : created new cellZone "
+                Info<< "    Region " << regioni << " : created new cellZone "
                     << zoneI << ' ' << cellZones[zoneI].name() << endl;
             }
         }
@@ -1999,7 +2045,7 @@ int main(int argc, char *argv[])
         {
             const point insidePoint = args.optionRead<point>("insidePoint");
 
-            label regionI = -1;
+            label regioni = -1;
 
             (void)mesh.tetBasePtIs();
 
@@ -2010,16 +2056,16 @@ int main(int argc, char *argv[])
 
             if (celli != -1)
             {
-                regionI = cellRegion[celli];
+                regioni = cellRegion[celli];
             }
 
-            reduce(regionI, maxOp<label>());
+            reduce(regioni, maxOp<label>());
 
             Info<< nl
-                << "Subsetting region " << regionI
+                << "Subsetting region " << regioni
                 << " containing point " << insidePoint << endl;
 
-            if (regionI == -1)
+            if (regioni == -1)
             {
                 FatalErrorInFunction
                     << "Point " << insidePoint
@@ -2036,18 +2082,18 @@ int main(int argc, char *argv[])
                 prefixRegion,
                 faceToInterface,
                 interfacePatches,
-                regionI,
+                regioni,
                 (overwrite ? oldInstance : runTime.timeName())
             );
         }
         else if (largestOnly)
         {
-            label regionI = findMax(regionSizes);
+            label regioni = findMax(regionSizes);
 
             Info<< nl
-                << "Subsetting region " << regionI
-                << " of size " << regionSizes[regionI]
-                << " as named region " << regionNames[regionI] << endl;
+                << "Subsetting region " << regioni
+                << " of size " << regionSizes[regioni]
+                << " as named region " << regionNames[regioni] << endl;
 
             createAndWriteRegion
             (
@@ -2057,17 +2103,17 @@ int main(int argc, char *argv[])
                 prefixRegion,
                 faceToInterface,
                 interfacePatches,
-                regionI,
+                regioni,
                 (overwrite ? oldInstance : runTime.timeName())
             );
         }
         else
         {
             // Split all
-            for (label regionI = 0; regionI < nCellRegions; regionI++)
+            for (label regioni = 0; regioni < nCellRegions; regioni++)
             {
                 Info<< nl
-                    << "Region " << regionI << nl
+                    << "Region " << regioni << nl
                     << "-------- " << endl;
 
                 createAndWriteRegion
@@ -2078,7 +2124,7 @@ int main(int argc, char *argv[])
                     prefixRegion,
                     faceToInterface,
                     interfacePatches,
-                    regionI,
+                    regioni,
                     (overwrite ? oldInstance : runTime.timeName())
                 );
             }
