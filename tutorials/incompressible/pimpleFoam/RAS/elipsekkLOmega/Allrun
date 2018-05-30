@@ -10,14 +10,10 @@ application=$(getApplication)
 runApplication blockMesh
 runApplication transformPoints -scale '(1.6666 1 1)'
 
-runApplication changeDictionary -instance system -dict system/changeDictionaryDict.X
-runApplication mirrorMesh -overwrite
+runApplication mirrorMesh -dict mirrorMeshDict.X -overwrite
 rm log.mirrorMesh
-
-rm log.changeDictionary
-runApplication changeDictionary -instance system -dict system/changeDictionaryDict.Y
-
-runApplication mirrorMesh -overwrite
+runApplication mirrorMesh -dict mirrorMeshDict.Y -overwrite
+rm log.mirrorMesh
 
 runApplication topoSet
 runApplication createPatch -overwrite

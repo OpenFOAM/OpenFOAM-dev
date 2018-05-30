@@ -79,7 +79,7 @@ public:
     // Constructors
 
         //- Construct from IOobject
-        mirrorFvMesh(const IOobject& io);
+        mirrorFvMesh(const IOobject& io, const word& dictName);
 
 
     //- Destructor

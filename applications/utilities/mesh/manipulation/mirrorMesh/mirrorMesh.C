@@ -42,10 +42,16 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addDictOption.H"
+
     #include "setRootCase.H"
     #include "createTime.H"
 
     const bool overwrite = args.optionFound("overwrite");
+    const word dictName
+    (
+        args.optionLookupOrDefault<word>("dict", "mirrorMeshDict")
+    );
 
     mirrorFvMesh mesh
     (
@@ -54,7 +60,8 @@ int main(int argc, char *argv[])
             mirrorFvMesh::defaultRegion,
             runTime.constant(),
             runTime
-        )
+        ),
+        dictName
     );
 
     hexRef8Data refData
