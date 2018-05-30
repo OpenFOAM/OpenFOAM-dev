@@ -17,7 +17,7 @@ removeRegionDirs () {
         done
     done
 
-    find . -name "domain*" -type d | xargs rm -rf
+    find . -name "region*" -type d | xargs rm -rf
 }
 
 cleanCase
