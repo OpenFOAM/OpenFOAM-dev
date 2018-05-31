@@ -107,20 +107,8 @@ Foam::ConeInjection<CloudType>::ConeInjection
 
         axis /= mag(axis);
 
-        vector tangent = Zero;
-        scalar magTangent = 0.0;
-
-        cachedRandom& rnd = this->owner().rndGen();
-        while (magTangent < small)
-        {
-            vector v = rnd.sample01<vector>();
-
-            tangent = v - (v & axis)*axis;
-            magTangent = mag(tangent);
-        }
-
-        tanVec1_[i] = tangent/magTangent;
-        tanVec2_[i] = axis^tanVec1_[i];
+        tanVec1_[i] = normalised(perpendicular(axis));
+        tanVec2_[i] = normalised(axis^tanVec1_[i]);
     }
 
     // Set total volume to inject

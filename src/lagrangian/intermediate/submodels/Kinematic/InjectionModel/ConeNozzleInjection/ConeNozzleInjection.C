@@ -173,25 +173,12 @@ Foam::ConeNozzleInjection<CloudType>::ConeNozzleInjection
 
     setFlowType();
 
-    cachedRandom& rndGen = this->owner().rndGen();
-
     // Normalise direction vector
     direction_ /= mag(direction_);
 
     // Determine direction vectors tangential to direction
-    vector tangent = Zero;
-    scalar magTangent = 0.0;
-
-    while(magTangent < small)
-    {
-        vector v = rndGen.sample01<vector>();
-
-        tangent = v - (v & direction_)*direction_;
-        magTangent = mag(tangent);
-    }
-
-    tanVec1_ = tangent/magTangent;
-    tanVec2_ = direction_^tanVec1_;
+    tanVec1_ = normalised(perpendicular(direction_));
+    tanVec2_ = normalised(direction_ ^ tanVec1_);
 
     // Set total volume to inject
     this->volumeTotal_ = flowRateProfile_.integrate(0.0, duration_);
@@ -319,7 +306,7 @@ void Foam::ConeNozzleInjection<CloudType>::setPositionAndCell
 {
     cachedRandom& rndGen = this->owner().rndGen();
 
-    scalar beta = mathematical::twoPi*rndGen.sample01<scalar>();
+    scalar beta = mathematical::twoPi*rndGen.globalSample01<scalar>();
     normal_ = tanVec1_*cos(beta) + tanVec2_*sin(beta);
 
     switch (injectionMethod_)
@@ -335,7 +322,7 @@ void Foam::ConeNozzleInjection<CloudType>::setPositionAndCell
         }
         case imDisc:
         {
-            scalar frac = rndGen.sample01<scalar>();
+            scalar frac = rndGen.globalSample01<scalar>();
             scalar dr = outerDiameter_ - innerDiameter_;
             scalar r = 0.5*(innerDiameter_ + frac*dr);
             position = position_ + r*normal_;
