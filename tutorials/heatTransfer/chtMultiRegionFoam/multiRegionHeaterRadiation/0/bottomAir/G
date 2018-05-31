@@ -9,36 +9,33 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      changeDictionaryDict;
+    class       volScalarField;
+    location    "0/bottomAir";
+    object      G;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-p_rgh
+dimensions      [ 1 0 -3 0 0 0 0 ];
+
+internalField   uniform 0;
+
+boundaryField
 {
-    boundaryField
+    "(min|max)(X|Y|Z)"
     {
-        porous_half0
-        {
-            type            porousBafflePressure;
-            patchType       cyclic;
-            D               700;
-            I               500;
-            length          1.05;
-            jump            uniform 0;
-            value           uniform 0;
-        }
-        porous_half1
-        {
-            type            porousBafflePressure;
-            patchType       cyclic;
-            D               700;
-            I               500;
-            length          1.05;
-            jump            uniform 0;
-            value           uniform 0;
-        }
+        type            MarshakRadiation;
+        value           $internalField;
+        emissivityMode  lookup;
+        emissivity      uniform 1;
+    }
+    "bottomAir_to_.*"
+    {
+        type            MarshakRadiation;
+        value           $internalField;
+        emissivityMode  solidRadiation;
+        emissivity      uniform 1;
     }
 }
+
 
 // ************************************************************************* //

@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0/bottomAir";
+    location    "0/bottomWater";
     object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -39,7 +39,7 @@ boundaryField
         type            zeroGradient;
         value           $internalField;
     }
-    ".*_to_.*"
+    "bottomWater_to_.*"
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;

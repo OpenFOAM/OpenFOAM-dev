@@ -620,6 +620,30 @@ inline typename innerProduct<Form1, Form2>::type dot
 }
 
 
+template<class Form, class Cmpt, direction Ncmpts>
+inline direction findMax(const VectorSpace<Form, Cmpt, Ncmpts>& vs)
+{
+    direction index = 0;
+    for (direction i=1; i<Ncmpts; ++i)
+    {
+        index = vs[index] > vs[i] ? index : i;
+    }
+    return index;
+}
+
+
+template<class Form, class Cmpt, direction Ncmpts>
+inline direction findMin(const VectorSpace<Form, Cmpt, Ncmpts>& vs)
+{
+    direction index = 0;
+    for (direction i=1; i<Ncmpts; ++i)
+    {
+        index = vs[index] < vs[i] ? index : i;
+    }
+    return index;
+}
+
+
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
 template<class Form, class Cmpt, direction Ncmpts>

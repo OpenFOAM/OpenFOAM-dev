@@ -39,7 +39,7 @@ boundaryField
         type            kqRWallFunction;
         value           $internalField;
     }
-    ".*_to_.*"
+    "topAir_to_.*"
     {
         type            kqRWallFunction;
         value           $internalField;

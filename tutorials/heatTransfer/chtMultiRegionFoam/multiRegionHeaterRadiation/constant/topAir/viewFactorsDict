@@ -14,7 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
 writeViewFactorMatrix     true;
 writeFacesAgglomeration   true;
 writePatchViewFactors     false;

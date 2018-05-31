@@ -38,7 +38,7 @@ boundaryField
         type            fixedFluxPressure;
         value           $internalField;
     }
-    ".*_to_.*"
+    "topAir_to_.*"
     {
         type            fixedFluxPressure;
         value           $internalField;

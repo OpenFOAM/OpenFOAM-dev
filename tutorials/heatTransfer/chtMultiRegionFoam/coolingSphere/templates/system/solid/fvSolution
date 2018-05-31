@@ -31,7 +31,7 @@ solvers
     }
 }
 
-"(SIMPLE|PIMPLE|PISO)"
+PIMPLE
 {
     nNonOrthogonalCorrectors 0;
 }

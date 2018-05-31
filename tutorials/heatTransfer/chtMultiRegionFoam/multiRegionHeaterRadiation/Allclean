@@ -5,31 +5,16 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 cleanCase
-rm -rf VTK
-rm -rf constant/cellToRegion constant/polyMesh/sets
-rm -rf 0/bottomAir
-rm -rf 0/topAir
-rm -rf 0/heater
-rm -rf 0/leftSolid
-rm -rf 0/rightSolid
-rm -f 0/cellToRegion
-
-rm -rf constant/bottomAir/polyMesh
-rm -rf constant/topAir/polyMesh
-rm -rf constant/heater/polyMesh
-rm -rf constant/leftSolid/polyMesh
-rm -rf constant/rightSolid/polyMesh
-
-rm -f constant/bottomAir/F
-rm -f constant/bottomAir/constructMap*
-rm -f constant/bottomAir/finalAgglom
-rm -f constant/bottomAir/globalFaceFaces
-rm -f constant/bottomAir/subMap
-
-rm -f constant/topAir/F
-rm -f constant/topAir/constructMap*
-rm -f constant/topAir/finalAgglom
-rm -f constant/topAir/globalFaceFaces
-rm -f constant/topAir/subMap
+rm -rf \
+    0/cellToRegion \
+    0/*/cellToRegion \
+    0/*/facesAgglomeration \
+    0/*/viewFactorField \
+    constant/*/F \
+    constant/*/construct* \
+    constant/*/finalAgglom \
+    constant/*/globalFaceFaces \
+    constant/*/polyMesh \
+    constant/*/subMap
 
 #------------------------------------------------------------------------------
