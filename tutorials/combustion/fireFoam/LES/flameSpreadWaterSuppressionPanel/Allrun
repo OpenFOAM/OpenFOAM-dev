@@ -23,7 +23,9 @@ runApplication extrudeToRegionMesh -dict system/extrudeToRegionMeshDictPyr -over
 
 # change samplePatch in the boundary to coupled patch betwee region0 and
 # pyrolysis
-runApplication changeDictionary -region filmRegion -constant
+runApplication foamDictionary constant/filmRegion/polyMesh/boundary \
+               -entry entry0.region0_to_filmRegion_coupledWall.samplePatch \
+               -set region0_to_pyrolysisRegion_coupledWall
 
 # create faceSets for inlet, outlet, sides for the Film
 rm log.topoSet
