@@ -26,10 +26,11 @@ boundaryField
         type            calculated;
         value           uniform 0;
     }
-    wallFilm
+
+    "(region0_to.*)"
     {
         type            convectiveHeatTransfer;
-        L               1.0;
+        L               1;
         value           uniform 0;
     }
 }

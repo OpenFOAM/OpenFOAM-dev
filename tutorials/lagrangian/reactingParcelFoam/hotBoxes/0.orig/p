@@ -26,10 +26,11 @@ boundaryField
         type            calculated;
         value           $internalField;
     }
-    wallFilm
+
+    "(region0_to.*)"
     {
         type            calculated;
-        value           $internalField;
+        value           uniform 100000;
     }
 }
 

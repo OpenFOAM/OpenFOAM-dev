@@ -26,9 +26,11 @@ boundaryField
         type            fixedFluxPressure;
         value           uniform 100000;
     }
-    wallFilm
+
+    "(region0_to.*)"
     {
         type            fixedFluxPressure;
+        gradient        uniform 0;
         value           uniform 100000;
     }
 }

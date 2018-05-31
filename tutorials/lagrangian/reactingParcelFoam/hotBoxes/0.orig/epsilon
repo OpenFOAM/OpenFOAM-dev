@@ -26,10 +26,11 @@ boundaryField
         type            epsilonWallFunction;
         value           uniform 1e-7;
     }
-    wallFilm
+
+    "(region0_to.*)"
     {
         type            epsilonWallFunction;
-        value           uniform 1e-7;
+        value           uniform 1e-07;
     }
 }
 

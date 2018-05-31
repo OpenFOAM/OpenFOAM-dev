@@ -26,14 +26,14 @@ boundaryField
         type            fixedValue;
         value           uniform 300;
     }
-    wallFilm
+
+    "(region0_to.*)"
     {
-        type            zeroGradient;
-//        type            mapped;
-//        field       Tsf;
-//        average         300;
-//        setAverage      no;
-//        value           uniform 300;
+        type            mapped;
+        field           Tsf;
+        average         300;
+        setAverage      no;
+        value           uniform 300;
     }
 }
 

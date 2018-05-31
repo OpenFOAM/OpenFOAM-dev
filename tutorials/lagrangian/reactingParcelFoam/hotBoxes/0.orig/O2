@@ -25,7 +25,8 @@ boundaryField
     {
         type            zeroGradient;
     }
-    wallFilm
+
+    "(region0_to.*)"
     {
         type            zeroGradient;
     }

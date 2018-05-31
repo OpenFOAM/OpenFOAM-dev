@@ -27,7 +27,8 @@ boundaryField
         Prt             0.85;
         value           uniform 0;
     }
-    wallFilm
+
+    "(region0_to.*)"
     {
         type            alphatFilmWallFunction;
         B               5.5;
