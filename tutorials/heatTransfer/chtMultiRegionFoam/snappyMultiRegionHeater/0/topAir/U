@@ -37,7 +37,7 @@ boundaryField
     {
         type            noSlip;
     }
-    ".*_to_.*"
+    "topAir_to_.*"
     {
         type            noSlip;
     }

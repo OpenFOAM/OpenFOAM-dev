@@ -9,21 +9,23 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      k;
+    class       volVectorField;
+    location    "0/bottomAir";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [ 0 1 -1 0 0 0 0 ];
 
-internalField   uniform 0.1;
+internalField   uniform (0.01 0 0);
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     ".*"
     {
-        type            calculated;
-        value           $internalField;
+        type            noSlip;
     }
 }
 

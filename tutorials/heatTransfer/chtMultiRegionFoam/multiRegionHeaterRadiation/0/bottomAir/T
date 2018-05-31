@@ -10,14 +10,14 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0/heater";
-    object      p;
+    location    "0/bottomAir";
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -1 -2 0 0 0 0];
+dimensions      [ 0 0 0 1 0 0 0 ];
 
-internalField   uniform 100000;
+internalField   uniform 300;
 
 boundaryField
 {
@@ -25,13 +25,17 @@ boundaryField
 
     "(min|max)(X|Y|Z)"
     {
-        type            calculated;
+        type            zeroGradient;
         value           $internalField;
     }
-    "heater_to_.*"
+    "bottomAir_to_.*"
     {
-        type            calculated;
-        value           uniform 0;
+        type            compressible::turbulentTemperatureRadCoupledMixed;
+        value           $internalField;
+        Tnbr            T;
+        kappaMethod     fluidThermo;
+        qrNbr           none;
+        qr              qr;
     }
 }
 

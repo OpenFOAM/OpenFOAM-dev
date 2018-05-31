@@ -39,7 +39,7 @@ boundaryField
         type            epsilonWallFunction;
         value           $internalField;
     }
-    ".*_to_.*"
+    "topAir_to_.*"
     {
         type            epsilonWallFunction;
         value           $internalField;

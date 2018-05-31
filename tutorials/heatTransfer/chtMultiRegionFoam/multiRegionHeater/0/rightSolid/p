@@ -28,7 +28,7 @@ boundaryField
         type            calculated;
         value           $internalField;
     }
-    ".*_to_.*"
+    "rightSolid_to_.*"
     {
         type            calculated;
         value           uniform 0;

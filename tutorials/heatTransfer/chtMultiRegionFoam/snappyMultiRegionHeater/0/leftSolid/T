@@ -28,7 +28,7 @@ boundaryField
         type            zeroGradient;
         value           $internalField;
     }
-    ".*_to_.*"
+    "leftSolid_to_.*"
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
