@@ -80,7 +80,7 @@ cleanCase()
     rm -rf VTK > /dev/null 2>&1
     rm -rf sequencedVTK > /dev/null 2>&1
 
-    rm -f 0/polyMesh 0/cellLevel 0/pointLevel 0/cellDist constant/cellDecomposition
+    rm -rf 0/polyMesh 0/cellLevel 0/pointLevel 0/cellDist constant/cellDecomposition
 
     if [ -e system/blockMeshDict.m4 ]
     then
