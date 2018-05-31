@@ -719,6 +719,10 @@ Foam::fileNameList Foam::readDir
                         {
                             dirEntries[nEntries++] = fName.lessExt();
                         }
+                        else if (filtergz && fExt == "orig")
+                        {
+                            dirEntries[nEntries++] = fName.lessExt();
+                        }
                         else
                         {
                             dirEntries[nEntries++] = fName;
