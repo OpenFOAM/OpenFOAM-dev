@@ -8,14 +8,10 @@ gasSpecies="air H2O none"
 
 runApplication blockMesh
 
-function setArg()
-{
-    [ $1 != "none" ] && echo -set $1 || echo -remove
-}
-
 for g in $gasSpecies
 do
-    foamDictionary -entry inertSpecie $(setArg $g) constant/thermophysicalProperties.gas
+    [ $g != "none" ] && setArg="-set $g" || setArg="-remove"
+    foamDictionary -entry inertSpecie $setArg constant/thermophysicalProperties.gas
     runApplication -s $g.gas $(getApplication)
     mv postProcessing postProcessing_$g.gas
 done

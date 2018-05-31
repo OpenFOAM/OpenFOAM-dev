@@ -9,17 +9,14 @@ liquidSpecies="H2O C3H8O none"
 
 runApplication blockMesh
 
-function setArg()
-{
-    [ $1 != "none" ] && echo -set $1 || echo -remove
-}
-
 for g in $gasSpecies
 do
-    foamDictionary -entry inertSpecie $(setArg $g) constant/thermophysicalProperties.gas
+    [ $g != "none" ] && setArg="-set $g" || setArg="-remove"
+    foamDictionary -entry inertSpecie $setArg constant/thermophysicalProperties.gas
     for l in $liquidSpecies
     do
-        foamDictionary -entry inertSpecie $(setArg $l) constant/thermophysicalProperties.liquid
+        [ $l != "none" ] && setArg="-set $l" || setArg="-remove"
+        foamDictionary -entry inertSpecie $setArg constant/thermophysicalProperties.liquid
         runApplication -s $g.gas_$l.liquid $(getApplication)
         mv postProcessing postProcessing_$g.gas_$l.liquid
     done
