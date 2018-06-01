@@ -15,10 +15,7 @@ runParallel splitMeshRegions -cellZones -overwrite
 runParallel $(getApplication)
 
 # Reconstruct
-for region in bottomAir topAir heater leftSolid rightSolid
-do
-    runApplication -s $region reconstructParMesh -constant -region $region
-done
+runApplication reconstructParMesh -constant -allRegions
 runApplication reconstructPar -allRegions
 
 # Post-process

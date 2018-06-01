@@ -7,17 +7,13 @@ cd ${0%/*} || exit 1 # Run from this directory
 # Meshing
 runApplication blockMesh
 runApplication topoSet
-runApplication decomposePar -copyZero
-runParallel splitMeshRegions -cellZones -overwrite
+runApplication splitMeshRegions -cellZones -overwrite
+runApplication decomposePar -copyZero -allRegions
 
 # Simulation
 runParallel $(getApplication)
 
 # Reconstruct
-for region in bottomWater topAir heater leftSolid rightSolid
-do
-    runApplication -s $region reconstructParMesh -constant -region $region
-done
 runApplication reconstructPar -allRegions
 
 # Post-process
