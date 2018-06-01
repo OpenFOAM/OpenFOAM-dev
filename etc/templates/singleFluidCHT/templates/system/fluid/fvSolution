@@ -1,0 +1,105 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    "(rho|rhoFinal)"
+    {
+        solver          PCG
+        preconditioner  DIC;
+        tolerance       1e-7;
+        relTol          0;
+    }
+
+    p_rgh
+    {
+        solver           GAMG;
+        tolerance        1e-7;
+        relTol           0.01;
+
+        smoother         GaussSeidel;
+        maxIter          100;
+    }
+
+    "(U|h|e|k|omega|epsilon)"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-6;
+        relTol          0.1;
+    }
+
+    G
+    {
+        $p_rgh;
+        tolerance       1e-5;
+        relTol          0.1;
+    }
+
+    p_rghFinal
+    {
+        $p_rgh;
+//      relTol         0;  // for transient cases
+    }
+
+    "(U|h|e|k|omega|epsilon)Final"
+    {
+        $U;
+//      relTol         0;  // for transient cases
+    }
+
+    GFinal
+    {
+        $G;
+//      relTol         0;  // for transient cases
+    }
+}
+
+PIMPLE
+{
+    momentumPredictor yes;
+
+    nCorrectors     1;          // typically set to 2 for transient
+    nNonOrthogonalCorrectors 0; // typically set to 1 for transient
+
+//  Reference values for closed domains
+//    pRefCell        0;
+//    pRefValue       1e5;
+
+//  Limiting pressure for stability, typically at start up
+//    pMaxFactor      2;
+//    pMinFactor      0.1;
+}
+
+relaxationFactors
+{
+    fields
+    {
+        "rho.*"         1.0;
+        "p_rgh.*"       0.7;
+    }
+    equations
+    {
+        "U.*"            0.3;
+        "h.*"            0.7;
+        "(k|epsilon|omega).*" 0.7;
+    }
+}
+
+// For transient cases, use
+// relaxationFactors { equations { ".*" 1; } }
+
+// ************************************************************************* //

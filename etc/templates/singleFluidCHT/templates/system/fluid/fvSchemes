@@ -1,0 +1,86 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    // for transient, replace steadyState, e.g. with Euler
+    default         steadyState;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+
+    limited         cellLimited Gauss linear 1;
+    grad(U)         $limited;
+    grad(k)         $limited;
+    grad(omega)     $limited;
+    grad(epsilon)   $limited;
+}
+
+divSchemes
+{
+    default         none;
+
+    // for transient, remove "bounded"
+    div(phi,U)      bounded Gauss linearUpwind limited;
+
+    // for transient, remove "bounded"
+    turbulence      bounded Gauss limitedLinear 1;
+    div(phi,k)      $turbulence;
+    div(phi,omega)  $turbulence;
+    div(phi,epsilon) $turbulence;
+
+    div(phi,e)      $turbulence;
+    div(phi,h)      $turbulence;
+    div(phi,K)      $turbulence;
+    div(phi,Ekp)    $turbulence;
+
+    div(phid,p)     Gauss upwind;
+
+    // for transient, remove "bounded"
+    div((phi|interpolate(rho)),p)  bounded Gauss upwind;
+
+    div(((rho*nuEff)*dev2(T(grad(U)))))    Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
+fluxRequired
+{
+    default         no;
+    p                 ;
+}
+
+wallDist
+{
+    method meshWave;
+}
+
+// ************************************************************************* //

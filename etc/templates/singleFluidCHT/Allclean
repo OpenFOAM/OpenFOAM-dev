@@ -1,0 +1,27 @@
+#!/bin/sh
+cd "${0%/*}" || exit 1    # run from this directory
+
+# Source tutorial clean functions
+. "$WM_PROJECT_DIR/bin/tools/CleanFunctions"
+
+removeRegionDirs () {
+    # HACK to get regionDirs from materialProperties
+    _regionDirs="$(grep -E "^[a-Z]" constant/materialProperties | tail -n +2)"
+
+    for d in system constant
+    do
+        for r in $_regionDirs
+        do
+            dir="${d}/${r}"
+            [ -d "$dir" ] && rm -rf "$dir"
+        done
+    done
+}
+
+cleanCase
+removeRegionDirs
+rm -rf 0 > /dev/null 2>&1
+rm -rf constant/regionProperties > /dev/null 2>&1
+rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,148 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+snap            on;
+addLayers       off;
+
+geometry
+{
+    CAD
+    {
+        type triSurfaceMesh;
+        file "CAD.obj";
+        regions
+        {
+            <inletRegion>  { name inlet; }
+            <outletRegion> { name outlet; }
+        }
+    }
+
+    solid
+    {
+        type triSurfaceMesh;
+        file "solid.obj";
+    }
+};
+
+castellatedMeshControls
+{
+    features
+    (
+        { file "CAD.eMesh"; level 1; }
+        { file "solid.eMesh"; level 1; }
+    );
+
+    refinementSurfaces
+    {
+        solid
+        {
+            level (2 2);
+            faceZone    solid;
+            cellZone    solid;
+            cellZoneInside  inside;
+        }
+
+        CAD
+        {
+            level (2 2);
+            patchInfo
+            {
+                type wall;
+                inGroups (externalWall);
+            }
+
+            regions
+            {
+                <inletRegion>
+                {
+                    level (2 2);
+                    patchInfo
+                    {
+                        type patch;
+                        inGroups (inlet);
+                    }
+                }
+
+                <outletRegion>
+                {
+                    level (2 2);
+                    patchInfo
+                    {
+                        type patch;
+                        inGroups (outlet);
+                    }
+                }
+            }
+        }
+    }
+
+    refinementRegions
+    {
+        CAD
+        {
+            mode inside;
+            levels ((1E15 1));
+        }
+    }
+
+    locationInMesh (1e-5 1e-5 1e-5); // Offset from (0 0 0) to avoid
+                                     // coinciding with face or edge
+    nCellsBetweenLevels 3;
+}
+
+snapControls
+{
+    explicitFeatureSnap    true;
+    implicitFeatureSnap    false;
+}
+
+addLayersControls
+{
+    layers
+    {
+        "CAD.*"
+        {
+            nSurfaceLayers 2;
+        }
+    }
+
+    relativeSizes       true; // false, usually with firstLayerThickness
+    expansionRatio      1.2;
+    finalLayerThickness 0.5;
+    minThickness        1e-3;
+//  firstLayerThickness 0.01;
+
+//  maxThicknessToMedialRatio 0.6;
+}
+
+meshQualityControls
+{
+//    minTetQuality -1e+30;
+}
+
+writeFlags
+(
+//    scalarLevels
+    layerSets
+    layerFields
+);
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //

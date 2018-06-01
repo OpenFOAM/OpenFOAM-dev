@@ -1,0 +1,118 @@
+Overview
+========
++ This is a template case for conjugate heat transfer (CHT)
++ It is designed to work specifically with the foamSetupCHT utility
++ The template works simply for cases with a single fluid region and multiple
+  solid regions; it can be adapted for cases with multiple fluid regions
++ It is setup to run the chtMultiRegionFoam solver
++ The Allmesh and Allrun scripts demonstrate the commands to be run
+
+Meshing Strategy
+================
++ A single mesh is first created for the entire fluid/solid domain, including
+  relevant boundary patches, with cellZones to describe the solid regions.
++ The single mesh is then split into separate meshes for each region using
+  splitMeshRegions.
++ The case is designed to be meshed with snappyHexMesh
++ The overall (comined fluid/solid) domain is described by a single a surface
+  geometry file named (default name "CAD.obj"), that includes separate surface
+  regions to describe boundary patches
++ A surface geometry file is provided for each solid; the template includes
+  example entries for a single solid with geometry file "solid.obj".
+
+Surface Geometry
+================
++ Copy the overall domain geometry file ("CAD.obj") and solid geometry files
+  (e.g. "solid.obj") to the constant/triSurface
++ The CAD.obj should contain an inlet and outlet region to create the relevant
+  patches in the mesh
+
+Background Mesh
+===============
++ The user should establish the bounds of their "CAD.obj" file
++ The blockMeshDict file contains a backgroundMesh subditionary
++ For internal flows, where "CAD.obj" describes the external boundary, set xMin,
+  xMax, etc to be beyond the "CAD.obj" bounds
++ For external flows, the background mesh can define the external boundary by
+  uncommenting entries, e.g. left, in the boundary section of blockMeshDict
++ Set background mesh density with xCells, yCells, zCells
++ Run blockMesh
+
+Features
+========
++ Edit the surfaceFeatures file to include all the surface geometry files
++ Run surfaceFeatures to extract features for explicit feature capturing
+
+Castellated Mesh
+================
++ In the snappyHexMeshDict file, configure the "geometry" subdictionary to
+  include an entry for each surface geometry file, e.g. "CAD.obj", "solid.obj"
++ Replace <inletPatch> with the name of the inlet region in the "CAD.obj" file
++ Replace <outletPatch> with the name of the outlet region
++ In refinementSurfaces, include an entry to create a cellZone for each solid
++ run snappyHexMesh to obtain a castellatedMesh
++ Review the mesh; modify refinement levels and regenerate the mesh as required
+  (levels are set in refinementSurfaces and refinementRegions)
+
+Snapped Mesh
+============
++ In snappyHexMeshDict, set castellatedMesh off; snap on;
++ Run the snapping phase of snappyHexMesh
++ Review the mesh
+
+Layers
+======
++ To add layers to the mesh along wall boundary patches...
++ Switch on addLayers; switch snap off;
++ Run snappyHexMesh
++ The number of layers can be changed by modifying nSurfaceLayers
+
+Creating the CHT Mesh
+=====================
+Run splitMeshRegions with "-cellZones" to split the solid cellZones into
+separate mesh regions; the remaining fluid region can be named with the
+"-defaultRegionName" option.  For example, to name the default region "fluid":
+
+  splitMeshRegions -cellZones -defaultRegionName fluid -overwrite
+
+Initialisation
+==============
++ The case initialisation is performed largely by the foamSetupCHT utility
++ foamSetupCHT requires the user to configure a materialProperties file
+  that includes entries for each region with
+  + type : fluid or solid
+  + material : e.g. air, aluminium, selected from configured materials in
+    templates/materials directory
++ The user then runs foamSetupCHT which generates the region directories
+  in 0, system and constant, containing the respective field, configuration and
+  properties files
++ The user should edit these files accordingly.  The default models and
+  configuration (e.g. fvSchemes) for each region are generally reliable, but
+  the user must pay attention to field files (U, T, k, omega, etc), in
+  particular the boundary conditions and initial conditions.
++ Region boundaries, e.g. solid-fluid and solid-solid, use the "wall" group
+  boundary conditions by default.  External wall boundaries are part of the
+  "externalWall" group, which has its own boundary condition settings
++ For convenience, some field data common to multiple regions, e.g. initial
+  temperature, are provided through an "initialConditions" file
+
+Source Terms
+============
++ An fvOptions file is included in system for the solid regions
++ It contains examples of fixed temperature and heat flux sources which can
+  be switched on accordingly
+
+Running the Solver
+==================
++ The case uses chtMultiRegionFoam which can run either as a steady-state
+  solver, or as a transient solver.
++ The default setup is to run steady-state
++ To run transient, the user needs to modify the controlDict file, and fluid
+  and solid fvSchemes and fvSolutions files.  The latter files are annotated
+  with some information to remind users of the changes required.
+
+Post-Processing
+===============
++ In order to post-process with ParaView, run "paraFoam -touchAll", then open
+  paraview and open the individual ".OpenFOAM" dummy files for individual mesh
+  regions.
