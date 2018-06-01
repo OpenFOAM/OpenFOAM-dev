@@ -366,7 +366,7 @@ int main(int argc, char *argv[])
          || args.optionReadIfPresent("add", newValue)
         )
         {
-            bool overwrite = args.optionFound("set");
+            const bool overwrite = args.optionFound("set");
 
             Pair<word> dAk(dictAndKeyword(scopedName));
 
@@ -385,16 +385,16 @@ int main(int argc, char *argv[])
             changed = true;
 
             // Print the changed entry
-            const entry* entPtr = dict.lookupScopedEntryPtr
-            (
-                scopedName,
-                false,
-                true            // Support wildcards
-            );
-            if (entPtr)
-            {
-                Info<< *entPtr;
-            }
+            // const entry* entPtr = dict.lookupScopedEntryPtr
+            // (
+            //     scopedName,
+            //     false,
+            //     true            // Support wildcards
+            // );
+            // if (entPtr)
+            // {
+            //     Info<< *entPtr;
+            // }
         }
         else if (args.optionFound("remove"))
         {
