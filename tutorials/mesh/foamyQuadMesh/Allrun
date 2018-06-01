@@ -15,10 +15,6 @@ then
         ./Allrun $*
     )
     (
-        cd OpenCFD || exit
-        ./Allrun $*
-    )
-    (
         cd square || exit
         ./Allrun $*
     )
