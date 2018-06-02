@@ -1,0 +1,45 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      porousZone;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fixedTemperature
+{
+    type            fixedTemperatureConstraint;
+    active          no;
+    selectionMode   all;
+
+    mode            uniform;
+
+    temperature     constant 300; // Set temperature (K)
+}
+
+fixedPower
+{
+    type            scalarSemiImplicitSource;
+    active          no;
+    selectionMode   all;
+
+    volumeMode      absolute;
+
+    power           100;          // Set power (W)
+
+    injectionRateSuSp
+    {
+        e           ($power 0);
+        h           ($power 0);
+    }
+}
+
+//************************************************************************** //
