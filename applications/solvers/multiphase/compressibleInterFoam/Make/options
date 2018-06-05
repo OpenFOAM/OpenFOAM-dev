@@ -2,6 +2,7 @@ EXE_INC = \
     -I. \
     -I../VoF \
     -ItwoPhaseMixtureThermo \
+    -IVoFphaseCompressibleTurbulenceModels/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/transportModels/twoPhaseMixture/lnInclude \
@@ -9,9 +10,10 @@ EXE_INC = \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
-    -IVoFphaseCompressibleTurbulenceModels/lnInclude \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
 
 EXE_LIBS = \
     -ltwoPhaseMixtureThermo \
@@ -27,4 +29,6 @@ EXE_LIBS = \
     -lVoFphaseCompressibleTurbulenceModels \
     -lfiniteVolume \
     -lfvOptions \
-    -lmeshTools
+    -lmeshTools \
+    -ldynamicMesh \
+    -ldynamicFvMesh

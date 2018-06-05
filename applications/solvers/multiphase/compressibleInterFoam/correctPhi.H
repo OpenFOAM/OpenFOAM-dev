@@ -8,6 +8,4 @@ CorrectPhi
     pimple
 );
 
-//***HGW phi.oldTime() = phi;
-
 #include "continuityErrs.H"

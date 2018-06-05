@@ -74,8 +74,8 @@ solvers
 
     U
     {
-        solver          smoothSolver;
-        smoother        GaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-06;
         relTol          0;
         nSweeps         1;
@@ -83,8 +83,8 @@ solvers
 
     "(T|k|B|nuTilda).*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-08;
         relTol          0;
     }
