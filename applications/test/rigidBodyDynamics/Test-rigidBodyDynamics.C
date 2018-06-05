@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    RBD
+    Test-rigidBodyDynamics
 
 Description
     Does an RBD simulation and outputs the result as a gnuplot animation

@@ -82,8 +82,9 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
     }
 
     Info<< indent << typeName <<" : Creating addressing and weights between "
-        << this->size() << " source faces and " << neighbPatch().size()
-        << " target faces" << endl;
+        << returnReduce(this->size(), sumOp<label>()) << " source faces and "
+        << returnReduce(neighbPatch().size(), sumOp<label>()) << " target faces"
+        << endl;
 
     // Get the transform associated with the transform patch
     vectorTensorTransform t;
@@ -128,6 +129,17 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
         );
 
         reduce(bt, keepIfTrueOp<vectorTensorTransform>());
+
+        if (!bt.first())
+        {
+            FatalErrorInFunction
+                << "Transform patch " << transformPatch.name() << " for "
+                << typeName << " patch " << name() << " has zero faces. It may "
+                << "have been converted to a processor cyclic during "
+                << "decomposition. Consider adding " << transformPatch.name()
+                << " and it's neighbour to the list of preserved patches."
+                << exit(FatalError);
+        }
 
         t = bt.second();
     }
