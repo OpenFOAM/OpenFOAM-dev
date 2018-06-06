@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
                 }
             }
 
-            if (pimple.nCorrPimple() <= 1)
+            if (pimple.firstIter())
             {
                 #include "rhoEqn.H"
             }

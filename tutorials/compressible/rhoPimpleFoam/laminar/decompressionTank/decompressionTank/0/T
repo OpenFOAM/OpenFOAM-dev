@@ -9,51 +9,42 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      controlDict;
+    class       volScalarField;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoCentralFoam;
+dimensions      [0 0 0 1 0 0 0];
 
-startFrom       startTime;
+internalField   uniform 300;
 
-startTime       0;
-
-stopAt          endTime;
-
-endTime         0.007;
-
-deltaT          1e-06;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.001;
-
-cycleWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  yes;
-
-maxCo           0.2;
-
-maxDeltaT       1;
-
-functions
+boundaryField
 {
-    #includeFunc mag(U)
+    outerWall
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+
+    axis
+    {
+        type            symmetryPlane;
+    }
+
+    nozzle
+    {
+        type            zeroGradient;
+    }
+
+    back
+    {
+        type            empty;
+    }
+
+    front
+    {
+        type            empty;
+    }
 }
 
 // ************************************************************************* //

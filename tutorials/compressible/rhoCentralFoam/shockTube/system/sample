@@ -24,17 +24,16 @@ setFormat       raw;
 
 sets
 (
-    line
+    data
     {
-        type    face;
+        type    uniform;
         axis    x;
-        start   (-5 0 0);
-        end     (5 0 0);
-        nPoints 100;
+        start   (-4.995 0 0);
+        end     (4.995 0 0);
+        nPoints 1000;
     }
 );
 
-fields          ( p U.component(0) T rho );
-
+fields          (T mag(U) p);
 
 // ************************************************************************* //

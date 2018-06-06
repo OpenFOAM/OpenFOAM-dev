@@ -11,49 +11,37 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoCentralFoam;
-
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         0.007;
-
-deltaT          1e-06;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.001;
-
-cycleWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  yes;
-
-maxCo           0.2;
-
-maxDeltaT       1;
-
-functions
+solvers
 {
-    #includeFunc mag(U)
+    "(p|U|e).*"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-15;
+        relTol          0;
+    }
+
+    "rho.*"
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-15;
+        relTol          0;
+    }
 }
+
+PIMPLE
+{
+    nOuterCorrectors     2;
+    nCorrectors          1;
+    nNonOrthogonalCorrectors 0;
+
+    transonic            yes;
+}
+
 
 // ************************************************************************* //

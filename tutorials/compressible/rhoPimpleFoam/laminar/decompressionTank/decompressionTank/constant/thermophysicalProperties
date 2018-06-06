@@ -10,50 +10,56 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    location    "constant";
+    object      thermophysicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoCentralFoam;
-
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         0.007;
-
-deltaT          1e-06;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.001;
-
-cycleWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  yes;
-
-maxCo           0.2;
-
-maxDeltaT       1;
-
-functions
+thermoType0
 {
-    #includeFunc mag(U)
+    type            heRhoThermo;
+    mixture         pureMixture;
+    properties      liquid;
+    energy          sensibleInternalEnergy;
+}
+
+mixture0
+{
+    H2O;
+}
+
+thermoType
+{
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState perfectFluid;
+    specie          specie;
+    energy          sensibleInternalEnergy;
+}
+
+mixture
+{
+    specie
+    {
+        molWeight       18;
+    }
+    equationOfState
+    {
+        R               7342;
+        rho0            1000;
+    }
+    thermodynamics
+    {
+        Cp              4185;
+        Hf              0;
+    }
+    transport
+    {
+        mu              0.001;
+        Pr              1;
+    }
 }
 
 // ************************************************************************* //

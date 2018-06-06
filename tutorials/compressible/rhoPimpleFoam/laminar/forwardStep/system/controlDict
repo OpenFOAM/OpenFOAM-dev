@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoCentralFoam;
+application     rhoPimpleFoam;
 
 startFrom       startTime;
 
@@ -23,15 +23,15 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.007;
+endTime         10;
 
-deltaT          1e-06;
+deltaT          0.002;
 
-writeControl    adjustableRunTime;
+writeControl    runTime;
 
-writeInterval   0.001;
+writeInterval   0.5;
 
-cycleWrite      0;
+purgeWrite      0;
 
 writeFormat     ascii;
 
@@ -45,15 +45,17 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-adjustTimeStep  yes;
-
-maxCo           0.2;
-
-maxDeltaT       1;
-
 functions
 {
-    #includeFunc mag(U)
+    libs            ("libfieldFunctionObjects.so");
+
+    Ma
+    {
+        type            MachNo;
+        executeControl  writeTime;
+        writeControl    writeTime;
+    }
 }
+
 
 // ************************************************************************* //

@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoCentralFoam;
+application     rhoPimpleFoam;
 
 startFrom       startTime;
 
@@ -25,13 +25,13 @@ stopAt          endTime;
 
 endTime         0.007;
 
-deltaT          1e-06;
+deltaT          1e-05;
 
-writeControl    adjustableRunTime;
+writeControl    runTime;
 
 writeInterval   0.001;
 
-cycleWrite      0;
+purgeWrite      0;
 
 writeFormat     ascii;
 
@@ -44,12 +44,6 @@ timeFormat      general;
 timePrecision   6;
 
 runTimeModifiable true;
-
-adjustTimeStep  yes;
-
-maxCo           0.2;
-
-maxDeltaT       1;
 
 functions
 {
