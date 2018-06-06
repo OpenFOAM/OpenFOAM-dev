@@ -1,0 +1,24 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Multiplies a field by a scale factor
+
+\*---------------------------------------------------------------------------*/
+
+type            scale;
+libs            ("libfieldFunctionObjects.so");
+
+field           <fieldName>;
+result          <outputFieldName>; // optional
+scale           1;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+
+// ************************************************************************* //

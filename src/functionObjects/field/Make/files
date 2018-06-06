@@ -35,6 +35,7 @@ grad/grad.C
 ddt/ddt.C
 mag/mag.C
 magSqr/magSqr.C
+scale/scale.C
 vorticity/vorticity.C
 enstrophy/enstrophy.C
 Q/Q.C
