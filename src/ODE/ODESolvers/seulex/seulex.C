@@ -153,7 +153,7 @@ bool Foam::seulex::seul
 
             LUBacksubstitute(a_, pivotIndices_, dy_);
 
-            const scalar denom = min(1, dy1 + small);
+            const scalar denom = max(1, dy1);
             scalar dy2 = 0;
             for (label i=0; i<n_; i++)
             {
