@@ -409,20 +409,55 @@ void Foam::particle::locate
             << exit(FatalError);
     }
 
-    // Put the particle at the cell centre and in a random tet
+    // Track from the centre of the cell to the desired position
+    const vector displacement = position - mesh_.cellCentres()[celli_];
+
+    // Loop all cell tets to find the one containing the position. Track
+    // through each tet from the cell centre. If a tet contains the position
+    // then the track will end with a single trackToTri.
+    const class cell& c = mesh_.cells()[celli_];
+    label minF = 1, minTetFacei = -1, minTetPti = -1;
+    forAll(c, cellTetFacei)
+    {
+        const class face& f = mesh_.faces()[c[cellTetFacei]];
+        for (label tetPti = 1; tetPti < f.size() - 1; ++ tetPti)
+        {
+            coordinates_ = barycentric(1, 0, 0, 0);
+            tetFacei_ = c[cellTetFacei];
+            tetPti_ = tetPti;
+            facei_ = -1;
+
+            label tetTriI = -1;
+            const scalar f = trackToTri(displacement, 0, tetTriI);
+
+            if (tetTriI == -1)
+            {
+                return;
+            }
+
+            if (f < minF)
+            {
+                minF = f;
+                minTetFacei = tetFacei_;
+                minTetPti = tetPti_;
+            }
+        }
+    }
+
+    // The particle must be (hopefully only slightly) outside the cell. Track
+    // into the tet which got the furthest.
     coordinates_ = barycentric(1, 0, 0, 0);
-    tetFacei_ = mesh_.cells()[celli_][0];
-    tetPti_ = 1;
+    tetFacei_ = minTetFacei;
+    tetPti_ = minTetPti;
     facei_ = -1;
 
-    // Track to the injection point
-    track(position - mesh_.cellCentres()[celli_], 0);
+    track(displacement, 0);
     if (!onFace())
     {
         return;
     }
 
-    // We hit a boundary ...
+    // If we are here then we hit a boundary
     if (boundaryFail)
     {
         FatalErrorInFunction << boundaryMsg << exit(FatalError);
@@ -440,13 +475,12 @@ void Foam::particle::locate
         }
 
         const vector n = *direction/mag(*direction);
-        const vector s = position - mesh_.cellCentres()[celli_];
-        const vector sN = (s & n)*n;
-        const vector sT = s - sN;
+        const vector sN = (displacement & n)*n;
+        const vector sT = displacement - sN;
 
         coordinates_ = barycentric(1, 0, 0, 0);
-        tetFacei_ = mesh_.cells()[celli_][0];
-        tetPti_ = 1;
+        tetFacei_ = minTetFacei;
+        tetPti_ = minTetPti;
         facei_ = -1;
 
         track(sT, 0);
