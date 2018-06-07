@@ -82,7 +82,7 @@ public:
     // Constructors
 
         //- Construct from components
-        RosinRammler(const dictionary& dict, cachedRandom& rndGen);
+        RosinRammler(const dictionary& dict, Random& rndGen);
 
         //- Construct copy
         RosinRammler(const RosinRammler& p);

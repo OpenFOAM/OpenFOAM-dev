@@ -48,7 +48,7 @@ void testPackedList(const polyMesh& mesh, Random& rndGen)
         PackedList<3> bits(mesh.nEdges());
         forAll(bits, i)
         {
-            bits.set(i, rndGen.integer(0,3));
+            bits.set(i, rndGen.sampleAB<label>(0, 4));
         }
 
         labelList edgeValues(mesh.nEdges());
@@ -95,7 +95,7 @@ void testPackedList(const polyMesh& mesh, Random& rndGen)
         PackedList<3> bits(mesh.nPoints());
         forAll(bits, i)
         {
-            bits.set(i, rndGen.integer(0,3));
+            bits.set(i, rndGen.sampleAB<label>(0, 4));
         }
 
         labelList pointValues(mesh.nPoints());
@@ -143,7 +143,7 @@ void testPackedList(const polyMesh& mesh, Random& rndGen)
         PackedList<3> bits(mesh.nFaces());
         forAll(bits, facei)
         {
-            bits.set(facei, rndGen.integer(0,3));
+            bits.set(facei, rndGen.sampleAB<label>(0, 4));
         }
 
         labelList faceValues(mesh.nFaces());
@@ -213,7 +213,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
 
         forAll(localPoints, i)
         {
-            const point pt = localPoints[i] + 1e-4*rndGen.vector01();
+            const point pt = localPoints[i] + 1e-4*rndGen.sample01<vector>();
 
             label meshPointi = allBoundary.meshPoints()[i];
 
@@ -298,7 +298,8 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
         {
             const edge& e = edges[i];
 
-            const point pt = e.centre(localPoints) + 1e-4*rndGen.vector01();
+            const point pt =
+                e.centre(localPoints) + 1e-4*rndGen.sample01<vector>();
 
             label meshEdgeI = meshEdges[i];
 

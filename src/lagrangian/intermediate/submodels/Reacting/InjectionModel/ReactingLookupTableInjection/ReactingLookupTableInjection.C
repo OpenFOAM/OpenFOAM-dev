@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,8 +181,8 @@ void Foam::ReactingLookupTableInjection<CloudType>::setPositionAndCell
     label injectorI = 0;
     if (randomise_)
     {
-        cachedRandom& rnd = this->owner().rndGen();
-        injectorI = rnd.position<label>(0, injectorCells_.size() - 1);
+        Random& rnd = this->owner().rndGen();
+        injectorI = rnd.sampleAB<label>(0, injectorCells_.size());
     }
     else
     {

@@ -70,7 +70,7 @@ public:
     // Constructors
 
         //- Construct from components
-        uniform(const dictionary& dict, cachedRandom& rndGen);
+        uniform(const dictionary& dict, Random& rndGen);
 
         //- Construct copy
         uniform(const uniform& p);

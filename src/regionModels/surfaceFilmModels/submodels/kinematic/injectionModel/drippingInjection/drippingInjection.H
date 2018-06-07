@@ -42,7 +42,7 @@ SourceFiles
 
 #include "injectionModel.H"
 #include "distributionModel.H"
-#include "cachedRandom.H"
+#include "Random.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,7 +84,7 @@ protected:
         scalar particlesPerParcel_;
 
         //- Random number generator
-        cachedRandom rndGen_;
+        Random rndGen_;
 
         //- Parcel size PDF model
         const autoPtr<distributionModel>

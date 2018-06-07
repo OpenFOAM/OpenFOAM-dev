@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -322,13 +322,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     (
         particleProperties_.subOrEmptyDict("subModels", solution_.active())
     ),
-    rndGen_
-    (
-        label(0),
-        solution_.steadyState() ?
-        particleProperties_.lookupOrDefault<label>("randomSampleSize", 100000)
-      : -1
-    ),
+    rndGen_(0),
     cellOccupancyPtr_(),
     cellLengthScale_(mag(cbrt(mesh_.V()))),
     rho_(rho),
@@ -430,7 +424,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     solution_(c.solution_),
     constProps_(c.constProps_),
     subModelProperties_(c.subModelProperties_),
-    rndGen_(c.rndGen_, true),
+    rndGen_(c.rndGen_),
     cellOccupancyPtr_(nullptr),
     cellLengthScale_(c.cellLengthScale_),
     rho_(c.rho_),
@@ -521,7 +515,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     solution_(mesh),
     constProps_(),
     subModelProperties_(dictionary::null),
-    rndGen_(0, 0),
+    rndGen_(0),
     cellOccupancyPtr_(nullptr),
     cellLengthScale_(c.cellLengthScale_),
     rho_(c.rho_),

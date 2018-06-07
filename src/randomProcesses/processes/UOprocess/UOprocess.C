@@ -40,9 +40,9 @@ complexVector UOprocess::WeinerProcess()
 {
     return RootDeltaT*complexVector
     (
-        complex(GaussGen.GaussNormal(), GaussGen.GaussNormal()),
-        complex(GaussGen.GaussNormal(), GaussGen.GaussNormal()),
-        complex(GaussGen.GaussNormal(), GaussGen.GaussNormal())
+        complex(GaussGen.scalarNormal(), GaussGen.scalarNormal()),
+        complex(GaussGen.scalarNormal(), GaussGen.scalarNormal()),
+        complex(GaussGen.scalarNormal(), GaussGen.scalarNormal())
     );
 }
 

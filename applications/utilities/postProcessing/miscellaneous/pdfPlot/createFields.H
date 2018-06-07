@@ -20,7 +20,7 @@
     const fileName pdfPath = runTime.path()/"pdf";
     mkDir(pdfPath);
 
-    cachedRandom rndGen(label(0), -1);
+    Random rndGen(label(0));
 
     autoPtr<distributionModel> p
     (

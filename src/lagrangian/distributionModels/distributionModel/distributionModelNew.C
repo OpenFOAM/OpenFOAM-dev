@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 Foam::autoPtr<Foam::distributionModel> Foam::distributionModel::New
 (
     const dictionary& dict,
-    cachedRandom& rndGen
+    Random& rndGen
 )
 {
     const word modelType(dict.lookup("type"));

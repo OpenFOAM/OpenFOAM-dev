@@ -245,16 +245,6 @@ inline Point Foam::triangle<Point, PointRef>::randomPoint(Random& rndGen) const
 
 
 template<class Point, class PointRef>
-inline Point Foam::triangle<Point, PointRef>::randomPoint
-(
-    cachedRandom& rndGen
-) const
-{
-    return barycentricToPoint(barycentric2D01(rndGen));
-}
-
-
-template<class Point, class PointRef>
 inline Point Foam::triangle<Point, PointRef>::barycentricToPoint
 (
     const barycentric2D& bary

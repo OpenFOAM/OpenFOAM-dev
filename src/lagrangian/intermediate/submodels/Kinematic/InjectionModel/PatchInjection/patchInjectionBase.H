@@ -54,7 +54,7 @@ namespace Foam
 // Forward class declarations
 class polyMesh;
 class fvMesh;
-class cachedRandom;
+class Random;
 
 /*---------------------------------------------------------------------------*\
                      Class patchInjectionBase Declaration
@@ -118,7 +118,7 @@ public:
         virtual void setPositionAndCell
         (
             const fvMesh& mesh,
-            cachedRandom& rnd,
+            Random& rnd,
             vector& position,
             label& cellOwner,
             label& tetFacei,

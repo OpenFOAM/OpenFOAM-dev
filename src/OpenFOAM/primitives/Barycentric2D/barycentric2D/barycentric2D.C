@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,16 +25,14 @@ License
 
 #include "barycentric2D.H"
 #include "Random.H"
-#include "cachedRandom.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::barycentric2D barycentric2D01
-(
-    Foam::scalar s,
-    Foam::scalar t
-)
+Foam::barycentric2D Foam::barycentric2D01(Random& rndGen)
 {
+    scalar s = rndGen.scalar01();
+    scalar t = rndGen.scalar01();
+
     // Transform the random point in the unit square to a random point in the
     // unit tri by reflecting across the diagonal
 
@@ -45,30 +43,6 @@ Foam::barycentric2D barycentric2D01
     }
 
     return Foam::barycentric2D(1 - s - t, s, t);
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Foam::barycentric2D Foam::barycentric2D01(Random& rndGen)
-{
-    return
-        ::barycentric2D01
-        (
-            rndGen.scalar01(),
-            rndGen.scalar01()
-        );
-}
-
-
-Foam::barycentric2D Foam::barycentric2D01(cachedRandom& rndGen)
-{
-    return
-        ::barycentric2D01
-        (
-            rndGen.sample01<scalar>(),
-            rndGen.sample01<scalar>()
-        );
 }
 
 

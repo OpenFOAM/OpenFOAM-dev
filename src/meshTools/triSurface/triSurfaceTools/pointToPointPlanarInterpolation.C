@@ -216,7 +216,7 @@ void Foam::pointToPointPlanarInterpolation::calcWeights
         {
             localVertices[i] +=
                 perturb_
-               *(rndGen.position(bb.min(), bb.max())-bbMid);
+               *(rndGen.sampleAB<vector>(bb.min(), bb.max()) - bbMid);
         }
 
         // Determine triangulation

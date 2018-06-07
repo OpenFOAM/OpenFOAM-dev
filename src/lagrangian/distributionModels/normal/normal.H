@@ -85,7 +85,7 @@ public:
     // Constructors
 
         //- Construct from components
-        normal(const dictionary& dict, cachedRandom& rndGen);
+        normal(const dictionary& dict, Random& rndGen);
 
         //- Construct copy
         normal(const normal& p);

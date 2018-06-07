@@ -328,11 +328,11 @@ bool Foam::edgeIntersections::rotatePerturb
             const edge& e = surf1.edges()[edgeI];
 
             // Endpoint to modify. Choose either start or end.
-            label pointi = e[rndGen.bit()];
+            label pointi = e[rndGen.sampleAB<label>(0, 2)];
             // label pointi = e[0];
 
             // Generate random vector slightly larger than tolerance.
-            vector rndVec = rndGen.vector01() - vector(0.5, 0.5, 0.5);
+            vector rndVec = rndGen.sample01<vector>() - vector(0.5, 0.5, 0.5);
 
             // Make sure rndVec only perp to edge
             vector n(points1[meshPoints[e[1]]] - points1[meshPoints[e[0]]]);

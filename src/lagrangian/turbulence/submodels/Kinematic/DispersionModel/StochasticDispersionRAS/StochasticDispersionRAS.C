@@ -71,7 +71,7 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
     scalar& tTurb
 )
 {
-    cachedRandom& rnd = this->owner().rndGen();
+    Random& rnd = this->owner().rndGen();
 
     const scalar cps = 0.16432;
 
@@ -99,13 +99,13 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
             // Calculate a random direction dir distributed uniformly
             // in spherical coordinates
 
-            const scalar theta = rnd.sample01<scalar>()*twoPi;
-            const scalar u = 2*rnd.sample01<scalar>() - 1;
+            const scalar theta = rnd.scalar01()*twoPi;
+            const scalar u = 2*rnd.scalar01() - 1;
 
             const scalar a = sqrt(1 - sqr(u));
             const vector dir(a*cos(theta), a*sin(theta), u);
 
-            UTurb = sigma*mag(rnd.GaussNormal<scalar>())*dir;
+            UTurb = sigma*mag(rnd.scalarNormal())*dir;
         }
     }
     else

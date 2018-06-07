@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ bool Foam::TAB<CloudType>::update
     scalar& massChild
 )
 {
-    cachedRandom& rndGen = this->owner().rndGen();
+    Random& rndGen = this->owner().rndGen();
 
     scalar r = 0.5*d;
     scalar r2 = r*r;

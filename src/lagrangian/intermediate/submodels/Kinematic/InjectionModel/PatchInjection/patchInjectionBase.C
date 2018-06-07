@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "patchInjectionBase.H"
 #include "polyMesh.H"
 #include "SubField.H"
-#include "cachedRandom.H"
+#include "Random.H"
 #include "triPointRef.H"
 #include "volFields.H"
 #include "polyMeshTetDecomposition.H"
@@ -151,14 +151,14 @@ void Foam::patchInjectionBase::updateMesh(const polyMesh& mesh)
 void Foam::patchInjectionBase::setPositionAndCell
 (
     const fvMesh& mesh,
-    cachedRandom& rnd,
+    Random& rnd,
     vector& position,
     label& cellOwner,
     label& tetFacei,
     label& tetPti
 )
 {
-    scalar areaFraction = rnd.globalPosition(scalar(0), patchArea_);
+    scalar areaFraction = rnd.globalScalar01()*patchArea_;
 
     if (cellOwners_.size() > 0)
     {
@@ -199,7 +199,7 @@ void Foam::patchInjectionBase::setPositionAndCell
             const point pf(tri.randomPoint(rnd));
 
             // Position perturbed away from face (into domain)
-            const scalar a = rnd.position(scalar(0.1), scalar(0.5));
+            const scalar a = rnd.scalarAB(0.1, 0.5);
             const vector& pc = mesh.cellCentres()[cellOwner];
             const vector d =
                 mag((pf - pc) & patchNormal_[facei])*patchNormal_[facei];

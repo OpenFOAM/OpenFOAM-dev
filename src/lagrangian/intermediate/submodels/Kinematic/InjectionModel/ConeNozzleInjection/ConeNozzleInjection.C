@@ -304,9 +304,9 @@ void Foam::ConeNozzleInjection<CloudType>::setPositionAndCell
     label& tetPti
 )
 {
-    cachedRandom& rndGen = this->owner().rndGen();
+    Random& rndGen = this->owner().rndGen();
 
-    scalar beta = mathematical::twoPi*rndGen.globalSample01<scalar>();
+    scalar beta = mathematical::twoPi*rndGen.globalScalar01();
     normal_ = tanVec1_*cos(beta) + tanVec2_*sin(beta);
 
     switch (injectionMethod_)
@@ -322,7 +322,7 @@ void Foam::ConeNozzleInjection<CloudType>::setPositionAndCell
         }
         case imDisc:
         {
-            scalar frac = rndGen.globalSample01<scalar>();
+            scalar frac = rndGen.globalScalar01();
             scalar dr = outerDiameter_ - innerDiameter_;
             scalar r = 0.5*(innerDiameter_ + frac*dr);
             position = position_ + r*normal_;
@@ -356,7 +356,7 @@ void Foam::ConeNozzleInjection<CloudType>::setProperties
     typename CloudType::parcelType& parcel
 )
 {
-    cachedRandom& rndGen = this->owner().rndGen();
+    Random& rndGen = this->owner().rndGen();
 
     // set particle velocity
     const scalar deg2Rad = mathematical::pi/180.0;

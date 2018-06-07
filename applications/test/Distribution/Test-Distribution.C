@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2011-2016 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2011-2018 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -66,12 +66,12 @@ int main(int argc, char *argv[])
         Info<< nl << "Distribution<scalar>" << nl
             << "Sampling "
             << randomDistributionTestSize
-            << " times from GaussNormal distribution."
+            << " times from a standard normal distribution."
             << endl;
 
         for (label i = 0; i < randomDistributionTestSize; i++)
         {
-            dS.add(2.5*R.GaussNormal() + 8.5);
+            dS.add(2.5*R.scalarNormal() + 8.5);
         }
 
         Info<< "Mean " << dS.mean() << nl
@@ -85,12 +85,12 @@ int main(int argc, char *argv[])
         Info<< nl << "Distribution<scalar>" << nl
             << "Sampling "
             << randomDistributionTestSize
-            << " times from GaussNormal distribution."
+            << " times from a standard normal distribution."
             << endl;
 
         for (label i = 0; i < randomDistributionTestSize; i++)
         {
-            dS2.add(1.5*R.GaussNormal() -6.0);
+            dS2.add(1.5*R.scalarNormal() -6.0);
         }
 
         Info<< "Mean " << dS2.mean() << nl
@@ -150,23 +150,23 @@ int main(int argc, char *argv[])
         Info<< nl << "Distribution<vector>" << nl
             << "Sampling "
             << randomDistributionTestSize
-            << " times from uniform and GaussNormal distribution."
+            << " times from uniform and a standard normal distribution."
             << endl;
 
         for (label i = 0; i < randomDistributionTestSize; i++)
         {
-            dV.add(R.vector01());
+            dV.add(R.sample01<vector>());
 
-            // Adding separate GaussNormal components with component
+            // Adding separate standard normal components with component
             // weights
 
             dV.add
             (
                 vector
                 (
-                    R.GaussNormal()*3.0 + 1.5,
-                    R.GaussNormal()*0.25 + 4.0,
-                    R.GaussNormal()*3.0 - 1.5
+                    R.scalarNormal()*3.0 + 1.5,
+                    R.scalarNormal()*0.25 + 4.0,
+                    R.scalarNormal()*3.0 - 1.5
                 ),
                 vector(1.0, 2.0, 5.0)
             );
@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
     //         (
     //             labelVector
     //             (
-    //                 R.integer(-1000, 1000),
-    //                 R.integer(-5000, 5000),
-    //                 R.integer(-2000, 7000)
+    //                 R.sampleAB<label>(-1000, 1001),
+    //                 R.sampleAB<label>(-5000, 5001),
+    //                 R.sampleAB<label>(-2000, 7001)
     //             )
     //         );
     //     }
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
 
         for (label i = 0; i < randomDistributionTestSize; i++)
         {
-            dT.add(R.tensor01());
+            dT.add(R.sample01<tensor>());
         }
 
         Info<< "Mean " << dT.mean() << nl
@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
 
         for (label i = 0; i < randomDistributionTestSize; i++)
         {
-            dSyT.add(R.symmTensor01());
+            dSyT.add(R.sample01<symmTensor>());
         }
 
         Info<< "Mean " << dSyT.mean() << nl
@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
 
         for (label i = 0; i < randomDistributionTestSize; i++)
         {
-            dSpT.add(R.sphericalTensor01());
+            dSpT.add(R.sample01<sphericalTensor>());
         }
 
         Info<< "Mean " << dSpT.mean() << nl

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
         mesh.topoChanging(false);
 
 
-        label action = rndGen.integer(0, 5);
+        label action = rndGen.sampleAB<label>(0, 6);
 
 
         if (action == 0)
@@ -216,7 +216,10 @@ int main(int argc, char *argv[])
 
                 for (label i=0; i<nRefine; i++)
                 {
-                    refineCandidates.append(rndGen.integer(0, mesh.nCells()-1));
+                    refineCandidates.append
+                    (
+                        rndGen.sampleAB<label>(0, mesh.nCells())
+                    );
                 }
 
                 labelList cellsToRefine
@@ -245,7 +248,8 @@ int main(int argc, char *argv[])
 
                 for (label i=0; i<nUnrefine; i++)
                 {
-                    label index = rndGen.integer(0, allSplitPoints.size()-1);
+                    label index =
+                        rndGen.sampleAB<label>(0, allSplitPoints.size());
                     candidates.insert(allSplitPoints[index]);
                 }
 

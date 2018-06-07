@@ -118,7 +118,7 @@ void Foam::LISAAtomization<CloudType>::update
     const vector& injectionPos,
     const scalar pAmbient,
     const scalar chi,
-    cachedRandom& rndGen
+    Random& rndGen
 ) const
 {
     if (volFlowRate < small)

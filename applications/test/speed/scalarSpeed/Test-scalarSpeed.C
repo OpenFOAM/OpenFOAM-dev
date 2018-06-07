@@ -38,7 +38,7 @@ int main()
 
     for (label i=0; i<size; i+=rndAddrSkip)
     {
-        addr[i] = genAddr.integer(0, size-1);
+        addr[i] = genAddr.sampleAB<label>(0, size);
     }
 
     for (label i=0; i<redSize; i++)

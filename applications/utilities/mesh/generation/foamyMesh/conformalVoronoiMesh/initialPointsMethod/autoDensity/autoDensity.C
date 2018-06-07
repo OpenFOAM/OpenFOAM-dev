@@ -729,7 +729,7 @@ bool Foam::autoDensity::fillBox
         {
             trialPoints++;
 
-            point p = min + cmptMultiply(span, rndGen().vector01());
+            point p = min + cmptMultiply(span, rndGen().sample01<vector>());
 
             scalar localSize = cellShapeControls().cellSize(p);
 

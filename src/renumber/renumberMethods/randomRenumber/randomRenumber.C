@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::labelList Foam::randomRenumber::renumber
     {
         forAll(newToOld, i)
         {
-            label j = rndGen.integer(0, newToOld.size()-1);
+            label j = rndGen.sampleAB<label>(0, newToOld.size());
             Swap(newToOld[i], newToOld[j]);
         }
     }
