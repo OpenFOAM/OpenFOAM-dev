@@ -273,8 +273,6 @@ void Foam::mappedPatchBase::findSamples
 
         case NEARESTPATCHFACE:
         {
-            Random rndGen(123456);
-
             const polyPatch& pp = samplePolyPatch();
 
             if (pp.empty())
@@ -292,14 +290,8 @@ void Foam::mappedPatchBase::findSamples
 
                 treeBoundBox patchBb
                 (
-                    treeBoundBox(pp.points(), pp.meshPoints()).extend
-                    (
-                        rndGen,
-                        1e-4
-                    )
+                    treeBoundBox(pp.points(), pp.meshPoints()).extend(1e-4)
                 );
-                patchBb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-                patchBb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
                 indexedOctree<treeDataFace> boundaryTree
                 (
@@ -347,8 +339,6 @@ void Foam::mappedPatchBase::findSamples
 
         case NEARESTPATCHPOINT:
         {
-            Random rndGen(123456);
-
             const polyPatch& pp = samplePolyPatch();
 
             if (pp.empty())
@@ -364,14 +354,8 @@ void Foam::mappedPatchBase::findSamples
                 // patch (local) points
                 treeBoundBox patchBb
                 (
-                    treeBoundBox(pp.points(), pp.meshPoints()).extend
-                    (
-                        rndGen,
-                        1e-4
-                    )
+                    treeBoundBox(pp.points(), pp.meshPoints()).extend(1e-4)
                 );
-                patchBb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-                patchBb.max() += point(rootVSmall, rootVSmall, rootVSmall);
 
                 indexedOctree<treeDataPoint> boundaryTree
                 (

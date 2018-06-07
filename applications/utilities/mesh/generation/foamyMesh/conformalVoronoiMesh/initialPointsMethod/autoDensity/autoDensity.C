@@ -919,11 +919,7 @@ List<Vb::Point> autoDensity::initialPoints() const
     else
     {
         // Extend the global box to move it off large plane surfaces
-        hierBB = geometryToConformTo().globalBounds().extend
-        (
-            rndGen(),
-            1e-6
-        );
+        hierBB = geometryToConformTo().globalBounds().extend(1e-6);
     }
 
     DynamicList<Vb::Point> initialPoints;

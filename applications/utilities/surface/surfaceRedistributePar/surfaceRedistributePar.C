@@ -144,18 +144,13 @@ int main(int argc, char *argv[])
 
     #include "createPolyMesh.H"
 
-    Random rndGen(653213);
-
     // Determine mesh bounding boxes:
     List<List<treeBoundBox>> meshBb(Pstream::nProcs());
     {
         meshBb[Pstream::myProcNo()] = List<treeBoundBox>
         (
             1,
-            treeBoundBox
-            (
-                boundBox(mesh.points(), false)
-            ).extend(rndGen, 1e-3)
+            treeBoundBox(boundBox(mesh.points(), false)).extend(1e-3)
         );
         Pstream::gatherList(meshBb);
         Pstream::scatterList(meshBb);

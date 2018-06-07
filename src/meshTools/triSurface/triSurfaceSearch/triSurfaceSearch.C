@@ -217,14 +217,9 @@ Foam::triSurfaceSearch::tree() const
                     << endl;
             }
 
-            // Random number generator. Bit dodgy since not exactly random ;-)
-            Random rndGen(65431);
-
             // Slightly extended bb. Slightly off-centred just so on symmetric
             // geometry there are less face/edge aligned items.
-            bb = bb.extend(rndGen, 1e-4);
-            bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-            bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
+            bb = bb.extend(1e-4);
         }
 
         scalar oldTol = indexedOctree<treeDataTriSurface>::perturbTol();

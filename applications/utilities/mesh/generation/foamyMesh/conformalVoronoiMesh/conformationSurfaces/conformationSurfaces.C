@@ -558,10 +558,7 @@ Foam::conformationSurfaces::conformationSurfaces
 
     // Extend the global bounds to stop the bound box sitting on the surfaces
     // to be conformed to
-    // globalBounds_ = globalBounds_.extend(rndGen_, 1e-4);
-
     vector newSpan = 1e-4*globalBounds_.span();
-
     globalBounds_.min() -= newSpan;
     globalBounds_.max() += newSpan;
 

@@ -90,16 +90,7 @@ void Foam::patchCloudSet::calcSamples
         bb.min() = min(bb.min(), patchBb.min());
         bb.max() = max(bb.max(), patchBb.max());
     }
-
-    // Not very random
-    Random rndGen(123456);
-    // Make bb asymetric just to avoid problems on symmetric meshes
-    bb = bb.extend(rndGen, 1e-4);
-
-    // Make sure bb is 3D.
-    bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-    bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
-
+    bb = bb.extend(1e-4);
 
     indexedOctree<treeDataFace> patchTree
     (
