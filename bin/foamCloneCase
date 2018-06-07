@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -62,8 +62,7 @@ error() {
 }
 
 cpIfPresent() {
-    echo $1
-    [ -e "$1" ] && echo "... ${1##*/}" && cp -r "$1" "$2"
+    [ -e "$1" ] && echo "$1 to ... ${1##*/}" && cp -r "$1" "$2"
 }
 
 ver=$WM_PROJECT_VERSION
