@@ -757,6 +757,16 @@ Foam::scalar Foam::particle::trackToMovingTri
     FixedList<barycentricTensor, 3> T;
     movingTetReverseTransform(fraction, centre, detA, T);
 
+    if (debug)
+    {
+        Pair<vector> o, b, v1, v2;
+        movingTetGeometry(fraction, o, b, v1, v2);
+        Info<< "Tet points o=" << o[0] << ", b=" << b[0]
+            << ", v1=" << v1[0] << ", v2=" << v2[0] << endl
+            << "Tet determinant = " << detA[0] << endl
+            << "Start local coordinates = " << y0[0] << endl;
+    }
+
     // Get the factor by which the displacement is increased
     const scalar f = detA[0] >= 0 ? 1 : negativeSpaceDisplacementFactor;
 
@@ -780,6 +790,16 @@ Foam::scalar Foam::particle::trackToMovingTri
         hitEqn[i] = cubicEqn(hitEqnA[i], hitEqnB[i], hitEqnC[i], hitEqnD[i]);
     }
 
+    if (debug)
+    {
+        for (label i = 0; i < 4; ++ i)
+        {
+            Info<< (i ? "             " : "Hit equation ") << i << " = "
+                << hitEqn[i] << endl;
+        }
+        Info<< " DetA equation = " << detA << endl;
+    }
+
     // Calculate the hit fraction
     label iH = -1;
     scalar muH = std::isnormal(detA[0]) && detA[0] <= 0 ? vGreat : 1/detA[0];
@@ -791,6 +811,22 @@ Foam::scalar Foam::particle::trackToMovingTri
         {
             if (mu.type(j) == roots::real && hitEqn[i].derivative(mu[j]) < 0)
             {
+                if (debug)
+                {
+                    const barycentric yH
+                    (
+                        hitEqn[0].value(mu[j]),
+                        hitEqn[1].value(mu[j]),
+                        hitEqn[2].value(mu[j]),
+                        hitEqn[3].value(mu[j])
+                    );
+                    const scalar detAH = detAEqn.value(mu[j]);
+
+                    Info<< "Hit on tet face " << i << " at local coordinate "
+                        << yH/detAH << ", " << mu[j]*detA[0]*100 << "% of the "
+                        << "way along the track" << endl;
+                }
+
                 if (0 <= mu[j] && mu[j] < muH)
                 {
                     iH = i;
@@ -855,7 +891,11 @@ Foam::scalar Foam::particle::trackToMovingTri
             Info<< "Track hit no tet faces" << endl;
         }
         Info<< "End local coordinates = " << yH << endl
-            << "End global coordinates = " << position() << endl;
+            << "End global coordinates = " << position() << endl
+            << "Tracking displacement = " << position() - x0 << endl
+            << muH*detA[0]*100 << "% of the step from " << stepFraction_
+            << " to " << stepFraction_ + fraction << " completed" << endl
+            << endl;
     }
 
     return iH != -1 ? 1 - muH*detA[0] : 0;
