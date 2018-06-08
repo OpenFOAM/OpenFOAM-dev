@@ -199,19 +199,6 @@ bool dlSymFound(void* handle, const std::string& symbol);
 //- Return all loaded libraries
 fileNameList dlLoaded();
 
-
-// Low level random numbers. Use Random class instead.
-
-//- Seed random number generator.
-void osRandomSeed(const label seed);
-
-//- Return random integer (uniform distribution between 0 and 2^31)
-label osRandomInteger();
-
-//- Return random double precision (uniform distribution between 0 and 1)
-scalar osRandomDouble();
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
