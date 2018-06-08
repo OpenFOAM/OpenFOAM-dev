@@ -390,24 +390,23 @@ void Foam::particle::locate
 (
     const vector& position,
     const vector* direction,
-    const label celli,
+    label celli,
     const bool boundaryFail,
     const string boundaryMsg
 )
 {
-    celli_ = celli;
-
     // Find the cell, if it has not been given
-    if (celli_ < 0)
+    if (celli < 0)
     {
-        celli_ = mesh_.cellTree().findInside(position);
+        celli = mesh_.cellTree().findInside(position);
     }
-    if (celli_ < 0)
+    if (celli < 0)
     {
         FatalErrorInFunction
             << "Cell not found for particle position " << position << "."
             << exit(FatalError);
     }
+    celli_ = celli;
 
     // Track from the centre of the cell to the desired position
     const vector displacement = position - mesh_.cellCentres()[celli_];
@@ -479,6 +478,7 @@ void Foam::particle::locate
         const vector sT = displacement - sN;
 
         coordinates_ = barycentric(1, 0, 0, 0);
+        celli_ = celli;
         tetFacei_ = minTetFacei;
         tetPti_ = minTetPti;
         facei_ = -1;

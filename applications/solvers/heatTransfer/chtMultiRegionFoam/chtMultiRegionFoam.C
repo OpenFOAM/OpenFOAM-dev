@@ -25,11 +25,9 @@ Application
     chtMultiRegionFoam
 
 Description
-    Transient solver for buoyant, turbulent fluid flow and solid heat
-    conduction with conjugate heat transfer between solid and fluid regions.
-
-    It handles secondary fluid or solid circuits which can be coupled
-    thermally with the main fluid region. i.e radiators, etc.
+    Solver for steady or transient fluid flow and solid heat conduction, with
+    conjugate heat transfer between regions, buoyancy effects, turbulence,
+    reactions and radiation modelling.
 
 \*---------------------------------------------------------------------------*/
 
