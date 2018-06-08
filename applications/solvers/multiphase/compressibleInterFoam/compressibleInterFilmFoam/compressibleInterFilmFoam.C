@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,11 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    compressibleInterFoam
+    compressibleInterFilmFoam
 
 Description
     Solver for 2 compressible, non-isothermal immiscible fluids using a VOF
-    (volume of fluid) phase-fraction based interface capturing approach.
+    (volume of fluid) phase-fraction based interface capturing approach
+    and surface film modelling.
 
     The momentum and other fluid properties are of the "mixture" and a single
     momentum equation is solved.
