@@ -112,11 +112,6 @@ addLayersControls
 //  maxThicknessToMedialRatio 0.6;
 }
 
-meshQualityControls
-{
-//    minTetQuality -1e+30;
-}
-
 writeFlags
 (
 //    scalarLevels
