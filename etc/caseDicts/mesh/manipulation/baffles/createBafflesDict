@@ -10,50 +10,38 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      meshQualityDict.cfg;
+    object      createBafflesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-maxNonOrtho 65;
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
 
-maxBoundarySkewness 20;
-
-maxInternalSkewness 4;
-
-maxConcave 80;
-
-// Minimum cell pyramid volume; case dependent
-minVol 1e-13;
-
-//  1e-15 (small positive) to enable tracking
-// -1e+30 (large negative) for best layer insertion
-minTetQuality -1e30;
-
-// if >0 : preserve single cells with all points on the surface if the
-// resulting volume after snapping (by approximation) is larger than
-// minVolCollapseRatio times old volume (i.e. not collapsed to flat cell).
-//  If <0 : delete always.
-//minVolCollapseRatio 0.5;
-
-minArea          -1;
-
-minTwist          0.02;
-
-minDeterminant    0.001;
-
-minFaceWeight     0.05;
-
-minVolRatio       0.01;
-
-minTriangleTwist -1;
-
-nSmoothScale   4;
-
-errorReduction 0.75;
-
-relaxed
+// Example using "blades" as name of baffle patch
+baffles
 {
-    maxNonOrtho   75;
+    baffles  // group name
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    blades;
+
+        patches
+        {
+            master
+            {
+                name        blades;  // patch name
+                type        wall;
+            }
+            slave
+            {
+                $master;
+            }
+        }
+    }
 }
+
 
 // ************************************************************************* //
