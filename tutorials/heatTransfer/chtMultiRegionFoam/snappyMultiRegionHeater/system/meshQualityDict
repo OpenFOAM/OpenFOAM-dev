@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeEtc "caseDicts/meshQualityDict"
+#includeEtc "caseDicts/mesh/generation/meshQualityDict"
 
 
 // ************************************************************************* //

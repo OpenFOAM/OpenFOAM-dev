@@ -67,6 +67,9 @@ minVolRatio 0.01;
 //  compatibility
 minTriangleTwist -1;
 
+nSmoothScale   4;
+
+errorReduction 0.75;
 
 //- If >0 : preserve cells with all points on the surface if the
 //  resulting volume after snapping (by approximation) is larger than

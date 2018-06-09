@@ -267,7 +267,7 @@ addLayersControls
 // where to undo.
 meshQualityControls
 {
-    #includeEtc "caseDicts/meshQualityDict"
+    #includeEtc "caseDicts/mesh/generation/meshQualityDict"
 
 
     // Advanced

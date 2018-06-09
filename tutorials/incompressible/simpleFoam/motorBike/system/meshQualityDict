@@ -15,7 +15,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Include defaults parameters from master dictionary
-#includeEtc "caseDicts/meshQualityDict"
+#includeEtc "caseDicts/mesh/generation/meshQualityDict"
 
 //- minFaceWeight (0 -> 0.5)
 minFaceWeight 0.02;

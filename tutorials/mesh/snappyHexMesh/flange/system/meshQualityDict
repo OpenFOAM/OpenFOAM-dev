@@ -16,7 +16,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Include defaults parameters from master dictionary
-#includeEtc "caseDicts/meshQualityDict"
+#includeEtc "caseDicts/mesh/generation/meshQualityDict"
 
 
 // ************************************************************************* //
