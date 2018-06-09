@@ -133,13 +133,6 @@ boundary
             (20 21 22 23)
         );
     }
-
-    blades
-    {
-        type wall;
-        faces
-        ();
-    }
 );
 
 mergePatchPairs
