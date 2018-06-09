@@ -268,14 +268,6 @@ addLayersControls
 meshQualityControls
 {
     #includeEtc "caseDicts/mesh/generation/meshQualityDict"
-
-
-    // Advanced
-
-    //- Number of error distribution iterations
-    nSmoothScale 4;
-    //- Amount to scale back displacement at error points
-    errorReduction 0.75;
 }
 
 

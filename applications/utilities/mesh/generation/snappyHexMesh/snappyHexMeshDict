@@ -492,14 +492,6 @@ meshQualityControls
         // Maximum non-orthogonality allowed. Set to 180 to disable.
         maxNonOrtho 75;
     }
-
-
-    // Advanced
-
-        // Number of error distribution iterations
-        nSmoothScale 4;
-        // amount to scale back displacement at error points
-        errorReduction 0.75;
 }
 
 // Advanced
