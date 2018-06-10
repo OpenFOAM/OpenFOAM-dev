@@ -1,0 +1,99 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+intersectSurfaces()
+{
+    outputName1=$(basename $1)
+    outputName1=${outputName1%.*}
+
+    outputName2=$(basename $2)
+    outputName2=${outputName2%.*}
+
+    runApplication -s $outputName1:$outputName2 \
+        surfaceBooleanFeatures "$@" intersection
+}
+
+# Set application name
+application=$(getApplication)
+
+# Run the surface preparation script
+./constant/triSurface/surfaceProcess.sh > log.surfaceProcess 2>&1
+
+# Surface intersections
+intersectSurfaces                           \
+    constant/triSurface/vessel.stl          \
+    constant/triSurface/spargerShaft.stl    \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/vessel.stl          \
+    constant/triSurface/shaft.stl           \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/spargerShaft.stl    \
+    constant/triSurface/spargerInlet.stl    \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/stirrer.stl         \
+    constant/triSurface/shaftRotating.stl   \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/stirrer_baffles.stl \
+    constant/triSurface/stirrer.stl         \
+    -surf1Baffle                            \
+    -perturb
+
+intersectSurfaces                           \
+    constant/triSurface/rotating.stl        \
+    constant/triSurface/shaft.stl           \
+    -surf1Baffle                            \
+    -perturb
+
+# Intersect blades with the plate
+for bladeI in $(seq 1 6);
+do
+    intersectSurfaces                                   \
+        constant/triSurface/stirrer_baffles_$bladeI.obj \
+        constant/triSurface/stirrer_baffles_plate.obj   \
+        -surf1Baffle                                    \
+        -surf2Baffle
+done
+
+# Meshing
+cp system/controlDict.mesh system/controlDict
+
+runApplication blockMesh -region backgroundMeshDecomposition
+
+runApplication -s backgroundMeshDecomposition \
+    decomposePar -region backgroundMeshDecomposition
+
+runApplication surfaceFeatures
+
+runParallel foamyHexMesh
+
+runParallel -s faces \
+    collapseEdges -collapseFaces -latestTime \
+                  -dict system/collapseDict.collapseFaces
+
+#runParallel -s faceSet  \
+#    collapseEdges -collapseFaceSet indirectPatchFaces -latestTime \
+#                  -dict system/collapseDict.indirectPatchFaces
+
+runParallel checkMesh -allTopology -allGeometry -latestTime
+
+runApplication reconstructParMesh -latestTime
+
+# Copy the mesh from the latest time folder into polyMesh and delete that
+# latest time folder
+latestTime=$(foamListTimes -latestTime)
+cp -r $latestTime/polyMesh constant
+rm -rf $latestTime
+
+
+#------------------------------------------------------------------------------

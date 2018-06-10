@@ -1,0 +1,14 @@
+#!/bin/sh
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+
+#runApplication setSet -batch wallFilmRegion.setSet
+runApplication topoSet -dict system/wallFilmRegion.topoSet
+
+runApplication extrudeToRegionMesh -overwrite
+
+paraFoam -touch
+paraFoam -touch -region wallFilmRegion
+
+#------------------------------------------------------------------------------

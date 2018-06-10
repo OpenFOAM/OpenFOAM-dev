@@ -1,0 +1,30 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication surfaceFeatures
+
+runApplication foamyHexMesh
+
+# Collapse only patch faces from incomplete conformation
+runApplication -s indirectPatchFaces \
+    collapseEdges -collapseFaceSet indirectPatchFaces -latestTime -overwrite
+
+# Collapse small edges and sliver faces
+runApplication -s collapseFaces \
+    collapseEdges -collapseFaces -latestTime -overwrite
+
+runApplication checkMesh -allTopology -allGeometry -latestTime
+
+latestTime=`foamListTimes -latestTime`
+
+# Move the mesh into polyMesh
+rm -rf constant/polyMesh
+mv "${latestTime}"/polyMesh constant
+
+# Clean up intermediate meshes
+rm -r [1-9]*
+
+#------------------------------------------------------------------------------
