@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,36 +52,36 @@ typedef species::thermo<janafThermo<perfectGas<specie>>, absoluteEnthalpy>
 
 int main(int argc, char *argv[])
 {
-    argList::validArgs.append("control file");
+    argList::validArgs.append("properties dictionary");
     argList args(argc, argv);
 
-    const fileName controlFileName(args[1]);
+    const fileName propertiesFileName(args[1]);
 
-    // Construct control dictionary
-    IFstream controlFile(controlFileName);
+    // Construct properties dictionary
+    IFstream propertiesFile(propertiesFileName);
 
-    // Check controlFile stream is OK
-    if (!controlFile.good())
+    // Check propertiesFile stream is OK
+    if (!propertiesFile.good())
     {
         FatalErrorInFunction
-            << "Cannot read file " << controlFileName
+            << "Cannot read file " << propertiesFileName
             << abort(FatalError);
     }
 
-    dictionary control(controlFile);
+    dictionary properties(propertiesFile);
 
 
-    scalar P(readScalar(control.lookup("P")));
-    scalar T0(readScalar(control.lookup("T0")));
-    mixture rMix(control.lookup("reactants"));
-    mixture pMix(control.lookup("products"));
+    scalar P(readScalar(properties.lookup("P")));
+    scalar T0(readScalar(properties.lookup("T0")));
+    mixture rMix(properties.lookup("reactants"));
+    mixture pMix(properties.lookup("products"));
 
 
     Info<< nl << "Reading thermodynamic data dictionary" << endl;
 
     fileName thermoDataFileName(findEtcFile("thermoData/thermoData"));
 
-    // Construct control dictionary
+    // Construct properties dictionary
     IFstream thermoDataFile(thermoDataFileName);
 
     // Check thermoData stream is OK
