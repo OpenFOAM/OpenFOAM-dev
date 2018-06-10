@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes out specified objects in VTK format,
+    e.g. fields, stored on the case database.
+
+\*---------------------------------------------------------------------------*/
+
+type            writeVTK;
+libs            ("libfoamToVTK.so");
+
+objects         (<object names>);
+
+writeControl    writeTime;
+
+// ************************************************************************* //
