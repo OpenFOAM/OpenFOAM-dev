@@ -1,3 +1,4 @@
-EXE_INC = -I$(FOAM_SRC)/meshTools/lnInclude
+EXE_INC = \
+    -I$(FOAM_SRC)/meshTools/lnInclude
 
 EXE_LIBS = -lmeshTools
