@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 if [ -n "$FOAMY_HEX_MESH" ]
 then
-    ./Allrun.pre
+    ./Allmesh
 
     runApplication $(getApplication)
 fi
