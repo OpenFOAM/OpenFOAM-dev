@@ -14,13 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeEtc "caseDicts/foamyHexMeshDict"
+#includeEtc "caseDicts/mesh/generation/foamyHexMeshDict"
 
 geometry
 {
     #include "meshDict.geometry"
 }
-
 
 surfaceConformation
 {
@@ -46,11 +45,11 @@ surfaceConformation
         boundaryAndFaceZones
         {
             featureMethod           extendedFeatureEdgeMesh;
-            extendedFeatureEdgeMesh "boundaryAndFaceZones.extendedFeatureEdgeMesh";
+            extendedFeatureEdgeMesh
+                "boundaryAndFaceZones.extendedFeatureEdgeMesh";
         }
     }
 }
-
 
 motionControl
 {
@@ -74,7 +73,6 @@ motionControl
     printVertexInfo             off;
 }
 
-
 polyMeshFiltering
 {
     filterEdges                         false;
@@ -84,11 +82,9 @@ polyMeshFiltering
     writeBackgroundMeshDecomposition    false;
 }
 
-
 meshQualityControls
 {
     #include "meshQualityDict"
 }
-
 
 // ************************************************************************* //

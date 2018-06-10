@@ -14,13 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeEtc "caseDicts/foamyHexMeshDict"
+#includeEtc "caseDicts/mesh/generation/foamyHexMeshDict"
 
 geometry
 {
     #include "meshDict.geometry"
 }
-
 
 initialPoints
 {
@@ -44,7 +43,6 @@ initialPoints
     }
 }
 
-
 surfaceConformation
 {
     locationInMesh                      (0 0.1 1.0);
@@ -64,7 +62,6 @@ surfaceConformation
         iterationToInitialHitRatioLimit 0.0001;
     }
 }
-
 
 motionControl
 {
@@ -86,7 +83,6 @@ motionControl
     timeChecks                  no;
 }
 
-
 backgroundMeshDecomposition
 {
     minLevels           1;
@@ -94,7 +90,6 @@ backgroundMeshDecomposition
     spanScale           20;
     maxCellWeightCoeff  20;
 }
-
 
 polyMeshFiltering
 {
@@ -104,6 +99,5 @@ polyMeshFiltering
     filterEdges                         on;
     filterFaces                         off;
 }
-
 
 // ************************************************************************* //
