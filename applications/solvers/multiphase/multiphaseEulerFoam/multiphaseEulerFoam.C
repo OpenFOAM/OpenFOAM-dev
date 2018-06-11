@@ -25,7 +25,7 @@ Application
     multiphaseEulerFoam
 
 Description
-    Solver for a system of many compressible fluid phases including
+    Solver for a system of many incompressible fluid phases including
     heat-transfer.
 
 \*---------------------------------------------------------------------------*/
