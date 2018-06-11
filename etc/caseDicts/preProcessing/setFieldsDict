@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defaultFieldValues
+(
+    volScalarFieldValue alpha.water 0
+    volVectorFieldValue U (0 0 0)
+);
+
+regions
+(
+    // Setting values inside a box
+    boxToCell
+    {
+        box     (0 0 0) (30 30 30);
+        fieldValues
+        (
+            volScalarFieldValue alpha.water 1
+            volVectorFieldValue U (1 0 0)
+        );
+    }
+
+    // Setting values inside a sphere
+    sphereToCell
+    {
+        centre  (40 40 40);
+        radius  10;
+        fieldValues
+        (
+            volScalarFieldValue alpha.water 1
+            volVectorFieldValue U (1 0 0)
+        );
+    }
+
+    // Setting values inside a surface geometry file
+    surfaceToCell
+    {
+        file           "geometry.obj";
+        outsidePoints  ( (0 0 0) );
+        includeCut     no;
+        includeInside  yes;
+        includeOutside no;
+        nearDistance   0;
+        curvature      0;
+        fieldValues
+        (
+            volScalarFieldValue alpha.water 1
+            volVectorFieldValue U (1 0 0)
+        );
+    }
+);
+
+
+// ************************************************************************* //

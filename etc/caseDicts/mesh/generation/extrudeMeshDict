@@ -1,0 +1,83 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      extrudeMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+constructFrom    patch;
+/*
+patch:   patch of sourceCase
+mesh:    patch of sourceCase, retaining original mesh
+surface: surface geometry file
+*/
+
+sourceCase       "$FOAM_CASE";   // uses current case; can be a separate case
+sourcePatches    (front);
+// surface       "geometry.obj"; // constructFrom surface
+
+// constructFrom patch: name of exposed "original" patch
+exposedPatchName back;
+
+flipNormals      false;
+
+extrudeModel     plane;
+/*
+linearNormal:    linear extrusion in point-normal direction
+plane:           single-layer, point-normal extrusion with empty type (2D)
+linearDirection: linear extrusion in specified direction
+wedge:           single-layer, wedge extrusion with wedge type (axisymmetric)
+sector:          sector extrusion about specified axis
+linearRadial:    linear extrusion in radial direction
+radial:          linear extrusion in radial direction with multiple radii
+*/
+
+thickness        0.5; // used by plane extrusion
+
+nLayers          10;
+expansionRatio   1.0;
+
+// Merge front and back patches, typically for 360 deg wedge extrusion
+mergeFaces       false;
+mergeTol         0;
+
+linearNormalCoeffs
+{
+    thickness    0.5;
+}
+
+linearDirectionCoeffs
+{
+    direction    (0 1 0);
+    thickness    0.5;
+}
+
+sectorCoeffs // used by sector and wedge extrusion
+{
+    axisPt       (0 0 0);
+    axis         (1 0 0);
+    angle        360;
+}
+
+linearRadialCoeffs
+{
+    R            0.5;
+    Rsurface     0.1;
+}
+
+radialCoeffs
+{
+    R            table ((0 0.01) (3 0.03) (10 0.1));
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
