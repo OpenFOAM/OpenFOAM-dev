@@ -31,11 +31,9 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "Time.H"
-#include "dictionary.H"
 #include "IFstream.H"
-#include "OSspecific.H"
 #include "etcFiles.H"
+#include "dimensionedTypes.H"
 
 #include "specie.H"
 #include "perfectGas.H"
@@ -52,6 +50,8 @@ typedef species::thermo<janafThermo<perfectGas<specie>>, absoluteEnthalpy>
 
 int main(int argc, char *argv[])
 {
+    #include "removeCaseOptions.H"
+
     argList::validArgs.append("properties dictionary");
     argList args(argc, argv);
 

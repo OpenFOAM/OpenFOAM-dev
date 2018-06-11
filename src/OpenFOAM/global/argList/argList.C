@@ -90,6 +90,17 @@ Foam::argList::initValidTables::initValidTables()
 }
 
 
+void Foam::argList::initValidTables::clear()
+{
+    argList::removeOption("case");
+    argList::removeOption("parallel");
+    argList::removeOption("roots");
+    argList::removeOption("hostRoots");
+    argList::removeOption("noFunctionObjects");
+    argList::removeOption("fileHandler");
+}
+
+
 Foam::argList::initValidTables dummyInitValidTables;
 
 

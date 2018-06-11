@@ -174,14 +174,18 @@ public:
         //- Standard name for the post-processing option
         static word postProcessOptionName;
 
-        //! \cond internalClass
+        // Class to initialize options table
+        // with the standard case related options
         class initValidTables
         {
         public:
 
             initValidTables();
+
+            //- Clear the options table
+            //  for utilities which do not operate on files rather than cases
+            static void clear();
         };
-        //! \endcond
 
 
     // Constructors

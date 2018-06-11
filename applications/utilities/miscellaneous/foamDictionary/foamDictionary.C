@@ -238,9 +238,10 @@ void remove(dictionary& dict, const dictionary& removeDict)
 
 int main(int argc, char *argv[])
 {
+    #include "removeCaseOptions.H"
+
     writeInfoHeader = false;
 
-    argList::removeOption("case");
     argList::addNote("manipulates dictionaries");
     argList::validArgs.append("dictionary file");
     argList::addBoolOption("keywords", "list keywords");
