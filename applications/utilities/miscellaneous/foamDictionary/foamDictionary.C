@@ -240,6 +240,7 @@ int main(int argc, char *argv[])
 {
     writeInfoHeader = false;
 
+    argList::removeOption("case");
     argList::addNote("manipulates dictionaries");
     argList::validArgs.append("dictionary file");
     argList::addBoolOption("keywords", "list keywords");
