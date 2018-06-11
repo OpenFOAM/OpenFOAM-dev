@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,21 +50,20 @@ Note
 #include "triSurface.H"
 #include "OFstream.H"
 #include "OSspecific.H"
-#include "Time.H"
 
 using namespace Foam;
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
+    #include "removeCaseOptions.H"
+
     argList::addNote
     (
         "convert between surface formats"
     );
 
-    argList::noParallel();
     argList::validArgs.append("surface file");
     argList::validArgs.append("output surface file");
 

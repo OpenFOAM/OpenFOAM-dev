@@ -40,12 +40,12 @@ Description
 
 using namespace Foam;
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
-    argList::noParallel();
+    #include "removeCaseOptions.H"
+
     argList::validArgs.append("surface file");
     argList::validArgs.append("output surface file");
     argList args(argc, argv);

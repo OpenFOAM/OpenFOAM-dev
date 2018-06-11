@@ -52,6 +52,8 @@ typedef species::thermo<janafThermo<perfectGas<specie>>, absoluteEnthalpy>
 
 int main(int argc, char *argv[])
 {
+    #include "removeCaseOptions.H"
+
     argList::validArgs.append("properties dictionary");
     argList args(argc, argv);
 

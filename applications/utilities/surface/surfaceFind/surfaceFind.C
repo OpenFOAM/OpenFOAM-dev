@@ -36,12 +36,12 @@ Description
 
 using namespace Foam;
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
-    argList::noParallel();
+    #include "removeCaseOptions.H"
+
     argList::validArgs.append("surface file");
     argList::addOption("x", "X", "The point x-coordinate (if non-zero)");
     argList::addOption("y", "Y", "The point y-coordinate (if non-zero)");

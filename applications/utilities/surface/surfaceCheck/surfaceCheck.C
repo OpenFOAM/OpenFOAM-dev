@@ -171,7 +171,8 @@ labelList countBins
 
 int main(int argc, char *argv[])
 {
-    argList::noParallel();
+    #include "removeCaseOptions.H"
+
     argList::validArgs.append("surface file");
     argList::addBoolOption
     (

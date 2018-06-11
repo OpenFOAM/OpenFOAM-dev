@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,8 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    #include "removeCaseOptions.H"
+
     argList::addNote
     (
         "convert between surface formats, "
@@ -77,7 +79,6 @@ int main(int argc, char *argv[])
         "Normally use surfaceMeshConvert instead."
     );
 
-    argList::noParallel();
     argList::validArgs.append("surface file");
     argList::validArgs.append("output surface file");
 

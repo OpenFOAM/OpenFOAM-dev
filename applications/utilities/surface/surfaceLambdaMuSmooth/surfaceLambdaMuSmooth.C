@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,8 @@ void getFixedPoints
 
 int main(int argc, char *argv[])
 {
-    argList::noParallel();
+    #include "removeCaseOptions.H"
+
     argList::validOptions.clear();
     argList::validArgs.append("surface file");
     argList::validArgs.append("output surface file");
