@@ -143,6 +143,23 @@ public:
             scalar globalScalar01();
 };
 
+
+template<>
+inline scalar Random::sample01();
+
+template<>
+inline label Random::sample01();
+
+template<>
+inline scalar Random::sampleAB(const scalar& a, const scalar& b);
+
+template<>
+inline label Random::sampleAB(const label& a, const label& b);
+
+template<>
+inline scalar Random::sampleNormal();
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
