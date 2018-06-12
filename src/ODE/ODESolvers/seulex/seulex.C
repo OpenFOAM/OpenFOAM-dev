@@ -153,7 +153,8 @@ bool Foam::seulex::seul
 
             LUBacksubstitute(a_, pivotIndices_, dy_);
 
-            const scalar denom = max(1, dy1);
+            // const scalar denom = max(1, dy1);
+            const scalar denom = min(1, dy1 + small);
             scalar dy2 = 0;
             for (label i=0; i<n_; i++)
             {
@@ -286,7 +287,7 @@ void Foam::seulex::solve
         if (mag(dx) <= mag(x)*sqr(small))
         {
              WarningInFunction
-                    << "step size underflow :"  << dx << endl;
+                 << "step size underflow :"  << dx << endl;
         }
 
         scalar errOld = 0;
