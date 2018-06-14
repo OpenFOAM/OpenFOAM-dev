@@ -265,7 +265,11 @@ void Foam::OFstreamCollator::waitForBufferSpace(const off_t wantedSize) const
             }
         }
 
-        if (totalSize == 0 || (totalSize+wantedSize) <= maxBufferSize_)
+        if
+        (
+            totalSize == 0
+         || (wantedSize >= 0 && (totalSize+wantedSize) <= maxBufferSize_)
+        )
         {
             break;
         }
@@ -354,7 +358,8 @@ bool Foam::OFstreamCollator::write
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool append
+    const bool append,
+    const bool useThread
 )
 {
     // Determine (on master) sizes to receive. Note: do NOT use thread
@@ -374,7 +379,7 @@ bool Foam::OFstreamCollator::write
         Pstream::scatter(maxLocalSize, Pstream::msgType(), localComm_);
     }
 
-    if (maxBufferSize_ == 0 || maxLocalSize > maxBufferSize_)
+    if (!useThread || maxBufferSize_ == 0 || maxLocalSize > maxBufferSize_)
     {
         if (debug)
         {
@@ -585,6 +590,22 @@ bool Foam::OFstreamCollator::write
         }
 
         return true;
+    }
+}
+
+
+void Foam::OFstreamCollator::waitAll()
+{
+    // Wait for all buffer space to be available i.e. wait for all jobs
+    // to finish
+    if (Pstream::master(localComm_))
+    {
+        if (debug)
+        {
+            Pout<< "OFstreamCollator : waiting for thread to have consumed all"
+                << endl;
+        }
+        waitForBufferSpace(-1);
     }
 }
 

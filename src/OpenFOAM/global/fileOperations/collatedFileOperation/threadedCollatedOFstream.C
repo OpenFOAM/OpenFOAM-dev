@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,13 +35,15 @@ Foam::threadedCollatedOFstream::threadedCollatedOFstream
     const fileName& pathName,
     streamFormat format,
     versionNumber version,
-    compressionType compression
+    compressionType compression,
+    const bool useThread
 )
 :
     OStringStream(format, version),
     writer_(writer),
     pathName_(pathName),
-    compression_(compression)
+    compression_(compression),
+    useThread_(useThread)
 {}
 
 
@@ -57,7 +59,8 @@ Foam::threadedCollatedOFstream::~threadedCollatedOFstream()
         IOstream::BINARY,
         version(),
         compression_,
-        false                   // append
+        false,                  // append
+        useThread_
     );
 }
 
