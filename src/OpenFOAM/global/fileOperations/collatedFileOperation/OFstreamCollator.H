@@ -206,8 +206,12 @@ public:
             IOstream::streamFormat,
             IOstream::versionNumber,
             IOstream::compressionType,
-            const bool append
+            const bool append,
+            const bool useThread = true
         );
+
+        //- Wait for all thread actions to have finished
+        void waitAll();
 };
 
 

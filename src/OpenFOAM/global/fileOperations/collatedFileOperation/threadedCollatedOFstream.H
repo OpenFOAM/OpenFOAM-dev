@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,6 +60,8 @@ class threadedCollatedOFstream
 
         const IOstream::compressionType compression_;
 
+        const bool useThread_;
+
 
 public:
 
@@ -72,7 +74,8 @@ public:
             const fileName& pathname,
             streamFormat format=ASCII,
             versionNumber version=currentVersion,
-            compressionType compression=UNCOMPRESSED
+            compressionType compression=UNCOMPRESSED,
+            const bool useThread = true
         );
 
 

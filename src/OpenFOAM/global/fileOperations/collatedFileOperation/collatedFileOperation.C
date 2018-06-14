@@ -556,14 +556,32 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
         }
         else
         {
+            // Re-check static maxThreadFileBufferSize variable to see
+            // if needs to use threading
+            bool useThread = (maxThreadFileBufferSize > 0);
+
             if (debug)
             {
                 Pout<< "collatedFileOperation::writeObject :"
                     << " For object : " << io.name()
-                    << " starting collating output to " << pathName << endl;
+                    << " starting collating output to " << pathName
+                    << " useThread:" << useThread << endl;
             }
 
-            threadedCollatedOFstream os(writer_, pathName, fmt, ver, cmp);
+            if (!useThread)
+            {
+                writer_.waitAll();
+            }
+
+            threadedCollatedOFstream os
+            (
+                writer_,
+                pathName,
+                fmt,
+                ver,
+                cmp,
+                useThread
+            );
 
             // If any of these fail, return (leave error handling to Ostream
             // class)
