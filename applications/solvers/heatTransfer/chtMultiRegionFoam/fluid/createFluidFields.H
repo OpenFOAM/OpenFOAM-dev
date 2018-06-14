@@ -121,13 +121,7 @@ forAll(fluidRegions, i)
         )
     );
 
-    dimensionedScalar ghRef
-    (
-        mag(gFluid[i].value()) > small
-      ? gFluid[i]
-          & (cmptMag(gFluid[i].value())/mag(gFluid[i].value()))*hRefFluid[i]
-      : dimensionedScalar("ghRef", gFluid[i].dimensions()*dimLength, 0)
-    );
+    dimensionedScalar ghRef(- mag(gFluid[i])*hRefFluid[i]);
 
     Info<< "    Adding to ghFluid\n" << endl;
     ghFluid.set
