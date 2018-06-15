@@ -29,7 +29,13 @@ License
 // * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::label Foam::Reaction<ReactionThermo>::nUnNamedReactions = 0;
+Foam::label Foam::Reaction<ReactionThermo>::nUnNamedReactions(0);
+
+template<class ReactionThermo>
+Foam::scalar Foam::Reaction<ReactionThermo>::TlowDefault(0);
+
+template<class ReactionThermo>
+Foam::scalar Foam::Reaction<ReactionThermo>::ThighDefault(great);
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -160,6 +166,8 @@ Foam::Reaction<ReactionThermo>::Reaction
     ReactionThermo::thermoType(*thermoDatabase[species[0]]),
     name_("un-named-reaction-" + Foam::name(getNewReactionID())),
     species_(species),
+    Tlow_(TlowDefault),
+    Thigh_(ThighDefault),
     lhs_(lhs),
     rhs_(rhs)
 {
@@ -177,6 +185,8 @@ Foam::Reaction<ReactionThermo>::Reaction
     ReactionThermo::thermoType(r),
     name_(r.name() + "Copy"),
     species_(species),
+    Tlow_(r.Tlow()),
+    Thigh_(r.Thigh()),
     lhs_(r.lhs_),
     rhs_(r.rhs_)
 {}
@@ -197,7 +207,7 @@ Foam::Reaction<ReactionThermo>::specieCoeffs::specieCoeffs
     }
     else
     {
-        stoichCoeff = 1.0;
+        stoichCoeff = 1;
     }
 
     exponent = stoichCoeff;
@@ -330,7 +340,9 @@ Foam::Reaction<ReactionThermo>::Reaction
 :
     ReactionThermo::thermoType(*thermoDatabase[species[0]]),
     name_(dict.dictName()),
-    species_(species)
+    species_(species),
+    Tlow_(dict.lookupOrDefault<scalar>("Tlow", TlowDefault)),
+    Thigh_(dict.lookupOrDefault<scalar>("Thigh", ThighDefault))
 {
     setLRhs
     (
@@ -388,39 +400,402 @@ void Foam::Reaction<ReactionThermo>::write(Ostream& os) const
 
 
 template<class ReactionThermo>
-Foam::scalar Foam::Reaction<ReactionThermo>::kf
+void Foam::Reaction<ReactionThermo>::ddot
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    scalarField& d
 ) const
 {
-    return 0.0;
 }
 
 
 template<class ReactionThermo>
-Foam::scalar Foam::Reaction<ReactionThermo>::kr
+void Foam::Reaction<ReactionThermo>::fdot
 (
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalarField& f
+) const
+{
+}
+
+
+template<class ReactionThermo>
+void Foam::Reaction<ReactionThermo>::omega
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalarField& dcdt
+) const
+{
+    scalar pf, cf, pr, cr;
+    label lRef, rRef;
+
+    scalar omegaI = omega
+    (
+        p, T, c, pf, cf, lRef, pr, cr, rRef
+    );
+
+    forAll(lhs_, i)
+    {
+        const label si = lhs_[i].index;
+        const scalar sl = lhs_[i].stoichCoeff;
+        dcdt[si] -= sl*omegaI;
+    }
+    forAll(rhs_, i)
+    {
+        const label si = rhs_[i].index;
+        const scalar sr = rhs_[i].stoichCoeff;
+        dcdt[si] += sr*omegaI;
+    }
+}
+
+
+template<class ReactionThermo>
+Foam::scalar Foam::Reaction<ReactionThermo>::omega
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalar& pf,
+    scalar& cf,
+    label& lRef,
+    scalar& pr,
+    scalar& cr,
+    label& rRef
+) const
+{
+
+    scalar clippedT = min(max(T, this->Tlow()), this->Thigh());
+
+    const scalar kf = this->kf(p, clippedT, c);
+    const scalar kr = this->kr(kf, p, clippedT, c);
+
+    pf = 1;
+    pr = 1;
+
+    const label Nl = lhs_.size();
+    const label Nr = rhs_.size();
+
+    label slRef = 0;
+    lRef = lhs_[slRef].index;
+
+    pf = kf;
+    for (label s = 1; s < Nl; s++)
+    {
+        const label si = lhs_[s].index;
+
+        if (c[si] < c[lRef])
+        {
+            const scalar exp = lhs_[slRef].exponent;
+            pf *= pow(max(c[lRef], 0), exp);
+            lRef = si;
+            slRef = s;
+        }
+        else
+        {
+            const scalar exp = lhs_[s].exponent;
+            pf *= pow(max(c[si], 0), exp);
+        }
+    }
+    cf = max(c[lRef], 0);
+
+    {
+        const scalar exp = lhs_[slRef].exponent;
+        if (exp < 1)
+        {
+            if (cf > small)
+            {
+                pf *= pow(cf, exp - 1);
+            }
+            else
+            {
+                pf = 0;
+            }
+        }
+        else
+        {
+            pf *= pow(cf, exp - 1);
+        }
+    }
+
+    label srRef = 0;
+    rRef = rhs_[srRef].index;
+
+    // Find the matrix element and element position for the rhs
+    pr = kr;
+    for (label s = 1; s < Nr; s++)
+    {
+        const label si = rhs_[s].index;
+        if (c[si] < c[rRef])
+        {
+            const scalar exp = rhs_[srRef].exponent;
+            pr *= pow(max(c[rRef], 0), exp);
+            rRef = si;
+            srRef = s;
+        }
+        else
+        {
+            const scalar exp = rhs_[s].exponent;
+            pr *= pow(max(c[si], 0), exp);
+        }
+    }
+    cr = max(c[rRef], 0);
+
+    {
+        const scalar exp = rhs_[srRef].exponent;
+        if (exp < 1)
+        {
+            if (cr > small)
+            {
+                pr *= pow(cr, exp - 1);
+            }
+            else
+            {
+                pr = 0;
+            }
+        }
+        else
+        {
+            pr *= pow(cr, exp - 1);
+        }
+    }
+
+    return pf*cf - pr*cr;
+}
+
+
+template<class ReactionThermo>
+void Foam::Reaction<ReactionThermo>::dwdc
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalarSquareMatrix& J,
+    scalarField& dcdt,
+    scalar& omegaI,
+    scalar& kfwd,
+    scalar& kbwd,
+    const bool reduced,
+    const List<label>& c2s
+) const
+{
+
+    scalar pf, cf, pr, cr;
+    label lRef, rRef;
+
+    omegaI = omega(p, T, c, pf, cf, lRef, pr, cr, rRef);
+
+    forAll(lhs_, i)
+    {
+        const label si = reduced ? c2s[lhs_[i].index] : lhs_[i].index;
+        const scalar sl = lhs_[i].stoichCoeff;
+        dcdt[si] -= sl*omegaI;
+    }
+    forAll(rhs_, i)
+    {
+        const label si = reduced ? c2s[rhs_[i].index] : rhs_[i].index;
+        const scalar sr = rhs_[i].stoichCoeff;
+        dcdt[si] += sr*omegaI;
+    }
+
+    kfwd = this->kf(p, T, c);
+    kbwd = this->kr(kfwd, p, T, c);
+
+    forAll(lhs_, j)
+    {
+        const label sj = reduced ? c2s[lhs_[j].index] : lhs_[j].index;
+        scalar kf = kfwd;
+        forAll(lhs_, i)
+        {
+            const label si = lhs_[i].index;
+            const scalar el = lhs_[i].exponent;
+            if (i == j)
+            {
+                if (el < 1)
+                {
+                    if (c[si] > SMALL)
+                    {
+                        kf *= el*pow(c[si] + VSMALL, el - 1);
+                    }
+                    else
+                    {
+                        kf = 0;
+                    }
+                }
+                else
+                {
+                    kf *= el*pow(c[si], el - 1);
+                }
+            }
+            else
+            {
+                kf *= pow(c[si], el);
+            }
+        }
+
+        forAll(lhs_, i)
+        {
+            const label si = reduced ? c2s[lhs_[i].index] : lhs_[i].index;
+            const scalar sl = lhs_[i].stoichCoeff;
+            J(si, sj) -= sl*kf;
+        }
+        forAll(rhs_, i)
+        {
+            const label si = reduced ? c2s[rhs_[i].index] : rhs_[i].index;
+            const scalar sr = rhs_[i].stoichCoeff;
+            J(si, sj) += sr*kf;
+        }
+    }
+
+    forAll(rhs_, j)
+    {
+        const label sj = reduced ? c2s[rhs_[j].index] : rhs_[j].index;
+        scalar kr = kbwd;
+        forAll(rhs_, i)
+        {
+            const label si = rhs_[i].index;
+            const scalar er = rhs_[i].exponent;
+            if (i == j)
+            {
+                if (er < 1)
+                {
+                    if (c[si] > SMALL)
+                    {
+                        kr *= er*pow(c[si] + VSMALL, er - 1);
+                    }
+                    else
+                    {
+                        kr = 0;
+                    }
+                }
+                else
+                {
+                    kr *= er*pow(c[si], er - 1);
+                }
+            }
+            else
+            {
+                kr *= pow(c[si], er);
+            }
+        }
+
+        forAll(lhs_, i)
+        {
+            const label si = reduced ? c2s[lhs_[i].index] : lhs_[i].index;
+            const scalar sl = lhs_[i].stoichCoeff;
+            J(si, sj) += sl*kr;
+        }
+        forAll(rhs_, i)
+        {
+            const label si = reduced ? c2s[rhs_[i].index] : rhs_[i].index;
+            const scalar sr = rhs_[i].stoichCoeff;
+            J(si, sj) -= sr*kr;
+        }
+    }
+
+    // When third-body species are involved, additional terms are added
+    // beta function returns an empty list when third-body are not involved
+    if (this->beta().size() > 0)
+    {
+        scalarField dcidc(this->beta().size());
+        this->dcidc(p, T, c, dcidc);
+        forAll(this->beta(), j)
+        {
+            label sj = this-> beta()[j].first();
+            sj = reduced ? c2s[sj] : sj;
+            if (sj != -1)
+            {
+                forAll(lhs_, i)
+                {
+                    const label si =
+                        reduced ? c2s[lhs_[i].index] : lhs_[i].index;
+                    const scalar sl = lhs_[i].stoichCoeff;
+                    J(si, sj) -= sl*dcidc[j]*omegaI;
+                }
+                forAll(rhs_, i)
+                {
+                    const label si =
+                        reduced ? c2s[rhs_[i].index] : rhs_[i].index;
+                    const scalar sr = rhs_[i].stoichCoeff;
+                    J(si, sj) += sr*dcidc[j]*omegaI;
+                }
+            }
+        }
+    }
+}
+
+
+template<class ReactionThermo>
+void Foam::Reaction<ReactionThermo>::dwdT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    const scalar omegaI,
     const scalar kfwd,
-    const scalar p,
-    const scalar T,
-    const scalarField& c
+    const scalar kbwd,
+    scalarSquareMatrix& J,
+    const bool reduced,
+    const List<label>& c2s,
+    const label indexT
 ) const
 {
-    return 0.0;
-}
+    scalar kf = kfwd;
+    scalar kr = kbwd;
 
+    scalar dkfdT = this->dkfdT(p, T, c);
+    scalar dkrdT = this->dkrdT(p, T, c, dkfdT, kr);
 
-template<class ReactionThermo>
-Foam::scalar Foam::Reaction<ReactionThermo>::kr
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c
-) const
-{
-    return 0.0;
+    scalar sumExp = 0.0;
+    forAll(lhs_, i)
+    {
+        const label si = lhs_[i].index;
+        const scalar el = lhs_[i].exponent;
+        const scalar cExp = pow(c[si], el);
+        dkfdT *= cExp;
+        kf *= cExp;
+        sumExp += el;
+    }
+    kf *= -sumExp/T;
+
+    sumExp = 0.0;
+    forAll(rhs_, i)
+    {
+        const label si = rhs_[i].index;
+        const scalar er = rhs_[i].exponent;
+        const scalar cExp = pow(c[si], er);
+        dkrdT *= cExp;
+        kr *= cExp;
+        sumExp += er;
+    }
+    kr *= -sumExp/T;
+
+    // dqidT includes the third-body (or pressure dependent) effect
+    scalar dqidT = dkfdT - dkrdT + kf - kr;
+
+    // For reactions including third-body efficiencies or pressure dependent
+    // reaction, an additional term is needed
+    scalar dcidT = this->dcidT(p, T, c);
+    dcidT *= omegaI;
+
+    // J(i, indexT) = sum_reactions nu_i dqdT
+    forAll(lhs_, i)
+    {
+        const label si = reduced ? c2s[lhs_[i].index] : lhs_[i].index;
+        const scalar sl = lhs_[i].stoichCoeff;
+        J(si, indexT) -= sl*(dqidT + dcidT);
+    }
+    forAll(rhs_, i)
+    {
+        const label si = reduced ? c2s[rhs_[i].index] : rhs_[i].index;
+        const scalar sr = rhs_[i].stoichCoeff;
+        J(si, indexT) += sr*(dqidT + dcidT);
+    }
 }
 
 

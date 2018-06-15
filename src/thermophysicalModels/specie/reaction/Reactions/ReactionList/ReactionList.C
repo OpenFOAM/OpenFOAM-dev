@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,6 +83,13 @@ template<class ThermoType>
 bool Foam::ReactionList<ThermoType>::readReactionDict()
 {
     const dictionary& reactions(dict_.subDict("reactions"));
+
+    // Set general temperature limits from the dictionary
+    Reaction<ThermoType>::TlowDefault =
+        dict_.lookupOrDefault<scalar>("Tlow", 0);
+
+    Reaction<ThermoType>::ThighDefault =
+        dict_.lookupOrDefault<scalar>("Thigh", great);
 
     forAllConstIter(dictionary, reactions, iter)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,12 @@ inline Foam::ChemicallyActivatedReactionRate
     kInf_(kInf),
     F_(F),
     thirdBodyEfficiencies_(tbes)
-{}
+{
+    forAll(tbes, i)
+    {
+        beta_.append(Tuple2<label, scalar>(i, tbes[i]));
+    }
+}
 
 
 template<class ReactionRate, class ChemicallyActivationFunction>
@@ -60,7 +65,19 @@ inline Foam::ChemicallyActivatedReactionRate
     kInf_(species, dict),
     F_(dict),
     thirdBodyEfficiencies_(species, dict)
-{}
+{
+    forAll(thirdBodyEfficiencies_, i)
+    {
+        beta_.append
+        (
+            Tuple2<label, scalar>
+            (
+                i,
+                thirdBodyEfficiencies_[i]
+            )
+        );
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -77,12 +94,105 @@ inline Foam::scalar Foam::ChemicallyActivatedReactionRate
     const scalarField& c
 ) const
 {
-    scalar k0 = k0_(p, T, c);
-    scalar kInf = kInf_(p, T, c);
-
-    scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
+    const scalar k0 = k0_(p, T, c);
+    const scalar kInf = kInf_(p, T, c);
+    const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
 
     return k0*(1/(1 + Pr))*F_(T, Pr);
+}
+
+
+template<class ReactionRate, class ChemicallyActivationFunction>
+inline Foam::scalar Foam::ChemicallyActivatedReactionRate
+<
+    ReactionRate,
+    ChemicallyActivationFunction
+>::ddT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c
+) const
+{
+    const scalar k0 = k0_(p, T, c);
+    const scalar kInf = kInf_(p, T, c);
+    const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
+
+    return (1/(1 + Pr))*F_(T, Pr)*k0_.ddT(p, T, c);
+}
+
+
+template<class ReactionRate, class ChemicallyActivationFunction>
+inline void Foam::ChemicallyActivatedReactionRate
+<
+    ReactionRate,
+    ChemicallyActivationFunction
+>::dcidc
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalarField& dcidc
+) const
+{
+    const scalar M = thirdBodyEfficiencies_.M(c);
+
+    if (M > small)
+    {
+        const scalar k0 = k0_(p, T, c);
+        const scalar kInf = kInf_(p, T, c);
+
+        const scalar Pr = k0*M/kInf;
+        const scalar F = F_(T, Pr);
+
+        forAll(beta_, i)
+        {
+            const scalar dPrdci = -beta_[i].second()*k0/kInf;
+            const scalar dFdci = F_.ddc(Pr, F, dPrdci, T);
+            dcidc[i] = (-dPrdci/(1 + Pr) + dFdci/F);
+        }
+    }
+    else
+    {
+        forAll(beta_, i)
+        {
+            dcidc[i] = 0;
+        }
+    }
+}
+
+
+template<class ReactionRate, class ChemicallyActivationFunction>
+inline Foam::scalar Foam::ChemicallyActivatedReactionRate
+<
+    ReactionRate,
+    ChemicallyActivationFunction
+>::dcidT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c
+) const
+{
+    const scalar M = thirdBodyEfficiencies_.M(c);
+
+    if (M > small)
+    {
+        const scalar k0 = k0_(p, T, c);
+        const scalar kInf = kInf_(p, T, c);
+
+        const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
+        const scalar F = F_(T, Pr);
+        const scalar dPrdT =
+            Pr*(k0_.ddT(p, T, c)/k0 - kInf_.ddT(p, T, c)/kInf - 1/T);
+        const scalar dFdT = F_.ddT(Pr, F, dPrdT, T);
+
+        return (-dPrdT/(1 + Pr) + dFdT/F);
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 

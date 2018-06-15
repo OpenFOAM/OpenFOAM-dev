@@ -28,7 +28,7 @@ License
 #include "mappedPatchBase.H"
 #include "fvPatchFieldMapper.H"
 #include "radiationModel.H"
-#include "noRadiation.H"
+#include "opaqueSolid.H"
 #include "absorptionEmissionModel.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
@@ -151,29 +151,20 @@ Foam::scalarField Foam::radiationCoupledBase::emissivity() const
 
             const polyMesh& nbrMesh = mpp.sampleMesh();
 
-            const radiation::radiationModel& radiation =
-                nbrMesh.lookupObject<radiation::radiationModel>
+            const radiation::opaqueSolid& radiation =
+                nbrMesh.lookupObject<radiation::opaqueSolid>
                 (
                     "radiationProperties"
                 );
-
-            if (isType<radiation::noRadiation>(radiation))
-            {
-                FatalErrorInFunction
-                    << "No radiation model defined for region "
-                    << nbrMesh.name() << nl
-                    << "    required for option 'solidRadiation' "
-                       "of patchField type " << type()
-                    << " on patch " << patch_.name()
-                    << abort(FatalError);
-            }
 
             const fvMesh& nbrFvMesh = refCast<const fvMesh>(nbrMesh);
 
             const fvPatch& nbrPatch =
                 nbrFvMesh.boundary()[mpp.samplePolyPatch().index()];
 
-
+            // NOTE: for an opaqueSolid the absorptionEmission model returns the
+            // emissivity of the surface rather than the emission coefficient
+            // and the input specification MUST correspond to this.
             scalarField emissivity
             (
                 radiation.absorptionEmission().e()().boundaryField()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::IrreversibleReaction
+    Foam::ReactionProxy
 
 Description
-    Simple extension of Reaction to handle irreversible reactions
+    Proxy version of Reaction which provides dummy implementations of the
+    abstract virtual functions.
+
+    Used for read-construction and format conversion.
 
 SourceFiles
-    IrreversibleReaction.C
+    ReactionProxy.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IrreversibleReaction_H
-#define IrreversibleReaction_H
+#ifndef ReactionProxy_H
+#define ReactionProxy_H
 
 #include "Reaction.H"
 
@@ -43,67 +46,37 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class IrreversibleReaction Declaration
+                        Class ReactionProxy Declaration
 \*---------------------------------------------------------------------------*/
 
-template
-<
-    template<class> class ReactionType,
-    class ReactionThermo,
-    class ReactionRate
->
-class IrreversibleReaction
+template<class ReactionThermo>
+class ReactionProxy
 :
-    public ReactionType<ReactionThermo>
+    public Reaction<ReactionThermo>
 {
-    // Private data
-
-        ReactionRate k_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=
-        (
-            const IrreversibleReaction
-            <
-                ReactionType,
-                ReactionThermo,
-                ReactionRate
-            >&
-        );
-
 
 public:
-
-    //- Runtime type information
-    TypeName("irreversible");
-
 
     // Constructors
 
         //- Construct from components
-        IrreversibleReaction
+        ReactionProxy
         (
-            const ReactionType<ReactionThermo>& reaction,
-            const ReactionRate& reactionRate
+            const speciesTable& species,
+            const List<typename Reaction<ReactionThermo>::specieCoeffs>& lhs,
+            const List<typename Reaction<ReactionThermo>::specieCoeffs>& rhs,
+            const HashPtrTable<ReactionThermo>& thermoDatabase
         );
 
         //- Construct as copy given new speciesTable
-        IrreversibleReaction
+        ReactionProxy
         (
-            const IrreversibleReaction
-            <
-                ReactionType,
-                ReactionThermo,
-                ReactionRate
-            >&,
+            const Reaction<ReactionThermo>&,
             const speciesTable& species
         );
 
         //- Construct from dictionary
-        IrreversibleReaction
+        ReactionProxy
         (
             const speciesTable& species,
             const HashPtrTable<ReactionThermo>& thermoDatabase,
@@ -111,49 +84,23 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<ReactionThermo>> clone() const
-        {
-            return autoPtr<Reaction<ReactionThermo>>
-            (
-                new IrreversibleReaction
-                <
-                    ReactionType,
-                    ReactionThermo,
-                    ReactionRate
-                >(*this)
-            );
-        }
+        virtual autoPtr<Reaction<ReactionThermo>> clone() const;
 
         //- Construct and return a clone with new speciesTable
         virtual autoPtr<Reaction<ReactionThermo>> clone
         (
             const speciesTable& species
-        ) const
-        {
-            return autoPtr<Reaction<ReactionThermo>>
-            (
-                new IrreversibleReaction
-                <
-                    ReactionType,
-                    ReactionThermo,
-                    ReactionRate
-                >
-                (
-                    *this,
-                    species
-                )
-            );
-        }
+        ) const;
 
 
     //- Destructor
-    virtual ~IrreversibleReaction()
+    virtual ~ReactionProxy()
     {}
 
 
     // Member Functions
 
-        // IrreversibleReaction rate coefficients
+        // Reaction rate coefficients
 
             //- Forward rate constant
             virtual scalar kf
@@ -164,7 +111,6 @@ public:
             ) const;
 
             //- Reverse rate constant from the given forward rate constant
-            //  Returns 0
             virtual scalar kr
             (
                 const scalar kfwd,
@@ -174,7 +120,6 @@ public:
             ) const;
 
             //- Reverse rate constant
-            //  Returns 0
             virtual scalar kr
             (
                 const scalar p,
@@ -183,7 +128,7 @@ public:
             ) const;
 
 
-        // IrreversibleReaction Jacobian functions
+        // Jacobian coefficients
 
             //- Temperature derivative of forward rate
             virtual scalar dkfdT
@@ -194,7 +139,6 @@ public:
             ) const;
 
             //- Temperature derivative of reverse rate
-            //  Returns 0
             virtual scalar dkrdT
             (
                 const scalar p,
@@ -210,7 +154,6 @@ public:
             virtual const List<Tuple2<label, scalar>>& beta() const;
 
             //- Species concentration derivative of the pressure dependent term
-            //  By default this value is 1 as it multiplies the third-body term
             virtual void dcidc
             (
                 const scalar p,
@@ -220,17 +163,12 @@ public:
             ) const;
 
             //- Temperature derivative of the pressure dependent term
-            //  By default this value is 0 since ddT of molecularity is approx.0
             virtual scalar dcidT
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c
             ) const;
-
-
-        //- Write
-        virtual void write(Ostream&) const;
 };
 
 
@@ -241,7 +179,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "IrreversibleReaction.C"
+    #include "ReactionProxy.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

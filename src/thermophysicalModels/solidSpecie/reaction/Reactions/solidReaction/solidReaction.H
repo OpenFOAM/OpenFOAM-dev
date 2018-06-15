@@ -59,7 +59,7 @@ inline Ostream& operator<<(Ostream&, const solidReaction<ReactionThermo>&);
 template<class ReactionThermo>
 class solidReaction
 :
-    public  Reaction<ReactionThermo>
+    public Reaction<ReactionThermo>
 {
 
 private:
@@ -129,28 +129,6 @@ public:
         );
 
 
-        //- Construct and return a clone
-        virtual autoPtr<Reaction<ReactionThermo>> clone() const
-        {
-            return autoPtr<Reaction<ReactionThermo>>
-            (
-                new solidReaction<ReactionThermo>(*this)
-            );
-        }
-
-        //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<ReactionThermo>> clone
-        (
-            const speciesTable& species
-        ) const
-        {
-            return autoPtr<Reaction<ReactionThermo>>
-            (
-                new solidReaction<ReactionThermo>(*this, species)
-            );
-        }
-
-
     //- Destructor
     virtual ~solidReaction()
     {}
@@ -160,12 +138,13 @@ public:
 
         // Access
 
-
-            // - Access to gas components of the reaction
+            //- Access to the gas components of the left hand side
             virtual const List<specieCoeffs>& grhs() const;
+
+            //- Access to the gas components of the right hand side
             virtual const List<specieCoeffs>& glhs() const;
 
-            // - Access to gas specie list
+            //- Access to gas specie list
             virtual const speciesTable& gasSpecies() const;
 
 

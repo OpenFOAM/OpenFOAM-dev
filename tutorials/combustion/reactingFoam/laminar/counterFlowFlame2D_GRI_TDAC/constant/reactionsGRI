@@ -2349,7 +2349,7 @@ reactions
         A               1.2e+11;
         beta            -1;
         Ta              0;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -2415,7 +2415,7 @@ reactions
         A               5e+11;
         beta            -1;
         Ta              0;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -2481,7 +2481,7 @@ reactions
         A               2.8e+12;
         beta            -0.86;
         Ta              0;
-        coeffs          
+        coeffs
 53
 (
 (CH4 1)
@@ -2547,7 +2547,7 @@ reactions
         A               1e+12;
         beta            -1;
         Ta              0;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -2613,7 +2613,7 @@ reactions
         A               2.2e+16;
         beta            -2;
         Ta              0;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -2679,7 +2679,7 @@ reactions
         A               1.87e+14;
         beta            -1;
         Ta              8554.25;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -2745,7 +2745,7 @@ reactions
         A               1.06e+14;
         beta            -1.41;
         Ta              0;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -2811,7 +2811,7 @@ reactions
         A               1.3e+11;
         beta            -0.11;
         Ta              2505.89;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -2877,7 +2877,7 @@ reactions
         A               4.48e+13;
         beta            -1.32;
         Ta              372.362;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -2943,7 +2943,7 @@ reactions
         A               3.1e+11;
         beta            0;
         Ta              27197.5;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -3009,7 +3009,7 @@ reactions
         A               1.04e+26;
         beta            -3.3;
         Ta              63704;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -3075,7 +3075,7 @@ reactions
         A               1.18e+13;
         beta            0;
         Ta              42630.4;
-        coeffs          
+        coeffs
 53
 (
 (CH4 2)
@@ -3155,7 +3155,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -3240,7 +3240,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -3325,7 +3325,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 3)
@@ -3410,7 +3410,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -3495,7 +3495,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -3580,7 +3580,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -3665,7 +3665,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -3750,7 +3750,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -3835,7 +3835,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -3920,7 +3920,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4005,7 +4005,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4090,7 +4090,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4175,7 +4175,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4260,7 +4260,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4345,7 +4345,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4430,7 +4430,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4515,7 +4515,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4600,7 +4600,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4685,7 +4685,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4770,7 +4770,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4851,7 +4851,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -4932,7 +4932,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -5017,7 +5017,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -5102,7 +5102,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -5187,7 +5187,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -5272,7 +5272,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -5357,7 +5357,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -5442,7 +5442,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -5527,7 +5527,7 @@ reactions
         }
         thirdBodyEfficiencies
         {
-            coeffs          
+            coeffs
 53
 (
 (CH4 2)
@@ -5588,3 +5588,6 @@ reactions
         }
     }
 }
+
+Thigh   5000;
+Tlow    200;

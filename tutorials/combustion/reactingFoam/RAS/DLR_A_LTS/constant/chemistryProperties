@@ -35,9 +35,9 @@ initialChemicalTimeStep 1e-07;
 
 odeCoeffs
 {
-    solver          Rosenbrock34;  // Rosenbrock34, seulex or rodas23
-    absTol          1e-12;
-    relTol          1e-7;
+    solver          seulex;
+    absTol          1e-08;
+    relTol          0.1;
 }
 
 reduction
@@ -86,7 +86,7 @@ tabulation
     printNumRetrieve   off;
 
     // Tolerance used for retrieve and grow
-    tolerance   1e-4;
+    tolerance   0.003;
 
     // ISAT is the only method currently available
     method    ISAT;
@@ -97,24 +97,24 @@ tabulation
         otherSpecies 1;
         Temperature  1000;
         Pressure     1e15;
-        deltaT       0.5;
+        deltaT       1;
     }
 
     // Maximum number of leafs stored in the binary tree
-    maxNLeafs  2000;
+    maxNLeafs  5000;
 
     // Maximum life time of the leafs (in time steps) used in unsteady
     // simulations to force renewal of the stored chemPoints and keep the tree
     // small
-    chPMaxLifeTime 100;
+    chPMaxLifeTime 1000;
 
     // Maximum number of growth allowed on a chemPoint to avoid distorted
     // chemPoints
-    maxGrowth  10;
+    maxGrowth  100;
 
     // Number of time steps between analysis of the tree to remove old
     // chemPoints or try to balance it
-    checkEntireTreeInterval  5;
+    checkEntireTreeInterval  500;
 
     // Parameters used to decide whether to balance or not if the tree's depth
     // is larger than maxDepthFactor*log2(nLeafs) then balance the tree
@@ -122,7 +122,6 @@ tabulation
 
     // Try to balance the tree only if the size of the tree is greater
     minBalanceThreshold 30;
-
 
     // Activate the use of a MRU (most recently used) list
     MRURetrieve false;

@@ -67,14 +67,12 @@ int main(int argc, char *argv[])
 
     chemkinReader cr(species, args[1], args[3], args[2], newFormat);
 
-
     OFstream reactionsFile(args[4]);
-    reactionsFile
-        << "elements" << cr.elementNames() << token::END_STATEMENT << nl << nl;
-    reactionsFile
-        << "species" << cr.species() << token::END_STATEMENT << nl << nl;
+    reactionsFile.writeKeyword("elements")
+        << cr.elementNames() << token::END_STATEMENT << nl << nl;
+    reactionsFile.writeKeyword("species")
+        << cr.species() << token::END_STATEMENT << nl << nl;
     cr.reactions().write(reactionsFile);
-
 
     // Temporary hack to splice the specie composition data into the thermo file
     // pending complete integration into the thermodynamics structure
@@ -103,6 +101,14 @@ int main(int argc, char *argv[])
 
     thermoDict.write(OFstream(args[5])(), false);
 
+    reactionsFile << nl;
+
+    reactionsFile.writeKeyword("Tlow")
+        << Reaction<gasHThermoPhysics>::TlowDefault
+        << token::END_STATEMENT << nl;
+    reactionsFile.writeKeyword("Thigh")
+        << Reaction<gasHThermoPhysics>::ThighDefault
+        << token::END_STATEMENT << nl << nl;
 
     Info<< "End\n" << endl;
 

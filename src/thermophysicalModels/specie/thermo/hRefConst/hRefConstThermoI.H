@@ -142,6 +142,26 @@ inline Foam::scalar Foam::hRefConstThermo<EquationOfState>::S
 }
 
 
+template<class EquationOfState>
+inline Foam::scalar Foam::hRefConstThermo<EquationOfState>::dGdT
+(
+    const scalar p, const scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class EquationOfState>
+inline Foam::scalar Foam::hRefConstThermo<EquationOfState>::dCpdT
+(
+    const scalar p, const scalar T
+) const
+{
+    return 0;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class EquationOfState>

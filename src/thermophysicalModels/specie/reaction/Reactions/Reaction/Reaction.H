@@ -40,6 +40,8 @@ SourceFiles
 #include "speciesTable.H"
 #include "HashPtrTable.H"
 #include "scalarField.H"
+#include "simpleMatrix.H"
+#include "Tuple2.H"
 #include "typeInfo.H"
 #include "runTimeSelectionTables.H"
 
@@ -84,6 +86,8 @@ public:
         //- Number of un-named reactions
         static label nUnNamedReactions;
 
+        //- Default temperature limits of applicability of reaction rates
+        static scalar TlowDefault, ThighDefault;
 
     // Public data types
 
@@ -133,6 +137,9 @@ private:
 
         //- List of specie names present in reaction system
         const speciesTable& species_;
+
+        //- Temperature limits of applicability of reaction rates
+        scalar Tlow_, Thigh_;
 
         //- Specie info for the left-hand-side of the reaction
         List<specieCoeffs> lhs_;
@@ -201,25 +208,13 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<ReactionThermo>> clone() const //
-        {
-            return autoPtr<Reaction<ReactionThermo>>
-            (
-                new Reaction<ReactionThermo>(*this)
-            );
-        }
+        virtual autoPtr<Reaction<ReactionThermo>> clone() const = 0;
 
         //- Construct and return a clone with new speciesTable
         virtual autoPtr<Reaction<ReactionThermo>> clone
         (
             const speciesTable& species
-        ) const
-        {
-            return autoPtr<Reaction<ReactionThermo>>
-            (
-                new Reaction<ReactionThermo>(*this, species)
-            );
-        }
+        ) const = 0;
 
 
     // Selectors
@@ -242,14 +237,22 @@ public:
 
         // Access
 
+            inline word& name();
             inline const word& name() const;
 
-            // - Access to basic components of the reaction
+            inline scalar Tlow() const;
+            inline scalar Thigh() const;
+
+            //- Access to the components of the left hand side
             inline const List<specieCoeffs>& lhs() const;
+
+            //- Access to the components of the right hand side
             inline const List<specieCoeffs>& rhs() const;
 
-            // - Access to gas components of the reaction
+            //- Access to the gas components of the left hand side
             virtual const List<specieCoeffs>& grhs() const;
+
+            //- Access to the gas components of the right hand side
             virtual const List<specieCoeffs>& glhs() const;
 
             //- Access to specie list
@@ -270,13 +273,56 @@ public:
 
         // Reaction rate coefficients
 
+            //- Forward reaction rate
+            void ddot
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                scalarField& d
+            ) const;
+
+            //- Backward reaction rate
+            void fdot
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                scalarField& f
+            ) const;
+
+            //- Net reaction rate for individual species
+            void omega
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                scalarField& dcdt
+            ) const;
+
+            //- Net reaction rate
+            scalar omega
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                scalar& pf,
+                scalar& cf,
+                label& lRef,
+                scalar& pr,
+                scalar& cr,
+                label& rRef
+            ) const;
+
+        // Reaction rate coefficients
+
             //- Forward rate constant
             virtual scalar kf
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c
-            ) const;
+            ) const = 0;
 
             //- Reverse rate constant from the given forward rate constant
             virtual scalar kr
@@ -285,17 +331,90 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c
-            ) const;
+            ) const = 0;
 
-            //- Reverse rate constant.
-            //  Note this evaluates the forward rate constant and divides by the
-            //  equilibrium constant
+            //- Reverse rate constant
             virtual scalar kr
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c
+            ) const = 0;
+
+
+        // Jacobian coefficients
+
+            //- Derivative of the net reaction rate for each species involved
+            //  w.r.t. the species concentration
+            void dwdc
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                scalarSquareMatrix& J,
+                scalarField& dcdt,
+                scalar& omegaI,
+                scalar& kfwd,
+                scalar& kbwd,
+                const bool reduced,
+                const List<label>& c2s
             ) const;
+
+            //- Derivative of the net reaction rate for each species involved
+            //  w.r.t. the temperature
+            void dwdT
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                const scalar omegaI,
+                const scalar kfwd,
+                const scalar kbwd,
+                scalarSquareMatrix& J,
+                const bool reduced,
+                const List<label>& c2s,
+                const label indexT
+            ) const;
+
+            //- Temperature derivative of forward rate
+            virtual scalar dkfdT
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c
+            ) const = 0;
+
+            //- Temperature derivative of reverse rate
+            virtual scalar dkrdT
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                const scalar dkfdT,
+                const scalar kr
+            ) const = 0;
+
+            //- Third-body efficiencies (beta = 1-alpha)
+            //  non-empty only for third-body reactions
+            //  with enhanced molecularity (alpha != 1)
+            virtual const List<Tuple2<label, scalar>>& beta() const = 0;
+
+            //- Species concentration derivative of the pressure dependent term
+            virtual void dcidc
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                scalarField& dcidc
+            ) const = 0;
+
+            //- Temperature derivative of the pressure dependent term
+            virtual scalar dcidT
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c
+            ) const = 0;
 
 
         //- Write

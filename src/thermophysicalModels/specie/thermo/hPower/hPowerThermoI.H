@@ -164,6 +164,30 @@ inline Foam::scalar Foam::hPowerThermo<EquationOfState>::S
 }
 
 
+template<class EquationOfState>
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::dGdT
+(
+    const scalar p, const scalar T
+) const
+{
+    // To be implemented
+    NotImplemented;
+    return 0;
+}
+
+
+template<class EquationOfState>
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::dCpdT
+(
+    const scalar p, const scalar T
+) const
+{
+    // To be implemented
+    NotImplemented;
+    return 0;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class EquationOfState>

@@ -16,19 +16,19 @@ FoamFile
 
 application     reactingFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
-startTime       0;
+startTime       1500;
 
 stopAt          endTime;
 
-endTime         1500;
+endTime         5000;
 
 deltaT          1;
 
 writeControl    runTime;
 
-writeInterval   1500;
+writeInterval   100;
 
 purgeWrite      0;
 

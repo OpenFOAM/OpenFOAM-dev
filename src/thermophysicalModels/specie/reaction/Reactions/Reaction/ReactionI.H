@@ -33,9 +33,30 @@ namespace Foam
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
+inline word& Reaction<ReactionThermo>::name()
+{
+    return name_;
+}
+
+
+template<class ReactionThermo>
 inline const word& Reaction<ReactionThermo>::name() const
 {
     return name_;
+}
+
+
+template<class ReactionThermo>
+inline scalar Reaction<ReactionThermo>::Tlow() const
+{
+    return Tlow_;
+}
+
+
+template<class ReactionThermo>
+inline scalar Reaction<ReactionThermo>::Thigh() const
+{
+    return Thigh_;
 }
 
 

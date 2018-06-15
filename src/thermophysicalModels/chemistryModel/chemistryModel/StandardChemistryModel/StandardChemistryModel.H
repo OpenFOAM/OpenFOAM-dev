@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,22 +163,6 @@ public:
             scalarField& dcdt
         ) const;
 
-        //- Return the reaction rate for reaction r and the reference
-        //  species and charateristic times
-        virtual scalar omega
-        (
-            const Reaction<ThermoType>& r,
-            const scalarField& c,
-            const scalar T,
-            const scalar p,
-            scalar& pf,
-            scalar& cf,
-            label& lRef,
-            scalar& pr,
-            scalar& cr,
-            label& rRef
-        ) const;
-
 
         //- Return the reaction rate for iReaction and the reference
         //  species and charateristic times
@@ -254,7 +238,7 @@ public:
                 const scalar t,
                 const scalarField& c,
                 scalarField& dcdt,
-                scalarSquareMatrix& dfdc
+                scalarSquareMatrix& J
             ) const;
 
             virtual void solve

@@ -5588,3 +5588,6 @@ reactions
         }
     }
 }
+
+Thigh   5000;
+Tlow    200;

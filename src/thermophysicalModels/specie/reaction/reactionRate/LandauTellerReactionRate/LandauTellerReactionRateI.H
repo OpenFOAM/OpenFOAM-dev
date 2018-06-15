@@ -72,7 +72,7 @@ inline Foam::scalar Foam::LandauTellerReactionRate::operator()
         lta *= pow(T, beta_);
     }
 
-    scalar expArg = 0.0;
+    scalar expArg = 0;
 
     if (mag(Ta_) > vSmall)
     {
@@ -95,6 +95,81 @@ inline Foam::scalar Foam::LandauTellerReactionRate::operator()
     }
 
     return lta;
+}
+
+
+inline Foam::scalar Foam::LandauTellerReactionRate::ddT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField&
+) const
+{
+    scalar lta = A_;
+
+    if (mag(beta_) > vSmall)
+    {
+        lta *= pow(T, beta_);
+    }
+
+    scalar expArg = 0;
+    scalar deriv = 0;
+
+    if (mag(Ta_) > vSmall)
+    {
+        scalar TaT = Ta_/T;
+        expArg -= TaT;
+        deriv += TaT;
+    }
+
+    if (mag(B_) > vSmall)
+    {
+        scalar BT = B_/cbrt(T);
+        expArg += BT;
+        deriv -= BT/3;
+    }
+
+    if (mag(C_) > vSmall)
+    {
+        scalar CT = C_/pow(T, 2.0/3.0);
+        expArg += CT;
+        deriv -= 2*CT/3;
+    }
+
+    if (mag(expArg) > vSmall)
+    {
+        lta *= exp(expArg);
+    }
+
+    return lta*(beta_+deriv)/T;
+}
+
+
+inline const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
+Foam::LandauTellerReactionRate::beta() const
+{
+    return NullObjectRef<List<Tuple2<label, scalar>>>();
+}
+
+
+inline void Foam::LandauTellerReactionRate::dcidc
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalarField& dcidc
+) const
+{}
+
+
+inline Foam::scalar Foam::LandauTellerReactionRate::dcidT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c
+) const
+{
+    return 0;
 }
 
 
