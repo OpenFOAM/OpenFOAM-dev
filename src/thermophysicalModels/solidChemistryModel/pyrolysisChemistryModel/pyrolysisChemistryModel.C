@@ -37,7 +37,13 @@ pyrolysisChemistryModel
 )
 :
     solidChemistryModel<CompType, SolidThermo>(thermo),
-    pyrolisisGases_(this->reactions_[0].gasSpecies()),
+    pyrolisisGases_
+    (
+        dynamic_cast<const SolidReaction<SolidThermo>&>
+        (
+            this->reactions_[0]
+        ).gasSpecies()
+    ),
     gasThermo_(pyrolisisGases_.size()),
     nGases_(pyrolisisGases_.size()),
     nSpecie_(this->Ys_.size() + nGases_),
@@ -156,7 +162,7 @@ pyrolysisChemistryModel
     Info<< indent << "Number of gases = " << nGases_ << nl;
     forAll(this->reactions_, i)
     {
-        Info<< dynamic_cast<const SolidReaction<SolidThermo>& >
+        Info<< dynamic_cast<const SolidReaction<SolidThermo>&>
         (
             this->reactions_[i]
         ) << nl;
@@ -193,7 +199,11 @@ pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
 
     forAll(this->reactions_, i)
     {
-        const Reaction<SolidThermo>& R = this->reactions_[i];
+        const SolidReaction<SolidThermo>& R =
+            dynamic_cast<const SolidReaction<SolidThermo>&>
+            (
+                this->reactions_[i]
+            );
 
         scalar omegai = omega
         (

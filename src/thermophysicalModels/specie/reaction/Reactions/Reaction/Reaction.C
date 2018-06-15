@@ -806,30 +806,4 @@ const Foam::speciesTable& Foam::Reaction<ReactionThermo>::species() const
 }
 
 
-template<class ReactionThermo>
-const Foam::speciesTable& Foam::Reaction<ReactionThermo>::gasSpecies() const
-{
-    NotImplemented;
-    return NullObjectRef<speciesTable>();
-}
-
-
-template<class ReactionThermo>
-const Foam::List<typename Foam::Reaction<ReactionThermo>::specieCoeffs>&
-Foam::Reaction<ReactionThermo>::glhs() const
-{
-    NotImplemented;
-    return NullObjectRef<List<specieCoeffs>>();
-}
-
-
-template<class ReactionThermo>
-const Foam::List<typename Foam::Reaction<ReactionThermo>::specieCoeffs>&
-Foam::Reaction<ReactionThermo>::grhs() const
-{
-    NotImplemented;
-    return NullObjectRef<List<specieCoeffs>>();
-}
-
-
 // ************************************************************************* //

@@ -249,17 +249,8 @@ public:
             //- Access to the components of the right hand side
             inline const List<specieCoeffs>& rhs() const;
 
-            //- Access to the gas components of the left hand side
-            virtual const List<specieCoeffs>& grhs() const;
-
-            //- Access to the gas components of the right hand side
-            virtual const List<specieCoeffs>& glhs() const;
-
             //- Access to specie list
             const speciesTable& species() const;
-
-            //- Access to gas specie list
-            virtual const speciesTable& gasSpecies() const;
 
             //- Construct the left- and right-hand-side reaction coefficients
             void setLRhs
