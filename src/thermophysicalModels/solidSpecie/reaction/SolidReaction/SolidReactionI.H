@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidReaction.H"
+#include "SolidReaction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,7 +36,7 @@ template<class ReactionThermo>
 inline Ostream& operator<<
 (
     Ostream& os,
-    const solidReaction<ReactionThermo>& r
+    const SolidReaction<ReactionThermo>& r
 )
 {
     OStringStream reaction;

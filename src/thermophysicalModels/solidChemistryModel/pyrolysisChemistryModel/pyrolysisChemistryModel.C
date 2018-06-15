@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pyrolysisChemistryModel.H"
-#include "solidReaction.H"
+#include "SolidReaction.H"
 #include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -156,7 +156,7 @@ pyrolysisChemistryModel
     Info<< indent << "Number of gases = " << nGases_ << nl;
     forAll(this->reactions_, i)
     {
-        Info<< dynamic_cast<const solidReaction<SolidThermo>& >
+        Info<< dynamic_cast<const SolidReaction<SolidThermo>& >
         (
             this->reactions_[i]
         ) << nl;

@@ -23,14 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidReaction.H"
+#include "SolidReaction.H"
 #include "DynamicList.H"
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::solidReaction<ReactionThermo>::solidReaction
+Foam::SolidReaction<ReactionThermo>::SolidReaction
 (
     const Reaction<ReactionThermo>& reaction,
     const speciesTable& pyrolisisGases,
@@ -46,9 +45,9 @@ Foam::solidReaction<ReactionThermo>::solidReaction
 
 
 template<class ReactionThermo>
-Foam::solidReaction<ReactionThermo>::solidReaction
+Foam::SolidReaction<ReactionThermo>::SolidReaction
 (
-    const solidReaction<ReactionThermo>& r,
+    const SolidReaction<ReactionThermo>& r,
     const speciesTable& pyrolisisGases
 )
 :
@@ -60,7 +59,7 @@ Foam::solidReaction<ReactionThermo>::solidReaction
 
 
 template<class ReactionThermo>
-Foam::solidReaction<ReactionThermo>::solidReaction
+Foam::SolidReaction<ReactionThermo>::SolidReaction
 (
     const speciesTable& species,
     const HashPtrTable<ReactionThermo>& thermoDatabase,
@@ -85,8 +84,8 @@ Foam::solidReaction<ReactionThermo>::solidReaction
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-const Foam::List<typename Foam::solidReaction<ReactionThermo>::specieCoeffs>&
-Foam::solidReaction<ReactionThermo>::glhs() const
+const Foam::List<typename Foam::SolidReaction<ReactionThermo>::specieCoeffs>&
+Foam::SolidReaction<ReactionThermo>::glhs() const
 {
     return glhs_;
 }
@@ -94,14 +93,14 @@ Foam::solidReaction<ReactionThermo>::glhs() const
 
 template<class ReactionThermo>
 const Foam::List<typename Foam::Reaction<ReactionThermo>::specieCoeffs>&
-Foam::solidReaction<ReactionThermo>::grhs() const
+Foam::SolidReaction<ReactionThermo>::grhs() const
 {
     return grhs_;
 }
 
 
 template<class ReactionThermo>
-const Foam::speciesTable& Foam::solidReaction<ReactionThermo>::
+const Foam::speciesTable& Foam::SolidReaction<ReactionThermo>::
 gasSpecies() const
 {
     return pyrolisisGases_;
@@ -109,7 +108,7 @@ gasSpecies() const
 
 
 template<class ReactionThermo>
-void Foam::solidReaction<ReactionThermo>::write(Ostream& os) const
+void Foam::SolidReaction<ReactionThermo>::write(Ostream& os) const
 {
     OStringStream reaction;
     os.writeKeyword("reaction") << solidReactionStr(reaction)
@@ -118,7 +117,7 @@ void Foam::solidReaction<ReactionThermo>::write(Ostream& os) const
 
 
 template<class ReactionThermo>
-Foam::string Foam::solidReaction<ReactionThermo>::solidReactionStr
+Foam::string Foam::SolidReaction<ReactionThermo>::solidReactionStr
 (
     OStringStream& reaction
 ) const
@@ -142,7 +141,7 @@ Foam::string Foam::solidReaction<ReactionThermo>::solidReactionStr
 
 
 template<class ReactionThermo>
-void Foam::solidReaction<ReactionThermo>::solidReactionStrLeft
+void Foam::SolidReaction<ReactionThermo>::solidReactionStrLeft
 (
     OStringStream& reaction
 ) const
@@ -167,7 +166,7 @@ void Foam::solidReaction<ReactionThermo>::solidReactionStrLeft
 
 
 template<class ReactionThermo>
-void Foam::solidReaction<ReactionThermo>::solidReactionStrRight
+void Foam::SolidReaction<ReactionThermo>::solidReactionStrRight
 (
     OStringStream& reaction
 ) const

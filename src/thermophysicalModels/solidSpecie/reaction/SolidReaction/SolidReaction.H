@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solidReaction
+    Foam::SolidReaction
 
 Description
 
     Read solid reactions of the type S1 = S2 + G1
 
 SourceFiles
-    solidReactionI.H
-    solidReaction.C
+    SolidReactionI.H
+    SolidReaction.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidReaction_H
-#define solidReaction_H
+#ifndef SolidReaction_H
+#define SolidReaction_H
 
 #include "speciesTable.H"
 #include "Reaction.H"
@@ -47,17 +47,17 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 template<class ReactionThermo>
-class solidReaction;
+class SolidReaction;
 
 template<class ReactionThermo>
-inline Ostream& operator<<(Ostream&, const solidReaction<ReactionThermo>&);
+inline Ostream& operator<<(Ostream&, const SolidReaction<ReactionThermo>&);
 
 /*---------------------------------------------------------------------------*\
-                        Class solidReaction Declaration
+                        Class SolidReaction Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ReactionThermo>
-class solidReaction
+class SolidReaction
 :
     public Reaction<ReactionThermo>
 {
@@ -91,7 +91,7 @@ private:
         void solidReactionStrRight(OStringStream&) const;
 
         //- Disallow default bitwise assignment
-        void operator=(const solidReaction&);
+        void operator=(const SolidReaction&);
 
 
 public:
@@ -103,7 +103,7 @@ public:
     // Constructors
 
         //- Construct from components
-        solidReaction
+        SolidReaction
         (
             const Reaction<ReactionThermo>& reaction,
             const speciesTable& pyrolisisGases,
@@ -113,15 +113,15 @@ public:
 
 
         //- Construct as copy given new speciesTable
-        solidReaction
+        SolidReaction
         (
-            const solidReaction<ReactionThermo>&,
+            const SolidReaction<ReactionThermo>&,
             const speciesTable& pyrolisisGases
         );
 
 
         //- Construct from dictionary
-        solidReaction
+        SolidReaction
         (
             const speciesTable& species,
             const HashPtrTable<ReactionThermo>& thermoDatabase,
@@ -130,7 +130,7 @@ public:
 
 
     //- Destructor
-    virtual ~solidReaction()
+    virtual ~SolidReaction()
     {}
 
 
@@ -157,7 +157,7 @@ public:
         friend Ostream& operator<< <ReactionThermo>
         (
             Ostream&,
-            const solidReaction<ReactionThermo>&
+            const SolidReaction<ReactionThermo>&
         );
 };
 
@@ -168,12 +168,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "solidReactionI.H"
+#include "SolidReactionI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "solidReaction.C"
+    #include "SolidReaction.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
