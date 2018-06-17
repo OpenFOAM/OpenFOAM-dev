@@ -38,7 +38,7 @@ Script=${0##*/}
 
 # Source the wmake functions
 # shellcheck source=scripts/wmakeFunctions
-. ${0%/*}/scripts/wmakeFunctions
+. "${0%/*}/scripts/wmakeFunctions"
 
 error() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done

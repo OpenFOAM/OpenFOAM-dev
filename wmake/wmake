@@ -153,7 +153,7 @@ do
         # Parallel compilation on all cores of local machine
         -j)
             useAllCores
-            test $# -ge 2 && (($2 + 1)) > /dev/null 2>&1 \
+            [ $# -ge 2 ] && [ "$2" -gt 0 ] > /dev/null 2>&1 \
                 && shift && export WM_NCOMPPROCS=$1
             echo "Compiling enabled on $WM_NCOMPPROCS cores"
             ;;
@@ -222,11 +222,11 @@ then
     WM_NCOMPPROCS=$(wmakeScheduler -count) || unset WM_NCOMPPROCS
 fi
 
-if [ "$WM_NCOMPPROCS" ]
+if [ -n "$WM_NCOMPPROCS" ]
 then
     parOpt="-j $WM_NCOMPPROCS"
 
-    if [ "$WM_NCOMPPROCS" -gt 1 ] && [ ! "$MAKEFLAGS" ]
+    if [ "$WM_NCOMPPROCS" -gt 1 ] && [ -z "$MAKEFLAGS" ]
     then
         lockDir=$HOME/.$WM_PROJECT/.wmake
 

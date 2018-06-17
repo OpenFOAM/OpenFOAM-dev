@@ -55,7 +55,7 @@ Script=${0##*/}
 
 # Source the wmake functions
 # shellcheck source=scripts/wmakeFunctions
-. ${0%/*}/scripts/wmakeFunctions
+. "${0%/*}/scripts/wmakeFunctions"
 
 usage() {
     cat<<USAGE
@@ -90,6 +90,18 @@ error() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     usage
     exit 1
+}
+
+removeDepFiles()
+{
+    if [ "$#" -eq 1 ]
+    then
+        find "$1" -name '*.dep' -print0 | xargs -0t rm 2>/dev/null
+    elif [ "$#" -eq 2 ]
+    then
+        find "$1" -name '*.dep' -exec grep -q "$2" '{}' \; \
+             -exec rm '{}' \; -print
+    fi
 }
 
 #------------------------------------------------------------------------------
@@ -144,20 +156,37 @@ files)
 
     findObjectDir .
 
-    # With the -a/-all option replace the current platform with a wildcard
-    if [ "$all" = "all" ]
-    then
-        objectsDir=$(echo "$objectsDir" | sed s%"$WM_OPTIONS"%*% )
-    fi
-
+    # First give the verbose information for the current searching method
     if [ "$#" -eq 0 ]
     then
         echo "removing all .dep files ..."
-        find "$objectsDir" -name '*.dep' -print0 | xargs -0t rm 2>/dev/null
     else
         echo "removing .dep files referring to $1 ..."
-        find "$objectsDir" -name '*.dep' -exec grep -q "$1" '{}' \; \
-             -exec rm '{}' \; -print
+    fi
+
+    # With the -a/-all option replace the current platform with a wildcard
+    if [ "$all" = "all" ]
+    then
+
+        # Handle the removal on all platforms for consistency
+        mainPath=${objectsDir%%/$WM_OPTIONS*}
+        objSubPath=${objectsDir##*$WM_OPTIONS/}
+
+        for pathEntry in "$mainPath"/*
+        do
+            if [ -e "$pathEntry/$objSubPath" ]
+            then
+                # Note:
+                # If $1 is empty, it should still work for the default method
+                removeDepFiles "$pathEntry/$objSubPath" "$1"
+            fi
+        done
+
+    else
+
+        # Handle only the removal for the current WM_OPTIONS
+        removeDepFiles "$objectsDir" "$1"
+
     fi
 
     ;;
