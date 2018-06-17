@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,9 +28,8 @@ Group
     grpWallFunctions
 
 Description
-    This boundary condition provides a turbulent kinematic viscosity condition
-    when using wall functions, based on turbulence kinetic energy.
-    - replicates OpenFOAM v1.5 (and earlier) behaviour
+    Turbulent viscosity wall-function boundary condition
+    for high Reynolds number flows based on near-wall turbulence kinetic energy.
 
 Usage
     Example of the boundary condition specification:
