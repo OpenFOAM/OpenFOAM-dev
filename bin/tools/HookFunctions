@@ -1,0 +1,354 @@
+#---------------------------------*- sh -*-------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     HookFunctions
+#
+# Description
+#     Functions for automatically checking code pre commit and receive
+#
+#------------------------------------------------------------------------------
+
+headerSeparator="-----------------------------------"
+echoIndent="    "
+
+#-----------------------------------------------------------------------------
+
+
+#
+# report failure and exit
+#
+die()
+{
+    echo "$hookName hook failure" 1>&2
+    echo $headerSeparator 1>&2
+    echo '' 1>&2
+    echo "$@" 1>&2
+    echo '' 1>&2
+    exit 1
+}
+
+
+#
+# report failure, listing bad files and exit
+#
+dieOnBadFiles()
+{
+    if [ -n "$badFiles" ]
+    then
+        echo "$hookName hook failure" 1>&2
+        echo $headerSeparator 1>&2
+        echo "$@" 1>&2
+        echo '' 1>&2
+        echo "File(s):" 1>&2
+        echo "$badFiles" 1>&2
+        echo ''  1>&2
+        exit 1
+    fi
+}
+
+
+#
+# qualify 'git grep' to check cached value or from a specific commit
+#
+gitScope()
+{
+    if [ "$#" -gt 0 ]
+    then
+        echo "$1:"
+    else
+        echo "--cached -- "
+    fi
+}
+
+
+#
+# check for bad strings, characters, etc
+#
+checkIllegalCode()
+{
+    echo "$hookName: check bad strings/characters etc ..." 1>&2
+
+    reBad="("$'\t'")"
+    msgBad="<TAB>"
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        case "$f" in
+        # exclude potential makefiles
+        (*[Mm]akefile* | wmake/rules/* | *.f* | *.v[cf]proj | *.pdf | *.png | *.html | *.gif | *.css | *.gz)
+        ;;
+        (*)
+            fileType=`file -b $f`
+            if [ "$fileType" != "data" ]
+            then
+                # parse line numbers from grep output:
+                #        <lineNr>:   contents
+                lines=$(git grep -E -hn -e "$reBad" $scope"$f" |
+                    sed -e 's@:.*@@' |
+                    tr '\n' ' '
+                )
+                [ -n "$lines" ] && echo "$echoIndent$f -- lines: $lines"
+            fi
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Remove/correct bad '$msgBad' references"
+}
+
+
+#
+# limit line length to 80-columns
+#
+checkLineLength()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$echoIndent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#
+# limit line length to 80-columns, except C++ comment lines
+#
+checkLineLengthNonComments()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' \
+                --and --not -e '^ *//' \
+                $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$echoIndent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#
+# limit line length to 80-columns, except #directive lines
+#
+checkLineLengthNonDirective()
+{
+    echo "$hookName: check line lengths ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # parse line numbers from grep output:
+            #        <lineNr>:   contents
+            lines=$(git grep -hn -e '^.\{81,\}' \
+                --and --not -e '^ *#' \
+                $scope"$f" |
+                sed -e 's@:.*@@' |
+                tr '\n' ' '
+            )
+            [ -n "$lines" ] && echo "$echoIndent$f -- lines: $lines"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Limit code to 80 columns before pushing"
+}
+
+
+#
+# check for non-standard code patterns
+#
+checkNonStandardCodePatterns()
+{
+    echo "$hookName: checking for non-standard code ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # Directly report the incorrect markers
+            git grep -n --color -e '> >' \
+                --or -w -e 'NULL' \
+                $scope"$f"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "$(cat<<MESSAGE
+Please revise the files reported below for the following non-standard code:
+
+  1. Spaced ending of multi-level template parameters are not allowed, such as:
+
+      List<List<scalar> >
+
+    which instead should be:
+
+      List<List<scalar>>
+
+  2. The use of the 'NULL' macro should be replaced by 'nullptr'
+
+$headerSeparator
+MESSAGE
+    )"
+}
+
+
+#
+# check that header files respect the policy of file names matching the
+# #ifndef/#define bounds
+#
+checkHeaderIfndefNames()
+{
+    echo "$hookName: check header files #ifndef/#define names ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.H files
+        case "$f" in
+        (*.H)
+            fileName=$(basename $f)
+            correctMangledName=$(basename $f | sed 's=\.=_=')
+
+            if git grep -q -e "#ifndef.*_H" $scope"$f" && ! git grep -q -e "#ifndef[ ]\+$correctMangledName" $scope"$f"
+            then
+                echo "Updated #ifndef/#define for: $f" 1>&2
+                echo $f
+
+                currentMangled=$(grep "#ifndef.*_H" $f | sed 's=#ifndef\s*==')
+
+                sed -i -e 's='$currentMangled'='$correctMangledName'=' $f
+            fi
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Some header files were automatically updated to respect #ifndef naming convention; Please check these before pushing"
+}
+
+
+#
+# check that OpenFOAM Foundation copyright is current
+#
+checkCopyright()
+{
+    echo "$hookName: check copyright ..." 1>&2
+
+    scope=$(gitScope $@)
+    year=$(date +%Y)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        startYear=$(
+            git grep -h -e "Copyright.*OpenFOAM" $scope"$f" | \
+            head -n 1 | \
+            sed 's/[^0-9]*\([0-9]*\).*/\1/g'
+            )
+        endYear=$(
+            git grep -h -e "Copyright.*-.*OpenFOAM" $scope"$f" | \
+            head -n 1 | \
+            sed 's/[^-]*-\([0-9]*\).*/\1/g'
+            )
+
+        if [ "$startYear" != "" ]
+        then
+            if [ "$endYear" != "" ]
+            then
+                # Date is of type 2011-2012 OpenFOAM Foundation
+                if [ "$year" != "$endYear" ]
+                then
+                    echo "Updated copyright for: $f" 1>&2
+                    echo "$f"
+                    sed -i -e "s/$startYear-$endYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
+                fi
+            else
+                # Date is of type 2011 OpenFOAM Foundation
+                if [ "$year" != "$startYear" ]
+                then
+                    echo "$f"
+                    echo "Updated copyright for: $f" 1>&2
+                    sed -i -e "s/$startYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
+                fi
+            fi
+        fi
+    done
+    )
+
+    dieOnBadFiles "Some copyright dates were automatically updated; Please check these before pushing"
+}
+
+
+#------------------------------------------------------------------------------

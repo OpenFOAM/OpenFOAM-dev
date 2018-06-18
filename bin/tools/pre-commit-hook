@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -38,8 +38,12 @@
 #     Hook receives: empty
 #
 #     Checks for
+#     - trailing whitespace and non-standard line endings
 #     - illegal code, e.g. <TAB>
 #     - columns greater than 80 for *.[CH] files
+#     - non-standard code patterns
+#     - missmatched header #ifndef/#define names
+#     - incorrect copyright statements
 #
 # Note
 #     Using "git commit --no-verify" it is possible to override the hook.
@@ -49,351 +53,51 @@
 #
 #------------------------------------------------------------------------------
 
-hookName="pre-commit"
-headerSeparator="-----------------------------------"
+. bin/tools/HookFunctions || exit 1
 
-die()
-{
-    echo "$hookName hook failure" 1>&2
-    echo $headerSeparator 1>&2
-    echo '' 1>&2
-    echo "$@" 1>&2
-    echo '' 1>&2
-    exit 1
-}
+hookName="pre-commit"
+
 
 #-----------------------------------------------------------------------------
-# Check content that will be added by this commit.
+# Check content that will be added by this commit
+#
 
+# Clear
+unset fileList
+unset badFiles
+
+# Get the commit to test against
 if git rev-parse --verify HEAD > /dev/null 2>&1
 then
     against=HEAD
 else
-    # Initial commit: diff against an empty tree object
-    against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+    # Git's "empty" object
+    against=$(git hash-object -t tree /dev/null)
+
 fi
 
-# called manually with arguments for the files/directories to be tested?
+# Get the list of files to check
 if [ "$#" -gt 0 ]
 then
+    # Called with arguments for the files/directories to be tested
     case "$1" in
     -h | -help)
         die "interactive usage: supply list of files/directories to check"
         ;;
     esac
-
-    # obtain list of all specified files/directories
     fileList=$(git ls-files -- $@ 2>/dev/null)
 else
-    # list of all files to be committed
+    # Called with out arguments to test staged changes
     fileList=$(git diff-index --cached --name-only $against --)
 fi
 
-#
-# no files changed: can skip all the checks
-# this usage can correspond to a 'git commit --amend'
-#
+# If no files have changed then the checks are not needed. This usage can
+# correspond to a 'git commit --amend'
 [ -n "$fileList" ] || exit 0
 
 
-unset badFiles
-# join list of files with this amount of space
-Indent="    "
-
-#
-# report bad files and die if there are any
-#
-dieOnBadFiles()
-{
-    if [ -n "$badFiles" ]
-    then
-        echo "$hookName hook failure" 1>&2
-        echo $headerSeparator 1>&2
-        echo "$@" 1>&2
-        echo '' 1>&2
-        echo "File(s):" 1>&2
-        echo "$badFiles" 1>&2
-        echo ''  1>&2
-        exit 1
-    fi
-}
-
-
-#
-# qualify 'git grep' to check cached value or from a specific commit
-#
-gitScope()
-{
-    if [ "$#" -gt 0 ]
-    then
-        echo "$1:"
-    else
-        echo "--cached -- "
-    fi
-}
-
-
-#
-# check for bad strings, characters, etc
-#
-checkIllegalCode()
-{
-    echo "$hookName: check bad strings/characters etc ..." 1>&2
-
-    reBad="("$'\t'")"
-    msgBad="<TAB>"
-
-    scope=$(gitScope $@)
-
-    badFiles=$(
-    for f in $fileList
-    do
-        case "$f" in
-        # exclude potential makefiles
-        (*[Mm]akefile* | wmake/rules/* | *.f* | *.v[cf]proj | *.pdf | *.png | *.html | *.gif | *.css | *.gz)
-        ;;
-        (*)
-            fileType=`file -b $f`
-            if [ "$fileType" != "data" ]
-            then
-                # parse line numbers from grep output:
-                #        <lineNr>:   contents
-                lines=$(git grep -E -hn -e "$reBad" $scope"$f" |
-                    sed -e 's@:.*@@' |
-                    tr '\n' ' '
-                )
-                [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
-            fi
-        ;;
-        esac
-    done
-    )
-
-    dieOnBadFiles "Remove/correct bad '$msgBad' references"
-}
-
-
-#
-# limit line length to 80-columns
-#
-checkLineLength()
-{
-    echo "$hookName: check line lengths ..." 1>&2
-
-    scope=$(gitScope $@)
-
-    badFiles=$(
-    for f in $fileList
-    do
-        # limit to *.[CH] files
-        case "$f" in
-        (*.[CH])
-            # parse line numbers from grep output:
-            #        <lineNr>:   contents
-            lines=$(git grep -hn -e '^.\{81,\}' $scope"$f" |
-                sed -e 's@:.*@@' |
-                tr '\n' ' '
-            )
-            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
-        ;;
-        esac
-    done
-    )
-
-    dieOnBadFiles "Limit code to 80 columns before pushing"
-}
-
-
-#
-# limit line length to 80-columns, except C++ comment lines
-#
-checkLineLengthNonComments()
-{
-    echo "$hookName: check line lengths ..." 1>&2
-
-    scope=$(gitScope $@)
-
-    badFiles=$(
-    for f in $fileList
-    do
-        # limit to *.[CH] files
-        case "$f" in
-        (*.[CH])
-            # parse line numbers from grep output:
-            #        <lineNr>:   contents
-            lines=$(git grep -hn -e '^.\{81,\}' \
-                --and --not -e '^ *//' \
-                $scope"$f" |
-                sed -e 's@:.*@@' |
-                tr '\n' ' '
-            )
-            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
-        ;;
-        esac
-    done
-    )
-
-    dieOnBadFiles "Limit code to 80 columns before pushing"
-}
-
-
-#
-# limit line length to 80-columns, except #directive lines
-#
-checkLineLengthNonDirective()
-{
-    echo "$hookName: check line lengths ..." 1>&2
-
-    scope=$(gitScope $@)
-
-    badFiles=$(
-    for f in $fileList
-    do
-        # limit to *.[CH] files
-        case "$f" in
-        (*.[CH])
-            # parse line numbers from grep output:
-            #        <lineNr>:   contents
-            lines=$(git grep -hn -e '^.\{81,\}' \
-                --and --not -e '^ *#' \
-                $scope"$f" |
-                sed -e 's@:.*@@' |
-                tr '\n' ' '
-            )
-            [ -n "$lines" ] && echo "$Indent$f -- lines: $lines"
-        ;;
-        esac
-    done
-    )
-
-    dieOnBadFiles "Limit code to 80 columns before pushing"
-}
-
-
-#
-# check for non-standard code patterns
-#
-checkNonStandardCodePatterns()
-{
-    echo "$hookName: checking for non-standard code ..." 1>&2
-
-    scope=$(gitScope $@)
-
-    badFiles=$(
-    for f in $fileList
-    do
-        # limit to *.[CH] files
-        case "$f" in
-        (*.[CH])
-            # Directly report the incorrect markers
-            git grep -n --color -e '> >' \
-                --or -w -e 'NULL' \
-                $scope"$f"
-        ;;
-        esac
-    done
-    )
-
-    dieOnBadFiles "$(cat<<MESSAGE
-Please revise the files reported below for the following non-standard code:
-
-  1. Spaced ending of multi-level template parameters are not allowed, such as:
-
-      List<List<scalar> >
-
-    which instead should be:
-
-      List<List<scalar>>
-
-  2. The use of the 'NULL' macro should be replaced by 'nullptr'
-
-$headerSeparator
-MESSAGE
-    )"
-}
-
-
-#
-# check that header files respect the policy of file names matching the
-# #ifndef/#define bounds
-#
-checkHeaderIfndefNames()
-{
-    echo "$hookName: check header files #ifndef/#define names ..." 1>&2
-
-    badFiles=$(
-    for f in $fileList
-    do
-        # limit to *.H files
-        case "$f" in
-        (*.H)
-            fileName=$(basename $f)
-            correctMangledName=$(basename $f | sed 's=\.=_=')
-
-            if grep -q "#ifndef.*_H" $f
-            then
-              if ! grep "#ifndef.*_H" $f | grep -q $correctMangledName
-              then
-                echo "$(grep -H "#ifndef" $f | sed 's=#=\n\t#=') --> $correctMangledName"
-
-                currentMangled=$(grep "#ifndef.*_H" $f | sed 's=#ifndef\s*==')
-
-                sed -i -e 's='$currentMangled'='$correctMangledName'=' $f
-              fi
-            fi
-        ;;
-        esac
-    done
-    )
-
-    dieOnBadFiles "Some header files were automatically updated to respect #ifndef naming convention; Please check these before pushing"
-}
-
-
-#
-# check that OpenFOAM Foundation copyright is current
-#
-checkCopyright()
-{
-    year=$(date +%Y)
-    echo "$hookName: check copyright ..." 1>&2
-
-    badFiles=$(
-    for f in $fileList
-    do
-        startYear=`grep -m 1 "Copyright.*OpenFOAM" $f | sed 's/[^0-9]*\([0-9]*\).*/\1/g'`
-        endYear=`grep -m 1 "Copyright.*-.*OpenFOAM" $f | sed 's/[^-]*-\([0-9]*\).*/\1/g'`
-        #echo "startYear=$startYear endYear=$endYear"
-        if [ "$startYear" != "" ]
-        then
-            if [ "$endYear" != "" ]
-            then
-                # Date is of type 2011-2012 OpenFOAM Foundation
-                if [ "$year" != "$endYear" ]
-                then
-                    echo "Updated copyright for: $f" 1>&2
-                    echo "$f"
-                    sed -i -e "s/$startYear-$endYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
-                fi
-            else
-                # Date is of type 2011 OpenFOAM Foundation
-                if [ "$year" != "$startYear" ]
-                then
-                    echo "$f"
-                    echo "Updated copyright for: $f" 1>&2
-                    sed -i -e "s/$startYear OpenFOAM/$startYear-$year OpenFOAM/g" $f
-                fi
-            fi
-        fi
-    done
-    )
-
-    dieOnBadFiles "Some copyright dates were automatically updated; Please check these before pushing"
-}
-
-
 #------------------------------------------------------------------------------
-# Main code : do all checks
+# Main code. Do all checks.
 #
 
 # builtin whitespace check to avoid trailing space, including CR-LF endings
@@ -411,7 +115,9 @@ checkNonStandardCodePatterns
 # check if #ifndef/#define bounds are named correctly
 checkHeaderIfndefNames
 
+# check copyright
 checkCopyright
 
 exit 0
+
 #------------------------------------------------------------------------------
