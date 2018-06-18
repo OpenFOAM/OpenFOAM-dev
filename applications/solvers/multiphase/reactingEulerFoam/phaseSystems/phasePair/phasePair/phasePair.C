@@ -25,6 +25,7 @@ License
 
 #include "phasePair.H"
 #include "phaseSystem.H"
+#include "surfaceTensionModel.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -165,7 +166,11 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::EoH2() const
 
 Foam::tmp<Foam::volScalarField> Foam::phasePair::sigma() const
 {
-    return phase1().fluid().sigma(phasePair(phase1(), phase2()));
+    return
+        phase1().fluid().lookupSubModel<surfaceTensionModel>
+        (
+            phasePair(phase1(), phase2())
+        ).sigma();
 }
 
 
