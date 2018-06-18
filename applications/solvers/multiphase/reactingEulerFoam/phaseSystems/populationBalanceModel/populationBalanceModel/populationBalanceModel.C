@@ -30,6 +30,7 @@ License
 #include "driftModel.H"
 #include "nucleationModel.H"
 #include "phaseSystem.H"
+#include "surfaceTensionModel.H"
 #include "fvmDdt.H"
 #include "fvcDdt.H"
 #include "fvmSup.H"
@@ -1152,13 +1153,11 @@ Foam::diameterModels::populationBalanceModel::sigmaWithContinuousPhase
     const phaseModel& dispersedPhase
 ) const
 {
-    const phasePairKey key
-    (
-        dispersedPhase.name(),
-        continuousPhase_.name()
-    );
-
-    return fluid_.sigma(key);
+    return
+        fluid_.lookupSubModel<surfaceTensionModel>
+        (
+            phasePair(dispersedPhase, continuousPhase_)
+        ).sigma();
 }
 
 
