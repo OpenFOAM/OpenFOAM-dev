@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,12 @@ Foam::dictionaryListEntry::dictionaryListEntry
 
         for (label i=0; i<s; i++)
         {
-            entry::New(*this, is);
+            if (!entry::New(*this, is))
+            {
+                FatalIOErrorInFunction(is)
+                    << "Failed to read dictionary entry in list"
+                    << exit(FatalIOError);
+            }
         }
         is.readEndList("List");
     }
@@ -88,7 +93,13 @@ Foam::dictionaryListEntry::dictionaryListEntry
                 break;
             }
             is.putBack(nextToken);
-            entry::New(*this, is);
+
+            if (!entry::New(*this, is))
+            {
+                FatalIOErrorInFunction(is)
+                    << "Failed to read dictionary entry in list"
+                    << exit(FatalIOError);
+            }
         }
     }
     else
