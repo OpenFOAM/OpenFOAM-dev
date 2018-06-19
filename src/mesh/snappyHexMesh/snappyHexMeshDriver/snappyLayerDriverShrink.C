@@ -24,7 +24,7 @@ License
 Description
     Shrinking mesh (part of adding cell layers)
 
-\*----------------------------------------------------------------------------*/
+\*---------------------------------------------------------------------------*/
 
 #include "snappyLayerDriver.H"
 #include "fvMesh.H"

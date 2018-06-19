@@ -24,7 +24,7 @@ License
 Description
     All to do with adding cell layers
 
-\*----------------------------------------------------------------------------*/
+\*---------------------------------------------------------------------------*/
 
 #include "snappyLayerDriver.H"
 #include "fvMesh.H"
