@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,6 +144,7 @@ void Foam::mappedFieldFvPatchField<Type>::autoMap
     const fvPatchFieldMapper& m
 )
 {
+    fixedValueFvPatchField<Type>::autoMap(m);
     mappedPatchBase::clearOut();
 }
 
@@ -155,6 +156,7 @@ void Foam::mappedFieldFvPatchField<Type>::rmap
     const labelList& addr
 )
 {
+    fixedValueFvPatchField<Type>::rmap(ptf, addr);
     mappedPatchBase::clearOut();
 }
 
