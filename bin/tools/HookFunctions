@@ -30,10 +30,69 @@
 #------------------------------------------------------------------------------
 
 headerSeparator="-----------------------------------"
+
 echoIndent="    "
 
-#-----------------------------------------------------------------------------
+sourceBanner="(\
+/\*---------------------------------------------------------------------------\*\\\\|\
+/\*--------------------------------\*- C\+\+ -\*----------------------------------\*\\\\)
+  =========                 \|
+  \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox
+   \\\\\\\\    /   O peration     \|
+    \\\\\\\\  /    A nd           \| Copyright \(C\) [0-9-]+ OpenFOAM Foundation
+     \\\\\\\\/     M anipulation  \|
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM\.
 
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    \(at your option\) any later version\.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE\.  See the GNU General Public License
+    for more details\.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM\.  If not, see <http://www\.gnu\.org/licenses/>\.
+(.|
+)*?
+\\\\\*---------------------------------------------------------------------------\*/"
+
+scriptBanner="(\
+#------------------------------------------------------------------------------|\
+#---------------------------------\*- sh -\*-------------------------------------|\
+#----------------------------------\*-sh-\*--------------------------------------|\
+#----------------------------\*- makefile-gmake -\*------------------------------)
+# =========                 \|
+# \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox
+#  \\\\\\\\    /   O peration     \|
+#   \\\\\\\\  /    A nd           \| Copyright \(C\) [0-9-]+ OpenFOAM Foundation
+#    \\\\\\\\/     M anipulation  \|
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM\.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     \(at your option\) any later version\.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE\.  See the GNU General Public License
+#     for more details\.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM\.  If not, see <http://www\.gnu\.org/licenses/>\.
+(.|
+)*?
+#------------------------------------------------------------------------------"
+
+
+#-----------------------------------------------------------------------------
 
 #
 # report failure and exit
@@ -71,13 +130,27 @@ dieOnBadFiles()
 #
 # qualify 'git grep' to check cached value or from a specific commit
 #
-gitScope()
+gitScopeGrep()
 {
     if [ "$#" -gt 0 ]
     then
         echo "$1:"
     else
         echo "--cached -- "
+    fi
+}
+
+
+#
+# qualify 'git show' to check cached value or from a specific commit
+#
+gitScopeShow()
+{
+    if [ "$#" -gt 0 ]
+    then
+        echo "$1:"
+    else
+        echo ":"
     fi
 }
 
@@ -92,7 +165,7 @@ checkIllegalCode()
     reBad="("$'\t'")"
     msgBad="<TAB>"
 
-    scope=$(gitScope $@)
+    scope=$(gitScopeGrep $@)
 
     badFiles=$(
     for f in $fileList
@@ -129,7 +202,7 @@ checkLineLength()
 {
     echo "$hookName: check line lengths ..." 1>&2
 
-    scope=$(gitScope $@)
+    scope=$(gitScopeGrep $@)
 
     badFiles=$(
     for f in $fileList
@@ -160,7 +233,7 @@ checkLineLengthNonComments()
 {
     echo "$hookName: check line lengths ..." 1>&2
 
-    scope=$(gitScope $@)
+    scope=$(gitScopeGrep $@)
 
     badFiles=$(
     for f in $fileList
@@ -193,7 +266,7 @@ checkLineLengthNonDirective()
 {
     echo "$hookName: check line lengths ..." 1>&2
 
-    scope=$(gitScope $@)
+    scope=$(gitScopeGrep $@)
 
     badFiles=$(
     for f in $fileList
@@ -226,7 +299,7 @@ checkNonStandardCodePatterns()
 {
     echo "$hookName: checking for non-standard code ..." 1>&2
 
-    scope=$(gitScope $@)
+    scope=$(gitScopeGrep $@)
 
     badFiles=$(
     for f in $fileList
@@ -270,7 +343,7 @@ checkHeaderIfndefNames()
 {
     echo "$hookName: check header files #ifndef/#define names ..." 1>&2
 
-    scope=$(gitScope $@)
+    scope=$(gitScopeGrep $@)
 
     badFiles=$(
     for f in $fileList
@@ -300,13 +373,56 @@ checkHeaderIfndefNames()
 
 
 #
+# check that the banners are correctly formatted
+#
+checkBanner()
+{
+    echo "$hookName: check banner ..." 1>&2
+
+    scopeGrep=$(gitScopeGrep $@)
+    scopeShow=$(gitScopeShow $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        if git grep -q -e "Copyright (C) [0-9-]\+ OpenFOAM Foundation" $scopeGrep"$f"
+        then
+            case "$f" in
+            (*.c|*.C|*.Cver|*.cxx|*.dox|*.H|*.h)
+                # C++ Source
+                if ! git show $scopeShow"$f" | pcregrep -q -M "$sourceBanner"
+                then
+                    echo $f
+                fi
+            ;;
+            (*.*)
+                # No check for other extensions yet
+            ;;
+            (*)
+                # Assume that everything with a copyright statement but without
+                # an extension is a script with '#' comments
+                if ! git show $scopeShow"$f" | pcregrep -q -M "$scriptBanner"
+                then
+                    echo $f
+                fi
+            ;;
+            esac
+        fi
+    done
+    )
+
+    dieOnBadFiles "Fix banner formating before pushing"
+}
+
+
+#
 # check that OpenFOAM Foundation copyright is current
 #
 checkCopyright()
 {
     echo "$hookName: check copyright ..." 1>&2
 
-    scope=$(gitScope $@)
+    scope=$(gitScopeGrep $@)
     year=$(date +%Y)
 
     badFiles=$(

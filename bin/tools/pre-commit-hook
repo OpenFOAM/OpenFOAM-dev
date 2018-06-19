@@ -115,6 +115,9 @@ checkNonStandardCodePatterns
 # check if #ifndef/#define bounds are named correctly
 checkHeaderIfndefNames
 
+# check banner
+checkBanner
+
 # check copyright
 checkCopyright
 
