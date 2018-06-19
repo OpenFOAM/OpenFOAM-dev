@@ -91,6 +91,15 @@ scriptBanner="(\
 )*?
 #------------------------------------------------------------------------------"
 
+dictBanner="\
+/\*--------------------------------\*- C\+\+ -\*----------------------------------\*\\\\
+\| =========                 \|                                                 \|
+\| \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox           \|
+\|  \\\\\\\\    /   O peration     \| Version:  dev                                   \|
+\|   \\\\\\\\  /    A nd           \| Web:      www\.OpenFOAM\.org                      \|
+\|    \\\\\\\\/     M anipulation  \|                                                 \|
+\\\\\*---------------------------------------------------------------------------\*/"
+
 
 #-----------------------------------------------------------------------------
 
@@ -385,11 +394,11 @@ checkBanner()
     badFiles=$(
     for f in $fileList
     do
+        # Source files
         if git grep -q -e "Copyright (C) [0-9-]\+ OpenFOAM Foundation" $scopeGrep"$f"
         then
             case "$f" in
             (*.c|*.C|*.Cver|*.cxx|*.dox|*.H|*.h)
-                # C++ Source
                 if ! git show $scopeShow"$f" | pcregrep -q -M "$sourceBanner"
                 then
                     echo $f
@@ -407,6 +416,14 @@ checkBanner()
                 fi
             ;;
             esac
+
+        # Case files
+        elif git grep -q -e "^FoamFile" $scopeGrep"$f"
+        then
+            if ! git show $scopeShow"$f" | pcregrep -q -M "$dictBanner"
+            then
+                echo $f
+            fi
         fi
     done
     )
