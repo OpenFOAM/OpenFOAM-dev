@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,6 @@ License
 
 Class
     Foam::plenumPressureFvPatchScalarField
-
-Group
-    grpInletBoundaryConditions
 
 Description
     This boundary condition provides a plenum pressure inlet condition. This

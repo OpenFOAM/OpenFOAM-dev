@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,6 @@ License
 
 Class
     Foam::incompressible::RASModels::ShihQuadraticKE
-
-Group
-    grpIcoRASTurbulence
 
 Description
     Shih's quadratic algebraic Reynolds stress k-epsilon turbulence model for

@@ -24,9 +24,6 @@ License
 Class
     Foam::wavePressureFvPatchScalarField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This boundary condition provides a wavePressure condition. This sets the
     pressure to a value specified by a superposition of wave models. All the

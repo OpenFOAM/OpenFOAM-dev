@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::setTimeStepFunctionObject
 
-Group
-    grpUtilitiesFunctionObjects
-
 Description
     Overrides the timeStep. Can only be used with
     solvers with adjustTimeStep control (e.g. pimpleFoam). Makes no attempt

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,6 @@ License
 
 Class
     Foam::jumpCyclicAMIFvPatchField
-
-Group
-    grpCoupledBoundaryConditions
 
 Description
     This boundary condition provides a base class that enforces a cyclic

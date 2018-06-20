@@ -24,9 +24,6 @@ License
 Class
     Foam::waveAlphaFvPatchScalarField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This boundary condition provides a waveAlpha condition. This sets the phase
     fraction to that specified by a superposition of wave models. All the

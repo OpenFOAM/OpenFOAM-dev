@@ -24,9 +24,6 @@ License
 Class
     Foam::pressureDirectedInletOutletVelocityFvPatchVectorField
 
-Group
-    grpInletBoundaryConditions grpOutletBoundaryConditions
-
 Description
     This velocity inlet/outlet boundary condition is applied to pressure
     boundaries where the pressure is specified.  A zero-gradient condition is

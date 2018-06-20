@@ -45,9 +45,4 @@ License
          functionality
     - \b doc: documentation
 
-\section usingOpenFOAM Using OpenFOAM
-
-    - \ref grpFunctionObjects namespace Foam::functionObjects
-    - \subpage pageBoundaryConditions
-
 \*---------------------------------------------------------------------------*/

@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::phaseForces
 
-Group
-    grpForcesFunctionObjects
-
 Description
     This function object calculates and outputs the blended interfacial forces
     acting on a given phase (drag, virtual mass, lift, wall-lubrication and

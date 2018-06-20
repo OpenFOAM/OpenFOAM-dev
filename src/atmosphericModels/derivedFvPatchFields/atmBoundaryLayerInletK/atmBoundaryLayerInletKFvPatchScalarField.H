@@ -24,9 +24,6 @@ License
 Class
     Foam::atmBoundaryLayerInletKFvPatchScalarField
 
-Group
-    grpRASBoundaryConditions grpInletBoundaryConditions
-
 Description
     This boundary condition specifies an inlet value for the turbulence
     kinetic energy, \f$k\f$, appropriate for atmospheric boundary layers.

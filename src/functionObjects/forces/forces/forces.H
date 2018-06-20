@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::forces
 
-Group
-    grpForcesFunctionObjects
-
 Description
     Calculates the forces and moments by integrating the pressure and
     skin-friction forces over a given list of patches.

@@ -24,9 +24,6 @@ License
 Class
     Foam::nutkWallFunctionFvPatchScalarField
 
-Group
-    grpWallFunctions
-
 Description
     Turbulent viscosity wall-function boundary condition
     for high Reynolds number flows based on near-wall turbulence kinetic energy.

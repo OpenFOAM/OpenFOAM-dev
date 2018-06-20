@@ -28,9 +28,6 @@ Description
     Specialisation for RAS of the generic kOmegaSSTBase base class.
     For more information, see Description of kOmegaSSTBase.H
 
-Group
-    grpRASTurbulence
-
 See also
     Foam::kOmegaSST
 

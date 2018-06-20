@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::turbulenceIntensity
 
-Group
-    grpFieldFunctionObjects
-
 Description
     Evaluates and writes the turbulence intensity field 'I'.
 

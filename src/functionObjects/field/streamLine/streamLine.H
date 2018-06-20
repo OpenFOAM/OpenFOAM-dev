@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::streamLine
 
-Group
-    grpFieldFunctionObjects
-
 Description
     Generates streamline data by sampling a set of user-specified fields along a
     particle track, transported by a user-specified velocity field.

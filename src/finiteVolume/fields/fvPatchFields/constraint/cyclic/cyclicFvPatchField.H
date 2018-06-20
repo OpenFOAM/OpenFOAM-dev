@@ -24,9 +24,6 @@ License
 Class
     Foam::cyclicFvPatchField
 
-Group
-    grpCoupledBoundaryConditions
-
 Description
     This boundary condition enforces a cyclic condition between a pair of
     boundaries.

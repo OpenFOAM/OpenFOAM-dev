@@ -24,9 +24,6 @@ License
 Class
     Foam::movingWallVelocityFvPatchVectorField
 
-Group
-    grpWallBoundaryConditions
-
 Description
     This boundary condition provides a velocity condition for cases with
     moving walls.

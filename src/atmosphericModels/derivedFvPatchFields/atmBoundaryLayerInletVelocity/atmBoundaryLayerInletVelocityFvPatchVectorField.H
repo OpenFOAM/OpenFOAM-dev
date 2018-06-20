@@ -24,9 +24,6 @@ License
 Class
     Foam::atmBoundaryLayerInletVelocityFvPatchVectorField
 
-Group
-    grpRASBoundaryConditions grpInletBoundaryConditions
-
 Description
     This boundary condition specifies a velocity inlet profile appropriate
     for atmospheric boundary layers (ABL).

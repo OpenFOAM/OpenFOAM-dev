@@ -24,9 +24,6 @@ License
 Class
     Foam::timeVaryingMappedFixedValueFvPatchField
 
-Group
-    grpInletBoundaryConditions grpCoupledBoundaryConditions
-
 Description
     This boundary conditions interpolates the values from a set of supplied
     points in space and time.

@@ -24,9 +24,6 @@ License
 Class
     Foam::waveVelocityFvPatchVectorField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This boundary condition provides a waveVelocity condition. This sets the
     velocity to that specified by a superposition of wave models. The

@@ -24,9 +24,6 @@ License
 Class
     Foam::uniformDensityHydrostaticPressureFvPatchScalarField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This boundary condition provides a hydrostatic pressure condition,
     calculated as:

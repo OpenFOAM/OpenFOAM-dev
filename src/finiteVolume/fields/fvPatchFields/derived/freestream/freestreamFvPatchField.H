@@ -24,9 +24,6 @@ License
 Class
     Foam::freestreamFvPatchField
 
-Group
-    grpInletBoundaryConditions grpOutletBoundaryConditions
-
 Description
     This boundary condition provides a free-stream condition.  It is a 'mixed'
     condition derived from the \c inletOutlet condition, whereby the mode of

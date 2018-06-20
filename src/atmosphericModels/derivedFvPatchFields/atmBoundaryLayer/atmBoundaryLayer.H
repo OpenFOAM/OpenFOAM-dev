@@ -24,9 +24,6 @@ License
 Class
     Foam::atmBoundaryLayer
 
-Group
-    grpRASBoundaryConditions grpInletBoundaryConditions
-
 Description
     This class provides functions to evaluate the velocity and turbulence
     distributions appropriate for atmospheric boundary layers (ABL).

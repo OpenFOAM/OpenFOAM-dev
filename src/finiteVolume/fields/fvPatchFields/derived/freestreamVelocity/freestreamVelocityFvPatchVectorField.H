@@ -24,9 +24,6 @@ License
 Class
     Foam::freestreamVelocityFvPatchVectorField
 
-Group
-    grpInletBoundaryConditions grpOutletBoundaryConditions
-
 Description
     This boundary condition provides a free-stream condition for velocity.
 

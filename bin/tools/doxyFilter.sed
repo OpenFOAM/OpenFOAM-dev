@@ -76,17 +76,6 @@ s/Class *\n *\(.*\) */\\class \1/
 }
 
 
-# Group
-#     groupName
-# =>
-# \ingroup groupName
-#
-/^Group *$/,/^[^ ]/{
-s/^Group//
-s/^    /\\ingroup /
-}
-
-
 # Namespace
 #     namespaceName
 # =>

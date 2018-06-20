@@ -24,9 +24,6 @@ License
 Class
     Foam::pressureFvPatchScalarField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     Static pressure boundary condition
 

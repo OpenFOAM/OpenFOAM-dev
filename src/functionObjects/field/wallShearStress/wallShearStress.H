@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::wallShearStress
 
-Group
-    grpForcesFunctionObjects
-
 Description
     Calculates and write the shear-stress at wall patches as
     the volVectorField field 'wallShearStress'.

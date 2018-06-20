@@ -24,9 +24,6 @@ License
 Class
     Foam::codedMixedFvPatchField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     Constructs on-the-fly a new boundary condition (derived from
     mixedFvPatchField) which is then used to evaluate.

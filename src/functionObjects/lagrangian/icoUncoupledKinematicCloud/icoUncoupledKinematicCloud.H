@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::icoUncoupledKinematicCloud
 
-Group
-    grpLagrangianFunctionObjects
-
 Description
     This functionObject tracks a uncoupled kinematic particle cloud in the
     specified velocity field of an incompressible flow (laminar, RANS or LES).

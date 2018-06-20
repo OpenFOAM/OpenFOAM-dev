@@ -24,9 +24,6 @@ License
 Class
     Foam::fixedProfileFvPatchField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This boundary condition provides a fixed value profile condition.
 

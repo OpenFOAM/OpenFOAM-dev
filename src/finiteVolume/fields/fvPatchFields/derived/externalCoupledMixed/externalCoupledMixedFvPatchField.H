@@ -24,9 +24,6 @@ License
 Class
     Foam::externalCoupledMixedFvPatchField
 
-Group
-    grpGenericBoundaryConditions grpCoupledBoundaryConditions
-
 Description
     This boundary condition provides an interface to an external application.
     Values are transferred as plain text files, where OpenFOAM data is written

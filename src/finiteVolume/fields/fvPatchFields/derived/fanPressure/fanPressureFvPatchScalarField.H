@@ -24,9 +24,6 @@ License
 Class
     Foam::fanPressureFvPatchScalarField
 
-Group
-    grpInletBoundaryConditions grpOutletBoundaryConditions
-
 Description
     This boundary condition can be applied to assign either a pressure inlet
     or outlet total pressure condition for a fan.

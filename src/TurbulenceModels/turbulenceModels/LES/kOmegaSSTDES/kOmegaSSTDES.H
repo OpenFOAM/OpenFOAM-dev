@@ -42,9 +42,6 @@ Description
     For further details of the implementation of the base k-omega-SST model
     see Foam::kOmegaSST.
 
-Group
-    grpLESTurbulence
-
 See also
     Foam::kOmegaSST
 
