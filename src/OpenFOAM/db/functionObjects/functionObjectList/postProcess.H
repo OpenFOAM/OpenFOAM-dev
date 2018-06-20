@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,14 +94,20 @@ if (argList::postProcess(argc, argv))
 
     // Externally stored dictionary for functionObjectList
     // if not constructed from runTime
-    dictionary functionsDict;
+    dictionary functionsControlDict("controlDict");
 
     HashSet<word> selectedFields;
 
     // Construct functionObjectList
     autoPtr<functionObjectList> functionsPtr
     (
-        functionObjectList::New(args, runTime, functionsDict, selectedFields)
+        functionObjectList::New
+        (
+            args,
+            runTime,
+            functionsControlDict,
+            selectedFields
+        )
     );
 
     forAll(timeDirs, timei)
@@ -117,7 +123,7 @@ if (argList::postProcess(argc, argv))
             (
                 args,
                 runTime,
-                functionsDict,
+                functionsControlDict,
                 selectedFields
             );
         }

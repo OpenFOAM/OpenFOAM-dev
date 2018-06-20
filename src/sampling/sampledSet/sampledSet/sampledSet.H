@@ -74,6 +74,8 @@ class sampledSet
 
 protected:
 
+    // Protected data
+
         //- Segment numbers
         labelList segments_;
 

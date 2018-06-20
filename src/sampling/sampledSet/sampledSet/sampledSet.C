@@ -27,6 +27,10 @@ License
 #include "polyMesh.H"
 #include "meshSearch.H"
 #include "writer.H"
+#include "lineCellSet.H"
+#include "lineCellFaceSet.H"
+#include "lineFaceSet.H"
+#include "lineUniformSet.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -138,15 +142,37 @@ Foam::autoPtr<Foam::sampledSet> Foam::sampledSet::New
 {
     const word sampleType(dict.lookup("type"));
 
+    const HashTable<word> oldToNewType =
+    {
+        Tuple2<word, word>("midPoint", lineCellSet::typeName),
+        Tuple2<word, word>("midPointAndFace", lineCellFaceSet::typeName),
+        Tuple2<word, word>("face", lineFaceSet::typeName),
+        Tuple2<word, word>("uniform", lineUniformSet::typeName)
+    };
+
+    if (oldToNewType.found(sampleType))
+    {
+        const word newSampleType = oldToNewType[sampleType];
+
+        FatalErrorInFunction
+            << "Unknown sample set type "
+            << sampleType << nl << nl
+            << "The sample set type " << sampleType << " has been renamed "
+            << newSampleType << nl << nl
+            << "Replace \"type " << sampleType << ";\" with \"type "
+            << newSampleType << ";\" for the set " << name << " in "
+            << dict.name() << exit(FatalError);
+    }
+
     wordConstructorTable::iterator cstrIter =
         wordConstructorTablePtr_->find(sampleType);
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown sample type "
+            << "Unknown sample set type "
             << sampleType << nl << nl
-            << "Valid sample types : " << endl
+            << "Valid sample set types : " << endl
             << wordConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
