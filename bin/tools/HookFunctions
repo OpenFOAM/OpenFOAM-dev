@@ -364,7 +364,7 @@ checkHeaderIfndefNames()
             correctMangledName=$(basename $f | sed 's=\.=_=')
 
             if git grep -q -e "#ifndef.*_H" $scope"$f" && \
-             ! git grep -q -e "#ifndef.*$correctMangledName" $scope"$f"
+             ! git grep -q -e "#ifndef.*[ _]$correctMangledName" $scope"$f"
             then
                 echo "Updated #ifndef/#define for: $f" 1>&2
                 echo $f

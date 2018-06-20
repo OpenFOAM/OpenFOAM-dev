@@ -120,8 +120,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressiblealphatWallBoilingWallFunctionFvPatchScalarField_H
-#define compressiblealphatWallBoilingWallFunctionFvPatchScalarField_H
+#ifndef compressible_alphatWallBoilingWallFunctionFvPatchScalarField_H
+#define compressible_alphatWallBoilingWallFunctionFvPatchScalarField_H
 
 #include "alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField.H"
 #include "partitioningModel.H"

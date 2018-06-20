@@ -59,8 +59,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressiblealphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
-#define compressiblealphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
+#ifndef compressible_alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
+#define compressible_alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
 
 #include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 
@@ -72,7 +72,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
-   Class alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField Declaration
+ Class alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField

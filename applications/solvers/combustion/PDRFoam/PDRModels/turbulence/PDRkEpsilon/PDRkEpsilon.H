@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressiblePDRkEpsilon_H
-#define compressiblePDRkEpsilon_H
+#ifndef compressible_PDRkEpsilon_H
+#define compressible_PDRkEpsilon_H
 
 #include "kEpsilon.H"
 #include "turbulentFluidThermoModel.H"

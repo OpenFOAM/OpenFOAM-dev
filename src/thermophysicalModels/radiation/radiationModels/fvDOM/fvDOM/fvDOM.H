@@ -63,8 +63,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef radiationModelfvDOM_H
-#define radiationModelfvDOM_H
+#ifndef radiation_fvDOM_H
+#define radiation_fvDOM_H
 
 #include "radiativeIntensityRay.H"
 #include "radiationModel.H"
