@@ -41,8 +41,12 @@ License
     OpenFOAM comprises of four main directories:
     - \b src: the core OpenFOAM libraries
     - \b applications: solvers and utilities
-    - \b tutorials: test-cases that demonstrate a wide-range of OpenFOAM
+    - \b tutorials: cases that demonstrate a wide-range of OpenFOAM
          functionality
+    - \b test: cases that test and validate individual models or aspects of
+         OpenFOAM functionality
+    - \b etc: configuration files
+    - \b bin: scripts
     - \b doc: documentation
 
 \*---------------------------------------------------------------------------*/
