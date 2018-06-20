@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,10 @@ void writeAndRead
     Pout<< "** Writing:" << writeType
         << " Reading:" << readType << endl;
 
-    autoPtr<fileOperation> writeHandler(fileOperation::New(writeType));
+    autoPtr<fileOperation> writeHandler
+    (
+        fileOperation::New(writeType, writeInfoHeader)
+    );
     fileHandler(writeHandler);
 
     // Delete
@@ -84,10 +87,13 @@ void writeAndRead
     fileHandler().rm(fileHandler().filePath(io.objectPath()));
 
     // Write
-    Pout<< "Writing:" << fileHandler().objectPath(io) << endl;
+    Pout<< "Writing:" << fileHandler().objectPath(io, word::null) << endl;
     write(io, sz);
 
-    autoPtr<fileOperation> readHandler(fileOperation::New(readType));
+    autoPtr<fileOperation> readHandler
+    (
+        fileOperation::New(readType, writeInfoHeader)
+    );
     fileHandler(readHandler);
 
     // Read
@@ -108,7 +114,10 @@ void readIfPresent
     const word& readType
 )
 {
-    autoPtr<fileOperation> readHandler(fileOperation::New(readType));
+    autoPtr<fileOperation> readHandler
+    (
+        fileOperation::New(readType, writeInfoHeader)
+    );
     fileHandler(readHandler);
 
     // Read
