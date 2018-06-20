@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     #define CREATE_MESH createMeshesPostProcess.H
     #include "postProcess.H"
 
-    #include "setRootCase.H"
+    #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createMeshes.H"
     #include "createFields.H"

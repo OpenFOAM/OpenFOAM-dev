@@ -37,7 +37,7 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createMesh.H"
 
