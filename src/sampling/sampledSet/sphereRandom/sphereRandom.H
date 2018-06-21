@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sphereRandom
+    Foam::sampledSets::sphereRandom
 
 Description
     Random samples within a sphere

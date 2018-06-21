@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::arcUniform
+    Foam::sampledSets::arcUniform
 
 Description
     Uniform samples along an arc

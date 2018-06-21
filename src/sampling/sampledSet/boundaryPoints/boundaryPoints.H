@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boundaryPoints
+    Foam::sampledSets::boundaryPoints
 
 Description
     Specified point samples within patches

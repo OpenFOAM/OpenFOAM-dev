@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineCellFace
+    Foam::sampledSets::lineCellFace
 
 Description
     Face-intersections along a line, plus cell-samples at the mid-points

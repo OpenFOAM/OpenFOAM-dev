@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineCell
+    Foam::sampledSets::lineCell
 
 Description
     Cell-samples along a line at the mid-points in-between face-intersections

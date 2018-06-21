@@ -28,7 +28,7 @@ License
 #include "interpolation.H"
 #include "IOmanip.H"
 #include "meshSearch.H"
-#include "lineCellFaceSet.H"
+#include "lineCellFace.H"
 #include "Time.H"
 #include "uniformDimensionedFields.H"
 #include "volFields.H"
@@ -72,7 +72,7 @@ void Foam::functionObjects::interfaceHeight::writePositions()
     forAll(locations_, li)
     {
         // Create a set along a ray projected in the direction of gravity
-        const lineCellFaceSet set
+        const sampledSets::lineCellFace set
         (
             "",
             mesh_,

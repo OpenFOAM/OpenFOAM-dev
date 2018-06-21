@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::points
+    Foam::sampledSets::points
 
 Description
     Specified point samples. Optionally ordered into a continuous path.

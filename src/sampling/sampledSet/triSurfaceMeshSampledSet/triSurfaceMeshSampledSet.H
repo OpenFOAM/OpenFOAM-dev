@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::triSurfaceMeshSampledSet
+    Foam::sampledSets::triSurfaceMeshSampledSet
 
 Description
     Samples from all the points of a triSurfaceMesh. Surface files are read

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boxUniform
+    Foam::sampledSets::boxUniform
 
 Description
     Uniform 3D-grid of samples

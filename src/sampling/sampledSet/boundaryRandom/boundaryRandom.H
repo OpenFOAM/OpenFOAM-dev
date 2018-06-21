@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boundaryRandom
+    Foam::sampledSets::boundaryRandom
 
 Description
     Random samples within patches

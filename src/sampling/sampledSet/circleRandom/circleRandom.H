@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::circleRandom
+    Foam::sampledSets::circleRandom
 
 Description
     Random samples within a circle
