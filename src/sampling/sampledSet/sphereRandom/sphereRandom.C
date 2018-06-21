@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sphereRandomSet.H"
+#include "sphereRandom.H"
 #include "sampledSet.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
@@ -37,14 +37,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(sphereRandomSet, 0);
-    addToRunTimeSelectionTable(sampledSet, sphereRandomSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(sphereRandom, 0);
+    addToRunTimeSelectionTable(sampledSet, sphereRandom, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sphereRandomSet::calcSamples
+void Foam::sampledSets::sphereRandom::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -81,7 +84,7 @@ void Foam::sphereRandomSet::calcSamples
 }
 
 
-void Foam::sphereRandomSet::genSamples()
+void Foam::sampledSets::sphereRandom::genSamples()
 {
     // Storage for sample points
     DynamicList<point> samplingPts;
@@ -118,7 +121,7 @@ void Foam::sphereRandomSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sphereRandomSet::sphereRandomSet
+Foam::sampledSets::sphereRandom::sphereRandom
 (
     const word& name,
     const polyMesh& mesh,
@@ -142,7 +145,7 @@ Foam::sphereRandomSet::sphereRandomSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sphereRandomSet::~sphereRandomSet()
+Foam::sampledSets::sphereRandom::~sphereRandom()
 {}
 
 

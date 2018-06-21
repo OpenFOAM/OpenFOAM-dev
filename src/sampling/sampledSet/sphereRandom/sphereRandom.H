@@ -22,72 +22,67 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boundaryPointsSet
+    Foam::sampledSets::sphereRandom
 
 Description
-    Specified point samples within patches
+    Random samples within a sphere
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        patches     | The patches on which to sample         | yes    |
-        points      | The points to sample                   | yes    |
-        maxDistance | The maximum distance from patch to point | yes  |
+        centre      | Centre of the sphere                   | yes    |
+        radius      | Radius of the sphere                   | yes    |
+        nPoints     | The number of points                   | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        boundaryPoints;
-        patches     (inlet1 inlet2);
-        points
-        (
-            (0 -0.05 0.05)
-            (0 -0.05 0.15)
-            (0 0.05 0.15)
-            (0 0.05 0.05)
-        );
-        maxDistance 0.01;
+        type        sphereRandom;
+        centre      (0.95 0 0.25);
+        radius      0.25;
+        nPoints     200;
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    boundaryPointsSet.C
+    sphereRandom.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef boundaryPointsSet_H
-#define boundaryPointsSet_H
+#ifndef sphereRandom_H
+#define sphereRandom_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
-#include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class boundaryPointsSet Declaration
+                          Class sphereRandom Declaration
 \*---------------------------------------------------------------------------*/
 
-class boundaryPointsSet
+class sphereRandom
 :
     public sampledSet
 {
     // Private data
 
-        //- Sampling points
-        const List<point> points_;
+        //- Centre point
+        const point centre_;
 
-        //- Patches to sample
-        const labelHashSet patches_;
+        //- Radius
+        const scalar radius_;
 
-        //- Maximum distance to to search for a nearby patch
-        const scalar maxDistance_;
+        //- Number of points
+        const label nPoints_;
 
 
     // Private Member Functions
@@ -109,13 +104,13 @@ class boundaryPointsSet
 public:
 
     //- Runtime type information
-    TypeName("boundaryPoints");
+    TypeName("sphereRandom");
 
 
     // Constructors
 
         //- Construct from dictionary
-        boundaryPointsSet
+        sphereRandom
         (
             const word& name,
             const polyMesh& mesh,
@@ -124,13 +119,15 @@ public:
         );
 
 
-    //- Destructor
-    virtual ~boundaryPointsSet();
+    // Destructor
+
+        virtual ~sphereRandom();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

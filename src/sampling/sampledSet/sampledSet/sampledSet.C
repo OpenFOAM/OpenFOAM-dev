@@ -27,10 +27,10 @@ License
 #include "polyMesh.H"
 #include "meshSearch.H"
 #include "writer.H"
-#include "lineCellSet.H"
-#include "lineCellFaceSet.H"
-#include "lineFaceSet.H"
-#include "lineUniformSet.H"
+#include "lineCell.H"
+#include "lineCellFace.H"
+#include "lineFace.H"
+#include "lineUniform.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -144,10 +144,14 @@ Foam::autoPtr<Foam::sampledSet> Foam::sampledSet::New
 
     const HashTable<word> oldToNewType =
     {
-        Tuple2<word, word>("midPoint", lineCellSet::typeName),
-        Tuple2<word, word>("midPointAndFace", lineCellFaceSet::typeName),
-        Tuple2<word, word>("face", lineFaceSet::typeName),
-        Tuple2<word, word>("uniform", lineUniformSet::typeName)
+        Tuple2<word, word>("midPoint", sampledSets::lineCell::typeName),
+        Tuple2<word, word>
+        (
+            "midPointAndFace",
+            sampledSets::lineCellFace::typeName
+        ),
+        Tuple2<word, word>("face", sampledSets::lineFace::typeName),
+        Tuple2<word, word>("uniform", sampledSets::lineUniform::typeName)
     };
 
     if (oldToNewType.found(sampleType))

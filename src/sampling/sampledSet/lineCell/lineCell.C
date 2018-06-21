@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "lineCellFaceSet.H"
+#include "lineCell.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
@@ -33,14 +33,77 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(lineCellFaceSet, 0);
-    addToRunTimeSelectionTable(sampledSet, lineCellFaceSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(lineCell, 0);
+    addToRunTimeSelectionTable(sampledSet, lineCell, word);
+}
+}
+
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+void Foam::sampledSets::lineCell::calcMidPointSample
+(
+    const polyMesh& mesh,
+    const point& prevPt,
+    const label prevFace,
+    const label prevSegment,
+    const scalar prevCurveDist,
+    const point& nextPt,
+    const label nextFace,
+    const label nextSegment,
+    DynamicList<point>& samplingPts,
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces,
+    DynamicList<label>& samplingSegments,
+    DynamicList<scalar>& samplingCurveDist
+)
+{
+    if (prevSegment == nextSegment)
+    {
+        const point pt = (prevPt + nextPt)/2;
+        const vector delta = nextPt - prevPt;
+
+        const label prevOwner = mesh.faceOwner()[prevFace];
+        const label prevNeighbour =
+            prevFace < mesh.faceNeighbour().size()
+          ? mesh.faceNeighbour()[prevFace]
+          : -1;
+        const label nextOwner = mesh.faceOwner()[nextFace];
+        const label nextNeighbour =
+            nextFace < mesh.faceNeighbour().size()
+          ? mesh.faceNeighbour()[nextFace]
+          : -2;
+
+        label celli = -1;
+        if (prevOwner == nextOwner || prevOwner == nextNeighbour)
+        {
+            celli = prevOwner;
+        }
+        else if (prevNeighbour == nextOwner || prevNeighbour == nextNeighbour)
+        {
+            celli = prevNeighbour;
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Adjacent faces in the same segment do not share a cell. "
+                << "This is a bug." << exit(FatalError);
+        }
+
+        samplingPts.append(pt);
+        samplingCells.append(celli);
+        samplingFaces.append(-1);
+        samplingCurveDist.append(prevCurveDist + mag(delta)/2);
+        samplingSegments.append(prevSegment);
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::lineCellFaceSet::calcSamples
+void Foam::sampledSets::lineCell::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -55,7 +118,7 @@ void Foam::lineCellFaceSet::calcSamples
     DynamicList<label> faceFaces;
     DynamicList<label> faceSegments;
     DynamicList<scalar> faceCurveDist;
-    lineFaceSet::calcSamples
+    lineFace::calcSamples
     (
         mesh(),
         searchEngine(),
@@ -68,29 +131,16 @@ void Foam::lineCellFaceSet::calcSamples
         faceCurveDist
     );
 
-    // If there are no intersections then quit
-    if (!facePts.size())
-    {
-        return;
-    }
-
-    // Append all the face intersections to the set, additionally adding mid
-    // points when the segment is the same
-    samplingPts.append(facePts[0]);
-    samplingCells.append(faceCells[0]);
-    samplingFaces.append(faceFaces[0]);
-    samplingSegments.append(faceSegments[0]);
-    samplingCurveDist.append(faceCurveDist[0]);
-
+    // Append all mid points to the set
     for (label facei = 1; facei < facePts.size(); ++ facei)
     {
-        lineCellSet::calcMidPointSample
+        calcMidPointSample
         (
             mesh(),
-            samplingPts.last(),
-            samplingFaces.last(),
-            samplingSegments.last(),
-            samplingCurveDist.last(),
+            facePts[facei - 1],
+            faceFaces[facei - 1],
+            faceSegments[facei - 1],
+            faceCurveDist[facei - 1],
             facePts[facei],
             faceFaces[facei],
             faceSegments[facei],
@@ -100,17 +150,11 @@ void Foam::lineCellFaceSet::calcSamples
             samplingSegments,
             samplingCurveDist
         );
-
-        samplingPts.append(facePts[facei]);
-        samplingCells.append(faceCells[facei]);
-        samplingFaces.append(faceFaces[facei]);
-        samplingSegments.append(faceSegments[facei]);
-        samplingCurveDist.append(faceCurveDist[facei]);
     }
 }
 
 
-void Foam::lineCellFaceSet::genSamples()
+void Foam::sampledSets::lineCell::genSamples()
 {
     DynamicList<point> samplingPts;
     DynamicList<label> samplingCells;
@@ -146,7 +190,7 @@ void Foam::lineCellFaceSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::lineCellFaceSet::lineCellFaceSet
+Foam::sampledSets::lineCell::lineCell
 (
     const word& name,
     const polyMesh& mesh,
@@ -167,32 +211,9 @@ Foam::lineCellFaceSet::lineCellFaceSet
 }
 
 
-Foam::lineCellFaceSet::lineCellFaceSet
-(
-    const word& name,
-    const polyMesh& mesh,
-    const meshSearch& searchEngine,
-    const word& axis,
-    const point& start,
-    const point& end
-)
-:
-    sampledSet(name, mesh, searchEngine, axis),
-    start_(start),
-    end_(end)
-{
-    genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::lineCellFaceSet::~lineCellFaceSet()
+Foam::sampledSets::lineCell::~lineCell()
 {}
 
 

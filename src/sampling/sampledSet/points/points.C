@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------* \
+/*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "pointsSet.H"
+#include "points.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
@@ -33,14 +33,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(pointsSet, 0);
-    addToRunTimeSelectionTable(sampledSet, pointsSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(points, 0);
+    addToRunTimeSelectionTable(sampledSet, points, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::pointsSet::calcSamplesUnordered
+void Foam::sampledSets::points::calcSamplesUnordered
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -65,7 +68,7 @@ void Foam::pointsSet::calcSamplesUnordered
     }
 }
 
-void Foam::pointsSet::calcSamplesOrdered
+void Foam::sampledSets::points::calcSamplesOrdered
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -120,7 +123,7 @@ void Foam::pointsSet::calcSamplesOrdered
 }
 
 
-void Foam::pointsSet::genSamples()
+void Foam::sampledSets::points::genSamples()
 {
     DynamicList<point> samplingPts;
     DynamicList<label> samplingCells;
@@ -170,7 +173,7 @@ void Foam::pointsSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pointsSet::pointsSet
+Foam::sampledSets::points::points
 (
     const word& name,
     const polyMesh& mesh,
@@ -193,7 +196,7 @@ Foam::pointsSet::pointsSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::pointsSet::~pointsSet()
+Foam::sampledSets::points::~points()
 {}
 
 

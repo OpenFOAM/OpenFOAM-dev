@@ -23,27 +23,30 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "boxUniformSet.H"
+#include "arcUniform.H"
 #include "sampledSet.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 #include "word.H"
-#include "transform.H"
+#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(boxUniformSet, 0);
-    addToRunTimeSelectionTable(sampledSet, boxUniformSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(arcUniform, 0);
+    addToRunTimeSelectionTable(sampledSet, arcUniform, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::boxUniformSet::calcSamples
+void Foam::sampledSets::arcUniform::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -52,36 +55,32 @@ void Foam::boxUniformSet::calcSamples
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
-    for (label k = 0; k < nPoints_.z(); ++ k)
+    const vector axis1 = radial_ - (radial_ & normal_)*normal_;
+    const vector axis2 = normal_ ^ axis1;
+    const scalar radius = mag(axis1);
+
+    for (label i = 0; i < nPoints_; ++ i)
     {
-        for (label j = 0; j < nPoints_.y(); ++ j)
+        const scalar t = scalar(i)/(nPoints_ - 1);
+        const scalar theta = (1 - t)*startAngle_ + t*endAngle_;
+        const scalar c = cos(theta), s = sin(theta);
+
+        const point pt = centre_ + c*axis1 + s*axis2;
+        const label celli = searchEngine().findCell(pt);
+
+        if (celli != -1)
         {
-            for (label i = 0; i < nPoints_.x(); ++ i)
-            {
-                const vector t =
-                    cmptDivide(vector(i, j, k), vector(nPoints_) - vector::one);
-
-                const point pt =
-                    cmptMultiply(vector::one - t, box_.min())
-                  + cmptMultiply(t, box_.max());
-
-                const label celli = searchEngine().findCell(pt);
-
-                if (celli != -1)
-                {
-                    samplingPts.append(pt);
-                    samplingCells.append(celli);
-                    samplingFaces.append(-1);
-                    samplingSegments.append(0);
-                    samplingCurveDist.append(scalar(i));
-                }
-            }
+            samplingPts.append(pt);
+            samplingCells.append(celli);
+            samplingFaces.append(-1);
+            samplingSegments.append(samplingSegments.size());
+            samplingCurveDist.append(radius*theta);
         }
     }
 }
 
 
-void Foam::boxUniformSet::genSamples()
+void Foam::sampledSets::arcUniform::genSamples()
 {
     // Storage for sample points
     DynamicList<point> samplingPts;
@@ -118,7 +117,7 @@ void Foam::boxUniformSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::boxUniformSet::boxUniformSet
+Foam::sampledSets::arcUniform::arcUniform
 (
     const word& name,
     const polyMesh& mesh,
@@ -127,8 +126,12 @@ Foam::boxUniformSet::boxUniformSet
 )
 :
     sampledSet(name, mesh, searchEngine, dict),
-    box_(dict.lookup("box")),
-    nPoints_(dict.lookup("nPoints"))
+    centre_(dict.lookup("centre")),
+    normal_(normalised(dict.lookupType<vector>("normal"))),
+    radial_(dict.lookupType<vector>("radial")),
+    startAngle_(readScalar(dict.lookup("startAngle"))),
+    endAngle_(readScalar(dict.lookup("endAngle"))),
+    nPoints_(dict.lookupType<scalar>("nPoints"))
 {
     genSamples();
 
@@ -141,7 +144,7 @@ Foam::boxUniformSet::boxUniformSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::boxUniformSet::~boxUniformSet()
+Foam::sampledSets::arcUniform::~arcUniform()
 {}
 
 

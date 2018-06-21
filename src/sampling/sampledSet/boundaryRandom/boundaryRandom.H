@@ -22,63 +22,68 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::triSurfaceMeshSet
+    Foam::sampledSets::boundaryRandom
 
 Description
-    Samples from all the points of a triSurfaceMesh. Surface files are read
-    from constant/triSurface.
+    Random samples within patches
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        surface     | The surface file name                  | yes    |
+        patches     | The patches on which to sample         | yes    |
+        nPoints     | The number of points                   | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        triSurfaceMesh;
-        surface     "surface.stl";
+        type        boundaryRandom;
+        patches     (inlet1 inlet2);
+        nPoints     1000;
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    triSurfaceMeshSet.C
+    boundaryRandom.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef triSurfaceMeshSet_H
-#define triSurfaceMeshSet_H
+#ifndef boundaryRandom_H
+#define boundaryRandom_H
 
 #include "sampledSet.H"
+#include "DynamicList.H"
+#include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                           Class triSurfaceMeshSet Declaration
+                        Class boundaryRandom Declaration
 \*---------------------------------------------------------------------------*/
 
-class triSurfaceMeshSet
+class boundaryRandom
 :
     public sampledSet
 {
     // Private data
 
-        //- Name of triSurfaceMesh
-        const word surface_;
+        //- Patches to sample
+        const labelHashSet patches_;
 
-        //- Sampling points
-        const List<point> points_;
+        //- Number of points
+        const label nPoints_;
 
 
     // Private Member Functions
 
-        //- Samples all points in sampleCoords.
+        //- Sample all points
         void calcSamples
         (
             DynamicList<point>& samplingPts,
@@ -88,20 +93,20 @@ class triSurfaceMeshSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Uses calcSamples to obtain samples. Copies them into *this.
+        //- Use calcSamples to obtain samples and copy them into *this
         void genSamples();
 
 
 public:
 
     //- Runtime type information
-    TypeName("triSurfaceMesh");
+    TypeName("boundaryRandom");
 
 
     // Constructors
 
         //- Construct from dictionary
-        triSurfaceMeshSet
+        boundaryRandom
         (
             const word& name,
             const polyMesh& mesh,
@@ -111,12 +116,13 @@ public:
 
 
     //- Destructor
-    virtual ~triSurfaceMeshSet();
+    virtual ~boundaryRandom();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

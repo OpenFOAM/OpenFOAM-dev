@@ -22,67 +22,83 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boundaryRandomSet
+    Foam::sampledSets::points
 
 Description
-    Random samples within patches
+    Specified point samples. Optionally ordered into a continuous path.
+    Ordering is an optimisation; it enables tracking from one point to the
+    next. If ordering is off, each point is searched for individually.
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        patches     | The patches on which to sample         | yes    |
-        nPoints     | The number of points                   | yes    |
+        points      | The points to sample                   | yes    |
+        ordered     | Are the points in order?               | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        boundaryRandom;
-        patches     (inlet1 inlet2);
-        nPoints     1000;
+        type        points;
+        points
+        (
+            (0.95 0 0.25)
+            (0.951251 0 0.250119)
+            (0.952468 0 0.250473)
+            (0.953618 0 0.251057)
+            (0.954669 0 0.251859)
+            (0.95559 0 0.252865)
+            (0.956353 0 0.254057)
+            (0.956931 0 0.255413)
+            (0.9573 0 0.256908)
+            (0.957441 0 0.258513)
+        );
+        ordered     yes;
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    boundaryRandomSet.C
+    points.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef boundaryRandomSet_H
-#define boundaryRandomSet_H
+#ifndef points_H
+#define points_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
-#include "HashSet.H"
+#include "passiveParticleCloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class boundaryRandomSet Declaration
+                        Class points Declaration
 \*---------------------------------------------------------------------------*/
 
-class boundaryRandomSet
+class points
 :
     public sampledSet
 {
     // Private data
 
-        //- Patches to sample
-        const labelHashSet patches_;
+        //- Sampling points
+        const List<point> points_;
 
-        //- Number of points
-        const label nPoints_;
+        //- Do the points form an ordered sequence?
+        const Switch ordered_;
 
 
     // Private Member Functions
 
-        //- Sample all points
-        void calcSamples
+        //- Calculate all the sampling points
+        void calcSamplesUnordered
         (
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
@@ -91,20 +107,30 @@ class boundaryRandomSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Use calcSamples to obtain samples and copy them into *this
+        //- Calculate all the sampling points
+        void calcSamplesOrdered
+        (
+            DynamicList<point>& samplingPts,
+            DynamicList<label>& samplingCells,
+            DynamicList<label>& samplingFaces,
+            DynamicList<label>& samplingSegments,
+            DynamicList<scalar>& samplingCurveDist
+        ) const;
+
+        //- Uses calcSamples to obtain samples and copies them into *this
         void genSamples();
 
 
 public:
 
     //- Runtime type information
-    TypeName("boundaryRandom");
+    TypeName("points");
 
 
     // Constructors
 
         //- Construct from dictionary
-        boundaryRandomSet
+        points
         (
             const word& name,
             const polyMesh& mesh,
@@ -114,12 +140,13 @@ public:
 
 
     //- Destructor
-    virtual ~boundaryRandomSet();
+    virtual ~points();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

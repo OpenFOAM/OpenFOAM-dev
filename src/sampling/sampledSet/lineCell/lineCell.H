@@ -22,89 +22,67 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::arcUniformSet
+    Foam::sampledSets::lineCell
 
 Description
-    Uniform samples along an arc
+    Cell-samples along a line at the mid-points in-between face-intersections
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        centre      | Centre of the circle                   | yes    |
-        normal      | Direction normal to the plane of the circle  | yes |
-        radial      | Vector from the centre to a point on the arc | yes |
-        startAngle  | The angle of the start of the arc in radians | yes |
-        endAngle    | The angle of the end of the arc in radians | yes |
-        nPoints     | The number of points                   | yes    |
+        start       | The start point of the line            | yes    |
+        end         | The end point of the line              | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        arcUniform;
-        centre      (0.95 0 0.25);
-        normal      (1 0 0);
-        radial      (0 0 0.25);
-        startAngle  -1.57079633;
-        endAngle    0.52359878;
-        nPoints     200;
+        type        lineCell;
+        start       (0.5 0.6 0.5);
+        end         (0.5 -0.3 -0.1);
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    arcUniformSet.C
+    lineCell.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef arcUniformSet_H
-#define arcUniformSet_H
+#ifndef lineCell_H
+#define lineCell_H
 
-#include "sampledSet.H"
-#include "DynamicList.H"
+#include "lineFace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                          Class arcUniformSet Declaration
+                         Class lineCell Declaration
 \*---------------------------------------------------------------------------*/
 
-class arcUniformSet
+class lineCell
 :
     public sampledSet
 {
     // Private data
 
-        // Arc definition
+        //- Start point
+        const point start_;
 
-            //- Centre of the circle of which the arc is a part
-            const point centre_;
-
-            //- Normal direction to the circle of which the arc is a part
-            const vector normal_;
-
-            //- Radial vector from the centre to the point on the arc from
-            //  which the angles are measured
-            const vector radial_;
-
-            //- Start angle
-            const scalar startAngle_;
-
-            //- End angle
-            const scalar endAngle_;
-
-            //- Number of points spaced along the arc
-            const label nPoints_;
+        //- End point
+        const point end_;
 
 
     // Private Member Functions
 
         //- Calculate all the sampling points
-        void calcSamples
+        virtual void calcSamples
         (
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
@@ -116,16 +94,38 @@ class arcUniformSet
         //- Uses calcSamples to obtain samples and copies them into *this
         void genSamples();
 
+
 public:
 
     //- Runtime type information
-    TypeName("arcUniform");
+    TypeName("lineCell");
+
+
+    // Static Member Functions
+
+        //- Calculate the next mid point sample
+        static void calcMidPointSample
+        (
+            const polyMesh& mesh,
+            const point& prevPt,
+            const label prevFace,
+            const label prevSegment,
+            const scalar prevCurveDist,
+            const point& nextPt,
+            const label nextFace,
+            const label nextSegment,
+            DynamicList<point>& samplingPts,
+            DynamicList<label>& samplingCells,
+            DynamicList<label>& samplingFaces,
+            DynamicList<label>& samplingSegments,
+            DynamicList<scalar>& samplingCurveDist
+        );
 
 
     // Constructors
 
         //- Construct from dictionary
-        arcUniformSet
+        lineCell
         (
             const word& name,
             const polyMesh& mesh,
@@ -134,13 +134,14 @@ public:
         );
 
 
-    // Destructor
-    virtual ~arcUniformSet();
+    //- Destructor
+    virtual ~lineCell();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

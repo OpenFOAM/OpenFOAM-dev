@@ -22,71 +22,68 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sphereRandomSet
+    Foam::sampledSets::lineCellFace
 
 Description
-    Random samples within a sphere
+    Face-intersections along a line, plus cell-samples at the mid-points
+    in-between
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        centre      | Centre of the sphere                   | yes    |
-        radius      | Radius of the sphere                   | yes    |
-        nPoints     | The number of points                   | yes    |
+        start       | The start point of the line            | yes    |
+        end         | The end point of the line              | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        sphereRandom;
-        centre      (0.95 0 0.25);
-        radius      0.25;
-        nPoints     200;
+        type        lineCellFace;
+        start       (0.55 0.6 0.5);
+        end         (0.55 -0.3 -0.1);
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    sphereRandomSet.C
+    lineCellFace.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sphereRandomSet_H
-#define sphereRandomSet_H
+#ifndef lineCellFace_H
+#define lineCellFace_H
 
-#include "sampledSet.H"
-#include "DynamicList.H"
+#include "lineCell.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                          Class sphereRandomSet Declaration
+                         Class lineCellFace Declaration
 \*---------------------------------------------------------------------------*/
 
-class sphereRandomSet
+class lineCellFace
 :
     public sampledSet
 {
     // Private data
 
-        //- Centre point
-        const point centre_;
+        //- Start point
+        const point start_;
 
-        //- Radius
-        const scalar radius_;
-
-        //- Number of points
-        const label nPoints_;
+        //- End point
+        const point end_;
 
 
     // Private Member Functions
 
-        //- Samples all points in sampleCoords
-        void calcSamples
+        //- Calculate all the sampling points
+        virtual void calcSamples
         (
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
@@ -95,20 +92,20 @@ class sphereRandomSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Uses calcSamples to obtain samples. Copies them into *this.
+        //- Uses calcSamples to obtain samples and copies them into *this
         void genSamples();
 
 
 public:
 
     //- Runtime type information
-    TypeName("sphereRandom");
+    TypeName("lineCellFace");
 
 
     // Constructors
 
         //- Construct from dictionary
-        sphereRandomSet
+        lineCellFace
         (
             const word& name,
             const polyMesh& mesh,
@@ -116,15 +113,26 @@ public:
             const dictionary& dict
         );
 
+        //- Construct from components
+        lineCellFace
+        (
+            const word& name,
+            const polyMesh& mesh,
+            const meshSearch& searchEngine,
+            const word& axis,
+            const point& start,
+            const point& end
+        );
 
-    // Destructor
 
-        virtual ~sphereRandomSet();
+    //- Destructor
+    virtual ~lineCellFace();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

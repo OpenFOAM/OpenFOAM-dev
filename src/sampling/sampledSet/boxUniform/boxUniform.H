@@ -22,81 +22,75 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::pointsSet
+    Foam::sampledSets::boxUniform
 
 Description
-    Specified point samples. Optionally ordered into a continuous path.
-    Ordering is an optimisation; it enables tracking from one point to the
-    next. If ordering is off, each point is searched for individually.
+    Uniform 3D-grid of samples
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        points      | The points to sample                   | yes    |
-        ordered     | Are the points in order?               | yes    |
+        box         | The box which contains the samples     | yes    |
+        nPoints     | The number of points in each direction | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        points;
-        points
-        (
-            (0.95 0 0.25)
-            (0.951251 0 0.250119)
-            (0.952468 0 0.250473)
-            (0.953618 0 0.251057)
-            (0.954669 0 0.251859)
-            (0.95559 0 0.252865)
-            (0.956353 0 0.254057)
-            (0.956931 0 0.255413)
-            (0.9573 0 0.256908)
-            (0.957441 0 0.258513)
-        );
-        ordered     yes;
+        type        boxUniform;
+        box         (0.95 0 0.25) (1.2 0.25 0.5);
+        nPoints     (2 4 6);
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    pointsSet.C
+    boxUniform.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef pointsSet_H
-#define pointsSet_H
+#ifndef boxUniform_H
+#define boxUniform_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
-#include "passiveParticleCloud.H"
+#include "labelVector.H"
+#include "boundBox.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// Forward declaration of classes
+class passiveParticle;
+template<class Type> class particle;
+
+namespace sampledSets
+{
+
 /*---------------------------------------------------------------------------*\
-                        Class pointsSet Declaration
+                           Class boxUniform Declaration
 \*---------------------------------------------------------------------------*/
 
-class pointsSet
+class boxUniform
 :
     public sampledSet
 {
     // Private data
 
-        //- Sampling points
-        const List<point> points_;
+        //- Box
+        const boundBox box_;
 
-        //- Do the points form an ordered sequence?
-        const Switch ordered_;
+        //- The number of points across each direction of the box
+        const labelVector nPoints_;
 
 
     // Private Member Functions
 
-        //- Calculate all the sampling points
-        void calcSamplesUnordered
+        //- Samples all points in sampleCoords.
+        void calcSamples
         (
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
@@ -105,30 +99,20 @@ class pointsSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Calculate all the sampling points
-        void calcSamplesOrdered
-        (
-            DynamicList<point>& samplingPts,
-            DynamicList<label>& samplingCells,
-            DynamicList<label>& samplingFaces,
-            DynamicList<label>& samplingSegments,
-            DynamicList<scalar>& samplingCurveDist
-        ) const;
-
-        //- Uses calcSamples to obtain samples and copies them into *this
+        //- Uses calcSamples to obtain samples. Copies them into *this.
         void genSamples();
 
 
 public:
 
     //- Runtime type information
-    TypeName("points");
+    TypeName("boxUniform");
 
 
     // Constructors
 
         //- Construct from dictionary
-        pointsSet
+        boxUniform
         (
             const word& name,
             const polyMesh& mesh,
@@ -138,12 +122,13 @@ public:
 
 
     //- Destructor
-    virtual ~pointsSet();
+    virtual ~boxUniform();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

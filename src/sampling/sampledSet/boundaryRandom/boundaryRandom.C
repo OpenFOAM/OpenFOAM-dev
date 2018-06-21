@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "boundaryRandomSet.H"
+#include "boundaryRandom.H"
 #include "sampledSet.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
@@ -39,14 +39,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(boundaryRandomSet, 0);
-    addToRunTimeSelectionTable(sampledSet, boundaryRandomSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(boundaryRandom, 0);
+    addToRunTimeSelectionTable(sampledSet, boundaryRandom, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::boundaryRandomSet::calcSamples
+void Foam::sampledSets::boundaryRandom::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -175,7 +178,7 @@ void Foam::boundaryRandomSet::calcSamples
 }
 
 
-void Foam::boundaryRandomSet::genSamples()
+void Foam::sampledSets::boundaryRandom::genSamples()
 {
     // Storage for sample points
     DynamicList<point> samplingPts;
@@ -212,7 +215,7 @@ void Foam::boundaryRandomSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::boundaryRandomSet::boundaryRandomSet
+Foam::sampledSets::boundaryRandom::boundaryRandom
 (
     const word& name,
     const polyMesh& mesh,
@@ -241,7 +244,7 @@ Foam::boundaryRandomSet::boundaryRandomSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::boundaryRandomSet::~boundaryRandomSet()
+Foam::sampledSets::boundaryRandom::~boundaryRandom()
 {}
 
 

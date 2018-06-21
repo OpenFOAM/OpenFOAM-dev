@@ -22,66 +22,78 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineCellFaceSet
+    Foam::sampledSets::circleRandom
 
 Description
-    Face-intersections along a line, plus cell-samples at the mid-points
-    in-between
+    Random samples within a circle
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        start       | The start point of the line            | yes    |
-        end         | The end point of the line              | yes    |
+        centre      | Centre of the circle                   | yes    |
+        normal      | Direction normal to the plane of the circle | yes |
+        radius      | Radius of the circle                   | yes    |
+        nPoints     | The number of points                   | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        lineCellFace;
-        start       (0.55 0.6 0.5);
-        end         (0.55 -0.3 -0.1);
+        type        circleRandom;
+        centre      (0.95 0 0.25);
+        normal      (1 0 0);
+        radius      0.25;
+        nPoints     200;
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    lineCellFaceSet.C
+    circleRandom.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef lineCellFaceSet_H
-#define lineCellFaceSet_H
+#ifndef circleRandom_H
+#define circleRandom_H
 
-#include "lineCellSet.H"
+#include "sampledSet.H"
+#include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class lineCellFaceSet Declaration
+                          Class circleRandom Declaration
 \*---------------------------------------------------------------------------*/
 
-class lineCellFaceSet
+class circleRandom
 :
     public sampledSet
 {
     // Private data
 
-        //- Start point
-        const point start_;
+        //- Centre point
+        const point centre_;
 
-        //- End point
-        const point end_;
+        //- Direction normal to the circle
+        const vector normal_;
+
+        //- Radius
+        const scalar radius_;
+
+        //- Number of points
+        const label nPoints_;
 
 
     // Private Member Functions
 
-        //- Calculate all the sampling points
-        virtual void calcSamples
+        //- Samples all points in sampleCoords
+        void calcSamples
         (
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
@@ -90,20 +102,20 @@ class lineCellFaceSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Uses calcSamples to obtain samples and copies them into *this
+        //- Uses calcSamples to obtain samples. Copies them into *this.
         void genSamples();
 
 
 public:
 
     //- Runtime type information
-    TypeName("lineCellFace");
+    TypeName("circleRandom");
 
 
     // Constructors
 
         //- Construct from dictionary
-        lineCellFaceSet
+        circleRandom
         (
             const word& name,
             const polyMesh& mesh,
@@ -111,25 +123,16 @@ public:
             const dictionary& dict
         );
 
-        //- Construct from components
-        lineCellFaceSet
-        (
-            const word& name,
-            const polyMesh& mesh,
-            const meshSearch& searchEngine,
-            const word& axis,
-            const point& start,
-            const point& end
-        );
 
+    // Destructor
 
-    //- Destructor
-    virtual ~lineCellFaceSet();
+        virtual ~circleRandom();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

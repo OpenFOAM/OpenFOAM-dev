@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------* \
+/*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -22,72 +22,65 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineUniformSet
+    Foam::sampledSets::triSurfaceMeshSampledSet
 
 Description
-    Uniform samples along a line
+    Samples from all the points of a triSurfaceMesh. Surface files are read
+    from constant/triSurface.
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        start       | The start point of the line            | yes    |
-        end         | The end point of the line              | yes    |
-        nPoints     | The number of points                   | yes    |
+        surface     | The surface file name                  | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        lineUniform;
-        start       (0.65 0.3 0.3);
-        end         (0.65 -0.3 -0.1);
-        nPoints     200;
+        type        triSurfaceMesh;
+        surface     "surface.stl";
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    lineUniformSet.C
+    triSurfaceMeshSampledSet.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef lineUniformSet_H
-#define lineUniformSet_H
+#ifndef triSurfaceMeshSampledSet_H
+#define triSurfaceMeshSampledSet_H
 
-#include "passiveParticleCloud.H"
 #include "sampledSet.H"
-#include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                           Class lineUniformSet Declaration
+                   Class triSurfaceMeshSampledSet Declaration
 \*---------------------------------------------------------------------------*/
 
-class lineUniformSet
+class triSurfaceMeshSampledSet
 :
     public sampledSet
 {
     // Private data
 
-        //- Starting point
-        const point start_;
+        //- Name of triSurfaceMesh
+        const word surface_;
 
-        //- End point
-        const point end_;
-
-        //- Number of points
-        const label nPoints_;
+        //- Sampling points
+        const List<point> points_;
 
 
     // Private Member Functions
 
-        //- Samples from start_ to end_. samplingSegments contains segmentNo
-        //  for each sample.
+        //- Samples all points in sampleCoords.
         void calcSamples
         (
             DynamicList<point>& samplingPts,
@@ -104,13 +97,13 @@ class lineUniformSet
 public:
 
     //- Runtime type information
-    TypeName("lineUniform");
+    TypeName("triSurfaceMesh");
 
 
     // Constructors
 
         //- Construct from dictionary
-        lineUniformSet
+        triSurfaceMeshSampledSet
         (
             const word& name,
             const polyMesh& mesh,
@@ -120,12 +113,13 @@ public:
 
 
     //- Destructor
-    virtual ~lineUniformSet();
+    virtual ~triSurfaceMeshSampledSet();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

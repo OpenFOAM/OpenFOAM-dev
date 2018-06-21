@@ -5,18 +5,18 @@ probes/probesGrouping.C
 sampledSet/sampledSet/sampledSet.C
 sampledSet/sampledSets/sampledSets.C
 sampledSet/sampledSets/sampledSetsGrouping.C
-sampledSet/arcUniform/arcUniformSet.C
-sampledSet/boxUniform/boxUniformSet.C
-sampledSet/circleRandom/circleRandomSet.C
-sampledSet/lineCell/lineCellSet.C
-sampledSet/lineCellFace/lineCellFaceSet.C
-sampledSet/lineFace/lineFaceSet.C
-sampledSet/lineUniform/lineUniformSet.C
-sampledSet/boundaryPoints/boundaryPointsSet.C
-sampledSet/boundaryRandom/boundaryRandomSet.C
-sampledSet/points/pointsSet.C
-sampledSet/sphereRandom/sphereRandomSet.C
-sampledSet/triSurfaceMesh/triSurfaceMeshSet.C
+sampledSet/arcUniform/arcUniform.C
+sampledSet/boxUniform/boxUniform.C
+sampledSet/circleRandom/circleRandom.C
+sampledSet/lineCell/lineCell.C
+sampledSet/lineCellFace/lineCellFace.C
+sampledSet/lineFace/lineFace.C
+sampledSet/lineUniform/lineUniform.C
+sampledSet/boundaryPoints/boundaryPoints.C
+sampledSet/boundaryRandom/boundaryRandom.C
+sampledSet/points/points.C
+sampledSet/sphereRandom/sphereRandom.C
+sampledSet/triSurfaceMeshSampledSet/triSurfaceMeshSampledSet.C
 
 cuttingPlane/cuttingPlane.C
 

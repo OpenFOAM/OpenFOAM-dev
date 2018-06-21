@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "lineUniformSet.H"
+#include "lineUniform.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
@@ -33,14 +33,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(lineUniformSet, 0);
-    addToRunTimeSelectionTable(sampledSet, lineUniformSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(lineUniform, 0);
+    addToRunTimeSelectionTable(sampledSet, lineUniform, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::lineUniformSet::calcSamples
+void Foam::sampledSets::lineUniform::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -91,7 +94,7 @@ void Foam::lineUniformSet::calcSamples
 }
 
 
-void Foam::lineUniformSet::genSamples()
+void Foam::sampledSets::lineUniform::genSamples()
 {
     DynamicList<point> samplingPts;
     DynamicList<label> samplingCells;
@@ -127,7 +130,7 @@ void Foam::lineUniformSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::lineUniformSet::lineUniformSet
+Foam::sampledSets::lineUniform::lineUniform
 (
     const word& name,
     const polyMesh& mesh,
@@ -151,7 +154,7 @@ Foam::lineUniformSet::lineUniformSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::lineUniformSet::~lineUniformSet()
+Foam::sampledSets::lineUniform::~lineUniform()
 {}
 
 

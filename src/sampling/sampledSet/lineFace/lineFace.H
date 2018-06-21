@@ -22,75 +22,68 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::circleRandomSet
+    Foam::sampledSets::lineFace
 
 Description
-    Random samples within a circle
+    Face-intersections along a line
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        centre      | Centre of the circle                   | yes    |
-        normal      | Direction normal to the plane of the circle | yes |
-        radius      | Radius of the circle                   | yes    |
-        nPoints     | The number of points                   | yes    |
+        start       | The start point of the line            | yes    |
+        end         | The end point of the line              | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        circleRandom;
-        centre      (0.95 0 0.25);
-        normal      (1 0 0);
-        radius      0.25;
-        nPoints     200;
+        type        lineFace;
+        start       (0.6 0.6 0.5);
+        end         (0.6 -0.3 -0.1);
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    circleRandomSet.C
+    lineFace.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef circleRandomSet_H
-#define circleRandomSet_H
+#ifndef lineFace_H
+#define lineFace_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
+#include "passiveParticleCloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                          Class circleRandomSet Declaration
+                         Class lineFace Declaration
 \*---------------------------------------------------------------------------*/
 
-class circleRandomSet
+class lineFace
 :
     public sampledSet
 {
     // Private data
 
-        //- Centre point
-        const point centre_;
+        //- Start point
+        const point start_;
 
-        //- Direction normal to the circle
-        const vector normal_;
-
-        //- Radius
-        const scalar radius_;
-
-        //- Number of points
-        const label nPoints_;
+        //- End point
+        const point end_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
-        //- Samples all points in sampleCoords
+        //- Calculate all the sampling points
         void calcSamples
         (
             DynamicList<point>& samplingPts,
@@ -100,20 +93,37 @@ class circleRandomSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Uses calcSamples to obtain samples. Copies them into *this.
+        //- Uses calcSamples to obtain samples and copies them into *this
         void genSamples();
 
 
 public:
 
     //- Runtime type information
-    TypeName("circleRandom");
+    TypeName("lineFace");
+
+
+    // Static Member Functions
+
+        //- Calculate all the sampling points
+        static void calcSamples
+        (
+            const polyMesh& mesh,
+            const meshSearch& searchEngine,
+            const vector& start,
+            const vector& end,
+            DynamicList<point>& samplingPts,
+            DynamicList<label>& samplingCells,
+            DynamicList<label>& samplingFaces,
+            DynamicList<label>& samplingSegments,
+            DynamicList<scalar>& samplingCurveDist
+        );
 
 
     // Constructors
 
         //- Construct from dictionary
-        circleRandomSet
+        lineFace
         (
             const word& name,
             const polyMesh& mesh,
@@ -122,14 +132,14 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~circleRandomSet();
+    //- Destructor
+    virtual ~lineFace();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
