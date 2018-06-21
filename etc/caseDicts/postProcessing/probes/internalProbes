@@ -6,22 +6,16 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Writes out values of fields at a specified list of points, interpolated to
-    specified boundary patches.
+    Writes out values of fields interpolated to a specified list of points.
 
 \*---------------------------------------------------------------------------*/
 
 fields (p U);
-
 points
 (
     (0 0 0)
 );
 
-maxDistance 0.1;
-
-patches     (".*");
-
-#includeEtc "caseDicts/postProcessing/probes/boundaryPoints.cfg"
+#includeEtc "caseDicts/postProcessing/probes/internalProbes.cfg"
 
 // ************************************************************************* //
