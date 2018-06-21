@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "boundaryPointsSet.H"
+#include "boundaryPoints.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 #include "treeBoundBox.H"
@@ -36,14 +36,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(boundaryPointsSet, 0);
-    addToRunTimeSelectionTable(sampledSet, boundaryPointsSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(boundaryPoints, 0);
+    addToRunTimeSelectionTable(sampledSet, boundaryPoints, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::boundaryPointsSet::calcSamples
+void Foam::sampledSets::boundaryPoints::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -188,7 +191,7 @@ void Foam::boundaryPointsSet::calcSamples
 }
 
 
-void Foam::boundaryPointsSet::genSamples()
+void Foam::sampledSets::boundaryPoints::genSamples()
 {
     DynamicList<point> samplingPts;
     DynamicList<label> samplingCells;
@@ -224,7 +227,7 @@ void Foam::boundaryPointsSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::boundaryPointsSet::boundaryPointsSet
+Foam::sampledSets::boundaryPoints::boundaryPoints
 (
     const word& name,
     const polyMesh& mesh,
@@ -254,7 +257,7 @@ Foam::boundaryPointsSet::boundaryPointsSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::boundaryPointsSet::~boundaryPointsSet()
+Foam::sampledSets::boundaryPoints::~boundaryPoints()
 {}
 
 

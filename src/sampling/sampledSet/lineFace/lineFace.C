@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "lineFaceSet.H"
+#include "lineFace.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
@@ -33,14 +33,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(lineFaceSet, 0);
-    addToRunTimeSelectionTable(sampledSet, lineFaceSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(lineFace, 0);
+    addToRunTimeSelectionTable(sampledSet, lineFace, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-void Foam::lineFaceSet::calcSamples
+void Foam::sampledSets::lineFace::calcSamples
 (
     const polyMesh& mesh,
     const meshSearch& searchEngine,
@@ -161,7 +164,7 @@ void Foam::lineFaceSet::calcSamples
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::lineFaceSet::calcSamples
+void Foam::sampledSets::lineFace::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -185,7 +188,7 @@ void Foam::lineFaceSet::calcSamples
 }
 
 
-void Foam::lineFaceSet::genSamples()
+void Foam::sampledSets::lineFace::genSamples()
 {
     DynamicList<point> samplingPts;
     DynamicList<label> samplingCells;
@@ -221,7 +224,7 @@ void Foam::lineFaceSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::lineFaceSet::lineFaceSet
+Foam::sampledSets::lineFace::lineFace
 (
     const word& name,
     const polyMesh& mesh,
@@ -244,7 +247,7 @@ Foam::lineFaceSet::lineFaceSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::lineFaceSet::~lineFaceSet()
+Foam::sampledSets::lineFace::~lineFace()
 {}
 
 

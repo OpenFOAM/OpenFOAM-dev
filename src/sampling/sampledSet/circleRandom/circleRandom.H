@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::circleRandomSet
+    Foam::circleRandom
 
 Description
     Random samples within a circle
@@ -50,12 +50,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    circleRandomSet.C
+    circleRandom.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef circleRandomSet_H
-#define circleRandomSet_H
+#ifndef circleRandom_H
+#define circleRandom_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
@@ -64,12 +64,14 @@ SourceFiles
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                          Class circleRandomSet Declaration
+                          Class circleRandom Declaration
 \*---------------------------------------------------------------------------*/
 
-class circleRandomSet
+class circleRandom
 :
     public sampledSet
 {
@@ -113,7 +115,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        circleRandomSet
+        circleRandom
         (
             const word& name,
             const polyMesh& mesh,
@@ -124,12 +126,13 @@ public:
 
     // Destructor
 
-        virtual ~circleRandomSet();
+        virtual ~circleRandom();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -22,71 +22,79 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boxUniformSet
+    Foam::boundaryPoints
 
 Description
-    Uniform 3D-grid of samples
+    Specified point samples within patches
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        box         | The box which contains the samples     | yes    |
-        nPoints     | The number of points in each direction | yes    |
+        patches     | The patches on which to sample         | yes    |
+        points      | The points to sample                   | yes    |
+        maxDistance | The maximum distance from patch to point | yes  |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        boxUniform;
-        box         (0.95 0 0.25) (1.2 0.25 0.5);
-        nPoints     (2 4 6);
+        type        boundaryPoints;
+        patches     (inlet1 inlet2);
+        points
+        (
+            (0 -0.05 0.05)
+            (0 -0.05 0.15)
+            (0 0.05 0.15)
+            (0 0.05 0.05)
+        );
+        maxDistance 0.01;
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    boxUniformSet.C
+    boundaryPoints.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef boxUniformSet_H
-#define boxUniformSet_H
+#ifndef boundaryPoints_H
+#define boundaryPoints_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
-#include "labelVector.H"
-#include "boundBox.H"
+#include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class passiveParticle;
-template<class Type> class particle;
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                           Class boxUniformSet Declaration
+                        Class boundaryPoints Declaration
 \*---------------------------------------------------------------------------*/
 
-class boxUniformSet
+class boundaryPoints
 :
     public sampledSet
 {
     // Private data
 
-        //- Box
-        const boundBox box_;
+        //- Sampling points
+        const List<point> points_;
 
-        //- The number of points across each direction of the box
-        const labelVector nPoints_;
+        //- Patches to sample
+        const labelHashSet patches_;
+
+        //- Maximum distance to to search for a nearby patch
+        const scalar maxDistance_;
 
 
     // Private Member Functions
 
-        //- Samples all points in sampleCoords.
+        //- Samples all points in sampleCoords
         void calcSamples
         (
             DynamicList<point>& samplingPts,
@@ -103,13 +111,13 @@ class boxUniformSet
 public:
 
     //- Runtime type information
-    TypeName("boxUniform");
+    TypeName("boundaryPoints");
 
 
     // Constructors
 
         //- Construct from dictionary
-        boxUniformSet
+        boundaryPoints
         (
             const word& name,
             const polyMesh& mesh,
@@ -119,12 +127,13 @@ public:
 
 
     //- Destructor
-    virtual ~boxUniformSet();
+    virtual ~boundaryPoints();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

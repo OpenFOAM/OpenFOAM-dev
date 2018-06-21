@@ -22,88 +22,65 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::arcUniformSet
+    Foam::triSurfaceMeshSampledSet
 
 Description
-    Uniform samples along an arc
+    Samples from all the points of a triSurfaceMesh. Surface files are read
+    from constant/triSurface.
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        centre      | Centre of the circle                   | yes    |
-        normal      | Direction normal to the plane of the circle  | yes |
-        radial      | Vector from the centre to a point on the arc | yes |
-        startAngle  | The angle of the start of the arc in radians | yes |
-        endAngle    | The angle of the end of the arc in radians | yes |
-        nPoints     | The number of points                   | yes    |
+        surface     | The surface file name                  | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        arcUniform;
-        centre      (0.95 0 0.25);
-        normal      (1 0 0);
-        radial      (0 0 0.25);
-        startAngle  -1.57079633;
-        endAngle    0.52359878;
-        nPoints     200;
+        type        triSurfaceMesh;
+        surface     "surface.stl";
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    arcUniformSet.C
+    triSurfaceMeshSampledSet.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef arcUniformSet_H
-#define arcUniformSet_H
+#ifndef triSurfaceMeshSampledSet_H
+#define triSurfaceMeshSampledSet_H
 
 #include "sampledSet.H"
-#include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                          Class arcUniformSet Declaration
+                   Class triSurfaceMeshSampledSet Declaration
 \*---------------------------------------------------------------------------*/
 
-class arcUniformSet
+class triSurfaceMeshSampledSet
 :
     public sampledSet
 {
     // Private data
 
-        // Arc definition
+        //- Name of triSurfaceMesh
+        const word surface_;
 
-            //- Centre of the circle of which the arc is a part
-            const point centre_;
-
-            //- Normal direction to the circle of which the arc is a part
-            const vector normal_;
-
-            //- Radial vector from the centre to the point on the arc from
-            //  which the angles are measured
-            const vector radial_;
-
-            //- Start angle
-            const scalar startAngle_;
-
-            //- End angle
-            const scalar endAngle_;
-
-            //- Number of points spaced along the arc
-            const label nPoints_;
+        //- Sampling points
+        const List<point> points_;
 
 
     // Private Member Functions
 
-        //- Calculate all the sampling points
+        //- Samples all points in sampleCoords.
         void calcSamples
         (
             DynamicList<point>& samplingPts,
@@ -113,19 +90,20 @@ class arcUniformSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Uses calcSamples to obtain samples and copies them into *this
+        //- Uses calcSamples to obtain samples. Copies them into *this.
         void genSamples();
+
 
 public:
 
     //- Runtime type information
-    TypeName("arcUniform");
+    TypeName("triSurfaceMesh");
 
 
     // Constructors
 
         //- Construct from dictionary
-        arcUniformSet
+        triSurfaceMeshSampledSet
         (
             const word& name,
             const polyMesh& mesh,
@@ -134,13 +112,14 @@ public:
         );
 
 
-    // Destructor
-    virtual ~arcUniformSet();
+    //- Destructor
+    virtual ~triSurfaceMeshSampledSet();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

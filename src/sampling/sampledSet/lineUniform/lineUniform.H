@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------* \
+/*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineUniformSet
+    Foam::lineUniform
 
 Description
     Uniform samples along a line
@@ -48,12 +48,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    lineUniformSet.C
+    lineUniform.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef lineUniformSet_H
-#define lineUniformSet_H
+#ifndef lineUniform_H
+#define lineUniform_H
 
 #include "passiveParticleCloud.H"
 #include "sampledSet.H"
@@ -63,12 +63,14 @@ SourceFiles
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                           Class lineUniformSet Declaration
+                           Class lineUniform Declaration
 \*---------------------------------------------------------------------------*/
 
-class lineUniformSet
+class lineUniform
 :
     public sampledSet
 {
@@ -110,7 +112,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        lineUniformSet
+        lineUniform
         (
             const word& name,
             const polyMesh& mesh,
@@ -120,12 +122,13 @@ public:
 
 
     //- Destructor
-    virtual ~lineUniformSet();
+    virtual ~lineUniform();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

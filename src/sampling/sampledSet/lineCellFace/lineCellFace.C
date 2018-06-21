@@ -23,27 +23,27 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "arcUniformSet.H"
-#include "sampledSet.H"
+#include "lineCellFace.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
-#include "word.H"
-#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(arcUniformSet, 0);
-    addToRunTimeSelectionTable(sampledSet, arcUniformSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(lineCellFace, 0);
+    addToRunTimeSelectionTable(sampledSet, lineCellFace, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::arcUniformSet::calcSamples
+void Foam::sampledSets::lineCellFace::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -52,34 +52,69 @@ void Foam::arcUniformSet::calcSamples
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
-    const vector axis1 = radial_ - (radial_ & normal_)*normal_;
-    const vector axis2 = normal_ ^ axis1;
-    const scalar radius = mag(axis1);
+    // Run the algorithm from lineFaceSet to get all the face intersections
+    DynamicList<point> facePts;
+    DynamicList<label> faceCells;
+    DynamicList<label> faceFaces;
+    DynamicList<label> faceSegments;
+    DynamicList<scalar> faceCurveDist;
+    lineFace::calcSamples
+    (
+        mesh(),
+        searchEngine(),
+        start_,
+        end_,
+        facePts,
+        faceCells,
+        faceFaces,
+        faceSegments,
+        faceCurveDist
+    );
 
-    for (label i = 0; i < nPoints_; ++ i)
+    // If there are no intersections then quit
+    if (!facePts.size())
     {
-        const scalar t = scalar(i)/(nPoints_ - 1);
-        const scalar theta = (1 - t)*startAngle_ + t*endAngle_;
-        const scalar c = cos(theta), s = sin(theta);
+        return;
+    }
 
-        const point pt = centre_ + c*axis1 + s*axis2;
-        const label celli = searchEngine().findCell(pt);
+    // Append all the face intersections to the set, additionally adding mid
+    // points when the segment is the same
+    samplingPts.append(facePts[0]);
+    samplingCells.append(faceCells[0]);
+    samplingFaces.append(faceFaces[0]);
+    samplingSegments.append(faceSegments[0]);
+    samplingCurveDist.append(faceCurveDist[0]);
 
-        if (celli != -1)
-        {
-            samplingPts.append(pt);
-            samplingCells.append(celli);
-            samplingFaces.append(-1);
-            samplingSegments.append(samplingSegments.size());
-            samplingCurveDist.append(radius*theta);
-        }
+    for (label facei = 1; facei < facePts.size(); ++ facei)
+    {
+        lineCell::calcMidPointSample
+        (
+            mesh(),
+            samplingPts.last(),
+            samplingFaces.last(),
+            samplingSegments.last(),
+            samplingCurveDist.last(),
+            facePts[facei],
+            faceFaces[facei],
+            faceSegments[facei],
+            samplingPts,
+            samplingCells,
+            samplingFaces,
+            samplingSegments,
+            samplingCurveDist
+        );
+
+        samplingPts.append(facePts[facei]);
+        samplingCells.append(faceCells[facei]);
+        samplingFaces.append(faceFaces[facei]);
+        samplingSegments.append(faceSegments[facei]);
+        samplingCurveDist.append(faceCurveDist[facei]);
     }
 }
 
 
-void Foam::arcUniformSet::genSamples()
+void Foam::sampledSets::lineCellFace::genSamples()
 {
-    // Storage for sample points
     DynamicList<point> samplingPts;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
@@ -114,7 +149,7 @@ void Foam::arcUniformSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::arcUniformSet::arcUniformSet
+Foam::sampledSets::lineCellFace::lineCellFace
 (
     const word& name,
     const polyMesh& mesh,
@@ -123,12 +158,31 @@ Foam::arcUniformSet::arcUniformSet
 )
 :
     sampledSet(name, mesh, searchEngine, dict),
-    centre_(dict.lookup("centre")),
-    normal_(normalised(dict.lookupType<vector>("normal"))),
-    radial_(dict.lookupType<vector>("radial")),
-    startAngle_(readScalar(dict.lookup("startAngle"))),
-    endAngle_(readScalar(dict.lookup("endAngle"))),
-    nPoints_(dict.lookupType<scalar>("nPoints"))
+    start_(dict.lookup("start")),
+    end_(dict.lookup("end"))
+{
+    genSamples();
+
+    if (debug)
+    {
+        write(Info);
+    }
+}
+
+
+Foam::sampledSets::lineCellFace::lineCellFace
+(
+    const word& name,
+    const polyMesh& mesh,
+    const meshSearch& searchEngine,
+    const word& axis,
+    const point& start,
+    const point& end
+)
+:
+    sampledSet(name, mesh, searchEngine, axis),
+    start_(start),
+    end_(end)
 {
     genSamples();
 
@@ -141,7 +195,7 @@ Foam::arcUniformSet::arcUniformSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::arcUniformSet::~arcUniformSet()
+Foam::sampledSets::lineCellFace::~lineCellFace()
 {}
 
 

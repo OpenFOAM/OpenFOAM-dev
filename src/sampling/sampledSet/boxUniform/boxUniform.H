@@ -22,58 +22,69 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::triSurfaceMeshSet
+    Foam::boxUniform
 
 Description
-    Samples from all the points of a triSurfaceMesh. Surface files are read
-    from constant/triSurface.
+    Uniform 3D-grid of samples
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        surface     | The surface file name                  | yes    |
+        box         | The box which contains the samples     | yes    |
+        nPoints     | The number of points in each direction | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        triSurfaceMesh;
-        surface     "surface.stl";
+        type        boxUniform;
+        box         (0.95 0 0.25) (1.2 0.25 0.5);
+        nPoints     (2 4 6);
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    triSurfaceMeshSet.C
+    boxUniform.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef triSurfaceMeshSet_H
-#define triSurfaceMeshSet_H
+#ifndef boxUniform_H
+#define boxUniform_H
 
 #include "sampledSet.H"
+#include "DynamicList.H"
+#include "labelVector.H"
+#include "boundBox.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// Forward declaration of classes
+class passiveParticle;
+template<class Type> class particle;
+
+namespace sampledSets
+{
+
 /*---------------------------------------------------------------------------*\
-                           Class triSurfaceMeshSet Declaration
+                           Class boxUniform Declaration
 \*---------------------------------------------------------------------------*/
 
-class triSurfaceMeshSet
+class boxUniform
 :
     public sampledSet
 {
     // Private data
 
-        //- Name of triSurfaceMesh
-        const word surface_;
+        //- Box
+        const boundBox box_;
 
-        //- Sampling points
-        const List<point> points_;
+        //- The number of points across each direction of the box
+        const labelVector nPoints_;
 
 
     // Private Member Functions
@@ -95,13 +106,13 @@ class triSurfaceMeshSet
 public:
 
     //- Runtime type information
-    TypeName("triSurfaceMesh");
+    TypeName("boxUniform");
 
 
     // Constructors
 
         //- Construct from dictionary
-        triSurfaceMeshSet
+        boxUniform
         (
             const word& name,
             const polyMesh& mesh,
@@ -111,12 +122,13 @@ public:
 
 
     //- Destructor
-    virtual ~triSurfaceMeshSet();
+    virtual ~boxUniform();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

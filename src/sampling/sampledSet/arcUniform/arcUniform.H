@@ -22,77 +22,90 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boundaryPointsSet
+    Foam::arcUniform
 
 Description
-    Specified point samples within patches
+    Uniform samples along an arc
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        patches     | The patches on which to sample         | yes    |
-        points      | The points to sample                   | yes    |
-        maxDistance | The maximum distance from patch to point | yes  |
+        centre      | Centre of the circle                   | yes    |
+        normal      | Direction normal to the plane of the circle  | yes |
+        radial      | Vector from the centre to a point on the arc | yes |
+        startAngle  | The angle of the start of the arc in radians | yes |
+        endAngle    | The angle of the end of the arc in radians | yes |
+        nPoints     | The number of points                   | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        boundaryPoints;
-        patches     (inlet1 inlet2);
-        points
-        (
-            (0 -0.05 0.05)
-            (0 -0.05 0.15)
-            (0 0.05 0.15)
-            (0 0.05 0.05)
-        );
-        maxDistance 0.01;
+        type        arcUniform;
+        centre      (0.95 0 0.25);
+        normal      (1 0 0);
+        radial      (0 0 0.25);
+        startAngle  -1.57079633;
+        endAngle    0.52359878;
+        nPoints     200;
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    boundaryPointsSet.C
+    arcUniform.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef boundaryPointsSet_H
-#define boundaryPointsSet_H
+#ifndef arcUniform_H
+#define arcUniform_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
-#include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class boundaryPointsSet Declaration
+                          Class arcUniform Declaration
 \*---------------------------------------------------------------------------*/
 
-class boundaryPointsSet
+class arcUniform
 :
     public sampledSet
 {
     // Private data
 
-        //- Sampling points
-        const List<point> points_;
+        // Arc definition
 
-        //- Patches to sample
-        const labelHashSet patches_;
+            //- Centre of the circle of which the arc is a part
+            const point centre_;
 
-        //- Maximum distance to to search for a nearby patch
-        const scalar maxDistance_;
+            //- Normal direction to the circle of which the arc is a part
+            const vector normal_;
+
+            //- Radial vector from the centre to the point on the arc from
+            //  which the angles are measured
+            const vector radial_;
+
+            //- Start angle
+            const scalar startAngle_;
+
+            //- End angle
+            const scalar endAngle_;
+
+            //- Number of points spaced along the arc
+            const label nPoints_;
 
 
     // Private Member Functions
 
-        //- Samples all points in sampleCoords
+        //- Calculate all the sampling points
         void calcSamples
         (
             DynamicList<point>& samplingPts,
@@ -102,20 +115,19 @@ class boundaryPointsSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Uses calcSamples to obtain samples. Copies them into *this.
+        //- Uses calcSamples to obtain samples and copies them into *this
         void genSamples();
-
 
 public:
 
     //- Runtime type information
-    TypeName("boundaryPoints");
+    TypeName("arcUniform");
 
 
     // Constructors
 
         //- Construct from dictionary
-        boundaryPointsSet
+        arcUniform
         (
             const word& name,
             const polyMesh& mesh,
@@ -124,13 +136,14 @@ public:
         );
 
 
-    //- Destructor
-    virtual ~boundaryPointsSet();
+    // Destructor
+    virtual ~arcUniform();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

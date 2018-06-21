@@ -22,67 +22,68 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boundaryRandomSet
+    Foam::lineCellFace
 
 Description
-    Random samples within patches
+    Face-intersections along a line, plus cell-samples at the mid-points
+    in-between
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        patches     | The patches on which to sample         | yes    |
-        nPoints     | The number of points                   | yes    |
+        start       | The start point of the line            | yes    |
+        end         | The end point of the line              | yes    |
         axis        | The coordinate axis that is written    | yes    |
     \endtable
 
     Example specification:
     \verbatim
     {
-        type        boundaryRandom;
-        patches     (inlet1 inlet2);
-        nPoints     1000;
+        type        lineCellFace;
+        start       (0.55 0.6 0.5);
+        end         (0.55 -0.3 -0.1);
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    boundaryRandomSet.C
+    lineCellFace.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef boundaryRandomSet_H
-#define boundaryRandomSet_H
+#ifndef lineCellFace_H
+#define lineCellFace_H
 
-#include "sampledSet.H"
-#include "DynamicList.H"
-#include "HashSet.H"
+#include "lineCell.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class boundaryRandomSet Declaration
+                         Class lineCellFace Declaration
 \*---------------------------------------------------------------------------*/
 
-class boundaryRandomSet
+class lineCellFace
 :
     public sampledSet
 {
     // Private data
 
-        //- Patches to sample
-        const labelHashSet patches_;
+        //- Start point
+        const point start_;
 
-        //- Number of points
-        const label nPoints_;
+        //- End point
+        const point end_;
 
 
     // Private Member Functions
 
-        //- Sample all points
-        void calcSamples
+        //- Calculate all the sampling points
+        virtual void calcSamples
         (
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
@@ -91,20 +92,20 @@ class boundaryRandomSet
             DynamicList<scalar>& samplingCurveDist
         ) const;
 
-        //- Use calcSamples to obtain samples and copy them into *this
+        //- Uses calcSamples to obtain samples and copies them into *this
         void genSamples();
 
 
 public:
 
     //- Runtime type information
-    TypeName("boundaryRandom");
+    TypeName("lineCellFace");
 
 
     // Constructors
 
         //- Construct from dictionary
-        boundaryRandomSet
+        lineCellFace
         (
             const word& name,
             const polyMesh& mesh,
@@ -112,14 +113,26 @@ public:
             const dictionary& dict
         );
 
+        //- Construct from components
+        lineCellFace
+        (
+            const word& name,
+            const polyMesh& mesh,
+            const meshSearch& searchEngine,
+            const word& axis,
+            const point& start,
+            const point& end
+        );
+
 
     //- Destructor
-    virtual ~boundaryRandomSet();
+    virtual ~lineCellFace();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

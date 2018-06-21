@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "triSurfaceMeshSet.H"
+#include "triSurfaceMeshSampledSet.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
@@ -35,14 +35,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(triSurfaceMeshSet, 0);
-    addToRunTimeSelectionTable(sampledSet, triSurfaceMeshSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(triSurfaceMeshSampledSet, 0);
+    addToRunTimeSelectionTable(sampledSet, triSurfaceMeshSampledSet, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::triSurfaceMeshSet::calcSamples
+void Foam::sampledSets::triSurfaceMeshSampledSet::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -68,7 +71,7 @@ void Foam::triSurfaceMeshSet::calcSamples
 }
 
 
-void Foam::triSurfaceMeshSet::genSamples()
+void Foam::sampledSets::triSurfaceMeshSampledSet::genSamples()
 {
     // Storage for sample points
     DynamicList<point> samplingPts;
@@ -105,7 +108,7 @@ void Foam::triSurfaceMeshSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::triSurfaceMeshSet::triSurfaceMeshSet
+Foam::sampledSets::triSurfaceMeshSampledSet::triSurfaceMeshSampledSet
 (
     const word& name,
     const polyMesh& mesh,
@@ -145,7 +148,7 @@ Foam::triSurfaceMeshSet::triSurfaceMeshSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::triSurfaceMeshSet::~triSurfaceMeshSet()
+Foam::sampledSets::triSurfaceMeshSampledSet::~triSurfaceMeshSampledSet()
 {}
 
 

@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "circleRandomSet.H"
+#include "circleRandom.H"
 #include "sampledSet.H"
 #include "meshSearch.H"
 #include "DynamicList.H"
@@ -37,14 +37,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(circleRandomSet, 0);
-    addToRunTimeSelectionTable(sampledSet, circleRandomSet, word);
+namespace sampledSets
+{
+    defineTypeNameAndDebug(circleRandom, 0);
+    addToRunTimeSelectionTable(sampledSet, circleRandom, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::circleRandomSet::calcSamples
+void Foam::sampledSets::circleRandom::calcSamples
 (
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
@@ -82,7 +85,7 @@ void Foam::circleRandomSet::calcSamples
 }
 
 
-void Foam::circleRandomSet::genSamples()
+void Foam::sampledSets::circleRandom::genSamples()
 {
     // Storage for sample points
     DynamicList<point> samplingPts;
@@ -119,7 +122,7 @@ void Foam::circleRandomSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::circleRandomSet::circleRandomSet
+Foam::sampledSets::circleRandom::circleRandom
 (
     const word& name,
     const polyMesh& mesh,
@@ -144,7 +147,7 @@ Foam::circleRandomSet::circleRandomSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::circleRandomSet::~circleRandomSet()
+Foam::sampledSets::circleRandom::~circleRandom()
 {}
 
 

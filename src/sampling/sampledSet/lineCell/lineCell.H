@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineFaceSet
+    Foam::lineCell
 
 Description
-    Face-intersections along a line
+    Cell-samples along a line at the mid-points in-between face-intersections
 
 Usage
     \table
@@ -38,35 +38,35 @@ Usage
     Example specification:
     \verbatim
     {
-        type        lineFace;
-        start       (0.6 0.6 0.5);
-        end         (0.6 -0.3 -0.1);
+        type        lineCell;
+        start       (0.5 0.6 0.5);
+        end         (0.5 -0.3 -0.1);
         axis        x;
     }
     \endverbatim
 
 SourceFiles
-    lineFaceSet.C
+    lineCell.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef lineFaceSet_H
-#define lineFaceSet_H
+#ifndef lineCell_H
+#define lineCell_H
 
-#include "sampledSet.H"
-#include "DynamicList.H"
-#include "passiveParticleCloud.H"
+#include "lineFace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSets
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class lineFaceSet Declaration
+                         Class lineCell Declaration
 \*---------------------------------------------------------------------------*/
 
-class lineFaceSet
+class lineCell
 :
     public sampledSet
 {
@@ -79,10 +79,10 @@ class lineFaceSet
         const point end_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- Calculate all the sampling points
-        void calcSamples
+        virtual void calcSamples
         (
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
@@ -98,18 +98,22 @@ class lineFaceSet
 public:
 
     //- Runtime type information
-    TypeName("lineFace");
+    TypeName("lineCell");
 
 
     // Static Member Functions
 
-        //- Calculate all the sampling points
-        static void calcSamples
+        //- Calculate the next mid point sample
+        static void calcMidPointSample
         (
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
-            const vector& start,
-            const vector& end,
+            const point& prevPt,
+            const label prevFace,
+            const label prevSegment,
+            const scalar prevCurveDist,
+            const point& nextPt,
+            const label nextFace,
+            const label nextSegment,
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
             DynamicList<label>& samplingFaces,
@@ -121,7 +125,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        lineFaceSet
+        lineCell
         (
             const word& name,
             const polyMesh& mesh,
@@ -131,12 +135,13 @@ public:
 
 
     //- Destructor
-    virtual ~lineFaceSet();
+    virtual ~lineCell();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSets
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
