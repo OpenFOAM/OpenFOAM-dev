@@ -1,7 +1,7 @@
-BasicChemistryModel<psiReactionThermo>& chemistry = pChemistry();
+BasicChemistryModel<rhoReactionThermo>& chemistry = pChemistry();
 scalar dtChem = min
 (
-    refCast<const BasicChemistryModel<psiReactionThermo>>
+    refCast<const BasicChemistryModel<rhoReactionThermo>>
     (
         chemistry
     ).deltaTChem()[0],

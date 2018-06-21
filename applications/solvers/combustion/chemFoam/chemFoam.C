@@ -32,7 +32,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "psiReactionThermo.H"
+#include "rhoReactionThermo.H"
 #include "BasicChemistryModel.H"
 #include "reactingMixture.H"
 #include "chemistrySolver.H"
