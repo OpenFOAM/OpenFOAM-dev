@@ -153,8 +153,13 @@ bool Foam::seulex::seul
 
             LUBacksubstitute(a_, pivotIndices_, dy_);
 
+            // This form from the original paper is unreliable
+            // step size underflow for some cases
             // const scalar denom = max(1, dy1);
+
+            // This form is reliable but limits how large the step size can be
             const scalar denom = min(1, dy1 + small);
+
             scalar dy2 = 0;
             for (label i=0; i<n_; i++)
             {
