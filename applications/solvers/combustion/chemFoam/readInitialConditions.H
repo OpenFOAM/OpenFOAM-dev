@@ -1,4 +1,4 @@
-    word constProp(initialConditions.lookup("constantProperty"));
+    const word constProp(initialConditions.lookup("constantProperty"));
     if ((constProp != "pressure") && (constProp != "volume"))
     {
         FatalError << "in initialConditions, unknown constantProperty type "
@@ -6,7 +6,7 @@
             << abort(FatalError);
     }
 
-    word fractionBasis(initialConditions.lookup("fractionBasis"));
+    const word fractionBasis(initialConditions.lookup("fractionBasis"));
     if ((fractionBasis != "mass") && (fractionBasis != "mole"))
     {
         FatalError << "in initialConditions, unknown fractionBasis type " << nl
@@ -14,20 +14,8 @@
             << fractionBasis << abort(FatalError);
     }
 
-    label nSpecie = Y.size();
-    PtrList<gasHThermoPhysics> specieData(Y.size());
-    forAll(specieData, i)
-    {
-        specieData.set
-        (
-            i,
-            new gasHThermoPhysics
-            (
-                dynamic_cast<const reactingMixture<gasHThermoPhysics>&>
-                    (thermo).speciesData()[i]
-            )
-        );
-    }
+    const label nSpecie = Y.size();
+    const scalarList W(::W(thermo));
 
     scalarList Y0(nSpecie, 0.0);
     scalarList X0(nSpecie, 0.0);
@@ -49,12 +37,12 @@
         forAll(Y, i)
         {
             X0[i] /= mTot;
-            mw += specieData[i].W()*X0[i];
+            mw += W[i]*X0[i];
         }
 
         forAll(Y, i)
         {
-            Y0[i] = X0[i]*specieData[i].W()/mw;
+            Y0[i] = X0[i]*W[i]/mw;
         }
     }
     else  // mass fraction
@@ -73,21 +61,21 @@
         forAll(Y, i)
         {
             Y0[i] /= mTot;
-            invW += Y0[i]/specieData[i].W();
+            invW += Y0[i]/W[i];
         }
         const scalar mw = 1.0/invW;
 
         forAll(Y, i)
         {
-            X0[i] = Y0[i]*mw/specieData[i].W();
+            X0[i] = Y0[i]*mw/W[i];
         }
     }
 
-    scalar h0 = 0.0;
+    const scalar h0 = ::h0(thermo, Y0, p[0], T0);
+
     forAll(Y, i)
     {
         Y[i] = Y0[i];
-        h0 += Y0[i]*specieData[i].Hs(p[0], T0);
     }
 
     thermo.he() = dimensionedScalar("h", dimEnergy/dimMass, h0);

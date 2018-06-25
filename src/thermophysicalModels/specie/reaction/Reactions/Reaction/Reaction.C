@@ -584,7 +584,6 @@ void Foam::Reaction<ReactionThermo>::dwdc
     const List<label>& c2s
 ) const
 {
-
     scalar pf, cf, pr, cr;
     label lRef, rRef;
 
@@ -706,7 +705,7 @@ void Foam::Reaction<ReactionThermo>::dwdc
         this->dcidc(p, T, c, dcidc);
         forAll(this->beta(), j)
         {
-            label sj = this-> beta()[j].first();
+            label sj = this->beta()[j].first();
             sj = reduced ? c2s[sj] : sj;
             if (sj != -1)
             {
