@@ -19,7 +19,13 @@ fields  (U p);
 #includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
 
 // Override settings here, e.g.
-// setConfig { type lineCell; }
+/*
+setConfig
+{
+    type lineCell;
+    axis x;        // y, z, xyz
+}
+*/
 
 // Must be last entry
 #includeEtc "caseDicts/postProcessing/graphs/graph.cfg"
