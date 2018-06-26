@@ -228,17 +228,29 @@ public:
             //- Overridable function to handle the particle hitting a cyclicAMI
             void hitCyclicAMIPatch
             (
+                const vector&,
+                const scalar,
                 Cloud<findCellParticle>&,
-                trackingData&,
-                const vector&
+                trackingData&
             );
 
             //- Overridable function to handle the particle hitting a cyclicACMI
             void hitCyclicACMIPatch
             (
+                const vector&,
+                const scalar,
                 Cloud<findCellParticle>&,
-                trackingData&,
-                const vector&
+                trackingData&
+            );
+
+            //- Overridable function to handle the particle hitting a
+            //cyclicRepeatAMI
+            void hitCyclicRepeatAMIPatch
+            (
+                const vector&,
+                const scalar,
+                Cloud<findCellParticle>&,
+                trackingData&
             );
 
             //- Overridable function to handle the particle hitting a

@@ -409,7 +409,6 @@ void Foam::particle::changeToMasterPatch()
 void Foam::particle::locate
 (
     const vector& position,
-    const vector* direction,
     label celli,
     const bool boundaryFail,
     const string boundaryMsg
@@ -488,34 +487,11 @@ void Foam::particle::locate
     }
     else
     {
-        // Re-do the track, but this time do the bit tangential to the
-        // direction/patch first. This gets us as close as possible to the
-        // original path/position.
-
-        if (direction == nullptr)
-        {
-            const polyPatch& p = mesh_.boundaryMesh()[patch()];
-            direction = &p.faceNormals()[p.whichFace(facei_)];
-        }
-
-        const vector n = *direction/mag(*direction);
-        const vector sN = (displacement & n)*n;
-        const vector sT = displacement - sN;
-
-        coordinates_ = barycentric(1, 0, 0, 0);
-        celli_ = celli;
-        tetFacei_ = minTetFacei;
-        tetPti_ = minTetPti;
-        facei_ = -1;
-
-        track(sT, 0);
-        track(sN, 0);
-
         static label nWarnings = 0;
         static const label maxNWarnings = 100;
         if (nWarnings < maxNWarnings)
         {
-            WarningInFunction << boundaryMsg << endl;
+            WarningInFunction << boundaryMsg.c_str() << endl;
             ++ nWarnings;
         }
         if (nWarnings == maxNWarnings)
@@ -572,7 +548,6 @@ Foam::particle::particle
     locate
     (
         position,
-        nullptr,
         celli,
         false,
         "Particle initialised with a location outside of the mesh."
@@ -1171,7 +1146,6 @@ void Foam::particle::autoMap
     locate
     (
         position,
-        nullptr,
         mapper.reverseCellMap()[celli_],
         true,
         "Particle mapped to a location outside of the mesh."

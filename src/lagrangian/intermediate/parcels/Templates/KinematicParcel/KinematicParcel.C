@@ -358,7 +358,7 @@ bool Foam::KinematicParcel<ParcelType>::move
 
         if (p.onFace() && ttd.keepParticle)
         {
-            p.hitFace(s, cloud, ttd);
+            p.hitFace(f*s - d, f, cloud, ttd);
         }
     }
 

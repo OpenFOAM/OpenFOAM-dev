@@ -1232,7 +1232,6 @@ const
     const labelList& addr = tgtAddress_[tgtFacei];
 
     pointHit nearest;
-    nearest.setDistance(great);
     label nearestFacei = -1;
 
     forAll(addr, i)
@@ -1240,23 +1239,27 @@ const
         const label srcFacei = addr[i];
         const face& f = srcPatch[srcFacei];
 
-        pointHit ray = f.ray(tgtPoint, n, srcPoints);
+        const pointHit ray =
+            f.ray(tgtPoint, n, srcPoints, intersection::VISIBLE);
 
         if (ray.hit())
         {
-            // tgtPoint = ray.rawPoint();
+            tgtPoint = ray.rawPoint();
             return srcFacei;
         }
-        else if (ray.distance() < nearest.distance())
+
+        const pointHit near = f.nearestPoint(tgtPoint, srcPoints);
+
+        if (near.distance() < nearest.distance())
         {
-            nearest = ray;
+            nearest = near;
             nearestFacei = srcFacei;
         }
     }
 
     if (nearest.hit() || nearest.eligibleMiss())
     {
-        // tgtPoint = nearest.rawPoint();
+        tgtPoint = nearest.rawPoint();
         return nearestFacei;
     }
 
@@ -1277,7 +1280,6 @@ const
     const pointField& tgtPoints = tgtPatch.points();
 
     pointHit nearest;
-    nearest.setDistance(great);
     label nearestFacei = -1;
 
     // Target face addresses that intersect source face srcFacei
@@ -1288,23 +1290,27 @@ const
         const label tgtFacei = addr[i];
         const face& f = tgtPatch[tgtFacei];
 
-        pointHit ray = f.ray(srcPoint, n, tgtPoints);
+        const pointHit ray =
+            f.ray(srcPoint, n, tgtPoints, intersection::VISIBLE);
 
         if (ray.hit())
         {
-            // srcPoint = ray.rawPoint();
+            srcPoint = ray.rawPoint();
             return tgtFacei;
         }
-        else if (ray.distance() < nearest.distance())
+
+        const pointHit near = f.nearestPoint(srcPoint, tgtPoints);
+
+        if (near.distance() < nearest.distance())
         {
-            nearest = ray;
+            nearest = near;
             nearestFacei = tgtFacei;
         }
     }
 
     if (nearest.hit() || nearest.eligibleMiss())
     {
-        // srcPoint = nearest.rawPoint();
+        srcPoint = nearest.rawPoint();
         return nearestFacei;
     }
 

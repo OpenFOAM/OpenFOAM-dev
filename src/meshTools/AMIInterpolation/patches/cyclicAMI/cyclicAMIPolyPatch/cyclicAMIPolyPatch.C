@@ -952,6 +952,26 @@ void Foam::cyclicAMIPolyPatch::transformPosition
 }
 
 
+void Foam::cyclicAMIPolyPatch::transformDirection
+(
+    vector& d,
+    const label facei
+) const
+{
+    if (!parallel())
+    {
+        const tensor& T =
+        (
+            forwardT().size() == 1
+          ? forwardT()[0]
+          : forwardT()[facei]
+        );
+
+        d = Foam::transform(T, d);
+    }
+}
+
+
 void Foam::cyclicAMIPolyPatch::reverseTransformPosition
 (
     point& l,

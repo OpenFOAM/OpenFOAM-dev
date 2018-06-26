@@ -286,7 +286,7 @@ inline Foam::vector Foam::particle::position() const
 }
 
 
-void Foam::particle::patchData(vector& n, vector& U) const
+void Foam::particle::patchData(vector& normal, vector& displacement) const
 {
     if (!onBoundaryFace())
     {
@@ -300,27 +300,23 @@ void Foam::particle::patchData(vector& n, vector& U) const
         Pair<vector> centre, base, vertex1, vertex2;
         movingTetGeometry(1, centre, base, vertex1, vertex2);
 
-        n = triPointRef(base[0], vertex1[0], vertex2[0]).normal();
+        normal = triPointRef(base[0], vertex1[0], vertex2[0]).normal();
 
         // Interpolate the motion of the three face vertices to the current
         // coordinates
-        U =
+        displacement =
             coordinates_.b()*base[1]
           + coordinates_.c()*vertex1[1]
           + coordinates_.d()*vertex2[1];
-
-        // The movingTetGeometry method gives the motion as a displacement
-        // across the time-step, so we divide by the time-step to get velocity
-        U /= mesh_.time().deltaTValue();
     }
     else
     {
         vector centre, base, vertex1, vertex2;
         stationaryTetGeometry(centre, base, vertex1, vertex2);
 
-        n = triPointRef(base, vertex1, vertex2).normal();
+        normal = triPointRef(base, vertex1, vertex2).normal();
 
-        U = Zero;
+        displacement = Zero;
     }
 }
 

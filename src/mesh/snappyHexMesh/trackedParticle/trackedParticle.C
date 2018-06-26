@@ -206,9 +206,10 @@ void Foam::trackedParticle::hitCyclicPatch
 
 void Foam::trackedParticle::hitCyclicAMIPatch
 (
+    const vector&,
+    const scalar,
     Cloud<trackedParticle>&,
-    trackingData& td,
-    const vector& direction
+    trackingData& td
 )
 {
     // Remove particle
@@ -218,9 +219,23 @@ void Foam::trackedParticle::hitCyclicAMIPatch
 
 void Foam::trackedParticle::hitCyclicACMIPatch
 (
+    const vector&,
+    const scalar,
     Cloud<trackedParticle>&,
-    trackingData& td,
-    const vector&
+    trackingData& td
+)
+{
+    // Remove particle
+    td.keepParticle = false;
+}
+
+
+void Foam::trackedParticle::hitCyclicRepeatAMIPatch
+(
+    const vector&,
+    const scalar,
+    Cloud<trackedParticle>&,
+    trackingData& td
 )
 {
     // Remove particle
