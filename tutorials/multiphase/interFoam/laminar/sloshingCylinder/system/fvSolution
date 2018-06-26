@@ -74,7 +74,7 @@ PIMPLE
     correctPhi      no;
 
     pRefPoint       (0 0 0);
-    pRefValue       1e5;
+    pRefValue       0;
 }
 
 relaxationFactors
