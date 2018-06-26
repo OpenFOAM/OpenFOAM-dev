@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,77 +23,76 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "displacementMotionSolver.H"
-#include "mapPolyMesh.H"
+#include "displacementLinearMotionMotionSolver.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(displacementMotionSolver, 0);
+    defineTypeNameAndDebug(displacementLinearMotionMotionSolver, 0);
+
+    addToRunTimeSelectionTable
+    (
+        motionSolver,
+        displacementLinearMotionMotionSolver,
+        dictionary
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::displacementMotionSolver::displacementMotionSolver
+Foam::displacementLinearMotionMotionSolver::
+displacementLinearMotionMotionSolver
 (
     const polyMesh& mesh,
-    const IOdictionary& dict,
-    const word& type
+    const IOdictionary& dict
 )
 :
-    points0MotionSolver(mesh, dict, type),
-    pointDisplacement_
-    (
-        IOobject
-        (
-            "pointDisplacement",
-            time().timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        pointMesh::New(mesh)
-    )
+    points0MotionSolver(mesh, dict, typeName),
+    axis_(normalised(vector(coeffDict().lookup("axis")))),
+    xFixed_(readScalar(coeffDict().lookup("xFixed"))),
+    xMoving_(readScalar(coeffDict().lookup("xMoving"))),
+    displacement_(Function1<scalar>::New("displacement", coeffDict()))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::displacementMotionSolver::~displacementMotionSolver()
+Foam::displacementLinearMotionMotionSolver::
+~displacementLinearMotionMotionSolver()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::displacementMotionSolver::updateMesh
-(
-    const mapPolyMesh& mpm
-)
+Foam::tmp<Foam::pointField>
+Foam::displacementLinearMotionMotionSolver::curPoints() const
 {
-    displacementMotionSolver::updateMesh(mpm);
+    tmp<pointField> tcurPoints(new pointField(points0()));
+    pointField& curPoints = tcurPoints.ref();
 
-    const vectorField displacement(this->newPoints() - points0_);
+    const scalar t = time().value();
 
-    forAll(points0_, pointi)
+    const scalar displacement = displacement_->value(t);
+
+    forAll(curPoints, i)
     {
-        label oldPointi = mpm.pointMap()[pointi];
+        const scalar lambda =
+            (xFixed_ - (axis_ & curPoints[i]))/(xFixed_ - xMoving_);
 
-        if (oldPointi >= 0)
+        if (lambda > 1)
         {
-            label masterPointi = mpm.reversePointMap()[oldPointi];
-
-            if ((masterPointi != pointi))
-            {
-                // newly inserted point in this cellZone
-
-                // need to set point0 so that it represents the position that
-                // it would have had if it had existed for all time
-                points0_[pointi] -= displacement[pointi];
-            }
+            curPoints[i] += axis_*displacement;
+        }
+        else if (lambda > 0)
+        {
+            curPoints[i] += axis_*lambda*displacement;
         }
     }
+
+    return tcurPoints;
 }
 
 

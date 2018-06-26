@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,29 +22,43 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::displacementInterpolationMotionSolver
+    Foam::displacementLinearMotionMotionSolver
 
 Description
-    Mesh motion solver for a polyMesh.
+    Mesh motion solver simple linear expansion and contraction of a mesh
+    region defined by a motion axis and the extents of the motion.
 
-    Scales in between motion prescribed on faceZones. Works out per point
-    the distance between the bounding face zones (in all three directions)
-    at the start and then every time step
-    - moves the faceZones based on tables
-    - interpolates the displacement of all points based on the
-      faceZone motion.
+    Example:
+    \verbatim
+        dynamicFvMesh   dynamicMotionSolverFvMesh;
 
-    Tables are in the \a constant/tables directory.
+        motionSolver    displacementLinearMotion;
+
+        axis            (0 1 0);
+        xFixed          0.8;
+        xMoving         0;
+        displacement    table
+        (
+            (0 0)
+            (4 0.7)
+        );
+    \endverbatim
+
+    This mesh is compressed between \c xFixed and \c xMoving in the direction
+    \c axis between time 0 and 4 with a maximum displacement of 0.7.
+    The mesh beyond \c xFixed is fixed and beyond \c xMoving moves with maximum
+    displacement.
 
 SourceFiles
-    displacementInterpolationMotionSolver.C
+    displacementLinearMotionMotionSolver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef displacementInterpolationMotionSolver_H
-#define displacementInterpolationMotionSolver_H
+#ifndef displacementLinearMotionMotionSolver_H
+#define displacementLinearMotionMotionSolver_H
 
 #include "points0MotionSolver.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,68 +66,56 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-        Class displacementInterpolationMotionSolver Declaration
+             Class displacementLinearMotionMotionSolver Declaration
 \*---------------------------------------------------------------------------*/
 
-class displacementInterpolationMotionSolver
+class displacementLinearMotionMotionSolver
 :
     public points0MotionSolver
 {
     // Private data
 
-        // Face zone information (note: could pack these to only contain
-        // used zones)
+        //- Axis of the linear motion
+        vector axis_;
 
-            //- Interpolation table. From faceZone to times.
-            List<scalarField> times_;
+        //- The location of the end of motion
+        scalar xFixed_;
 
-            //- Interpolation table. From faceZone to displacements.
-            List<vectorField> displacements_;
+        //- The location moving with the specified displacement
+        scalar xMoving_;
 
-        // Range information.
+        //- The displacement as a function of time
+        autoPtr<Function1<scalar>> displacement_;
 
-            //- Per direction, per range the index of the lower
-            //  faceZone
-            FixedList<labelList, 3> rangeToZone_;
-
-            //- Per direction, per range the points that are in it
-            FixedList<labelListList, 3> rangeToPoints_;
-
-            //- Per direction, per range the weight of the points relative
-            //  to this and the next range.
-            FixedList<List<scalarField>, 3> rangeToWeights_;
-
-
-    // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        displacementInterpolationMotionSolver
+        displacementLinearMotionMotionSolver
         (
-            const displacementInterpolationMotionSolver&
+            const displacementLinearMotionMotionSolver&
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementInterpolationMotionSolver&);
+        void operator=(const displacementLinearMotionMotionSolver&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("displacementInterpolation");
+    TypeName("displacementLinearMotion");
 
 
     // Constructors
 
         //- Construct from polyMesh and IOdictionary
-        displacementInterpolationMotionSolver
+        displacementLinearMotionMotionSolver
         (
             const polyMesh&,
-            const IOdictionary& dict
+            const IOdictionary&
         );
 
 
     //- Destructor
-    ~displacementInterpolationMotionSolver();
+    ~displacementLinearMotionMotionSolver();
 
 
     // Member Functions
