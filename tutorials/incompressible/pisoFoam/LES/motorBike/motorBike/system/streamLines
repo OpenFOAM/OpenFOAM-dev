@@ -10,6 +10,8 @@ streamLines
 {
     type            streamLine;
 
+    libs            ("libfieldFunctionObjects.so");
+
     // Output every
     writeControl    writeTime;
     // writeInterval 10;

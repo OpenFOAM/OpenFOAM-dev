@@ -37,7 +37,7 @@ writeFormat     binary;
 
 writePrecision  12;
 
-writeCompression no;
+writeCompression off;
 
 timeFormat      general;
 

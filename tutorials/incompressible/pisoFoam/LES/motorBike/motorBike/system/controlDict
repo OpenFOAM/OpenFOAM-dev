@@ -15,8 +15,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs            ("libOpenFOAM.so" "libfieldFunctionObjects.so");
-
 application     simpleFoam;
 
 startFrom       startTime;
@@ -35,11 +33,11 @@ writeInterval   500;
 
 purgeWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
 writePrecision  6;
 
-writeCompression compressed;
+writeCompression off;
 
 timeFormat      general;
 
@@ -49,67 +47,9 @@ runTimeModifiable true;
 
 functions
 {
-    streamLines
-    {
-        type            streamLine;
-        writeControl    writeTime;
-        setFormat       vtk;
-        direction       forward;
-        fields          (p U);
-        lifeTime        10000;
-        nSubCycle       5;
-        cloudName       particleTracks;
-        seedSampleSet
-        {
-            type            lineUniform;
-            axis            x;
-            start           (-1.001 1e-07 0.0011);
-            end             (-1.001 1e-07 1.0011);
-            nPoints         20;
-        }
-    }
-    cuttingPlane
-    {
-        type            surfaces;
-        libs            ("libsampling.so");
-        writeControl    writeTime;
-        surfaceFormat   vtk;
-        fields          (p U);
-        interpolationScheme cellPoint;
-        surfaces
-        (
-            yNormal
-            {
-                type cuttingPlane;
-                planeType pointAndNormal;
-                pointAndNormalDict
-                {
-                    point   (0 0 0);
-                    normal  (0 1 0);
-                }
-                interpolate true;
-            }
-        );
-    }
-    forces
-    {
-        type            forceCoeffs;
-        libs            ("libforces.so");
-        writeControl    timeStep;
-        writeInterval   1;
-        patches         ("motorBike.*");
-        rho             rhoInf;
-        log             true;
-        rhoInf          1;
-        liftDir         (0 0 1);
-        dragDir         (1 0 0);
-        CofR            (0.72 0 0);
-        pitchAxis       (0 1 0);
-        magUInf         20;
-        lRef            1.42;
-        Aref            0.75;
-    }
+    #include "cuttingPlane"
+    #include "streamLines"
+    #include "forceCoeffs"
 }
-
 
 // ************************************************************************* //
