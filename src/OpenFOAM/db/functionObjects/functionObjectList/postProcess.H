@@ -155,6 +155,9 @@ if (argList::postProcess(argc, argv))
             Warning<< err << endl;
         }
 
+        // Clear the objects owned by the mesh
+        mesh.objectRegistry::clear();
+
         Info<< endl;
     }
 

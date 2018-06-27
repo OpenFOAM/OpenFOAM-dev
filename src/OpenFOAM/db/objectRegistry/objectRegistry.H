@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,6 +198,10 @@ public:
 
             //- Remove an regIOobject from registry
             bool checkOut(regIOobject&) const;
+
+            //- Remove all regIOobject owned by the registry
+            void clear();
+
 
         // Reading
 
