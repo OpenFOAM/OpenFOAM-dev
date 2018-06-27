@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "displacementMotionSolver.H"
-#include "mapPolyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -63,38 +62,6 @@ Foam::displacementMotionSolver::displacementMotionSolver
 
 Foam::displacementMotionSolver::~displacementMotionSolver()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::displacementMotionSolver::updateMesh
-(
-    const mapPolyMesh& mpm
-)
-{
-    displacementMotionSolver::updateMesh(mpm);
-
-    const vectorField displacement(this->newPoints() - points0_);
-
-    forAll(points0_, pointi)
-    {
-        label oldPointi = mpm.pointMap()[pointi];
-
-        if (oldPointi >= 0)
-        {
-            label masterPointi = mpm.reversePointMap()[oldPointi];
-
-            if ((masterPointi != pointi))
-            {
-                // newly inserted point in this cellZone
-
-                // need to set point0 so that it represents the position that
-                // it would have had if it had existed for all time
-                points0_[pointi] -= displacement[pointi];
-            }
-        }
-    }
-}
 
 
 // ************************************************************************* //

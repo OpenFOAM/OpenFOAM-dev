@@ -105,9 +105,6 @@ public:
         {
             return pointDisplacement_;
         }
-
-        //- Update topology
-        virtual void updateMesh(const mapPolyMesh&);
 };
 
 

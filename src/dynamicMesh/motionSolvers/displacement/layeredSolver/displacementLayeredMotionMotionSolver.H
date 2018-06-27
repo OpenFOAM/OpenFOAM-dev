@@ -148,6 +148,9 @@ public:
 
         //- Solve for motion
         virtual void solve();
+
+        //- Update topology
+        virtual void updateMesh(const mapPolyMesh&);
 };
 
 
