@@ -608,6 +608,18 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
     }
 }
 
+void Foam::fileOperations::collatedFileOperation::flush() const
+{
+    if (debug)
+    {
+        Pout<< "collatedFileOperation::flush : clearing and waiting for thread"
+            << endl;
+    }
+    masterUncollatedFileOperation::flush();
+    // Wait for thread to finish (note: also removes thread)
+    writer_.waitAll();
+}
+
 
 Foam::word Foam::fileOperations::collatedFileOperation::processorsDir
 (

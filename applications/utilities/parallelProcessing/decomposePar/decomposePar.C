@@ -104,7 +104,6 @@ Usage
 #include "pointFieldDecomposer.H"
 #include "lagrangianFieldDecomposer.H"
 #include "decompositionModel.H"
-#include "collatedFileOperation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -459,12 +458,6 @@ int main(int argc, char *argv[])
         // Decompose the mesh
         if (!decomposeFieldsOnly)
         {
-            // Disable buffering when writing mesh since we need to read
-            // it later on when decomposing the fields
-            float bufSz =
-                fileOperations::collatedFileOperation::maxThreadFileBufferSize;
-            fileOperations::collatedFileOperation::maxThreadFileBufferSize = 0;
-
             mesh.decomposeMesh(dictIO.objectPath());
 
             mesh.writeDecomposition(decomposeSets);
@@ -521,8 +514,7 @@ int main(int argc, char *argv[])
                     << endl;
             }
 
-            fileOperations::collatedFileOperation::maxThreadFileBufferSize =
-                bufSz;
+            fileHandler().flush();
         }
 
 

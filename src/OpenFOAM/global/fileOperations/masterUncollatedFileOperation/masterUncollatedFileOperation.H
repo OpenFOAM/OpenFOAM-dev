@@ -752,6 +752,9 @@ public:
             //- Callback for time change
             virtual void setTime(const Time&) const;
 
+            //- Forcibly wait until all output done. Flush any cached data
+            virtual void flush() const;
+
             //- Return cached times
             const HashPtrTable<instantList>& times() const
             {

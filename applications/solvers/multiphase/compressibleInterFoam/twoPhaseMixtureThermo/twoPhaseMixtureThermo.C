@@ -50,12 +50,6 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
     thermo1_(nullptr),
     thermo2_(nullptr)
 {
-    // Note: we're writing files to be read in immediately afterwards.
-    //       Avoid any thread-writing problems.
-    float bufSz =
-        fileOperations::collatedFileOperation::maxThreadFileBufferSize;
-    fileOperations::collatedFileOperation::maxThreadFileBufferSize = 0;
-
     {
         volScalarField T1
         (
@@ -86,9 +80,9 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
         T2.write();
     }
 
-    fileOperations::collatedFileOperation::maxThreadFileBufferSize =
-        bufSz;
-
+    // Note: we're writing files to be read in immediately afterwards.
+    //       Avoid any thread-writing problems.
+    fileHandler().flush();
 
     thermo1_ = rhoThermo::New(U.mesh(), phase1Name());
     thermo2_ = rhoThermo::New(U.mesh(), phase2Name());
