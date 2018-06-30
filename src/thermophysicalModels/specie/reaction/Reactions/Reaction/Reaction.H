@@ -216,6 +216,15 @@ public:
             const speciesTable& species
         ) const = 0;
 
+        //- Construct the left- and right-hand-side reaction coefficients
+        void setLRhs
+        (
+            Istream&,
+            const speciesTable&,
+            List<specieCoeffs>& lhs,
+            List<specieCoeffs>& rhs
+        );
+
 
     // Selectors
 
@@ -237,29 +246,23 @@ public:
 
         // Access
 
-            inline word& name();
+            //- Return the name of the reaction
             inline const word& name() const;
 
+            //- Return the lower temperature limit for the reaction
             inline scalar Tlow() const;
+
+            //- Return the upper temperature limit for the reaction
             inline scalar Thigh() const;
 
-            //- Access to the components of the left hand side
+            //- Return the components of the left hand side
             inline const List<specieCoeffs>& lhs() const;
 
-            //- Access to the components of the right hand side
+            //- Return the components of the right hand side
             inline const List<specieCoeffs>& rhs() const;
 
-            //- Access to specie list
+            //- Return the specie list
             const speciesTable& species() const;
-
-            //- Construct the left- and right-hand-side reaction coefficients
-            void setLRhs
-            (
-                Istream&,
-                const speciesTable&,
-                List<specieCoeffs>& lhs,
-                List<specieCoeffs>& rhs
-            );
 
 
         // Reaction rate coefficients
