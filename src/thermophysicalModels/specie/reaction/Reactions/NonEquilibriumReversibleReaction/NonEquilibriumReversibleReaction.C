@@ -240,7 +240,7 @@ Foam::NonEquilibriumReversibleReaction
     ReactionRate
 >::beta() const
 {
-    return rk_.beta();
+    return fk_.beta();
 }
 
 
