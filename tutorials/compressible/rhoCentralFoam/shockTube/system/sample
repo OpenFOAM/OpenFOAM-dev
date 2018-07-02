@@ -26,7 +26,7 @@ sets
 (
     data
     {
-        type    uniform;
+        type    lineFace;
         axis    x;
         start   (-4.995 0 0);
         end     (4.995 0 0);

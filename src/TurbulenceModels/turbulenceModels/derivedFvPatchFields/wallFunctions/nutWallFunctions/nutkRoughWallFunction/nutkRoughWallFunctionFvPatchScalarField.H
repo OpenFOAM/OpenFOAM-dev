@@ -24,9 +24,6 @@ License
 Class
     Foam::nutkRoughWallFunctionFvPatchScalarField
 
-Group
-    grpWallFunctions
-
 Description
     This boundary condition provides a turbulent kinematic viscosity condition
     when using wall functions for rough walls, based on turbulence kinetic

@@ -78,10 +78,7 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
         }
 
         treeBoundBox overallBb(pp.points());
-        Random rndGen(123456);
-        overallBb = overallBb.extend(rndGen, 1e-4);
-        overallBb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-        overallBb.max() += point(rootVSmall, rootVSmall, rootVSmall);
+        overallBb = overallBb.extend(1e-4);
 
         const indexedOctree<treeDataFace> boundaryTree
         (

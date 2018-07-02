@@ -7,7 +7,7 @@ List<treeBoundBox> meshBb
     treeBoundBox
     (
         boundBox(coarseMesh.points(), false)
-    ).extend(rndGen, 1e-3)
+    ).extend(1e-3)
 );
 
 // Dummy bounds dictionary

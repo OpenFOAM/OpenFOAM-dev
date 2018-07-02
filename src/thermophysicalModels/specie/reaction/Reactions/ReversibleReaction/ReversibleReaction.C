@@ -157,6 +157,117 @@ template
     class ReactionThermo,
     class ReactionRate
 >
+Foam::scalar Foam::ReversibleReaction
+<
+    ReactionType,
+    ReactionThermo,
+    ReactionRate
+>::dkfdT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c
+) const
+{
+    return k_.ddT(p, T, c);
+}
+
+
+template
+<
+    template<class> class ReactionType,
+    class ReactionThermo,
+    class ReactionRate
+>
+Foam::scalar Foam::ReversibleReaction
+<
+    ReactionType,
+    ReactionThermo,
+    ReactionRate
+>::dkrdT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    const scalar dkfdT,
+    const scalar kr
+) const
+{
+    scalar Kc = max(this->Kc(p, T), rootSmall);
+
+    return dkfdT/Kc - kr*this->dKcdTbyKc(p, T);
+}
+
+
+template
+<
+    template<class> class ReactionType,
+    class ReactionThermo,
+    class ReactionRate
+>
+const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
+Foam::ReversibleReaction
+<
+    ReactionType,
+    ReactionThermo,
+    ReactionRate
+>::beta() const
+{
+    return k_.beta();
+}
+
+
+template
+<
+    template<class> class ReactionType,
+    class ReactionThermo,
+    class ReactionRate
+>
+void Foam::ReversibleReaction
+<
+    ReactionType,
+    ReactionThermo,
+    ReactionRate
+>::dcidc
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalarField& dcidc
+) const
+{
+    k_.dcidc(p, T, c, dcidc);
+}
+
+
+template
+<
+    template<class> class ReactionType,
+    class ReactionThermo,
+    class ReactionRate
+>
+Foam::scalar Foam::ReversibleReaction
+<
+    ReactionType,
+    ReactionThermo,
+    ReactionRate
+>::dcidT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c
+) const
+{
+    return k_.dcidT(p, T, c);
+}
+
+
+template
+<
+    template<class> class ReactionType,
+    class ReactionThermo,
+    class ReactionRate
+>
 void Foam::ReversibleReaction
 <
     ReactionType,

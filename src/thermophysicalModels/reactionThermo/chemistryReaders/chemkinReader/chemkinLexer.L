@@ -651,6 +651,18 @@ bool finishReaction = false;
     }
 
 <readThermoSpecieName>{end} {
+        Reaction<gasHThermoPhysics>::TlowDefault = max
+        (
+            Reaction<gasHThermoPhysics>::TlowDefault,
+            currentLowT
+        );
+
+        Reaction<gasHThermoPhysics>::ThighDefault = min
+        (
+            Reaction<gasHThermoPhysics>::ThighDefault,
+            currentHighT
+        );
+
         BEGIN(INITIAL);
     }
 

@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs            ("libOpenFOAM.so" "libfieldFunctionObjects.so");
-
 application     pisoFoam;
 
 startFrom       startTime;
@@ -38,7 +36,7 @@ writeFormat     binary;
 
 writePrecision  6;
 
-writeCompression compressed;
+writeCompression off;
 
 timeFormat      general;
 
@@ -46,13 +44,11 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-
 functions
 {
     #include "cuttingPlane"
     #include "streamLines"
     #include "forceCoeffs"
 }
-
 
 // ************************************************************************* //

@@ -24,9 +24,6 @@ License
 Class
     Foam::semiPermeableBaffleVelocityFvPatchVectorField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This is a velocity boundary condition for a semi-permeable baffle.
 

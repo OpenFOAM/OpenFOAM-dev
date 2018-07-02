@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermo
+    Foam::species::thermo
 
 Description
     Basic thermodynamics type based on the use of fitting functions for
@@ -316,6 +316,15 @@ public:
                 const scalar p,
                 const scalar T0
             ) const;
+
+
+        // Derivative term used for Jacobian
+
+            //- Derivative of B (acooding to Niemeyer et al.) w.r.t. temperature
+            inline scalar dKcdTbyKc(const scalar p, const scalar T) const;
+
+            //- Derivative of cp w.r.t. temperature
+            inline scalar dcpdT(const scalar p, const scalar T) const;
 
 
         // I-O

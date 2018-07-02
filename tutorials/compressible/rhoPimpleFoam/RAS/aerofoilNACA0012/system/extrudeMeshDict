@@ -20,8 +20,7 @@ sourceCase "$FOAM_CASE";
 sourcePatches (back);
 exposedPatchName front;
 
-extrudeModel  linearDirection;
-direction     (0 -1 0);
+extrudeModel  plane;
 thickness     0.1;
 
 flipNormals false;

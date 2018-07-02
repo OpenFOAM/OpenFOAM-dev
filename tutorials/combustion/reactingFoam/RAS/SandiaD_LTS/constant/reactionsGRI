@@ -3608,3 +3608,6 @@ reactions
         Ta              0;
     }
 }
+
+Tlow            250;
+Thigh           5000;

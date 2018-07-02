@@ -390,8 +390,8 @@ void Foam::FreeStream<CloudType>::inflow()
                     vector U =
                         sqrt(physicoChemical::k.value()*faceTemperature/mass)
                        *(
-                            rndGen.GaussNormal()*t1
-                          + rndGen.GaussNormal()*t2
+                            rndGen.scalarNormal()*t1
+                          + rndGen.scalarNormal()*t2
                         )
                       + (t1 & faceVelocity)*t1
                       + (t2 & faceVelocity)*t2

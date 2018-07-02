@@ -15,7 +15,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Include defaults parameters from master dictionary
-#includeEtc "caseDicts/foamyHexMeshDict"
+#includeEtc "caseDicts/mesh/generation/foamyHexMeshDict"
 
 geometry
 {
@@ -40,7 +40,6 @@ geometry
     }
 
 }
-
 
 surfaceConformation
 {
@@ -99,7 +98,6 @@ surfaceConformation
     }
 }
 
-
 initialPoints
 {
     initialPointsMethod         autoDensity;
@@ -113,7 +111,6 @@ initialPoints
         surfaceSampleResolution 3;
     }
 }
-
 
 motionControl
 {
@@ -190,7 +187,6 @@ motionControl
     timeChecks                  no;
 }
 
-
 // After simulation, when converting to polyMesh, filter out small faces/edges.
 // Do not change. See cvControls.H
 polyMeshFiltering
@@ -200,11 +196,9 @@ polyMeshFiltering
     writeTetDualMesh            false;
 }
 
-
 meshQualityControls
 {
     #include "meshQualityDict"
 }
-
 
 // ************************************************************************* //

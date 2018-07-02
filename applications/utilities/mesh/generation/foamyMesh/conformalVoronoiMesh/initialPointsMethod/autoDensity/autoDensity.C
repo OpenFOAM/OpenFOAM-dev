@@ -729,7 +729,7 @@ bool Foam::autoDensity::fillBox
         {
             trialPoints++;
 
-            point p = min + cmptMultiply(span, rndGen().vector01());
+            point p = min + cmptMultiply(span, rndGen().sample01<vector>());
 
             scalar localSize = cellShapeControls().cellSize(p);
 
@@ -919,11 +919,7 @@ List<Vb::Point> autoDensity::initialPoints() const
     else
     {
         // Extend the global box to move it off large plane surfaces
-        hierBB = geometryToConformTo().globalBounds().extend
-        (
-            rndGen(),
-            1e-6
-        );
+        hierBB = geometryToConformTo().globalBounds().extend(1e-6);
     }
 
     DynamicList<Vb::Point> initialPoints;

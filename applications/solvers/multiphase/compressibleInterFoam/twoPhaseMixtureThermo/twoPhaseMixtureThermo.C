@@ -26,7 +26,7 @@ License
 #include "twoPhaseMixtureThermo.H"
 #include "gradientEnergyFvPatchScalarField.H"
 #include "mixedEnergyFvPatchScalarField.H"
-
+#include "collatedFileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -79,6 +79,10 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
         );
         T2.write();
     }
+
+    // Note: we're writing files to be read in immediately afterwards.
+    //       Avoid any thread-writing problems.
+    fileHandler().flush();
 
     thermo1_ = rhoThermo::New(U.mesh(), phase1Name());
     thermo2_ = rhoThermo::New(U.mesh(), phase2Name());

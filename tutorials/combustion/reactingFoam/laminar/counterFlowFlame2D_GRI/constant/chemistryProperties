@@ -7,29 +7,28 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      chemistryProperties;
+    version         2;
+    format          ascii;
+    class           dictionary;
+    location        "constant";
+    object          chemistryProperties;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 chemistryType
 {
-    solver            ode;
+    solver          ode;
 }
 
 chemistry       on;
 
-initialChemicalTimeStep 1e-7;
-maxChemicalTimeStep     1e-4;
+initialChemicalTimeStep 1e-07;
 
 odeCoeffs
 {
     solver          seulex;
-    absTol          1e-12;
-    relTol          1e-1;
+    absTol          1e-8;
+    relTol          0.1;
 }
+
 
 // ************************************************************************* //

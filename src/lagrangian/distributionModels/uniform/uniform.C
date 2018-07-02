@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ namespace distributionModels
 Foam::distributionModels::uniform::uniform
 (
     const dictionary& dict,
-    cachedRandom& rndGen
+    Random& rndGen
 )
 :
     distributionModel(typeName, dict, rndGen),
@@ -71,7 +71,7 @@ Foam::distributionModels::uniform::~uniform()
 
 Foam::scalar Foam::distributionModels::uniform::sample() const
 {
-    return rndGen_.position<scalar>(minValue_, maxValue_);
+    return rndGen_.scalarAB(minValue_, maxValue_);
 }
 
 

@@ -2466,16 +2466,7 @@ void Foam::snappySnapDriver::reverseAttractMeshPoints
 
     // Get search domain and extend it a bit
     treeBoundBox bb(pp.localPoints());
-    {
-        // Random number generator. Bit dodgy since not exactly random ;-)
-        Random rndGen(65431);
-
-        // Slightly extended bb. Slightly off-centred just so on symmetric
-        // geometry there are less face/edge aligned items.
-        bb = bb.extend(rndGen, 1e-4);
-        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
-    }
+    bb = bb.extend(1e-4);
 
     // Collect candidate points for attraction
     DynamicList<label> attractPoints(pp.nPoints());

@@ -40,6 +40,20 @@ inline const word& Reaction<ReactionThermo>::name() const
 
 
 template<class ReactionThermo>
+inline scalar Reaction<ReactionThermo>::Tlow() const
+{
+    return Tlow_;
+}
+
+
+template<class ReactionThermo>
+inline scalar Reaction<ReactionThermo>::Thigh() const
+{
+    return Thigh_;
+}
+
+
+template<class ReactionThermo>
 inline const List<typename Reaction<ReactionThermo>::specieCoeffs>&
 Reaction<ReactionThermo>::lhs() const
 {

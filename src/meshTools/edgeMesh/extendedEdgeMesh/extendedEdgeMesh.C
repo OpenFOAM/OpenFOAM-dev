@@ -826,17 +826,9 @@ Foam::extendedEdgeMesh::pointTree() const
 {
     if (pointTree_.empty())
     {
-        Random rndGen(17301893);
-
         // Slightly extended bb. Slightly off-centred just so on symmetric
         // geometry there are less face/edge aligned items.
-        treeBoundBox bb
-        (
-            treeBoundBox(points()).extend(rndGen, 1e-4)
-        );
-
-        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
+        treeBoundBox bb(treeBoundBox(points()).extend(1e-4));
 
         const labelList featurePointLabels = identity(nonFeatureStart_);
 
@@ -866,17 +858,9 @@ Foam::extendedEdgeMesh::edgeTree() const
 {
     if (edgeTree_.empty())
     {
-        Random rndGen(17301893);
-
         // Slightly extended bb. Slightly off-centred just so on symmetric
         // geometry there are less face/edge aligned items.
-        treeBoundBox bb
-        (
-            treeBoundBox(points()).extend(rndGen, 1e-4)
-        );
-
-        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
+        treeBoundBox bb(treeBoundBox(points()).extend(1e-4));
 
         labelList allEdges(identity(edges().size()));
 
@@ -910,17 +894,9 @@ Foam::extendedEdgeMesh::edgeTreesByType() const
     {
         edgeTreesByType_.setSize(nEdgeTypes);
 
-        Random rndGen(872141);
-
         // Slightly extended bb. Slightly off-centred just so on symmetric
         // geometry there are less face/edge aligned items.
-        treeBoundBox bb
-        (
-            treeBoundBox(points()).extend(rndGen, 1e-4)
-        );
-
-        bb.min() -= point(rootVSmall, rootVSmall, rootVSmall);
-        bb.max() += point(rootVSmall, rootVSmall, rootVSmall);
+        treeBoundBox bb(treeBoundBox(points()).extend(1e-4));
 
         labelListList sliceEdges(nEdgeTypes);
 

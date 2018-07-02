@@ -24,9 +24,6 @@ License
 Class
     Foam::advectiveFvPatchField
 
-Group
-    grpOutletBoundaryConditions
-
 Description
     This boundary condition provides an advective outflow condition, based on
     solving DDt(W, field) = 0 at the boundary where \c W is the wave velocity

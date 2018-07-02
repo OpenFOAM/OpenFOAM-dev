@@ -140,12 +140,7 @@ void Foam::uniformDensityHydrostaticPressureFvPatchScalarField::updateCoeffs()
         const uniformDimensionedScalarField& hRef =
             db().lookupObject<uniformDimensionedScalarField>("hRef");
 
-        ghRef =
-        (
-            mag(g.value()) > small
-          ? (g & (cmptMag(g.value())/mag(g.value()))*hRef).value()
-          : 0
-        );
+        ghRef = - mag(g.value())*hRef.value();
     }
 
     operator==

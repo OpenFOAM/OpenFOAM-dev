@@ -24,9 +24,6 @@ License
 Class
     Foam::PrghPressureFvPatchScalarField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This boundary condition provides the p_rgh equivalent of a pressure
     boundary condition calculated as:

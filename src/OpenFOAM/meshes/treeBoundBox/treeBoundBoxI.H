@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -312,27 +312,18 @@ inline void Foam::treeBoundBox::searchOrder
 }
 
 
-//- Return slightly wider bounding box
-inline Foam::treeBoundBox Foam::treeBoundBox::extend
-(
-    Random& rndGen,
-    const scalar s
-) const
+inline Foam::treeBoundBox Foam::treeBoundBox::extend(const scalar s) const
 {
+    // Numbers that don't approximate rational fractions with which to make the
+    // box asymmetric. These are between one and two.
+    static const vector a = vector::uniform(sqrt(1.25) + 0.5);
+    static const vector b = vector::uniform(sqrt(2.0));
+
     treeBoundBox bb(*this);
 
-    vector newSpan = bb.span();
-
-    // Make 3D
-    scalar minSpan = s * Foam::mag(newSpan);
-
-    for (direction dir = 0; dir < vector::nComponents; dir++)
-    {
-        newSpan[dir] = Foam::max(newSpan[dir], minSpan);
-    }
-
-    bb.min() -= cmptMultiply(s * rndGen.vector01(), newSpan);
-    bb.max() += cmptMultiply(s * rndGen.vector01(), newSpan);
+    const scalar delta = s*Foam::mag(bb.span());
+    bb.min() -= Foam::max(delta*a, vector::uniform(rootVSmall));
+    bb.max() += Foam::max(delta*b, vector::uniform(rootVSmall));
 
     return bb;
 }

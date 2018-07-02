@@ -168,9 +168,9 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
         {
             const Reaction<ThermoType>& R = this->reactions_[i];
 
-            scalar omegai = omega
+            scalar omegai = R.omega
             (
-                R, c, T, p, pf, cf, lRef, pr, cr, rRef
+                p, T, c, pf, cf, lRef, pr, cr, rRef
             );
 
             forAll(R.lhs(), s)
@@ -232,17 +232,17 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
         if (c[si] < c[lRef])
         {
             const scalar exp = R.lhs()[slRef].exponent;
-            pf *= pow(max(c[lRef], 0.0), exp);
+            pf *= pow(max(c[lRef], 0), exp);
             lRef = si;
             slRef = s;
         }
         else
         {
             const scalar exp = R.lhs()[s].exponent;
-            pf *= pow(max(c[si], 0.0), exp);
+            pf *= pow(max(c[si], 0), exp);
         }
     }
-    cf = max(c[lRef], 0.0);
+    cf = max(c[lRef], 0);
 
     {
         const scalar exp = R.lhs()[slRef].exponent;
@@ -274,17 +274,17 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
         if (c[si] < c[rRef])
         {
             const scalar exp = R.rhs()[srRef].exponent;
-            pr *= pow(max(c[rRef], 0.0), exp);
+            pr *= pow(max(c[rRef], 0), exp);
             rRef = si;
             srRef = s;
         }
         else
         {
             const scalar exp = R.rhs()[s].exponent;
-            pr *= pow(max(c[si], 0.0), exp);
+            pr *= pow(max(c[si], 0), exp);
         }
     }
-    cr = max(c[rRef], 0.0);
+    cr = max(c[rRef], 0);
 
     {
         const scalar exp = R.rhs()[srRef].exponent;
@@ -334,14 +334,14 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
         // efficiencies
         for (label i=0; i<NsDAC_; i++)
         {
-            this->c_[simplifiedToCompleteIndex_[i]] = max(c[i], 0.0);
+            this->c_[simplifiedToCompleteIndex_[i]] = max(c[i], 0);
         }
     }
     else
     {
         for (label i=0; i<this->nSpecie(); i++)
         {
-            this->c_[i] = max(c[i], 0.0);
+            this->c_[i] = max(c[i], 0);
         }
     }
 
@@ -398,7 +398,8 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
 (
     const scalar t,
     const scalarField& c,
-    scalarSquareMatrix& dfdc
+    scalarField& dcdt,
+    scalarSquareMatrix& J
 ) const
 {
     const bool reduced = mechRed_->active();
@@ -416,183 +417,119 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
         this->c_ = completeC_;
         for (label i=0; i<NsDAC_; i++)
         {
-            this->c_[simplifiedToCompleteIndex_[i]] = max(c[i], 0.0);
+            this->c_[simplifiedToCompleteIndex_[i]] = max(c[i], 0);
         }
     }
     else
     {
         forAll(this->c_, i)
         {
-            this->c_[i] = max(c[i], 0.0);
+            this->c_[i] = max(c[i], 0);
         }
     }
 
-    dfdc = Zero;
+    J = Zero;
+    dcdt = Zero;
+    scalarField hi(this->c_.size());
+    scalarField cpi(this->c_.size());
+    forAll(hi, i)
+    {
+        hi[i] = this->specieThermo_[i].ha(p, T);
+        cpi[i] = this->specieThermo_[i].cp(p, T);
+    }
+
+    scalar omegaI = 0;
 
     forAll(this->reactions_, ri)
     {
         if (!reactionsDisabled_[ri])
         {
             const Reaction<ThermoType>& R = this->reactions_[ri];
-
-            const scalar kf0 = R.kf(p, T, this->c_);
-            const scalar kr0 = R.kr(kf0, p, T, this->c_);
-
-            forAll(R.lhs(), j)
-            {
-                label sj = R.lhs()[j].index;
-                if (reduced)
-                {
-                    sj = completeToSimplifiedIndex_[sj];
-                }
-                scalar kf = kf0;
-                forAll(R.lhs(), i)
-                {
-                    const label si = R.lhs()[i].index;
-                    const scalar el = R.lhs()[i].exponent;
-                    if (i == j)
-                    {
-                        if (el < 1)
-                        {
-                            if (this->c_[si] > small)
-                            {
-                                kf *= el*pow(this->c_[si], el - 1);
-                            }
-                            else
-                            {
-                                kf = 0;
-                            }
-                        }
-                        else
-                        {
-                            kf *= el*pow(this->c_[si], el - 1);
-                        }
-                    }
-                    else
-                    {
-                        kf *= pow(this->c_[si], el);
-                    }
-                }
-
-                forAll(R.lhs(), i)
-                {
-                    label si = R.lhs()[i].index;
-                    if (reduced)
-                    {
-                        si = completeToSimplifiedIndex_[si];
-                    }
-                    const scalar sl = R.lhs()[i].stoichCoeff;
-                    dfdc(si, sj) -= sl*kf;
-                }
-                forAll(R.rhs(), i)
-                {
-                    label si = R.rhs()[i].index;
-                    if (reduced)
-                    {
-                        si = completeToSimplifiedIndex_[si];
-                    }
-                    const scalar sr = R.rhs()[i].stoichCoeff;
-                    dfdc(si, sj) += sr*kf;
-                }
-            }
-
-            forAll(R.rhs(), j)
-            {
-                label sj = R.rhs()[j].index;
-                if (reduced)
-                {
-                    sj = completeToSimplifiedIndex_[sj];
-                }
-                scalar kr = kr0;
-                forAll(R.rhs(), i)
-                {
-                    const label si = R.rhs()[i].index;
-                    const scalar er = R.rhs()[i].exponent;
-                    if (i == j)
-                    {
-                        if (er < 1)
-                        {
-                            if (this->c_[si] > small)
-                            {
-                                kr *= er*pow(this->c_[si], er - 1);
-                            }
-                            else
-                            {
-                                kr = 0;
-                            }
-                        }
-                        else
-                        {
-                            kr *= er*pow(this->c_[si], er - 1);
-                        }
-                    }
-                    else
-                    {
-                        kr *= pow(this->c_[si], er);
-                    }
-                }
-
-                forAll(R.lhs(), i)
-                {
-                    label si = R.lhs()[i].index;
-                    if (reduced)
-                    {
-                        si = completeToSimplifiedIndex_[si];
-                    }
-                    const scalar sl = R.lhs()[i].stoichCoeff;
-                    dfdc(si, sj) += sl*kr;
-                }
-                forAll(R.rhs(), i)
-                {
-                    label si = R.rhs()[i].index;
-                    if (reduced)
-                    {
-                        si = completeToSimplifiedIndex_[si];
-                    }
-                    const scalar sr = R.rhs()[i].stoichCoeff;
-                    dfdc(si, sj) -= sr*kr;
-                }
-            }
+            scalar kfwd, kbwd;
+            R.dwdc
+            (
+                p,
+                T,
+                this->c_,
+                J,
+                dcdt,
+                omegaI,
+                kfwd,
+                kbwd,
+                reduced,
+                completeToSimplifiedIndex_
+            );
+            R.dwdT
+            (
+                p,
+                T,
+                this->c_,
+                omegaI,
+                kfwd,
+                kbwd,
+                J,
+                reduced,
+                completeToSimplifiedIndex_,
+                this->nSpecie_
+            );
         }
     }
 
-    // Calculate the dcdT elements numerically
-    const scalar delta = 1e-3;
-
-    omega(this->c_, T + delta, p, this->dcdt_);
-    for (label i=0; i<this->nSpecie_; i++)
+    // The species derivatives of the temperature term are partially computed
+    // while computing dwdc, they are completed hereunder:
+    scalar cpMean = 0;
+    scalar dcpdTMean = 0;
+    forAll(this->c_, i)
     {
-        dfdc(i, this->nSpecie_) = this->dcdt_[i];
+        cpMean += this->c_[i]*cpi[i]; // J/(m3.K)
+        // Already multiplied by rho
+        dcpdTMean += this->c_[i]*this->specieThermo_[i].dcpdT(p, T);
     }
 
-    omega(this->c_, T - delta, p, this->dcdt_);
-    for (label i=0; i<this->nSpecie_; i++)
+    scalar dTdt = 0;
+    forAll(hi, i)
     {
-        dfdc(i, this->nSpecie_) =
-            0.5*(dfdc(i, this->nSpecie_) - this->dcdt_[i])/delta;
+        if (reduced)
+        {
+            const label si = completeToSimplifiedIndex_[i];
+            if (si != -1)
+            {
+                dTdt += hi[i]*dcdt[si]; // J/(m3.s)
+            }
+        }
+        else
+        {
+            dTdt += hi[i]*dcdt[i]; // J/(m3.s)
+        }
+    }
+    dTdt /= -cpMean; // K/s
+    dcdt[this->nSpecie_] = dTdt;
+
+    for (label i = 0; i < this->nSpecie_; i++)
+    {
+        J(this->nSpecie_, i) = 0;
+        for (label j = 0; j < this->nSpecie_; j++)
+        {
+            const label sj = reduced ? simplifiedToCompleteIndex_[j] : j;
+            J(this->nSpecie_, i) += hi[sj]*J(j, i);
+        }
+        const label si = reduced ? simplifiedToCompleteIndex_[i] : i;
+        J(this->nSpecie_, i) += cpi[si]*dTdt; // J/(mol.s)
+        J(this->nSpecie_, i) /= -cpMean;    // K/s / (mol/m3)
     }
 
-    dfdc(this->nSpecie_, this->nSpecie_) = 0;
-    dfdc(this->nSpecie_ + 1, this->nSpecie_) = 0;
-}
-
-
-template<class ReactionThermo, class ThermoType>
-void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
-(
-    const scalar t,
-    const scalarField& c,
-    scalarField& dcdt,
-    scalarSquareMatrix& dfdc
-) const
-{
-    jacobian(t, c, dfdc);
-
-    const scalar T = c[this->nSpecie_];
-    const scalar p = c[this->nSpecie_ + 1];
-
-    // Note: Uses the c_ field initialized by the call to jacobian above
-    omega(this->c_, T, p, dcdt);
+    // ddT of dTdt
+    J(this->nSpecie_, this->nSpecie_) = 0;
+    for (label i = 0; i < this->nSpecie_; i++)
+    {
+        const label si = reduced ? simplifiedToCompleteIndex_[i] : i;
+        J(this->nSpecie_, this->nSpecie_) +=
+            cpi[si]*dcdt[i]
+          + hi[si]*J(i, this->nSpecie_);
+    }
+    J(this->nSpecie_, this->nSpecie_) += dTdt*dcpdTMean;
+    J(this->nSpecie_, this->nSpecie_) /= -cpMean;
+    J(this->nSpecie_, this->nSpecie_) += dTdt/T;
 }
 
 
@@ -915,7 +852,7 @@ setTabulationResultsAdd
     const label celli
 )
 {
-    tabulationResults_[celli] = 0.0;
+    tabulationResults_[celli] = 0;
 }
 
 
@@ -923,7 +860,7 @@ template<class ReactionThermo, class ThermoType>
 void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
 setTabulationResultsGrow(const label celli)
 {
-    tabulationResults_[celli] = 1.0;
+    tabulationResults_[celli] = 1;
 }
 
 
@@ -934,7 +871,7 @@ setTabulationResultsRetrieve
     const label celli
 )
 {
-    tabulationResults_[celli] = 2.0;
+    tabulationResults_[celli] = 2;
 }
 
 

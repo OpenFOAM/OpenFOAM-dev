@@ -1,1 +1,2 @@
-EXE_INC = -I$(FOAM_APP)/utilities/mesh/generation/foamyMesh/conformalVoronoiMesh/vectorTools
+EXE_INC = \
+    -I$(FOAM_APP)/utilities/mesh/generation/foamyMesh/conformalVoronoiMesh/vectorTools

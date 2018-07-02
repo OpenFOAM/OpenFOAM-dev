@@ -138,7 +138,7 @@ bool Foam::SHF<CloudType>::update
     scalar& massChild
 )
 {
-    cachedRandom& rndGen = this->owner().rndGen();
+    Random& rndGen = this->owner().rndGen();
 
     bool addChild = false;
 

@@ -1,0 +1,61 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeatureExtractDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaces
+(
+    "surface1.stl"
+    "surface2.obj"
+);
+
+// Identify edges when angle between faces < includedAngle
+includedAngle       120;
+
+// Include region boundaries as features
+geometricTestOnly   no;
+
+subsetFeatures
+{
+    // Include only edges that intersect the plane with (normal)(basePoint)
+    // plane               (1 0 0)(0 0 0);
+
+    // Include only edges inside the box
+    // insideBox           (0 0 0)(1 1 1);
+
+    // Include only edges outside the box
+    // outsideBox          (0 0 0)(1 1 1);
+
+    // Include nonManifold edges (edges with >2 connected faces)
+    nonManifoldEdges    yes;
+
+    // Include open edges (edges with 1 connected face)
+    openEdges           yes;
+}
+
+trimFeatures
+{
+    // Remove features with fewer than the specified number of edges
+    minElem         0;
+
+    // Remove features shorter than the specified cumulative length
+    minLen          0.0;
+}
+
+// Write features to obj format for visualisation
+writeObj            yes;
+verboseObj          no;
+
+
+// ************************************************************************* //

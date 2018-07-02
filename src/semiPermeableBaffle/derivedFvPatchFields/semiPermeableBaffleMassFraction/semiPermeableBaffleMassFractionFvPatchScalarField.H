@@ -24,9 +24,6 @@ License
 Class
     Foam::semiPermeableBaffleMassFractionFvPatchScalarField
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This is a mass-fraction boundary condition for a semi-permeable baffle.
 

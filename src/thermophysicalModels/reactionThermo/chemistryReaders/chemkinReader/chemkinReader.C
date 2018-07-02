@@ -26,6 +26,7 @@ License
 #include "chemkinReader.H"
 #include <fstream>
 #include "atomicWeights.H"
+#include "ReactionProxy.H"
 #include "IrreversibleReaction.H"
 #include "ReversibleReaction.H"
 #include "NonEquilibriumReversibleReaction.H"
@@ -182,7 +183,7 @@ void Foam::chemkinReader::addReactionType
                 new IrreversibleReaction
                 <Reaction, gasHThermoPhysics, ReactionRateType>
                 (
-                    Reaction<gasHThermoPhysics>
+                    ReactionProxy<gasHThermoPhysics>
                     (
                         speciesTable_,
                         lhs.shrink(),
@@ -202,7 +203,7 @@ void Foam::chemkinReader::addReactionType
                 new ReversibleReaction
                 <Reaction, gasHThermoPhysics, ReactionRateType>
                 (
-                    Reaction<gasHThermoPhysics>
+                    ReactionProxy<gasHThermoPhysics>
                     (
                         speciesTable_,
                         lhs.shrink(),
@@ -490,7 +491,7 @@ void Foam::chemkinReader::addReaction
                     new NonEquilibriumReversibleReaction
                         <Reaction, gasHThermoPhysics, ArrheniusReactionRate>
                     (
-                        Reaction<gasHThermoPhysics>
+                        ReactionProxy<gasHThermoPhysics>
                         (
                             speciesTable_,
                             lhs.shrink(),
@@ -546,7 +547,7 @@ void Foam::chemkinReader::addReaction
                         thirdBodyArrheniusReactionRate
                     >
                     (
-                        Reaction<gasHThermoPhysics>
+                        ReactionProxy<gasHThermoPhysics>
                         (
                             speciesTable_,
                             lhs.shrink(),
@@ -646,9 +647,13 @@ void Foam::chemkinReader::addReaction
                 reactions_.append
                 (
                     new NonEquilibriumReversibleReaction
-                        <Reaction, gasHThermoPhysics, LandauTellerReactionRate>
+                    <
+                        Reaction,
+                        gasHThermoPhysics,
+                        LandauTellerReactionRate
+                    >
                     (
-                        Reaction<gasHThermoPhysics>
+                        ReactionProxy<gasHThermoPhysics>
                         (
                             speciesTable_,
                             lhs.shrink(),
@@ -780,6 +785,9 @@ void Foam::chemkinReader::read
     const fileName& transportFileName
 )
 {
+    Reaction<gasHThermoPhysics>::TlowDefault = 0;
+    Reaction<gasHThermoPhysics>::ThighDefault = great;
+
     transportDict_.read(IFstream(transportFileName)());
 
     if (thermoFileName != fileName::null)

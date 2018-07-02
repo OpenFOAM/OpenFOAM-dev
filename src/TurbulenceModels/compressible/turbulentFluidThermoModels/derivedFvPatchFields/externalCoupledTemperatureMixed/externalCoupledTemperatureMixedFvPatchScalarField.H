@@ -24,9 +24,6 @@ License
 Class
     Foam::externalCoupledTemperatureMixedFvPatchScalarField
 
-Group
-    grpCoupledBoundaryConditions
-
 Description
     This boundary condition provides a temperature interface to an external
     application.  Values are transferred as plain text files, where OpenFOAM

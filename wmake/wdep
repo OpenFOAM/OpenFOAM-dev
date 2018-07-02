@@ -5,7 +5,7 @@
 #  \\    /   O peration     |
 #   \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # License
 #     This file is part of OpenFOAM.
 #
@@ -39,7 +39,7 @@ Script=${0##*/}
 
 # Source the wmake functions
 # shellcheck source=scripts/wmakeFunctions
-. ${0%/*}/scripts/wmakeFunctions
+. "${0%/*}/scripts/wmakeFunctions"
 
 usage() {
     cat<<USAGE

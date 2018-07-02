@@ -24,9 +24,6 @@ License
 Class
     Foam::fixedMeanOutletInletFvPatchField
 
-Group
-    grpInletBoundaryConditions
-
 Description
     This boundary condition extrapolates field to the patch using the near-cell
     values and adjusts the distribution to match the specified, optionally

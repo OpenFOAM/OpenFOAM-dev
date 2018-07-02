@@ -80,7 +80,7 @@ public:
     // Constructors
 
         //- Construct from components
-        general(const dictionary& dict, cachedRandom& rndGen);
+        general(const dictionary& dict, Random& rndGen);
 
         //- Construct copy
         general(const general& p);

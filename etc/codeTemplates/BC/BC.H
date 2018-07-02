@@ -24,9 +24,6 @@ License
 Class
     Foam::CONSTRUCT
 
-Group
-    grpGenericBoundaryConditions
-
 Description
     This boundary condition provides a NAME condition,
     calculated as:

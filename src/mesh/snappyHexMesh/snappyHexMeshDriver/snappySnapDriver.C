@@ -24,7 +24,7 @@ License
 Description
     All to do with snapping to the surface
 
-\*----------------------------------------------------------------------------*/
+\*---------------------------------------------------------------------------*/
 
 #include "snappySnapDriver.H"
 #include "motionSmoother.H"

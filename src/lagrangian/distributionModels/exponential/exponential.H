@@ -75,7 +75,7 @@ public:
     // Constructors
 
         //- Construct from components
-        exponential(const dictionary& dict, cachedRandom& rndGen);
+        exponential(const dictionary& dict, Random& rndGen);
 
         //- Construct copy
         exponential(const exponential& p);

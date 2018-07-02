@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 {
     #include "postProcess.H"
 
-    #include "setRootCase.H"
+    #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "createDyMControls.H"
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
                 }
             }
 
-            if (pimple.firstIter())
+            if (pimple.firstIter() && !pimple.simpleRho())
             {
                 #include "rhoEqn.H"
             }

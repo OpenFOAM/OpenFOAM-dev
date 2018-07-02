@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,6 @@ namespace Foam
 
 // Forward declaration of classes
 class Random;
-class cachedRandom;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -53,7 +52,6 @@ typedef Barycentric2D<scalar> barycentric2D;
 
 //- Generate a random barycentric coordinate within the unit triangle
 barycentric2D barycentric2D01(Random& rndGen);
-barycentric2D barycentric2D01(cachedRandom& rndGen);
 
 
 template<>

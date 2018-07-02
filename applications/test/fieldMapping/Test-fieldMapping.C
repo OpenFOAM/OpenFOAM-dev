@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
         }
 
         // Remove face
-        label candidateFacei = rndGen.integer(0, mesh.nInternalFaces()-1);
+        label candidateFacei = rndGen.sampleAB<label>(0, mesh.nInternalFaces());
         Info<< "Wanting to delete face " << mesh.faceCentres()[candidateFacei]
             << nl << endl;
 

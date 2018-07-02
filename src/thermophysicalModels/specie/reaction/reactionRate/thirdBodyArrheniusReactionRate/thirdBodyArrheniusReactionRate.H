@@ -61,6 +61,7 @@ class thirdBodyArrheniusReactionRate
     // Private data
 
         thirdBodyEfficiencies thirdBodyEfficiencies_;
+        List<Tuple2<label, scalar>> beta_;
 
 
 public:
@@ -93,6 +94,38 @@ public:
         }
 
         inline scalar operator()
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c
+        ) const;
+
+        inline scalar ddT
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c
+        ) const;
+
+        //- Third-body efficiencies (beta = 1-alpha)
+        //  non-empty only for third-body reactions
+        //  with enhanced molecularity (alpha != 1)
+        inline const List<Tuple2<label, scalar>>& beta() const
+        {
+            return beta_;
+        }
+
+        //- Species concentration derivative of the pressure dependent term
+        inline void dcidc
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c,
+            scalarField& dcidc
+        ) const;
+
+        //- Temperature derivative of the pressure dependent term
+        inline scalar dcidT
         (
             const scalar p,
             const scalar T,

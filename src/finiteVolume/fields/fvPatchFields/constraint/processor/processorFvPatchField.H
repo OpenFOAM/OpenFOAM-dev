@@ -24,9 +24,6 @@ License
 Class
     Foam::processorFvPatchField
 
-Group
-    grpCoupledBoundaryConditions
-
 Description
     This boundary condition enables processor communication across patches.
 

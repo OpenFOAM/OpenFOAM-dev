@@ -24,9 +24,6 @@ License
 Class
     Foam::atmBoundaryLayerInletEpsilonFvPatchScalarField
 
-Group
-    grpRASBoundaryConditions grpInletBoundaryConditions
-
 Description
     This boundary condition specifies an inlet value for the turbulence
     dissipation, \f$\epsilon\f$, appropriate for atmospheric boundary layers.

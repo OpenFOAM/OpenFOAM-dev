@@ -24,8 +24,6 @@ License
 Class
     Foam::functionObjects::FUNCTIONOBJECT
 
-Group
-
 Description
     This function object...
 

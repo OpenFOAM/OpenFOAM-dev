@@ -24,9 +24,6 @@ License
 Class
     Foam::outletPhaseMeanVelocityFvPatchVectorField
 
-Group
-    grpOutletBoundaryConditions
-
 Description
     This boundary condition adjusts the velocity for the given phase to achieve
     the specified mean thus causing the phase-fraction to adjust according to

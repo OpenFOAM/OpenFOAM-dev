@@ -24,9 +24,6 @@ License
 Class
     Foam::cyclicRepeatAMIFvPatchField
 
-Group
-    grpCoupledBoundaryConditions
-
 Description
     This boundary condition enforces an repeating condition between a pair of
     boundaries, whereby communication between the patches is performed using

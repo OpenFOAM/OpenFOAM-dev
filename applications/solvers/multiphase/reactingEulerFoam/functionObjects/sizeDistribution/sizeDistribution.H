@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::sizeDistribution
 
-Group
-    grpFieldFunctionObjects
-
 Description
     This function object calculates and outputs information about the size
     distribution of the dispersed phase, such as the number density function or

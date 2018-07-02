@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,6 @@ License
 Class
     Foam::compressible::
         alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
-
-Group
-    grpCmpWallFunctions
 
 Description
     This boundary condition provides a thermal wall function for turbulent
@@ -62,8 +59,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressiblealphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
-#define compressiblealphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
+#ifndef compressible_alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
+#define compressible_alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
 
 #include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 
@@ -75,7 +72,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
-   Class alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField Declaration
+ Class alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField

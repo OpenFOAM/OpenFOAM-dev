@@ -980,8 +980,6 @@ void Foam::faceCoupleInfo::findSlavesCoveringMaster
 
     treeBoundBox overallBb(mesh0.points());
 
-    Random rndGen(123456);
-
     indexedOctree<treeDataFace> tree
     (
         treeDataFace    // all information needed to search faces
@@ -990,7 +988,7 @@ void Foam::faceCoupleInfo::findSlavesCoveringMaster
             mesh0,
             bndFaces                    // boundary faces only
         ),
-        overallBb.extend(rndGen, 1e-4), // overall search domain
+        overallBb.extend(1e-4),         // overall search domain
         8,                              // maxLevel
         10,                             // leafsize
         3.0                             // duplicity

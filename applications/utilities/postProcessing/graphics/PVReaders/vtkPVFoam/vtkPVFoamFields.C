@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,37 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "vtkPVFoam.H"
-
-// OpenFOAM includes
-#include "IOobjectList.H"
-#include "vtkPVFoamReader.h"
-
 // VTK includes
 #include "vtkDataArraySelection.h"
 #include "vtkPolyData.h"
 #include "vtkUnstructuredGrid.h"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
+// OpenFOAM includes
+#include "IOobjectList.H"
+#include "vtkPVFoam.H"
+#include "vtkPVFoamReader.h"
 #include "vtkPVFoamVolFields.H"
 #include "vtkPVFoamPointFields.H"
 #include "vtkPVFoamLagrangianFields.H"
 
 
-void Foam::vtkPVFoam::pruneObjectList
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::IOobjectList Foam::vtkPVFoam::getObjects
 (
-    IOobjectList& objects,
-    const wordHashSet& selected
+    const wordHashSet& selected,
+    const fvMesh& mesh,
+    const fileName& instance,
+    const fileName& local
 )
 {
-    // hash all the selected field names
+    // If nothing is selected then return an empty list
     if (selected.empty())
     {
-        objects.clear();
+        return IOobjectList(0);
     }
 
-    // only keep selected fields
+    // Create the list of objects at the instance
+    IOobjectList objects(mesh, instance, local);
+
+    // Add any objects from constant that are not already present
+    IOobjectList objectsConstant(mesh, dbPtr_().constant(), local);
+    forAllIter(IOobjectList, objectsConstant, iter)
+    {
+        if (!objects.found(iter.key()))
+        {
+            objects.add
+            (
+                *objectsConstant.HashPtrTable<IOobject>::remove(iter)
+            );
+        }
+    }
+
+    // Remove everything that is not selected
     forAllIter(IOobjectList, objects, iter)
     {
         if (!selected.found(iter()->name()))
@@ -61,6 +77,8 @@ void Foam::vtkPVFoam::pruneObjectList
             objects.erase(iter);
         }
     }
+
+    return objects;
 }
 
 
@@ -83,8 +101,15 @@ void Foam::vtkPVFoam::convertVolFields
 
     // Get objects (fields) for this time - only keep selected fields
     // the region name is already in the mesh db
-    IOobjectList objects(mesh, dbPtr_().timeName());
-    pruneObjectList(objects, selectedFields);
+    IOobjectList objects
+    (
+        getObjects
+        (
+            selectedFields,
+            mesh,
+            dbPtr_().timeName()
+        )
+    );
 
     if (objects.empty())
     {
@@ -174,8 +199,15 @@ void Foam::vtkPVFoam::convertPointFields
 
     // Get objects (fields) for this time - only keep selected fields
     // the region name is already in the mesh db
-    IOobjectList objects(mesh, dbPtr_().timeName());
-    pruneObjectList(objects, selectedFields);
+    IOobjectList objects
+    (
+        getObjects
+        (
+            selectedFields,
+            mesh,
+            dbPtr_().timeName()
+        )
+    );
 
     if (objects.empty())
     {
@@ -267,11 +299,14 @@ void Foam::vtkPVFoam::convertLagrangianFields
         // the region name is already in the mesh db
         IOobjectList objects
         (
-            mesh,
-            dbPtr_().timeName(),
-            cloud::prefix/cloudName
+            getObjects
+            (
+                selectedFields,
+                mesh,
+                dbPtr_().timeName(),
+                cloud::prefix/cloudName
+            )
         );
-        pruneObjectList(objects, selectedFields);
 
         if (objects.empty())
         {

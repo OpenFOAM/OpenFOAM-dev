@@ -24,8 +24,6 @@ License
 Class
     Foam::functionObjects::surfaceInterpolate
 
-Group grpFieldFunctionObjects
-
 Description
     Linearly interpolates volume fields to generate surface fields.
 

@@ -14,16 +14,16 @@ runApplication chemkinToFoam \
 runApplication blockMesh
 runApplication setFields
 
-
 # Run the application without chemistry until 1500 to let the flow field develop
+foamDictionary -entry "startTime" -set "0" system/controlDict
 foamDictionary -entry "writeInterval" -set "1500" system/controlDict
 foamDictionary -entry "endTime" -set "1500" system/controlDict
 foamDictionary -entry "chemistry" -set "off" constant/chemistryProperties
 
 runApplication $application
 
-
 # Run with chemistry until flame reach its full size
+foamDictionary -entry "startTime" -set "1500" system/controlDict
 foamDictionary -entry "writeInterval" -set "100" system/controlDict
 foamDictionary -entry "endTime" -set "5000" system/controlDict
 foamDictionary -entry "chemistry" -set "on" constant/chemistryProperties

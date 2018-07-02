@@ -5,7 +5,7 @@
         scalar invW = 0.0;
         forAll(Y, i)
         {
-            invW += Y[i][0]/specieData[i].W();
+            invW += Y[i][0]/W[i];
         }
 
         Rspecific[0] = 1000.0*constant::physicoChemical::R.value()*invW;

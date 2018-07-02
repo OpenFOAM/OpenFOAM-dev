@@ -1,2 +1,4 @@
-EXE_INC = -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude
+EXE_INC = \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude
+
 EXE_LIBS = -lspecie

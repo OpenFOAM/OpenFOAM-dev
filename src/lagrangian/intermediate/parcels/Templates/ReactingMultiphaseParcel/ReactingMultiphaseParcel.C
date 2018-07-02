@@ -520,6 +520,10 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     // Check that model is active
     if (!cloud.devolatilisation().active())
     {
+        if (canCombust != -1)
+        {
+            canCombust = 1;
+        }
         return;
     }
 

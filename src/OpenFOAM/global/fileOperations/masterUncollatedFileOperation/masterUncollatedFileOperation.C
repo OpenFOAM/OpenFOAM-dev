@@ -2532,6 +2532,13 @@ Foam::fileOperations::masterUncollatedFileOperation::NewOFstream
 }
 
 
+void Foam::fileOperations::masterUncollatedFileOperation::flush() const
+{
+    fileOperation::flush();
+    times_.clear();
+}
+
+
 Foam::label Foam::fileOperations::masterUncollatedFileOperation::addWatch
 (
     const fileName& fName

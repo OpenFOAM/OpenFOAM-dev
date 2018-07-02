@@ -51,12 +51,7 @@ void Foam::fv::tabulatedAccelerationSource::addSup
 
         g = g0_ - dimensionedVector("a", dimAcceleration, acceleration.x());
 
-        dimensionedScalar ghRef
-        (
-            mag(g.value()) > small
-          ? g & (cmptMag(g.value())/mag(g.value()))*hRef
-          : dimensionedScalar("ghRef", g.dimensions()*dimLength, 0)
-        );
+        dimensionedScalar ghRef(- mag(g)*hRef);
 
         mesh_.lookupObjectRef<volScalarField>("gh") = (g & mesh_.C()) - ghRef;
 

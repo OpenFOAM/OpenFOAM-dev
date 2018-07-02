@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addRegionOption.H"
     argList::noParallel();
     argList::validArgs.append("patches");
     argList::validArgs.append("edgeFraction");
@@ -69,12 +70,14 @@ int main(int argc, char *argv[])
         "restrict cells to refine based on specified cellSet name"
     );
 
-
     #include "setRootCase.H"
     #include "createTime.H"
     runTime.functionObjects().off();
 
-    #include "createPolyMesh.H"
+    Foam::word meshRegionName = polyMesh::defaultRegion;
+    args.optionReadIfPresent("region", meshRegionName);
+
+    #include "createNamedPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
     // Find set of patches from the list of regular expressions provided

@@ -69,7 +69,7 @@ inline Foam::scalar Foam::powerSeriesReactionRate::operator()
         lta *= pow(T, beta_);
     }
 
-    scalar expArg = 0.0;
+    scalar expArg = 0;
 
     forAll(coeffs_, n)
     {
@@ -79,6 +79,64 @@ inline Foam::scalar Foam::powerSeriesReactionRate::operator()
     lta *= exp(expArg);
 
     return lta;
+}
+
+
+inline Foam::scalar Foam::powerSeriesReactionRate::ddT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField&
+) const
+{
+    scalar lta = A_;
+
+    if (mag(beta_) > vSmall)
+    {
+        lta *= pow(T, beta_);
+    }
+
+    scalar expArg = 0;
+    scalar deriv = 0;
+
+    forAll(coeffs_, n)
+    {
+        scalar cT = coeffs_[n]/pow(T, n + 1);
+        expArg += cT;
+        deriv -= (n + 1)*cT;
+    }
+
+    lta *= exp(expArg);
+
+    return lta*(beta_+deriv)/T;
+}
+
+
+inline const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
+Foam::powerSeriesReactionRate::beta() const
+{
+    return NullObjectRef<List<Tuple2<label, scalar>>>();
+}
+
+
+inline void Foam::powerSeriesReactionRate::dcidc
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalarField& dcidc
+) const
+{}
+
+
+inline Foam::scalar Foam::powerSeriesReactionRate::dcidT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c
+) const
+{
+    return 0;
 }
 
 

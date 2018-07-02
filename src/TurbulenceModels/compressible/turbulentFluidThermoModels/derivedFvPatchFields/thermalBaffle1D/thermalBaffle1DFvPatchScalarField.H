@@ -24,9 +24,6 @@ License
 Class
     Foam::compressible::thermalBaffle1DFvPatchScalarField
 
-Group
-    grpThermoBoundaryConditions
-
 Description
     This BC solves a steady 1D thermal baffle.
 

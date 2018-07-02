@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,11 +31,9 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "Time.H"
-#include "dictionary.H"
 #include "IFstream.H"
-#include "OSspecific.H"
 #include "etcFiles.H"
+#include "dimensionedTypes.H"
 
 #include "specie.H"
 #include "perfectGas.H"
@@ -52,23 +50,25 @@ typedef species::thermo<janafThermo<perfectGas<specie>>, absoluteEnthalpy>
 
 int main(int argc, char *argv[])
 {
-    argList::validArgs.append("control file");
+    #include "removeCaseOptions.H"
+
+    argList::validArgs.append("properties dictionary");
     argList args(argc, argv);
 
-    const fileName controlFileName = args[1];
+    const fileName propertiesDictName = args[1];
 
     // Construct control dictionary
-    IFstream controlFile(controlFileName);
+    IFstream propertiesDict(propertiesDictName);
 
-    // Check controlFile stream is OK
-    if (!controlFile.good())
+    // Check propertiesDict stream is OK
+    if (!propertiesDict.good())
     {
         FatalErrorInFunction
-            << "Cannot read file " << controlFileName
+            << "Cannot read file " << propertiesDictName
             << exit(FatalError);
     }
 
-    dictionary control(controlFile);
+    dictionary control(propertiesDict);
 
 
     scalar P(readScalar(control.lookup("P")));

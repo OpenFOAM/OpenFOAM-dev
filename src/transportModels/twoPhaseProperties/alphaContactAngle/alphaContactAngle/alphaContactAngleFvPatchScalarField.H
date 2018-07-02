@@ -24,9 +24,6 @@ License
 Class
     Foam::alphaContactAngleFvPatchScalarField
 
-Group
-    grpWallBoundaryConditions grpGenericBoundaryConditions
-
 Description
     Abstract base class for alphaContactAngle boundary conditions.
 

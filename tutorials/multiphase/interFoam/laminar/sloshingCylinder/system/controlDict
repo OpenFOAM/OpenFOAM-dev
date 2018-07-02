@@ -33,11 +33,11 @@ writeInterval   0.02;
 
 purgeWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
 writePrecision  6;
 
-writeCompression yes;
+writeCompression off;
 
 timeFormat      general;
 
@@ -51,10 +51,5 @@ maxCo           2;
 maxAlphaCo      2;
 
 maxDeltaT       1;
-
-functions
-{
-}
-
 
 // ************************************************************************* //

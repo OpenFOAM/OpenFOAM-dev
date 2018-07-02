@@ -1,0 +1,62 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+    class           dictionary;
+    object          collapseDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// If on, adhere to quality criteria in controlMeshQualityCoeffs
+controlMeshQuality      on;
+
+controlMeshQualityCoeffs
+{
+    #includeEtc                 "caseDicts/mesh/generation/meshQualityDict"
+
+    edgeReductionFactor         0.5;
+    faceReductionFactor         0.5;
+    maximumSmoothingIterations  2;
+    maximumIterations           10;
+    maxPointErrorCount          5;
+}
+
+collapseEdgesCoeffs
+{
+    // Absolute length of edges that are merged
+    minimumEdgeLength   1e-6;
+
+    // The maximum angle between edges that permits merging
+    maximumMergeAngle   30;
+}
+
+
+collapseFacesCoeffs
+{
+    // The initial face length factor
+    initialFaceLengthFactor     0.5;
+
+    // Relative length of face for collapsing to a point
+    maxCollapseFaceToPointSideLengthCoeff   0.3;
+
+    // Allow early collapse of edges to a point
+    allowEarlyCollapseToPoint   on;
+
+    // Factor to premultiply maxCollapseFaceTo... for early collapse
+    allowEarlyCollapseCoeff     0.2;
+
+    // Limiting relative distance between a vertex and face centre
+    guardFraction               0.1;
+}
+
+
+// ************************************************************************* //

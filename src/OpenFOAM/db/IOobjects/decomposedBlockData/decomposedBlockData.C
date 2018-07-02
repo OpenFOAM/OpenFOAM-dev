@@ -859,7 +859,7 @@ bool Foam::decomposedBlockData::writeBlocks
         label startProc = 1;
         label nSendProcs = nProcs-1;
 
-        while (nSendProcs > 0)
+        while (nSendProcs > 0 && startProc < nProcs)
         {
             nSendProcs = calcNumProcs
             (
@@ -873,7 +873,7 @@ bool Foam::decomposedBlockData::writeBlocks
                 startProc
             );
 
-            if (startProc == nProcs || nSendProcs == 0)
+            if (nSendProcs == 0)
             {
                 break;
             }

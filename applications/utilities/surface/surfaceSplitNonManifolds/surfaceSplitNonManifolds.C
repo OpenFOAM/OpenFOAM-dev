@@ -666,11 +666,12 @@ bool splitBorderEdges
 
 int main(int argc, char *argv[])
 {
+    #include "removeCaseOptions.H"
+
     argList::addNote
     (
         "split multiply connected surface edges by duplicating points"
     );
-    argList::noParallel();
     argList::validArgs.append("surface file");
     argList::validArgs.append("output surface file");
     argList::addBoolOption

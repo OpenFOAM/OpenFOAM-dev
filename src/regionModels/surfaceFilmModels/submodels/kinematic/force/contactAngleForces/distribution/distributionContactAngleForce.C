@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ distributionContactAngleForce::distributionContactAngleForce
 )
 :
     contactAngleForce(typeName, film, dict),
-    rndGen_(label(0), -1),
+    rndGen_(label(0)),
     distribution_
     (
         distributionModel::New

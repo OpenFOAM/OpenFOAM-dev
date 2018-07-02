@@ -24,9 +24,6 @@ License
 Class
     Foam::omegaWallFunctionFvPatchScalarField
 
-Group
-    grpWallFunctions
-
 Description
     This boundary condition provides a wall constraint on turbulnce specific
     dissipation, omega for both low and high Reynolds number turbulence models.

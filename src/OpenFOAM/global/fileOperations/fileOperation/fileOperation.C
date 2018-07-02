@@ -982,6 +982,17 @@ Foam::label Foam::fileOperation::nProcs
 }
 
 
+void Foam::fileOperation::flush() const
+{
+    if (debug)
+    {
+        Pout<< "fileOperation::flush : clearing processor directories cache"
+            << endl;
+    }
+    procsDirs_.clear();
+}
+
+
 Foam::fileName Foam::fileOperation::processorsCasePath
 (
     const IOobject& io,

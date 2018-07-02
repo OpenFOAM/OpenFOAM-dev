@@ -100,7 +100,7 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
     scalar& tTurb
 )
 {
-    cachedRandom& rnd = this->owner().rndGen();
+    Random& rnd = this->owner().rndGen();
 
     const scalar cps = 0.16432;
 
@@ -135,11 +135,11 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
             // prevent this we let fac be both negative/positive
             if (this->owner().mesh().nSolutionD() == 2)
             {
-                fac = rnd.GaussNormal<scalar>();
+                fac = rnd.scalarNormal();
             }
             else
             {
-                fac = mag(rnd.GaussNormal<scalar>());
+                fac = mag(rnd.scalarNormal());
             }
 
             UTurb = sigma*fac*dir;

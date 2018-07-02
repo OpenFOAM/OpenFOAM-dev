@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------* \
+/*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -23,9 +23,6 @@ License
 
 Class
     Foam::externalCoupledMixedFvPatchField
-
-Group
-    grpGenericBoundaryConditions grpCoupledBoundaryConditions
 
 Description
     This boundary condition provides an interface to an external application.

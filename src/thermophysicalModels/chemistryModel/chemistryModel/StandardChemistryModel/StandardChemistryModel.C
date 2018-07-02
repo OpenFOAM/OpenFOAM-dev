@@ -56,7 +56,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
         BasicChemistryModel<ReactionThermo>::template lookupOrDefault<scalar>
         (
             "Treact",
-            0.0
+            0
         )
     ),
     RR_(nSpecie_),
@@ -80,7 +80,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
                     IOobject::NO_WRITE
                 ),
                 thermo.p().mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
             )
         );
     }
@@ -109,8 +109,6 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
     scalarField& dcdt
 ) const
 {
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
 
     dcdt = Zero;
 
@@ -118,24 +116,7 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
     {
         const Reaction<ThermoType>& R = reactions_[i];
 
-        const scalar omegai = omega
-        (
-            R, c, T, p, pf, cf, lRef, pr, cr, rRef
-        );
-
-        forAll(R.lhs(), s)
-        {
-            const label si = R.lhs()[s].index;
-            const scalar sl = R.lhs()[s].stoichCoeff;
-            dcdt[si] -= sl*omegai;
-        }
-
-        forAll(R.rhs(), s)
-        {
-            const label si = R.rhs()[s].index;
-            const scalar sr = R.rhs()[s].stoichCoeff;
-            dcdt[si] += sr*omegai;
-        }
+        R.omega(p, T, c, dcdt);
     }
 }
 
@@ -156,120 +137,8 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omegaI
 ) const
 {
     const Reaction<ThermoType>& R = reactions_[index];
-    scalar w = omega(R, c, T, p, pf, cf, lRef, pr, cr, rRef);
+    scalar w = R.omega(p, T, c, pf, cf, lRef, pr, cr, rRef);
     return(w);
-}
-
-
-template<class ReactionThermo, class ThermoType>
-Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
-(
-    const Reaction<ThermoType>& R,
-    const scalarField& c,
-    const scalar T,
-    const scalar p,
-    scalar& pf,
-    scalar& cf,
-    label& lRef,
-    scalar& pr,
-    scalar& cr,
-    label& rRef
-) const
-{
-    const scalar kf = R.kf(p, T, c);
-    const scalar kr = R.kr(kf, p, T, c);
-
-    pf = 1.0;
-    pr = 1.0;
-
-    const label Nl = R.lhs().size();
-    const label Nr = R.rhs().size();
-
-    label slRef = 0;
-    lRef = R.lhs()[slRef].index;
-
-    pf = kf;
-    for (label s = 1; s < Nl; s++)
-    {
-        const label si = R.lhs()[s].index;
-
-        if (c[si] < c[lRef])
-        {
-            const scalar exp = R.lhs()[slRef].exponent;
-            pf *= pow(max(c[lRef], 0.0), exp);
-            lRef = si;
-            slRef = s;
-        }
-        else
-        {
-            const scalar exp = R.lhs()[s].exponent;
-            pf *= pow(max(c[si], 0.0), exp);
-        }
-    }
-    cf = max(c[lRef], 0.0);
-
-    {
-        const scalar exp = R.lhs()[slRef].exponent;
-        if (exp < 1.0)
-        {
-            if (cf > small)
-            {
-                pf *= pow(cf, exp - 1.0);
-            }
-            else
-            {
-                pf = 0.0;
-            }
-        }
-        else
-        {
-            pf *= pow(cf, exp - 1.0);
-        }
-    }
-
-    label srRef = 0;
-    rRef = R.rhs()[srRef].index;
-
-    // Find the matrix element and element position for the rhs
-    pr = kr;
-    for (label s = 1; s < Nr; s++)
-    {
-        const label si = R.rhs()[s].index;
-        if (c[si] < c[rRef])
-        {
-            const scalar exp = R.rhs()[srRef].exponent;
-            pr *= pow(max(c[rRef], 0.0), exp);
-            rRef = si;
-            srRef = s;
-        }
-        else
-        {
-            const scalar exp = R.rhs()[s].exponent;
-            pr *= pow(max(c[si], 0.0), exp);
-        }
-    }
-    cr = max(c[rRef], 0.0);
-
-    {
-        const scalar exp = R.rhs()[srRef].exponent;
-        if (exp < 1.0)
-        {
-            if (cr > small)
-            {
-                pr *= pow(cr, exp - 1.0);
-            }
-            else
-            {
-                pr = 0.0;
-            }
-        }
-        else
-        {
-            pr *= pow(cr, exp - 1.0);
-        }
-    }
-
-    return pf*cf - pr*cr;
 }
 
 
@@ -286,29 +155,29 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::derivatives
 
     forAll(c_, i)
     {
-        c_[i] = max(c[i], 0.0);
+        c_[i] = max(c[i], 0);
     }
 
     omega(c_, T, p, dcdt);
 
     // Constant pressure
     // dT/dt = ...
-    scalar rho = 0.0;
-    scalar cSum = 0.0;
+    scalar rho = 0;
+    scalar cSum = 0;
     for (label i = 0; i < nSpecie_; i++)
     {
         const scalar W = specieThermo_[i].W();
         cSum += c_[i];
         rho += W*c_[i];
     }
-    scalar cp = 0.0;
+    scalar cp = 0;
     for (label i=0; i<nSpecie_; i++)
     {
         cp += c_[i]*specieThermo_[i].cp(p, T);
     }
     cp /= rho;
 
-    scalar dT = 0.0;
+    scalar dT = 0;
     for (label i = 0; i < nSpecie_; i++)
     {
         const scalar hi = specieThermo_[i].ha(p, T);
@@ -319,7 +188,7 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::derivatives
     dcdt[nSpecie_] = -dT;
 
     // dp/dt = ...
-    dcdt[nSpecie_ + 1] = 0.0;
+    dcdt[nSpecie_ + 1] = 0;
 }
 
 
@@ -329,7 +198,7 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
     const scalar t,
     const scalarField& c,
     scalarField& dcdt,
-    scalarSquareMatrix& dfdc
+    scalarSquareMatrix& J
 ) const
 {
     const scalar T = c[nSpecie_];
@@ -337,131 +206,67 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
 
     forAll(c_, i)
     {
-        c_[i] = max(c[i], 0.0);
+        c_[i] = max(c[i], 0);
     }
 
-    dfdc = Zero;
+    J = Zero;
+    dcdt = Zero;
 
-    // Length of the first argument must be nSpecie_
-    omega(c_, T, p, dcdt);
-
+    // To compute the species derivatives of the temperature term,
+    // the enthalpies of the individual species is needed
+    scalarField hi(nSpecie_);
+    scalarField cpi(nSpecie_);
+    for (label i = 0; i < nSpecie_; i++)
+    {
+        hi[i] = specieThermo_[i].ha(p, T);
+        cpi[i] = specieThermo_[i].cp(p, T);
+    }
+    scalar omegaI = 0;
+    List<label> dummy;
     forAll(reactions_, ri)
     {
         const Reaction<ThermoType>& R = reactions_[ri];
-
-        const scalar kf0 = R.kf(p, T, c_);
-        const scalar kr0 = R.kr(kf0, p, T, c_);
-
-        forAll(R.lhs(), j)
-        {
-            const label sj = R.lhs()[j].index;
-            scalar kf = kf0;
-            forAll(R.lhs(), i)
-            {
-                const label si = R.lhs()[i].index;
-                const scalar el = R.lhs()[i].exponent;
-                if (i == j)
-                {
-                    if (el < 1.0)
-                    {
-                        if (c_[si] > small)
-                        {
-                            kf *= el*pow(c_[si], el - 1.0);
-                        }
-                        else
-                        {
-                            kf = 0.0;
-                        }
-                    }
-                    else
-                    {
-                        kf *= el*pow(c_[si], el - 1.0);
-                    }
-                }
-                else
-                {
-                    kf *= pow(c_[si], el);
-                }
-            }
-
-            forAll(R.lhs(), i)
-            {
-                const label si = R.lhs()[i].index;
-                const scalar sl = R.lhs()[i].stoichCoeff;
-                dfdc(si, sj) -= sl*kf;
-            }
-            forAll(R.rhs(), i)
-            {
-                const label si = R.rhs()[i].index;
-                const scalar sr = R.rhs()[i].stoichCoeff;
-                dfdc(si, sj) += sr*kf;
-            }
-        }
-
-        forAll(R.rhs(), j)
-        {
-            const label sj = R.rhs()[j].index;
-            scalar kr = kr0;
-            forAll(R.rhs(), i)
-            {
-                const label si = R.rhs()[i].index;
-                const scalar er = R.rhs()[i].exponent;
-                if (i == j)
-                {
-                    if (er < 1.0)
-                    {
-                        if (c_[si] > small)
-                        {
-                            kr *= er*pow(c_[si], er - 1.0);
-                        }
-                        else
-                        {
-                            kr = 0.0;
-                        }
-                    }
-                    else
-                    {
-                        kr *= er*pow(c_[si], er - 1.0);
-                    }
-                }
-                else
-                {
-                    kr *= pow(c_[si], er);
-                }
-            }
-
-            forAll(R.lhs(), i)
-            {
-                const label si = R.lhs()[i].index;
-                const scalar sl = R.lhs()[i].stoichCoeff;
-                dfdc(si, sj) += sl*kr;
-            }
-            forAll(R.rhs(), i)
-            {
-                const label si = R.rhs()[i].index;
-                const scalar sr = R.rhs()[i].stoichCoeff;
-                dfdc(si, sj) -= sr*kr;
-            }
-        }
+        scalar kfwd, kbwd;
+        R.dwdc(p, T, c_, J, dcdt, omegaI, kfwd, kbwd, false, dummy);
+        R.dwdT(p, T, c_, omegaI, kfwd, kbwd, J, false, dummy, nSpecie_);
     }
 
-    // Calculate the dcdT elements numerically
-    const scalar delta = 1.0e-3;
-
-    omega(c_, T + delta, p, dcdt_);
+    // The species derivatives of the temperature term are partially computed
+    // while computing dwdc, they are completed hereunder:
+    scalar cpMean = 0;
+    scalar dcpdTMean = 0;
     for (label i=0; i<nSpecie_; i++)
     {
-        dfdc(i, nSpecie_) = dcdt_[i];
+        cpMean += c_[i]*cpi[i]; // J/(m3.K)
+        dcpdTMean += c_[i]*specieThermo_[i].dcpdT(p, T);
     }
-
-    omega(c_, T - delta, p, dcdt_);
+    scalar dTdt = 0.0;
     for (label i=0; i<nSpecie_; i++)
     {
-        dfdc(i, nSpecie_) = 0.5*(dfdc(i, nSpecie_) - dcdt_[i])/delta;
+        dTdt += hi[i]*dcdt[i]; // J/(m3.s)
+    }
+    dTdt /= -cpMean; // K/s
+
+    for (label i = 0; i < nSpecie_; i++)
+    {
+        J(nSpecie_, i) = 0;
+        for (label j = 0; j < nSpecie_; j++)
+        {
+            J(nSpecie_, i) += hi[j]*J(j, i);
+        }
+        J(nSpecie_, i) += cpi[i]*dTdt; // J/(mol.s)
+        J(nSpecie_, i) /= -cpMean;    // K/s / (mol/m3)
     }
 
-    dfdc(nSpecie_, nSpecie_) = 0;
-    dfdc(nSpecie_ + 1, nSpecie_) = 0;
+    // ddT of dTdt
+    J(nSpecie_, nSpecie_) = 0;
+    for (label i = 0; i < nSpecie_; i++)
+    {
+        J(nSpecie_, nSpecie_) += cpi[i]*dcdt[i] + hi[i]*J(i, nSpecie_);
+    }
+    J(nSpecie_, nSpecie_) += dTdt*dcpdTMean;
+    J(nSpecie_, nSpecie_) /= -cpMean;
+    J(nSpecie_, nSpecie_) += dTdt/T;
 }
 
 
@@ -509,7 +314,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
             const scalar Ti = T[celli];
             const scalar pi = p[celli];
 
-            scalar cSum = 0.0;
+            scalar cSum = 0;
 
             for (label i=0; i<nSpecie_; i++)
             {
@@ -521,7 +326,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
             {
                 const Reaction<ThermoType>& R = reactions_[i];
 
-                omega(R, c_, Ti, pi, pf, cf, lRef, pr, cr, rRef);
+                R.omega(pi, Ti, c_, pf, cf, lRef, pr, cr, rRef);
 
                 forAll(R.rhs(), s)
                 {
@@ -557,7 +362,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::Qdot() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 
@@ -600,7 +405,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
                 IOobject::NO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
         )
     );
 
@@ -628,7 +433,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
         }
 
         const Reaction<ThermoType>& R = reactions_[ri];
-        const scalar omegai = omega(R, c_, Ti, pi, pf, cf, lRef, pr, cr, rRef);
+        const scalar omegai = R.omega(pi, Ti, c_, pf, cf, lRef, pr, cr, rRef);
 
         forAll(R.lhs(), s)
         {

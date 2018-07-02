@@ -33,9 +33,10 @@ gradSchemes
 
 divSchemes
 {
-    div(rhoPhi,U)  Gauss linearUpwindV grad(U);
+    div(rhoPhi,U)   Gauss linearUpwindV grad(U);
     div(phi,alpha)  Gauss vanLeer;
     div(phirb,alpha) Gauss linear;
+
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 

@@ -5,9 +5,30 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Generate mesh
-./Allrun-pre
+./Allmesh
 
-# Run simulation
-./Allrun-simulation
+cp system/controlDict.flow system/controlDict
+
+# Set application name
+application=$(getApplication)
+
+runApplication createBaffles -overwrite
+runApplication mergeOrSplitBaffles -split -overwrite
+
+# Get rid of zero faced patches
+runApplication createPatch -overwrite
+
+# Initialize alpha
+runApplication setFields
+
+# Decompose
+runApplication -s main \
+    decomposePar -force
+
+# Run
+runParallel $application
+
+# Reconstruct
+runApplication reconstructPar -noFunctionObjects
 
 #------------------------------------------------------------------------------

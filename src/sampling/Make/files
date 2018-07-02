@@ -2,20 +2,21 @@ probes/probes.C
 probes/patchProbes.C
 probes/probesGrouping.C
 
-sampledSet/circle/circleSet.C
-sampledSet/cloud/cloudSet.C
-sampledSet/patchCloud/patchCloudSet.C
-sampledSet/polyLine/polyLineSet.C
-sampledSet/face/faceOnlySet.C
-sampledSet/midPoint/midPointSet.C
-sampledSet/midPointAndFace/midPointAndFaceSet.C
-sampledSet/patchSeed/patchSeedSet.C
 sampledSet/sampledSet/sampledSet.C
 sampledSet/sampledSets/sampledSets.C
 sampledSet/sampledSets/sampledSetsGrouping.C
-sampledSet/triSurfaceMeshPointSet/triSurfaceMeshPointSet.C
-sampledSet/uniform/uniformSet.C
-sampledSet/array/arraySet.C
+sampledSet/arcUniform/arcUniform.C
+sampledSet/boxUniform/boxUniform.C
+sampledSet/circleRandom/circleRandom.C
+sampledSet/lineCell/lineCell.C
+sampledSet/lineCellFace/lineCellFace.C
+sampledSet/lineFace/lineFace.C
+sampledSet/lineUniform/lineUniform.C
+sampledSet/boundaryPoints/boundaryPoints.C
+sampledSet/boundaryRandom/boundaryRandom.C
+sampledSet/points/points.C
+sampledSet/sphereRandom/sphereRandom.C
+sampledSet/triSurfaceMeshSampledSet/triSurfaceMeshSampledSet.C
 
 cuttingPlane/cuttingPlane.C
 

@@ -10,6 +10,8 @@ streamLines
 {
     type            streamLine;
 
+    libs            ("libfieldFunctionObjects.so");
+
     // Output every
     writeControl    writeTime;
     // writeInterval 10;
@@ -34,7 +36,7 @@ streamLines
     // Seeding method.
     seedSampleSet
     {
-        type        uniform;
+        type        lineUniform;
         axis        x;  // distance;
 
         // Note: tracks slightly offset so as not to be on a face

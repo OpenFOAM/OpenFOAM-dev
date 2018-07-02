@@ -85,7 +85,7 @@ public:
     // Constructors
 
         //- Construct from components
-        multiNormal(const dictionary& dict, cachedRandom& rndGen);
+        multiNormal(const dictionary& dict, Random& rndGen);
 
         //- Construct copy
         multiNormal(const multiNormal& p);

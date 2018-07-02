@@ -15,7 +15,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Include defaults parameters from master dictionary
-#includeEtc "caseDicts/foamyHexMeshDict"
+#includeEtc "caseDicts/mesh/generation/foamyHexMeshDict"
 
 geometry
 {
@@ -33,7 +33,6 @@ geometry
     }
 }
 
-
 backgroundMeshDecomposition
 {
     minLevels           0;
@@ -41,7 +40,6 @@ backgroundMeshDecomposition
     spanScale           20;
     maxCellWeightCoeff  20;
 }
-
 
 initialPoints
 {
@@ -61,7 +59,6 @@ initialPoints
         pointFile               "constant/internalDelaunayVertices";
     }
 }
-
 
 surfaceConformation
 {
@@ -84,7 +81,6 @@ surfaceConformation
         }
     }
 }
-
 
 motionControl
 {
@@ -121,11 +117,9 @@ motionControl
     timeChecks                  no;
 }
 
-
 meshQualityControls
 {
     #include "meshQualityDict"
 }
-
 
 // ************************************************************************* //

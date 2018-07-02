@@ -24,9 +24,6 @@ License
 Class
     Foam::totalPressureFvPatchScalarField
 
-Group
-    grpInletBoundaryConditions grpOutletBoundaryConditions
-
 Description
     This boundary condition provides a total pressure condition.  Four
     variants are possible:

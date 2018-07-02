@@ -118,12 +118,7 @@ updateCoeffs()
     const uniformDimensionedScalarField& hRef =
         this->db().template lookupObject<uniformDimensionedScalarField>("hRef");
 
-    dimensionedScalar ghRef
-    (
-        mag(g.value()) > small
-      ? g & (cmptMag(g.value())/mag(g.value()))*hRef
-      : dimensionedScalar("ghRef", g.dimensions()*dimLength, 0)
-    );
+    const dimensionedScalar ghRef(- mag(g)*hRef);
 
     this->operator==
     (

@@ -335,9 +335,11 @@ bool Foam::functionObjectList::readFunctionObject
     }
 
     // Merge this functionObject dictionary into functionsDict
+    const word funcNameArgsWord = string::validate<word>(funcNameArgs);
     dictionary funcArgsDict;
-    funcArgsDict.add(string::validate<word>(funcNameArgs), funcDict);
+    funcArgsDict.add(funcNameArgsWord, funcDict);
     functionsDict.merge(funcArgsDict);
+    functionsDict.subDict(funcNameArgsWord).name() = funcDict.name();
 
     return true;
 }

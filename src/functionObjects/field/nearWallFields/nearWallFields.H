@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::nearWallFields
 
-Group
-    grpFieldFunctionObjects
-
 Description
     Samples near-patch volume fields.
 

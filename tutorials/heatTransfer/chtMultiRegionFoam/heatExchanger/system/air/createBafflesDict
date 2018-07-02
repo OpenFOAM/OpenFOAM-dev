@@ -19,30 +19,24 @@ FoamFile
 // faces.
 internalFacesOnly true;
 
-
-// Baffles to create.
 baffles
 {
-    baffleFaces
+    baffles
     {
         //- Use predefined faceZone to select faces and orientation.
         type        faceZone;
         zoneName    rotorBlades;
 
-
         patches
         {
             master
             {
-                //- Master side patch
-                name            blades;
-                type            patch;
+                name        blades;
+                type        wall;
             }
             slave
             {
-                //- Slave side patch
-                name            blades;
-                type            patch;
+                $master;
             }
         }
     }

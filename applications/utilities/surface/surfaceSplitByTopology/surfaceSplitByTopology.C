@@ -38,7 +38,8 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    argList::noParallel();
+    #include "removeCaseOptions.H"
+
     argList::validOptions.clear();
     argList::validArgs.append("surface file");
     argList::validArgs.append("output surface file");

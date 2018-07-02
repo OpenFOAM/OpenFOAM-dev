@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
 
 inline Foam::scalar Foam::thirdBodyEfficiencies::M(const scalarList& c) const
 {
-    scalar M = 0.0;
+    scalar M = 0;
     forAll(*this, i)
     {
         M += operator[](i)*c[i];

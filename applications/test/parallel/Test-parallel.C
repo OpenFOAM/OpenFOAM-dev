@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,8 @@ int main(int argc, char *argv[])
         List<Tuple2<label, List<scalar>>> complexData(100);
         forAll(complexData, i)
         {
-            complexData[i].first() = rndGen.integer(0, Pstream::nProcs()-1);
+            complexData[i].first() =
+                rndGen.sampleAB<label>(0, Pstream::nProcs());
             complexData[i].second().setSize(3);
             complexData[i].second()[0] = 1;
             complexData[i].second()[1] = 2;

@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::forceCoeffs
 
-Group
-    grpForcesFunctionObjects
-
 Description
     Extends the forces functionObject by providing lift, drag and moment
     coefficients.  The data can optionally be output into bins, defined in a

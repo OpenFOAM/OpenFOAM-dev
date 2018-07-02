@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,6 +86,77 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::operator()
        *(1 + A_[3]*exp(-Ta_[3]/T)*sqr(c[co_])*sqr(c[c3h6_]))
        *(1 + A_[4]*exp(-Ta_[4]/T)*pow(c[no_], 0.7))
     );
+}
+
+
+inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::ddT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c
+) const
+{
+    scalar den =
+    (
+        T
+       *sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[co_] + A_[2]*exp(-Ta_[2]/T)*c[c3h6_])
+       *(1 + A_[3]*exp(-Ta_[3]/T)*sqr(c[co_])*sqr(c[c3h6_]))
+       *(1 + A_[4]*exp(-Ta_[4]/T)*pow(c[no_], 0.7))
+    );
+    scalar rate = A_[0]*exp(-Ta_[0]/T)/ den;
+
+    scalar derivDen =
+    (
+        sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[co_] + A_[2]*exp(-Ta_[2]/T)*c[c3h6_])
+       *(1 + A_[3]*exp(-Ta_[3]/T)*sqr(c[co_])*sqr(c[c3h6_]))
+       *(1 + A_[4]*exp(-Ta_[4]/T)*pow(c[no_], 0.7))
+      + 2*T*(1 + A_[1]*exp(-Ta_[1]/T)*c[co_] + A_[2]*exp(-Ta_[2]/T)*c[c3h6_])
+       *
+        (
+            A_[1]*exp(-Ta_[1]/T)*c[co_]*Ta_[1]/sqr(T)
+          + A_[2]*exp(-Ta_[2]/T)*c[c3h6_]*Ta_[2]/sqr(T)
+        )
+       *(1 + A_[3]*exp(-Ta_[3]/T)*sqr(c[co_])*sqr(c[c3h6_]))
+       *(1 + A_[4]*exp(-Ta_[4]/T)*pow(c[no_], 0.7))
+      + T
+       *sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[co_] + A_[2]*exp(-Ta_[2]/T)*c[c3h6_])
+       *(A_[3]*exp(-Ta_[3]/T)*Ta_[3]*sqr(c[co_])*sqr(c[c3h6_])/sqr(T))
+       *(1 + A_[4]*exp(-Ta_[4]/T)*pow(c[no_], 0.7))
+      + T
+       *sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[co_] + A_[2]*exp(-Ta_[2]/T)*c[c3h6_])
+       *(1 + A_[3]*exp(-Ta_[3]/T)*sqr(c[co_])*sqr(c[c3h6_]))
+       *(A_[4]*exp(-Ta_[4]/T)*Ta_[4]*pow(c[no_], 0.7))/sqr(T)
+    );
+
+    return rate*(Ta_[0]/sqr(T) - derivDen/den);
+}
+
+
+inline const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
+Foam::LangmuirHinshelwoodReactionRate::beta() const
+{
+    return NullObjectRef<List<Tuple2<label, scalar>>>();
+}
+
+
+inline void Foam::LangmuirHinshelwoodReactionRate::dcidc
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    scalarField& dcidc
+) const
+{}
+
+
+inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::dcidT
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c
+) const
+{
+    return 0;
 }
 
 

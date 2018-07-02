@@ -24,9 +24,6 @@ License
 Class
     Foam::nutkAtmRoughWallFunctionFvPatchScalarField
 
-Group
-    grpWallFunctions
-
 Description
     This boundary condition provides a turbulent kinematic viscosity for
     atmospheric velocity profiles.  It is desinged to be used in conjunction

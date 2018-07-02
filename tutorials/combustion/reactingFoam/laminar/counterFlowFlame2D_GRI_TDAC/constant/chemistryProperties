@@ -24,12 +24,12 @@ chemistryType
 chemistry       on;
 
 initialChemicalTimeStep 1e-7;
-maxChemicalTimeStep     1e-4;
+//maxChemicalTimeStep 1E-3;
 
 odeCoeffs
 {
     solver          seulex;
-    absTol          1e-12;
+    absTol          1e-8;
     relTol          1e-1;
 }
 
@@ -79,7 +79,7 @@ tabulation
     printNumRetrieve   off;
 
     // Tolerance used for retrieve and grow
-    tolerance   1e-4;
+    tolerance   3e-3;
 
     // ISAT is the only method currently available
     method    ISAT;
@@ -88,7 +88,7 @@ tabulation
     scaleFactor
     {
         otherSpecies 1;
-        Temperature  2500;
+        Temperature  10000;
         Pressure     1e15;
         deltaT       1;
     }

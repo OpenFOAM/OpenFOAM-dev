@@ -1639,7 +1639,7 @@ const
 
         pointHit ray = f.ray(srcPoint, n, tgtPoints);
 
-        if (ray.hit() || ray.eligibleMiss())
+        if (ray.hit())
         {
             // srcPoint = ray.rawPoint();
             return tgtFacei;

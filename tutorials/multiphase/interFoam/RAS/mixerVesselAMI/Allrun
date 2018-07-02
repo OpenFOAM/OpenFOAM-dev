@@ -6,8 +6,10 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 application=$(getApplication)
 
+./Allmesh
 
-./Allrun.pre
+# Initialize alpha
+runApplication setFields
 
 # Decompose
 runApplication decomposePar -force

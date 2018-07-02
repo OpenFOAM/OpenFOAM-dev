@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
- =========                   |
- \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
-  \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2011-2018 OpenFOAM Foundation
-    \\/      M anipulation   |
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+     \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -48,6 +48,8 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    #include "removeCaseOptions.H"
+
     argList::addNote
     (
         "Calculates the inertia tensor and principal axes and moments "
@@ -55,7 +57,6 @@ int main(int argc, char *argv[])
         "Inertia can either be of the solid body or of a thin shell."
     );
 
-    argList::noParallel();
     argList::validArgs.append("surface file");
     argList::addBoolOption
     (

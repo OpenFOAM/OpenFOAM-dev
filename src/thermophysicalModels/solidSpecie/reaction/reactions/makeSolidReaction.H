@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
 #ifndef makeSolidReaction_H
 #define makeSolidReaction_H
 
-#include "solidReaction.H"
+#include "SolidReaction.H"
 #include "IrreversibleReaction.H"
 #include "Reaction.H"
 
@@ -47,16 +47,16 @@ namespace Foam
 
 #define makeSolidReaction(ReactionType, Thermo, ReactionRate)                  \
                                                                                \
-    typedef solidReaction<Thermo> solidReaction##Thermo;                       \
+    typedef SolidReaction<Thermo> SolidReaction##Thermo;                       \
                                                                                \
     typedef Reaction<Thermo> Reaction##Thermo;                                 \
                                                                                \
-    typedef ReactionType<solidReaction, Thermo, ReactionRate>                  \
+    typedef ReactionType<SolidReaction, Thermo, ReactionRate>                  \
         ReactionType##Thermo##ReactionRate;                                    \
                                                                                \
     defineTemplateRunTimeSelectionTable(Reaction##Thermo, dictionary);         \
                                                                                \
-    defineTemplateTypeNameAndDebug(solidReaction##Thermo, 0);                  \
+    defineTemplateTypeNameAndDebug(SolidReaction##Thermo, 0);                  \
     defineTemplateTypeNameAndDebug(Reaction##Thermo, 0);                       \
                                                                                \
     template<>                                                                 \
@@ -64,7 +64,7 @@ namespace Foam
     (                                                                          \
         ReactionType::typeName_()                                              \
       + ReactionRate::type()                                                   \
-      + solidReaction##Thermo::typeName_()                                     \
+      + SolidReaction##Thermo::typeName_()                                     \
     );                                                                         \
                                                                                \
     addToRunTimeSelectionTable                                                 \

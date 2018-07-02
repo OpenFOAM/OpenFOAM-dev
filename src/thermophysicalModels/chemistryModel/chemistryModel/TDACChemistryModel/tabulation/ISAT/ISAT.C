@@ -65,7 +65,7 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
     (
         this->coeffsDict_.lookupOrDefault
         (
-            "minBalanceThreshold",0.1*chemisTree_.maxNLeafs()
+            "minBalanceThreshold", 0.1*chemisTree_.maxNLeafs()
         )
     ),
     MRURetrieve_(this->coeffsDict_.lookupOrDefault("MRURetrieve", false)),
@@ -169,17 +169,8 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::addToMRU
         {
             if (MRUList_.size() == maxMRUSize_)
             {
-                if (iter() == MRUList_.last())
-                {
-                    MRUList_.remove(iter);
-                    MRUList_.insert(phi0);
-                }
-                else
-                {
-                    FatalErrorInFunction
-                        << "wrong MRUList construction"
-                        << exit(FatalError);
-                }
+                MRUList_.remove(iter);
+                MRUList_.insert(phi0);
             }
             else
             {
@@ -238,13 +229,13 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::calcNewC
 
                 // As we use an approximation of A, Rphiq should be checked for
                 // negative values
-                Rphiq[i] = max(0.0,Rphiq[i]);
+                Rphiq[i] = max(0, Rphiq[i]);
             }
             // The species is not active A(i, j) = I(i, j)
             else
             {
                 Rphiq[i] += dphi[i];
-                Rphiq[i] = max(0.0,Rphiq[i]);
+                Rphiq[i] = max(0, Rphiq[i]);
             }
         }
         else // Mechanism reduction is not active
@@ -255,7 +246,7 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::calcNewC
             }
             // As we use a first order gradient matrix, Rphiq should be checked
             // for negative values
-            Rphiq[i] = max(0.0,Rphiq[i]);
+            Rphiq[i] = max(0, Rphiq[i]);
         }
     }
 }
@@ -322,6 +313,9 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::cleanAndBalance()
         }
         x = xtmp;
     }
+
+    MRUList_.clear();
+
     // Check if the tree should be balanced according to criterion:
     //  -the depth of the tree bigger than a*log2(size), log2(size) being the
     //      ideal depth (e.g. 4 leafs can be stored in a tree of depth 2)
@@ -333,7 +327,6 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::cleanAndBalance()
     )
     {
         chemisTree_.balance();
-        MRUList_.clear();
         treeModified = true;
     }
 
@@ -365,7 +358,7 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
         Rcq[i] = rhoi*Rphiq[s2c]/this->chemistry_.specieThermo()[s2c].W();
     }
     Rcq[speciesNumber] = Rphiq[Rphiq.size() - nAdditionalEqns_];
-    Rcq[speciesNumber+1] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 1];
+    Rcq[speciesNumber + 1] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 1];
     if (this->variableTimeStep())
     {
         Rcq[speciesNumber + 2] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 2];
@@ -373,15 +366,15 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
 
     // Aaa is computed implicitly,
     // A is given by A = C(psi0, t0+dt), where C is obtained through solving
-    // d/dt C(psi0,t) = J(psi(t))C(psi0,t)
+    // d/dt C(psi0, t) = J(psi(t))C(psi0, t)
     // If we solve it implicitly:
-    // (C(psi0, t0+dt) - C(psi0,t0))/dt = J(psi(t0+dt))C(psi0,t0+dt)
+    // (C(psi0, t0+dt) - C(psi0, t0))/dt = J(psi(t0+dt))C(psi0, t0+dt)
     // The Jacobian is thus computed according to the mapping
     // C(psi0,t0+dt)*(I-dt*J(psi(t0+dt))) = C(psi0, t0)
     // A = C(psi0,t0)/(I-dt*J(psi(t0+dt)))
     // where C(psi0,t0) = I
-
-    this->chemistry_.jacobian(runTime_.value(), Rcq, A);
+    scalarField dcdt(speciesNumber + 2, Zero);
+    this->chemistry_.jacobian(runTime_.value(), Rcq, dcdt, A);
 
     // The jacobian is computed according to the molar concentration
     // the following conversion allows the code to use A with mass fraction
@@ -410,21 +403,48 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
         // Columns for pressure and temperature
         A(i, speciesNumber) *=
             -dt*this->chemistry_.specieThermo()[si].W()/rhoi;
-        A(i, speciesNumber+1) *=
+        A(i, speciesNumber + 1) *=
             -dt*this->chemistry_.specieThermo()[si].W()/rhoi;
     }
 
-    // For temperature and pressure, only unity on the diagonal
-    A(speciesNumber, speciesNumber) = 1;
-    A(speciesNumber + 1, speciesNumber + 1) = 1;
+    // For the temperature and pressure lines, ddc(dTdt)
+    // should be converted in ddY(dTdt)
+    for (label i=0; i<speciesNumber; i++)
+    {
+        label si = i;
+        if (mechRedActive)
+        {
+            si = this->chemistry_.simplifiedToCompleteIndex()[i];
+        }
+
+        A(speciesNumber, i) *=
+            -dt*rhoi/this->chemistry_.specieThermo()[si].W();
+        A(speciesNumber + 1, i) *=
+            -dt*rhoi/this->chemistry_.specieThermo()[si].W();
+    }
+
+    A(speciesNumber, speciesNumber) = -dt*A(speciesNumber, speciesNumber) + 1;
+
+    A(speciesNumber + 1, speciesNumber + 1) =
+        -dt*A(speciesNumber + 1, speciesNumber + 1) + 1;
+
     if (this->variableTimeStep())
     {
-        A[speciesNumber + 2][speciesNumber + 2] = 1;
+        A(speciesNumber + 2, speciesNumber + 2) = 1;
     }
 
     // Inverse of (I-dt*J(psi(t0+dt)))
     LUscalarMatrix LUA(A);
     LUA.inv(A);
+
+    // After inversion, lines of p and T are set to 0 except diagonal.  This
+    // avoid skewness of the ellipsoid of accuracy and potential issues in the
+    // binary tree.
+    for (label i=0; i<speciesNumber; i++)
+    {
+        A(speciesNumber, i) = 0;
+        A(speciesNumber + 1, i) = 0;
+    }
 }
 
 
@@ -498,7 +518,7 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::retrieve
         }
         lastSearch_->lastTimeUsed() = this->chemistry_.timeSteps();
         addToMRU(phi0);
-        calcNewC(phi0,phiq, Rphiq);
+        calcNewC(phi0, phiq, Rphiq);
         nRetrieved_++;
         return true;
     }
@@ -525,11 +545,12 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
     // option is on, the code first tries to grow the point hold by lastSearch_
     if (lastSearch_ && growPoints_)
     {
-        if (grow(lastSearch_,phiq, Rphiq))
+        if (grow(lastSearch_, phiq, Rphiq))
         {
             nGrowth_++;
             growthOrAddFlag = 0;
-            // the structure of the tree is not modified, return false
+            addToMRU(lastSearch_);
+            //the structure of the tree is not modified, return false
             return growthOrAddFlag;
         }
     }
@@ -605,7 +626,10 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
         scaleFactor_.size(),
         lastSearch_ // lastSearch_ may be nullptr (handled by binaryTree)
     );
-
+    if (lastSearch_ != nullptr)
+    {
+        addToMRU(lastSearch_);
+    }
     nAdd_++;
 
     return growthOrAddFlag;

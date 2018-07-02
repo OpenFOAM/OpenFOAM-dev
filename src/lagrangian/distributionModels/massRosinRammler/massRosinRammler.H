@@ -93,7 +93,7 @@ public:
     // Constructors
 
         //- Construct from components
-        massRosinRammler(const dictionary& dict, cachedRandom& rndGen);
+        massRosinRammler(const dictionary& dict, Random& rndGen);
 
         //- Construct copy
         massRosinRammler(const massRosinRammler& p);

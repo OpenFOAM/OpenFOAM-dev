@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,17 +25,15 @@ License
 
 #include "barycentric.H"
 #include "Random.H"
-#include "cachedRandom.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::barycentric barycentric01
-(
-    Foam::scalar s,
-    Foam::scalar t,
-    Foam::scalar u
-)
+Foam::barycentric Foam::barycentric01(Random& rndGen)
 {
+    scalar s = rndGen.scalar01();
+    scalar t = rndGen.scalar01();
+    scalar u = rndGen.scalar01();
+
     // Transform the random point in the unit cube to a random point in the
     // unit tet by means of a series of reflections. See
     // <http://vcg.isti.cnr.it/jgt/tetra.htm> for details.
@@ -63,32 +61,6 @@ Foam::barycentric barycentric01
     }
 
     return Foam::barycentric(1 - s - t - u, s, t, u);
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Foam::barycentric Foam::barycentric01(Random& rndGen)
-{
-    return
-        ::barycentric01
-        (
-            rndGen.scalar01(),
-            rndGen.scalar01(),
-            rndGen.scalar01()
-        );
-}
-
-
-Foam::barycentric Foam::barycentric01(cachedRandom& rndGen)
-{
-    return
-        ::barycentric01
-        (
-            rndGen.sample01<scalar>(),
-            rndGen.sample01<scalar>(),
-            rndGen.sample01<scalar>()
-        );
 }
 
 

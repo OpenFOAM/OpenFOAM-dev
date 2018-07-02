@@ -58,7 +58,7 @@ displacementInterpolationMotionSolver
     const IOdictionary& dict
 )
 :
-    displacementMotionSolver(mesh, dict, typeName)
+    points0MotionSolver(mesh, dict, typeName)
 {
     // Get zones and their interpolation tables for displacement
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

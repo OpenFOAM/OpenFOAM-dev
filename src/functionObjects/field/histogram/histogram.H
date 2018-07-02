@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::histogram
 
-Group
-    grpFieldFunctionObjects
-
 Description
     Write the volume-weighted histogram of a volScalarField.
 

@@ -24,9 +24,6 @@ License
 Class
     Foam::cyclicAMIFvPatchField
 
-Group
-    grpCoupledBoundaryConditions
-
 Description
     This boundary condition enforces a cyclic condition between a pair of
     boundaries, whereby communication between the patches is performed using

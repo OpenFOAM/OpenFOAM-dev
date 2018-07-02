@@ -24,9 +24,6 @@ License
 Class
     Foam::fanFvPatchField
 
-Group
-    grpCoupledBoundaryConditions
-
 Description
     This boundary condition provides a jump condition, using the \c cyclic
     condition as a base.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ Class
     Foam::IrreversibleReaction
 
 Description
-    Simple extension of Reaction to handle reversible reactions using
-    equilibrium thermodynamics.
+    Simple extension of Reaction to handle irreversible reactions
 
 SourceFiles
     IrreversibleReaction.C
@@ -158,6 +157,71 @@ public:
 
             //- Forward rate constant
             virtual scalar kf
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c
+            ) const;
+
+            //- Reverse rate constant from the given forward rate constant
+            //  Returns 0
+            virtual scalar kr
+            (
+                const scalar kfwd,
+                const scalar p,
+                const scalar T,
+                const scalarField& c
+            ) const;
+
+            //- Reverse rate constant
+            //  Returns 0
+            virtual scalar kr
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c
+            ) const;
+
+
+        // IrreversibleReaction Jacobian functions
+
+            //- Temperature derivative of forward rate
+            virtual scalar dkfdT
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c
+            ) const;
+
+            //- Temperature derivative of reverse rate
+            //  Returns 0
+            virtual scalar dkrdT
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                const scalar dkfdT,
+                const scalar kr
+            ) const;
+
+            //- Third-body efficiencies (beta = 1-alpha)
+            //  non-empty only for third-body reactions
+            //  with enhanced molecularity (alpha != 1)
+            virtual const List<Tuple2<label, scalar>>& beta() const;
+
+            //- Species concentration derivative of the pressure dependent term
+            //  By default this value is 1 as it multiplies the third-body term
+            virtual void dcidc
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                scalarField& dcidc
+            ) const;
+
+            //- Temperature derivative of the pressure dependent term
+            //  By default this value is 0 since ddT of molecularity is approx.0
+            virtual scalar dcidT
             (
                 const scalar p,
                 const scalar T,

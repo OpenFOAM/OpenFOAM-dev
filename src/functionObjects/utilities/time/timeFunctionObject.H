@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::time
 
-Group
-    grpUtilitiesFunctionObjects
-
 Description
     Writes run time, CPU time and clock time
     and optionally the CPU and clock times per time step.

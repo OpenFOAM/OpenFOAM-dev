@@ -44,7 +44,7 @@ SourceFiles
 #ifndef displacementInterpolationMotionSolver_H
 #define displacementInterpolationMotionSolver_H
 
-#include "displacementMotionSolver.H"
+#include "points0MotionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,7 +57,7 @@ namespace Foam
 
 class displacementInterpolationMotionSolver
 :
-    public displacementMotionSolver
+    public points0MotionSolver
 {
     // Private data
 

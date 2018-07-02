@@ -3,9 +3,9 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # License
 #     This file is part of OpenFOAM.
 #
@@ -42,7 +42,7 @@
 #     This script must exist in $FOAM_INST_DIR/OpenFOAM-<VERSION>/bin/
 #     or $FOAM_INST_DIR/openfoam<VERSION>/bin/ (for the debian version)
 #
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 usage() {
     cat<<USAGE
 

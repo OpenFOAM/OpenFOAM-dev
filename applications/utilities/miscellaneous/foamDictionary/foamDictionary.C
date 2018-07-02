@@ -238,6 +238,8 @@ void remove(dictionary& dict, const dictionary& removeDict)
 
 int main(int argc, char *argv[])
 {
+    #include "removeCaseOptions.H"
+
     writeInfoHeader = false;
 
     argList::addNote("manipulates dictionaries");

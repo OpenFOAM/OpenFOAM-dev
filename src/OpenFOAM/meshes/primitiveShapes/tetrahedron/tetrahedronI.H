@@ -250,16 +250,6 @@ inline Point Foam::tetrahedron<Point, PointRef>::randomPoint
 
 
 template<class Point, class PointRef>
-inline Point Foam::tetrahedron<Point, PointRef>::randomPoint
-(
-    cachedRandom& rndGen
-) const
-{
-    return barycentricToPoint(barycentric01(rndGen));
-}
-
-
-template<class Point, class PointRef>
 inline Point Foam::tetrahedron<Point, PointRef>::barycentricToPoint
 (
     const barycentric& bary

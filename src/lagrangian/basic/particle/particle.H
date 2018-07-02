@@ -275,7 +275,7 @@ private:
             (
                 const vector& position,
                 const vector* direction,
-                const label celli,
+                label celli,
                 const bool boundaryFail,
                 const string boundaryMsg
             );

@@ -155,6 +155,9 @@ public:
 
         // Other
 
+            //- Forcibly wait until all output done. Flush any cached data
+            virtual void flush() const;
+
             //- Actual name of processors dir
             virtual word processorsDir(const IOobject&) const;
 

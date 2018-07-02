@@ -66,7 +66,7 @@ public:
     // Constructors
 
         //- Construct from components
-        fixedValue(const dictionary& dict, cachedRandom& rndGen);
+        fixedValue(const dictionary& dict, Random& rndGen);
 
         //- Construct copy
         fixedValue(const fixedValue& p);

@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::regionSizeDistribution
 
-Group
-    grpFieldFunctionObjects
-
 Description
     Creates a size distribution via interrogating a continuous phase fraction
     field.

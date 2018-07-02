@@ -126,6 +126,36 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::S
 }
 
 
+template<class EquationOfState, int PolySize>
+inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::dGdT
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    return
+    (
+        hCoeffs_.derivative(T)
+      - T*sCoeffs_.derivative(T)
+      - sCoeffs_.value(T)
+    );
+}
+
+
+template<class EquationOfState, int PolySize>
+inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::dCpdT
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    return
+    (
+        CpCoeffs_.derivative(T)
+    );
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class EquationOfState, int PolySize>

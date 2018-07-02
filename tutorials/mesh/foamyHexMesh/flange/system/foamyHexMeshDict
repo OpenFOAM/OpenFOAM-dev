@@ -15,7 +15,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Include defaults parameters from master dictionary
-#includeEtc "caseDicts/foamyHexMeshDict"
+#includeEtc "caseDicts/mesh/generation/foamyHexMeshDict"
 
 // Any scalar with a name <name>Coeff specifies a value that will be implemented
 // as a faction of the target cell size
@@ -24,7 +24,6 @@ geometry
 {
     #include "meshDict.geometry"
 }
-
 
 initialPoints
 {
@@ -38,7 +37,6 @@ initialPoints
         surfaceSampleResolution 5;
     }
 }
-
 
 surfaceConformation
 {
@@ -92,7 +90,6 @@ surfaceConformation
         }
     }
 }
-
 
 motionControl
 {
@@ -159,7 +156,6 @@ motionControl
     timeChecks                  no;
 }
 
-
 backgroundMeshDecomposition
 {
     minLevels           1;
@@ -168,11 +164,9 @@ backgroundMeshDecomposition
     maxCellWeightCoeff  10;
 }
 
-
 meshQualityControls
 {
     #include "meshQualityDict"
 }
-
 
 // ************************************************************************* //

@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::fieldAverage
 
-Group
-    grpFieldFunctionObjects
-
 Description
     Calculates average quantities for a user-specified selection of volumetric
     and surface fields.

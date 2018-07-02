@@ -15,9 +15,6 @@ Description
 // Sampling and I/O settings
 #includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
 
-// Override settings here, e.g.
-// setConfig { type midPoint; }
-
 type            sets;
 libs            ("libsampling.so");
 
@@ -29,7 +26,7 @@ setFormat   raw;
 
 setConfig
 {
-    type    midPoint;  // midPoint
+    type    lineCell;
     axis    distance;  // x, y, z, xyz
 }
 

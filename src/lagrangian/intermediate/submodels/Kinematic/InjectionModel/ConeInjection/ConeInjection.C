@@ -250,7 +250,7 @@ void Foam::ConeInjection<CloudType>::setProperties
     typename CloudType::parcelType& parcel
 )
 {
-    cachedRandom& rnd = this->owner().rndGen();
+    Random& rnd = this->owner().rndGen();
 
     // set particle velocity
     const label i = parcelI % positionAxis_.size();
@@ -258,7 +258,7 @@ void Foam::ConeInjection<CloudType>::setProperties
     scalar t = time - this->SOI_;
     scalar ti = thetaInner_.value(t);
     scalar to = thetaOuter_.value(t);
-    scalar coneAngle = degToRad(rnd.position<scalar>(ti, to));
+    scalar coneAngle = degToRad(rnd.scalarAB(ti, to));
 
     scalar alpha = sin(coneAngle);
     scalar dcorr = cos(coneAngle);

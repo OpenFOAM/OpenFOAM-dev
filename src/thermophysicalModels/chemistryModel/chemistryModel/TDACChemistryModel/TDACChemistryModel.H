@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,20 +221,12 @@ public:
                 scalarField& dcdt
             ) const;
 
-            //- Pure jacobian function for tabulation
-            void jacobian
-            (
-                const scalar t,
-                const scalarField& c,
-                scalarSquareMatrix& dfdc
-            ) const;
-
             virtual void jacobian
             (
                 const scalar t,
                 const scalarField& c,
                 scalarField& dcdt,
-                scalarSquareMatrix& dfdc
+                scalarSquareMatrix& J
             ) const;
 
             virtual void solve

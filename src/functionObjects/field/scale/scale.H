@@ -24,9 +24,6 @@ License
 Class
     Foam::functionObjects::scale
 
-Group
-    grpFieldFunctionObjects
-
 Description
     Multiplies a field by a scaling factor.
 

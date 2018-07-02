@@ -24,9 +24,6 @@ License
 Class
     Foam::RASModels::kEpsilonLopesdaCosta
 
-Group
-    grpRASTurbulence
-
 Description
     Variant of the standard k-epsilon turbulence model with additional source
     terms to handle the changes in turbulence in porous regions represented by

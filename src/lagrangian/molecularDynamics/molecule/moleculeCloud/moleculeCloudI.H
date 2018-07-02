@@ -301,12 +301,9 @@ inline Foam::vector Foam::moleculeCloud::equipartitionLinearVelocity
     scalar mass
 )
 {
-    return sqrt(physicoChemical::k.value()*temperature/mass)*vector
-    (
-        rndGen_.GaussNormal(),
-        rndGen_.GaussNormal(),
-        rndGen_.GaussNormal()
-    );
+    return
+        sqrt(physicoChemical::k.value()*temperature/mass)
+       *rndGen_.sampleNormal<vector>();
 }
 
 
@@ -323,17 +320,17 @@ inline Foam::vector Foam::moleculeCloud::equipartitionAngularMomentum
         return sqrtKbT*vector
         (
             0.0,
-            sqrt(cP.momentOfInertia().yy())*rndGen_.GaussNormal(),
-            sqrt(cP.momentOfInertia().zz())*rndGen_.GaussNormal()
+            sqrt(cP.momentOfInertia().yy())*rndGen_.scalarNormal(),
+            sqrt(cP.momentOfInertia().zz())*rndGen_.scalarNormal()
         );
     }
     else
     {
         return sqrtKbT*vector
         (
-            sqrt(cP.momentOfInertia().xx())*rndGen_.GaussNormal(),
-            sqrt(cP.momentOfInertia().yy())*rndGen_.GaussNormal(),
-            sqrt(cP.momentOfInertia().zz())*rndGen_.GaussNormal()
+            sqrt(cP.momentOfInertia().xx())*rndGen_.scalarNormal(),
+            sqrt(cP.momentOfInertia().yy())*rndGen_.scalarNormal(),
+            sqrt(cP.momentOfInertia().zz())*rndGen_.scalarNormal()
         );
     }
 }

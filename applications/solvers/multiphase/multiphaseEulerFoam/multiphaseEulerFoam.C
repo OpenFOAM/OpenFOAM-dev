@@ -25,7 +25,7 @@ Application
     multiphaseEulerFoam
 
 Description
-    Solver for a system of many compressible fluid phases including
+    Solver for a system of many incompressible fluid phases including
     heat-transfer.
 
 \*---------------------------------------------------------------------------*/
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 {
     #include "postProcess.H"
 
-    #include "setRootCase.H"
+    #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createMesh.H"
     #include "createControl.H"

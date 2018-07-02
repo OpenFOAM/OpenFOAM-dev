@@ -122,8 +122,7 @@ sha1 = primitives/hashes/SHA1
 $(sha1)/SHA1.C
 $(sha1)/SHA1Digest.C
 
-primitives/random/Random/Random.C
-primitives/random/cachedRandom/cachedRandom.C
+primitives/Random/Random.C
 
 ranges = primitives/ranges
 $(ranges)/labelRange/labelRange.C
