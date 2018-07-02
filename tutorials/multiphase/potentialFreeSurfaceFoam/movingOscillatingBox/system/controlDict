@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     potentialFreeSurfaceDyMFoam;
+application     potentialFreeSurfaceFoam;
 
 startFrom       startTime;
 

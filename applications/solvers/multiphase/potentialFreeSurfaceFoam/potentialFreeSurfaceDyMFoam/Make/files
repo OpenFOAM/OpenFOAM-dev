@@ -1,3 +1,0 @@
-potentialFreeSurfaceDyMFoam.C
-
-EXE = $(FOAM_APPBIN)/potentialFreeSurfaceDyMFoam
