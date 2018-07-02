@@ -57,7 +57,8 @@ Foam::RBD::joints::function::function
 )
 :
     joint(model, 0),
-    f_(Function1<scalar>::New("function", dict))
+    f_(Function1<scalar>::New("function", dict)),
+    delta_(dict.lookupOrDefault<scalar>("delta", rootSmall))
 {}
 
 
@@ -87,9 +88,21 @@ void Foam::RBD::joints::function::jcalc
     spatialVector x(Zero), v(Zero), c(Zero);
     for(label i = 0; i < model_.joints()[lambda].nDoF(); ++ i)
     {
-        x += f_->value(state.q()[parent.qIndex() + i])*parent.S()[i];
-        v += f_->value(state.qDot()[parent.qIndex() + i])*parent.S()[i];
-        c += f_->value(state.qDdot()[parent.qIndex() + i])*parent.S()[i];
+        const scalar q = state.q()[parent.qIndex() + i];
+        const scalar qDot = state.qDot()[parent.qIndex() + i];
+        const scalar qDdot = state.qDdot()[parent.qIndex() + i];
+
+        const scalar f = f_->value(q);
+        const scalar fMinusDf = f_->value(q - delta_/2);
+        const scalar fPlusDf = f_->value(q + delta_/2);
+        const scalar dfdq = (fPlusDf - fMinusDf)/delta_;
+        const scalar d2fdq2 = (fPlusDf - 2*f + fMinusDf)/sqr(delta_);
+
+        const spatialVector& s = parent.S()[i];
+
+        x += f*s;
+        v += dfdq*qDot*s;
+        c += (dfdq*qDdot + d2fdq2*sqr(qDot))*s;
     }
 
     const scalar magW = mag(x.w());

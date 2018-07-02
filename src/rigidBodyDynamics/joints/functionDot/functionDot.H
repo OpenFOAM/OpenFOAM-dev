@@ -70,6 +70,9 @@ private:
         //- Function
         autoPtr<Function1<scalar>> f_;
 
+        //- Difference used to calculate the gradient of the function
+        const scalar delta_;
+
 
 public:
 
