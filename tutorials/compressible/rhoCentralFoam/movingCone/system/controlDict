@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoCentralDyMFoam;
+application     rhoCentralFoam;
 
 startFrom       startTime;
 

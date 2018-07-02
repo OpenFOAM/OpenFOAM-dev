@@ -6,7 +6,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
@@ -18,4 +18,6 @@ EXE_LIBS = \
     -lrhoCentralFoam \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
     -lmeshTools

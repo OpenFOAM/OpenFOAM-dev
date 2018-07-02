@@ -26,11 +26,12 @@ Application
 
 Description
     Density-based compressible flow solver based on central-upwind schemes of
-    Kurganov and Tadmor.
+    Kurganov and Tadmor with support for mesh-motion and topology changes.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "psiThermo.H"
 #include "turbulentFluidThermoModel.H"
 #include "fixedRhoFvPatchScalarField.H"
@@ -47,7 +48,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
+    #include "createDynamicFvMesh.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
     #include "createTimeControls.H"
@@ -68,6 +69,17 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
+        #include "readTimeControls.H"
+
+        if (!LTS)
+        {
+            #include "setDeltaT.H"
+            runTime++;
+
+            // Do any mesh changes
+            mesh.update();
+        }
+
         // --- Directed interpolation of primitive fields onto faces
 
         surfaceScalarField rho_pos(interpolate(rho, pos));
@@ -91,6 +103,13 @@ int main(int argc, char *argv[])
 
         surfaceScalarField phiv_pos("phiv_pos", U_pos & mesh.Sf());
         surfaceScalarField phiv_neg("phiv_neg", U_neg & mesh.Sf());
+
+        // Make fluxes relative to mesh-motion
+        if (mesh.moving())
+        {
+            phiv_pos -= mesh.phi();
+            phiv_neg -= mesh.phi();
+        }
 
         volScalarField c("c", sqrt(thermo.Cp()/thermo.Cv()*rPsi));
         surfaceScalarField cSf_pos
@@ -140,18 +159,12 @@ int main(int argc, char *argv[])
         amaxSf = max(mag(aphiv_pos), mag(aphiv_neg));
 
         #include "centralCourantNo.H"
-        #include "readTimeControls.H"
 
         if (LTS)
         {
             #include "setRDeltaT.H"
+            runTime++;
         }
-        else
-        {
-            #include "setDeltaT.H"
-        }
-
-        runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
@@ -170,6 +183,12 @@ int main(int argc, char *argv[])
           + aphiv_neg*(rho_neg*(e_neg + 0.5*magSqr(U_neg)) + p_neg)
           + aSf*p_pos - aSf*p_neg
         );
+
+        // Make flux for pressure-work absolute
+        if (mesh.moving())
+        {
+            phiEp += mesh.phi()*(a_pos*p_pos + a_neg*p_neg);
+        }
 
         volScalarField muEff("muEff", turbulence->muEff());
         volTensorField tauMC("tauMC", muEff*dev2(Foam::T(fvc::grad(U))));
