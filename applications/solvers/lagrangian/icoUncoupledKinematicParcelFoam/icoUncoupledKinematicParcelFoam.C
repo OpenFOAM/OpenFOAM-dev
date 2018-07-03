@@ -22,17 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    icoUncoupledKinematicParcelFoam
+    uncoupledKinematicParcelFoam
 
 Description
     Transient solver for the passive transport of a single kinematic
-    particle cloud.
+    particle cloud, with optional mesh motion and mesh topology changes.
 
     Uses a pre-calculated velocity field to evolve the cloud.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
 #include "basicKinematicCollidingCloud.H"
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
+    #include "createDynamicFvMesh.H"
     #include "createControl.H"
     #include "createFields.H"
 
@@ -63,6 +64,15 @@ int main(int argc, char *argv[])
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        kinematicCloud.storeGlobalPositions();
+
+        mesh.update();
+
+        if (mesh.changing())
+        {
+            U.correctBoundaryConditions();
+        }
 
         Info<< "Evolving " << kinematicCloud.name() << endl;
 

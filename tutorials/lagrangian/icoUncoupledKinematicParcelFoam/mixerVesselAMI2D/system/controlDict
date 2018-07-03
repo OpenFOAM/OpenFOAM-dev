@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     icoUncoupledKinematicParcelDyMFoam;
+application     icoUncoupledKinematicParcelFoam;
 
 startFrom       startTime;
 
