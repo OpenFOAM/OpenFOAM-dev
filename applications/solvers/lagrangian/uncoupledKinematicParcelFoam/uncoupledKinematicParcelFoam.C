@@ -32,6 +32,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "psiThermo.H"
 #include "turbulentFluidThermoModel.H"
 #include "basicKinematicCloud.H"
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
+    #include "createDynamicFvMesh.H"
     #include "createFields.H"
     #include "compressibleCourantNo.H"
 
@@ -63,6 +64,15 @@ int main(int argc, char *argv[])
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        kinematicCloud.storeGlobalPositions();
+
+        mesh.update();
+
+        if (mesh.changing())
+        {
+            U.correctBoundaryConditions();
+        }
 
         Info<< "Evolving " << kinematicCloud.name() << endl;
         kinematicCloud.evolve();

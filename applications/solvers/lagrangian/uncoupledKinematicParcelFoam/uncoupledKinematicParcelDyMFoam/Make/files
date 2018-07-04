@@ -1,3 +1,0 @@
-uncoupledKinematicParcelDyMFoam.C
-
-EXE = $(FOAM_APPBIN)/uncoupledKinematicParcelDyMFoam

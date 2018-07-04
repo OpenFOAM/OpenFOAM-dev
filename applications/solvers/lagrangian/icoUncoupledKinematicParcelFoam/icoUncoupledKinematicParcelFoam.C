@@ -49,13 +49,14 @@ int main(int argc, char *argv[])
         "specify alternative cloud name. default is 'kinematicCloud'"
     );
 
+    #define NO_CONTROL
     #include "postProcess.H"
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "createControl.H"
     #include "createFields.H"
+    #include "CourantNo.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,10 +75,9 @@ int main(int argc, char *argv[])
             U.correctBoundaryConditions();
         }
 
-        Info<< "Evolving " << kinematicCloud.name() << endl;
-
         laminarTransport.correct();
 
+        Info<< "Evolving " << kinematicCloud.name() << endl;
         mu = laminarTransport.nu()*rhoInfValue;
 
         kinematicCloud.evolve();
