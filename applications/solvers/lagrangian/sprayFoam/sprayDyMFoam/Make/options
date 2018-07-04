@@ -24,7 +24,6 @@ EXE_INC = \
     -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
     -I$(LIB_SRC)/combustionModels/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
@@ -46,9 +45,9 @@ EXE_LIBS = \
     -lregionModels \
     -lsurfaceFilmModels \
     -lcombustionModels \
-     -lfiniteVolume \
-    -lfvOptions \
+    -lfiniteVolume \
     -ldynamicFvMesh \
     -ltopoChangerFvMesh \
+    -lfvOptions \
     -ldynamicMesh \
     -lmeshTools
