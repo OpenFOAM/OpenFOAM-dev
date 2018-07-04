@@ -7,6 +7,7 @@ EXE_INC = \
     -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/barotropicCompressibilityModel/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
@@ -14,5 +15,6 @@ EXE_LIBS = \
     -lincompressibleTurbulenceModels \
     -lbarotropicCompressibilityModel \
     -lfiniteVolume \
+    -ldynamicFvMesh \
     -lfvOptions \
     -lmeshTools
