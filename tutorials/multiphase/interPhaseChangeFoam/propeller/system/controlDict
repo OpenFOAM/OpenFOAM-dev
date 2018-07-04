@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     interPhaseChangeDyMFoam;
+application     interPhaseChangeFoam;
 
 startFrom       startTime;
 

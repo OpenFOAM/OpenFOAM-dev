@@ -2,10 +2,9 @@
     word alphaScheme("div(phi,alpha)");
     word alpharScheme("div(phirb,alpha)");
 
-    surfaceScalarField phir("phir", phic*interface.nHatf());
+    surfaceScalarField phir("phir", phic*mixture.nHatf());
 
-    Pair<tmp<volScalarField>> vDotAlphal =
-        mixture->vDotAlphal();
+    Pair<tmp<volScalarField>> vDotAlphal = mixture.vDotAlphal();
     const volScalarField& vDotcAlphal = vDotAlphal[0]();
     const volScalarField& vDotvAlphal = vDotAlphal[1]();
     const volScalarField vDotvmcAlphal(vDotvAlphal - vDotcAlphal);

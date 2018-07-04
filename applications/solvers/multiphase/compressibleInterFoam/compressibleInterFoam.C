@@ -106,21 +106,14 @@ int main(int argc, char *argv[])
         {
             if (pimple.firstIter() || moveMeshOuterCorrectors)
             {
-                scalar timeBeforeMeshUpdate = runTime.elapsedCpuTime();
-
                 mesh.update();
 
                 if (mesh.changing())
                 {
-
-                    MRF.update();
-
-                    Info<< "Execution time for mesh.update() = "
-                        << runTime.elapsedCpuTime() - timeBeforeMeshUpdate
-                        << " s" << endl;
-
                     gh = (g & mesh.C()) - ghRef;
                     ghf = (g & mesh.Cf()) - ghRef;
+
+                    MRF.update();
 
                     if (correctPhi)
                     {
@@ -142,6 +135,8 @@ int main(int argc, char *argv[])
                     }
                 }
             }
+
+            divU = fvc::div(fvc::absolute(phi, U));
 
             #include "alphaControls.H"
             #include "compressibleAlphaEqnSubCycle.H"

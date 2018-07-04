@@ -30,14 +30,18 @@ volVectorField U
 
 
 Info<< "Creating phaseChangeTwoPhaseMixture\n" << endl;
-autoPtr<phaseChangeTwoPhaseMixture> mixture =
-    phaseChangeTwoPhaseMixture::New(U, phi);
+autoPtr<phaseChangeTwoPhaseMixture> mixturePtr
+(
+    phaseChangeTwoPhaseMixture::New(U, phi)
+);
 
-volScalarField& alpha1(mixture->alpha1());
-volScalarField& alpha2(mixture->alpha2());
+phaseChangeTwoPhaseMixture& mixture = mixturePtr();
 
-const dimensionedScalar& rho1 = mixture->rho1();
-const dimensionedScalar& rho2 = mixture->rho2();
+volScalarField& alpha1(mixture.alpha1());
+volScalarField& alpha2(mixture.alpha2());
+
+const dimensionedScalar& rho1 = mixture.rho1();
+const dimensionedScalar& rho2 = mixture.rho2();
 
 
 // Need to store rho for ddt(rho, U)
@@ -55,13 +59,10 @@ volScalarField rho
 rho.oldTime();
 
 
-// Construct interface from alpha1 distribution
-interfaceProperties interface(alpha1, U, mixture());
-
 // Construct incompressible turbulence model
 autoPtr<incompressible::turbulenceModel> turbulence
 (
-    incompressible::turbulenceModel::New(U, phi, mixture())
+    incompressible::turbulenceModel::New(U, phi, mixture)
 );
 
 

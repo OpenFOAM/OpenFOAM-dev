@@ -32,7 +32,7 @@ writeInterval           0.001;
 
 purgeWrite              0;
 
-writeFormat             ascii;
+writeFormat             binary;
 
 writePrecision          6;
 
@@ -45,6 +45,6 @@ runTimeModifiable       yes;
 adjustTimeStep          on;
 
 maxCo                   5;
-
+maxAlphaCo              2;
 
 // ************************************************************************* //
