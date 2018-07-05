@@ -6,13 +6,15 @@
         "phiHbyA",
         (
            fvc::flux(HbyA)
-         + alphacf*rAUcf*fvc::ddtCorr(Uc, phic)
+         + alphacf*rAUcf*fvc::ddtCorr(Uc, phic, Ucf)
         )
     );
 
     if (p.needReference())
     {
+        fvc::makeRelative(phiHbyA, Uc);
         adjustPhi(phiHbyA, Uc, p);
+        fvc::makeAbsolute(phiHbyA, Uc);
     }
 
     phiHbyA += phicForces;
@@ -41,8 +43,15 @@
             p.relax();
 
             Uc = HbyA
-              + rAUc*fvc::reconstruct((phicForces - pEqn.flux()/alphacf)/rAUcf);
+               + rAUc
+                *fvc::reconstruct((phicForces - pEqn.flux()/alphacf)/rAUcf);
             Uc.correctBoundaryConditions();
+
+            // Correct Ucf if the mesh is moving
+            fvc::correctUf(Ucf, Uc, phic);
+
+            // Make the fluxes relative to the mesh motion
+            fvc::makeRelative(phic, Uc);
         }
     }
 }

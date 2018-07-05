@@ -5,7 +5,5 @@ wclean libso DPMTurbulenceModels
 
 wclean
 wclean MPPICFoam
-wclean DPMDyMFoam
-wclean DPMDyMFoam/MPPICDyMFoam
 
 #------------------------------------------------------------------------------

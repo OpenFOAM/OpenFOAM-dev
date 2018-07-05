@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,21 +21,35 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    MPPICDyMFoam
+Global
+    createUcfIfPresent
 
 Description
-    Transient solver for the coupled transport of a single kinematic particle
-    cloud including the effect of the volume fraction of particles on the
-    continuous phase. Multi-Phase Particle In Cell (MPPIC) modeling is used to
-    represent collisions without resolving particle-particle interactions,
-    with optional mesh motion and mesh topology changes.
+    Creates and initialises the continuous phase face velocity field Ufc
+    if required.
 
 \*---------------------------------------------------------------------------*/
 
-#define MPPIC
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "DPMDyMFoam.C"
+autoPtr<surfaceVectorField> Ucf;
 
+if (mesh.dynamic())
+{
+    Info<< "Constructing continuous phase face velocity Ucf\n" << endl;
+
+    Ucf = new surfaceVectorField
+    (
+        IOobject
+        (
+            "Ucf",
+            runTime.timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        fvc::interpolate(Uc)
+    );
+}
 
 // ************************************************************************* //

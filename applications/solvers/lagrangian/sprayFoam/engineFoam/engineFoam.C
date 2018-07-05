@@ -57,10 +57,10 @@ int main(int argc, char *argv[])
     #include "readEngineTimeControls.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
-    #include "createRhoUf.H"
     #include "compressibleCourantNo.H"
     #include "setInitialDeltaT.H"
     #include "initContinuityErrs.H"
+    #include "createRhoUfIfPresent.H"
     #include "startSummary.H"
 
     turbulence->validate();
