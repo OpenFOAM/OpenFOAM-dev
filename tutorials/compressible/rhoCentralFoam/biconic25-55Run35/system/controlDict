@@ -51,5 +51,10 @@ maxCo           0.5;
 
 maxDeltaT       2e-8;
 
+functions
+{
+    #includeFunc wallHeatFlux
+    #includeFunc sample
+}
 
 // ************************************************************************* //

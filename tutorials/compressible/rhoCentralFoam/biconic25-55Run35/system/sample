@@ -15,12 +15,14 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type sets;
+type            sets;
 libs            ("libsampling.so");
 
+writeControl    writeTime;
 interpolationScheme cellPointFace;
-
 setFormat       raw;
+
+fields          ( p wallHeatFlux );
 
 sets
 (
@@ -49,8 +51,5 @@ sets
         nPoints 40;
     }
 );
-
-fields          ( p wallHeatTransRate );
-
 
 // ************************************************************************* //
