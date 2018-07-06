@@ -1,7 +1,7 @@
 #---------------------------------*- sh -*-------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-#  \\    /   O peration     |
+#  \\    /   O peration     | Website:  https://openfoam.org
 #   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ sourceBanner="(\
 /\*--------------------------------\*- C\+\+ -\*----------------------------------\*\\\\)
   =========                 \|
   \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox
-   \\\\\\\\    /   O peration     \|
+   \\\\\\\\    /   O peration     \| Website:  https://openfoam\.org
     \\\\\\\\  /    A nd           \| Copyright \(C\) [0-9-]+ OpenFOAM Foundation
      \\\\\\\\/     M anipulation  \|
 -------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ scriptBanner="(\
 #----------------------------\*- makefile-gmake -\*------------------------------)
 # =========                 \|
 # \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox
-#  \\\\\\\\    /   O peration     \|
+#  \\\\\\\\    /   O peration     \| Website:  https://openfoam\.org
 #   \\\\\\\\  /    A nd           \| Copyright \(C\) [0-9-]+ OpenFOAM Foundation
 #    \\\\\\\\/     M anipulation  \|
 #------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ dictBanner="\
 \| =========                 \|                                                 \|
 \| \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox           \|
 \|  \\\\\\\\    /   O peration     \| Version:  dev                                   \|
-\|   \\\\\\\\  /    A nd           \| Web:      www\.OpenFOAM\.org                      \|
+\|   \\\\\\\\  /    A nd           \| Website:  https://openfoam\.org                  \|
 \|    \\\\\\\\/     M anipulation  \|                                                 \|
 \\\\\*---------------------------------------------------------------------------\*/"
 
@@ -181,7 +181,7 @@ checkIllegalCode()
     do
         case "$f" in
         # exclude potential makefiles
-        (*[Mm]akefile* | wmake/rules/* | *.f* | *.v[cf]proj | *.pdf | *.png | *.html | *.gif | *.css | *.gz)
+        (*[Mm]akefile* | wmake/rules/* | bin/tools/gtagsrc | *.f* | *.v[cf]proj | *.pdf | *.png | *.html | *.gif | *.css | *.gz)
         ;;
         (*)
             fileType=`file -b $f`

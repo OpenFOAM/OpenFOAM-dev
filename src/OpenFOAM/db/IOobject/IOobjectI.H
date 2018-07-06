@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ inline Stream& Foam::IOobject::writeBanner(Stream& os, bool noHint)
         "|  \\\\    /   O peration     |"
         " Version:  " << FOAMversion << spaces << "|\n"
         "|   \\\\  /    A nd           |"
-        " Web:      www.OpenFOAM.org                      |\n"
+        " Website:  https://openfoam.org                  |\n"
         "|    \\\\/     M anipulation  |"
         "                                                 |\n"
         "\\*-----------------------------------------"
