@@ -42,9 +42,9 @@ void Foam::moleFractions<ThermoType>::calculateMoleFractions()
     {
         const dimensionedScalar Wi
         (
-            "W",
+            "Wi",
             dimMass/dimMoles,
-            thermo.composition().W(i)
+            thermo.composition().Wi(i)
         );
 
         X_[i] = W*Y[i]/Wi;

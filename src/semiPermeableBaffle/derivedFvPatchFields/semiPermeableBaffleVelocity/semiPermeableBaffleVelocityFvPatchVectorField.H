@@ -60,8 +60,6 @@ SourceFiles
 namespace Foam
 {
 
-class basicSpecieMixture;
-
 /*---------------------------------------------------------------------------*\
        Class semiPermeableBaffleVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
@@ -74,12 +72,6 @@ class semiPermeableBaffleVelocityFvPatchVectorField
 
         //- Name of the density field
         const word rhoName_;
-
-
-    // Private Member Functions
-
-        //- Return the composition
-        const basicSpecieMixture& composition() const;
 
 
 public:

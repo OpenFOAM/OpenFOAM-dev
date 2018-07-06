@@ -551,6 +551,28 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::W() const
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::W
+(
+    const label patchi
+) const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    tmp<scalarField> tW
+    (
+        phasei().boundaryField()[patchi]*phasei().thermo().W(patchi)
+    );
+
+    for (++phasei; phasei != phases_.end(); ++phasei)
+    {
+        tW.ref() +=
+            phasei().boundaryField()[patchi]*phasei().thermo().W(patchi);
+    }
+
+    return tW;
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::nu() const
 {
     return mu()/rho();

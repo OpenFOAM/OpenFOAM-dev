@@ -313,6 +313,17 @@ Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::W() const
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::W
+(
+    const label patchi
+) const
+{
+    return
+        alpha1().boundaryField()[patchi]*thermo1_->W(patchi)
+      + alpha2().boundaryField()[patchi]*thermo1_->W(patchi);
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::nu() const
 {
     return mu()/(alpha1()*thermo1_->rho() + alpha2()*thermo2_->rho());

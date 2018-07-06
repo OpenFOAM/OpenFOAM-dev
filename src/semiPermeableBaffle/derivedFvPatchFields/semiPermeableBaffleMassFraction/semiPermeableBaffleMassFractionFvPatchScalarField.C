@@ -29,6 +29,62 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "turbulenceModel.H"
+#include "psiReactionThermo.H"
+#include "rhoReactionThermo.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    template<>
+    const char* NamedEnum
+    <
+        semiPermeableBaffleMassFractionFvPatchScalarField::input,
+        4
+    >::names[] =
+    {
+        "none",
+        "massFraction",
+        "moleFraction",
+        "partialPressure",
+    };
+}
+
+const Foam::NamedEnum
+<
+    Foam::semiPermeableBaffleMassFractionFvPatchScalarField::input,
+    4
+> Foam::semiPermeableBaffleMassFractionFvPatchScalarField::inputNames_;
+
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+const Foam::basicSpecieMixture&
+Foam::semiPermeableBaffleMassFractionFvPatchScalarField::composition
+(
+    const objectRegistry& db
+)
+{
+    const word& name = basicThermo::dictName;
+
+    if (db.foundObject<psiReactionThermo>(name))
+    {
+        return db.lookupObject<psiReactionThermo>(name).composition();
+    }
+    else if (db.foundObject<rhoReactionThermo>(name))
+    {
+        return db.lookupObject<rhoReactionThermo>(name).composition();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Could not find a multi-component thermodynamic model."
+            << exit(FatalError);
+
+        return NullObjectRef<basicSpecieMixture>();
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -42,7 +98,9 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     mappedPatchBase(p.patch()),
     mixedFvPatchScalarField(p, iF),
     c_(0),
-    phiName_("phi")
+    input_(none),
+    phiName_("phi"),
+    pName_("p")
 {
     refValue() = Zero;
     refGrad() = Zero;
@@ -61,7 +119,14 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     mappedPatchBase(p.patch(), NEARESTPATCHFACE, dict),
     mixedFvPatchScalarField(p, iF),
     c_(dict.lookupOrDefault<scalar>("c", scalar(0))),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi"))
+    input_
+    (
+        c_ == scalar(0)
+      ? none
+      : inputNames_.read(dict.lookup("input"))
+    ),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    pName_(dict.lookupOrDefault<word>("p", "p"))
 {
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
 
@@ -83,7 +148,9 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     mappedPatchBase(p.patch(), ptf),
     mixedFvPatchScalarField(ptf, p, iF, mapper),
     c_(ptf.c_),
-    phiName_(ptf.phiName_)
+    input_(ptf.input_),
+    phiName_(ptf.phiName_),
+    pName_(ptf.pName_)
 {}
 
 
@@ -96,7 +163,9 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     mappedPatchBase(ptf.patch().patch(), ptf),
     mixedFvPatchScalarField(ptf),
     c_(ptf.c_),
-    phiName_(ptf.phiName_)
+    input_(ptf.input_),
+    phiName_(ptf.phiName_),
+    pName_(ptf.pName_)
 {}
 
 
@@ -110,7 +179,9 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     mappedPatchBase(ptf.patch().patch(), ptf),
     mixedFvPatchScalarField(ptf, iF),
     c_(ptf.c_),
-    phiName_(ptf.phiName_)
+    input_(ptf.input_),
+    phiName_(ptf.phiName_),
+    pName_(ptf.pName_)
 {}
 
 
@@ -126,15 +197,61 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::phiY() const
 
     const word& YName = internalField().name();
 
+    // Initialise the input variables to the mass fractions
+    scalarField psic(patchInternalField());
+
     const label nbrPatchi = samplePolyPatch().index();
     const fvPatch& nbrPatch = patch().boundaryMesh()[nbrPatchi];
-
     const fvPatchScalarField& nbrYp =
         nbrPatch.lookupPatchField<volScalarField, scalar>(YName);
-    scalarField nbrYc(nbrYp.patchInternalField());
-    mappedPatchBase::map().distribute(nbrYc);
+    scalarField nbrPsic(nbrYp.patchInternalField());
+    mappedPatchBase::map().distribute(nbrPsic);
 
-    return c_*patch().magSf()*(patchInternalField() - nbrYc);
+    switch (input_)
+    {
+        case none:
+            FatalErrorInFunction
+                << "A none input cannot be used with a non-zero transfer "
+                << "coefficient" << exit(FatalError);
+
+        case massFraction:
+            // Do nothing
+            break;
+
+        case partialPressure:
+            // Multiply by pressure
+            {
+                psic *=
+                    patch().lookupPatchField<volScalarField, scalar>(pName_);
+
+                fvPatchScalarField nbrP
+                (
+                    nbrPatch.lookupPatchField<volScalarField, scalar>(pName_)
+                );
+                mappedPatchBase::map().distribute(nbrP);
+                nbrPsic *= nbrP;
+            }
+
+            // Falls through ...
+
+        case moleFraction:
+            // Convert to mole fraction
+            {
+                const basicSpecieMixture& mixture = composition(db());
+                const scalar Wi(mixture.Wi(mixture.species()[YName]));
+                const basicThermo& thermo =
+                    db().lookupObject<basicThermo>(basicThermo::dictName);
+
+                psic *= thermo.W(patch().index())/Wi;
+
+                scalarField nbrW(thermo.W(nbrPatch.index()));
+                mappedPatchBase::map().distribute(nbrW);
+                nbrPsic *= nbrW/Wi;
+            }
+            break;
+    }
+
+    return c_*patch().magSf()*(psic - nbrPsic);
 }
 
 
@@ -171,7 +288,10 @@ void Foam::semiPermeableBaffleMassFractionFvPatchScalarField::write
     fvPatchScalarField::write(os);
     mappedPatchBase::write(os);
     writeEntryIfDifferent<scalar>(os, "c", scalar(0), c_);
+    os.writeKeyword("input") << inputNames_[input_]
+        << token::END_STATEMENT << nl;
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    writeEntryIfDifferent<word>(os, "p", "p", pName_);
     writeEntry("value", os);
 }
 

@@ -49,7 +49,7 @@ Foam::SpecieMixture<MixtureType>::SpecieMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class MixtureType>
-Foam::scalar Foam::SpecieMixture<MixtureType>::W
+Foam::scalar Foam::SpecieMixture<MixtureType>::Wi
 (
     const label speciei
 ) const

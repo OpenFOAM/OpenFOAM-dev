@@ -769,6 +769,25 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<BasicThermo, MixtureType>::W
 
 
 template<class BasicThermo, class MixtureType>
+Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::W
+(
+    const label patchi
+) const
+{
+    const fvMesh& mesh = this->T_.mesh();
+
+    tmp<scalarField> tW(new scalarField(mesh.boundaryMesh()[patchi].size()));
+    scalarField& W = tW.ref();
+    forAll(W, facei)
+    {
+        W[facei] = this->patchFaceMixture(patchi, facei).W();
+    }
+
+    return tW;
+}
+
+
+template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::volScalarField>
 Foam::heThermo<BasicThermo, MixtureType>::kappa() const
 {

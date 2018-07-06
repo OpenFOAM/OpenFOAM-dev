@@ -124,7 +124,7 @@ void standardPhaseChange::correctModel
     );
 
     // Molecular weight of vapour [kg/kmol]
-    const scalar Wvap = thermo.carrier().W(vapId);
+    const scalar Wvap = thermo.carrier().Wi(vapId);
 
     // Molecular weight of liquid [kg/kmol]
     const scalar Wliq = filmThermo.W();

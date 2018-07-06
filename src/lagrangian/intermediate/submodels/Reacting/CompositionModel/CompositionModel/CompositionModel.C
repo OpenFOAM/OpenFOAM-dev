@@ -245,7 +245,7 @@ Foam::scalarField Foam::CompositionModel<CloudType>::X
             forAll(Y, i)
             {
                 label cid = props.carrierIds()[i];
-                X[i] = Y[i]/thermo_.carrier().W(cid);
+                X[i] = Y[i]/thermo_.carrier().Wi(cid);
                 WInv += X[i];
             }
             break;

@@ -179,7 +179,7 @@ void waxSolventEvaporation::correctModel
     );
 
     // Molecular weight of vapour [kg/kmol]
-    const scalar Wvap = thermo.carrier().W(vapId);
+    const scalar Wvap = thermo.carrier().Wi(vapId);
 
     const scalar Wwax = Wwax_.value();
     const scalar Wsolvent = Wsolvent_.value();

@@ -32,32 +32,6 @@ License
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-const Foam::basicSpecieMixture&
-Foam::semiPermeableBaffleVelocityFvPatchVectorField::composition() const
-{
-    const word& name = basicThermo::dictName;
-
-    if (db().foundObject<psiReactionThermo>(name))
-    {
-        return db().lookupObject<psiReactionThermo>(name).composition();
-    }
-    else if (db().foundObject<rhoReactionThermo>(name))
-    {
-        return db().lookupObject<rhoReactionThermo>(name).composition();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Could not find a multi-component thermodynamic model."
-            << exit(FatalError);
-
-        return NullObjectRef<basicSpecieMixture>();
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::semiPermeableBaffleVelocityFvPatchVectorField::
@@ -138,7 +112,7 @@ void Foam::semiPermeableBaffleVelocityFvPatchVectorField::updateCoeffs()
     const scalarField& rhop =
         patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
-    const PtrList<volScalarField>& Y = composition().Y();
+    const PtrList<volScalarField>& Y = YBCType::composition(db()).Y();
 
     scalarField phip(patch().size(), Zero);
     forAll(Y, i)

@@ -76,7 +76,7 @@ public:
         // Per specie properties
 
             //- Molecular weight of the given specie [kg/kmol]
-            virtual scalar W(const label speciei) const;
+            virtual scalar Wi(const label speciei) const;
 
 
         // Per specie thermo properties

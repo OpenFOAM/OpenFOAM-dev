@@ -36,7 +36,7 @@ wRatioByP() const
     (
         "W",
         dimMass/dimMoles,
-        this->thermo_.composition().W(saturatedIndex_)
+        this->thermo_.composition().Wi(saturatedIndex_)
     );
 
     return Wi/this->thermo_.W()/this->thermo_.p();

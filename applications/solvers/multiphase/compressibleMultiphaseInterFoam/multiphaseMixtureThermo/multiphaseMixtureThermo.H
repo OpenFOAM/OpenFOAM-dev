@@ -379,6 +379,9 @@ public:
             //- Molecular weight [kg/kmol]
             virtual tmp<volScalarField> W() const;
 
+            //- Molecular weight for patch [kg/kmol]
+            virtual tmp<scalarField> W(const label patchi) const;
+
 
         // Fields derived from transport state variables
 
