@@ -2,7 +2,7 @@
 #---------------------------------*- sh -*-------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-#  \\    /   O peration     |
+#  \\    /   O peration     | Website:  https://openfoam.org
 #   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
@@ -100,25 +100,25 @@ fi
 # Main code. Do all checks.
 #
 
-# builtin whitespace check to avoid trailing space, including CR-LF endings
+# Builtin whitespace check to avoid trailing space, including CR-LF endings
 bad=$(git diff-index --cached --check $against --) || die "$bad"
 
-# check for illegal code, e.g. <TAB>, etc
+# Check for illegal code, e.g. <TAB>, etc
 checkIllegalCode
 
-# ensure code conforms to 80 columns max
+# Ensure code conforms to 80 columns max
 checkLineLengthNonDirective
 
-# check for non-standard code patterns
+# Check for non-standard code patterns
 checkNonStandardCodePatterns
 
-# check if #ifndef/#define bounds are named correctly
+# Check if #ifndef/#define bounds are named correctly
 checkHeaderIfndefNames
 
-# check banner
+# Check banner
 checkBanner
 
-# check copyright
+# Check copyright
 checkCopyright
 
 exit 0
