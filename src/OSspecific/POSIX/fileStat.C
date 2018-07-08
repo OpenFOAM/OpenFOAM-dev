@@ -31,6 +31,13 @@ License
 #include <unistd.h>
 #include <sys/sysmacros.h>
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+const Foam::label Foam::fileStat::nVariants_ = 2;
+
+const char* Foam::fileStat::variantExts_[] = {"gz", "orig"};
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fileStat::fileStat()
@@ -42,6 +49,7 @@ Foam::fileStat::fileStat()
 Foam::fileStat::fileStat
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink,
     const unsigned int maxTime
 )
@@ -53,26 +61,22 @@ Foam::fileStat::fileStat
 
     if (!timedOut(myTimer))
     {
-        if (followLink)
+        int (*getFileStatus)(const char *, struct stat *) =
+            followLink ? ::stat : ::lstat;
+
+        if (getFileStatus(fName.c_str(), &status_) == 0)
         {
-            if (::stat(fName.c_str(), &status_) != 0)
-            {
-                locIsValid = false;
-            }
-            else
-            {
-                locIsValid = true;
-            }
+            locIsValid = true;
         }
-        else
+        else if (checkVariants)
         {
-            if (::lstat(fName.c_str(), &status_) != 0)
+            for (label i = 0; !locIsValid && i < nVariants_; ++ i)
             {
-                locIsValid = false;
-            }
-            else
-            {
-                locIsValid = true;
+                const fileName fNameVar = fName + "." + variantExts_[i];
+                if (getFileStatus(fNameVar.c_str(), &status_) == 0)
+                {
+                    locIsValid = true;
+                }
             }
         }
     }

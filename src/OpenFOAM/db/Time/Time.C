@@ -162,7 +162,7 @@ void Foam::Time::setControls()
 
     // Check if time directory exists
     // If not increase time precision to see if it is formatted differently.
-    if (!fileHandler().exists(timePath(), false))
+    if (!fileHandler().exists(timePath(), false, false))
     {
         int oldPrecision = precision_;
         int requiredPrecision = -1;
@@ -186,7 +186,7 @@ void Foam::Time::setControls()
             oldTime = newTime;
 
             // Check the existence of the time directory with the new format
-            found = fileHandler().exists(timePath(), false);
+            found = fileHandler().exists(timePath(), false, false);
 
             if (found)
             {

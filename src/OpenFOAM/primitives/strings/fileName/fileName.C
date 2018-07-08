@@ -48,9 +48,13 @@ Foam::fileName::fileName(const wordList& lst)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::fileName::Type Foam::fileName::type(const bool followLink) const
+Foam::fileName::Type Foam::fileName::type
+(
+    const bool checkVariants,
+    const bool followLink
+) const
 {
-    return ::Foam::type(*this, followLink);
+    return ::Foam::type(*this, checkVariants, followLink);
 }
 
 

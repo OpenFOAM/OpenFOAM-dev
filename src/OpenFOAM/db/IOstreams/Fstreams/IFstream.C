@@ -55,7 +55,7 @@ Foam::IFstreamAllocator::IFstreamAllocator(const fileName& pathname)
     // If the file is compressed, decompress it before reading.
     if (!ifPtr_->good())
     {
-        if (isFile(pathname + ".gz", false))
+        if (isFile(pathname + ".gz", false, false))
         {
             delete ifPtr_;
 
@@ -71,7 +71,7 @@ Foam::IFstreamAllocator::IFstreamAllocator(const fileName& pathname)
                 compression_ = IOstream::COMPRESSED;
             }
         }
-        else if (isFile(pathname + ".orig", false))
+        else if (isFile(pathname + ".orig", false, false))
         {
             delete ifPtr_;
 
@@ -174,8 +174,8 @@ Foam::IFstream& Foam::IFstream::operator()() const
 {
     if (!good())
     {
-        // also checks .gz file
-        if (isFile(pathname_, true))
+        // also checks variants
+        if (isFile(pathname_, true, true))
         {
             check("IFstream::operator()");
             FatalIOError.exit();

@@ -887,7 +887,7 @@ int main(int argc, char *argv[])
             Info<< "Reading commands from file " << batchFile << endl;
 
             // we cannot handle .gz files
-            if (!isFile(batchFile, false))
+            if (!isFile(batchFile, false, false))
             {
                 FatalErrorInFunction
                     << "Cannot open file " << batchFile << exit(FatalError);

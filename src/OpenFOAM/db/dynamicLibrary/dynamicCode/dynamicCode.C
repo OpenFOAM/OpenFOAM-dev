@@ -157,7 +157,7 @@ bool Foam::dynamicCode::resolveTemplates
         if (!templateDir.empty() && isDir(templateDir))
         {
             file = templateDir/templateName;
-            if (!isFile(file, false))
+            if (!isFile(file, false, false))
             {
                 file.clear();
             }
@@ -512,7 +512,7 @@ bool Foam::dynamicCode::upToDate(const SHA1Digest& sha1) const
 {
     const fileName file = digestFile();
 
-    if (!exists(file, false) || SHA1Digest(IFstream(file)()) != sha1)
+    if (!exists(file, false, false) || SHA1Digest(IFstream(file)()) != sha1)
     {
         return false;
     }

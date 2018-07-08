@@ -456,7 +456,12 @@ bool Foam::chMod(const fileName& name, const mode_t m)
 }
 
 
-mode_t Foam::mode(const fileName& name, const bool followLink)
+mode_t Foam::mode
+(
+    const fileName& name,
+    const bool checkVariants,
+    const bool followLink
+)
 {
     if (POSIX::debug)
     {
@@ -466,7 +471,7 @@ mode_t Foam::mode(const fileName& name, const bool followLink)
             error::printStack(Pout);
         }
     }
-    fileStat fileStatus(name, followLink);
+    fileStat fileStatus(name, checkVariants, followLink);
     if (fileStatus.isValid())
     {
         return fileStatus.status().st_mode;
@@ -478,13 +483,18 @@ mode_t Foam::mode(const fileName& name, const bool followLink)
 }
 
 
-Foam::fileName::Type Foam::type(const fileName& name, const bool followLink)
+Foam::fileName::Type Foam::type
+(
+    const fileName& name,
+    const bool checkVariants,
+    const bool followLink
+)
 {
     if (POSIX::debug)
     {
         Pout<< FUNCTION_NAME << " : name:" << name << endl;
     }
-    mode_t m = mode(name, followLink);
+    mode_t m = mode(name, checkVariants, followLink);
 
     if (S_ISREG(m))
     {
@@ -508,20 +518,20 @@ Foam::fileName::Type Foam::type(const fileName& name, const bool followLink)
 bool Foam::exists
 (
     const fileName& name,
-    const bool checkGzip,
+    const bool checkVariants,
     const bool followLink
 )
 {
     if (POSIX::debug)
     {
-        Pout<< FUNCTION_NAME << " : name:" << name << " checkGzip:" << checkGzip
-            << endl;
+        Pout<< FUNCTION_NAME << " : name:" << name << " checkVariants:"
+            << bool(checkVariants) << " followLink:" << followLink << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
             error::printStack(Pout);
         }
     }
-    return mode(name, followLink) || isFile(name, checkGzip, followLink);
+    return mode(name, checkVariants, followLink);
 }
 
 
@@ -529,51 +539,55 @@ bool Foam::isDir(const fileName& name, const bool followLink)
 {
     if (POSIX::debug)
     {
-        Pout<< FUNCTION_NAME << " : name:" << name << endl;
+        Pout<< FUNCTION_NAME << " : name:" << name << " followLink:"
+            << followLink << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
             error::printStack(Pout);
         }
     }
-    return S_ISDIR(mode(name, followLink));
+    return S_ISDIR(mode(name, false, followLink));
 }
 
 
 bool Foam::isFile
 (
     const fileName& name,
-    const bool checkGzip,
+    const bool checkVariants,
     const bool followLink
 )
 {
     if (POSIX::debug)
     {
-        Pout<< FUNCTION_NAME << " : name:" << name << " checkGzip:" << checkGzip
-            << endl;
+        Pout<< FUNCTION_NAME << " : name:" << name << " checkVariants:"
+            << bool(checkVariants) << " followLink:" << followLink << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
             error::printStack(Pout);
         }
     }
 
-    return
-        S_ISREG(mode(name, followLink))
-     || (checkGzip && S_ISREG(mode(name + ".gz", followLink)))
-     || (checkGzip && S_ISREG(mode(name + ".orig", followLink)));
+    return S_ISREG(mode(name, checkVariants, followLink));
 }
 
 
-off_t Foam::fileSize(const fileName& name, const bool followLink)
+off_t Foam::fileSize
+(
+    const fileName& name,
+    const bool checkVariants,
+    const bool followLink
+)
 {
     if (POSIX::debug)
     {
-        Pout<< FUNCTION_NAME << " : name:" << name << endl;
+        Pout<< FUNCTION_NAME << " : name:" << name << " checkVariants:"
+            << bool(checkVariants) << " followLink:" << followLink << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
             error::printStack(Pout);
         }
     }
-    fileStat fileStatus(name, followLink);
+    fileStat fileStatus(name, checkVariants, followLink);
     if (fileStatus.isValid())
     {
         return fileStatus.status().st_size;
@@ -585,17 +599,23 @@ off_t Foam::fileSize(const fileName& name, const bool followLink)
 }
 
 
-time_t Foam::lastModified(const fileName& name, const bool followLink)
+time_t Foam::lastModified
+(
+    const fileName& name,
+    const bool checkVariants,
+    const bool followLink
+)
 {
     if (POSIX::debug)
     {
-        Pout<< FUNCTION_NAME << " : name:" << name << endl;
+        Pout<< FUNCTION_NAME << " : name:" << name << " checkVariants:"
+            << bool(checkVariants) << " followLink:" << followLink << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
             error::printStack(Pout);
         }
     }
-    fileStat fileStatus(name, followLink);
+    fileStat fileStatus(name, checkVariants, followLink);
     if (fileStatus.isValid())
     {
         return fileStatus.status().st_mtime;
@@ -607,17 +627,23 @@ time_t Foam::lastModified(const fileName& name, const bool followLink)
 }
 
 
-double Foam::highResLastModified(const fileName& name, const bool followLink)
+double Foam::highResLastModified
+(
+    const fileName& name,
+    const bool checkVariants,
+    const bool followLink
+)
 {
     if (POSIX::debug)
     {
-        Pout<< FUNCTION_NAME << " : name:" << name << endl;
+        Pout<< FUNCTION_NAME << " : name:" << name << " checkVariants:"
+            << bool(checkVariants) << " followLink:" << followLink << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
             error::printStack(Pout);
         }
     }
-    fileStat fileStatus(name, followLink);
+    fileStat fileStatus(name, checkVariants, followLink);
     if (fileStatus.isValid())
     {
         return
@@ -635,7 +661,7 @@ Foam::fileNameList Foam::readDir
 (
     const fileName& directory,
     const fileName::Type type,
-    const bool filtergz,
+    const bool filterVariants,
     const bool followLink
 )
 {
@@ -700,24 +726,25 @@ Foam::fileNameList Foam::readDir
                     )
                 )
                 {
-                    if ((directory/fName).type(followLink) == type)
+                    if ((directory/fName).type(false, followLink) == type)
                     {
                         if (nEntries >= dirEntries.size())
                         {
                             dirEntries.setSize(dirEntries.size() + maxNnames);
                         }
 
-                        if (filtergz && fExt == "gz")
+                        dirEntries[nEntries++] = fName;
+
+                        if (filterVariants)
                         {
-                            dirEntries[nEntries++] = fName.lessExt();
-                        }
-                        else if (filtergz && fExt == "orig")
-                        {
-                            dirEntries[nEntries++] = fName.lessExt();
-                        }
-                        else
-                        {
-                            dirEntries[nEntries++] = fName;
+                            for (label i = 0; i < fileStat::nVariants_; ++ i)
+                            {
+                                if (fExt == fileStat::variantExts_[i])
+                                {
+                                    dirEntries[nEntries - 1] = fName.lessExt();
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -750,7 +777,7 @@ bool Foam::cp(const fileName& src, const fileName& dest, const bool followLink)
         return false;
     }
 
-    const fileName::Type srcType = src.type(followLink);
+    const fileName::Type srcType = src.type(false, followLink);
 
     fileName destFile(dest);
 
@@ -949,7 +976,7 @@ bool Foam::mv(const fileName& src, const fileName& dst, const bool followLink)
     if
     (
         dst.type() == fileName::DIRECTORY
-     && src.type(followLink) != fileName::DIRECTORY
+     && src.type(false, followLink) != fileName::DIRECTORY
     )
     {
         const fileName dstName(dst/src.name());
@@ -976,7 +1003,7 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
         }
     }
 
-    if (exists(src, false))
+    if (exists(src, false, false))
     {
         const int maxIndex = 99;
         char index[3];
@@ -992,7 +1019,7 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
 
             // avoid overwriting existing files, except for the last
             // possible index where we have no choice
-            if (!exists(dstName, false) || n == maxIndex)
+            if (!exists(dstName, false, false) || n == maxIndex)
             {
                 return ::rename(src.c_str(), dstName.c_str()) == 0;
             }
@@ -1017,15 +1044,22 @@ bool Foam::rm(const fileName& file)
         }
     }
 
-    // Try returning plain file name; if not there, try with .gz
+    // Try returning plain file name; if not there, try variants
     if (remove(file.c_str()) == 0)
     {
         return true;
     }
-    else
+
+    for (label i = 0; i < fileStat::nVariants_; ++ i)
     {
-        return ::remove(string(file + ".gz").c_str()) == 0;
+        const fileName fileVar = file + "." + fileStat::variantExts_[i];
+        if (::remove(string(fileVar).c_str()) == 0)
+        {
+            return true;
+        }
     }
+
+    return false;
 }
 
 
@@ -1064,7 +1098,7 @@ bool Foam::rmDir(const fileName& directory)
             {
                 fileName path = directory/fName;
 
-                if (path.type(false) == fileName::DIRECTORY)
+                if (path.type(false, false) == fileName::DIRECTORY)
                 {
                     if (!rmDir(path))
                     {

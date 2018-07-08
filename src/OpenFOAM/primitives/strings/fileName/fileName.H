@@ -156,7 +156,11 @@ public:
 
             //- Return the file type: FILE, DIRECTORY, UNDEFINED or
             //  LINK (only if followLink=false)
-            Type type(const bool followLink = true) const;
+            Type type
+            (
+                const bool checkVariants = true,
+                const bool followLink = true
+            ) const;
 
             //- Return true if file name is absolute
             bool isAbsolute() const;

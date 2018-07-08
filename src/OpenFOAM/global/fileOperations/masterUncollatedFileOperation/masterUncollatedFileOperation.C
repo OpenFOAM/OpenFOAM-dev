@@ -36,6 +36,7 @@ License
 #include "SubList.H"
 #include "unthreadedInitialise.H"
 #include "PackedBoolList.H"
+#include "gzstream.h"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -496,25 +497,28 @@ bool Foam::fileOperations::masterUncollatedFileOperation::uniformFile
 void Foam::fileOperations::masterUncollatedFileOperation::readAndSend
 (
     const fileName& filePath,
-    const IOstream::compressionType cmp,
     const labelUList& procs,
     PstreamBuffers& pBufs
 )
 {
-    if (cmp == IOstream::compressionType::COMPRESSED)
+    if (debug)
+    {
+        Pout<< FUNCTION_NAME << ": Opening " << filePath << endl;
+    }
+
+    IFstream is(filePath, IOstream::streamFormat::BINARY);
+
+    if (!is.good())
+    {
+        FatalIOErrorInFunction(filePath) << "Cannot open file " << filePath
+            << exit(FatalIOError);
+    }
+
+    if (isA<igzstream>(is.stdStream()))
     {
         if (debug)
         {
-            Pout<< "masterUncollatedFileOperation::readAndSend :"
-                << " Opening compressed " << filePath << endl;
-        }
-
-        IFstream is(filePath, IOstream::streamFormat::BINARY);
-
-        if (!is.good())
-        {
-            FatalIOErrorInFunction(filePath) << "Cannot open file " << filePath
-                << exit(FatalIOError);
+            Pout<< FUNCTION_NAME << ": Reading compressed" << endl;
         }
 
         std::ostringstream stringStr;
@@ -530,21 +534,12 @@ void Foam::fileOperations::masterUncollatedFileOperation::readAndSend
     else
     {
         off_t count(Foam::fileSize(filePath));
-        IFstream is(filePath, IOstream::streamFormat::BINARY);
-
-        if (!is.good())
-        {
-            FatalIOErrorInFunction(filePath) << "Cannot open file " << filePath
-                << exit(FatalIOError);
-        }
-
 
         if (debug)
         {
-            Pout<< "masterUncollatedFileOperation::readStream :"
-                << " From " << filePath <<  " reading " << label(count)
-                << " bytes" << endl;
+            Pout<< FUNCTION_NAME << " : Reading " << count << " bytes " << endl;
         }
+
         List<char> buf(static_cast<label>(count));
         is.stdStream().read(buf.begin(), count);
 
@@ -553,36 +548,6 @@ void Foam::fileOperations::masterUncollatedFileOperation::readAndSend
             UOPstream os(procs[i], pBufs);
             os.write(buf.begin(), count);
         }
-    }
-}
-
-
-void Foam::fileOperations::masterUncollatedFileOperation::readAndSend
-(
-    const fileName& fName,
-    const labelUList& procs,
-    PstreamBuffers& pBufs
-)
-{
-    if (Foam::exists(fName+".gz", false))
-    {
-        readAndSend
-        (
-            fName,
-            IOstream::compressionType::COMPRESSED,
-            procs,
-            pBufs
-        );
-    }
-    else
-    {
-        readAndSend
-        (
-            fName,
-            IOstream::compressionType::UNCOMPRESSED,
-            procs,
-            pBufs
-        );
     }
 }
 
@@ -910,13 +875,14 @@ bool Foam::fileOperations::masterUncollatedFileOperation::chMod
 mode_t Foam::fileOperations::masterUncollatedFileOperation::mode
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
     return masterOp<mode_t, modeOp>
     (
         fName,
-        modeOp(followLink),
+        modeOp(checkVariants, followLink),
         Pstream::msgType(),
         comm_
     );
@@ -926,6 +892,7 @@ mode_t Foam::fileOperations::masterUncollatedFileOperation::mode
 Foam::fileName::Type Foam::fileOperations::masterUncollatedFileOperation::type
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
@@ -934,7 +901,7 @@ Foam::fileName::Type Foam::fileOperations::masterUncollatedFileOperation::type
         masterOp<label, typeOp>
         (
             fName,
-            typeOp(followLink),
+            typeOp(checkVariants, followLink),
             Pstream::msgType(),
             comm_
         )
@@ -945,14 +912,14 @@ Foam::fileName::Type Foam::fileOperations::masterUncollatedFileOperation::type
 bool Foam::fileOperations::masterUncollatedFileOperation::exists
 (
     const fileName& fName,
-    const bool checkGzip,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
     return masterOp<bool, existsOp>
     (
         fName,
-        existsOp(checkGzip, followLink),
+        existsOp(checkVariants, followLink),
         Pstream::msgType(),
         comm_
     );
@@ -978,14 +945,14 @@ bool Foam::fileOperations::masterUncollatedFileOperation::isDir
 bool Foam::fileOperations::masterUncollatedFileOperation::isFile
 (
     const fileName& fName,
-    const bool checkGzip,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
     return masterOp<bool, isFileOp>
     (
         fName,
-        isFileOp(checkGzip, followLink),
+        isFileOp(checkVariants, followLink),
         Pstream::msgType(),
         comm_
     );
@@ -995,13 +962,14 @@ bool Foam::fileOperations::masterUncollatedFileOperation::isFile
 off_t Foam::fileOperations::masterUncollatedFileOperation::fileSize
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
     return masterOp<off_t, fileSizeOp>
     (
         fName,
-        fileSizeOp(followLink),
+        fileSizeOp(checkVariants, followLink),
         Pstream::msgType(),
         comm_
     );
@@ -1011,13 +979,14 @@ off_t Foam::fileOperations::masterUncollatedFileOperation::fileSize
 time_t Foam::fileOperations::masterUncollatedFileOperation::lastModified
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
     return masterOp<time_t, lastModifiedOp>
     (
         fName,
-        lastModifiedOp(followLink),
+        lastModifiedOp(checkVariants, followLink),
         Pstream::msgType(),
         comm_
     );
@@ -1027,13 +996,14 @@ time_t Foam::fileOperations::masterUncollatedFileOperation::lastModified
 double Foam::fileOperations::masterUncollatedFileOperation::highResLastModified
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
     return masterOp<double, lastModifiedHROp>
     (
         fName,
-        lastModifiedHROp(followLink),
+        lastModifiedHROp(checkVariants, followLink),
         Pstream::msgType(),
         comm_
     );
@@ -2415,13 +2385,6 @@ Foam::fileOperations::masterUncollatedFileOperation::NewIFstream
                         << " Opening global file " << filePath << endl;
                 }
 
-                IOstream::compressionType cmp
-                (
-                    Foam::exists(filePath+".gz", false)
-                  ? IOstream::compressionType::COMPRESSED
-                  : IOstream::compressionType::UNCOMPRESSED
-                );
-
                 labelList procs(Pstream::nProcs(Pstream::worldComm)-1);
                 for
                 (
@@ -2433,7 +2396,7 @@ Foam::fileOperations::masterUncollatedFileOperation::NewIFstream
                     procs[proci-1] = proci;
                 }
 
-                readAndSend(filePath, cmp, procs, pBufs);
+                readAndSend(filePath, procs, pBufs);
             }
             else
             {
@@ -2444,20 +2407,7 @@ Foam::fileOperations::masterUncollatedFileOperation::NewIFstream
                     proci++
                 )
                 {
-                    IOstream::compressionType cmp
-                    (
-                        Foam::exists(filePaths[proci]+".gz", false)
-                      ? IOstream::compressionType::COMPRESSED
-                      : IOstream::compressionType::UNCOMPRESSED
-                    );
-
-                    readAndSend
-                    (
-                        filePaths[proci],
-                        cmp,
-                        labelList(1, proci),
-                        pBufs
-                    );
+                    readAndSend(filePaths[proci], labelList(1, proci), pBufs);
                 }
             }
         }

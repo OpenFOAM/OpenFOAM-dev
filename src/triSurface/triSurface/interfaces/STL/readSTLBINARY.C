@@ -43,7 +43,7 @@ bool Foam::triSurface::readSTLBINARY(const fileName& STLfileName)
     );
 
     // If the file is compressed, decompress it before reading.
-    if (!STLfilePtr->good() && isFile(STLfileName + ".gz", false))
+    if (!STLfilePtr->good() && isFile(STLfileName + ".gz", false, false))
     {
         compressed = true;
         STLfilePtr.reset(new igzstream((STLfileName + ".gz").c_str()));

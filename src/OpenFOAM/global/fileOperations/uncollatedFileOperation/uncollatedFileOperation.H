@@ -93,6 +93,7 @@ public:
             virtual mode_t mode
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const;
 
@@ -100,6 +101,7 @@ public:
             virtual fileName::Type type
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const;
 
@@ -108,7 +110,7 @@ public:
             virtual bool exists
             (
                 const fileName&,
-                const bool checkGzip=true,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const;
 
@@ -124,7 +126,7 @@ public:
             virtual bool isFile
             (
                 const fileName&,
-                const bool checkGzip=true,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const;
 
@@ -132,6 +134,7 @@ public:
             virtual off_t fileSize
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const;
 
@@ -139,6 +142,7 @@ public:
             virtual time_t lastModified
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const;
 
@@ -146,6 +150,7 @@ public:
             virtual double highResLastModified
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const;
 

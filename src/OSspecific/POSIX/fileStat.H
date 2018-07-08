@@ -74,6 +74,15 @@ class fileStat
 
 public:
 
+    // Public static data
+
+        //- Number of file variants
+        static const label nVariants_;
+
+        //- Extensions of the file variants
+        static const char* variantExts_[];
+
+
     // Constructors
 
         //- Empty constructor
@@ -85,6 +94,7 @@ public:
         fileStat
         (
             const fileName& fName,
+            const bool checkVariants = true,
             const bool followLink = true,
             const unsigned int maxTime = 0
         );

@@ -198,6 +198,7 @@ public:
             virtual mode_t mode
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const = 0;
 
@@ -205,6 +206,7 @@ public:
             virtual fileName::Type type
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const = 0;
 
@@ -213,7 +215,7 @@ public:
             virtual bool exists
             (
                 const fileName&,
-                const bool checkGzip=true,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const = 0;
 
@@ -229,7 +231,7 @@ public:
             virtual bool isFile
             (
                 const fileName&,
-                const bool checkGzip=true,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const = 0;
 
@@ -237,6 +239,7 @@ public:
             virtual off_t fileSize
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const = 0;
 
@@ -244,6 +247,7 @@ public:
             virtual time_t lastModified
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const = 0;
 
@@ -251,6 +255,7 @@ public:
             virtual double highResLastModified
             (
                 const fileName&,
+                const bool checkVariants = true,
                 const bool followLink = true
             ) const = 0;
 
@@ -259,7 +264,7 @@ public:
             (
                 const fileName&,
                 const fileName::Type=fileName::FILE,
-                const bool filtergz=true,
+                const bool filterVariants = true,
                 const bool followLink = true
             ) const = 0;
 

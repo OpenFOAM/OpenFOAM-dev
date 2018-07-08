@@ -206,31 +206,33 @@ bool Foam::fileOperations::uncollatedFileOperation::chMod
 mode_t Foam::fileOperations::uncollatedFileOperation::mode
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
-    return Foam::mode(fName, followLink);
+    return Foam::mode(fName, checkVariants, followLink);
 }
 
 
 Foam::fileName::Type Foam::fileOperations::uncollatedFileOperation::type
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
-    return Foam::type(fName, followLink);
+    return Foam::type(fName, checkVariants, followLink);
 }
 
 
 bool Foam::fileOperations::uncollatedFileOperation::exists
 (
     const fileName& fName,
-    const bool checkGzip,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
-    return Foam::exists(fName, checkGzip, followLink);
+    return Foam::exists(fName, checkVariants, followLink);
 }
 
 
@@ -247,41 +249,44 @@ bool Foam::fileOperations::uncollatedFileOperation::isDir
 bool Foam::fileOperations::uncollatedFileOperation::isFile
 (
     const fileName& fName,
-    const bool checkGzip,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
-    return Foam::isFile(fName, checkGzip, followLink);
+    return Foam::isFile(fName, checkVariants, followLink);
 }
 
 
 off_t Foam::fileOperations::uncollatedFileOperation::fileSize
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
-    return Foam::fileSize(fName, followLink);
+    return Foam::fileSize(fName, checkVariants, followLink);
 }
 
 
 time_t Foam::fileOperations::uncollatedFileOperation::lastModified
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
-    return Foam::lastModified(fName, followLink);
+    return Foam::lastModified(fName, checkVariants, followLink);
 }
 
 
 double Foam::fileOperations::uncollatedFileOperation::highResLastModified
 (
     const fileName& fName,
+    const bool checkVariants,
     const bool followLink
 ) const
 {
-    return Foam::highResLastModified(fName, followLink);
+    return Foam::highResLastModified(fName, checkVariants, followLink);
 }
 
 
