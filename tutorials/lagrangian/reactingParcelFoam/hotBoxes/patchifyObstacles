@@ -1,12 +1,4 @@
 #!/bin/sh
-#--------------------------------*- C++ -*------------------------------------#
-# =========                 |                                                 #
-# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           #
-#  \\    /   O peration     | Version:  dev                                   #
-#   \\  /    A nd           | Website:  https://openfoam.org                  #
-#    \\/     M anipulation  |                                                 #
-#-----------------------------------------------------------------------------#
-
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Stop on first error

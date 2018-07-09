@@ -4,7 +4,7 @@
 #  \\    /   O peration     | Website:  https://openfoam.org
 #   \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # License
 #     This file is part of OpenFOAM.
 #

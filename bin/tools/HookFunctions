@@ -35,7 +35,8 @@ echoIndent="    "
 
 sourceBanner="(\
 /\*---------------------------------------------------------------------------\*\\\\|\
-/\*--------------------------------\*- C\+\+ -\*----------------------------------\*\\\\)
+/\*--------------------------------\*- C\+\+ -\*----------------------------------\*\\\\|\
+/\*---------------------------------\*- C -\*-----------------------------------\*\\\\)
   =========                 \|
   \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox
    \\\\\\\\    /   O peration     \| Website:  https://openfoam\.org
@@ -91,13 +92,15 @@ scriptBanner="(\
 )*?
 #------------------------------------------------------------------------------"
 
-dictBanner="\
-/\*--------------------------------\*- C\+\+ -\*----------------------------------\*\\\\
-\| =========                 \|                                                 \|
-\| \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox           \|
-\|  \\\\\\\\    /   O peration     \| Version:  dev                                   \|
-\|   \\\\\\\\  /    A nd           \| Website:  https://openfoam\.org                  \|
-\|    \\\\\\\\/     M anipulation  \|                                                 \|
+dictBanner="(\
+/\*---------------------------------------------------------------------------\*\\\\|\
+/\*--------------------------------\*- C\+\+ -\*----------------------------------\*\\\\)
+  =========                 \|
+  \\\\\\\\      /  F ield         \| OpenFOAM: The Open Source CFD Toolbox
+   \\\\\\\\    /   O peration     \| Website:  https://openfoam\.org
+    \\\\\\\\  /    A nd           \| Version:  (dev|[0-9\.x]+)
+     \\\\\\\\/     M anipulation  \|(.|
+)*?
 \\\\\*---------------------------------------------------------------------------\*/"
 
 
@@ -395,36 +398,48 @@ checkBanner()
     badFiles=$(
     for f in $fileList
     do
-        # Source files
-        if git grep -q -e "Copyright (C) [0-9-]\+ OpenFOAM Foundation" $scopeGrep"$f"
+        fFile="${f##*/}"
+        [[ "$fFile" = *.* ]] && fExt="${fFile##*.}" || fExt=""
+
+        # Skip links
+        if [ -h "$f" ]
         then
-            case "$f" in
-            (*.c|*.C|*.Cver|*.cxx|*.dox|*.H|*.h)
+            :
+
+        # Copyrighted source and script files
+        elif git grep -q -e "Copyright (C) [0-9-]\+ OpenFOAM Foundation" $scopeGrep"$f"
+        then
+            case "$fExt" in
+            (c|C|Cver|cxx|dox|H|h|l|L)
                 if ! git show $scopeShow"$f" | pcregrep -q -M "$sourceBanner"
                 then
                     echo $f
                 fi
             ;;
-            (*.*)
-                # No check for other extensions yet
-            ;;
-            (*)
-                # Assume that everything with a copyright statement but without
-                # an extension is a script with '#' comments
+            (''|awk|csh|gnuplot|sed|sh)
                 if ! git show $scopeShow"$f" | pcregrep -q -M "$scriptBanner"
                 then
                     echo $f
                 fi
             ;;
+            (*)
+                # Unknown extension
+                echo "Banner not checked for copyrighted file $f" 1>&2
+            ;;
             esac
 
-        # Case files
-        elif git grep -q -e "^FoamFile" $scopeGrep"$f"
+        # Versioned case files
+        elif git grep -q -e "Version:  \(dev\|[0-9.]+\)" $scopeGrep"$f"
         then
             if ! git show $scopeShow"$f" | pcregrep -q -M "$dictBanner"
             then
                 echo $f
             fi
+
+        # Unknown files
+        elif git grep -q -e "OpenFOAM: The Open Source CFD Toolbox" $scopeGrep"$f"
+        then
+            : #echo "Banner not checked for file $f" 1>&2
         fi
     done
     )
