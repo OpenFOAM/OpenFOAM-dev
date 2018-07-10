@@ -1258,7 +1258,7 @@ void Foam::argList::printUsage() const
 
     Info<< nl
         <<"Using: OpenFOAM-" << Foam::FOAMversion
-        << " (see www.OpenFOAM.org)" << nl
+        << " (see https://openfoam.org)" << nl
         <<"Build: " << Foam::FOAMbuild << nl
         << endl;
 }
