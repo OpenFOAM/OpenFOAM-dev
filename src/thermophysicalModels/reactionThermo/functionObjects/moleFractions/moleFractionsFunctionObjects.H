@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,11 +22,16 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Typedef
-    Foam::moleFractionsFunctionObject
+    Foam::psiReactionThermoMoleFractionsFunctionObject
 
 Description
-    Instantiate the moleFractions functionObject for
-    psiReactionThermo and rhoReactionThermo
+    Instantiate the moleFractions functionObject for psiReactionThermo
+
+Typedef
+    Foam::rhoReactionThermoMoleFractionsFunctionObject
+
+Description
+    Instantiate the moleFractions functionObject for rhoReactionThermo
 
 SourceFiles
     moleFractionsFunctionObjects.C

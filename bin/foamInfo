@@ -1,0 +1,367 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamInfo
+#
+# Description
+#     Prints description and usage of an application, a script, or a model
+#     (including boundary conditions, function objects and fvOptions).
+#
+#------------------------------------------------------------------------------
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTIONS] <name>
+options:
+  -all     | -a        list all tutorials that use <name> (otherwise maximum 10)
+  -browser | -b <name> output C++ source guide web page with specified browser,
+                       e.g. foamInfo -browser "firefox"
+  -help    | -h        print the usage
+  -web     | -w        output C++ source guide web page with the browser
+                       specified in the global controlDict file
+
+Prints the following for an application, a script, or a model
+(including boundary conditions, function objects and fvOptions).
+- File: the location of the relevant source code header file;
+- Description details from the header file;
+- Usage details from the header file;
+- Examples: a list of relevant cases from the tutorials directory.
+
+For example, run:
+  foamInfo simpleFoam
+  foamInfo kEpsilon
+  foamInfo turbulentIntensityKineticEnergyInlet
+  foamInfo fixedTemperatureConstraint
+  foamInfo surfaces
+  foamInfo foamNewBC
+
+USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+findFiles() {
+    _pre="$1"
+
+    # Application
+    _out="$(find "$FOAM_APP" -name "${_pre}.C" -type f)"
+
+    # Script
+    _out="$(find "$FOAM_SRC/../bin" -name "${_pre}" -type f) $_out"
+
+    # Model
+    # exact match
+    _models="$(find "$FOAM_SRC" \
+             -name "${_pre}*.H" \
+             ! -name "*Fwd.H" \
+             ! -name "*Fields.H" \
+             ! -name "*I.H" -type f)"
+
+    # otherwise "looser" match
+    [ "$_models" ] || \
+        _models="$(find "$FOAM_SRC" \
+                 -iname "*${_pre}*.H" \
+                 ! -name "*Fwd.H" \
+                 ! -name "*Fields.H" \
+                 ! -name "*I.H" -type f)"
+
+    _out="$_models $_out"
+
+    for _t in scalar vector tensor
+    do
+        echo "$_pre" | grep -oq "$_t" && \
+            _mod="$(echo "$_pre" | sed "s/${_t}//g")" && \
+            _out="$(find "$FOAM_SRC" -name "${_mod}*.H" -type f) $_out"
+    done
+
+    # Function
+    _out="$(find "$FOAM_ETC" -name "${_pre}" -type f) $_out"
+
+    # Remove whitespace
+    echo "$_out" | xargs -n 1
+}
+
+nArgs() {
+    echo "$1" | xargs -n 1 | wc -l
+}
+
+listArgs() {
+    _i=0
+    _suggest=""
+    _pri=100
+
+    for _a in $1
+    do
+        _i=$(( _i + 1))
+        echo "${_i}) $_a" >&2
+
+        # Prioritise suggestion locations
+        _tests="\
+            fields/fvPatchFields/ \
+            fvMesh/fvPatches/ \
+            caseDicts/postProcessing/"
+
+        _n=0
+        for _t in $_tests
+        do
+            _n=$(( _n + 1))
+            [ "$_n" -lt "$_pri" ] && \
+                echo "$_a" | grep -q "$_t" && _suggest="$_i" && _pri="$_n"
+        done
+    done
+
+    echo "$_suggest"
+}
+
+setFile() {
+    _files="$1"
+    _n="$2"
+    echo "$_files" | xargs -n 1 | awk -v n="${_n}" 'NR==n'
+}
+
+printInfo() {
+    _file="$1"
+    echo "File"
+    printf "    %s\n\n" "$_file"
+
+    # Description
+    sed -e "s/^#.//g" -e "s/^#$//g" "$_file" | \
+        sed -n '/^Description/,/^[^ ]/p' | sed \$d
+
+    # Usage
+    sed -n '/^Usage/,/^[^ ]/p' "$_file" | sed \$d
+
+    return 0
+}
+
+webInfo() {
+    # basename of file
+    _file="$(basename "$1")"
+
+    echo "$_file" | grep -q ".[CH]" ||
+        error "No web documentation for file \"$_file\""
+
+    _pre="$(echo "$_file" | sed 's/\./_8/g')"
+    _url="https://cpp.openfoam.org/${VER}/${_pre}.html"
+
+    echo "Running \"$BROWSER $_url\""
+    $BROWSER "$_url"
+
+    return 0
+}
+
+showInfo() {
+    _file="$1"
+    _web="$2"
+
+    # Return 1 for web so examples are not printed
+    [ -n "$_web" ] && webInfo "$_file" && return 1
+    printInfo "$_file"
+}
+
+findSolverExamples() {
+    _pre="$1"
+    _out=""
+
+    # Solvers
+    _app="$(find "$FOAM_TUTORIALS" -name "$_pre")"
+    _dirs="$(find "$_app" -name "system" -type d)"
+    for _d in $_dirs
+    do
+        _out="${_d%/*} $_out"
+    done
+
+    # Remove whitespace
+    echo "$_out" | xargs -n 1
+}
+
+findUtilityExamples() {
+    _pre="$1"
+    _out=""
+
+    # Applications
+    _scripts="$(find "$FOAM_TUTORIALS" -type f -name "All*")"
+    for _f in $_scripts
+    do
+        grep -rq "$_pre" "$_f" && _out="${_f%/*} $_out"
+    done
+
+    # Remove whitespace
+    echo "$_out" | xargs -n 1 | sort -u
+}
+
+findModelExamples() {
+    _pre="$1"
+    _out=""
+
+    # Field files
+    _dirs="$(find "$FOAM_TUTORIALS" \
+              -type d -name "0*" -o -name "constant" -o -name "system")"
+    for _d in $_dirs
+    do
+        # Space and semicolon pick up exact matches
+        grep -rq " ${_pre};" "$_d" && _out="${_d%/*} $_out"
+    done
+
+    # Remove whitespace
+    echo "$_out" | xargs -n 1 | sort -u
+}
+
+findAllExamples() {
+    _pre="$1"
+    _type="$2"
+
+    case "$_type" in
+        model) findModelExamples "$_pre" ;;
+        utility|script) findUtilityExamples "$_pre" ;;
+        solver) findSolverExamples "$_pre" ;;
+    esac
+}
+
+showTypeExamples() {
+    _pre="$1"
+    _type="$2"
+    _all="$3"
+    _examples=""
+
+    [ -z "$_pre" ] && echo "Examples: none found" && return 1
+
+    _nExD=10
+    [ -n "$_all" ] && _nExD=1000
+
+    _examples="$(findAllExamples "$_pre" "$_type")"
+
+    [ -z "$_examples" ] && \
+        echo "Examples: cannot find any tutorials using \"$_pre\"" && \
+        return 1
+
+    _nEx="$(nArgs "$_examples")"
+
+    echo "Examples using \"$_pre\""
+    [ "$_nEx" -gt "$_nExD" -a -n "_all" ] && \
+        echo "    *** Listing 10 out of $_nEx;" \
+             "run with \"-a\" option to list all ***"
+    echo "$_examples" | awk -v nExD="$_nExD" 'FNR <= nExD {print "    " $1}'
+}
+
+showExamples() {
+    _pre="$1"
+    _file="$2"
+    _all="$3"
+
+    echo "$_file" | grep -q ".H" && _type=model && \
+        _pre="$(basename "${file%/*}")" && \
+        echo "$_pre" | grep -iq include && _pre=""
+    echo "$_file" | grep -q "$FOAM_SRC/../bin" && _type=script
+    echo "$_file" | grep -q "$FOAM_UTILITIES" && _type=utility
+    echo "$_file" | grep -q "$FOAM_SOLVERS" && _type=solver
+
+    [ -n "$_type" ] && showTypeExamples "$_pre" "$_type" "$_all" && return 0
+    return 0
+}
+
+web=""
+all=""
+# Global controlDict file
+controlDict="$(foamEtcFile controlDict 2> /dev/null)"
+BROWSER="$(grep docBrowser "$controlDict" 2> /dev/null | cut -d "\"" -f2)"
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -a | -all)
+        all="yes"
+        shift
+        ;;
+    -b | -browser)
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        BROWSER="$2"
+        web="yes"
+        shift 2
+        ;;
+    -h | -help)
+        usage && exit 0
+        ;;
+    -w | -web)
+        web="yes"
+        shift
+        ;;
+    -*)
+        error "invalid option '$1'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+# Check if browsing is possible
+VER="${WM_PROJECT_VERSION%%.*}"
+
+[ -n "$web" ] &&  \
+    ! command -v "$BROWSER" >/dev/null 2>&1 && \
+        error "Cannot run browser application: $BROWSER"
+[ -n "$web" ] && [ -z "$VER" ] && \
+    error "Cannot establish OpenFOAM version: \$WM_PROJECT_VERSION not set"
+
+[ "$VER" = "dev" ] || VER="v${VER}"
+
+[ $# -gt 1 ] && error "$# arguments \"$*\" specified: only 1 permitted"
+[ $# -eq 1 ] || error "Missing argument: no application, model, script, etc provided"
+prefix="$1"
+
+files="$(findFiles "$prefix")"
+[ -z "$files" ] && error "Nothing found with \"$prefix\" in the name"
+
+nFiles="$(nArgs "$files")"
+nFile=""
+if [ "$nFiles" -eq 1 ]
+then
+    nFile=1
+else
+    echo "Multiple items with \"$prefix\" found:"
+    suggest="$(listArgs "$files")"
+
+    printf "\n%s" "Enter file number (1-$nFiles) to obtain description "
+    [ -n "$suggest" ] && printf "%s" "(suggest $suggest) "
+    printf "%s" ": "
+
+    read nFile
+    [ -z "$nFile" -a -n "$suggest" ] && nFile="$suggest"
+    [ -z "$nFile" ] && \
+        echo "Cannot specify nothing; re-run and enter a file number" && exit 1
+    ! [ "$nFile" -eq "$nFile" ] 2>/dev/null && \
+        echo "\"$nFile\" is not a number between 1 and $nFiles" && exit 1
+    [ "$nFile" -lt 1 -o "$nFile" -gt "$nFiles" ] && \
+        echo "\"$nFile\" is not a number between 1 and $nFiles" && exit 1
+fi
+
+file="$(setFile "$files" "$nFile")"
+showInfo "$file" "$web" && showExamples "$prefix" "$file" "$all"

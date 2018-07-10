@@ -1,5 +1,5 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
+cd "${0%/*}" || exit 1    # Run from this directory
 
 #
 # FUNCTIONS
@@ -41,16 +41,13 @@ do
     esac
 done
 
+sampleDir=postProcessing/sample
+ext="$(find $sampleDir -mindepth 2 | head -1 | xargs basename | cut -d_ -f2-)"
 
-sample $timeOpt
-SDIR=sets
-LSDIR=`ls $SDIR | head -1`
-EXAMPLE_FILE=`ls -1 $SDIR/${LSDIR}/* | head -1`
-FS=`basename $EXAMPLE_FILE | cut -d_ -f2-`
-
-for d in $SDIR/*
+for d in $sampleDir/*
 do
-    cat ${d}/cone25_${FS} ${d}/cone55_${FS} ${d}/base_${FS} > ${d}/biconic_${FS}
+    cat "${d}/cone25_${ext}" "${d}/cone55_${ext}" "${d}/base_${ext}"\
+        > "${d}/biconic_${ext}"
 done
 
 #------------------------------------------------------------------------------

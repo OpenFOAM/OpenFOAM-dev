@@ -1,23 +1,25 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
+cd "${0%/*}" || exit 1    # Run from this directory
 
 # Source tutorial run functions
-. $WM_PROJECT_DIR/bin/tools/RunFunctions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
 runApplication blockMesh
 
 runApplication datToFoam constant/grid256.dat
 
-CONST="constant"
-cat $CONST/pointsHeader $CONST/points.tmp > $CONST/polyMesh/points
+points="constant/polyMesh/points"
+pointsTmp="constant/points.tmp"
+sed -i -e 's/binary/ascii/' -ne '1,17p' $points
+cat $pointsTmp >> $points
+rm $pointsTmp
+
 runApplication collapseEdges -overwrite
 
 echo "Changing patch type to wedge type in boundary file"
-mv $CONST/polyMesh/boundary $CONST/polyMesh/boundary.bak
-sed -f $CONST/wedgeScr $CONST/polyMesh/boundary.bak > $CONST/polyMesh/boundary
-rm $CONST/polyMesh/boundary.bak
+sed -i '/wedge/,/nFaces/{s/patch/wedge/}' constant/polyMesh/boundary
 
-runApplication $(getApplication)
+runApplication "$(getApplication)"
 
 
 #------------------------------------------------------------------------------
