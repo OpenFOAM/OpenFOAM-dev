@@ -15,7 +15,7 @@ volScalarField h
 );
 
 Info<< "Reading field h0 if present\n" << endl;
-volScalarField h0
+const volScalarField h0
 (
     IOobject
     (

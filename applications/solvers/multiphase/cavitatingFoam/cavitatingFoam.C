@@ -26,16 +26,19 @@ Application
 
 Description
     Transient cavitation code based on the homogeneous equilibrium model
-    from which the compressibility of the liquid/vapour "mixture" is obtained.
+    from which the compressibility of the liquid/vapour "mixture" is obtained,
+    with optional mesh motion and mesh topology changes.
 
     Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "barotropicCompressibilityModel.H"
 #include "incompressibleTwoPhaseMixture.H"
 #include "turbulentTransportModel.H"
+#include "CorrectPhi.H"
 #include "pimpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,10 +49,11 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "createControl.H"
+    #include "createDynamicFvMesh.H"
     #include "createControls.H"
     #include "createFields.H"
+    #include "createUfIfPresent.H"
+    #include "createPcorrTypes.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
 
@@ -62,11 +66,29 @@ int main(int argc, char *argv[])
     while (runTime.run())
     {
         #include "readControls.H"
-        #include "CourantNo.H"
-        #include "setDeltaT.H"
 
-        runTime++;
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        {
+            #include "CourantNo.H"
+            #include "setDeltaT.H"
+
+            runTime++;
+
+            Info<< "Time = " << runTime.timeName() << nl << endl;
+
+            // Do any mesh changes
+            mesh.update();
+
+            if (mesh.changing() && correctPhi)
+            {
+                // Calculate absolute flux from the mapped surface velocity
+                phi = mesh.Sf() & Uf();
+
+                #include "correctPhi.H"
+
+                // Make the flux relative to the mesh motion
+                fvc::makeRelative(phi, U);
+            }
+        }
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())

@@ -27,7 +27,8 @@ Application
 Description
     Solver for 2 incompressible, isothermal immiscible fluids with phase-change
     (e.g. cavitation).  Uses a VOF (volume of fluid) phase-fraction based
-    interface capturing approach.
+    interface capturing approach, with optional mesh motion and mesh topology
+    changes including adaptive re-meshing.
 
     The momentum and other fluid properties are of the "mixture" and a
     single momentum equation is solved.
@@ -41,6 +42,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "CMULES.H"
 #include "subCycle.H"
 #include "interfaceProperties.H"
@@ -48,6 +50,7 @@ Description
 #include "turbulentTransportModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
+#include "CorrectPhi.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,14 +60,17 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "createControl.H"
+    #include "createDynamicFvMesh.H"
+    #include "createDyMControls.H"
+    #include "initContinuityErrs.H"
     #include "createFields.H"
-    #include "createTimeControls.H"
-    #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
+    #include "initCorrectPhi.H"
+    #include "createUfIfPresent.H"
 
     turbulence->validate();
+
+    #include "CourantNo.H"
+    #include "setInitialDeltaT.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,8 +78,15 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "readDyMControls.H"
+
+        // Store divU from the previous mesh so that it can be mapped
+        // and used in correctPhi to ensure the corrected phi has the
+        // same divergence
+        volScalarField divU("divU0", fvc::div(fvc::absolute(phi, U)));
+
         #include "CourantNo.H"
+        #include "alphaCourantNo.H"
         #include "setDeltaT.H"
 
         runTime++;
@@ -83,7 +96,37 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            #include "alphaControls.H"
+            if (pimple.firstIter() || moveMeshOuterCorrectors)
+            {
+                mesh.update();
+
+                if (mesh.changing())
+                {
+                    gh = (g & mesh.C()) - ghRef;
+                    ghf = (g & mesh.Cf()) - ghRef;
+
+                    if (correctPhi)
+                    {
+                        // Calculate absolute flux
+                        // from the mapped surface velocity
+                        phi = mesh.Sf() & Uf();
+
+                        #include "correctPhi.H"
+
+                        // Make the flux relative to the mesh motion
+                        fvc::makeRelative(phi, U);
+
+                        mixture.correct();
+                    }
+
+                    if (checkMeshCourantNo)
+                    {
+                        #include "meshCourantNo.H"
+                    }
+                }
+            }
+
+            divU = fvc::div(fvc::absolute(phi, U));
 
             surfaceScalarField rhoPhi
             (
@@ -97,10 +140,10 @@ int main(int argc, char *argv[])
                 dimensionedScalar("0", dimMass/dimTime, 0)
             );
 
-            mixture->correct();
-
+            #include "alphaControls.H"
             #include "alphaEqnSubCycle.H"
-            interface.correct();
+
+            mixture.correct();
 
             #include "UEqn.H"
 

@@ -1,4 +1,4 @@
-volScalarField rAU(1.0/UEqn.A());
+rAU = 1.0/UEqn.A();
 surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_gh));
 
@@ -11,11 +11,17 @@ surfaceScalarField phiHbyA
 (
     "phiHbyA",
     fvc::flux(HbyA)
-  + MRF.zeroFilter(rAUf*fvc::ddtCorr(U, phi))
+  + MRF.zeroFilter(rAUf*fvc::ddtCorr(U, phi, Uf))
 );
 
 MRF.makeRelative(phiHbyA);
-adjustPhi(phiHbyA, U, p_gh);
+
+if (p_gh.needReference())
+{
+    fvc::makeRelative(phiHbyA, U);
+    adjustPhi(phiHbyA, U, p_gh);
+    fvc::makeAbsolute(phiHbyA, U);
+}
 
 // Update the pressure BCs to ensure flux consistency
 constrainPressure(p_gh, U, phiHbyA, rAUf);
@@ -35,16 +41,22 @@ while (pimple.correctNonOrthogonal())
     if (pimple.finalNonOrthogonalIter())
     {
         phi = phiHbyA - p_ghEqn.flux();
+
+        // Explicitly relax pressure for momentum corrector
+        p_gh.relax();
+
+        U = HbyA - rAU*fvc::grad(p_gh);
+        U.correctBoundaryConditions();
+        fvOptions.correct(U);
     }
 }
 
 #include "continuityErrs.H"
 
-// Explicitly relax pressure for momentum corrector
-p_gh.relax();
+// Correct Uf if the mesh is moving
+fvc::correctUf(Uf, U, phi);
+
+// Make the fluxes relative to the mesh motion
+fvc::makeRelative(phi, U);
 
 p = p_gh + (g & mesh.C());
-
-U = HbyA - rAU*fvc::grad(p_gh);
-U.correctBoundaryConditions();
-fvOptions.correct(U);

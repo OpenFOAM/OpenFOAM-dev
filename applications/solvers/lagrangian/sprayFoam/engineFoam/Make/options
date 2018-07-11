@@ -1,6 +1,5 @@
 EXE_INC = \
     -I. \
-    -I../sprayDyMFoam \
     -I.. \
     -I../../reactingParcelFoam \
     -I$(LIB_SRC)/finiteVolume/lnInclude \

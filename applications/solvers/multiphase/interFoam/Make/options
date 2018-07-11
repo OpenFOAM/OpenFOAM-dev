@@ -18,6 +18,6 @@ EXE_LIBS = \
     -lincompressibleTurbulenceModels \
     -lfiniteVolume \
     -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
     -lfvOptions \
-    -lmeshTools \
-    -lsampling
+    -lmeshTools

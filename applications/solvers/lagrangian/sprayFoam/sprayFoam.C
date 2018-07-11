@@ -26,18 +26,20 @@ Application
 
 Description
     Transient solver for compressible, turbulent flow with a spray particle
-    cloud.
+    cloud, with optional mesh motion and mesh topology changes.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "turbulentFluidThermoModel.H"
+#include "dynamicFvMesh.H"
+#include "turbulenceModel.H"
 #include "basicSprayCloud.H"
 #include "psiReactionThermo.H"
 #include "CombustionModel.H"
 #include "radiationModel.H"
 #include "SLGThermo.H"
 #include "pimpleControl.H"
+#include "CorrectPhi.H"
 #include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,14 +50,14 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "createControl.H"
-    #include "createTimeControls.H"
+    #include "createDynamicFvMesh.H"
+    #include "createDyMControls.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
     #include "compressibleCourantNo.H"
     #include "setInitialDeltaT.H"
     #include "initContinuityErrs.H"
+    #include "createRhoUfIfPresent.H"
 
     turbulence->validate();
 
@@ -65,7 +67,21 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "readDyMControls.H"
+
+        // Store divrhoU from the previous mesh so that it can be mapped
+        // and used in correctPhi to ensure the corrected phi has the
+        // same divergence
+        autoPtr<volScalarField> divrhoU;
+        if (correctPhi)
+        {
+            divrhoU = new volScalarField
+            (
+                "divrhoU",
+                fvc::div(fvc::absolute(phi, rho, U))
+            );
+        }
+
         #include "compressibleCourantNo.H"
         #include "setDeltaT.H"
 
@@ -73,44 +89,68 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        parcels.evolve();
-
-        if (!pimple.frozenFlow())
+        // Store momentum to set rhoUf for introduced faces.
+        autoPtr<volVectorField> rhoU;
+        if (rhoUf.valid())
         {
-            #include "rhoEqn.H"
+            rhoU = new volVectorField("rhoU", rho*U);
+        }
 
-            // --- Pressure-velocity PIMPLE corrector loop
-            while (pimple.loop())
+        // Store the particle positions
+        parcels.storeGlobalPositions();
+
+        // Do any mesh changes
+        mesh.update();
+
+        if (mesh.changing())
+        {
+            MRF.update();
+
+            if (correctPhi)
             {
-                #include "UEqn.H"
-                #include "YEqn.H"
-                #include "EEqn.H"
+                // Calculate absolute flux from the mapped surface velocity
+                phi = mesh.Sf() & rhoUf();
 
-                // --- Pressure corrector loop
-                while (pimple.correct())
-                {
-                    #include "pEqn.H"
-                }
+                #include "correctPhi.H"
 
-                if (pimple.turbCorr())
-                {
-                    turbulence->correct();
-                }
+                // Make the fluxes relative to the mesh-motion
+                fvc::makeRelative(phi, rho, U);
             }
 
-            rho = thermo.rho();
-
-            if (runTime.write())
+            if (checkMeshCourantNo)
             {
-                combustion->Qdot()().write();
+                #include "meshCourantNo.H"
             }
         }
-        else
+
+        parcels.evolve();
+
+        #include "rhoEqn.H"
+
+        // --- Pressure-velocity PIMPLE corrector loop
+        while (pimple.loop())
         {
-            if (runTime.writeTime())
+            #include "UEqn.H"
+            #include "YEqn.H"
+            #include "EEqn.H"
+
+            // --- Pressure corrector loop
+            while (pimple.correct())
             {
-                parcels.write();
+                #include "pEqn.H"
             }
+
+            if (pimple.turbCorr())
+            {
+                turbulence->correct();
+            }
+        }
+
+        rho = thermo.rho();
+
+        if (runTime.write())
+        {
+            combustion->Qdot()().write();
         }
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

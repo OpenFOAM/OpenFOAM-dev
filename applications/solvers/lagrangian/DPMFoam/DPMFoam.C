@@ -27,14 +27,16 @@ Application
 Description
     Transient solver for the coupled transport of a single kinematic particle
     cloud including the effect of the volume fraction of particles on the
-    continuous phase.
+    continuous phase, with optional mesh motion and mesh topology changes.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "singlePhaseTransportModel.H"
 #include "PhaseIncompressibleTurbulenceModel.H"
 #include "pimpleControl.H"
+#include "CorrectPhi.H"
 
 #ifdef MPPIC
     #include "basicKinematicMPPICCloud.H"
@@ -57,23 +59,47 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "createControl.H"
-    #include "createTimeControls.H"
+    #include "createDynamicFvMesh.H"
+    #include "createDyMControls.H"
     #include "createFields.H"
+    #include "createUcfIfPresent.H"
     #include "initContinuityErrs.H"
 
     Info<< "\nStarting time loop\n" << endl;
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "readDyMControls.H"
         #include "CourantNo.H"
         #include "setDeltaT.H"
 
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        // Store the particle positions
+        kinematicCloud.storeGlobalPositions();
+
+        mesh.update();
+
+        if (mesh.changing())
+        {
+            if (correctPhi)
+            {
+                // Calculate absolute flux from the mapped surface velocity
+                phic = mesh.Sf() & Ucf();
+
+                #include "correctPhic.H"
+
+                // Make the flux relative to the mesh motion
+                fvc::makeRelative(phic, Uc);
+            }
+
+            if (checkMeshCourantNo)
+            {
+                #include "meshCourantNo.H"
+            }
+        }
 
         continuousPhaseTransport.correct();
         muc = rhoc*continuousPhaseTransport.nu();

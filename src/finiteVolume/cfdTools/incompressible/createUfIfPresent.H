@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Global
-    createUf
+    createUfIfPresent
 
 Description
     Creates and initialises the velocity field Uf if required.

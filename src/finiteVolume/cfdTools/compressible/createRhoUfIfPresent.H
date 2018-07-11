@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Global
-    createRhoUf
+    createRhoUfIfPresent
 
 Description
     Creates and initialises the velocity field rhoUf if required.

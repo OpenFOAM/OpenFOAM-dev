@@ -15,19 +15,21 @@
     surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
     volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 
-    phi = fvc::flux(HbyA)
-         + rhorAUf*fvc::ddtCorr(U, phi);
+    phi = fvc::flux(HbyA) + rhorAUf*fvc::ddtCorr(U, phi, Uf);
+    fvc::makeRelative(phi, U);
 
     surfaceScalarField phiGradp(rhorAUf*mesh.magSf()*fvc::snGrad(p));
 
     phi -= phiGradp/rhof;
 
+    volScalarField rho0(rho - psi*p);
+
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
-            fvm::ddt(psi, p)
-          - (rhol0 + (psil - psiv)*pSat)*fvc::ddt(alphav) - pSat*fvc::ddt(psi)
+            fvc::ddt(rho)
+          + psi*correction(fvm::ddt(p))
           + fvc::div(phi, rho)
           + fvc::div(phiGradp)
           - fvm::laplacian(rhorAUf, p)
@@ -44,13 +46,7 @@
     Info<< "Predicted p max-min : " << max(p).value()
         << " " << min(p).value() << endl;
 
-    rho == max
-    (
-        psi*p
-      + alphal*rhol0
-      + ((alphav*psiv + alphal*psil) - psi)*pSat,
-        rhoMin
-    );
+    rho == max(rho0 + psi*p, rhoMin);
 
     #include "alphavPsi.H"
 
@@ -82,4 +78,7 @@
     U.correctBoundaryConditions();
 
     Info<< "max(U) " << max(mag(U)).value() << endl;
+
+    // Correct Uf if the mesh is moving
+    fvc::correctUf(Uf, U, phi);
 }

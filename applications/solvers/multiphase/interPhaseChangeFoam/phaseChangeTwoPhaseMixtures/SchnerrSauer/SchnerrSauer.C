@@ -96,7 +96,7 @@ Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::pCoeff
     const volScalarField& p
 ) const
 {
-    volScalarField limitedAlpha1(min(max(alpha1_, scalar(0)), scalar(1)));
+    volScalarField limitedAlpha1(min(max(alpha1(), scalar(0)), scalar(1)));
     volScalarField rho
     (
         limitedAlpha1*rho1() + (scalar(1) - limitedAlpha1)*rho2()
@@ -111,10 +111,10 @@ Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::pCoeff
 Foam::Pair<Foam::tmp<Foam::volScalarField>>
 Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotAlphal() const
 {
-    const volScalarField& p = alpha1_.db().lookupObject<volScalarField>("p");
+    const volScalarField& p = alpha1().db().lookupObject<volScalarField>("p");
     volScalarField pCoeff(this->pCoeff(p));
 
-    volScalarField limitedAlpha1(min(max(alpha1_, scalar(0)), scalar(1)));
+    volScalarField limitedAlpha1(min(max(alpha1(), scalar(0)), scalar(1)));
 
     return Pair<tmp<volScalarField>>
     (
@@ -128,10 +128,10 @@ Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotAlphal() const
 Foam::Pair<Foam::tmp<Foam::volScalarField>>
 Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotP() const
 {
-    const volScalarField& p = alpha1_.db().lookupObject<volScalarField>("p");
+    const volScalarField& p = alpha1().db().lookupObject<volScalarField>("p");
     volScalarField pCoeff(this->pCoeff(p));
 
-    volScalarField limitedAlpha1(min(max(alpha1_, scalar(0)), scalar(1)));
+    volScalarField limitedAlpha1(min(max(alpha1(), scalar(0)), scalar(1)));
     volScalarField apCoeff(limitedAlpha1*pCoeff);
 
     return Pair<tmp<volScalarField>>

@@ -35,7 +35,7 @@ SourceFiles
 #ifndef phaseChangeTwoPhaseMixture_H
 #define phaseChangeTwoPhaseMixture_H
 
-#include "incompressibleTwoPhaseMixture.H"
+#include "immiscibleIncompressibleTwoPhaseMixture.H"
 #include "typeInfo.H"
 #include "runTimeSelectionTables.H"
 #include "volFields.H"
@@ -54,7 +54,7 @@ namespace Foam
 
 class phaseChangeTwoPhaseMixture
 :
-    public incompressibleTwoPhaseMixture
+    public immiscibleIncompressibleTwoPhaseMixture
 {
 
 protected:

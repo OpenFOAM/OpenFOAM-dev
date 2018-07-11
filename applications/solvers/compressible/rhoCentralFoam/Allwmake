@@ -4,6 +4,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-(wmake $targetType BCs && wmake $targetType && wmake $targetType rhoCentralDyMFoam)
+(wmake $targetType BCs && wmake $targetType)
 
 #------------------------------------------------------------------------------
