@@ -712,12 +712,12 @@ void Foam::KinematicCloud<CloudType>::patchData
     // component; the lid velocity in a lid-driven cavity case, for example. We
     // want the particle to interact with this velocity, so we look it up in the
     // velocity field and use it to set the wall-tangential component.
-    if (isA<wallPolyPatch>(pp))
+    if (!mesh_.moving() && isA<wallPolyPatch>(pp))
     {
         const label patchi = pp.index();
         const label patchFacei = pp.whichFace(p.face());
 
-        // We only want to use the boundary condition value  onlyif it is set
+        // We only want to use the boundary condition value only if it is set
         // by the boundary condition. If the boundary values are extrapolated
         // (e.g., slip conditions) then they represent the motion of the fluid
         // just inside the domain rather than that of the wall itself.
