@@ -152,6 +152,11 @@ void Foam::particle::rotate(const bool reverse)
 
 void Foam::particle::changeTet(const label tetTriI)
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     const bool isOwner = mesh_.faceOwner()[tetFacei_] == celli_;
 
     const label firstTetPtI = 1;
@@ -227,6 +232,11 @@ void Foam::particle::changeTet(const label tetTriI)
 
 void Foam::particle::changeFace(const label tetTriI)
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     // Get the old topology
     const triFace triOldIs(currentTetIndices().faceTriIs(mesh_));
 
@@ -342,6 +352,11 @@ void Foam::particle::changeFace(const label tetTriI)
 
 void Foam::particle::changeCell()
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     // Set the cell to be the one on the other side of the face
     const label ownerCellI = mesh_.faceOwner()[tetFacei_];
     const bool isOwner = celli_ == ownerCellI;
@@ -354,6 +369,11 @@ void Foam::particle::changeCell()
 
 void Foam::particle::changeToMasterPatch()
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     label thisPatch = patch();
 
     forAll(mesh_.cells()[celli_], cellFaceI)
@@ -395,6 +415,11 @@ void Foam::particle::locate
     const string boundaryMsg
 )
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     // Find the cell, if it has not been given
     if (celli < 0)
     {
@@ -591,6 +616,11 @@ Foam::scalar Foam::particle::track
     const scalar fraction
 )
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     scalar f = trackToFace(displacement, fraction);
 
     while (onInternalFace())
@@ -610,6 +640,11 @@ Foam::scalar Foam::particle::trackToCell
     const scalar fraction
 )
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     const scalar f = trackToFace(displacement, fraction);
 
     if (onInternalFace())
@@ -627,6 +662,11 @@ Foam::scalar Foam::particle::trackToFace
     const scalar fraction
 )
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     scalar f = 1;
 
     label tetTriI = onFace() ? 0 : -1;

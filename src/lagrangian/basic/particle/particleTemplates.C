@@ -108,6 +108,11 @@ void Foam::particle::hitFace
     trackingData& td
 )
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     typename TrackCloudType::particleType& p =
         static_cast<typename TrackCloudType::particleType&>(*this);
     typename TrackCloudType::particleType::trackingData& ttd =
@@ -183,6 +188,11 @@ void Foam::particle::trackToAndHitFace
     trackingData& td
 )
 {
+    if (debug)
+    {
+        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
+    }
+
     trackToFace(direction, fraction);
 
     hitFace(direction, cloud, td);
