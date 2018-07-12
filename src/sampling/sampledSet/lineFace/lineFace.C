@@ -124,6 +124,7 @@ void Foam::sampledSets::lineFace::calcSamples
             if (!sampleParticle.onBoundaryFace())
             {
                 FatalErrorInFunction
+                    << "Failed to associate with the starting boundary face"
                     << exit(FatalError);
             }
         }
