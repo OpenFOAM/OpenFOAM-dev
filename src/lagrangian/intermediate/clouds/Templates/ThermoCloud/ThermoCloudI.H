@@ -373,7 +373,7 @@ template<class CloudType>
 inline Foam::scalar Foam::ThermoCloud<CloudType>::Tmax() const
 {
     scalar T = -great;
-    scalar n = 0;
+    label n = 0;
     forAllConstIter(typename ThermoCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
@@ -399,7 +399,7 @@ template<class CloudType>
 inline Foam::scalar Foam::ThermoCloud<CloudType>::Tmin() const
 {
     scalar T = great;
-    scalar n = 0;
+    label n = 0;
     forAllConstIter(typename ThermoCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
