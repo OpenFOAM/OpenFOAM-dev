@@ -64,7 +64,7 @@ class MichaelisMentenReactionRate
 {
     // Private data
 
-        //- List of specie names present in reaction system
+        //- List of species present in reaction system
         const speciesTable& species_;
 
         //- The maximum reaction rate at saturating substrate concentration

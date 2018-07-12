@@ -25,7 +25,14 @@ Class
     Foam::LangmuirHinshelwoodReactionRate
 
 Description
-    Power series reaction rate.
+    Langmuir-Hinshelwood reaction rate for gaseous reactions on surfaces.
+
+    Reference:
+    \verbatim
+        Hinshelwood, C.N. (1940).
+        The Kinetics of Chemical Change.
+        Oxford Clarendon Press
+    \endverbatim
 
 SourceFiles
     LangmuirHinshelwoodReactionRateI.H
@@ -58,28 +65,23 @@ class LangmuirHinshelwoodReactionRate
 {
     // Private data
 
-        static const label n_ = 5;
+        //- List of species present in reaction system
+        const speciesTable& species_;
+
+        static const label n_ = 3;
         scalar A_[n_];
         scalar Ta_[n_];
 
-        label co_;
-        label c3h6_;
-        label no_;
+        //- Index of specie "A"
+        label a_;
+
+        //- Index of specie "B"
+        label b_;
 
 
 public:
 
     // Constructors
-
-        //- Construct from components
-        inline LangmuirHinshelwoodReactionRate
-        (
-            const scalar A[],
-            const scalar Ta[],
-            const label co,
-            const label c3h6,
-            const label no
-        );
 
         //- Construct from dictionary
         inline LangmuirHinshelwoodReactionRate
