@@ -17,6 +17,6 @@ runParallel topoSet
 runParallel $(getApplication)
 
 runApplication reconstructParMesh -constant
-runApplication reconstructPar
+runApplication reconstructPar -constant
 
 #------------------------------------------------------------------------------
