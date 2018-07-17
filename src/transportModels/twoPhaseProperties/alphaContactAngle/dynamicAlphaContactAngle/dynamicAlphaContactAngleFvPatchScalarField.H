@@ -26,7 +26,63 @@ Class
 
 Description
     A dynamic alphaContactAngle scalar boundary condition
-    (alphaContactAngleFvPatchScalarField)
+
+Usage
+    Standard properties:
+    \table
+        Property | Description                      | Required | Default value
+        theta0   | Equilibrium contact angle        | yes      |
+        uTheta   | Velocity scale                   | yes      |
+    \endtable
+
+    The advancing and receding contact angles can be either specified with
+    respect to the interface normal direction:
+    \table
+        Property | Description                      | Required | Default value
+        thetaA   | Limiting advancing contact angle | yes      |
+        thetaR   | Limiting receding contact angle  | yes      |
+    \endtable
+
+    or with respect to the phase outward direction:
+    \table
+        Property | Description                      | Required | Default value
+        thetaAdv | Limiting advancing contact angle | yes      |
+        thetaRec | Limiting receding  contact angle | yes      |
+    \endtable
+
+    Example of the boundary condition specification using the interface
+    normal direction convention:
+    \verbatim
+    <patchName>
+    {
+        type           dynamicAlphaContactAngle;
+        uTheta         1;
+        theta0         90;
+        thetaA         70;
+        thetaR         110;
+        limit          gradient;
+        value          uniform 0;
+    }
+    \endverbatim
+
+    Example of the boundary condition specification using the phase outward
+    direction convention (opposite to the normal direction):
+    \verbatim
+    <patchName>
+    {
+        type           dynamicAlphaContactAngle;
+        uTheta         1;
+        theta0         90;
+        thetaAdv       110;
+        thetaRec       70;
+        limit          gradient;
+        value          uniform 0;
+    }
+    \endverbatim
+
+See also
+    Foam::alphaContactAngleFvPatchScalarField
+    Foam::constantAlphaContactAngleFvPatchScalarField
 
 SourceFiles
     dynamicAlphaContactAngleFvPatchScalarField.C

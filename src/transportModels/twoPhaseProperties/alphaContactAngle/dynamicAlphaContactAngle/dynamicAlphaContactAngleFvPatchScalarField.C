@@ -73,8 +73,18 @@ dynamicAlphaContactAngleFvPatchScalarField
     alphaContactAngleFvPatchScalarField(p, iF, dict),
     theta0_(readScalar(dict.lookup("theta0"))),
     uTheta_(readScalar(dict.lookup("uTheta"))),
-    thetaA_(readScalar(dict.lookup("thetaA"))),
-    thetaR_(readScalar(dict.lookup("thetaR")))
+    thetaA_
+    (
+        dict.found("thetaA")
+      ? readScalar(dict.lookup("thetaA"))
+      : readScalar(dict.lookup("thetaRec"))
+    ),
+    thetaR_
+    (
+        dict.found("thetaR")
+      ? readScalar(dict.lookup("thetaR"))
+      : readScalar(dict.lookup("thetaAdv"))
+    )
 {
     evaluate();
 }
