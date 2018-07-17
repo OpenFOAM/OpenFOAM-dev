@@ -68,8 +68,8 @@ findFilesInDirs () {
         [ -d "$_d" ] && _out="$(find "$_d" -name "$_str" -type f | sort) $_out"
     done
 
-    # Remove whitespace
-    echo "$_out" | xargs -n 1
+    # Remove whitespace and blank lines
+    echo "$_out" | xargs -n 1 | awk 'NF'
 }
 
 findFiles () {
