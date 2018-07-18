@@ -41,8 +41,8 @@ Description
 
 SourceFiles
     AMIInterpolation.C
-    AMIInterpolationName.C
     AMIInterpolationParallelOps.C
+    AMIInterpolationTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -64,31 +64,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class AMIInterpolationName Declaration
+                  Class AMIInterpolation Declaration
 \*---------------------------------------------------------------------------*/
 
-TemplateName(AMIInterpolation);
-
-
-/*---------------------------------------------------------------------------*\
-                      Class AMIInterpolation Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class SourcePatch, class TargetPatch>
 class AMIInterpolation
-:
-    public AMIInterpolationName
 {
 public:
-
-    // Public typedefs
-
-        // Typedef to SourcePatch type this AMIInterplation is instantiated on
-        typedef SourcePatch sourcePatchType;
-
-        // Typedef to TargetPatch type this AMIInterplation is instantiated on
-        typedef TargetPatch targetPatchType;
-
 
     // Public data types
 
@@ -115,10 +96,9 @@ public:
         );
 
         //- Calculate the patch face magnitudes for the given tri-mode
-        template<class Patch>
         static tmp<scalarField> patchMagSf
         (
-            const Patch& patch,
+            const primitivePatch& patch,
             const faceAreaIntersect::triangulationMode triMode
         );
 
@@ -200,8 +180,8 @@ private:
             //- Calculate if patches are on multiple processors
             label calcDistribution
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch
             ) const;
 
             label calcOverlappingProcs
@@ -214,7 +194,7 @@ private:
             void distributePatches
             (
                 const mapDistribute& map,
-                const TargetPatch& pp,
+                const primitivePatch& pp,
                 const globalIndex& gi,
                 List<faceList>& faces,
                 List<pointField>& points,
@@ -224,7 +204,7 @@ private:
             void distributeAndMergePatches
             (
                 const mapDistribute& map,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& tgtPatch,
                 const globalIndex& gi,
                 faceList& tgtFaces,
                 pointField& tgtPoints,
@@ -233,8 +213,8 @@ private:
 
             autoPtr<mapDistribute> calcProcMap
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch
             ) const;
 
 
@@ -312,21 +292,25 @@ private:
 
             void constructFromSurface
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const autoPtr<searchableSurface>& surfPtr,
                 const bool report
             );
 
 public:
 
+    //- Runtime type information
+    TypeName("cyclicAMI");
+
+
     // Constructors
 
         //- Construct from components
         AMIInterpolation
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
             const interpolationMethod& method = imFaceAreaWeight,
@@ -338,8 +322,8 @@ public:
         //- Construct from components
         AMIInterpolation
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
             const word& methodName =
@@ -352,8 +336,8 @@ public:
         //- Construct from components, with projection surface
         AMIInterpolation
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const autoPtr<searchableSurface>& surf,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
@@ -366,8 +350,8 @@ public:
         //- Construct from components, with projection surface
         AMIInterpolation
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const autoPtr<searchableSurface>& surf,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
@@ -378,11 +362,12 @@ public:
             const bool report = true
         );
 
-        //- Construct from agglomeration of AMIInterpolation. Agglomeration
-        //  passed in as new coarse size and addressing from fine from coarse
+        //- Construct from agglomeration of AMIInterpolation.
+        //  Agglomeration passed in as new coarse size and addressing from fine
+        //  from coarse
         AMIInterpolation
         (
-            const AMIInterpolation<SourcePatch, TargetPatch>& fineAMI,
+            const AMIInterpolation& fineAMI,
             const labelList& sourceRestrictAddressing,
             const labelList& neighbourRestrictAddressing,
             const bool report = false
@@ -390,7 +375,7 @@ public:
 
 
     //- Destructor
-    ~AMIInterpolation();
+    virtual ~AMIInterpolation();
 
 
     // Member Functions
@@ -469,42 +454,27 @@ public:
             //- Update addressing and weights
             void update
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const bool report
             );
 
             //- Sum the weights on both sides of an AMI
-            static void sumWeights
-            (
-                AMIInterpolation<SourcePatch, TargetPatch>& AMI
-            );
+            static void sumWeights(AMIInterpolation& AMI);
 
             //- As above, but for multiple AMI-s
-            static void sumWeights
-            (
-                PtrList<AMIInterpolation<SourcePatch, TargetPatch>>& AMIs
-            );
+            static void sumWeights(PtrList<AMIInterpolation>& AMIs);
 
             //- Print out information relating to the weights sum. Values close
             //  to one are ideal. This information acts as a measure of the
             //  quality of the AMI.
-            static void reportSumWeights
-            (
-                AMIInterpolation<SourcePatch, TargetPatch>& AMI
-            );
+            static void reportSumWeights(AMIInterpolation& AMI);
 
             //- Normalise the weights on both sides of an AMI
-            static void normaliseWeights
-            (
-                AMIInterpolation<SourcePatch, TargetPatch>& AMI
-            );
+            static void normaliseWeights(AMIInterpolation& AMI);
 
             //- As above, but for multiple AMI-s
-            static void normaliseWeights
-            (
-                UPtrList<AMIInterpolation<SourcePatch, TargetPatch>>& AMIs
-            );
+            static void normaliseWeights(UPtrList<AMIInterpolation>& AMIs);
 
 
         // Evaluation
@@ -608,8 +578,8 @@ public:
             //- Return source patch face index of point on target patch face
             label srcPointFace
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const vector& n,
                 const label tgtFacei,
                 point& tgtPoint
@@ -619,8 +589,8 @@ public:
             //- Return target patch face index of point on source patch face
             label tgtPointFace
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const vector& n,
                 const label srcFacei,
                 point& srcPoint
@@ -633,8 +603,8 @@ public:
             //- Write face connectivity as OBJ file
             void writeFaceConnectivity
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const labelListList& srcAddress
             ) const;
 };
@@ -651,8 +621,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "AMIInterpolation.C"
-    #include "AMIInterpolationParallelOps.C"
+    #include "AMIInterpolationTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

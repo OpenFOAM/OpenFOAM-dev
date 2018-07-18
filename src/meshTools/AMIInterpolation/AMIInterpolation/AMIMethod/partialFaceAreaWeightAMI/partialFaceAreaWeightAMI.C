@@ -24,11 +24,20 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "partialFaceAreaWeightAMI.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(partialFaceAreaWeightAMI, 0);
+    addToRunTimeSelectionTable(AMIMethod, partialFaceAreaWeightAMI, components);
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
+void Foam::partialFaceAreaWeightAMI::setNextFaces
 (
     label& startSeedI,
     label& srcFacei,
@@ -39,7 +48,7 @@ void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
     const bool errorOnNotFound
 ) const
 {
-    faceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
+    faceAreaWeightAMI::setNextFaces
     (
         startSeedI,
         srcFacei,
@@ -54,12 +63,10 @@ void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::
-partialFaceAreaWeightAMI
+Foam::partialFaceAreaWeightAMI::partialFaceAreaWeightAMI
 (
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch,
     const scalarField& srcMagSf,
     const scalarField& tgtMagSf,
     const faceAreaIntersect::triangulationMode& triMode,
@@ -67,7 +74,7 @@ partialFaceAreaWeightAMI
     const bool requireMatch
 )
 :
-    faceAreaWeightAMI<SourcePatch, TargetPatch>
+    faceAreaWeightAMI
     (
         srcPatch,
         tgtPatch,
@@ -82,23 +89,19 @@ partialFaceAreaWeightAMI
 
 // * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::
-~partialFaceAreaWeightAMI()
+Foam::partialFaceAreaWeightAMI::~partialFaceAreaWeightAMI()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-bool Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::conformal() const
+bool Foam::partialFaceAreaWeightAMI::conformal() const
 {
     return false;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
+void Foam::partialFaceAreaWeightAMI::calculate
 (
     labelListList& srcAddress,
     scalarListList& srcWeights,
@@ -130,7 +133,7 @@ void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
     List<DynamicList<label>> tgtAddr(this->tgtPatch_.size());
     List<DynamicList<scalar>> tgtWght(tgtAddr.size());
 
-    faceAreaWeightAMI<SourcePatch, TargetPatch>::calcAddressing
+    faceAreaWeightAMI::calcAddressing
     (
         srcAddr,
         srcWght,

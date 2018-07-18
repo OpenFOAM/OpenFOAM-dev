@@ -181,7 +181,7 @@ Foam::regionCoupledBaseGAMGInterface::regionCoupledBaseGAMGInterface
 
             amiPtr_.reset
             (
-                new AMIPatchToPatchInterpolation
+                new AMIInterpolation
                 (
                     fineRegionCoupledLduInterface_.AMI(),
                     faceRestrictAddressing_,

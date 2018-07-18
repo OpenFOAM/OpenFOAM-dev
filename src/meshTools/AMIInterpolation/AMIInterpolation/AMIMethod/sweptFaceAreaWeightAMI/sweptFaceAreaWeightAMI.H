@@ -103,10 +103,9 @@ namespace Foam
                     Class sweptFaceAreaWeightAMI Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class SourcePatch, class TargetPatch>
 class sweptFaceAreaWeightAMI
 :
-    public faceAreaWeightAMI<SourcePatch, TargetPatch>
+    public faceAreaWeightAMI
 {
 private:
 
@@ -248,7 +247,7 @@ public:
     // Constructors
 
         //- Use parent constructors
-        using faceAreaWeightAMI<SourcePatch, TargetPatch>::faceAreaWeightAMI;
+        using faceAreaWeightAMI::faceAreaWeightAMI;
 
 
     //- Destructor
@@ -259,12 +258,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "sweptFaceAreaWeightAMI.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

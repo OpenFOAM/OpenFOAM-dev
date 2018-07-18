@@ -28,10 +28,18 @@ License
 #include "mapDistribute.H"
 #include "unitConversion.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(AMIMethod, 0);
+    defineRunTimeSelectionTable(AMIMethod, components);
+}
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-void Foam::AMIMethod<SourcePatch, TargetPatch>::checkPatches() const
+void Foam::AMIMethod::checkPatches() const
 {
     if (debug && (!srcPatch_.size() || !tgtPatch_.size()))
     {
@@ -67,8 +75,7 @@ void Foam::AMIMethod<SourcePatch, TargetPatch>::checkPatches() const
 }
 
 
-template<class SourcePatch, class TargetPatch>
-bool Foam::AMIMethod<SourcePatch, TargetPatch>::initialise
+bool Foam::AMIMethod::initialise
 (
     labelListList& srcAddress,
     scalarListList& srcWeights,
@@ -142,8 +149,7 @@ bool Foam::AMIMethod<SourcePatch, TargetPatch>::initialise
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::AMIMethod<SourcePatch, TargetPatch>::writeIntersectionOBJ
+void Foam::AMIMethod::writeIntersectionOBJ
 (
     const scalar area,
     const face& f1,
@@ -194,8 +200,7 @@ void Foam::AMIMethod<SourcePatch, TargetPatch>::writeIntersectionOBJ
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::AMIMethod<SourcePatch, TargetPatch>::resetTree()
+void Foam::AMIMethod::resetTree()
 {
     // Clear the old octree
     treePtr_.clear();
@@ -225,8 +230,7 @@ void Foam::AMIMethod<SourcePatch, TargetPatch>::resetTree()
 }
 
 
-template<class SourcePatch, class TargetPatch>
-Foam::label Foam::AMIMethod<SourcePatch, TargetPatch>::findTargetFace
+Foam::label Foam::AMIMethod::findTargetFace
 (
     const label srcFacei
 ) const
@@ -256,11 +260,10 @@ Foam::label Foam::AMIMethod<SourcePatch, TargetPatch>::findTargetFace
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
+void Foam::AMIMethod::appendNbrFaces
 (
     const label facei,
-    const TargetPatch& patch,
+    const primitivePatch& patch,
     const DynamicList<label>& visitedFaces,
     DynamicList<label>& faceIDs
 ) const
@@ -310,8 +313,7 @@ void Foam::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
 }
 
 
-template<class SourcePatch, class TargetPatch>
-Foam::scalar Foam::AMIMethod<SourcePatch, TargetPatch>::maxWalkAngle() const
+Foam::scalar Foam::AMIMethod::maxWalkAngle() const
 {
     return degToRad(89);
 }
@@ -319,11 +321,10 @@ Foam::scalar Foam::AMIMethod<SourcePatch, TargetPatch>::maxWalkAngle() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::AMIMethod<SourcePatch, TargetPatch>::AMIMethod
+Foam::AMIMethod::AMIMethod
 (
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch,
     const scalarField& srcMagSf,
     const scalarField& tgtMagSf,
     const faceAreaIntersect::triangulationMode& triMode,
@@ -344,15 +345,13 @@ Foam::AMIMethod<SourcePatch, TargetPatch>::AMIMethod
 
 // * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::AMIMethod<SourcePatch, TargetPatch>::~AMIMethod()
+Foam::AMIMethod::~AMIMethod()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-bool Foam::AMIMethod<SourcePatch, TargetPatch>::conformal() const
+bool Foam::AMIMethod::conformal() const
 {
     return true;
 }

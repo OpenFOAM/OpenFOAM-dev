@@ -73,7 +73,7 @@ inline Foam::scalar Foam::meshToMesh::V() const
 }
 
 
-inline const Foam::PtrList<Foam::AMIPatchToPatchInterpolation>&
+inline const Foam::PtrList<Foam::AMIInterpolation>&
 Foam::meshToMesh::patchAMIs() const
 {
     return patchAMIs_;

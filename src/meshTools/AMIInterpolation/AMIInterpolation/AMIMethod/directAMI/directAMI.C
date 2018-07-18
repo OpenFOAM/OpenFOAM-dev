@@ -24,11 +24,20 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "directAMI.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(directAMI, 0);
+    addToRunTimeSelectionTable(AMIMethod, directAMI, components);
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-void Foam::directAMI<SourcePatch, TargetPatch>::appendToDirectSeeds
+void Foam::directAMI::appendToDirectSeeds
 (
     labelList& mapFlag,
     labelList& srcTgtSeed,
@@ -155,8 +164,7 @@ void Foam::directAMI<SourcePatch, TargetPatch>::appendToDirectSeeds
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::directAMI<SourcePatch, TargetPatch>::restartAdvancingFront
+void Foam::directAMI::restartAdvancingFront
 (
     labelList& mapFlag,
     DynamicList<label>& nonOverlapFaces,
@@ -187,11 +195,10 @@ void Foam::directAMI<SourcePatch, TargetPatch>::restartAdvancingFront
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::directAMI<SourcePatch, TargetPatch>::directAMI
+Foam::directAMI::directAMI
 (
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch,
     const scalarField& srcMagSf,
     const scalarField& tgtMagSf,
     const faceAreaIntersect::triangulationMode& triMode,
@@ -199,7 +206,7 @@ Foam::directAMI<SourcePatch, TargetPatch>::directAMI
     const bool requireMatch
 )
 :
-    AMIMethod<SourcePatch, TargetPatch>
+    AMIMethod
     (
         srcPatch,
         tgtPatch,
@@ -214,15 +221,13 @@ Foam::directAMI<SourcePatch, TargetPatch>::directAMI
 
 // * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::directAMI<SourcePatch, TargetPatch>::~directAMI()
+Foam::directAMI::~directAMI()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-void Foam::directAMI<SourcePatch, TargetPatch>::calculate
+void Foam::directAMI::calculate
 (
     labelListList& srcAddress,
     scalarListList& srcWeights,

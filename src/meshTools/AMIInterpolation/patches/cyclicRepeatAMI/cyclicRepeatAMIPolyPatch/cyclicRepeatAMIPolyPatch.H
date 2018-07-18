@@ -36,7 +36,7 @@ SourceFiles
 #define cyclicRepeatAMIPolyPatch_H
 
 #include "cyclicAMIPolyPatch.H"
-#include "AMIPatchToPatchInterpolation.H"
+#include "AMIInterpolation.H"
 #include "polyBoundaryMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

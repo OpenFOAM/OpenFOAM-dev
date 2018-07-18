@@ -139,7 +139,7 @@ public:
             }
 
             //- Return a reference to the AMI interpolator
-            virtual const AMIPatchToPatchInterpolation& AMI() const
+            virtual const AMIInterpolation& AMI() const
             {
                 return regionCoupledBase_.AMI();
             }

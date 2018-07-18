@@ -24,11 +24,20 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "faceAreaWeightAMI.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(faceAreaWeightAMI, 0);
+    addToRunTimeSelectionTable(AMIMethod, faceAreaWeightAMI, components);
+}
+
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::calcAddressing
+void Foam::faceAreaWeightAMI::calcAddressing
 (
     List<DynamicList<label>>& srcAddr,
     List<DynamicList<scalar>>& srcWght,
@@ -105,8 +114,7 @@ void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::calcAddressing
 }
 
 
-template<class SourcePatch, class TargetPatch>
-bool Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::processSourceFace
+bool Foam::faceAreaWeightAMI::processSourceFace
 (
     const label srcFacei,
     const label tgtStartFacei,
@@ -181,8 +189,7 @@ bool Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::processSourceFace
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
+void Foam::faceAreaWeightAMI::setNextFaces
 (
     label& startSeedI,
     label& srcFacei,
@@ -296,8 +303,7 @@ void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
 }
 
 
-template<class SourcePatch, class TargetPatch>
-Foam::scalar Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
+Foam::scalar Foam::faceAreaWeightAMI::interArea
 (
     const label srcFacei,
     const label tgtFacei
@@ -359,9 +365,7 @@ Foam::scalar Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::
-restartUncoveredSourceFace
+void Foam::faceAreaWeightAMI::restartUncoveredSourceFace
 (
     List<DynamicList<label>>& srcAddr,
     List<DynamicList<scalar>>& srcWght,
@@ -456,9 +460,8 @@ restartUncoveredSourceFace
 }
 
 
-template<class SourcePatch, class TargetPatch>
 Foam::scalar
-Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::minWeight() const
+Foam::faceAreaWeightAMI::minWeight() const
 {
     return faceAreaIntersect::tolerance();
 }
@@ -466,11 +469,10 @@ Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::minWeight() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::faceAreaWeightAMI
+Foam::faceAreaWeightAMI::faceAreaWeightAMI
 (
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch,
     const scalarField& srcMagSf,
     const scalarField& tgtMagSf,
     const faceAreaIntersect::triangulationMode& triMode,
@@ -479,7 +481,7 @@ Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::faceAreaWeightAMI
     const bool restartUncoveredSourceFace
 )
 :
-    AMIMethod<SourcePatch, TargetPatch>
+    AMIMethod
     (
         srcPatch,
         tgtPatch,
@@ -495,15 +497,13 @@ Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::faceAreaWeightAMI
 
 // * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::~faceAreaWeightAMI()
+Foam::faceAreaWeightAMI::~faceAreaWeightAMI()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-void Foam::faceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
+void Foam::faceAreaWeightAMI::calculate
 (
     labelListList& srcAddress,
     scalarListList& srcWeights,

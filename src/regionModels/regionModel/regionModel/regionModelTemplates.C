@@ -37,7 +37,7 @@ Foam::regionModels::regionModel::mapRegionPatchField
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag + 1;
 
-    const AMIPatchToPatchInterpolation& ami =
+    const AMIInterpolation& ami =
         interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
     tmp<Field<Type>> tresult(ami.interpolateToSource(nbrField));
@@ -69,7 +69,7 @@ Foam::regionModels::regionModel::mapRegionPatchField
         int oldTag = UPstream::msgType();
         UPstream::msgType() = oldTag + 1;
 
-        const AMIPatchToPatchInterpolation& ami =
+        const AMIInterpolation& ami =
             interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
         const fieldType& nbrField =
@@ -121,7 +121,7 @@ Foam::regionModels::regionModel::mapRegionPatchInternalField
         int oldTag = UPstream::msgType();
         UPstream::msgType() = oldTag + 1;
 
-        const AMIPatchToPatchInterpolation& ami =
+        const AMIInterpolation& ami =
             interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
         const fieldType& nbrField =
