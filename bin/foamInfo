@@ -39,6 +39,7 @@ options:
   -browser | -b <name> output C++ source guide web page with specified browser,
                        e.g. foamInfo -browser "firefox"
   -help    | -h        print the usage
+  -keyword | -k        uses <name> as a keyword, rather than an exact match
   -web     | -w        output C++ source guide web page with the browser
                        specified in the global controlDict file
 
@@ -49,13 +50,22 @@ Prints the following for an application, a script, or a model
 - Usage details from the header file;
 - Examples: a list of relevant cases from the tutorials directory.
 
-For example, run:
+By default, finds a case-sensitive match to <name>; otherwise, a
+case-insensitive match; otherwise, looks for a broader keyword match
+with "-keyword | -k" option.
+
+Examples:
   foamInfo simpleFoam
-  foamInfo kEpsilon
   foamInfo turbulentIntensityKineticEnergyInlet
   foamInfo fixedTemperatureConstraint
   foamInfo surfaces
   foamInfo foamNewBC
+  foamInfo wallFunction
+  foamInfo kEpsilon
+  foamInfo -k kEpsilon
+  foamInfo fixedValue
+  foamInfo -k fixedValue
+  foamInfo -k contactAngle
 
 USAGE
 }
@@ -65,6 +75,17 @@ error() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     usage
     exit 1
+}
+
+# (1) case-sensitive match; (2) case-insensitive match; (3) keyword match
+findModelFiles() {
+    find "$FOAM_SRC" \
+        -name "$1" \
+        -iname "$2" \
+        ! -iname "$3" \
+        ! -name "*Fwd.H" \
+        ! -name "*Fields.H" \
+        ! -name "*I.H" -type f
 }
 
 findFiles() {
@@ -77,20 +98,16 @@ findFiles() {
     _out="$(find "$FOAM_SRC/../bin" -name "${_pre}" -type f) $_out"
 
     # Model
-    # exact match
-    _models="$(find "$FOAM_SRC" \
-             -name "${_pre}*.H" \
-             ! -name "*Fwd.H" \
-             ! -name "*Fields.H" \
-             ! -name "*I.H" -type f)"
+    # case-sensitive match
+    _models="$(findModelFiles "${_pre}*.H" "*" "")"
 
-    # otherwise "looser" match
+    # case-insensitive match
     [ "$_models" ] || \
-        _models="$(find "$FOAM_SRC" \
-                 -iname "*${_pre}*.H" \
-                 ! -name "*Fwd.H" \
-                 ! -name "*Fields.H" \
-                 ! -name "*I.H" -type f)"
+        _models="$(findModelFiles "*" "${_pre}*.H" "")"
+
+    # keyword match
+    [ "$_models" -a ! "$KEYWORD" ] || \
+          _models="$_models $(findModelFiles "*" "*${_pre}*.H" "${_pre}*.H")"
 
     _out="$_models $_out"
 
@@ -105,7 +122,7 @@ findFiles() {
     _out="$(find "$FOAM_ETC" -name "${_pre}" -type f) $_out"
 
     # Remove whitespace
-    echo "$_out" | xargs -n 1
+    echo "$_out" | xargs -n 1 | awk 'NF'
 }
 
 nArgs() {
@@ -292,6 +309,7 @@ all=""
 # Global controlDict file
 controlDict="$(foamEtcFile controlDict 2> /dev/null)"
 BROWSER="$(grep docBrowser "$controlDict" 2> /dev/null | cut -d "\"" -f2)"
+KEYWORD=""
 
 while [ "$#" -gt 0 ]
 do
@@ -308,6 +326,10 @@ do
         ;;
     -h | -help)
         usage && exit 0
+        ;;
+    -k | -keyword)
+        KEYWORD="yes"
+        shift
         ;;
     -w | -web)
         web="yes"
