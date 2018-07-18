@@ -23,15 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "AMIMethod.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::autoPtr<Foam::AMIMethod<SourcePatch, TargetPatch>>
-Foam::AMIMethod<SourcePatch, TargetPatch>::New
+Foam::autoPtr<Foam::AMIMethod> Foam::AMIMethod::New
 (
     const word& methodName,
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch,
     const scalarField& srcMagSf,
     const scalarField& tgtMagSf,
     const faceAreaIntersect::triangulationMode& triMode,
@@ -56,7 +56,7 @@ Foam::AMIMethod<SourcePatch, TargetPatch>::New
             << componentsConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<AMIMethod<SourcePatch, TargetPatch>>
+    return autoPtr<AMIMethod>
     (
         cstrIter()
         (

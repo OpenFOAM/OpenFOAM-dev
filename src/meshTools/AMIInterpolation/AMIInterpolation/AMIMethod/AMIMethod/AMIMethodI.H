@@ -23,9 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-template<class SourcePatch, class TargetPatch>
-inline const Foam::labelList&
-Foam::AMIMethod<SourcePatch, TargetPatch>::srcNonOverlap() const
+inline const Foam::labelList& Foam::AMIMethod::srcNonOverlap() const
 {
     return srcNonOverlap_;
 }

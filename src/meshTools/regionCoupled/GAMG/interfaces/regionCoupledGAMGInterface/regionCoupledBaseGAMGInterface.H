@@ -60,7 +60,7 @@ class regionCoupledBaseGAMGInterface
         const regionCoupledLduInterface& fineRegionCoupledLduInterface_;
 
         //- AMI interface
-        // autoPtr<AMIPatchToPatchInterpolation> amiPtr_;
+        // autoPtr<AMIInterpolation> amiPtr_;
 
 
     // Private Member Functions
@@ -128,7 +128,7 @@ public:
                 );
             }
 
-            // virtual const AMIPatchToPatchInterpolation& AMI() const
+            // virtual const AMIInterpolation& AMI() const
             //{
             //    return amiPtr_();
             //}

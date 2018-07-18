@@ -56,7 +56,7 @@ namespace Foam
 template<>
 void Foam::meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<scalar>& srcField,
     Field<scalar>& tgtField,
     const plusEqOp<scalar>& cop
@@ -67,7 +67,7 @@ void Foam::meshToMesh::mapAndOpSrcToTgt
 template<>
 void Foam::meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<vector>& srcField,
     Field<vector>& tgtField,
     const plusEqOp<vector>& cop
@@ -78,7 +78,7 @@ void Foam::meshToMesh::mapAndOpSrcToTgt
 template<>
 void Foam::meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<sphericalTensor>& srcField,
     Field<sphericalTensor>& tgtField,
     const plusEqOp<sphericalTensor>& cop
@@ -89,7 +89,7 @@ void Foam::meshToMesh::mapAndOpSrcToTgt
 template<>
 void Foam::meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<symmTensor>& srcField,
     Field<symmTensor>& tgtField,
     const plusEqOp<symmTensor>& cop
@@ -100,7 +100,7 @@ void Foam::meshToMesh::mapAndOpSrcToTgt
 template<>
 void Foam::meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<tensor>& srcField,
     Field<tensor>& tgtField,
     const plusEqOp<tensor>& cop
@@ -111,7 +111,7 @@ void Foam::meshToMesh::mapAndOpSrcToTgt
 template<>
 void Foam::meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<scalar>& srcField,
     const Field<scalar>& tgtField,
     const plusEqOp<scalar>& cop
@@ -122,7 +122,7 @@ void Foam::meshToMesh::mapAndOpTgtToSrc
 template<>
 void Foam::meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<vector>& srcField,
     const Field<vector>& tgtField,
     const plusEqOp<vector>& cop
@@ -133,7 +133,7 @@ void Foam::meshToMesh::mapAndOpTgtToSrc
 template<>
 void Foam::meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<sphericalTensor>& srcField,
     const Field<sphericalTensor>& tgtField,
     const plusEqOp<sphericalTensor>& cop
@@ -144,7 +144,7 @@ void Foam::meshToMesh::mapAndOpTgtToSrc
 template<>
 void Foam::meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<symmTensor>& srcField,
     const Field<symmTensor>& tgtField,
     const plusEqOp<symmTensor>& cop
@@ -155,7 +155,7 @@ void Foam::meshToMesh::mapAndOpTgtToSrc
 template<>
 void Foam::meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<tensor>& srcField,
     const Field<tensor>& tgtField,
     const plusEqOp<tensor>& cop
@@ -458,24 +458,24 @@ void Foam::meshToMesh::calculate(const word& methodName)
 }
 
 
-Foam::AMIPatchToPatchInterpolation::interpolationMethod
+Foam::AMIInterpolation::interpolationMethod
 Foam::meshToMesh::interpolationMethodAMI(const interpolationMethod method)
 {
     switch (method)
     {
         case imDirect:
         {
-            return AMIPatchToPatchInterpolation::imDirect;
+            return AMIInterpolation::imDirect;
             break;
         }
         case imMapNearest:
         {
-            return AMIPatchToPatchInterpolation::imMapNearest;
+            return AMIInterpolation::imMapNearest;
             break;
         }
         case imCellVolumeWeight:
         {
-            return AMIPatchToPatchInterpolation::imFaceAreaWeight;
+            return AMIInterpolation::imFaceAreaWeight;
             break;
         }
         default:
@@ -486,7 +486,7 @@ Foam::meshToMesh::interpolationMethodAMI(const interpolationMethod method)
         }
     }
 
-    return AMIPatchToPatchInterpolation::imDirect;
+    return AMIInterpolation::imDirect;
 }
 
 
@@ -519,7 +519,7 @@ void Foam::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
         patchAMIs_.set
         (
             i,
-            new AMIPatchToPatchInterpolation
+            new AMIInterpolation
             (
                 srcPP,
                 tgtPP,
@@ -659,7 +659,7 @@ Foam::meshToMesh::meshToMesh
     constructNoCuttingPatches
     (
         interpolationMethodNames_[method],
-        AMIPatchToPatchInterpolation::interpolationMethodToWord
+        AMIInterpolation::interpolationMethodToWord
         (
             interpolationMethodAMI(method)
         ),
@@ -723,7 +723,7 @@ Foam::meshToMesh::meshToMesh
     constructFromCuttingPatches
     (
         interpolationMethodNames_[method],
-        AMIPatchToPatchInterpolation::interpolationMethodToWord
+        AMIInterpolation::interpolationMethodToWord
         (
             interpolationMethodAMI(method)
         ),

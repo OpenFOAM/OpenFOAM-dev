@@ -47,7 +47,7 @@ SourceFiles
 #include "mapDistribute.H"
 #include "volFieldsFwd.H"
 #include "NamedEnum.H"
-#include "AMIPatchToPatchInterpolation.H"
+#include "AMIInterpolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -92,7 +92,7 @@ private:
         List<label> tgtPatchID_;
 
         //- List of AMIs between source and target patches
-        PtrList<AMIPatchToPatchInterpolation> patchAMIs_;
+        PtrList<AMIInterpolation> patchAMIs_;
 
         //- Cutting patches whose values are set using a zero-gradient condition
         List<label> cuttingPatches_;
@@ -134,7 +134,7 @@ private:
         template<class Type, class CombineOp>
         void mapAndOpSrcToTgt
         (
-            const AMIPatchToPatchInterpolation& AMI,
+            const AMIInterpolation& AMI,
             const Field<Type>& srcField,
             Field<Type>& tgtField,
             const CombineOp& cop
@@ -145,7 +145,7 @@ private:
         template<class Type, class CombineOp>
         void mapAndOpTgtToSrc
         (
-            const AMIPatchToPatchInterpolation& AMI,
+            const AMIInterpolation& AMI,
             Field<Type>& srcField,
             const Field<Type>& tgtField,
             const CombineOp& cop
@@ -195,7 +195,7 @@ private:
         );
 
         //- Return the list of AMIs between source and target patches
-        inline const PtrList<AMIPatchToPatchInterpolation>&
+        inline const PtrList<AMIInterpolation>&
         patchAMIs() const;
 
 
@@ -338,11 +338,8 @@ public:
             inline scalar V() const;
 
             //- Conversion between mesh and patch interpolation methods
-            static AMIPatchToPatchInterpolation::interpolationMethod
-            interpolationMethodAMI
-            (
-                const interpolationMethod method
-            );
+            static AMIInterpolation::interpolationMethod
+            interpolationMethodAMI(const interpolationMethod method);
 
 
         // Evaluation
@@ -551,7 +548,7 @@ public:
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<scalar>& srcField,
     Field<scalar>& tgtField,
     const plusEqOp<scalar>& cop
@@ -559,7 +556,7 @@ void meshToMesh::mapAndOpSrcToTgt
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<vector>& srcField,
     Field<vector>& tgtField,
     const plusEqOp<vector>& cop
@@ -567,7 +564,7 @@ void meshToMesh::mapAndOpSrcToTgt
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<sphericalTensor>& srcField,
     Field<sphericalTensor>& tgtField,
     const plusEqOp<sphericalTensor>& cop
@@ -575,7 +572,7 @@ void meshToMesh::mapAndOpSrcToTgt
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<symmTensor>& srcField,
     Field<symmTensor>& tgtField,
     const plusEqOp<symmTensor>& cop
@@ -583,7 +580,7 @@ void meshToMesh::mapAndOpSrcToTgt
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<tensor>& srcField,
     Field<tensor>& tgtField,
     const plusEqOp<tensor>& cop
@@ -593,7 +590,7 @@ void meshToMesh::mapAndOpSrcToTgt
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<scalar>& srcField,
     const Field<scalar>& tgtField,
     const plusEqOp<scalar>& cop
@@ -601,7 +598,7 @@ void meshToMesh::mapAndOpTgtToSrc
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<vector>& srcField,
     const Field<vector>& tgtField,
     const plusEqOp<vector>& cop
@@ -609,7 +606,7 @@ void meshToMesh::mapAndOpTgtToSrc
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<sphericalTensor>& srcField,
     const Field<sphericalTensor>& tgtField,
     const plusEqOp<sphericalTensor>& cop
@@ -617,7 +614,7 @@ void meshToMesh::mapAndOpTgtToSrc
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<symmTensor>& srcField,
     const Field<symmTensor>& tgtField,
     const plusEqOp<symmTensor>& cop
@@ -625,7 +622,7 @@ void meshToMesh::mapAndOpTgtToSrc
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<tensor>& srcField,
     const Field<tensor>& tgtField,
     const plusEqOp<tensor>& cop

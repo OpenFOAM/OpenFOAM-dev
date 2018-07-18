@@ -41,6 +41,7 @@ SourceFiles
 #include "indexedOctree.H"
 #include "treeDataPrimitivePatch.H"
 #include "treeBoundBoxList.H"
+#include "primitivePatch.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,10 +53,8 @@ namespace Foam
                           Class AMIMethod Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class SourcePatch, class TargetPatch>
 class AMIMethod
 {
-
 private:
 
     // Private Member Functions
@@ -70,16 +69,16 @@ private:
 protected:
 
     //- Local typedef to octree tree-type
-    typedef treeDataPrimitivePatch<TargetPatch> treeType;
+    typedef treeDataPrimitivePatch<primitivePatch> treeType;
 
 
     // Protected data
 
         //- Reference to source patch
-        const SourcePatch& srcPatch_;
+        const primitivePatch& srcPatch_;
 
         //- Reference to target patch
-        const TargetPatch& tgtPatch_;
+        const primitivePatch& tgtPatch_;
 
         //- Flag to indicate that the two patches are co-directional and
         //  that the orientation of the target patch should be reversed
@@ -147,7 +146,7 @@ protected:
             void appendNbrFaces
             (
                 const label facei,
-                const TargetPatch& patch,
+                const primitivePatch& patch,
                 const DynamicList<label>& visitedFaces,
                 DynamicList<label>& faceIDs
             ) const;
@@ -161,6 +160,7 @@ public:
     //- Runtime type information
     TypeName("AMIMethod");
 
+
     //- Declare runtime constructor selection table
     declareRunTimeSelectionTable
     (
@@ -168,8 +168,8 @@ public:
         AMIMethod,
         components,
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const scalarField& srcMagSf,
             const scalarField& tgtMagSf,
             const faceAreaIntersect::triangulationMode& triMode,
@@ -187,24 +187,28 @@ public:
         )
     );
 
-    //- Construct from components
-    AMIMethod
-    (
-        const SourcePatch& srcPatch,
-        const TargetPatch& tgtPatch,
-        const scalarField& srcMagSf,
-        const scalarField& tgtMagSf,
-        const faceAreaIntersect::triangulationMode& triMode,
-        const bool reverseTarget,
-        const bool requireMatch
-    );
+
+    // Constructors
+
+        //- Construct from components
+        AMIMethod
+        (
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
+            const scalarField& srcMagSf,
+            const scalarField& tgtMagSf,
+            const faceAreaIntersect::triangulationMode& triMode,
+            const bool reverseTarget,
+            const bool requireMatch
+        );
+
 
     //- Selector
     static autoPtr<AMIMethod> New
     (
         const word& methodName,
-        const SourcePatch& srcPatch,
-        const TargetPatch& tgtPatch,
+        const primitivePatch& srcPatch,
+        const primitivePatch& tgtPatch,
         const scalarField& srcMagSf,
         const scalarField& tgtMagSf,
         const faceAreaIntersect::triangulationMode& triMode,
@@ -250,37 +254,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeAMIMethod(AMIType)                                                 \
-                                                                               \
-    typedef AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>       \
-        AMIMethod##AMIType;                                                    \
-                                                                               \
-    defineNamedTemplateTypeNameAndDebug(AMIMethod##AMIType, 0);                \
-    defineTemplateRunTimeSelectionTable(AMIMethod##AMIType, components);
-
-
-#define makeAMIMethodType(AMIType, Method)                                     \
-                                                                               \
-    typedef Method<AMIType::sourcePatchType,AMIType::targetPatchType>          \
-        Method##AMIType;                                                       \
-                                                                               \
-    defineNamedTemplateTypeNameAndDebug(Method##AMIType, 0);                   \
-                                                                               \
-    AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>::             \
-        addcomponentsConstructorToTable<Method##AMIType>                       \
-        add##Method##AMIType##ConstructorToTable_;
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #include "AMIMethodI.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "AMIMethod.C"
-    #include "AMIMethodNew.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

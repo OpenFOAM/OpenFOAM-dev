@@ -87,9 +87,9 @@ public:
         // Access
 
             //- Return a reference to the AMI interpolators
-            virtual const PtrList<AMIPatchToPatchInterpolation>& AMIs() const
+            virtual const PtrList<AMIInterpolation>& AMIs() const
             {
-                const PtrList<AMIPatchToPatchInterpolation>& AMIs =
+                const PtrList<AMIInterpolation>& AMIs =
                     cyclicAMIFvPatch::AMIs();
 
                 updateAreas();

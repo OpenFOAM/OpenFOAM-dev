@@ -78,7 +78,7 @@ void Foam::cyclicACMIPolyPatch::resetAMI() const
         // face is fully covered)
         cyclicAMIPolyPatch::resetAMI();
 
-        AMIPatchToPatchInterpolation& AMI = this->AMIs_[0];
+        AMIInterpolation& AMI = this->AMIs_[0];
 
         srcMask_ =
             min(scalar(1) - tolerance_, max(tolerance_, AMI.srcWeightsSum()));
@@ -218,7 +218,7 @@ Foam::cyclicACMIPolyPatch::cyclicACMIPolyPatch
         patchType,
         transform,
         false,
-        AMIPatchToPatchInterpolation::imPartialFaceAreaWeight
+        AMIInterpolation::imPartialFaceAreaWeight
     ),
     nonOverlapPatchName_(word::null),
     nonOverlapPatchID_(-1),
@@ -248,7 +248,7 @@ Foam::cyclicACMIPolyPatch::cyclicACMIPolyPatch
         bm,
         patchType,
         false,
-        AMIPatchToPatchInterpolation::imPartialFaceAreaWeight
+        AMIInterpolation::imPartialFaceAreaWeight
     ),
     nonOverlapPatchName_(dict.lookup("nonOverlapPatch")),
     nonOverlapPatchID_(-1),

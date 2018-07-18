@@ -24,14 +24,23 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mapNearestAMI.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(mapNearestAMI, 0);
+    addToRunTimeSelectionTable(AMIMethod, mapNearestAMI, components);
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-void Foam::mapNearestAMI<SourcePatch, TargetPatch>::findNearestFace
+void Foam::mapNearestAMI::findNearestFace
 (
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch,
     const label& srcFacei,
     label& tgtFacei
 ) const
@@ -72,8 +81,7 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::findNearestFace
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::mapNearestAMI<SourcePatch, TargetPatch>::setNextNearestFaces
+void Foam::mapNearestAMI::setNextNearestFaces
 (
     boolList& mapFlag,
     label& startSeedI,
@@ -120,8 +128,7 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::setNextNearestFaces
 }
 
 
-template<class SourcePatch, class TargetPatch>
-Foam::label Foam::mapNearestAMI<SourcePatch, TargetPatch>::findMappedSrcFace
+Foam::label Foam::mapNearestAMI::findMappedSrcFace
 (
     const label tgtFacei,
     const List<DynamicList<label>>& tgtToSrc
@@ -167,11 +174,10 @@ Foam::label Foam::mapNearestAMI<SourcePatch, TargetPatch>::findMappedSrcFace
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::mapNearestAMI<SourcePatch, TargetPatch>::mapNearestAMI
+Foam::mapNearestAMI::mapNearestAMI
 (
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch,
     const scalarField& srcMagSf,
     const scalarField& tgtMagSf,
     const faceAreaIntersect::triangulationMode& triMode,
@@ -179,7 +185,7 @@ Foam::mapNearestAMI<SourcePatch, TargetPatch>::mapNearestAMI
     const bool requireMatch
 )
 :
-    AMIMethod<SourcePatch, TargetPatch>
+    AMIMethod
     (
         srcPatch,
         tgtPatch,
@@ -194,15 +200,13 @@ Foam::mapNearestAMI<SourcePatch, TargetPatch>::mapNearestAMI
 
 // * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::mapNearestAMI<SourcePatch, TargetPatch>::~mapNearestAMI()
+Foam::mapNearestAMI::~mapNearestAMI()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-void Foam::mapNearestAMI<SourcePatch, TargetPatch>::calculate
+void Foam::mapNearestAMI::calculate
 (
     labelListList& srcAddress,
     scalarListList& srcWeights,

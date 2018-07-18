@@ -29,11 +29,10 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-Foam::label Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcDistribution
+Foam::label Foam::AMIInterpolation::calcDistribution
 (
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch
 ) const
 {
     label proci = 0;
@@ -81,9 +80,7 @@ Foam::label Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcDistribution
 }
 
 
-template<class SourcePatch, class TargetPatch>
-Foam::label
-Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcOverlappingProcs
+Foam::label Foam::AMIInterpolation::calcOverlappingProcs
 (
     const List<treeBoundBoxList>& procBb,
     const treeBoundBox& bb,
@@ -113,11 +110,10 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcOverlappingProcs
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::AMIInterpolation<SourcePatch, TargetPatch>::distributePatches
+void Foam::AMIInterpolation::distributePatches
 (
     const mapDistribute& map,
-    const TargetPatch& pp,
+    const primitivePatch& pp,
     const globalIndex& gi,
     List<faceList>& faces,
     List<pointField>& points,
@@ -209,12 +205,10 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::distributePatches
 }
 
 
-template<class SourcePatch, class TargetPatch>
-void Foam::AMIInterpolation<SourcePatch, TargetPatch>::
-distributeAndMergePatches
+void Foam::AMIInterpolation::distributeAndMergePatches
 (
     const mapDistribute& map,
-    const TargetPatch& tgtPatch,
+    const primitivePatch& tgtPatch,
     const globalIndex& gi,
     faceList& tgtFaces,
     pointField& tgtPoints,
@@ -325,12 +319,11 @@ distributeAndMergePatches
 }
 
 
-template<class SourcePatch, class TargetPatch>
 Foam::autoPtr<Foam::mapDistribute>
-Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
+Foam::AMIInterpolation::calcProcMap
 (
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch
+    const primitivePatch& srcPatch,
+    const primitivePatch& tgtPatch
 ) const
 {
     // Get decomposition of patch

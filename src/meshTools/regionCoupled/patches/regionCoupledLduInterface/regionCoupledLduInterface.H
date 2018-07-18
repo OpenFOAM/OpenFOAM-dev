@@ -36,7 +36,7 @@ SourceFiles
 #define regionCoupledLduInterface_H
 
 #include "primitiveFieldsFwd.H"
-#include "AMIPatchToPatchInterpolation.H"
+#include "AMIInterpolation.H"
 #include "polyMesh.H"
 
 
@@ -83,7 +83,7 @@ public:
             virtual const regionCoupledLduInterface& neighbPatch() const = 0;
 
             //- Return AMI
-            // virtual const AMIPatchToPatchInterpolation& AMI() const = 0;
+            // virtual const AMIInterpolation& AMI() const = 0;
 
             //- Return nbrMesh
             virtual const polyMesh& nbrMesh() const = 0;

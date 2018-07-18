@@ -320,7 +320,7 @@ Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapTgtToSrc
 template<class Type, class CombineOp>
 void Foam::meshToMesh::mapAndOpSrcToTgt
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     const Field<Type>& srcField,
     Field<Type>& tgtField,
     const CombineOp& cop
@@ -348,7 +348,7 @@ void Foam::meshToMesh::mapSrcToTgt
 {
     mapSrcToTgt(field, cop, result.primitiveFieldRef());
 
-    const PtrList<AMIPatchToPatchInterpolation>& AMIList = patchAMIs();
+    const PtrList<AMIInterpolation>& AMIList = patchAMIs();
 
     typename GeometricField<Type, fvPatchField, volMesh>::
         Boundary& resultBf = result.boundaryFieldRef();
@@ -528,7 +528,7 @@ Foam::meshToMesh::mapSrcToTgt
 template<class Type, class CombineOp>
 void Foam::meshToMesh::mapAndOpTgtToSrc
 (
-    const AMIPatchToPatchInterpolation& AMI,
+    const AMIInterpolation& AMI,
     Field<Type>& srcField,
     const Field<Type>& tgtField,
     const CombineOp& cop
@@ -556,7 +556,7 @@ void Foam::meshToMesh::mapTgtToSrc
 {
     mapTgtToSrc(field, cop, result.primitiveFieldRef());
 
-    const PtrList<AMIPatchToPatchInterpolation>& AMIList = patchAMIs();
+    const PtrList<AMIInterpolation>& AMIList = patchAMIs();
 
     forAll(AMIList, i)
     {

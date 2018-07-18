@@ -36,7 +36,7 @@ SourceFiles
 #define cyclicAMIPolyPatch_H
 
 #include "coupledPolyPatch.H"
-#include "AMIPatchToPatchInterpolation.H"
+#include "AMIInterpolation.H"
 #include "polyBoundaryMesh.H"
 #include "coupleGroupIdentifier.H"
 
@@ -106,7 +106,7 @@ protected:
 
 
         //- AMI interpolation classes
-        mutable PtrList<AMIPatchToPatchInterpolation> AMIs_;
+        mutable PtrList<AMIInterpolation> AMIs_;
 
         //- AMI transforms (from source to target)
         mutable List<vectorTensorTransform> AMITransforms_;
@@ -121,7 +121,7 @@ protected:
         const scalar AMILowWeightCorrection_;
 
         //- AMI Method
-        const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod_;
+        const AMIInterpolation::interpolationMethod AMIMethod_;
 
         //- Projection surface
         mutable autoPtr<searchableSurface> surfPtr_;
@@ -179,8 +179,8 @@ public:
             const word& patchType,
             const transformType transform = UNKNOWN,
             const bool AMIRequireMatch = true,
-            const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod =
-                AMIPatchToPatchInterpolation::imFaceAreaWeight
+            const AMIInterpolation::interpolationMethod AMIMethod =
+                AMIInterpolation::imFaceAreaWeight
         );
 
         //- Construct from dictionary
@@ -192,8 +192,8 @@ public:
             const polyBoundaryMesh& bm,
             const word& patchType,
             const bool AMIRequireMatch = true,
-            const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod =
-                AMIPatchToPatchInterpolation::imFaceAreaWeight
+            const AMIInterpolation::interpolationMethod AMIMethod =
+                AMIInterpolation::imFaceAreaWeight
         );
 
         //- Construct as copy, resetting the boundary mesh
@@ -307,7 +307,7 @@ public:
             const autoPtr<searchableSurface>& surfPtr() const;
 
             //- Return a reference to the AMI interpolators
-            const PtrList<AMIPatchToPatchInterpolation>& AMIs() const;
+            const PtrList<AMIInterpolation>& AMIs() const;
 
             //- Return a reference to the AMI transforms
             const List<vectorTensorTransform>& AMITransforms() const;

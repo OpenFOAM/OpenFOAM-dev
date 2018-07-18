@@ -152,7 +152,7 @@ inline const Foam::mapDistribute& Foam::mappedPatchBase::map() const
 }
 
 
-inline const Foam::AMIPatchToPatchInterpolation& Foam::mappedPatchBase::AMI
+inline const Foam::AMIInterpolation& Foam::mappedPatchBase::AMI
 (
     bool forceUpdate
 ) const
