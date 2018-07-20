@@ -566,7 +566,7 @@ public:
 
         //- Convenience function. Cobines trackToFace and hitFace
         template<class TrackCloudType>
-        void trackToAndHitFace
+        scalar trackToAndHitFace
         (
             const vector& direction,
             const scalar fraction,

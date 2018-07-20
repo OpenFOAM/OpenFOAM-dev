@@ -180,7 +180,7 @@ void Foam::particle::hitFace
 
 
 template<class TrackCloudType>
-void Foam::particle::trackToAndHitFace
+Foam::scalar Foam::particle::trackToAndHitFace
 (
     const vector& direction,
     const scalar fraction,
@@ -193,9 +193,11 @@ void Foam::particle::trackToAndHitFace
         Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
     }
 
-    trackToFace(direction, fraction);
+    const scalar f = trackToFace(direction, fraction);
 
     hitFace(direction, cloud, td);
+
+    return f;
 }
 
 
