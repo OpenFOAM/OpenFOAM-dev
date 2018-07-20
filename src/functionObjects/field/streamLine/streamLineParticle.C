@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "streamLineParticle.H"
 #include "streamLineParticleCloud.H"
 #include "vectorFieldIOField.H"
+#include "scalarFieldIOField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -88,7 +89,8 @@ Foam::streamLineParticle::streamLineParticle
 )
 :
     particle(mesh, position, celli),
-    lifeTime_(lifeTime)
+    lifeTime_(lifeTime),
+    age_(0)
 {}
 
 
@@ -106,8 +108,8 @@ Foam::streamLineParticle::streamLineParticle
         List<scalarList> sampledScalars;
         List<vectorList> sampledVectors;
 
-        is  >> lifeTime_ >> sampledPositions_ >> sampledScalars
-            >> sampledVectors;
+        is  >> lifeTime_ >> age_ >> sampledPositions_ >> sampledTimes_
+            >> sampledScalars >> sampledVectors;
 
         sampledScalars_.setSize(sampledScalars.size());
         forAll(sampledScalars, i)
@@ -137,8 +139,11 @@ Foam::streamLineParticle::streamLineParticle
 :
     particle(p),
     lifeTime_(p.lifeTime_),
+    age_(p.age_),
     sampledPositions_(p.sampledPositions_),
-    sampledScalars_(p.sampledScalars_)
+    sampledTimes_(p.sampledTimes_),
+    sampledScalars_(p.sampledScalars_),
+    sampledVectors_(p.sampledVectors_)
 {}
 
 
@@ -169,6 +174,7 @@ bool Foam::streamLineParticle::move
 
             // Store current position and sampled velocity.
             sampledPositions_.append(position());
+            sampledTimes_.append(age_);
             vector U = interpolateFields(td, position(), cell(), face());
 
             if (!td.trackForward_)
@@ -205,7 +211,10 @@ bool Foam::streamLineParticle::move
                 dt = maxDt;
             }
 
-            trackToAndHitFace(dt*U, 0, cloud, td);
+            age_ +=
+                (td.trackForward_ ? +1 : -1)
+               *dt
+               *(1 - trackToAndHitFace(dt*U, 0, cloud, td));
 
             if
             (
@@ -237,6 +246,7 @@ bool Foam::streamLineParticle::move
         {
             // Normal exit. Store last position and fields
             sampledPositions_.append(position());
+            sampledTimes_.append(age_);
             interpolateFields(td, position(), cell(), face());
 
             if (debug)
@@ -248,10 +258,16 @@ bool Foam::streamLineParticle::move
         }
 
         // Transfer particle data into trackingData.
-        td.allPositions_.append(vectorList());
-        vectorList& top = td.allPositions_.last();
-        top.transfer(sampledPositions_);
-
+        {
+            td.allPositions_.append(vectorList());
+            vectorList& top = td.allPositions_.last();
+            top.transfer(sampledPositions_);
+        }
+        {
+            td.allTimes_.append(scalarList());
+            scalarList& top = td.allTimes_.last();
+            top.transfer(sampledTimes_);
+        }
         forAll(sampledScalars_, i)
         {
             td.allScalars_[i].append(scalarList());
@@ -406,11 +422,19 @@ void Foam::streamLineParticle::readFields(Cloud<streamLineParticle>& c)
     );
     c.checkFieldIOobject(c, sampledPositions);
 
+    scalarFieldIOField sampledTimes
+    (
+        c.fieldIOobject("sampledTimes", IOobject::MUST_READ),
+        valid
+    );
+    c.checkFieldIOobject(c, sampledTimes);
+
     label i = 0;
     forAllIter(Cloud<streamLineParticle>, c, iter)
     {
         iter().lifeTime_ = lifeTime[i];
         iter().sampledPositions_.transfer(sampledPositions[i]);
+        iter().sampledTimes_.transfer(sampledTimes[i]);
         i++;
     }
 }
@@ -432,17 +456,24 @@ void Foam::streamLineParticle::writeFields(const Cloud<streamLineParticle>& c)
         c.fieldIOobject("sampledPositions", IOobject::NO_READ),
         np
     );
+    scalarFieldIOField sampledTimes
+    (
+        c.fieldIOobject("sampledTimes", IOobject::NO_READ),
+        np
+    );
 
     label i = 0;
     forAllConstIter(Cloud<streamLineParticle>, c, iter)
     {
         lifeTime[i] = iter().lifeTime_;
         sampledPositions[i] = iter().sampledPositions_;
+        sampledTimes[i] = iter().sampledTimes_;
         i++;
     }
 
     lifeTime.write(np > 0);
     sampledPositions.write(np > 0);
+    sampledTimes.write(np > 0);
 }
 
 
@@ -452,7 +483,9 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const streamLineParticle& p)
 {
     os  << static_cast<const particle&>(p)
         << token::SPACE << p.lifeTime_
+        << token::SPACE << p.age_
         << token::SPACE << p.sampledPositions_
+        << token::SPACE << p.sampledTimes_
         << token::SPACE << p.sampledScalars_
         << token::SPACE << p.sampledVectors_;
 

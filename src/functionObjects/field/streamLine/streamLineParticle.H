@@ -86,6 +86,8 @@ public:
 
             DynamicList<vectorList>& allPositions_;
 
+            DynamicList<scalarList>& allTimes_;
+
             List<DynamicList<scalarList>>& allScalars_;
 
             List<DynamicList<vectorList>>& allVectors_;
@@ -104,6 +106,7 @@ public:
                 const label nSubCycle,
                 const scalar trackLength,
                 DynamicList<List<point>>& allPositions,
+                DynamicList<List<scalar>>& allTimes,
                 List<DynamicList<scalarList>>& allScalars,
                 List<DynamicList<vectorList>>& allVectors
             )
@@ -116,6 +119,7 @@ public:
                 nSubCycle_(nSubCycle),
                 trackLength_(trackLength),
                 allPositions_(allPositions),
+                allTimes_(allTimes),
                 allScalars_(allScalars),
                 allVectors_(allVectors)
             {}
@@ -129,8 +133,14 @@ private:
         //- Lifetime of particle. Particle dies when reaches 0.
         label lifeTime_;
 
+        //- Age of the particle
+        scalar age_;
+
         //- Sampled positions
         DynamicList<point> sampledPositions_;
+
+        //- Sampled times
+        DynamicList<scalar> sampledTimes_;
 
         //- Sampled scalars
         List<DynamicList<scalar>> sampledScalars_;

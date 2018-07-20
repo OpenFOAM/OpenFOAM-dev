@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -244,6 +244,8 @@ void Foam::functionObjects::streamLine::track()
     // Size to maximum expected sizes.
     allTracks_.clear();
     allTracks_.setCapacity(nSeeds);
+    allAges_.clear();
+    allAges_.setCapacity(nSeeds);
     allScalars_.setSize(vsInterp.size());
     forAll(allScalars_, i)
     {
@@ -272,6 +274,7 @@ void Foam::functionObjects::streamLine::track()
         trackLength_,   // fixed track length
 
         allTracks_,
+        allAges_,
         allScalars_,
         allVectors_
     );
@@ -341,6 +344,8 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
             << " should be present in the list of fields " << fields_
             << exit(FatalIOError);
     }
+
+    writeAge_ = dict.lookupOrDefault<Switch>("writeAge", true);
 
     // The trackForward entry is maintained here for backwards compatibility
     if (!dict.found("direction") && dict.found("trackForward"))
@@ -498,9 +503,9 @@ bool Foam::functionObjects::streamLine::write()
         );
 
         // Distribute the scalars
-        forAll(allScalars_, scalarI)
+        forAll(allScalars_, scalari)
         {
-            allScalars_[scalarI].shrink();
+            allScalars_[scalari].shrink();
             mapDistributeBase::distribute
             (
                 Pstream::commsTypes::scheduled,
@@ -510,15 +515,15 @@ bool Foam::functionObjects::streamLine::write()
                 false,
                 distMap.constructMap(),
                 false,
-                allScalars_[scalarI],
+                allScalars_[scalari],
                 flipOp()
             );
-            allScalars_[scalarI].setCapacity(allScalars_[scalarI].size());
+            allScalars_[scalari].setCapacity(allScalars_[scalari].size());
         }
         // Distribute the vectors
-        forAll(allVectors_, vectorI)
+        forAll(allVectors_, vectori)
         {
-            allVectors_[vectorI].shrink();
+            allVectors_[vectori].shrink();
             mapDistributeBase::distribute
             (
                 Pstream::commsTypes::scheduled,
@@ -528,10 +533,10 @@ bool Foam::functionObjects::streamLine::write()
                 false,
                 distMap.constructMap(),
                 false,
-                allVectors_[vectorI],
+                allVectors_[vectori],
                 flipOp()
             );
-            allVectors_[vectorI].setCapacity(allVectors_[vectorI].size());
+            allVectors_[vectori].setCapacity(allVectors_[vectori].size());
         }
     }
 
@@ -587,21 +592,46 @@ bool Foam::functionObjects::streamLine::write()
 
         // Convert scalar values
 
-        if (allScalars_.size() > 0)
+        if (allScalars_.size() > 0 || writeAge_)
         {
-            List<List<scalarField>> scalarValues(allScalars_.size());
+            List<List<scalarField>> ageAndScalarValues
+            (
+                allScalars_.size() + writeAge_
+            );
+            wordList ageAndScalarNames(allScalars_.size() + writeAge_);
 
-            forAll(allScalars_, scalarI)
+            if (writeAge_)
             {
-                DynamicList<scalarList>& allTrackVals =
-                    allScalars_[scalarI];
-                scalarValues[scalarI].setSize(allTrackVals.size());
+                DynamicList<scalarList>& allTrackAges = allAges_;
 
+                ageAndScalarValues[0].setSize(allTrackAges.size());
+                forAll(allTrackAges, trackI)
+                {
+                    ageAndScalarValues[0][trackI].transfer
+                    (
+                        allTrackAges[trackI]
+                    );
+                }
+
+                ageAndScalarNames[0] = "age";
+            }
+
+            forAll(allScalars_, scalari)
+            {
+                const label ageAndScalari = scalari + writeAge_;
+
+                DynamicList<scalarList>& allTrackVals = allScalars_[scalari];
+
+                ageAndScalarValues[ageAndScalari].setSize(allTrackVals.size());
                 forAll(allTrackVals, trackI)
                 {
-                    scalarList& trackVals = allTrackVals[trackI];
-                    scalarValues[scalarI][trackI].transfer(trackVals);
+                    ageAndScalarValues[ageAndScalari][trackI].transfer
+                    (
+                        allTrackVals[trackI]
+                    );
                 }
+
+                ageAndScalarNames[ageAndScalari] = scalarNames_[scalari];
             }
 
             fileName vtkFile
@@ -610,7 +640,7 @@ bool Foam::functionObjects::streamLine::write()
               / scalarFormatterPtr_().getFileName
                 (
                     tracks[0],
-                    scalarNames_
+                    ageAndScalarNames
                 )
             );
 
@@ -620,8 +650,8 @@ bool Foam::functionObjects::streamLine::write()
             (
                 true,           // writeTracks
                 tracks,
-                scalarNames_,
-                scalarValues,
+                ageAndScalarNames,
+                ageAndScalarValues,
                 OFstream(vtkFile)()
             );
         }
@@ -632,16 +662,17 @@ bool Foam::functionObjects::streamLine::write()
         {
             List<List<vectorField>> vectorValues(allVectors_.size());
 
-            forAll(allVectors_, vectorI)
+            forAll(allVectors_, vectori)
             {
-                DynamicList<vectorList>& allTrackVals =
-                    allVectors_[vectorI];
-                vectorValues[vectorI].setSize(allTrackVals.size());
+                DynamicList<vectorList>& allTrackVals = allVectors_[vectori];
 
+                vectorValues[vectori].setSize(allTrackVals.size());
                 forAll(allTrackVals, trackI)
                 {
-                    vectorList& trackVals = allTrackVals[trackI];
-                    vectorValues[vectorI][trackI].transfer(trackVals);
+                    vectorValues[vectori][trackI].transfer
+                    (
+                        allTrackVals[trackI]
+                    );
                 }
             }
 
@@ -654,6 +685,8 @@ bool Foam::functionObjects::streamLine::write()
                     vectorNames_
                 )
             );
+
+            Info<< "    Writing data to " << vtkFile.path() << endl;
 
             vectorFormatterPtr_().write
             (

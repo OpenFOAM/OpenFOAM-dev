@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Description
 
         setFormat       vtk;
         U               U;
-        trackForward    yes;
+        direction       both;
 
         fields
         (
@@ -69,7 +69,9 @@ Usage
         type         | Type name: streamLine   | yes         |
         setFormat    | Output data type        | yes         |
         U            | Tracking velocity field name | no     | U
+        direction    | Direction in which to track | yes     |
         fields       | Fields to sample        | yes         |
+        writeTime    | Write the flow time along the streamline | no | no
         lifetime     | Maximum number of particle tracking steps | yes |
         trackLength  | Tracking segment length | no          |
         nSubCycle    | Number of tracking steps per cell | no|
@@ -187,6 +189,9 @@ private:
         //- Names of vector fields
         wordList vectorNames_;
 
+        //- Write the streamline ages
+        Switch writeAge_;
+
 
         // Demand driven
 
@@ -210,6 +215,9 @@ private:
 
             //- All tracks. Per particle the points it passed through
             DynamicList<List<point>> allTracks_;
+
+            //- All ages. Per particle the age when it passed through the points
+            DynamicList<List<scalar>> allAges_;
 
             //- Per scalarField, per particle, the sampled value.
             List<DynamicList<scalarList>> allScalars_;
