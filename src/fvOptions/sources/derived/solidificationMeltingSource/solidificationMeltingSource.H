@@ -36,8 +36,8 @@ Description
     fraction to temperature relation is considered; e.g. given a specific
     quantity of a binary system, \c alpha1 is its melt fraction and \c alpha0 is
     its solid fraction, such that \c alpha0 = 1 - \c alpha1 therefore, assuming
-    infinite solute diffusion, the quantity of a component in solid phase is (1
-    - \c alpha1) * \c CS where \c CS is the solid concentration of the
+    infinite solute diffusion, the quantity of a component in solid phase is 
+    (1 - \c alpha1) * \c CS where \c CS is the solid concentration of the
     considered component and the quantity of a component in liquid phase is \c
     alpha1 * \c CL where \c CL is the melt concentration of the considered
     component; considering that the total quantity of a component must be equal
@@ -51,7 +51,7 @@ Description
     - for a binary system not miscible at solid state
       \c alpha1e = \c C0 / \c CLE where \c CLE is eutectic melt concentration;
     - for a binary system partially-miscible at solid state
-      \c alpha1e = (\c C0 - \c CSE) / (\c CLE - \c CSE) where CSE is eutectic
+      \c alpha1e = (\c C0 - \c CSE) / (\c CLE - \c CSE) where \c CSE is eutectic
       solid concentration of the relative solid solution.
 
     The presence of the solid phase in the flow field is incorporated into the
