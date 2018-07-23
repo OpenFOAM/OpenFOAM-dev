@@ -54,7 +54,7 @@ USAGE
 
 error() {
     exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    while [ "$#" -ge 1 ]; do echo "Error: $1"; shift; done
     usage
     exit 1
 }
@@ -136,7 +136,7 @@ setFile () {
 noFilesMessage () {
     _ext="$1"
     [ "$_ext" = "ANY" ] && echo "(with or without file extensions)" && return 1
-    [ -n "$_ext" ] && echo "with file extension $_ext" && return 1
+    [ -n "$_ext" ] && echo "with file extension '$_ext'" && return 1
 }
 
 searchDirs="\
@@ -170,7 +170,6 @@ do
    -t | -target)
       [ "$#" -ge 2 ] || error "'$1' option requires an argument"
       tgt="$2"
-      [ -d "$tgt" ] || error "directory with -t option does not exist: '$tgt'"
       shift 2
       ;;
    -*)
@@ -183,15 +182,16 @@ do
 done
 
 [ $# -gt 1 ] && error "$# arguments \"$*\" specified: only 1 permitted"
-[ $# -eq 1 ] || error "Missing argument: no file name/prefix <file> supplied"
+[ $# -eq 1 ] || error "missing argument: no file name/prefix <file> supplied"
 prefix="$1"
 
 [ -s "system/controlDict" ] || \
-    error "Cannot find OpenFOAM case directory (no system/controlDict file)"
+    echo "Warning: cannot find OpenFOAM case directory (no system/controlDict file)"
+[ -d "$tgt" ] || error "target directory does not exist: '$tgt'"
 
 files="$(findFiles "$searchDirs" "$prefix" "$ext")"
 [ -z "$files" ] && \
-    error "No file $prefix found $(noFilesMessage "$ext")"
+    error "no file $prefix found $(noFilesMessage "$ext")"
 
 nFiles="$(nArgs "$files")"
 [ "$nFiles" -eq 1 ] && cpFile "$files" "$tgt" && exit 0
