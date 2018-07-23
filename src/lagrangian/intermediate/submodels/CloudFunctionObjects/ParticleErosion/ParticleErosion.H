@@ -25,7 +25,49 @@ Class
     Foam::ParticleErosion
 
 Description
-    Creates particle erosion field, Q
+    Function object to create a field of eroded volume, Q, on a specified list
+    of patches. The volume is calculated by the model of Finnie et al. The
+    implementation follows the description given by the review of Yadav et al.
+
+    References:
+    \verbatim
+        I Finnie, A Levy, D H McFadden
+        "Fundamental Mechanisms of the Erosive Wear of Ductile Metals by Solid
+        Particles"
+        ASTM STP664, 1979, pages 36-58
+    \endverbatim
+
+    \verbatim
+        I Finnie and D H McFadden
+        "On the Velocity Dependence of the Erosion of Ductile Metal by Solid
+        Particle at Low Angles of Incidence"
+        Wear, 1978, volume 48, pages 181-190
+    \endverbatim
+
+    \verbatim
+        G Yadav, S Tiwari, A Rajput, R Jatola, M L Jain
+        "A Review: Erosion Wear Models"
+        Emerging Trends in Mechanical Engineering, 2016, volume 1, pages 150-154
+    \endverbatim
+
+Usage
+    \table
+        Property    | Description                          | Req'd? | Default
+        patches     | The patches on which to calculate Q  | yes    |
+        p           | Plastic flow stress                  | yes    |
+        psi         | Ratio between depth of contact and length of cut | no | 2
+        K           | Ratio of normal and tangential force | no | 2
+    \endtable
+
+    Example:
+    \verbatim
+    <functionName>
+    {
+        type    particleErosion;
+        patches (wall1 wall2);
+        p       2.7e9;
+    }
+    \endverbatim
 
 SourceFiles
     ParticleErosion.C
@@ -60,19 +102,19 @@ class ParticleErosion
             typedef typename CloudType::parcelType parcelType;
 
 
-        //- Particle erosion field
+        //- Particle eroded volume field
         autoPtr<volScalarField> QPtr_;
 
         //- List of patch indices to post-process
         labelList patchIDs_;
 
-        //- Plastic flow stress - typical metal value = 2.7 GPa
+        //- Plastic flow stress
         scalar p_;
 
-        //- Ratio between depth of contact and length of cut - default=2
+        //- Ratio between depth of contact and length of cut. Default 2.
         scalar psi_;
 
-        //- Ratio of normal and tangential forces - default=2
+        //- Ratio of normal and tangential forces. Default 2.
         scalar K_;
 
 

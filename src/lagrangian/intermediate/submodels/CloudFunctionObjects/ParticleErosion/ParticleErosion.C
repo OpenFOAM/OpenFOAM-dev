@@ -143,7 +143,7 @@ void Foam::ParticleErosion<CloudType>::preEvolve()
             (
                 IOobject
                 (
-                    this->owner().name() + "Q",
+                    this->owner().name() + ":Q",
                     mesh.time().timeName(),
                     mesh,
                     IOobject::READ_IF_PRESENT,
@@ -166,43 +166,42 @@ void Foam::ParticleErosion<CloudType>::postPatch
 )
 {
     const label patchi = pp.index();
-
     const label localPatchi = applyToPatch(patchi);
 
     if (localPatchi != -1)
     {
-        vector nw;
-        vector Up;
-
-        // patch-normal direction
+        // Get patch data
+        vector nw, Up;
         this->owner().patchData(p, pp, nw, Up);
 
-        // particle velocity relative to patch
+        // Particle velocity relative to patch
         const vector& U = p.U() - Up;
 
-        // quick reject if particle travelling away from the patch
+        // Quick rejection if the particle is travelling away from the patch
         if ((nw & U) < 0)
         {
             return;
         }
 
         const scalar magU = mag(U);
-        const vector Udir = U/magU;
+        const vector UHat = U/magU;
 
-        // determine impact angle, alpha
-        const scalar alpha = mathematical::pi/2.0 - acos(nw & Udir);
+        // Impact angle
+        const scalar alpha = mathematical::pi/2 - acos(nw & UHat);
 
-        const scalar coeff = p.nParticle()*p.mass()*sqr(magU)/(p_*psi_*K_);
-
+        // Get the face value to accumulate into
         const label patchFacei = pp.whichFace(p.face());
         scalar& Q = QPtr_->boundaryFieldRef()[patchi][patchFacei];
-        if (tan(alpha) < K_/6.0)
+
+        // Finnie's model
+        const scalar coeff = p.nParticle()*p.mass()*sqr(magU)/(p_*psi_*K_);
+        if (tan(alpha) < K_/6)
         {
-            Q += coeff*(sin(2.0*alpha) - 6.0/K_*sqr(sin(alpha)));
+            Q += coeff*(sin(2*alpha) - 6/K_*sqr(sin(alpha)));
         }
         else
         {
-            Q += coeff*(K_*sqr(cos(alpha))/6.0);
+            Q += coeff*(K_*sqr(cos(alpha))/6);
         }
     }
 }
