@@ -140,9 +140,9 @@ void Foam::inplaceMapValue
         ++iter
     )
     {
-        if (iter() >= 0)
+        if (*iter >= 0)
         {
-            iter() = oldToNew[iter()];
+            *iter = oldToNew[*iter];
         }
     }
 }
