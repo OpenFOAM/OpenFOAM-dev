@@ -43,6 +43,19 @@ Foam::HashSet<Key, Hash>::HashSet(const UList<Key>& lst)
 
 
 template<class Key, class Hash>
+template<unsigned Size>
+Foam::HashSet<Key, Hash>::HashSet(const FixedList<Key, Size>& lst)
+:
+    HashTable<nil, Key, Hash>(2*lst.size())
+{
+    forAll(lst, elemI)
+    {
+        this->insert(lst[elemI]);
+    }
+}
+
+
+template<class Key, class Hash>
 template<class AnyType, class AnyHash>
 Foam::HashSet<Key, Hash>::HashSet
 (

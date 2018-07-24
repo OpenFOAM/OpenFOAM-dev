@@ -85,6 +85,10 @@ public:
         //- Construct from UList of Key
         HashSet(const UList<Key>&);
 
+        //- Construct from FixedList of Key
+        template<unsigned Size>
+        HashSet(const FixedList<Key, Size>&);
+
         //- Construct as copy
         HashSet(const HashSet<Key, Hash>& hs)
         :
