@@ -6,7 +6,7 @@ cd "${0%/*}" || exit 1    # Run from this directory
 
 removeRegionDirs () {
     # HACK to get regionDirs from materialProperties
-    _regionDirs="$(grep -E "^[a-Z]" constant/materialProperties | tail -n +2)"
+    _regionDirs="$(grep "^[a-zA-Z]" constant/materialProperties | tail -n +2)"
 
     for _d in system constant
     do
