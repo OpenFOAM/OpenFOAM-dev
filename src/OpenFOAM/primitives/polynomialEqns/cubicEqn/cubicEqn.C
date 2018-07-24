@@ -81,7 +81,7 @@ Foam::Roots<3> Foam::cubicEqn::roots() const
 
     // This is assumed not to over- or under-flow. If it does, all bets are off.
     const scalar p = c*a - b*b/3;
-    const scalar q = b*b*b*(2.0/27.0) - b*c*a/3 + d*a*a;
+    const scalar q = b*b*b*scalar(2)/27 - b*c*a/3 + d*a*a;
     const scalar disc = p*p*p/27 + q*q/4;
 
     // How many roots of what types are available?
@@ -96,7 +96,7 @@ Foam::Roots<3> Foam::cubicEqn::roots() const
 
     if (oneReal)
     {
-        const Roots<1> r = linearEqn(- a, b/3).roots();
+        const Roots<1> r = linearEqn(a, b/3).roots();
         return Roots<3>(r.type(0), r[0]);
     }
     else if (twoReal)

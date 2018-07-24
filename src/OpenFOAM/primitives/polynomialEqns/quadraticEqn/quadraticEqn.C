@@ -71,7 +71,7 @@ Foam::Roots<2> Foam::quadraticEqn::roots() const
 
     if (oneReal)
     {
-        const Roots<1> r = linearEqn(- a, b/2).roots();
+        const Roots<1> r = linearEqn(a, b/2).roots();
         return Roots<2>(r, r);
     }
     else if (twoReal)

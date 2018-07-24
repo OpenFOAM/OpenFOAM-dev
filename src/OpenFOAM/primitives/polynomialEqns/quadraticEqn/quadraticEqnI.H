@@ -100,7 +100,9 @@ inline Foam::scalar Foam::quadraticEqn::derivative(const scalar x) const
 
 inline Foam::scalar Foam::quadraticEqn::error(const scalar x) const
 {
-    return mag(small*x*(x*2*a() + b()));
+    return
+        small*mag(x)*(mag(x*a()) + mag(b()))
+      + small*(mag(x*(x*a() + b())) + mag(c()));
 }
 
 

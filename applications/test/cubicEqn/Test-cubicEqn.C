@@ -51,7 +51,7 @@ void test(const Type& polynomialEqn, const scalar tol)
             case roots::real:
                 v[i] = polynomialEqn.value(r[i]);
                 e[i] = polynomialEqn.error(r[i]);
-                ok = ok && mag(v[i]) < tol*mag(e[i]);
+                ok = ok && mag(v[i]) <= tol*mag(e[i]);
                 break;
             case roots::posInf:
                 v[i] = + inf;
@@ -79,8 +79,10 @@ void test(const Type& polynomialEqn, const scalar tol)
 
 int main()
 {
-    const int nTests = 1000000;
-    for (int t = 0; t < nTests; ++ t)
+    const scalar tol = 5;
+
+    const label nTests = 1000000;
+    for (label t = 0; t < nTests; ++ t)
     {
         test
         (
@@ -91,11 +93,26 @@ int main()
                 randomScalar(1e-50, 1e+50),
                 randomScalar(1e-50, 1e+50)
             ),
-            100
+            tol
         );
     }
+    Info << nTests << " random cubics tested" << endl;
 
-    Info << nTests << " cubics tested" << endl;
+    const label coeffMin = -9, coeffMax = 10, nCoeff = coeffMax - coeffMin;
+    for (label a = coeffMin; a < coeffMax; ++ a)
+    {
+        for (label b = coeffMin; b < coeffMax; ++ b)
+        {
+            for (label c = coeffMin; c < coeffMax; ++ c)
+            {
+                for (label d = coeffMin; d < coeffMax; ++ d)
+                {
+                    test(cubicEqn(a, b, c, d), tol);
+                }
+            }
+        }
+    }
+    Info<< nCoeff*nCoeff*nCoeff*nCoeff << " integer cubics tested" << endl;
 
     return 0;
 }
