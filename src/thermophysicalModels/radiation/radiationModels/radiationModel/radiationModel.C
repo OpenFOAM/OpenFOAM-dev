@@ -74,19 +74,16 @@ Foam::IOobject Foam::radiation::radiationModel::createIOobject
 
 void Foam::radiation::radiationModel::initialise()
 {
-    if (radiation_)
-    {
-        solverFreq_ = max(1, lookupOrDefault<label>("solverFreq", 1));
+    solverFreq_ = max(1, lookupOrDefault<label>("solverFreq", 1));
 
-        absorptionEmission_.reset
-        (
-            absorptionEmissionModel::New(*this, mesh_).ptr()
-        );
+    absorptionEmission_.reset
+    (
+        absorptionEmissionModel::New(*this, mesh_).ptr()
+    );
 
-        scatter_.reset(scatterModel::New(*this, mesh_).ptr());
+    scatter_.reset(scatterModel::New(*this, mesh_).ptr());
 
-        soot_.reset(sootModel::New(*this, mesh_).ptr());
-    }
+    soot_.reset(sootModel::New(*this, mesh_).ptr());
 }
 
 
@@ -108,7 +105,6 @@ Foam::radiation::radiationModel::radiationModel(const volScalarField& T)
     mesh_(T.mesh()),
     time_(T.time()),
     T_(T),
-    radiation_(false),
     coeffs_(dictionary::null),
     solverFreq_(0),
     firstIter_(true),
@@ -128,7 +124,6 @@ Foam::radiation::radiationModel::radiationModel
     mesh_(T.mesh()),
     time_(T.time()),
     T_(T),
-    radiation_(lookupOrDefault("radiation", true)),
     coeffs_(subOrEmptyDict(type + "Coeffs")),
     solverFreq_(1),
     firstIter_(true),
@@ -136,11 +131,6 @@ Foam::radiation::radiationModel::radiationModel
     scatter_(nullptr),
     soot_(nullptr)
 {
-    if (readOpt() == IOobject::NO_READ)
-    {
-        radiation_ = false;
-    }
-
     initialise();
 }
 
@@ -167,7 +157,6 @@ Foam::radiation::radiationModel::radiationModel
     mesh_(T.mesh()),
     time_(T.time()),
     T_(T),
-    radiation_(lookupOrDefault("radiation", true)),
     coeffs_(subOrEmptyDict(type + "Coeffs")),
     solverFreq_(1),
     firstIter_(true),
@@ -187,11 +176,25 @@ Foam::radiation::radiationModel::~radiationModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+void Foam::radiation::radiationModel::correct()
+{
+    if (firstIter_ || (time_.timeIndex() % solverFreq_ == 0))
+    {
+        calculate();
+        firstIter_ = false;
+    }
+
+    if (!soot_.empty())
+    {
+        soot_->correct();
+    }
+}
+
+
 bool Foam::radiation::radiationModel::read()
 {
     if (regIOobject::read())
     {
-        lookup("radiation") >> radiation_;
         coeffs_ = subOrEmptyDict(type() + "Coeffs");
 
         solverFreq_ = lookupOrDefault<label>("solverFreq", 1);
@@ -202,26 +205,6 @@ bool Foam::radiation::radiationModel::read()
     else
     {
         return false;
-    }
-}
-
-
-void Foam::radiation::radiationModel::correct()
-{
-    if (!radiation_)
-    {
-        return;
-    }
-
-    if (firstIter_ || (time_.timeIndex() % solverFreq_ == 0))
-    {
-        calculate();
-        firstIter_ = false;
-    }
-
-    if (!soot_.empty())
-    {
-        soot_->correct();
     }
 }
 

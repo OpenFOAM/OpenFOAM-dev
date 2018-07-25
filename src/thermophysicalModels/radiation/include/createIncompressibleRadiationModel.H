@@ -10,7 +10,7 @@
         1.0
     );
 
-    if (radiation->radiation())
+    if (!isType<radiation::noRadiation>(radiation()))
     {
         IOdictionary transportProperties
         (

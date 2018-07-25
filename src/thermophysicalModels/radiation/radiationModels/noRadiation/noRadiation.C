@@ -68,14 +68,18 @@ Foam::radiation::noRadiation::~noRadiation()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::radiation::noRadiation::read()
-{
-    return radiationModel::read();
-}
+void Foam::radiation::noRadiation::correct()
+{}
 
 
 void Foam::radiation::noRadiation::calculate()
 {}
+
+
+bool Foam::radiation::noRadiation::read()
+{
+    return radiationModel::read();
+}
 
 
 Foam::tmp<Foam::volScalarField> Foam::radiation::noRadiation::Rp() const

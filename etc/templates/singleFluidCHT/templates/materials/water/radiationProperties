@@ -15,9 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-radiation off;
-
-radiationModel  P1;
+radiationModel  none; // P1;
 
 solverFreq 1;
 

@@ -85,6 +85,9 @@ public:
 
         // Edit
 
+            //- Main update/correction routine
+            void correct();
+
             //- Solve radiation equation(s)
             void calculate();
 

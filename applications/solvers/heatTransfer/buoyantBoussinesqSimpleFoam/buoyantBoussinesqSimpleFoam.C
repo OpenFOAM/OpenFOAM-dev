@@ -48,7 +48,7 @@ Description
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
-#include "radiationModel.H"
+#include "noRadiation.H"
 #include "fvOptions.H"
 #include "simpleControl.H"
 
