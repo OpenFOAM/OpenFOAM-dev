@@ -17,8 +17,6 @@ FoamFile
 
 combustionModel  infinitelyFastChemistry;
 
-active true;
-
 infinitelyFastChemistryCoeffs
 {
     C       10;

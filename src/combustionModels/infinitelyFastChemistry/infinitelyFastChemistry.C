@@ -67,25 +67,21 @@ void infinitelyFastChemistry<ReactionThermo, ThermoType>::correct()
     this->wFuel_ ==
         dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0.0);
 
-    if (this->active())
+    this->singleMixturePtr_->fresCorrect();
+
+    const label fuelI = this->singleMixturePtr_->fuelIndex();
+
+    const volScalarField& YFuel = this->thermo().composition().Y()[fuelI];
+
+    const dimensionedScalar s = this->singleMixturePtr_->s();
+
+    if (this->thermo().composition().contains("O2"))
     {
-        this->singleMixturePtr_->fresCorrect();
+        const volScalarField& YO2 = this->thermo().composition().Y("O2");
 
-        const label fuelI = this->singleMixturePtr_->fuelIndex();
-
-        const volScalarField& YFuel =
-            this->thermo().composition().Y()[fuelI];
-
-        const dimensionedScalar s = this->singleMixturePtr_->s();
-
-        if (this->thermo().composition().contains("O2"))
-        {
-            const volScalarField& YO2 = this->thermo().composition().Y("O2");
-
-            this->wFuel_ ==
-                this->rho()/(this->mesh().time().deltaT()*C_)
-               *min(YFuel, YO2/s.value());
-        }
+        this->wFuel_ ==
+            this->rho()/(this->mesh().time().deltaT()*C_)
+           *min(YFuel, YO2/s.value());
     }
 }
 

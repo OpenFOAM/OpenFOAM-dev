@@ -69,25 +69,21 @@ void diffusion<ReactionThermo, ThermoType>::correct()
     this->wFuel_ ==
         dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0.0);
 
-    if (this->active())
+    this->singleMixturePtr_->fresCorrect();
+
+    const label fuelI = this->singleMixturePtr_->fuelIndex();
+
+    const volScalarField& YFuel = this->thermo().composition().Y()[fuelI];
+
+    if (this->thermo().composition().contains(oxidantName_))
     {
-        this->singleMixturePtr_->fresCorrect();
+        const volScalarField& YO2 =
+            this->thermo().composition().Y(oxidantName_);
 
-        const label fuelI = this->singleMixturePtr_->fuelIndex();
-
-        const volScalarField& YFuel =
-            this->thermo().composition().Y()[fuelI];
-
-        if (this->thermo().composition().contains(oxidantName_))
-        {
-            const volScalarField& YO2 =
-                this->thermo().composition().Y(oxidantName_);
-
-            this->wFuel_ ==
-                C_*this->turbulence().muEff()
-               *mag(fvc::grad(YFuel) & fvc::grad(YO2))
-               *pos0(YFuel)*pos0(YO2);
-        }
+        this->wFuel_ ==
+            C_*this->turbulence().muEff()
+           *mag(fvc::grad(YFuel) & fvc::grad(YO2))
+           *pos0(YFuel)*pos0(YO2);
     }
 }
 

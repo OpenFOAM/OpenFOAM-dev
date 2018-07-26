@@ -81,7 +81,6 @@ Foam::combustionModel::combustionModel
     IOdictionary(createIOobject(thermo, combustionProperties)),
     mesh_(thermo.p().mesh()),
     turb_(turb),
-    active_(lookupOrDefault<Switch>("active", true)),
     coeffs_(optionalSubDict(modelType + "Coeffs")),
     modelType_(modelType)
 {}
@@ -99,7 +98,6 @@ bool Foam::combustionModel::read()
 {
     if (regIOobject::read())
     {
-        this->lookup("active") >> active_;
         coeffs_ = optionalSubDict(modelType_ + "Coeffs");
         return true;
     }

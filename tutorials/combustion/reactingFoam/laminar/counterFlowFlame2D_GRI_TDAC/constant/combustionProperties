@@ -17,11 +17,4 @@ FoamFile
 
 combustionModel  laminar;
 
-active  true;
-
-laminarCoeffs
-{
-}
-
-
 // ************************************************************************* //

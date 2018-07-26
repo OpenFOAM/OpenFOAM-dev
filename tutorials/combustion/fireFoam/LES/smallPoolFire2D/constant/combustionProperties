@@ -18,8 +18,6 @@ FoamFile
 combustionModel  infinitelyFastChemistry;
 //combustionModel  FSD;
 
-active  true;
-
 infinitelyFastChemistryCoeffs
 {
     semiImplicit no;

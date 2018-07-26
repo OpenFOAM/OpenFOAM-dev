@@ -75,7 +75,7 @@ template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::combustionModels::noCombustion<ReactionThermo>::Qdot() const
 {
-    tmp<volScalarField> tQdot
+    return tmp<volScalarField>
     (
         new volScalarField
         (
@@ -92,8 +92,6 @@ Foam::combustionModels::noCombustion<ReactionThermo>::Qdot() const
             dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
         )
     );
-
-    return tQdot;
 }
 
 

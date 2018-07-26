@@ -81,40 +81,33 @@ Foam::combustionModels::laminar<ReactionThermo>::tc() const
 template<class ReactionThermo>
 void Foam::combustionModels::laminar<ReactionThermo>::correct()
 {
-    if (this->active())
+    if (integrateReactionRate_)
     {
-        if (integrateReactionRate_)
+        if (fv::localEulerDdt::enabled(this->mesh()))
         {
-            if (fv::localEulerDdt::enabled(this->mesh()))
+            const scalarField& rDeltaT =
+                fv::localEulerDdt::localRDeltaT(this->mesh());
+
+            if (this->coeffs().found("maxIntegrationTime"))
             {
-                const scalarField& rDeltaT =
-                    fv::localEulerDdt::localRDeltaT(this->mesh());
+                const scalar maxIntegrationTime
+                (
+                    readScalar(this->coeffs().lookup("maxIntegrationTime"))
+                );
 
-                if (this->coeffs().found("maxIntegrationTime"))
-                {
-                    scalar maxIntegrationTime
-                    (
-                        readScalar(this->coeffs().lookup("maxIntegrationTime"))
-                    );
-
-                    this->chemistryPtr_->solve
-                    (
-                        min(1.0/rDeltaT, maxIntegrationTime)()
-                    );
-                }
-                else
-                {
-                    this->chemistryPtr_->solve((1.0/rDeltaT)());
-                }
+                this->chemistryPtr_->solve
+                (
+                    min(1.0/rDeltaT, maxIntegrationTime)()
+                );
             }
             else
             {
-                this->chemistryPtr_->solve(this->mesh().time().deltaTValue());
+                this->chemistryPtr_->solve((1.0/rDeltaT)());
             }
         }
         else
         {
-            this->chemistryPtr_->calculate();
+            this->chemistryPtr_->solve(this->mesh().time().deltaTValue());
         }
     }
 }
@@ -125,16 +118,10 @@ Foam::tmp<Foam::fvScalarMatrix>
 Foam::combustionModels::laminar<ReactionThermo>::R(volScalarField& Y) const
 {
     tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
-
     fvScalarMatrix& Su = tSu.ref();
 
-    if (this->active())
-    {
-        const label specieI =
-            this->thermo().composition().species()[Y.member()];
-
-        Su += this->chemistryPtr_->RR(specieI);
-    }
+    const label specieI = this->thermo().composition().species()[Y.member()];
+    Su += this->chemistryPtr_->RR(specieI);
 
     return tSu;
 }
@@ -144,30 +131,7 @@ template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::combustionModels::laminar<ReactionThermo>::Qdot() const
 {
-    tmp<volScalarField> tQdot
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                this->thermo().phasePropertyName(typeName + ":Qdot"),
-                this->mesh().time().timeName(),
-                this->mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh(),
-            dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
-        )
-    );
-
-    if (this->active())
-    {
-        tQdot.ref() = this->chemistryPtr_->Qdot();
-    }
-
-    return tQdot;
+    return this->chemistryPtr_->Qdot();
 }
 
 

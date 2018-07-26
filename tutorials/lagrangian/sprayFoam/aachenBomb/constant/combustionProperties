@@ -17,8 +17,6 @@ FoamFile
 
 combustionModel PaSR;
 
-active          yes;
-
 PaSRCoeffs
 {
     Cmix                1.0;

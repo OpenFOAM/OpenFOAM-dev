@@ -17,8 +17,6 @@ FoamFile
 
 combustionModel  EDC;
 
-active  true;
-
 EDCCoeffs
 {
     version v2005;

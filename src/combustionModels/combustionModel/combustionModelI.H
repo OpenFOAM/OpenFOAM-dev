@@ -50,12 +50,6 @@ inline Foam::tmp<Foam::surfaceScalarField> Foam::combustionModel::phi() const
 }
 
 
-inline const Foam::Switch& Foam::combustionModel::active() const
-{
-    return active_;
-}
-
-
 inline const Foam::dictionary& Foam::combustionModel::coeffs() const
 {
     return coeffs_;

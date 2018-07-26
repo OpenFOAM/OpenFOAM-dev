@@ -77,9 +77,6 @@ protected:
         //- Reference to the turbulence model
         const compressibleTurbulenceModel& turb_;
 
-        //- Active
-        Switch active_;
-
         //- Dictionary of the model
         dictionary coeffs_;
 
@@ -137,9 +134,6 @@ public:
 
         //- Return const access to phi
         inline tmp<surfaceScalarField> phi() const;
-
-        //- Is combustion active?
-        inline const Switch& active() const;
 
         //- Return const dictionary of the model
         inline const dictionary& coeffs() const;

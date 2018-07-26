@@ -128,6 +128,10 @@ class polyTopoChange
             //- Retired points
             labelHashSet retiredPoints_;
 
+            //- Explicitly provided old location for e.g. added points without
+            //  masterPoint
+            Map<point> oldPoints_;
+
 
         // Faces
 
@@ -507,6 +511,31 @@ public:
                 const label newZoneID,
                 const bool inCell
             );
+
+            // Explicitly provided 'old' point location
+
+                //- Add point with original position. Return new point label.
+                //  Notes:
+                //  - masterPointID can be < 0 (appended points)
+                //  - inCell = false: add retired point (to end of point list)
+                label addPoint
+                (
+                    const point& newPosition,
+                    const point& oldPosition,
+                    const label masterPointID,
+                    const label zoneID
+                );
+
+                //- Modify coordinate.
+                //  Notes:
+                //  - inCell = false: add retired point (to end of point list)
+                void modifyPoint
+                (
+                    const label pointi,
+                    const point& newPosition,
+                    const point& oldPosition,
+                    const label newZoneID
+                );
 
             //- Remove/merge point.
             void removePoint(const label, const label);
