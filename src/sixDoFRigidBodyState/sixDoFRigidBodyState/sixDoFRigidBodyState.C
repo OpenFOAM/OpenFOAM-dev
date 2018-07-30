@@ -104,19 +104,49 @@ bool Foam::functionObjects::sixDoFRigidBodyState::execute()
 }
 
 
+const Foam::sixDoFRigidBodyMotion&
+Foam::functionObjects::sixDoFRigidBodyState::motion() const
+{
+    const dynamicMotionSolverFvMesh& mesh =
+        refCast<const dynamicMotionSolverFvMesh>(obr_);
+
+    const sixDoFRigidBodyMotionSolver& motionSolver_ =
+        refCast<const sixDoFRigidBodyMotionSolver>(mesh.motion());
+
+    return motionSolver_.motion();
+}
+
+
+Foam::vector
+Foam::functionObjects::sixDoFRigidBodyState::velocity() const
+{
+    return motion().v();
+}
+
+
+Foam::vector
+Foam::functionObjects::sixDoFRigidBodyState::angularVelocity() const
+{
+    vector angularVelocity(motion().omega());
+
+    if (angleFormat_ == "degrees")
+    {
+        angularVelocity.x() = radToDeg(angularVelocity.x());
+        angularVelocity.y() = radToDeg(angularVelocity.y());
+        angularVelocity.z() = radToDeg(angularVelocity.z());
+    }
+
+    return angularVelocity;
+}
+
+
 bool Foam::functionObjects::sixDoFRigidBodyState::write()
 {
     logFiles::write();
 
     if (Pstream::master())
     {
-        const dynamicMotionSolverFvMesh& mesh =
-            refCast<const dynamicMotionSolverFvMesh>(obr_);
-
-        const sixDoFRigidBodyMotionSolver& motionSolver_ =
-            refCast<const sixDoFRigidBodyMotionSolver>(mesh.motion());
-
-        const sixDoFRigidBodyMotion& motion = motionSolver_.motion();
+        const sixDoFRigidBodyMotion& motion = this->motion();
 
         vector rotationAngle
         (

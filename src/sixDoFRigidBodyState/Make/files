@@ -1,3 +1,4 @@
-sixDoFRigidBodyState.C
+sixDoFRigidBodyState/sixDoFRigidBodyState.C
+sixDoFRigidBodyControl/sixDoFRigidBodyControl.C
 
 LIB = $(FOAM_LIBBIN)/libsixDoFRigidBodyState

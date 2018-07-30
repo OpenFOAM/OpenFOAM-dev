@@ -57,12 +57,15 @@ SourceFiles
 #define sixDoFRigidBodyState_H
 
 #include "fvMeshFunctionObject.H"
+#include "vector.H"
 #include "logFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    class sixDoFRigidBodyMotion;
+
 namespace functionObjects
 {
 
@@ -81,6 +84,8 @@ class sixDoFRigidBodyState
 
 
     // Private Member Functions
+
+        const sixDoFRigidBodyMotion& motion() const;
 
         //- Disallow default bitwise copy construct
         sixDoFRigidBodyState(const sixDoFRigidBodyState&);
@@ -119,6 +124,10 @@ public:
 
 
     // Member Functions
+
+    vector velocity() const;
+
+    vector angularVelocity() const;
 
         //- Read the sixDoFRigidBodyState data
         virtual bool read(const dictionary&);
