@@ -2183,7 +2183,7 @@ void Foam::medialAxisMeshMover::movePoints(const pointField& p)
     // Update motionSmoother for new geometry
     meshMover_.movePoints();
 
-    // Assume corrent mesh location is correct
+    // Assume current mesh location is correct
     meshMover_.correct();
 }
 

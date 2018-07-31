@@ -210,7 +210,7 @@ private:
 
         // Surface redistribution
 
-            //- Finds new bounds based on an indepedent decomposition.
+            //- Finds new bounds based on an independent decomposition.
             List<List<treeBoundBox>> independentlyDistributedBbs
             (
                 const triSurface&

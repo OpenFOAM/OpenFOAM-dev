@@ -444,7 +444,7 @@ checkBanner()
     done
     )
 
-    dieOnBadFiles "Fix banner formating before pushing"
+    dieOnBadFiles "Fix banner formatting before pushing"
 }
 
 

@@ -29,7 +29,7 @@ Description
     Temperature dependent contact angle force with a stochastic perturbation
 
     The contact angle in degrees is specified as a Foam::Function1 type, to
-    enable the use of, e.g.  contant, polynomial, table values and the
+    enable the use of, e.g.  constant, polynomial, table values and the
     stochastic perturbation obtained from a
     Foam::distributionModels::distributionModel
 

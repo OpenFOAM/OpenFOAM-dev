@@ -361,7 +361,7 @@ public:
             "celli tetFacei tetPti facei stepFraction origProc origId"
         );
 
-        //- Cumulative particle counter - used to provode unique ID
+        //- Cumulative particle counter - used to provide unique ID
         static label particleCount_;
 
 

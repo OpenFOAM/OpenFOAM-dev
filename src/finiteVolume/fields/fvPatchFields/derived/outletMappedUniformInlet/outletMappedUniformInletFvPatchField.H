@@ -25,7 +25,7 @@ Class
     Foam::outletMappedUniformInletFvPatchField
 
 Description
-    This boundary conditon averages the field over the "outlet" patch specified
+    This boundary condition averages the field over the "outlet" patch specified
     by name "outletPatch" and applies this as the uniform value of the field
     over this patch.
 

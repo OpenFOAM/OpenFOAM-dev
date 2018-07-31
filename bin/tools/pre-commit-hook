@@ -42,7 +42,7 @@
 #     - illegal code, e.g. <TAB>
 #     - columns greater than 80 for *.[CH] files
 #     - non-standard code patterns
-#     - missmatched header #ifndef/#define names
+#     - mismatched header #ifndef/#define names
 #     - incorrect copyright statements
 #
 # Note

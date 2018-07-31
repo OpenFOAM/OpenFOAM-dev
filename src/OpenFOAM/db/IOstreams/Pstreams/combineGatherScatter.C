@@ -189,7 +189,7 @@ void Foam::Pstream::combineScatter
         // Get my communication order
         const UPstream::commsStruct& myComm = comms[UPstream::myProcNo(comm)];
 
-        // Reveive from up
+        // Receive from up
         if (myComm.above() != -1)
         {
             if (contiguous<T>())
@@ -438,7 +438,7 @@ void Foam::Pstream::listCombineScatter
         // Get my communication order
         const UPstream::commsStruct& myComm = comms[UPstream::myProcNo(comm)];
 
-        // Reveive from up
+        // Receive from up
         if (myComm.above() != -1)
         {
             if (contiguous<T>())
@@ -672,7 +672,7 @@ void Foam::Pstream::mapCombineScatter
         // Get my communication order
         const UPstream::commsStruct& myComm = comms[UPstream::myProcNo(comm)];
 
-        // Reveive from up
+        // Receive from up
         if (myComm.above() != -1)
         {
             IPstream fromAbove

@@ -75,14 +75,14 @@ public:
 
     // Selectors
 
-        //- Read (optionallly from absolute path) & register on mesh
+        //- Read (optionally from absolute path) & register on mesh
         static const decompositionModel& New
         (
             const polyMesh& mesh,
             const fileName& decompDictFile = ""
         );
 
-        //- Read (optionallly from supplied dictionary) & register on mesh
+        //- Read (optionally from supplied dictionary) & register on mesh
         static const decompositionModel& New
         (
             const polyMesh& mesh,

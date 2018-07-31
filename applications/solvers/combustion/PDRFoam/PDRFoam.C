@@ -30,7 +30,7 @@ Description
 
     Combusting RANS code using the b-Xi two-equation model.
     Xi may be obtained by either the solution of the Xi transport
-    equation or from an algebraic exression.  Both approaches are
+    equation or from an algebraic expression.  Both approaches are
     based on Gulder's flame speed correlation which has been shown
     to be appropriate by comparison with the results from the
     spectral model.

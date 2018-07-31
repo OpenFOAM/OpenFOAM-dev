@@ -137,7 +137,7 @@ public:
 
     // Constructors
 
-        //- Create a writer obejct
+        //- Create a writer object
         meshWriter
         (
             const polyMesh&,

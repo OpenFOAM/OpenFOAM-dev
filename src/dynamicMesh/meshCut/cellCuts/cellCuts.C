@@ -2017,7 +2017,7 @@ bool Foam::cellCuts::validLoop
 
                     if (meshFacei == -1)
                     {
-                        // Can't find face. Ilegal.
+                        // Can't find face. Illegal.
                         return false;
                     }
                 }

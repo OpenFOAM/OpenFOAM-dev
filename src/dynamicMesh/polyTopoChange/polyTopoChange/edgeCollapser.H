@@ -324,7 +324,7 @@ public:
             //  edges that need to be collapsed in order to remove these faces.
             //  Also returns a map of new locations for points that will move
             //  as a result of the collapse.
-            //  Use in conjuctions with edgeCollapser to synchronise the
+            //  Use in conjunctions with edgeCollapser to synchronise the
             //  collapses and modify the mesh
             labelPair markSmallSliverFaces
             (

@@ -28,7 +28,7 @@ Description
     Temperature dependent contact angle force
 
     The contact angle in degrees is specified as a Foam::Function1 type, to
-    enable the use of, e.g.  contant, polynomial, table values.
+    enable the use of, e.g.  constant, polynomial, table values.
 
 See also
     Foam::regionModels::surfaceFilmModels::contactAngleForce

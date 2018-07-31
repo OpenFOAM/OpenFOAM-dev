@@ -26,7 +26,7 @@ Class
 
 Description
     This boundary condition provides a turbulent kinematic viscosity for
-    atmospheric velocity profiles.  It is desinged to be used in conjunction
+    atmospheric velocity profiles.  It is designed to be used in conjunction
     with the atmBoundaryLayerInletVelocity boundary condition.  The values
     are calculated using:
 

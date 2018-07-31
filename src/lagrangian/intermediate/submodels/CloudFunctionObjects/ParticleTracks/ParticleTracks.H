@@ -132,7 +132,7 @@ public:
             //- Return const access to the reset on write flag
             inline const Switch& resetOnWrite() const;
 
-            //- Rerurn the table of number of times a particle has hit a face
+            //- Return the table of number of times a particle has hit a face
             inline const hitTableType& faceHitCounter() const;
 
             //- Return const access to the cloud

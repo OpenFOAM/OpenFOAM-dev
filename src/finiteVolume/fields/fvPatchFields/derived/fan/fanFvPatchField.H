@@ -29,7 +29,7 @@ Description
     condition as a base.
 
     The jump is specified as a \c Function1 type, to enable the use of, e.g.
-    contant, polynomial, table values.
+    constant, polynomial, table values.
 
 Usage
     \table

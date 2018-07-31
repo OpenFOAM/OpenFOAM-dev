@@ -47,7 +47,7 @@ Description
         v_i         |  Volume of mother bubble i [m]
         \epsilon_c  |  Turbulent dissipation rate of continuous phase [m2/s3]
         \mu_c       |  Molecular dynamic viscosity of liquid phase [Pa s]
-        \rho_c      |  Density of continous phase [kg/m3]
+        \rho_c      |  Density of continuous phase [kg/m3]
         \rho_d      |  Density of disperse phase [kg/m3]
     \endvartable
 

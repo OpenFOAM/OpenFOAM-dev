@@ -87,7 +87,7 @@ public:
         inline labelRange();
 
         //- Construct a range
-        //  A negative size is autmatically changed to zero.
+        //  A negative size is automatically changed to zero.
         inline labelRange(const label start, const label size);
 
         //- Construct from Istream.

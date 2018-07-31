@@ -626,7 +626,7 @@ Foam::meshToMesh::mapTgtToSrc
 
     PtrList<fvPatchField<Type>> srcPatchFields(srcBm.size());
 
-    // constuct src boundary patch types as copy of 'field' boundary types
+    // construct src boundary patch types as copy of 'field' boundary types
     // note: this will provide place holders for fields with additional
     // entries, but these values will need to be reset
     forAll(srcPatchID_, i)

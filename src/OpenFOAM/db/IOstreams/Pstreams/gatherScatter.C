@@ -156,7 +156,7 @@ void Pstream::scatter
         // Get my communication order
         const commsStruct& myComm = comms[UPstream::myProcNo(comm)];
 
-        // Reveive from up
+        // Receive from up
         if (myComm.above() != -1)
         {
             if (contiguous<T>())

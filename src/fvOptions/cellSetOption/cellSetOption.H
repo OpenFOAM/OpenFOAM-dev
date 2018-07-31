@@ -25,7 +25,7 @@ Class
     Foam::fv::cellSetOption
 
 Description
-    Cell-set options abtract base class.  Provides a base set of controls,
+    Cell-set options abstract base class.  Provides a base set of controls,
     e.g.:
     \verbatim
         type            scalarExplicitSource    // Source type

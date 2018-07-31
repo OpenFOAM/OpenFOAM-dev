@@ -297,7 +297,7 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::cleanAndBalance()
     bool treeModified(false);
 
     // Check all chemPoints to see if we need to delete some of the chemPoints
-    // according to the ellapsed time and number of growths
+    // according to the elapsed time and number of growths
     chemPointISAT<CompType, ThermoType>* x = chemisTree_.treeMin();
     while(x != nullptr)
     {

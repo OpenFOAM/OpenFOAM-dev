@@ -135,7 +135,7 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking genration rate
+        //- Return the flame-wrinking generation rate
         virtual tmp<volScalarField> G() const = 0;
 
         //- Return the flame diffusivity

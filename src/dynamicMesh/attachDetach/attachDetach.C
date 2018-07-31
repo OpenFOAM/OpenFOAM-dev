@@ -427,7 +427,7 @@ void Foam::attachDetach::setRefinement(polyTopoChange& ref) const
         else
         {
             FatalErrorInFunction
-                << "Requested attach/detach event and currect state "
+                << "Requested attach/detach event and current state "
                 << "is not known."
                 << abort(FatalError);
         }

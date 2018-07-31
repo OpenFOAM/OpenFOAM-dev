@@ -652,7 +652,7 @@ void Foam::KinematicCloud<CloudType>::scaleSources()
 template<class CloudType>
 void Foam::KinematicCloud<CloudType>::preEvolve()
 {
-    // force calculaion of mesh dimensions - needed for parallel runs
+    // force calculation of mesh dimensions - needed for parallel runs
     // with topology change due to lazy evaluation of valid mesh dimensions
     label nGeometricD = mesh_.nGeometricD();
 

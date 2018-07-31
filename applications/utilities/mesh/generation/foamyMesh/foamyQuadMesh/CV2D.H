@@ -185,7 +185,7 @@ class CV2D
         //- Keep track of the boundary conform point-pairs
         //  stored after the insertion of the surface point-pairs in case
         //  the boundary conform function is called more than once without
-        //  removing and insertin the surface point-pairs
+        //  removing and inserting the surface point-pairs
         label startOfBoundaryConformPointPairs_;
 
         //- Store the feature points
@@ -311,7 +311,7 @@ class CV2D
 
         void markNearBoundaryPoints();
 
-        //- Restore the Delaunay contraint
+        //- Restore the Delaunay constraint
         void fast_restore_Delaunay(Vertex_handle vh);
 
         // Flip operations used by fast_restore_Delaunay
