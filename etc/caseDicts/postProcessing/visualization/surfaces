@@ -40,7 +40,7 @@ surfaces
         pointAndNormalDict
         {
             basePoint    (0 0 2); // Overrides default basePoint (0 0 0)
-            normalVector $z;      // $y: macro for (0 0 1)
+            normalVector $z;      // $z: macro for (0 0 1)
         }
     }
 
