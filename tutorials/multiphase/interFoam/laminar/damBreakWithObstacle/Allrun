@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 runApplication topoSet
-runApplication subsetMesh -overwrite c0 -patch walls
+runApplication subsetMesh -overwrite c0 -patch walls -noFields
 runApplication setFields
 runApplication $(getApplication)
 

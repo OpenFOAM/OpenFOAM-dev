@@ -9,7 +9,7 @@ application=$(getApplication)
 
 runApplication blockMesh
 runApplication topoSet
-runApplication subsetMesh -overwrite c0 -patch floatingObject
+runApplication subsetMesh -overwrite c0 -patch floatingObject -noFields
 
 runApplication $application
 
