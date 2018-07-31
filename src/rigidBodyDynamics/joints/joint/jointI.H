@@ -64,6 +64,14 @@ inline const Foam::List<Foam::spatialVector>& Foam::RBD::joint::S() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
+inline void Foam::RBD::joint::operator=(const joint& j)
+{
+    S_ = j.S_;
+    index_ = j.index_;
+    qIndex_ = j.qIndex_;
+}
+
+
 inline Foam::quaternion Foam::RBD::joint::unitQuaternion
 (
     const scalarField& q

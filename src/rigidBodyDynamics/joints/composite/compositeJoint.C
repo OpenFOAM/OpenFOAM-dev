@@ -52,7 +52,7 @@ namespace joints
 
 void Foam::RBD::joints::composite::setLastJoint()
 {
-    //last().joint::operator=(*this);
+    last().joint::operator=(*this);
 }
 
 

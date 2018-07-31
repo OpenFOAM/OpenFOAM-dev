@@ -243,6 +243,9 @@ public:
 
     // Member Operators
 
+        //- Assignment
+        inline void operator=(const joint& j);
+
         //- Return the unit quaternion for this joint
         //  if it uses a quaternion representation for rotation
         inline quaternion unitQuaternion
