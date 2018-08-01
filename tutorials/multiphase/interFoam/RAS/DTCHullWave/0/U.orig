@@ -16,11 +16,10 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 Umean 1.668;
-mUmean -1.668;
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform ($mUmean 0 0);
+internalField   uniform (#neg $Umean 0 0);
 
 boundaryField
 {
