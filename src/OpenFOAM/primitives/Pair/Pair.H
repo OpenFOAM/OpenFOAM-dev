@@ -116,6 +116,7 @@ public:
                 FatalErrorInFunction
                     << "Call to other only valid for Pair with differing"
                     << " elements:" << *this << abort(FatalError);
+                return first();
             }
             else if (first() == a)
             {
