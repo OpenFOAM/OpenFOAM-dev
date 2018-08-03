@@ -117,10 +117,9 @@ protected:
         virtual void writeFileHeader(const label i);
 
         //- Calculate the shear-stress
-        void calcShearStress
+        tmp<volVectorField> calcShearStress
         (
-            const volSymmTensorField& Reff,
-            volVectorField& shearStress
+            const volSymmTensorField& Reff
         );
 
 

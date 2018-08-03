@@ -130,11 +130,10 @@ protected:
         virtual void writeFileHeader(const label i);
 
         //- Calculate the heat transfer coefficient
-        void calcHeatTransferCoeff
+        tmp<volScalarField> calcHeatTransferCoeff
         (
             const volScalarField& nu,
-            const volScalarField& nut,
-            volScalarField& wallHeatTransferCoeff
+            const volScalarField& nut
         );
 
 

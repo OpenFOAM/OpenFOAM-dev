@@ -62,12 +62,28 @@ void Foam::functionObjects::yPlus::writeFileHeader(const label i)
 }
 
 
-void Foam::functionObjects::yPlus::calcYPlus
+Foam::tmp<Foam::volScalarField> Foam::functionObjects::yPlus::calcYPlus
 (
-    const turbulenceModel& turbModel,
-    volScalarField& yPlus
+    const turbulenceModel& turbModel
 )
 {
+    tmp<volScalarField> tyPlus
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                type(),
+                mesh_.time().timeName(),
+                mesh_
+            ),
+            mesh_,
+            dimensionedScalar("0", dimless, 0.0)
+        )
+    );
+
+    volScalarField::Boundary& yPlusBf = tyPlus.ref().boundaryFieldRef();
+
     volScalarField::Boundary d = nearWallDist(mesh_).y();
 
     const volScalarField::Boundary nutBf =
@@ -80,8 +96,6 @@ void Foam::functionObjects::yPlus::calcYPlus
         turbModel.nu()().boundaryField();
 
     const fvPatchList& patches = mesh_.boundary();
-
-    volScalarField::Boundary& yPlusBf = yPlus.boundaryFieldRef();
 
     forAll(patches, patchi)
     {
@@ -108,6 +122,8 @@ void Foam::functionObjects::yPlus::calcYPlus
                 )/nuBf[patchi];
         }
     }
+
+    return tyPlus;
 }
 
 
@@ -124,25 +140,6 @@ Foam::functionObjects::yPlus::yPlus
     logFiles(obr_, name),
     writeLocalObjects(obr_, log)
 {
-    volScalarField* yPlusPtr
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh_,
-            dimensionedScalar("0", dimless, 0.0)
-        )
-    );
-
-    mesh_.objectRegistry::store(yPlusPtr);
-
     read(dict);
     resetName(typeName);
     resetLocalObjectName(typeName);
@@ -168,9 +165,6 @@ bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 
 bool Foam::functionObjects::yPlus::execute()
 {
-    volScalarField& yPlus =
-        mesh_.lookupObjectRef<volScalarField>(type());
-
     if (mesh_.foundObject<turbulenceModel>(turbulenceModel::propertiesName))
     {
         const turbulenceModel& model = mesh_.lookupObject<turbulenceModel>
@@ -178,7 +172,9 @@ bool Foam::functionObjects::yPlus::execute()
             turbulenceModel::propertiesName
         );
 
-        calcYPlus(model, yPlus);
+        word name(type());
+
+        return store(name, calcYPlus(model));
     }
     else
     {

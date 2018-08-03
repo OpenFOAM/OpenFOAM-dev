@@ -73,48 +73,33 @@ bool Foam::functionObjects::CourantNo::calc()
         const surfaceScalarField& phi =
             lookupObject<surfaceScalarField>(fieldName_);
 
-        tmp<volScalarField::Internal> Coi
+        tmp<volScalarField> tCo
         (
+            new volScalarField
+            (
+                IOobject
+                (
+                    resultName_,
+                    mesh_.time().timeName(),
+                    mesh_
+                ),
+                mesh_,
+                dimensionedScalar("0", dimless, 0.0),
+                zeroGradientFvPatchScalarField::typeName
+            )
+        );
+
+        tCo->ref() =
             byRho
             (
                 (0.5*mesh_.time().deltaT())
                *fvc::surfaceSum(mag(phi))()()
                /mesh_.V()
-            )
-        );
-
-        if (foundObject<volScalarField>(resultName_))
-        {
-            volScalarField& Co = lookupObjectRef<volScalarField>(resultName_);
-
-            Co.ref() = Coi();
-            Co.correctBoundaryConditions();
-        }
-        else
-        {
-            tmp<volScalarField> tCo
-            (
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        resultName_,
-                        mesh_.time().timeName(),
-                        mesh_,
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE
-                    ),
-                    mesh_,
-                    dimensionedScalar("0", dimless, 0.0),
-                    zeroGradientFvPatchScalarField::typeName
-                )
             );
-            tCo.ref().ref() = Coi();
-            tCo.ref().correctBoundaryConditions();
-            mesh_.objectRegistry::store(tCo.ptr());
-        }
 
-        return true;
+        tCo->correctBoundaryConditions();
+
+        return store(resultName_, tCo);
     }
     else
     {

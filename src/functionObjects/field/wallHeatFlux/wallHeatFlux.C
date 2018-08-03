@@ -58,15 +58,30 @@ void Foam::functionObjects::wallHeatFlux::writeFileHeader(const label i)
 }
 
 
-void Foam::functionObjects::wallHeatFlux::calcHeatFlux
+Foam::tmp<Foam::volScalarField>
+Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
 (
     const volScalarField& alpha,
-    const volScalarField& he,
-    volScalarField& wallHeatFlux
+    const volScalarField& he
 )
 {
+    tmp<volScalarField> twallHeatFlux
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                type(),
+                mesh_.time().timeName(),
+                mesh_
+            ),
+            mesh_,
+            dimensionedScalar("0", dimMass/pow3(dimTime), 0)
+        )
+    );
+
     volScalarField::Boundary& wallHeatFluxBf =
-        wallHeatFlux.boundaryFieldRef();
+        twallHeatFlux.ref().boundaryFieldRef();
 
     const volScalarField::Boundary& heBf =
         he.boundaryField();
@@ -97,6 +112,8 @@ void Foam::functionObjects::wallHeatFlux::calcHeatFlux
             }
         }
     }
+
+    return twallHeatFlux;
 }
 
 
@@ -114,25 +131,6 @@ Foam::functionObjects::wallHeatFlux::wallHeatFlux
     writeLocalObjects(obr_, log),
     patchSet_()
 {
-    volScalarField* wallHeatFluxPtr
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh_,
-            dimensionedScalar("0", dimMass/pow3(dimTime), 0)
-        )
-    );
-
-    mesh_.objectRegistry::store(wallHeatFluxPtr);
-
     read(dict);
     resetName(typeName);
     resetLocalObjectName(typeName);
@@ -205,7 +203,7 @@ bool Foam::functionObjects::wallHeatFlux::read(const dictionary& dict)
 
 bool Foam::functionObjects::wallHeatFlux::execute()
 {
-    volScalarField& wallHeatFlux = lookupObjectRef<volScalarField>(type());
+    word name(type());
 
     if
     (
@@ -220,20 +218,17 @@ bool Foam::functionObjects::wallHeatFlux::execute()
             (
                 turbulenceModel::propertiesName
             );
+        const volScalarField& alpha = turbModel.alphaEff();
+        const volScalarField& he = turbModel.transport().he();
 
-        calcHeatFlux
-        (
-            turbModel.alphaEff(),
-            turbModel.transport().he(),
-            wallHeatFlux
-        );
+        return store(name, calcWallHeatFlux(alpha, he));
     }
     else if (foundObject<solidThermo>(solidThermo::dictName))
     {
         const solidThermo& thermo =
             lookupObject<solidThermo>(solidThermo::dictName);
 
-        calcHeatFlux(thermo.alpha(), thermo.he(), wallHeatFlux);
+        return store(name, calcWallHeatFlux(thermo.alpha(), thermo.he()));
     }
     else
     {

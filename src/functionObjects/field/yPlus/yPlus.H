@@ -95,10 +95,9 @@ class yPlus
         virtual void writeFileHeader(const label i);
 
         //- Calculate y+
-        void calcYPlus
+        tmp<volScalarField> calcYPlus
         (
-            const turbulenceModel& turbModel,
-            volScalarField& yPlus
+            const turbulenceModel& turbModel
         );
 
         //- Disallow default bitwise copy construct

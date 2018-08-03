@@ -57,25 +57,42 @@ void Foam::functionObjects::wallShearStress::writeFileHeader(const label i)
 }
 
 
-void Foam::functionObjects::wallShearStress::calcShearStress
+Foam::tmp<Foam::volVectorField>
+Foam::functionObjects::wallShearStress::calcShearStress
 (
-    const volSymmTensorField& Reff,
-    volVectorField& shearStress
+    const volSymmTensorField& Reff
 )
 {
-    shearStress.dimensions().reset(Reff.dimensions());
+    tmp<volVectorField> twallShearStress
+    (
+        new volVectorField
+        (
+            IOobject
+            (
+                type(),
+                mesh_.time().timeName(),
+                mesh_
+            ),
+            mesh_,
+            dimensionedVector("0", Reff.dimensions(), Zero)
+        )
+    );
+
+    volVectorField::Boundary& wallShearStressBf =
+        twallShearStress.ref().boundaryFieldRef();
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         label patchi = iter.key();
 
-        vectorField& ssp = shearStress.boundaryFieldRef()[patchi];
         const vectorField& Sfp = mesh_.Sf().boundaryField()[patchi];
         const scalarField& magSfp = mesh_.magSf().boundaryField()[patchi];
         const symmTensorField& Reffp = Reff.boundaryField()[patchi];
 
-        ssp = (-Sfp/magSfp) & Reffp;
+        wallShearStressBf[patchi] = (-Sfp/magSfp) & Reffp;
     }
+
+    return twallShearStress;
 }
 
 
@@ -93,30 +110,6 @@ Foam::functionObjects::wallShearStress::wallShearStress
     writeLocalObjects(obr_, log),
     patchSet_()
 {
-    volVectorField* wallShearStressPtr
-    (
-        new volVectorField
-        (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh_,
-            dimensionedVector
-            (
-                "0",
-                sqr(dimLength)/sqr(dimTime),
-                Zero
-            )
-        )
-    );
-
-    mesh_.objectRegistry::store(wallShearStressPtr);
-
     read(dict);
     resetName(typeName);
     resetLocalObjectName(typeName);
@@ -192,9 +185,6 @@ bool Foam::functionObjects::wallShearStress::execute()
     typedef compressible::turbulenceModel cmpModel;
     typedef incompressible::turbulenceModel icoModel;
 
-    volVectorField& wallShearStress =
-        mesh_.lookupObjectRef<volVectorField>(type());
-
     tmp<volSymmTensorField> Reff;
     if (mesh_.foundObject<cmpModel>(turbulenceModel::propertiesName))
     {
@@ -217,9 +207,9 @@ bool Foam::functionObjects::wallShearStress::execute()
             << "database" << exit(FatalError);
     }
 
-    calcShearStress(Reff(), wallShearStress);
+    word name(type());
 
-    return true;
+    return store(name, calcShearStress(Reff));
 }
 
 

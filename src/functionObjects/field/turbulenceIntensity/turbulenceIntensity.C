@@ -71,25 +71,6 @@ Foam::functionObjects::turbulenceIntensity::turbulenceIntensity
     logFiles(obr_, name),
     writeLocalObjects(obr_, log)
 {
-    volScalarField* turbulenceIntensityPtr
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "I",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh_,
-            dimensionedScalar("0", dimless, 0.0)
-        )
-    );
-
-    mesh_.objectRegistry::store(turbulenceIntensityPtr);
-
     read(dict);
     resetName(typeName);
     resetLocalObjectName("I");
@@ -115,9 +96,6 @@ bool Foam::functionObjects::turbulenceIntensity::read(const dictionary& dict)
 
 bool Foam::functionObjects::turbulenceIntensity::execute()
 {
-    volScalarField& turbulenceIntensity =
-        mesh_.lookupObjectRef<volScalarField>("I");
-
     if (mesh_.foundObject<turbulenceModel>(turbulenceModel::propertiesName))
     {
         const turbulenceModel& turbModel = mesh_.lookupObject<turbulenceModel>
@@ -126,12 +104,19 @@ bool Foam::functionObjects::turbulenceIntensity::execute()
         );
 
         volScalarField uPrime(sqrt((2.0/3.0)*turbModel.k()));
-        turbulenceIntensity =
-            uPrime
-           /max
+
+        word name("I");
+
+        return
+            store
             (
-                max(uPrime, mag(turbModel.U())),
-                dimensionedScalar("small", dimVelocity, small)
+                name,
+                uPrime
+               /max
+                (
+                    max(uPrime, mag(turbModel.U())),
+                    dimensionedScalar("small", dimVelocity, small)
+                )
             );
     }
     else
@@ -139,9 +124,9 @@ bool Foam::functionObjects::turbulenceIntensity::execute()
         FatalErrorInFunction
             << "Unable to find turbulence model in the "
             << "database" << exit(FatalError);
-    }
 
-    return true;
+        return false;
+    }
 }
 
 
