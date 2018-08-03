@@ -400,8 +400,6 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << exit(FatalIOError);
     }
 
-    readOldTimeIfPresent();
-
     if (debug)
     {
         InfoInFunction
