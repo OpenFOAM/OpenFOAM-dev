@@ -240,6 +240,9 @@ case ThirdParty:
     case Gcc61:
         set gcc_version=gcc-6.1.0
         breaksw
+    case Gcc73:
+        set gcc_version=gcc-7.3.0
+        breaksw
     case Gcc81:
         set gcc_version=gcc-8.1.0
         breaksw
