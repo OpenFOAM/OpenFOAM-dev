@@ -112,56 +112,63 @@ public:
             //- Return the laminar kinematic viscosity on a patch
             virtual tmp<scalarField> nu(const label patchi) const;
 
-            //- Return the laminar thermal conductivity
+            //- Thermal diffusivity for enthalpy of mixture [kg/m/s]
+            virtual tmp<volScalarField> alpha() const;
+
+            //- Thermal diffusivity for enthalpy of mixture for patch [kg/m/s]
+            virtual tmp<scalarField> alpha(const label patchi) const;
+
+            //- Thermal diffusivity for temperature of mixture [J/m/s/K]
             virtual tmp<volScalarField> kappa() const;
 
-            //- Return the laminar thermal conductivity on a patch
+            //- Thermal diffusivity for temperature of mixture
+            //  for patch [J/m/s/K]
             virtual tmp<scalarField> kappa(const label patchi) const;
 
-            //- Return the laminar thermal conductivity, given the turbulent
-            //  thermal diffusivity
+            //- Thermal diffusivity for energy of mixture [kg/m/s]
+            virtual tmp<volScalarField> alphahe() const;
+
+            //- Thermal diffusivity for energy of mixture for patch [kg/m/s]
+            virtual tmp<scalarField> alphahe(const label patchi) const;
+
+
+        // Turbulence
+
+            //- Effective thermal turbulent diffusivity for temperature
+            //  of mixture for patch [J/m/s/K]
+            using BasePhaseModel::kappaEff;
+
+            //- Effective thermal turbulent diffusivity for temperature
+            //  of mixture [J/m/s/K]
             virtual tmp<volScalarField> kappaEff
             (
                 const volScalarField& alphat
             ) const;
 
-            //- Return the laminar thermal conductivity on a patch, given the
-            //  turbulent thermal diffusivity
+            //- Effective thermal turbulent diffusivity for temperature
+            //  of mixture for patch [J/m/s/K]
             virtual tmp<scalarField> kappaEff
             (
                 const scalarField& alphat,
                 const label patchi
             ) const;
 
-            //- Return the thermal diffusivity for enthalpy
-            virtual tmp<volScalarField> alpha() const;
+            //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
+            using BasePhaseModel::alphaEff;
 
-            //- Return the thermal diffusivity for enthalpy on a patch
-            virtual tmp<scalarField> alpha(const label patchi) const;
-
-            //- Return the effective thermal diffusivity for enthalpy, given the
-            //  turbulent thermal diffusivity
+            //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
             virtual tmp<volScalarField> alphaEff
             (
                 const volScalarField& alphat
             ) const;
 
-            //- Return the effective thermal diffusivity for enthalpy on a
-            //  patch, given the turbulent thermal diffusivity
+            //- Effective thermal turbulent diffusivity of mixture
+            //  for patch [kg/m/s]
             virtual tmp<scalarField> alphaEff
             (
                 const scalarField& alphat,
                 const label patchi
             ) const;
-
-
-        // Turbulence (prevents compiler warnings)
-
-            //- Return the effective thermal conductivity
-            using BasePhaseModel::kappaEff;
-
-            //- Return the effective thermal conductivity for enthalpy
-            using BasePhaseModel::alphaEff;
 };
 
 

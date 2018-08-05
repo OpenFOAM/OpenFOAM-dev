@@ -102,42 +102,40 @@ public:
         //- Re-read model coefficients if they have changed
         virtual bool read();
 
-        //- Return the turbulent thermal diffusivity for enthalpy [kg/m/s]
+        //- Turbulent thermal diffusivity for enthalpy [kg/m/s]
         virtual tmp<volScalarField> alphat() const
         {
             return alphat_;
         }
 
-        //- Return the turbulent thermal diffusivity for enthalpy for a patch
-        //  [kg/m/s]
+        //- Turbulent thermal diffusivity for enthalpy for a patch [kg/m/s]
         virtual tmp<scalarField> alphat(const label patchi) const
         {
             return alphat()().boundaryField()[patchi];
         }
 
-        //- Return the effective turbulent thermal diffusivity for temperature
-        //  [J/m/s/K]
+        //- Effective thermal turbulent diffusivity for temperature
+        //  of mixture [J/m/s/K]
         virtual tmp<volScalarField> kappaEff() const
         {
             return this->transport_.kappaEff(alphat());
         }
 
-        //- Return the effective turbulent thermal diffusivity for temperature
-        //  [J/m/s/K]
+        //- Effective thermal turbulent diffusivity for temperature
+        //  of mixture for patch [J/m/s/K]
         virtual tmp<scalarField> kappaEff(const label patchi) const
         {
             return this->transport_.kappaEff(alphat(patchi), patchi);
         }
 
-        //- Return the effective turbulent thermal diffusivity for enthalpy
-        //  [kg/m/s]
+        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
         virtual tmp<volScalarField> alphaEff() const
         {
             return this->transport_.alphaEff(alphat());
         }
 
-        //- Return the effective turbulent thermal diffusivity for enthalpy
-        //  for a patch [kg/m/s]
+        //- Effective thermal turbulent diffusivity of mixture
+        //  for patch [kg/m/s]
         virtual tmp<scalarField> alphaEff(const label patchi) const
         {
             return this->transport_.alphaEff(alphat(patchi), patchi);

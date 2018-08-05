@@ -625,6 +625,45 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::kappa
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::alphahe() const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    tmp<volScalarField> talphaEff(phasei()*phasei().thermo().alphahe());
+
+    for (++phasei; phasei != phases_.end(); ++phasei)
+    {
+        talphaEff.ref() += phasei()*phasei().thermo().alphahe();
+    }
+
+    return talphaEff;
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::alphahe
+(
+    const label patchi
+) const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    tmp<scalarField> talphaEff
+    (
+        phasei().boundaryField()[patchi]
+       *phasei().thermo().alphahe(patchi)
+    );
+
+    for (++phasei; phasei != phases_.end(); ++phasei)
+    {
+        talphaEff.ref() +=
+            phasei().boundaryField()[patchi]
+           *phasei().thermo().alphahe(patchi);
+    }
+
+    return talphaEff;
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::kappaEff
 (
     const volScalarField& alphat

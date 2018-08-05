@@ -196,19 +196,45 @@ public:
             return thermo_->mu(patchi);
         }
 
-        //- Return the thermal conductivity on a patch
+        //- Thermal diffusivity for enthalpy of mixture [kg/m/s]
+        tmp<volScalarField> alpha() const
+        {
+            return thermo_->alpha();
+        }
+
+        //- Thermal diffusivity for enthalpy of mixture for patch [kg/m/s]
+        tmp<scalarField> alpha(const label patchi) const
+        {
+            return thermo_->alpha(patchi);
+        }
+
+        //- Thermal diffusivity for temperature of mixture [J/m/s/K]
         tmp<scalarField> kappa(const label patchi) const
         {
             return thermo_->kappa(patchi);
         }
 
-        //- Return the thermal conductivity
+        //- Thermal diffusivity for temperature of mixture
+        //  for patch [J/m/s/K]
         tmp<volScalarField> kappa() const
         {
             return thermo_->kappa();
         }
 
-        //- Return the laminar thermal conductivity
+        //- Thermal diffusivity for energy of mixture [kg/m/s]
+        tmp<volScalarField> alphahe() const
+        {
+            return thermo_->alphahe();
+        }
+
+        //- Thermal diffusivity for energy of mixture for patch [kg/m/s]
+        tmp<scalarField> alphahe(const label patchi) const
+        {
+            return thermo_->alphahe(patchi);
+        }
+
+        //- Effective thermal turbulent diffusivity for temperature
+        //  of mixture [J/m/s/K]
         tmp<volScalarField> kappaEff
         (
             const volScalarField& alphat
@@ -217,7 +243,8 @@ public:
             return thermo_->kappaEff(alphat);
         }
 
-        //- Return the laminar thermal conductivity on a patch
+        //- Effective thermal turbulent diffusivity for temperature
+        //  of mixture for patch [J/m/s/K]
         tmp<scalarField> kappaEff
         (
             const scalarField& alphat,
@@ -227,19 +254,7 @@ public:
             return thermo_->kappaEff(alphat, patchi);
         }
 
-        //- Return the laminar thermal diffusivity for enthalpy
-        tmp<volScalarField> alpha() const
-        {
-            return thermo_->alpha();
-        }
-
-        //- Return the laminar thermal diffusivity for enthalpy on a patch
-        tmp<scalarField> alpha(const label patchi) const
-        {
-            return thermo_->alpha(patchi);
-        }
-
-        //- Return the effective thermal diffusivity for enthalpy
+        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
         tmp<volScalarField> alphaEff
         (
             const volScalarField& alphat
@@ -248,7 +263,8 @@ public:
             return thermo_->alphaEff(alphat);
         }
 
-        //- Return the effective thermal diffusivity for enthalpy on a patch
+        //- Effective thermal turbulent diffusivity of mixture
+        //  for patch [kg/m/s]
         tmp<scalarField> alphaEff
         (
             const scalarField& alphat,

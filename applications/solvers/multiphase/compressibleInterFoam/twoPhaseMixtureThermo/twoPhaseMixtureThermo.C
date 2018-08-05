@@ -361,6 +361,25 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::kappa
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::alphahe() const
+{
+    return
+        alpha1()*thermo1_->alphahe()
+      + alpha2()*thermo2_->alphahe();
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::alphahe
+(
+    const label patchi
+) const
+{
+    return
+        alpha1().boundaryField()[patchi]*thermo1_->alphahe(patchi)
+      + alpha2().boundaryField()[patchi]*thermo2_->alphahe(patchi);
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::kappaEff
 (
     const volScalarField& alphat

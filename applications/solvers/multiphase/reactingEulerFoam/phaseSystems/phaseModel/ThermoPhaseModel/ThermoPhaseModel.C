@@ -155,6 +155,25 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappa
 
 template<class BasePhaseModel, class ThermoType>
 Foam::tmp<Foam::volScalarField>
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alphahe() const
+{
+    return thermo_->alphahe();
+}
+
+
+template<class BasePhaseModel, class ThermoType>
+Foam::tmp<Foam::scalarField>
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alphahe
+(
+    const label patchi
+) const
+{
+    return thermo_->alphahe(patchi);
+}
+
+
+template<class BasePhaseModel, class ThermoType>
+Foam::tmp<Foam::volScalarField>
 Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappaEff
 (
     const volScalarField& alphat

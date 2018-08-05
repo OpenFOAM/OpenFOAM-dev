@@ -271,18 +271,27 @@ public:
             //- Thermal diffusivity for temperature of mixture [J/m/s/K]
             virtual tmp<volScalarField> kappa() const;
 
-            //- Thermal diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //- Thermal diffusivity for temperature of mixture
+            //  for patch [J/m/s/K]
             virtual tmp<scalarField> kappa
             (
                 const label patchi
             ) const;
 
-            //- Effective thermal diffusivity for temperature
-            //  of mixture [J/m/s/K]
-            virtual tmp<volScalarField> kappaEff(const volScalarField&) const;
+            //- Thermal diffusivity for energy of mixture [kg/m/s]
+            virtual tmp<volScalarField> alphahe() const;
 
-            //- Effective thermal diffusivity for temperature
+            //- Thermal diffusivity for energy of mixture for patch [kg/m/s]
+            virtual tmp<scalarField> alphahe(const label patchi) const;
+
+            //- Effective thermal turbulent diffusivity for temperature
+            //  of mixture [J/m/s/K]
+            virtual tmp<volScalarField> kappaEff
+            (
+                const volScalarField&
+            ) const;
+
+            //- Effective thermal turbulent diffusivity for temperature
             //  of mixture for patch [J/m/s/K]
             virtual tmp<scalarField> kappaEff
             (
@@ -290,13 +299,14 @@ public:
                 const label patchi
             ) const;
 
-            //- Effective thermal diffusivity of mixture [kg/m/s]
+            //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
             virtual tmp<volScalarField> alphaEff
             (
                 const volScalarField& alphat
             ) const;
 
-            //- Effective thermal diffusivity of mixture for patch [kg/m/s]
+            //- Effective thermal turbulent diffusivity of mixture
+            //  for patch [kg/m/s]
             virtual tmp<scalarField> alphaEff
             (
                 const scalarField& alphat,
