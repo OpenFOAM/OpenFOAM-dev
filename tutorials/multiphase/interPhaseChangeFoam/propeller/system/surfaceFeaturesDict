@@ -16,12 +16,9 @@ FoamFile
 
 surfaces
 (
-    "innerCylinderSmall.obj"
+    "innerCylinder.obj"
     "outerCylinder.obj"
-    "propellerStem1.obj"
-    "propellerStem2.obj"
-    "propellerStem3.obj"
-    "propellerTip.obj"
+    "propeller.obj"
 );
 
 // Identify a feature when angle between faces < includedAngle

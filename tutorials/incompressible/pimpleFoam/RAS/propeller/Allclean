@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 # Remove surface
-rm -f constant/triSurface/propellerTip.obj.gz > /dev/null 2>&1
+rm -f constant/triSurface/propeller.obj.gz > /dev/null 2>&1
 
 cleanCase
 

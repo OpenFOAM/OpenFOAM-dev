@@ -21,7 +21,7 @@ motionSolverLibs ("libfvMotionSolvers.so");
 
 motionSolver    solidBody;
 
-cellZone        innerCylinderSmall;
+cellZone        innerCylinder;
 
 solidBodyMotionFunction  rotatingMotion;
 

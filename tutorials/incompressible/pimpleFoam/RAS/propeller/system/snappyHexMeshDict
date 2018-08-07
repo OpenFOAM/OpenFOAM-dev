@@ -34,21 +34,21 @@ geometry
         file        "innerCylinder.obj";
         regions
         {
-            ascii
+            innerCylinder
             {
                  name       innerCylinder;
             }
         }
     }
-    innerCylinderSmall
+    middleCylinder
     {
         type        triSurfaceMesh;
-        file        "innerCylinderSmall.obj";
+        file        "middleCylinder.obj";
         regions
         {
-            ascii
+            middleCylinder
             {
-                 name       innerCylinderSmall;
+                 name       middleCylinder;
             }
         }
     }
@@ -58,57 +58,33 @@ geometry
         file        "outerCylinder.obj";
         regions
         {
-            ascii
+            outerCylinderWall
             {
                  name       outerCylinder;
             }
+            outerCylinderInlet
+            {
+                 name       inlet;
+            }
+            outerCylinderOutlet
+            {
+                 name       outlet;
+            }
         }
     }
-    propellerTip
+    propeller
     {
         type        triSurfaceMesh;
-        file        "propellerTip.obj";
+        file        "propeller.obj";
         regions
         {
-            ascii
+            propellerStem
+            {
+                 name       propellerStem;
+            }
+            propellerTip
             {
                  name       propellerTip;
-            }
-        }
-    }
-    propellerStem1
-    {
-        type        triSurfaceMesh;
-        file        "propellerStem1.obj";
-        regions
-        {
-            ascii
-            {
-                 name       propellerStem1;
-            }
-        }
-    }
-    propellerStem2
-    {
-        type        triSurfaceMesh;
-        file        "propellerStem2.obj";
-        regions
-        {
-            ascii
-            {
-                 name       propellerStem2;
-            }
-        }
-    }
-    propellerStem3
-    {
-        type        triSurfaceMesh;
-        file        "propellerStem3.obj";
-        regions
-        {
-            ascii
-            {
-                 name       propellerStem3;
             }
         }
     }
@@ -163,7 +139,7 @@ castellatedMeshControls
     features
     (
         {
-            file        "innerCylinderSmall.eMesh";
+            file        "innerCylinder.eMesh";
             level       4;
         }
         {
@@ -171,19 +147,7 @@ castellatedMeshControls
             level       0;
         }
         {
-            file        "propellerTip.eMesh";
-            level       4;
-        }
-//        {
-//            file        "propellerStem1.eMesh";
-//            level       4;
-//        }
-        {
-            file        "propellerStem2.eMesh";
-            level       4;
-        }
-        {
-            file        "propellerStem3.eMesh";
+            file        "propeller.eMesh";
             level       4;
         }
     );
@@ -201,34 +165,46 @@ castellatedMeshControls
 
     refinementSurfaces
     {
-        innerCylinderSmall
+        innerCylinder
         {
             level       (4 4);
-
-            faceType    boundary;
-            cellZone    innerCylinderSmall;
-            faceZone    innerCylinderSmall;
+            cellZone    innerCylinder;
+            faceZone    innerCylinder;
             cellZoneInside  inside;
         }
         outerCylinder
         {
             level       (0 0);
+            regions
+            {
+                inlet
+                {
+                    level       (0 0);
+                    patchInfo
+                    {
+                        type        patch;
+                    }
+                }
+                outlet
+                {
+                    level       (0 0);
+                    patchInfo
+                    {
+                        type        patch;
+                    }
+                }
+            }
         }
-        propellerTip
-        {
-            level       (4 5);
-        }
-        propellerStem1
+        propeller
         {
             level       (4 4);
-        }
-        propellerStem2
-        {
-            level       (4 4);
-        }
-        propellerStem3
-        {
-            level       (4 4);
+            regions
+            {
+                propellerTip
+                {
+                    level (4 5);
+                }
+            }
         }
     }
 
@@ -254,12 +230,12 @@ castellatedMeshControls
         innerCylinder
         {
             mode        inside;
-            levels      ((1E15 3));
+            levels      ((1E15 4));
         }
-        innerCylinderSmall
+        middleCylinder
         {
             mode        inside;
-            levels      ((1E15 4));
+            levels      ((1E15 3));
         }
     }
 
