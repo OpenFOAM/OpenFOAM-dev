@@ -34,7 +34,8 @@ boundaryField
 
     wing
     {
-        type            noSlip;
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
     }
 
     #include "include/frontBackTopBottomPatches"
