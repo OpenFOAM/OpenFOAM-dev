@@ -5,22 +5,18 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Copy propeller surface from resources directory
-cp $FOAM_TUTORIALS/resources/geometry/propellerTip.obj.gz constant/triSurface/
+cp $FOAM_TUTORIALS/resources/geometry/propeller.obj.gz constant/triSurface/
 
 # Meshing
 runApplication blockMesh
 runApplication surfaceFeatures
 runApplication snappyHexMesh -overwrite
 
-# Generate face/cell sets and zones
-runApplication topoSet -dict system/createInletOutletSets.topoSetDict
-
 # Create the inlet/outlet and AMI patches
-runApplication createPatch -overwrite
+runApplication createBaffles -overwrite
+runApplication mergeOrSplitBaffles -split -overwrite
 
+# Renumbering
 runApplication renumberMesh -noFields -overwrite
-
-# Test by running moveDynamicMes
-#runApplication moveDynamicMesh -checkAMI
 
 #------------------------------------------------------------------------------

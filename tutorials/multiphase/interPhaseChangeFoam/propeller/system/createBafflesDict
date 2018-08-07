@@ -1,0 +1,47 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createPatchDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+internalFacesOnly true;
+
+baffles
+{
+    rotating
+    {
+        type        faceZone;
+        zoneName    innerCylinder;
+
+        patches
+        {
+            master
+            {
+                name            AMI1;
+                type            cyclicAMI;
+                neighbourPatch  AMI2;
+            }
+
+            slave
+            {
+                name            AMI2;
+                type            cyclicAMI;
+                neighbourPatch  AMI1;
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //
