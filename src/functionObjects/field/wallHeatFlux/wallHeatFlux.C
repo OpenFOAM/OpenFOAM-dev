@@ -218,10 +218,12 @@ bool Foam::functionObjects::wallHeatFlux::execute()
             (
                 turbulenceModel::propertiesName
             );
-        const volScalarField& alpha = turbModel.alphaEff();
-        const volScalarField& he = turbModel.transport().he();
 
-        return store(name, calcWallHeatFlux(alpha, he));
+        return store
+        (
+            name,
+            calcWallHeatFlux(turbModel.alphaEff(), turbModel.transport().he())
+        );
     }
     else if (foundObject<solidThermo>(solidThermo::dictName))
     {
