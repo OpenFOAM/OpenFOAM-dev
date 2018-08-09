@@ -216,10 +216,11 @@ bool Foam::functionObjects::wallHeatTransferCoeff::execute()
                 turbulenceModel::propertiesName
             );
 
-        const volScalarField& nu = turbModel.nu();
-        const volScalarField& nut = turbModel.nut();
-
-        return store(name, calcHeatTransferCoeff(nu, nut));
+        return store
+        (
+            name,
+            calcHeatTransferCoeff(turbModel.nu(), turbModel.nut())
+        );
     }
     else
     {
