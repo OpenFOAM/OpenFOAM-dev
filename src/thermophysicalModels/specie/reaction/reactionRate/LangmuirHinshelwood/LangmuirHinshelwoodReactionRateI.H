@@ -35,8 +35,8 @@ inline Foam::LangmuirHinshelwoodReactionRate::LangmuirHinshelwoodReactionRate
 )
 :
     species_(st),
-    a_(st["A"]),
-    b_(st["B"])
+    a_(st[dict.lookup("A")]),
+    b_(st[dict.lookup("B")])
 {
     // Read (A, Ta) pairs
     FixedList<Tuple2<scalar, scalar>, n_> coeffs(dict.lookup("coeffs"));
