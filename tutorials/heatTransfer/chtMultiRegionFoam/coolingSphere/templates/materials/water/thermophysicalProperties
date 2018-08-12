@@ -20,7 +20,7 @@ thermoType
     mixture         pureMixture;
     transport       const;
     thermo          hConst;
-    equationOfState perfectGas;
+    equationOfState perfectFluid;
     specie          specie;
     energy          sensibleEnthalpy;
 }
@@ -31,6 +31,11 @@ mixture
     {
         nMoles      1;
         molWeight   18.0;       // [g/mol]
+    }
+    equationOfState
+    {
+        R           3000;      // [J/(kg K)]
+        rho0        1027;      // [kg/m^3]
     }
     thermodynamics
     {
