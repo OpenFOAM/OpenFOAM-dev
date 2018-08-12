@@ -159,18 +159,6 @@ public:
             Time& runTime,
             const argList& args
         );
-
-        //- Return the set of times selected based on the argList options
-        //  including support for \b -newTimes in which times are selected
-        //  if the file 'fName' does not exist in the time directory.
-        //  Also set the runTime to the first instance or the
-        //  \c constant/ directory if no instances are specified or available
-        static instantList select
-        (
-            Time& runTime,
-            const argList& args,
-            const word& fName
-        );
 };
 
 
