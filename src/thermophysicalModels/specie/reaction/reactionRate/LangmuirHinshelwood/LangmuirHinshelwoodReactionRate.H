@@ -68,15 +68,16 @@ class LangmuirHinshelwoodReactionRate
         //- List of species present in reaction system
         const speciesTable& species_;
 
-        static const label n_ = 3;
-        scalar A_[n_];
-        scalar Ta_[n_];
+        //- Reactant names
+        FixedList<word, 2> reactantNames_;
 
-        //- Index of specie "A"
-        label a_;
+        //- Reactant indices
+        FixedList<label, 3> r_;
 
-        //- Index of specie "B"
-        label b_;
+        scalar a_;
+        FixedList<scalar, 3> A_;
+        FixedList<scalar, 3> Ta_;
+        FixedList<scalar, 3> m_;
 
 
 public:

@@ -35,16 +35,22 @@ inline Foam::LangmuirHinshelwoodReactionRate::LangmuirHinshelwoodReactionRate
 )
 :
     species_(st),
-    a_(st[dict.lookup("A")]),
-    b_(st[dict.lookup("B")])
+    reactantNames_(dict.lookup("reactants")),
+    a_(dict.lookupOrDefault<scalar>("a", 1)),
+    A_(dict.lookup("A")),
+    Ta_(dict.lookup("Ta")),
+    m_
+    (
+        dict.lookupOrDefault<FixedList<scalar, 3>>
+        (
+            "m",
+            FixedList<scalar, 3>({1, 1, 2})
+        )
+    )
 {
-    // Read (A, Ta) pairs
-    FixedList<Tuple2<scalar, scalar>, n_> coeffs(dict.lookup("coeffs"));
-
-    forAll(coeffs, i)
+    forAll(reactantNames_, i)
     {
-        A_[i] = coeffs[i].first();
-        Ta_[i] = coeffs[i].second();
+        r_[i] = st[reactantNames_[i]];
     }
 }
 
@@ -58,9 +64,12 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::operator()
     const scalarField& c
 ) const
 {
+    const scalar c0m = pow(c[r_[0]], m_[0]);
+    const scalar c1m = pow(c[r_[1]], m_[1]);
+
     return A_[0]*exp(-Ta_[0]/T)/
     (
-        T*sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[a_] + A_[2]*exp(-Ta_[2]/T)*c[b_])
+        T*pow(a_ + A_[1]*exp(-Ta_[1]/T)*c0m + A_[2]*exp(-Ta_[2]/T)*c1m, m_[2])
     );
 }
 
@@ -72,20 +81,20 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::ddT
     const scalarField& c
 ) const
 {
-    const scalar den =
-    (
-        T*sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[a_] + A_[2]*exp(-Ta_[2]/T)*c[b_])
-    );
+    const scalar c0m = pow(c[r_[0]], m_[0]);
+    const scalar c1m = pow(c[r_[1]], m_[1]);
+
+    const scalar dr0 = A_[1]*exp(-Ta_[1]/T)*c0m;
+    const scalar dr1 = A_[2]*exp(-Ta_[2]/T)*c1m;
+
+    const scalar denByT = pow(a_ + dr0 + dr1, m_[2]);
+    const scalar den = T*denByT;
     const scalar rate = A_[0]*exp(-Ta_[0]/T)/den;
 
     const scalar derivDen =
     (
-        sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[a_] + A_[2]*exp(-Ta_[2]/T)*c[b_])
-      + 2*T*(1 + A_[1]*exp(-Ta_[1]/T)*c[a_] + A_[2]*exp(-Ta_[2]/T)*c[b_])
-       *(
-            A_[1]*exp(-Ta_[1]/T)*c[a_]*Ta_[1]/sqr(T)
-          + A_[2]*exp(-Ta_[2]/T)*c[b_]*Ta_[2]/sqr(T)
-        )
+        denByT
+      + m_[2]*T*(a_ + dr0 + dr1)*(dr0*Ta_[1]/sqr(T) + dr1*Ta_[2]/sqr(T))
     );
 
     return rate*(Ta_[0]/sqr(T) - derivDen/den);
@@ -122,18 +131,12 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::dcidT
 
 inline void Foam::LangmuirHinshelwoodReactionRate::write(Ostream& os) const
 {
-    os.writeKeyword("A") << species_[a_] << token::END_STATEMENT << nl;
-    os.writeKeyword("B") << species_[b_] << token::END_STATEMENT << nl;
-
-    FixedList<Tuple2<scalar, scalar>, n_> coeffs;
-
-    forAll(coeffs, i)
-    {
-        coeffs[i].first() = A_[i];
-        coeffs[i].second() = Ta_[i];
-    }
-
-    os.writeKeyword("coeffs") << coeffs << nl;
+    os.writeKeyword("reactants")
+        << reactantNames_ << token::END_STATEMENT << nl;
+    os.writeKeyword("a") << a_ << token::END_STATEMENT << nl;
+    os.writeKeyword("A") << A_ << token::END_STATEMENT << nl;
+    os.writeKeyword("Ta") << Ta_ << token::END_STATEMENT << nl;
+    os.writeKeyword("m") << m_ << token::END_STATEMENT << nl;
 }
 
 
