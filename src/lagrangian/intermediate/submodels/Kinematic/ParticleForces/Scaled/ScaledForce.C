@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,67 +23,73 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ParticleForce.H"
+#include "ScaledForce.H"
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class CloudType>
+Foam::dictionary Foam::ScaledForce<CloudType>::modelDict
+(
+    const dictionary& dict
+) const
+{
+    dictionary modelDict(dict);
+    modelDict.add<word>("type", dict.lookupType<word>("forceType"), true);
+    return modelDict;
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::ParticleForce<CloudType>::ParticleForce
+Foam::ScaledForce<CloudType>::ScaledForce
 (
     CloudType& owner,
     const fvMesh& mesh,
-    const dictionary& dict,
-    const word& forceType,
-    const bool readCoeffs
+    const dictionary& dict
 )
 :
-    owner_(owner),
-    mesh_(mesh),
-    coeffs_
+    ParticleForce<CloudType>(owner, mesh, dict, typeName, true),
+    model_
     (
-        readCoeffs
-      ? dict.optionalSubDict(forceType + "Coeffs")
-      : dictionary::null
-    )
-{
-    if (readCoeffs && coeffs_.isNull())
-    {
-        FatalIOErrorInFunction
+        ParticleForce<CloudType>::New
         (
-            dict
-        )   << "Force " << forceType << " must be specified as a dictionary"
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class CloudType>
-Foam::ParticleForce<CloudType>::ParticleForce(const ParticleForce& pf)
-:
-    owner_(pf.owner_),
-    mesh_(pf.mesh_),
-    coeffs_(pf.coeffs_)
+            owner,
+            mesh,
+            modelDict(dict),
+            dict.lookupType<word>("forceType")
+        )
+    ),
+    factor_(readScalar(this->coeffs().lookup("factor")))
 {}
 
 
-// * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
+template<class CloudType>
+Foam::ScaledForce<CloudType>::ScaledForce
+(
+    const ScaledForce<CloudType>& df
+)
+:
+    ParticleForce<CloudType>(df),
+    model_(nullptr),
+    factor_(1)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::ParticleForce<CloudType>::~ParticleForce()
+Foam::ScaledForce<CloudType>::~ScaledForce()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::ParticleForce<CloudType>::cacheFields(const bool store)
-{}
-
-
-template<class CloudType>
-Foam::forceSuSp Foam::ParticleForce<CloudType>::calcCoupled
+Foam::forceSuSp Foam::ScaledForce<CloudType>::calcCoupled
 (
-    const typename CloudType::parcelType&,
+    const typename CloudType::parcelType& p,
     const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
     const scalar mass,
@@ -91,18 +97,14 @@ Foam::forceSuSp Foam::ParticleForce<CloudType>::calcCoupled
     const scalar muc
 ) const
 {
-    forceSuSp value;
-    value.Su() = Zero;
-    value.Sp() = 0.0;
-
-    return value;
+    return factor_*model_->calcCoupled(p, td, dt, mass, Re, muc);
 }
 
 
 template<class CloudType>
-Foam::forceSuSp Foam::ParticleForce<CloudType>::calcNonCoupled
+Foam::forceSuSp Foam::ScaledForce<CloudType>::calcNonCoupled
 (
-    const typename CloudType::parcelType&,
+    const typename CloudType::parcelType& p,
     const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
     const scalar mass,
@@ -110,28 +112,20 @@ Foam::forceSuSp Foam::ParticleForce<CloudType>::calcNonCoupled
     const scalar muc
 ) const
 {
-    forceSuSp value;
-    value.Su() = Zero;
-    value.Sp() = 0.0;
-
-    return value;
+    return factor_*model_->calcCoupled(p, td, dt, mass, Re, muc);
 }
 
 
 template<class CloudType>
-Foam::scalar Foam::ParticleForce<CloudType>::massAdd
+Foam::scalar Foam::ScaledForce<CloudType>::massAdd
 (
     const typename CloudType::parcelType& p,
     const typename CloudType::parcelType::trackingData& td,
     const scalar mass
 ) const
 {
-    return 0.0;
+    return factor_*model_->massAdd(p, td, mass);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "ParticleForceNew.C"
 
 // ************************************************************************* //

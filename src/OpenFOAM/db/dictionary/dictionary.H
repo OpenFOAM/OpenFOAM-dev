@@ -263,6 +263,12 @@ public:
             return parent_;
         }
 
+        //- Return whether this dictionary is null
+        bool isNull() const
+        {
+            return this == &null;
+        }
+
         //- Return the top of the tree
         const dictionary& topDict() const;
 

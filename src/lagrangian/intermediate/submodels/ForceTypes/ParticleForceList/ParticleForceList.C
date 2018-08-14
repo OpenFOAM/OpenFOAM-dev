@@ -97,7 +97,7 @@ Foam::ParticleForceList<CloudType>::ParticleForceList
                         (
                             owner,
                             mesh,
-                            dict,
+                            dictionary::null,
                             model
                         )
                     );
