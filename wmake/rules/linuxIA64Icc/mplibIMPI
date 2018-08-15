@@ -1,3 +1,0 @@
-PFLAGS     = -DSGIMPI -DMPI_NO_CPPBIND
-PINC       =
-PLIBS      = -lmpi
