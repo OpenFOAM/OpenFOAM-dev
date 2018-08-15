@@ -231,53 +231,53 @@ public:
             return ocCoeff_->value(mesh().time().value());
         }
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensioned<Type>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& psi
         );
 
-        tmp<fvMatrix<Type>> fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type>> fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type>> fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type>> fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
@@ -286,26 +286,26 @@ public:
 
         typedef typename ddtScheme<Type>::fluxFieldType fluxFieldType;
 
-        tmp<fluxFieldType> fvcDdtUfCorr
+        virtual tmp<fluxFieldType> fvcDdtUfCorr
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
         );
 
-        tmp<fluxFieldType> fvcDdtPhiCorr
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
         );
 
-        tmp<fluxFieldType> fvcDdtUfCorr
+        virtual tmp<fluxFieldType> fvcDdtUfCorr
         (
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
         );
 
-        tmp<fluxFieldType> fvcDdtPhiCorr
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
@@ -313,7 +313,7 @@ public:
         );
 
 
-        tmp<surfaceScalarField> meshPhi
+        virtual tmp<surfaceScalarField> meshPhi
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );

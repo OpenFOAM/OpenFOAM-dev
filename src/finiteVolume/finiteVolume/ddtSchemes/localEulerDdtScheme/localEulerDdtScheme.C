@@ -348,6 +348,52 @@ localEulerDdtScheme<Type>::fvmDdt
 
 
 template<class Type>
+tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
+(
+    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const fluxFieldType& phi,
+    const fluxFieldType& phiCorr
+)
+{
+    tmp<surfaceScalarField> tddtCouplingCoeff = scalar(1)
+      - min
+        (
+            mag(phiCorr)*mesh().deltaCoeffs()
+           /(fvc::interpolate(localRDeltaT())*mesh().magSf()),
+            scalar(1)
+        );
+
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
+
+    surfaceScalarField::Boundary& ccbf = ddtCouplingCoeff.boundaryFieldRef();
+
+    forAll(U.boundaryField(), patchi)
+    {
+        if
+        (
+            U.boundaryField()[patchi].fixesValue()
+         || isA<cyclicAMIFvPatch>(mesh().boundary()[patchi])
+        )
+        {
+            ccbf[patchi] = 0.0;
+        }
+    }
+
+    if (debug > 1)
+    {
+        InfoInFunction
+            << "ddtCouplingCoeff mean max min = "
+            << gAverage(ddtCouplingCoeff.primitiveField())
+            << " " << gMax(ddtCouplingCoeff.primitiveField())
+            << " " << gMin(ddtCouplingCoeff.primitiveField())
+            << endl;
+    }
+
+    return tddtCouplingCoeff;
+}
+
+
+template<class Type>
 tmp<typename localEulerDdtScheme<Type>::fluxFieldType>
 localEulerDdtScheme<Type>::fvcDdtUfCorr
 (
