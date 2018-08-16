@@ -2,8 +2,7 @@
  * Note including of mplib compilation rules.
  * This is purely to avoid scotch.h including mpicxx.h, which causes problems.
  */
-sinclude $(GENERAL_RULES)/mplib$(WM_MPLIB)
-sinclude $(RULES)/mplib$(WM_MPLIB)
+-include $(GENERAL_RULES)/mplibType
 
 EXE_INC = \
     $(PFLAGS) $(PINC) \

@@ -1,5 +1,4 @@
-sinclude $(GENERAL_RULES)/mplib$(WM_MPLIB)
-sinclude $(RULES)/mplib$(WM_MPLIB)
+-include $(GENERAL_RULES)/mplibType
 
 EXE_INC = \
     /* -DFULLDEBUG -g -O0 */ \

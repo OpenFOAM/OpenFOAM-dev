@@ -1,0 +1,3 @@
+-include $(GENERAL_RULES)/mplib$(WM_MPLIB)
+-include $(GENERAL_RULES)/mplib$(WM_MPLIB)$(WM_ARCH_OPTION)
+-include $(RULES)/mplib$(WM_MPLIB)

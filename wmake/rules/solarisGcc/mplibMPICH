@@ -1,3 +1,0 @@
-PFLAGS     = -DMPICH_SKIP_MPICXX
-PINC       = -isystem $(MPI_ARCH_PATH)/include
-PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpich -lrt -laio
