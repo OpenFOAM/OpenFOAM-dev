@@ -1,0 +1,4 @@
+-include $(GENERAL_RULES)/mplib
+
+EXE_INC  = $(PFLAGS) $(PINC)
+LIB_LIBS = $(PLIBS)
