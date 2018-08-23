@@ -41,7 +41,11 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::validField
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
 
-    if (regionType_ != stSampledSurface && obr_.foundObject<sf>(fieldName))
+    if
+    (
+        regionType_ != regionTypes::sampledSurface
+     && obr_.foundObject<sf>(fieldName)
+    )
     {
         return true;
     }
@@ -66,7 +70,11 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::getFieldValues
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
 
-    if (regionType_ != stSampledSurface && obr_.foundObject<sf>(fieldName))
+    if
+    (
+        regionType_ != regionTypes::sampledSurface
+     && obr_.foundObject<sf>(fieldName)
+    )
     {
         return filterField(obr_.lookupObject<sf>(fieldName), applyOrientation);
     }
@@ -136,12 +144,12 @@ processSameTypeValues
     Type result = Zero;
     switch (operation_)
     {
-        case opSum:
+        case operationType::sum:
         {
             result = sum(values);
             break;
         }
-        case opWeightedSum:
+        case operationType::weightedSum:
         {
             if (weightField.size())
             {
@@ -153,12 +161,12 @@ processSameTypeValues
             }
             break;
         }
-        case opSumMag:
+        case operationType::sumMag:
         {
             result = sum(cmptMag(values));
             break;
         }
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             FatalErrorInFunction
                 << "Operation " << operationTypeNames_[operation_]
@@ -169,7 +177,7 @@ processSameTypeValues
             result = Zero;
             break;
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             FatalErrorInFunction
                 << "Operation " << operationTypeNames_[operation_]
@@ -180,12 +188,12 @@ processSameTypeValues
             result = Zero;
             break;
         }
-        case opAverage:
+        case operationType::average:
         {
             result = sum(values)/values.size();
             break;
         }
-        case opWeightedAverage:
+        case operationType::weightedAverage:
         {
             if (weightField.size())
             {
@@ -197,14 +205,14 @@ processSameTypeValues
             }
             break;
         }
-        case opAreaAverage:
+        case operationType::areaAverage:
         {
             const scalarField magSf(mag(Sf));
 
             result = sum(magSf*values)/sum(magSf);
             break;
         }
-        case opWeightedAreaAverage:
+        case operationType::weightedAreaAverage:
         {
             const scalarField magSf(mag(Sf));
 
@@ -218,14 +226,14 @@ processSameTypeValues
             }
             break;
         }
-        case opAreaIntegrate:
+        case operationType::areaIntegrate:
         {
             const scalarField magSf(mag(Sf));
 
             result = sum(magSf*values);
             break;
         }
-        case opWeightedAreaIntegrate:
+        case operationType::weightedAreaIntegrate:
         {
             const scalarField magSf(mag(Sf));
 
@@ -239,17 +247,17 @@ processSameTypeValues
             }
             break;
         }
-        case opMin:
+        case operationType::min:
         {
             result = min(values);
             break;
         }
-        case opMax:
+        case operationType::max:
         {
             result = max(values);
             break;
         }
-        case opCoV:
+        case operationType::CoV:
         {
             const scalarField magSf(mag(Sf));
 
@@ -268,11 +276,11 @@ processSameTypeValues
 
             break;
         }
-        case opAreaNormalAverage:
+        case operationType::areaNormalAverage:
         {}
-        case opAreaNormalIntegrate:
+        case operationType::areaNormalIntegrate:
         {}
-        case opNone:
+        case operationType::none:
         {}
     }
 
@@ -355,7 +363,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
             }
         }
 
-        if (operation_ != opNone)
+        if (operation_ != operationType::none)
         {
             // Apply scale factor
             values *= scaleFactor_;

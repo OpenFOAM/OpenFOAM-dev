@@ -108,7 +108,7 @@ Foam::functionObjects::fieldValues::fieldValueDelta::fieldValueDelta
 :
     regionFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
-    operation_(opSubtract),
+    operation_(operationType::subtract),
     region1Ptr_(nullptr),
     region2Ptr_(nullptr)
 {

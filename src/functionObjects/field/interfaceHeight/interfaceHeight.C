@@ -65,8 +65,8 @@ void Foam::functionObjects::interfaceHeight::writePositions()
 
     if (Pstream::master())
     {
-        writeTime(file(HEIGHT_FILE));
-        writeTime(file(POSITION_FILE));
+        writeTime(file(fileID::heightFile));
+        writeTime(file(fileID::positionFile));
     }
 
     forAll(locations_, li)
@@ -124,16 +124,16 @@ void Foam::functionObjects::interfaceHeight::writePositions()
 
             const Foam::Omanip<int> w = valueWidth(1);
 
-            file(HEIGHT_FILE) << w << hIB << w << hIL;
-            file(POSITION_FILE) << '(' << w << p.x() << w << p.y()
+            file(fileID::heightFile) << w << hIB << w << hIL;
+            file(fileID::positionFile) << '(' << w << p.x() << w << p.y()
                 << valueWidth() << p.z() << ") ";
         }
     }
 
     if (Pstream::master())
     {
-        file(HEIGHT_FILE).endl();
-        file(POSITION_FILE).endl();
+        file(fileID::heightFile).endl();
+        file(fileID::positionFile).endl();
     }
 }
 
@@ -154,7 +154,7 @@ void Foam::functionObjects::interfaceHeight::writeFileHeader(const label i)
 
     switch (fileID(i))
     {
-        case HEIGHT_FILE:
+        case fileID::heightFile:
             writeHeaderValue
             (
                 file(i),
@@ -168,7 +168,7 @@ void Foam::functionObjects::interfaceHeight::writeFileHeader(const label i)
                 "Interface height above the location"
             );
             break;
-        case POSITION_FILE:
+        case fileID::positionFile:
             writeHeaderValue(file(i), "p", "Interface position");
             break;
     }
@@ -180,10 +180,10 @@ void Foam::functionObjects::interfaceHeight::writeFileHeader(const label i)
     {
         switch (fileID(i))
         {
-            case HEIGHT_FILE:
+            case fileID::heightFile:
                 file(i) << w << li << w << ' ';
                 break;
-            case POSITION_FILE:
+            case fileID::positionFile:
                 file(i) << w << li << w << ' ' << w << ' ' << "  ";
                 break;
         }
@@ -195,10 +195,10 @@ void Foam::functionObjects::interfaceHeight::writeFileHeader(const label i)
     {
         switch (fileID(i))
         {
-            case HEIGHT_FILE:
+            case fileID::heightFile:
                 file(i) << w << "hB" << w << "hL";
                 break;
-            case POSITION_FILE:
+            case fileID::positionFile:
                 file(i) << w << "p" << w << ' ' << w << ' ' << "  ";
                 break;
         }
@@ -224,12 +224,7 @@ Foam::functionObjects::interfaceHeight::interfaceHeight
     interpolationScheme_("cellPoint")
 {
     read(dict);
-
-    wordList names(2);
-    names[HEIGHT_FILE] = "height";
-    names[POSITION_FILE] = "position";
-
-    resetNames(wordList(names));
+    resetNames({"height", "position"});
 }
 
 

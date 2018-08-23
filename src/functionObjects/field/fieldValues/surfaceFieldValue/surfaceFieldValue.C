@@ -430,17 +430,17 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
 
     switch (regionType_)
     {
-        case stFaceZone:
+        case regionTypes::faceZone:
         {
             setFaceZoneFaces();
             break;
         }
-        case stPatch:
+        case regionTypes::patch:
         {
             setPatchFaces();
             break;
         }
-        case stSampledSurface:
+        case regionTypes::sampledSurface:
         {
             sampledSurfaceFaces(dict);
             break;
@@ -480,7 +480,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     {
         Info<< "    weight field = " << weightFieldName_ << nl;
 
-        if (regionType_ == stSampledSurface)
+        if (regionType_ == regionTypes::sampledSurface)
         {
             FatalIOErrorInFunction(dict)
                 << "Cannot use weightField for a sampledSurface"
@@ -541,7 +541,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
     const label i
 )
 {
-    if (operation_ != opNone)
+    if (operation_ != operationType::none)
     {
         writeCommented(file(), "Region type : ");
         file() << regionTypeNames_[regionType_] << " " << regionName_ << endl;
@@ -579,12 +579,12 @@ processValues
 {
     switch (operation_)
     {
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             vector n(dict_.lookup("direction"));
             return sum(pos0(values*(Sf & n))*mag(values));
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
             const scalarField nv(values*(Sf & n));
@@ -611,7 +611,7 @@ processValues
 {
     switch (operation_)
     {
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             vector n(dict_.lookup("direction"));
             n /= mag(n) + rootVSmall;
@@ -619,7 +619,7 @@ processValues
 
             return sum(pos0(nv)*n*(nv));
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
             n /= mag(n) + rootVSmall;
@@ -627,12 +627,12 @@ processValues
 
             return sum(pos0(nv)*n*(nv));
         }
-        case opAreaNormalAverage:
+        case operationType::areaNormalAverage:
         {
             scalar result = sum(values & Sf)/sum(mag(Sf));
             return vector(result, 0.0, 0.0);
         }
-        case opAreaNormalIntegrate:
+        case operationType::areaNormalIntegrate:
         {
             scalar result = sum(values & Sf);
             return vector(result, 0.0, 0.0);
@@ -719,7 +719,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
 
 bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
 {
-    if (operation_ != opNone)
+    if (operation_ != operationType::none)
     {
         fieldValue::write();
     }
@@ -729,7 +729,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         surfacePtr_().update();
     }
 
-    if (operation_ != opNone && Pstream::master())
+    if (operation_ != operationType::none && Pstream::master())
     {
         writeTime(file());
     }
@@ -737,7 +737,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
     if (writeArea_)
     {
         totalArea_ = totalArea();
-        if (operation_ != opNone && Pstream::master())
+        if (operation_ != operationType::none && Pstream::master())
         {
             file() << tab << totalArea_;
         }
@@ -811,7 +811,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         }
     }
 
-    if (operation_ != opNone && Pstream::master())
+    if (operation_ != operationType::none && Pstream::master())
     {
         file() << endl;
     }

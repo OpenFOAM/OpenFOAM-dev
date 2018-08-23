@@ -266,7 +266,7 @@ void Foam::functionObjects::streamLine::track()
         vvInterp,
         UIndex,         // index of U in vvInterp
 
-        trackDirection_ == trackDirection::FORWARD,
+        trackDirection_ == trackDirection::forward,
 
         nSubCycle_,     // automatic track control:step through cells in steps?
         trackLength_,   // fixed track length
@@ -281,14 +281,14 @@ void Foam::functionObjects::streamLine::track()
     const scalar trackTime = Foam::sqrt(great);
 
     // Track
-    if (trackDirection_ == trackDirection::BOTH)
+    if (trackDirection_ == trackDirection::both)
     {
         initialParticles = particles;
     }
 
     particles.move(particles, td, trackTime);
 
-    if (trackDirection_ == trackDirection::BOTH)
+    if (trackDirection_ == trackDirection::both)
     {
         particles.IDLList<streamLineParticle>::operator=(initialParticles);
         td.trackForward_ = !td.trackForward_;
@@ -347,8 +347,8 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
     {
         trackDirection_ =
             dict.lookupType<bool>("trackForward")
-          ? trackDirection::FORWARD
-          : trackDirection::BACKWARD;
+          ? trackDirection::forward
+          : trackDirection::backward;
     }
     else
     {

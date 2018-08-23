@@ -107,7 +107,7 @@ public:
 
         //- Re-enumeration defining the write options, based on the original
         //  ones at IOobject::writeOption
-        enum writeOption
+        enum class writeOption
         {
             AUTO_WRITE,
             NO_WRITE,

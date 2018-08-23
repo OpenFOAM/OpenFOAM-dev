@@ -131,21 +131,21 @@ public:
     // Public data types
 
         //- Operation type enumeration
-        enum operationType
+        enum class operationType
         {
-            opNone,
-            opSum,
-            opWeightedSum,
-            opSumMag,
-            opAverage,
-            opWeightedAverage,
-            opVolAverage,
-            opWeightedVolAverage,
-            opVolIntegrate,
-            opWeightedVolIntegrate,
-            opMin,
-            opMax,
-            opCoV
+            none,
+            sum,
+            weightedSum,
+            sumMag,
+            average,
+            weightedAverage,
+            volAverage,
+            weightedVolAverage,
+            volIntegrate,
+            weightedVolIntegrate,
+            min,
+            max,
+            CoV
         };
 
         //- Operation type names

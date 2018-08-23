@@ -40,27 +40,27 @@ Type Foam::functionObjects::fieldValues::fieldValueDelta::applyOperation
 
     switch (operation_)
     {
-        case opAdd:
+        case operationType::add:
         {
             result = value1 + value2;
             break;
         }
-        case opSubtract:
+        case operationType::subtract:
         {
             result = value1 - value2;
             break;
         }
-        case opMin:
+        case operationType::min:
         {
             result = min(value1, value2);
             break;
         }
-        case opMax:
+        case operationType::max:
         {
             result = max(value1, value2);
             break;
         }
-        case opAverage:
+        case operationType::average:
         {
             result = 0.5*(value1 + value2);
             break;

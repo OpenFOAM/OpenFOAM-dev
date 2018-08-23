@@ -97,10 +97,10 @@ class fieldMinMax
 {
 public:
 
-    enum modeType
+    enum class modeType
     {
-        mdMag,
-        mdCmpt
+        mag,
+        cmpt
     };
 
 protected:

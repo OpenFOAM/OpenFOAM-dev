@@ -73,7 +73,7 @@ void Foam::functionObjects::writeObjects::writeObject
 {
     switch (writeOption_)
     {
-        case AUTO_WRITE:
+        case writeOption::AUTO_WRITE:
         {
             if(obj.writeOpt() != IOobject::AUTO_WRITE)
             {
@@ -82,7 +82,7 @@ void Foam::functionObjects::writeObjects::writeObject
 
             break;
         }
-        case NO_WRITE:
+        case writeOption::NO_WRITE:
         {
             if(obj.writeOpt() != IOobject::NO_WRITE)
             {
@@ -91,7 +91,7 @@ void Foam::functionObjects::writeObjects::writeObject
 
             break;
         }
-        case ANY_WRITE:
+        case writeOption::ANY_WRITE:
         {
             break;
         }
@@ -138,7 +138,7 @@ Foam::functionObjects::writeObjects::writeObjects
         ),
         log
     ),
-    writeOption_(ANY_WRITE)
+    writeOption_(writeOption::ANY_WRITE)
 {
     read(dict);
 }
@@ -174,7 +174,7 @@ bool Foam::functionObjects::writeObjects::read(const dictionary& dict)
     }
     else
     {
-        writeOption_ = ANY_WRITE;
+        writeOption_ = writeOption::ANY_WRITE;
     }
 
     return functionObject::read(dict);

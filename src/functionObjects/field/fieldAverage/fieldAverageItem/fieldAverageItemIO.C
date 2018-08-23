@@ -36,7 +36,7 @@ Foam::functionObjects::fieldAverageItem::fieldAverageItem(Istream& is)
     meanFieldName_("unknown"),
     prime2Mean_(0),
     prime2MeanFieldName_("unknown"),
-    base_(ITER),
+    base_(baseType::iter),
     window_(-1.0)
 {
     is.check

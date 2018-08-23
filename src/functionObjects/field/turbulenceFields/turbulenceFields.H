@@ -106,33 +106,31 @@ class turbulenceFields
 {
 public:
 
-    enum compressibleField
+    enum class compressibleField
     {
-        cfK,
-        cfEpsilon,
-        cfOmega,
-        cfMut,
-        cfMuEff,
-        cfAlphat,
-        cfAlphaEff,
-        cfR,
-        cfDevRhoReff
+        k,
+        epsilon,
+        omega,
+        mut,
+        muEff,
+        alphat,
+        alphaEff,
+        R,
+        devRhoReff
     };
     static const NamedEnum<compressibleField, 9> compressibleFieldNames_;
 
-    enum incompressibleField
+    enum class incompressibleField
     {
-        ifK,
-        ifEpsilon,
-        ifOmega,
-        ifNut,
-        ifNuEff,
-        ifR,
-        ifDevReff
+        k,
+        epsilon,
+        omega,
+        nut,
+        nuEff,
+        R,
+        devReff
     };
     static const NamedEnum<incompressibleField, 7> incompressibleFieldNames_;
-
-    static const word modelName;
 
 
 protected:
@@ -145,8 +143,7 @@ protected:
 
     // Protected Member Functions
 
-        //- Return true if compressible turbulence model is identified
-        bool compressible();
+        static const word& modelName();
 
         //- Process the turbulence field
         template<class Type>

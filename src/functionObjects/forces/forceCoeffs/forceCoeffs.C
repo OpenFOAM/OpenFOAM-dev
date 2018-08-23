@@ -44,7 +44,7 @@ void Foam::functionObjects::forceCoeffs::writeFileHeader(const label i)
 {
     switch (fileID(i))
     {
-        case MAIN_FILE:
+        case fileID::mainFile:
         {
             // force coeff data
 
@@ -65,7 +65,7 @@ void Foam::functionObjects::forceCoeffs::writeFileHeader(const label i)
 
             break;
         }
-        case BINS_FILE:
+        case fileID::binsFile:
         {
             // bin coeff data
 
@@ -217,8 +217,8 @@ bool Foam::functionObjects::forceCoeffs::write()
         scalar Clf = Cl/2.0 + Cm;
         scalar Clr = Cl/2.0 - Cm;
 
-        writeTime(file(MAIN_FILE));
-        file(MAIN_FILE)
+        writeTime(file(fileID::mainFile));
+        file(fileID::mainFile)
             << tab << Cm << tab  << Cd
             << tab << Cl << tab << Clf << tab << Clr << endl;
 
@@ -241,17 +241,17 @@ bool Foam::functionObjects::forceCoeffs::write()
                 }
             }
 
-            writeTime(file(BINS_FILE));
+            writeTime(file(fileID::binsFile));
 
             forAll(coeffs[0], i)
             {
-                file(BINS_FILE)
+                file(fileID::binsFile)
                     << tab << coeffs[2][i]
                     << tab << coeffs[1][i]
                     << tab << coeffs[0][i];
             }
 
-            file(BINS_FILE) << endl;
+            file(fileID::binsFile) << endl;
         }
 
         Log << endl;

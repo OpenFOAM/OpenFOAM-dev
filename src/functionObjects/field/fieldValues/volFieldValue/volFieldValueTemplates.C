@@ -82,62 +82,62 @@ Type Foam::functionObjects::fieldValues::volFieldValue::processValues
     Type result = Zero;
     switch (operation_)
     {
-        case opSum:
+        case operationType::sum:
         {
             result = gSum(values);
             break;
         }
-        case opWeightedSum:
+        case operationType::weightedSum:
         {
             result = gSum(weightField*values);
             break;
         }
-        case opSumMag:
+        case operationType::sumMag:
         {
             result = gSum(cmptMag(values));
             break;
         }
-        case opAverage:
+        case operationType::average:
         {
             result = gSum(values)/nCells();
             break;
         }
-        case opWeightedAverage:
+        case operationType::weightedAverage:
         {
             result = gSum(weightField*values)/gSum(weightField);
             break;
         }
-        case opVolAverage:
+        case operationType::volAverage:
         {
             result = gSum(V*values)/this->V();
             break;
         }
-        case opWeightedVolAverage:
+        case operationType::weightedVolAverage:
         {
             result = gSum(weightField*V*values)/gSum(weightField*V);
             break;
         }
-        case opVolIntegrate:
+        case operationType::volIntegrate:
         {
             result = gSum(V*values);
             break;
         }
-        case opWeightedVolIntegrate:
+        case operationType::weightedVolIntegrate:
         {
             result = gSum(weightField*V*values);
             break;
         }
-        case opMin:
+        case operationType::min:
         {
             result = gMin(values);
             break;
         }
-        case opMax:
+        case operationType::max:
         {
             result = gMax(values);
             break;
         }
-        case opCoV:
+        case operationType::CoV:
         {
             Type meanValue = gSum(values*V)/this->V();
 
@@ -154,7 +154,7 @@ Type Foam::functionObjects::fieldValues::volFieldValue::processValues
 
             break;
         }
-        case opNone:
+        case operationType::none:
         {}
     }
 

@@ -94,7 +94,7 @@ Foam::functionObjects::abort::abort
     functionObject(name),
     time_(runTime),
     abortFile_("$FOAM_CASE/" + name),
-    action_(nextWrite)
+    action_(actionType::nextWrite)
 {
     abortFile_.expand();
     read(dict);
@@ -120,7 +120,7 @@ bool Foam::functionObjects::abort::read(const dictionary& dict)
     }
     else
     {
-        action_ = nextWrite;
+        action_ = actionType::nextWrite;
     }
 
     if (dict.readIfPresent("file", abortFile_))
@@ -141,7 +141,7 @@ bool Foam::functionObjects::abort::execute()
     {
         switch (action_)
         {
-            case noWriteNow :
+            case actionType::noWriteNow :
             {
                 if (time_.stopAt(Time::saNoWriteNow))
                 {
@@ -153,7 +153,7 @@ bool Foam::functionObjects::abort::execute()
                 break;
             }
 
-            case writeNow :
+            case actionType::writeNow :
             {
                 if (time_.stopAt(Time::saWriteNow))
                 {
@@ -165,7 +165,7 @@ bool Foam::functionObjects::abort::execute()
                 break;
             }
 
-            case nextWrite :
+            case actionType::nextWrite :
             {
                 if (time_.stopAt(Time::saNextWrite))
                 {

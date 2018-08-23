@@ -106,7 +106,7 @@ Foam::functionObjects::fieldMinMax::fieldMinMax
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     location_(true),
-    mode_(mdMag),
+    mode_(modeType::mag),
     fieldSet_()
 {
     read(dict);
@@ -150,7 +150,7 @@ bool Foam::functionObjects::fieldMinMax::write()
 
     forAll(fieldSet_, fieldi)
     {
-        calcMinMaxFields<scalar>(fieldSet_[fieldi], mdCmpt);
+        calcMinMaxFields<scalar>(fieldSet_[fieldi], modeType::cmpt);
         calcMinMaxFields<vector>(fieldSet_[fieldi], mode_);
         calcMinMaxFields<sphericalTensor>(fieldSet_[fieldi], mode_);
         calcMinMaxFields<symmTensor>(fieldSet_[fieldi], mode_);

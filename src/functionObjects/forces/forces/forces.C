@@ -54,7 +54,7 @@ Foam::wordList Foam::functionObjects::forces::createFileNames
 
     const word forceType(dict.lookup("type"));
 
-    // Name for file(MAIN_FILE=0)
+    // Name for file(fileID::mainFile=0)
     names.append(forceType);
 
     if (dict.found("binData"))
@@ -63,7 +63,7 @@ Foam::wordList Foam::functionObjects::forces::createFileNames
         label nb = readLabel(binDict.lookup("nBin"));
         if (nb > 0)
         {
-            // Name for file(BINS_FILE=1)
+            // Name for file(fileID::binsFile=1)
             names.append(forceType + "_bins");
         }
     }
@@ -76,7 +76,7 @@ void Foam::functionObjects::forces::writeFileHeader(const label i)
 {
     switch (fileID(i))
     {
-        case MAIN_FILE:
+        case fileID::mainFile:
         {
             // force data
 
@@ -99,7 +99,7 @@ void Foam::functionObjects::forces::writeFileHeader(const label i)
 
             break;
         }
-        case BINS_FILE:
+        case fileID::binsFile:
         {
             // bin data
 
@@ -423,9 +423,9 @@ void Foam::functionObjects::forces::writeForces()
         << "        porous   : " << sum(moment_[2])
         << endl;
 
-    writeTime(file(MAIN_FILE));
+    writeTime(file(fileID::mainFile));
 
-    file(MAIN_FILE) << tab << setw(1) << '('
+    file(fileID::mainFile) << tab << setw(1) << '('
         << sum(force_[0]) << setw(1) << ' '
         << sum(force_[1]) << setw(1) << ' '
         << sum(force_[2]) << setw(3) << ") ("
@@ -442,7 +442,7 @@ void Foam::functionObjects::forces::writeForces()
         vectorField localMomentT(coordSys_.localVector(moment_[1]));
         vectorField localMomentP(coordSys_.localVector(moment_[2]));
 
-        file(MAIN_FILE) << tab << setw(1) << '('
+        file(fileID::mainFile) << tab << setw(1) << '('
             << sum(localForceN) << setw(1) << ' '
             << sum(localForceT) << setw(1) << ' '
             << sum(localForceP) << setw(3) << ") ("
@@ -451,7 +451,7 @@ void Foam::functionObjects::forces::writeForces()
             << sum(localMomentP) << setw(1) << ')';
     }
 
-    file(MAIN_FILE) << endl;
+    file(fileID::mainFile) << endl;
 }
 
 
@@ -479,11 +479,11 @@ void Foam::functionObjects::forces::writeBins()
         }
     }
 
-    writeTime(file(BINS_FILE));
+    writeTime(file(fileID::binsFile));
 
     forAll(f[0], i)
     {
-        file(BINS_FILE)
+        file(fileID::binsFile)
             << tab << setw(1) << '('
             << f[0][i] << setw(1) << ' '
             << f[1][i] << setw(1) << ' '
@@ -519,7 +519,7 @@ void Foam::functionObjects::forces::writeBins()
 
         forAll(lf[0], i)
         {
-            file(BINS_FILE)
+            file(fileID::binsFile)
                 << tab << setw(1) << '('
                 << lf[0][i] << setw(1) << ' '
                 << lf[1][i] << setw(1) << ' '
@@ -530,7 +530,7 @@ void Foam::functionObjects::forces::writeBins()
         }
     }
 
-    file(BINS_FILE) << endl;
+    file(fileID::binsFile) << endl;
 }
 
 

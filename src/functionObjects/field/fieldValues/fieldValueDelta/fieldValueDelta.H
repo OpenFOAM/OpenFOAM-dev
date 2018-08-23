@@ -100,13 +100,13 @@ class fieldValueDelta
 {
 public:
         //- Operation type enumeration
-        enum operationType
+        enum class operationType
         {
-            opAdd,
-            opSubtract,
-            opMin,
-            opMax,
-            opAverage
+            add,
+            subtract,
+            min,
+            max,
+            average
         };
 
         //- Operation type names

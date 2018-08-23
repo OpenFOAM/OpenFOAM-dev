@@ -64,7 +64,7 @@ public:
     // Public data
 
         //- Enumeration defining the type of action
-        enum actionType
+        enum class actionType
         {
             noWriteNow,    //!< stop immediately without writing data
             writeNow,      //!< write data and stop immediately
