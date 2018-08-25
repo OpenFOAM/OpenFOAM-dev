@@ -214,7 +214,7 @@ mode_t Foam::fileOperations::uncollatedFileOperation::mode
 }
 
 
-Foam::fileName::Type Foam::fileOperations::uncollatedFileOperation::type
+Foam::fileType Foam::fileOperations::uncollatedFileOperation::type
 (
     const fileName& fName,
     const bool checkVariants,
@@ -321,7 +321,7 @@ bool Foam::fileOperations::uncollatedFileOperation::rmDir
 Foam::fileNameList Foam::fileOperations::uncollatedFileOperation::readDir
 (
     const fileName& dir,
-    const fileName::Type type,
+    const fileType type,
     const bool filtergz,
     const bool followLink
 ) const

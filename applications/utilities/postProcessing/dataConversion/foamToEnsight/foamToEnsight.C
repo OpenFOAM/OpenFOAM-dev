@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
         fileNameList cloudDirs = readDir
         (
             runTime.timePath()/regionPrefix/cloud::prefix,
-            fileName::DIRECTORY
+            fileType::directory
         );
 
         forAll(cloudDirs, cloudI)
@@ -557,7 +557,7 @@ int main(int argc, char *argv[])
             fileNameList currentCloudDirs = readDir
             (
                 runTime.timePath()/regionPrefix/cloud::prefix,
-                fileName::DIRECTORY
+                fileType::directory
             );
 
             bool cloudExists = inFileNameList(currentCloudDirs, cloudName);

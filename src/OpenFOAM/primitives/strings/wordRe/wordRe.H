@@ -28,10 +28,10 @@ Description
     A wordRe is a word, but can also have a regular expression for matching
     words.
 
-    By default the constructors will generally preserve the argument as a
-    string literal and the assignment operators will use the wordRe::DETECT
-    compOption to scan the string for regular expression meta characters
-    and/or invalid word characters and react accordingly.
+    By default the constructors will generally preserve the argument as a string
+    literal and the assignment operators will use the wordRe::compOption::detect
+    compOption to scan the string for regular expression meta characters and/or
+    invalid word characters and react accordingly.
 
     The exceptions are when constructing/assigning from another
     Foam::wordRe (preserve the same type) or from a Foam::word (always
@@ -92,15 +92,15 @@ public:
     // Public data types
 
         //- Enumeration with compile options
-        //  Note that 'REGEXP' is implicit if 'NOCASE' is specified alone.
-        enum compOption
+        //  Note that 'regexp' is implicit if 'noCase' is specified alone.
+        enum class compOption
         {
-            LITERAL = 0, //!< treat as a string literal
-            DETECT = 1,  //!< detect if the string contains meta-characters
-            REGEXP = 2,  //!< treat as regular expression
-            NOCASE  = 4, //!< ignore case in regular expression
-            DETECT_NOCASE = DETECT | NOCASE,
-            REGEXP_NOCASE = REGEXP | NOCASE
+            literal = 0, //!< treat as a string literal
+            detect = 1,  //!< detect if the string contains meta-characters
+            regExp = 2,  //!< treat as regular expression
+            noCase  = 4, //!< ignore case in regular expression
+            detectNoCase = detect | noCase,
+            regExpNoCase = regExp | noCase
         };
 
 
@@ -130,15 +130,27 @@ public:
 
         //- Construct as copy of character array
         //  Optionally specify how it should be treated.
-        inline explicit wordRe(const char*, const compOption = LITERAL);
+        inline explicit wordRe
+        (
+            const char*,
+            const compOption = compOption::literal
+        );
 
         //- Construct as copy of string.
         //  Optionally specify how it should be treated.
-        inline explicit wordRe(const string&, const compOption = LITERAL);
+        inline explicit wordRe
+        (
+            const string&,
+            const compOption = compOption::literal
+        );
 
         //- Construct as copy of std::string
         //  Optionally specify how it should be treated.
-        inline explicit wordRe(const std::string&, const compOption = LITERAL);
+        inline explicit wordRe
+        (
+            const std::string&,
+            const compOption = compOption::literal
+        );
 
         //- Construct from Istream
         //  Words are treated as literals, strings with an auto-test
@@ -172,10 +184,18 @@ public:
         // Editing
 
             //- Copy string, auto-test for regular expression or other options
-            inline void set(const std::string&, const compOption = DETECT);
+            inline void set
+            (
+                const std::string&,
+                const compOption = compOption::detect
+            );
 
             //- Copy string, auto-test for regular expression or other options
-            inline void set(const char*, const compOption = DETECT);
+            inline void set
+            (
+                const char*,
+                const compOption = compOption::detect
+            );
 
             //- Clear string and precompiled regular expression
             inline void clear();
@@ -234,6 +254,13 @@ public:
         friend Istream& operator>>(Istream&, wordRe&);
         friend Ostream& operator<<(Ostream&, const wordRe&);
 };
+
+
+inline int operator&
+(
+    const wordRe::compOption co1,
+    const wordRe::compOption co2
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -520,7 +520,7 @@ int main(int argc, char *argv[])
                         cloudDirs = fileHandler().readDir
                         (
                             lagrangianDir,
-                            fileName::DIRECTORY
+                            fileType::directory
                         );
                     }
 

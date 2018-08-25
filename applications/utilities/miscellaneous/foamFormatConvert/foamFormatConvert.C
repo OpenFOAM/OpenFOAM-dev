@@ -408,7 +408,7 @@ int main(int argc, char *argv[])
                 fileHandler().readDir
                 (
                     lagrangianDirs[0],
-                    fileName::DIRECTORY
+                    fileType::directory
                 )
             );
 

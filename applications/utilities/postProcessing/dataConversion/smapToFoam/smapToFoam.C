@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     #include "createTime.H"
 
-    fileNameList fieldNames = readDir(runTime.timePath(), fileName::FILE);
+    fileNameList fieldNames = readDir(runTime.timePath(), fileType::file);
     dictionary fieldNameDict;
     forAll(fieldNames, i)
     {

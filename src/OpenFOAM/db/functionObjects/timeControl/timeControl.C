@@ -60,7 +60,7 @@ Foam::timeControl::timeControl
 :
     time_(t),
     prefix_(prefix),
-    timeControl_(ocTimeStep),
+    timeControl_(timeControls::timeStep),
     intervalSteps_(0),
     interval_(-1),
     executionIndex_(0)
@@ -102,28 +102,28 @@ void Foam::timeControl::read(const dictionary& dict)
     }
     else
     {
-        timeControl_ = ocTimeStep;
+        timeControl_ = timeControls::timeStep;
     }
 
     switch (timeControl_)
     {
-        case ocTimeStep:
+        case timeControls::timeStep:
         {
             intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 0);
             break;
         }
 
-        case ocWriteTime:
-        case ocOutputTime:
+        case timeControls::writeTime:
+        case timeControls::outputTime:
         {
             intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 1);
             break;
         }
 
-        case ocClockTime:
-        case ocRunTime:
-        case ocCpuTime:
-        case ocAdjustableRunTime:
+        case timeControls::clockTime:
+        case timeControls::runTime:
+        case timeControls::cpuTime:
+        case timeControls::adjustableRunTime:
         {
             interval_ = readScalar(dict.lookup(intervalName));
             break;
@@ -141,7 +141,7 @@ bool Foam::timeControl::execute()
 {
     switch (timeControl_)
     {
-        case ocTimeStep:
+        case timeControls::timeStep:
         {
             return
             (
@@ -151,8 +151,8 @@ bool Foam::timeControl::execute()
             break;
         }
 
-        case ocWriteTime:
-        case ocOutputTime:
+        case timeControls::writeTime:
+        case timeControls::outputTime:
         {
             if (time_.writeTime())
             {
@@ -162,8 +162,8 @@ bool Foam::timeControl::execute()
             break;
         }
 
-        case ocRunTime:
-        case ocAdjustableRunTime:
+        case timeControls::runTime:
+        case timeControls::adjustableRunTime:
         {
             label executionIndex = label
             (
@@ -182,7 +182,7 @@ bool Foam::timeControl::execute()
             break;
         }
 
-        case ocCpuTime:
+        case timeControls::cpuTime:
         {
             label executionIndex = label
             (
@@ -197,7 +197,7 @@ bool Foam::timeControl::execute()
             break;
         }
 
-        case ocClockTime:
+        case timeControls::clockTime:
         {
             label executionIndex = label
             (
@@ -212,7 +212,7 @@ bool Foam::timeControl::execute()
             break;
         }
 
-        case ocNone:
+        case timeControls::none:
         {
             return false;
         }

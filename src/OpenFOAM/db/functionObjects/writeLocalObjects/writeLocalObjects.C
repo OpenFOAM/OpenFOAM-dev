@@ -96,7 +96,7 @@ bool Foam::functionObjects::writeLocalObjects::read(const dictionary& dict)
     }
     else
     {
-        resetWriteObjectName(wordRe(".*", wordRe::DETECT));
+        resetWriteObjectName(wordRe(".*", wordRe::compOption::detect));
     }
 
     return true;

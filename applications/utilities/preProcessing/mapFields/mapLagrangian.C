@@ -105,7 +105,7 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
         readDir
         (
             meshSource.time().timePath()/cloud::prefix,
-            fileName::DIRECTORY
+            fileType::directory
         )
     );
 

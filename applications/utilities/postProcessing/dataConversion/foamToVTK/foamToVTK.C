@@ -446,7 +446,7 @@ int main(int argc, char *argv[])
             readDir
             (
                 runTime.timePath()/regionPrefix/cloud::prefix,
-                fileName::DIRECTORY
+                fileType::directory
             )
         );
         forAll(cloudDirs, i)
@@ -1210,14 +1210,14 @@ int main(int argc, char *argv[])
            /"VTK"
         );
 
-        fileNameList dirs(readDir(procVTK, fileName::DIRECTORY));
+        fileNameList dirs(readDir(procVTK, fileType::directory));
         label sz = dirs.size();
         dirs.setSize(sz+1);
         dirs[sz] = ".";
 
         forAll(dirs, i)
         {
-            fileNameList subFiles(readDir(procVTK/dirs[i], fileName::FILE));
+            fileNameList subFiles(readDir(procVTK/dirs[i], fileType::file));
 
             forAll(subFiles, j)
             {

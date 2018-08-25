@@ -1213,7 +1213,7 @@ int main(int argc, char *argv[])
             readDir
             (
                 runTime.timePath()/regionPrefix/cloud::prefix,
-                fileName::DIRECTORY
+                fileType::directory
             )
         );
 

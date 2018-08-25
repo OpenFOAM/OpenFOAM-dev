@@ -24,19 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Switch.H"
-#include "error.H"
 #include "dictionary.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const char* Foam::Switch::names[Foam::Switch::INVALID+1] =
+const char* Foam::Switch::names[nSwitchType] =
 {
-    "false", "true",
-    "off",   "on",
-    "no",    "yes",
-    "n",     "y",
-    "f",     "t",
-    "none",  "true",  // Is there a reasonable counterpart to "none"?
+    "false",
+    "true",
+    "off",
+    "on",
+    "no",
+    "yes",
+    "n",
+    "y",
+    "f",
+    "t",
+    "none",
+    "any",
     "invalid"
 };
 
@@ -49,35 +54,36 @@ Foam::Switch::switchType Foam::Switch::asEnum
     const bool allowInvalid
 )
 {
-    for (int sw = 0; sw < Switch::INVALID; ++sw)
+    for (switchType sw=switchType::False; sw<switchType::invalid; ++sw)
     {
-        if (str == names[sw])
+        if (str == names[toInt(sw)])
         {
-            // handle aliases
+            // Handle aliases
             switch (sw)
             {
-                case Switch::NO_1:
-                case Switch::NONE:
+                case switchType::n:
+                case switchType::none:
                 {
-                    return Switch::NO;
+                    return switchType::no;
                     break;
                 }
 
-                case Switch::YES_1:
+                case switchType::y:
+                case switchType::any:
                 {
-                    return Switch::YES;
+                    return switchType::yes;
                     break;
                 }
 
-                case Switch::FALSE_1:
+                case switchType::f:
                 {
-                    return Switch::FALSE;
+                    return switchType::False;
                     break;
                 }
 
-                case Switch::TRUE_1:
+                case switchType::t:
                 {
-                    return Switch::TRUE;
+                    return switchType::True;
                     break;
                 }
 
@@ -97,7 +103,7 @@ Foam::Switch::switchType Foam::Switch::asEnum
             << abort(FatalError);
     }
 
-    return Switch::INVALID;
+    return switchType::invalid;
 }
 
 
@@ -116,13 +122,13 @@ Foam::Switch Foam::Switch::lookupOrAddToDict
 
 bool Foam::Switch::valid() const
 {
-    return switch_ <= Switch::NONE;
+    return switch_ <= switchType::none;
 }
 
 
 const char* Foam::Switch::asText() const
 {
-    return names[switch_];
+    return names[toInt(switch_)];
 }
 
 

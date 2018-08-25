@@ -63,6 +63,16 @@ Istream& operator>>(Istream&, fileName&);
 Ostream& operator<<(Ostream&, const fileName&);
 
 
+//- Enumeration of file types
+enum class fileType
+{
+    undefined,
+    file,
+    directory,
+    link
+};
+
+
 /*---------------------------------------------------------------------------*\
                           Class fileName Declaration
 \*---------------------------------------------------------------------------*/
@@ -78,16 +88,6 @@ class fileName
 
 
 public:
-
-    //- Enumerations to handle file types and modes.
-    enum Type
-    {
-        UNDEFINED,
-        FILE,
-        DIRECTORY,
-        LINK
-    };
-
 
     // Static data members
 
@@ -154,9 +154,9 @@ public:
 
         // Interrogation
 
-            //- Return the file type: FILE, DIRECTORY, UNDEFINED or
-            //  LINK (only if followLink=false)
-            Type type
+            //- Return the file type: file, directory, undefined or
+            //  link (only if followLink=false)
+            fileType type
             (
                 const bool checkVariants = true,
                 const bool followLink = true

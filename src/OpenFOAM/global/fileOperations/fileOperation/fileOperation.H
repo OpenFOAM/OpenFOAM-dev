@@ -202,15 +202,15 @@ public:
                 const bool followLink = true
             ) const = 0;
 
-            //- Return the file type: DIRECTORY, FILE or LINK
-            virtual fileName::Type type
+            //- Return the file type: directory, file or link
+            virtual fileType type
             (
                 const fileName&,
                 const bool checkVariants = true,
                 const bool followLink = true
             ) const = 0;
 
-            //- Does the name exist (as DIRECTORY or FILE) in the file system?
+            //- Does the name exist (as directory or file) in the file system?
             //  Optionally enable/disable check for gzip file.
             virtual bool exists
             (
@@ -219,14 +219,14 @@ public:
                 const bool followLink = true
             ) const = 0;
 
-            //- Does the name exist as a DIRECTORY in the file system?
+            //- Does the name exist as a directory in the file system?
             virtual bool isDir
             (
                 const fileName&,
                 const bool followLink = true
             ) const = 0;
 
-            //- Does the name exist as a FILE in the file system?
+            //- Does the name exist as a file in the file system?
             //  Optionally enable/disable check for gzip file.
             virtual bool isFile
             (
@@ -263,7 +263,7 @@ public:
             virtual fileNameList readDir
             (
                 const fileName&,
-                const fileName::Type=fileName::FILE,
+                const fileType = fileType::file,
                 const bool filterVariants = true,
                 const bool followLink = true
             ) const = 0;

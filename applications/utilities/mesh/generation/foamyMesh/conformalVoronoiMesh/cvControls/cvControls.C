@@ -243,7 +243,7 @@ Foam::cvControls::cvControls
 
     if (filterFaces_)
     {
-        filterEdges_ = Switch::ON;
+        filterEdges_ = Switch::switchType::on;
     }
 
     writeTetDualMesh_ = Switch(filteringDict.lookup("writeTetDualMesh"));

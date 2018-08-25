@@ -128,18 +128,18 @@ inline bool Foam::wordRe::compile(const compOption opt) const
 {
     bool doCompile = false;
 
-    if (opt & wordRe::REGEXP)
+    if (opt & compOption::regExp)
     {
         doCompile = true;
     }
-    else if (opt & wordRe::DETECT)
+    else if (opt & compOption::detect)
     {
         if (string::meta<regExp>(*this) || !string::valid<word>(*this))
         {
             doCompile = true;
         }
     }
-    else if (opt & wordRe::NOCASE)
+    else if (opt & compOption::noCase)
     {
         doCompile = true;
     }
@@ -147,7 +147,7 @@ inline bool Foam::wordRe::compile(const compOption opt) const
 
     if (doCompile)
     {
-        re_.set(*this, (opt & wordRe::NOCASE));
+        re_.set(*this, (opt & compOption::noCase));
     }
     else
     {
@@ -271,21 +271,31 @@ inline void Foam::wordRe::operator=(const keyType& str)
 inline void Foam::wordRe::operator=(const string& str)
 {
     string::operator=(str);
-    compile(DETECT);  // auto-detect regex
+    compile(compOption::detect);  // auto-detect regex
 }
 
 
 inline void Foam::wordRe::operator=(const std::string& str)
 {
     string::operator=(str);
-    compile(DETECT);  // auto-detect regex
+    compile(compOption::detect);  // auto-detect regex
 }
 
 
 inline void Foam::wordRe::operator=(const char* str)
 {
     string::operator=(str);
-    compile(DETECT);  // auto-detect regex
+    compile(compOption::detect);  // auto-detect regex
+}
+
+
+inline int Foam::operator&
+(
+    const wordRe::compOption co1,
+    const wordRe::compOption co2
+)
+{
+    return int(co1) & int(co2);
 }
 
 

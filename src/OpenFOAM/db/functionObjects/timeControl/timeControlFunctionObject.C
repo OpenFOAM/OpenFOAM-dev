@@ -124,7 +124,8 @@ Foam::scalar Foam::functionObjects::timeControl::timeToNextWrite()
     if
     (
         active()
-     && writeControl_.control() == Foam::timeControl::ocAdjustableRunTime
+     && writeControl_.control() ==
+        Foam::timeControl::timeControls::adjustableRunTime
     )
     {
         const label  writeTimeIndex = writeControl_.executionIndex();

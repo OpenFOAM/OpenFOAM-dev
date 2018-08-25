@@ -62,14 +62,14 @@ Foam::OFstreamAllocator::OFstreamAllocator
     if (compression == IOstream::COMPRESSED)
     {
         // Get identically named uncompressed version out of the way
-        fileName::Type pathType = Foam::type(pathname, false, false);
-        if (pathType == fileName::FILE || pathType == fileName::LINK)
+        fileType pathType = Foam::type(pathname, false, false);
+        if (pathType == fileType::file || pathType == fileType::link)
         {
             rm(pathname);
         }
         fileName gzPathName(pathname + ".gz");
 
-        if (!append && Foam::type(gzPathName) == fileName::LINK)
+        if (!append && Foam::type(gzPathName) == fileType::link)
         {
             // Disallow writing into softlink to avoid any problems with
             // e.g. softlinked initial fields
@@ -82,15 +82,15 @@ Foam::OFstreamAllocator::OFstreamAllocator
     {
         // get identically named compressed version out of the way
         fileName gzPathName(pathname + ".gz");
-        fileName::Type gzType = Foam::type(gzPathName, false, false);
-        if (gzType == fileName::FILE || gzType == fileName::LINK)
+        fileType gzType = Foam::type(gzPathName, false, false);
+        if (gzType == fileType::file || gzType == fileType::link)
         {
             rm(gzPathName);
         }
         if
         (
             !append
-         && Foam::type(pathname, false, false) == fileName::LINK
+         && Foam::type(pathname, false, false) == fileType::link
         )
         {
             // Disallow writing into softlink to avoid any problems with

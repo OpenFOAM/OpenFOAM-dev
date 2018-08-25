@@ -92,7 +92,7 @@ void Foam::functionObjectList::listDir
 
     // Recurse into sub-directories
     {
-        fileNameList foDirs(fileHandler().readDir(dir, fileName::DIRECTORY));
+        fileNameList foDirs(fileHandler().readDir(dir, fileType::directory));
         forAll(foDirs, fd)
         {
             listDir(dir/foDirs[fd], foMap);

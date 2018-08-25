@@ -37,7 +37,7 @@ if (timeDirs.size())
       / timeDirs.last().name()
       / regionPrefix
       / cloud::prefix,
-        fileName::DIRECTORY
+        fileType::directory
     );
 
     forAll(cloudDirs, cloudI)

@@ -202,7 +202,7 @@ void Foam::vtkPVFoam::updateInfoLagrangian
             readDir
             (
                 dbPtr_->path()/times[timei].name()/lagrangianPrefix,
-                fileName::DIRECTORY
+                fileType::directory
             );
     }
 

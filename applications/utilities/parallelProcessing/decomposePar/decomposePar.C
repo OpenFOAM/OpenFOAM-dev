@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
                 fileHandler().readDir
                 (
                     runTime.path(),
-                    fileName::Type::DIRECTORY
+                    fileType::directory
                 )
             );
             forAllReverse(dirs, diri)
@@ -661,7 +661,7 @@ int main(int argc, char *argv[])
                     fileHandler().readDir
                     (
                         runTime.timePath()/cloud::prefix,
-                        fileName::DIRECTORY
+                        fileType::directory
                     )
                 );
 

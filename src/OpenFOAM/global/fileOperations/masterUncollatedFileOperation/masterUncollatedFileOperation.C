@@ -889,14 +889,14 @@ mode_t Foam::fileOperations::masterUncollatedFileOperation::mode
 }
 
 
-Foam::fileName::Type Foam::fileOperations::masterUncollatedFileOperation::type
+Foam::fileType Foam::fileOperations::masterUncollatedFileOperation::type
 (
     const fileName& fName,
     const bool checkVariants,
     const bool followLink
 ) const
 {
-    return fileName::Type
+    return fileType
     (
         masterOp<label, typeOp>
         (
@@ -1059,7 +1059,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::rmDir
 Foam::fileNameList Foam::fileOperations::masterUncollatedFileOperation::readDir
 (
     const fileName& dir,
-    const fileName::Type type,
+    const fileType type,
     const bool filtergz,
     const bool followLink
 ) const

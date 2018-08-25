@@ -89,7 +89,7 @@ Foam::Istream& Foam::operator>>(Istream& is, Switch& s)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const Switch& s)
 {
-    os << Switch::names[s.switch_];
+    os << Switch::names[int(s.switch_)];
     os.check("Ostream& operator<<(Ostream&, const Switch&)");
     return os;
 }
