@@ -158,8 +158,8 @@ public:
         (
             const FromPatch& fromPatch,
             const ToPatch& toPatch,
-            const intersection::algorithm alg = intersection::FULL_RAY,
-            const intersection::direction dir = intersection::VECTOR
+            const intersection::algorithm alg = intersection::algorithm::fullRay,
+            const intersection::direction dir = intersection::direction::vector
         );
 
 

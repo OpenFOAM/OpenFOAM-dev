@@ -49,8 +49,6 @@ namespace Foam
 
 class intersection
 {
-private:
-
     // Static data
 
         //- Relative tolerance for point in a plane.
@@ -61,17 +59,17 @@ private:
 
 public:
 
-    enum direction
+    enum class direction
     {
-        VECTOR,
-        CONTACT_SPHERE
+        vector,
+        contactSphere
     };
 
-    enum algorithm
+    enum class algorithm
     {
-        FULL_RAY,        // Intersecting with full ray
-        HALF_RAY,        // Intersecting with half ray
-        VISIBLE          // Intersecting with the visible side
+        fullRay,        // Intersecting with full ray
+        halfRay,        // Intersecting with half ray
+        visible         // Intersecting with the visible side
     };
 
     // Static Member Functions
@@ -93,8 +91,7 @@ public:
         {
             if (t < -vSmall)
             {
-                FatalErrorInFunction
-                    << abort(FatalError);
+                FatalErrorInFunction << abort(FatalError);
             }
 
             scalar oldTol = planarTol_;

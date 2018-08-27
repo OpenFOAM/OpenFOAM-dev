@@ -568,7 +568,7 @@ bool Foam::treeDataFace::findIntersectOp::operator()
         dir,
         shape.mesh_.faceCentres()[facei],
         shape.mesh_.points(),
-        intersection::HALF_RAY
+        intersection::algorithm::halfRay
     );
 
     if (inter.hit() && inter.distance() <= 1)

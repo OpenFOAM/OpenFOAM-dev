@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(treeDataCell, 0);
+    defineTypeNameAndDebug(treeDataCell, 0);
 }
 
 
@@ -253,7 +253,7 @@ bool Foam::treeDataCell::findIntersectOp::operator()
 
         if ((cellBb.posBits(start) & cellBb.posBits(end)) != 0)
         {
-            // start and end in same block outside of cellBb.
+            // Start and end in same block outside of cellBb.
             return false;
         }
     }
@@ -263,7 +263,7 @@ bool Foam::treeDataCell::findIntersectOp::operator()
 
         if ((cellBb.posBits(start) & cellBb.posBits(end)) != 0)
         {
-            // start and end in same block outside of cellBb.
+            // Start and end in same block outside of cellBb.
             return false;
         }
     }
@@ -290,7 +290,7 @@ bool Foam::treeDataCell::findIntersectOp::operator()
             start,
             dir,
             shape.mesh_.points(),
-            intersection::HALF_RAY
+            intersection::algorithm::halfRay
         );
 
         if (inter.hit() && sqr(inter.distance()) <= minDistSqr)

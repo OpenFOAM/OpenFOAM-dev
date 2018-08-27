@@ -1240,7 +1240,7 @@ const
         const face& f = srcPatch[srcFacei];
 
         const pointHit ray =
-            f.ray(tgtPoint, n, srcPoints, intersection::VISIBLE);
+            f.ray(tgtPoint, n, srcPoints, intersection::algorithm::visible);
 
         if (ray.hit())
         {
@@ -1291,7 +1291,7 @@ const
         const face& f = tgtPatch[tgtFacei];
 
         const pointHit ray =
-            f.ray(srcPoint, n, tgtPoints, intersection::VISIBLE);
+            f.ray(srcPoint, n, tgtPoints, intersection::algorithm::visible);
 
         if (ray.hit())
         {

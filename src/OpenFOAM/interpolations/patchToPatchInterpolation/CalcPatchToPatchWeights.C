@@ -100,7 +100,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                 );
 
             // Grab distance to target
-            if (dir_ == intersection::CONTACT_SPHERE)
+            if (dir_ == intersection::direction::contactSphere)
             {
                 pointDistance[pointi] =
                     hitFace.contactSphereDiameter
@@ -179,7 +179,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                 hitPoint = ph.missPoint();
 
                 // Grab distance to target
-                if (dir_ == intersection::CONTACT_SPHERE)
+                if (dir_ == intersection::direction::contactSphere)
                 {
                     pointDistance[pointi] =
                         hitFace.contactSphereDiameter

@@ -343,11 +343,11 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
 
     const vector q1 = q/Foam::mag(q);
 
-    if (dir == intersection::CONTACT_SPHERE)
+    if (dir == intersection::direction::contactSphere)
     {
         n /= magArea;
 
-        return ray(p, q1 - n, alg, intersection::VECTOR);
+        return ray(p, q1 - n, alg, intersection::direction::vector);
     }
 
     // Intersection point with triangle plane
@@ -356,9 +356,14 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
     // Is intersection point inside triangle
     bool hit;
     {
-        // Reuse the fast ray intersection routine below in FULL_RAY
+        // Reuse the fast ray intersection routine below in algorithm::fullRay
         // mode since the original intersection routine has rounding problems.
-        pointHit fastInter = intersection(p, q1, intersection::FULL_RAY);
+        pointHit fastInter = intersection
+        (
+            p,
+            q1,
+            intersection::algorithm::fullRay
+        );
         hit = fastInter.hit();
 
         if (hit)
@@ -388,10 +393,10 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
         )*intersection::planarTol();
 
     bool eligible =
-        alg == intersection::FULL_RAY
-     || (alg == intersection::HALF_RAY && dist > -planarPointTol)
+        alg == intersection::algorithm::fullRay
+     || (alg == intersection::algorithm::halfRay && dist > -planarPointTol)
      || (
-            alg == intersection::VISIBLE
+            alg == intersection::algorithm::visible
          && ((q1 & area()) < -vSmall)
         );
 
@@ -433,16 +438,16 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::intersection
     const vector edge1 = b_ - a_;
     const vector edge2 = c_ - a_;
 
-    // begin calculating determinant - also used to calculate U parameter
+    // Begin calculating determinant - also used to calculate U parameter
     const vector pVec = dir ^ edge2;
 
-    // if determinant is near zero, ray lies in plane of triangle
+    // Ff determinant is near zero, ray lies in plane of triangle
     const scalar det = edge1 & pVec;
 
     // Initialise to miss
     pointHit intersection(false, Zero, great, false);
 
-    if (alg == intersection::VISIBLE)
+    if (alg == intersection::algorithm::visible)
     {
         // Culling branch
         if (det < rootVSmall)
@@ -451,7 +456,11 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::intersection
             return intersection;
         }
     }
-    else if (alg == intersection::HALF_RAY || alg == intersection::FULL_RAY)
+    else if
+    (
+        alg == intersection::algorithm::halfRay
+     || alg == intersection::algorithm::fullRay
+    )
     {
         // Non-culling branch
         if (det > -rootVSmall && det < rootVSmall)
@@ -463,10 +472,10 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::intersection
 
     const scalar inv_det = 1.0 / det;
 
-    /* calculate distance from a_ to ray origin */
+    // Calculate distance from a_ to ray origin
     const vector tVec = orig-a_;
 
-    /* calculate U parameter and test bounds */
+    // Calculate U parameter and test bounds
     const scalar u = (tVec & pVec)*inv_det;
 
     if (u < -tol || u > 1.0+tol)
@@ -475,10 +484,10 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::intersection
         return intersection;
     }
 
-    /* prepare to test V parameter */
+    // Prepare to test V parameter
     const vector qVec = tVec ^ edge1;
 
-    /* calculate V parameter and test bounds */
+    // Calculate V parameter and test bounds
     const scalar v = (dir & qVec) * inv_det;
 
     if (v < -tol || u + v > 1.0+tol)
@@ -487,10 +496,10 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::intersection
         return intersection;
     }
 
-    /* calculate t, scale parameters, ray intersects triangle */
+    // Calculate t, scale parameters, ray intersects triangle
     const scalar t = (edge2 & qVec) * inv_det;
 
-    if (alg == intersection::HALF_RAY && t < -tol)
+    if (alg == intersection::algorithm::halfRay && t < -tol)
     {
         // Wrong side of orig. Return miss
         return intersection;
@@ -693,7 +702,7 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::nearestPoint
         (
             ln.start(),
             q,
-            intersection::FULL_RAY
+            intersection::algorithm::fullRay
         )
     );
 

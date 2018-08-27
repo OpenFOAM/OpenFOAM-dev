@@ -1362,7 +1362,7 @@ Foam::pointIndexHit Foam::mappedPatchBase::facePoint
                 (
                     cc,
                     d,
-                    intersection::HALF_RAY
+                    intersection::algorithm::halfRay
                 );
 
                 if (hitInfo.hit() && hitInfo.distance() > 0)

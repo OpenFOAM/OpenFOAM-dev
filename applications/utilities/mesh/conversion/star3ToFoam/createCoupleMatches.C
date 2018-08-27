@@ -910,14 +910,14 @@ void Foam::starMesh::createCoupleMatches()
                         pointStart,
                         masterProjDir,
                         points_,
-                        intersection::FULL_RAY
+                        intersection::algorithm::fullRay
                     ).hit()
                  && newMasterFace.ray
                     (
                         pointEnd,
                         masterProjDir,
                         points_,
-                        intersection::FULL_RAY
+                        intersection::algorithm::fullRay
                     ).hit()
                 )
                 {
@@ -953,14 +953,14 @@ void Foam::starMesh::createCoupleMatches()
                             pointStart,
                             slaveProjDir,
                             points_,
-                        intersection::FULL_RAY
+                        intersection::algorithm::fullRay
                         ).hit()
                      && newSlaveFace.ray
                         (
                             pointEnd,
                             slaveProjDir,
                             points_,
-                            intersection::FULL_RAY
+                            intersection::algorithm::fullRay
                         ).hit()
                     )
                     {
@@ -1324,7 +1324,7 @@ void Foam::starMesh::createCoupleMatches()
                         points_[intersectedFace[intPointi]],
                         pointProjectionNormal,
                         points_,
-                        intersection::FULL_RAY
+                        intersection::algorithm::fullRay
                     );
 
                 if (projHit.hit())
