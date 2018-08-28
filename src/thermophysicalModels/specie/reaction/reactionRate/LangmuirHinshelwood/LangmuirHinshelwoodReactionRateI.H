@@ -39,6 +39,14 @@ inline Foam::LangmuirHinshelwoodReactionRate::LangmuirHinshelwoodReactionRate
     a_(dict.lookupOrDefault<scalar>("a", 1)),
     A_(dict.lookup("A")),
     Ta_(dict.lookup("Ta")),
+    beta_
+    (
+        dict.lookupOrDefault<FixedList<scalar, 3>>
+        (
+            "beta",
+            FixedList<scalar, 3>({0, 0, 0})
+        )
+    ),
     m_
     (
         dict.lookupOrDefault<FixedList<scalar, 3>>
@@ -67,10 +75,15 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::operator()
     const scalar c0m = pow(c[r_[0]], m_[0]);
     const scalar c1m = pow(c[r_[1]], m_[1]);
 
-    return A_[0]*exp(-Ta_[0]/T)/
-    (
-        T*pow(a_ + A_[1]*exp(-Ta_[1]/T)*c0m + A_[2]*exp(-Ta_[2]/T)*c1m, m_[2])
-    );
+    const scalar TaByT0 = Ta_[0]/T;
+    const scalar TaByT1 = Ta_[1]/T;
+    const scalar TaByT2 = Ta_[2]/T;
+
+    const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-TaByT0);
+    const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-TaByT1);
+    const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-TaByT2);
+
+    return k0/pow(a_ + k1*c0m + k2*c1m, m_[2]);
 }
 
 
@@ -84,20 +97,20 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::ddT
     const scalar c0m = pow(c[r_[0]], m_[0]);
     const scalar c1m = pow(c[r_[1]], m_[1]);
 
-    const scalar dr0 = A_[1]*exp(-Ta_[1]/T)*c0m;
-    const scalar dr1 = A_[2]*exp(-Ta_[2]/T)*c1m;
+    const scalar TaByT0 = Ta_[0]/T;
+    const scalar TaByT1 = Ta_[1]/T;
+    const scalar TaByT2 = Ta_[2]/T;
 
-    const scalar denByT = pow(a_ + dr0 + dr1, m_[2]);
-    const scalar den = T*denByT;
-    const scalar rate = A_[0]*exp(-Ta_[0]/T)/den;
+    const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-TaByT0);
+    const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-TaByT1);
+    const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-TaByT2);
 
-    const scalar derivDen =
-    (
-        denByT
-      + m_[2]*T*(a_ + dr0 + dr1)*(dr0*Ta_[1]/sqr(T) + dr1*Ta_[2]/sqr(T))
-    );
-
-    return rate*(Ta_[0]/sqr(T) - derivDen/den);
+    return
+       (
+           (beta_[0] + TaByT0)*k0
+         - m_[2]*k0*((beta_[1] + TaByT1)*k1*c0m + (beta_[2] + TaByT2)*k2*c1m)
+          /(a_ + k1*c0m + k2*c1m)
+       )/(pow(a_ + k1*c0m + k2*c1m, m_[2])*T);
 }
 
 
@@ -136,6 +149,7 @@ inline void Foam::LangmuirHinshelwoodReactionRate::write(Ostream& os) const
     os.writeKeyword("a") << a_ << token::END_STATEMENT << nl;
     os.writeKeyword("A") << A_ << token::END_STATEMENT << nl;
     os.writeKeyword("Ta") << Ta_ << token::END_STATEMENT << nl;
+    os.writeKeyword("beta") << beta_ << token::END_STATEMENT << nl;
     os.writeKeyword("m") << m_ << token::END_STATEMENT << nl;
 }
 

@@ -77,6 +77,7 @@ class LangmuirHinshelwoodReactionRate
         scalar a_;
         FixedList<scalar, 3> A_;
         FixedList<scalar, 3> Ta_;
+        FixedList<scalar, 3> beta_;
         FixedList<scalar, 3> m_;
 
 
