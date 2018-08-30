@@ -46,11 +46,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace roots
-{
-
 //- Types of root
-enum type
+enum class rootType
 {
     real = 0,
     complex,
@@ -59,7 +56,6 @@ enum type
     nan
 };
 
-}
 
 /*---------------------------------------------------------------------------*\
                          Class Roots Declaration
@@ -83,12 +79,12 @@ public:
         inline Roots();
 
         //- Construct with a uniform value
-        inline Roots(const roots::type t, const scalar x);
+        inline Roots(const rootType t, const scalar x);
 
         //- Construct by concatenation
         inline Roots
         (
-            const roots::type t,
+            const rootType t,
             const scalar x,
             const Roots<N - 1>& xs
         );
@@ -97,7 +93,7 @@ public:
         inline Roots
         (
             const Roots<N - 1>& xs,
-            const roots::type t,
+            const rootType t,
             const scalar x
         );
 
@@ -109,10 +105,10 @@ public:
     // Member Functions
 
         //- Set the type of the i-th root
-        inline void type(const direction i, const roots::type t);
+        inline void type(const direction i, const rootType t);
 
         //- Return the type of the i-th root
-        inline roots::type type(const direction i) const;
+        inline rootType type(const direction i) const;
 };
 
 

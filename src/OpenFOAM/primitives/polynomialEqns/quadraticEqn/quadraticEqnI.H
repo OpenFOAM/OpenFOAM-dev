@@ -42,9 +42,9 @@ inline Foam::quadraticEqn::quadraticEqn
     const scalar c
 )
 {
-    this->v_[A] = a;
-    this->v_[B] = b;
-    this->v_[C] = c;
+    this->v_[coefficient::a] = a;
+    this->v_[coefficient::b] = b;
+    this->v_[coefficient::c] = c;
 }
 
 
@@ -52,37 +52,37 @@ inline Foam::quadraticEqn::quadraticEqn
 
 inline Foam::scalar Foam::quadraticEqn::a() const
 {
-    return this->v_[A];
+    return this->v_[coefficient::a];
 }
 
 
 inline Foam::scalar Foam::quadraticEqn::b() const
 {
-    return this->v_[B];
+    return this->v_[coefficient::b];
 }
 
 
 inline Foam::scalar Foam::quadraticEqn::c() const
 {
-    return this->v_[C];
+    return this->v_[coefficient::c];
 }
 
 
 inline Foam::scalar& Foam::quadraticEqn::a()
 {
-    return this->v_[A];
+    return this->v_[coefficient::a];
 }
 
 
 inline Foam::scalar& Foam::quadraticEqn::b()
 {
-    return this->v_[B];
+    return this->v_[coefficient::b];
 }
 
 
 inline Foam::scalar& Foam::quadraticEqn::c()
 {
-    return this->v_[C];
+    return this->v_[coefficient::c];
 }
 
 

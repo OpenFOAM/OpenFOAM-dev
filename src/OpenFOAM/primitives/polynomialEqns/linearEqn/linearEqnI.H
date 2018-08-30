@@ -37,8 +37,8 @@ inline Foam::linearEqn::linearEqn(const Foam::zero)
 
 inline Foam::linearEqn::linearEqn(const scalar a, const scalar b)
 {
-    this->v_[A] = a;
-    this->v_[B] = b;
+    this->v_[coefficient::a] = a;
+    this->v_[coefficient::b] = b;
 }
 
 
@@ -46,25 +46,25 @@ inline Foam::linearEqn::linearEqn(const scalar a, const scalar b)
 
 inline Foam::scalar Foam::linearEqn::a() const
 {
-    return this->v_[A];
+    return this->v_[coefficient::a];
 }
 
 
 inline Foam::scalar Foam::linearEqn::b() const
 {
-    return this->v_[B];
+    return this->v_[coefficient::b];
 }
 
 
 inline Foam::scalar& Foam::linearEqn::a()
 {
-    return this->v_[A];
+    return this->v_[coefficient::a];
 }
 
 
 inline Foam::scalar& Foam::linearEqn::b()
 {
-    return this->v_[B];
+    return this->v_[coefficient::b];
 }
 
 
@@ -93,7 +93,7 @@ inline Foam::Roots<1> Foam::linearEqn::roots() const
     This function solves a linear equation of the following form:
 
         a*x + b = 0
-          x + B = 0
+          x + b = 0
 
     */
 
@@ -102,15 +102,21 @@ inline Foam::Roots<1> Foam::linearEqn::roots() const
 
     if (a == 0)
     {
-        return Roots<1>(roots::nan, 0);
+        return Roots<1>(rootType::nan, 0);
     }
 
     if (mag(b/vGreat) >= mag(a))
     {
-        return Roots<1>(sign(a) == sign(b) ? roots::negInf : roots::posInf, 0);
+        return Roots<1>
+        (
+            sign(a) == sign(b)
+          ? rootType::negInf
+          : rootType::posInf,
+          0
+        );
     }
 
-    return Roots<1>(roots::real, - b/a);
+    return Roots<1>(rootType::real, -b/a);
 }
 
 

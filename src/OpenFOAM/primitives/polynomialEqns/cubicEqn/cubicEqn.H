@@ -53,8 +53,11 @@ class cubicEqn
 {
 public:
 
-    //- Component labeling enumeration
-    enum components { A, B, C, D };
+    //- Coefficient indexing enumeration
+    struct coefficient
+    {
+        enum {a, b, c, d};
+    };
 
 
     // Constructors

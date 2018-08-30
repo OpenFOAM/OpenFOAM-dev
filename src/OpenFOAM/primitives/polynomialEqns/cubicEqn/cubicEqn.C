@@ -76,7 +76,7 @@ Foam::Roots<3> Foam::cubicEqn::roots() const
 
     if (a == 0)
     {
-        return Roots<3>(quadraticEqn(b, c, d).roots(), roots::nan, 0);
+        return Roots<3>(quadraticEqn(b, c, d).roots(), rootType::nan, 0);
     }
 
     // This is assumed not to over- or under-flow. If it does, all bets are off.

@@ -53,8 +53,11 @@ class quadraticEqn
 {
 public:
 
-    //- Component labeling enumeration
-    enum components { A, B, C };
+    //- Coefficient indexing enumeration
+    struct coefficient
+    {
+        enum {a, b, c};
+    };
 
 
     // Constructors

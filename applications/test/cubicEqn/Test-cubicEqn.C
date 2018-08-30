@@ -39,7 +39,7 @@ void test(const Type& polynomialEqn, const scalar tol)
     const scalar nan = std::numeric_limits<scalar>::quiet_NaN();
     const scalar inf = std::numeric_limits<scalar>::infinity();
 
-    FixedList<label, Type::nComponents - 1> t;
+    FixedList<rootType, Type::nComponents - 1> t;
     FixedList<scalar, Type::nComponents - 1> v(nan);
     FixedList<scalar, Type::nComponents - 1> e(nan);
     bool ok = true;
@@ -48,16 +48,16 @@ void test(const Type& polynomialEqn, const scalar tol)
         t[i] = r.type(i);
         switch (t[i])
         {
-            case roots::real:
+            case rootType::real:
                 v[i] = polynomialEqn.value(r[i]);
                 e[i] = polynomialEqn.error(r[i]);
                 ok = ok && mag(v[i]) <= tol*mag(e[i]);
                 break;
-            case roots::posInf:
+            case rootType::posInf:
                 v[i] = + inf;
                 e[i] = nan;
                 break;
-            case roots::negInf:
+            case rootType::negInf:
                 v[i] = - inf;
                 e[i] = nan;
                 break;
@@ -70,7 +70,7 @@ void test(const Type& polynomialEqn, const scalar tol)
     if (!ok)
     {
         Info<< "Coeffs: " << polynomialEqn << endl
-            << " Types: " << t << endl
+         // << " Types: " << t << endl
             << " Roots: " << r << endl
             << "Values: " << v << endl
             << "Errors: " << e << endl << endl;

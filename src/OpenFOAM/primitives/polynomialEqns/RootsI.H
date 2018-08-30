@@ -32,13 +32,13 @@ inline Foam::Roots<N>::Roots()
 {
     forAll(*this, i)
     {
-        type(i, roots::nan);
+        type(i, rootType::nan);
     }
 }
 
 
 template <Foam::direction N>
-inline Foam::Roots<N>::Roots(const roots::type t, const scalar x)
+inline Foam::Roots<N>::Roots(const rootType t, const scalar x)
 :
     types_(0)
 {
@@ -53,7 +53,7 @@ inline Foam::Roots<N>::Roots(const roots::type t, const scalar x)
 template <Foam::direction N>
 inline Foam::Roots<N>::Roots
 (
-    const roots::type t,
+    const rootType t,
     const scalar x,
     const Roots<N - 1>& xs
 )
@@ -74,7 +74,7 @@ template <Foam::direction N>
 inline Foam::Roots<N>::Roots
 (
     const Roots<N - 1>& xs,
-    const roots::type t,
+    const rootType t,
     const scalar x
 )
 :
@@ -119,17 +119,17 @@ template <Foam::direction N>
 inline void Foam::Roots<N>::type
 (
     const direction i,
-    const roots::type t
+    const rootType t
 )
 {
-    types_ += (t - type(i)) << 3*i;
+    types_ += (static_cast<int>(t) - static_cast<int>(type(i))) << 3*i;
 }
 
 
 template <Foam::direction N>
-inline Foam::roots::type Foam::Roots<N>::type(const direction i) const
+inline Foam::rootType Foam::Roots<N>::type(const direction i) const
 {
-    return static_cast<roots::type>((types_ >> 3*i) & 7);
+    return static_cast<rootType>((types_ >> 3*i) & 7);
 }
 
 

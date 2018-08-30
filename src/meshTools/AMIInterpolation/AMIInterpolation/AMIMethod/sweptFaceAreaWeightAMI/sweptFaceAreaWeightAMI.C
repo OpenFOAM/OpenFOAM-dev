@@ -314,7 +314,7 @@ Foam::plane Foam::sweptFaceAreaWeightAMI::getCutPlane
         Pair<bool> cuts(false, false);
         for (label j = 0; j < 2; ++ j)
         {
-            if (us.type(j) == roots::real)
+            if (us.type(j) == rootType::real)
             {
                 const vector den = ca + da*us[j];
                 if (magSqr(den) > vSmall)

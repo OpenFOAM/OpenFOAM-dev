@@ -52,8 +52,11 @@ class linearEqn
 {
 public:
 
-    //- Component labeling enumeration
-    enum components { A, B };
+    //- Coefficient indexing enumeration
+    struct coefficient
+    {
+        enum {a, b};
+    };
 
 
     // Constructors

@@ -858,7 +858,7 @@ Foam::scalar Foam::particle::trackToMovingTri
 
         for (label j = 0; j < 3; ++ j)
         {
-            if (mu.type(j) == roots::real && hitEqn[i].derivative(mu[j]) < 0)
+            if (mu.type(j) == rootType::real && hitEqn[i].derivative(mu[j]) < 0)
             {
                 if (debug)
                 {

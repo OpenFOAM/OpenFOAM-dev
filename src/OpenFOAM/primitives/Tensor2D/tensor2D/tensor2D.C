@@ -99,22 +99,22 @@ Foam::vector2D Foam::eigenValues(const tensor2D& t)
     {
         switch (roots.type(i))
         {
-            case roots::real:
+            case rootType::real:
                 lambda[i] = roots[i];
                 break;
-            case roots::complex:
+            case rootType::complex:
                 WarningInFunction
                     << "Complex eigenvalues detected for tensor: " << t
                     << endl;
                 lambda[i] = 0;
                 break;
-            case roots::posInf:
+            case rootType::posInf:
                 lambda[i] = vGreat;
                 break;
-            case roots::negInf:
+            case rootType::negInf:
                 lambda[i] = - vGreat;
                 break;
-            case roots::nan:
+            case rootType::nan:
                 FatalErrorInFunction
                     << "Eigenvalue calculation failed for tensor: " << t
                     << exit(FatalError);

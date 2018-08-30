@@ -43,10 +43,10 @@ inline Foam::cubicEqn::cubicEqn
     const scalar d
 )
 {
-    this->v_[A] = a;
-    this->v_[B] = b;
-    this->v_[C] = c;
-    this->v_[D] = d;
+    this->v_[coefficient::a] = a;
+    this->v_[coefficient::b] = b;
+    this->v_[coefficient::c] = c;
+    this->v_[coefficient::d] = d;
 }
 
 
@@ -54,49 +54,49 @@ inline Foam::cubicEqn::cubicEqn
 
 inline Foam::scalar Foam::cubicEqn::a() const
 {
-    return this->v_[A];
+    return this->v_[coefficient::a];
 }
 
 
 inline Foam::scalar Foam::cubicEqn::b() const
 {
-    return this->v_[B];
+    return this->v_[coefficient::b];
 }
 
 
 inline Foam::scalar Foam::cubicEqn::c() const
 {
-    return this->v_[C];
+    return this->v_[coefficient::c];
 }
 
 
 inline Foam::scalar Foam::cubicEqn::d() const
 {
-    return this->v_[D];
+    return this->v_[coefficient::d];
 }
 
 
 inline Foam::scalar& Foam::cubicEqn::a()
 {
-    return this->v_[A];
+    return this->v_[coefficient::a];
 }
 
 
 inline Foam::scalar& Foam::cubicEqn::b()
 {
-    return this->v_[B];
+    return this->v_[coefficient::b];
 }
 
 
 inline Foam::scalar& Foam::cubicEqn::c()
 {
-    return this->v_[C];
+    return this->v_[coefficient::c];
 }
 
 
 inline Foam::scalar& Foam::cubicEqn::d()
 {
-    return this->v_[D];
+    return this->v_[coefficient::d];
 }
 
 
