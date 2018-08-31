@@ -7,7 +7,7 @@ int main()
 {
     int *ptrs[500000];
 
-//    for (;;);
+    // for (;;);
 
     cerr << "allocating ints\n";
 
@@ -21,7 +21,7 @@ int main()
 
     cerr << "allocating double\n";
 
-    double* array = new double[500000];
+    new double[500000];
 
     for (;;);
 }
