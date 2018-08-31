@@ -38,19 +38,19 @@ namespace Foam
 namespace radiation
 {
     defineTypeNameAndDebug(radiationCoupledBase, 0);
+}
+}
 
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::radiation::radiationCoupledBase::emissivityMethodType,
-        2
-    >::names[] =
-    {
-        "solidRadiation",
-        "lookup"
-    };
-}
-}
+template<>
+const char* Foam::NamedEnum
+<
+    Foam::radiation::radiationCoupledBase::emissivityMethodType,
+    2
+>::names[] =
+{
+    "solidRadiation",
+    "lookup"
+};
 
 const Foam::NamedEnum
 <
