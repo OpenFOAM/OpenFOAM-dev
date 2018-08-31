@@ -68,7 +68,8 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
     (
         p,
         ptf.emissivityMethod(),
-        ptf.emissivity_
+        ptf.emissivity_,
+        mapper
     ),
     TName_(ptf.TName_)
 {}
@@ -146,6 +147,27 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::radiation::wideBandDiffusiveRadiationMixedFvPatchScalarField::
+autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    mixedFvPatchScalarField::autoMap(m);
+    radiationCoupledBase::autoMap(m);
+}
+
+
+void Foam::radiation::wideBandDiffusiveRadiationMixedFvPatchScalarField::rmap
+(
+    const fvPatchScalarField& ptf,
+    const labelList& addr
+)
+{
+    mixedFvPatchScalarField::rmap(ptf, addr);
+    radiationCoupledBase::rmap(ptf, addr);
+}
 
 void Foam::radiation::wideBandDiffusiveRadiationMixedFvPatchScalarField::
 updateCoeffs()

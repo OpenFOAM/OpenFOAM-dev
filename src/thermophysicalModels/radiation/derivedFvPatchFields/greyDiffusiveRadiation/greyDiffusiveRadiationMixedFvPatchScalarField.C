@@ -67,7 +67,8 @@ greyDiffusiveRadiationMixedFvPatchScalarField
     (
         p,
         ptf.emissivityMethod(),
-        ptf.emissivity_
+        ptf.emissivity_,
+        mapper
     ),
     TName_(ptf.TName_)
 {}
@@ -142,6 +143,27 @@ greyDiffusiveRadiationMixedFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::radiation::greyDiffusiveRadiationMixedFvPatchScalarField::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    mixedFvPatchScalarField::autoMap(m);
+    radiationCoupledBase::autoMap(m);
+}
+
+
+void Foam::radiation::greyDiffusiveRadiationMixedFvPatchScalarField::rmap
+(
+    const fvPatchScalarField& ptf,
+    const labelList& addr
+)
+{
+    mixedFvPatchScalarField::rmap(ptf, addr);
+    radiationCoupledBase::rmap(ptf, addr);
+}
+
 
 void Foam::radiation::greyDiffusiveRadiationMixedFvPatchScalarField::
 updateCoeffs()

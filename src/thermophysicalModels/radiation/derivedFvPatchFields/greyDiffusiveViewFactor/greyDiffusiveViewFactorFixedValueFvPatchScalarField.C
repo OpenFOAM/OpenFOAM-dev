@@ -58,9 +58,10 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
     (
         patch(),
         ptf.emissivityMethod(),
-        ptf.emissivity_
+        ptf.emissivity_,
+        mapper
     ),
-    qro_(ptf.qro_)
+    qro_(ptf.qro_, mapper)
 {}
 
 
@@ -127,6 +128,32 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::radiation::greyDiffusiveViewFactorFixedValueFvPatchScalarField::
+autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    fixedValueFvPatchScalarField::autoMap(m);
+    radiationCoupledBase::autoMap(m);
+    qro_.autoMap(m);
+}
+
+
+void Foam::radiation::greyDiffusiveViewFactorFixedValueFvPatchScalarField::rmap
+(
+    const fvPatchScalarField& ptf,
+    const labelList& addr
+)
+{
+    fixedValueFvPatchScalarField::rmap(ptf, addr);
+    radiationCoupledBase::rmap(ptf, addr);
+    const greyDiffusiveViewFactorFixedValueFvPatchScalarField& mrptf =
+        refCast<const greyDiffusiveViewFactorFixedValueFvPatchScalarField>(ptf);
+
+    qro_.rmap(mrptf.qro_, addr);
+}
 
 void Foam::radiation::greyDiffusiveViewFactorFixedValueFvPatchScalarField::
 updateCoeffs()
