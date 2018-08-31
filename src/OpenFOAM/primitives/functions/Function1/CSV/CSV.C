@@ -25,7 +25,6 @@ License
 
 #include "CSV.H"
 #include "DynamicList.H"
-//#include "IFstream.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -75,7 +74,7 @@ Type Foam::Function1Types::CSV<Type>::readValue(const List<string>& split)
         if (componentColumns_[i] >= split.size())
         {
             FatalErrorInFunction
-            << "No column " << componentColumns_[i] << " in "
+                << "No column " << componentColumns_[i] << " in "
                 << split << endl
                 << exit(FatalError);
         }
@@ -92,7 +91,6 @@ template<class Type>
 void Foam::Function1Types::CSV<Type>::read()
 {
     fileName expandedFile(fName_);
-    // IFstream is(expandedFile.expand());
     autoPtr<ISstream> isPtr(fileHandler().NewIFstream(expandedFile.expand()));
     ISstream& is = isPtr();
 
@@ -105,16 +103,16 @@ void Foam::Function1Types::CSV<Type>::read()
 
     DynamicList<Tuple2<scalar, Type>> values;
 
-    // skip header
+    // Skip header
     for (label i = 0; i < nHeaderLine_; i++)
     {
         string line;
         is.getLine(line);
     }
 
-    label nEntries = max(componentColumns_);
+    const label nEntries = max(refColumn_, max(componentColumns_));
 
-    // read data
+    // Read data
     while (is.good())
     {
         string line;
@@ -280,9 +278,12 @@ void Foam::Function1Types::CSV<Type>::writeData(Ostream& os) const
 
     os.writeKeyword("separator") << string(separator_)
         << token::END_STATEMENT << nl;
+
     os.writeKeyword("mergeSeparators") << mergeSeparators_
         << token::END_STATEMENT << nl;
+
     os.writeKeyword("file") << fName_ << token::END_STATEMENT << nl;
+
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
