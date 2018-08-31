@@ -1314,11 +1314,11 @@ void Foam::refinementSurfaces::findInside
                     if
                     (
                         (
-                            volType[pointi] == volumeType::INSIDE
+                            volType[pointi] == volumeType::inside
                          && selectionMethod == surfaceZonesInfo::INSIDE
                         )
                      || (
-                            volType[pointi] == volumeType::OUTSIDE
+                            volType[pointi] == volumeType::outside
                          && selectionMethod == surfaceZonesInfo::OUTSIDE
                         )
                     )

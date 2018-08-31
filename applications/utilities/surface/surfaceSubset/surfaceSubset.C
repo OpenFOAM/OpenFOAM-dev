@@ -268,8 +268,8 @@ int main(int argc, char *argv[])
                 if
                 (
                     outside
-                  ? (t == volumeType::OUTSIDE)
-                  : (t == volumeType::INSIDE)
+                  ? (t == volumeType::outside)
+                  : (t == volumeType::inside)
                 )
                 {
                     facesToSubset[facei] = true;

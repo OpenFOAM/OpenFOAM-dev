@@ -102,7 +102,7 @@ bool Foam::convergenceControl::endIfConverged(Time& time)
     {
         if (time.writeTime())
         {
-            time.stopAt(Time::saNoWriteNow);
+            time.stopAt(Time::stopAtControl::noWriteNow);
             time.setEndTime(time);
         }
         else

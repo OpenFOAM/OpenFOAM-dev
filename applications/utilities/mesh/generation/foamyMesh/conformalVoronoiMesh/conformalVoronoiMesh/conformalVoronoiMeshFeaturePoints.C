@@ -407,8 +407,8 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
     }
     while
     (
-        circ.circulate(CirculatorBase::CLOCKWISE),
-        circNormalDirs.circulate(CirculatorBase::CLOCKWISE)
+        circ.circulate(CirculatorBase::direction::clockwise),
+        circNormalDirs.circulate(CirculatorBase::direction::clockwise)
     );
 
 

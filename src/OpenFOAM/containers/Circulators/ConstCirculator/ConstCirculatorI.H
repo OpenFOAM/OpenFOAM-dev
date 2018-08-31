@@ -102,11 +102,11 @@ bool Foam::ConstCirculator<ContainerType>::circulate
     const CirculatorBase::direction dir
 )
 {
-    if (dir == CirculatorBase::CLOCKWISE)
+    if (dir == CirculatorBase::direction::clockwise)
     {
         operator++();
     }
-    else if (dir == CirculatorBase::ANTICLOCKWISE)
+    else if (dir == CirculatorBase::direction::anticlockwise)
     {
         operator--();
     }

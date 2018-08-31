@@ -64,9 +64,9 @@ inline Foam::point Foam::treeBoundBox::corner(const direction octant) const
 {
     return point
     (
-        (octant & RIGHTHALF) ? max().x() : min().x(),
-        (octant & TOPHALF)   ? max().y() : min().y(),
-        (octant & FRONTHALF) ? max().z() : min().z()
+        (octant & octantBit::rightHalf) ? max().x() : min().x(),
+        (octant & octantBit::topHalf)   ? max().y() : min().y(),
+        (octant & octantBit::frontHalf) ? max().z() : min().z()
     );
 }
 
@@ -90,17 +90,17 @@ inline Foam::direction Foam::treeBoundBox::subOctant
 
     if (pt.x() > mid.x())
     {
-        octant |= treeBoundBox::RIGHTHALF;
+        octant |= octantBit::rightHalf;
     }
 
     if (pt.y() > mid.y())
     {
-        octant |= treeBoundBox::TOPHALF;
+        octant |= octantBit::topHalf;
     }
 
     if (pt.z() > mid.z())
     {
-        octant |= treeBoundBox::FRONTHALF;
+        octant |= octantBit::frontHalf;
     }
 
     return octant;
@@ -133,7 +133,7 @@ inline Foam::direction Foam::treeBoundBox::subOctant
 
     if (pt.x() > mid.x())
     {
-        octant |= treeBoundBox::RIGHTHALF;
+        octant |= octantBit::rightHalf;
     }
     else if (pt.x() == mid.x())
     {
@@ -142,7 +142,7 @@ inline Foam::direction Foam::treeBoundBox::subOctant
 
     if (pt.y() > mid.y())
     {
-        octant |= treeBoundBox::TOPHALF;
+        octant |= octantBit::topHalf;
     }
     else if (pt.y() == mid.y())
     {
@@ -151,7 +151,7 @@ inline Foam::direction Foam::treeBoundBox::subOctant
 
     if (pt.z() > mid.z())
     {
-        octant |= treeBoundBox::FRONTHALF;
+        octant |= octantBit::frontHalf;
     }
     else if (pt.z() == mid.z())
     {
@@ -179,40 +179,40 @@ inline Foam::direction Foam::treeBoundBox::subOctant
 
     if (pt.x() > mid.x())
     {
-        octant |= treeBoundBox::RIGHTHALF;
+        octant |= octantBit::rightHalf;
     }
     else if (pt.x() == mid.x())
     {
         onEdge = true;
         if (dir.x() > 0)
         {
-            octant |= treeBoundBox::RIGHTHALF;
+            octant |= octantBit::rightHalf;
         }
     }
 
     if (pt.y() > mid.y())
     {
-        octant |= treeBoundBox::TOPHALF;
+        octant |= octantBit::topHalf;
     }
     else if (pt.y() == mid.y())
     {
         onEdge = true;
         if (dir.y() > 0)
         {
-            octant |= treeBoundBox::TOPHALF;
+            octant |= octantBit::topHalf;
         }
     }
 
     if (pt.z() > mid.z())
     {
-        octant |= treeBoundBox::FRONTHALF;
+        octant |= octantBit::frontHalf;
     }
     else if (pt.z() == mid.z())
     {
         onEdge = true;
         if (dir.z() > 0)
         {
-            octant |= treeBoundBox::FRONTHALF;
+            octant |= octantBit::frontHalf;
         }
     }
 
@@ -234,19 +234,19 @@ inline void Foam::treeBoundBox::searchOrder
 
     if (dist.x() < 0)
     {
-        octant |= treeBoundBox::RIGHTHALF;
+        octant |= octantBit::rightHalf;
         dist.x() *= -1;
     }
 
     if (dist.y() < 0)
     {
-        octant |= treeBoundBox::TOPHALF;
+        octant |= octantBit::topHalf;
         dist.y() *= -1;
     }
 
     if (dist.z() < 0)
     {
-        octant |= treeBoundBox::FRONTHALF;
+        octant |= octantBit::frontHalf;
         dist.z() *= -1;
     }
 
@@ -258,42 +258,42 @@ inline void Foam::treeBoundBox::searchOrder
     {
         if (dist.y() < dist.z())
         {
-            min = treeBoundBox::RIGHTHALF;
-            mid = treeBoundBox::TOPHALF;
-            max = treeBoundBox::FRONTHALF;
+            min = octantBit::rightHalf;
+            mid = octantBit::topHalf;
+            max = octantBit::frontHalf;
         }
         else if (dist.z() < dist.x())
         {
-            min = treeBoundBox::FRONTHALF;
-            mid = treeBoundBox::RIGHTHALF;
-            max = treeBoundBox::TOPHALF;
+            min = octantBit::frontHalf;
+            mid = octantBit::rightHalf;
+            max = octantBit::topHalf;
         }
         else
         {
-            min = treeBoundBox::RIGHTHALF;
-            mid = treeBoundBox::FRONTHALF;
-            max = treeBoundBox::TOPHALF;
+            min = octantBit::rightHalf;
+            mid = octantBit::frontHalf;
+            max = octantBit::topHalf;
         }
     }
     else
     {
         if (dist.z() < dist.y())
         {
-            min = treeBoundBox::FRONTHALF;
-            mid = treeBoundBox::TOPHALF;
-            max = treeBoundBox::RIGHTHALF;
+            min = octantBit::frontHalf;
+            mid = octantBit::topHalf;
+            max = octantBit::rightHalf;
         }
         else if (dist.x() < dist.z())
         {
-            min = treeBoundBox::TOPHALF;
-            mid = treeBoundBox::RIGHTHALF;
-            max = treeBoundBox::FRONTHALF;
+            min = octantBit::topHalf;
+            mid = octantBit::rightHalf;
+            max = octantBit::frontHalf;
         }
         else
         {
-            min = treeBoundBox::TOPHALF;
-            mid = treeBoundBox::FRONTHALF;
-            max = treeBoundBox::RIGHTHALF;
+            min = octantBit::topHalf;
+            mid = octantBit::frontHalf;
+            max = octantBit::rightHalf;
         }
     }
 

@@ -94,7 +94,7 @@ Foam::volumeType Foam::treeDataPoint::getVolumeType
     const point& sample
 ) const
 {
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 

@@ -64,7 +64,7 @@ void Foam::conformationSurfaces::hasBoundedVolume
             List<volumeType> vTypes
             (
                 pts.size(),
-                volumeType::UNKNOWN
+                volumeType::unknown
             );
 
             surface.getVolumeType(pts, vTypes);
@@ -569,7 +569,7 @@ Foam::conformationSurfaces::conformationSurfaces
     referenceVolumeTypes_.setSize
     (
         surfaces_.size(),
-        volumeType::UNKNOWN
+        volumeType::unknown
     );
 
     Info<< endl
@@ -666,7 +666,7 @@ Foam::Field<bool> Foam::conformationSurfaces::wellInOutSide
         List<volumeType>
         (
             samplePts.size(),
-            volumeType::UNKNOWN
+            volumeType::unknown
         )
     );
 
@@ -731,7 +731,7 @@ Foam::Field<bool> Foam::conformationSurfaces::wellInOutSide
             if
             (
                 !surface.hasVolumeType()
-             //&& surfaceVolumeTests[s][i] == volumeType::UNKNOWN
+             //&& surfaceVolumeTests[s][i] == volumeType::unknown
             )
             {
                 pointField sample(1, samplePts[i]);
@@ -760,7 +760,7 @@ Foam::Field<bool> Foam::conformationSurfaces::wellInOutSide
                 }
             }
 
-            if (surfaceVolumeTests[s][i] == volumeType::OUTSIDE)
+            if (surfaceVolumeTests[s][i] == volumeType::outside)
             {
                 if
                 (
@@ -772,7 +772,7 @@ Foam::Field<bool> Foam::conformationSurfaces::wellInOutSide
                     break;
                 }
             }
-            else if (surfaceVolumeTests[s][i] == volumeType::INSIDE)
+            else if (surfaceVolumeTests[s][i] == volumeType::inside)
             {
                 if
                 (

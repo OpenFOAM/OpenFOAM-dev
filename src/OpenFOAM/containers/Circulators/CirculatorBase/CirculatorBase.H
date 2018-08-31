@@ -49,19 +49,19 @@ public:
     // Public data
 
         //- Direction type enumeration
-        enum direction
+        enum class direction
         {
-            NONE,
-            CLOCKWISE,
-            ANTICLOCKWISE
+            none,
+            clockwise,
+            anticlockwise
         };
 
 
     // Constructors
 
         //- Construct null
-        CirculatorBase(){};
-
+        CirculatorBase()
+        {}
 };
 
 

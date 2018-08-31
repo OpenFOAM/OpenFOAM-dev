@@ -103,11 +103,11 @@ void Foam::distanceSurface::createGeometry()
             {
                 volumeType vT = volType[i];
 
-                if (vT == volumeType::OUTSIDE)
+                if (vT == volumeType::outside)
                 {
                     fld[i] = Foam::mag(cc[i] - nearest[i].hitPoint());
                 }
-                else if (vT == volumeType::INSIDE)
+                else if (vT == volumeType::inside)
                 {
                     fld[i] = -Foam::mag(cc[i] - nearest[i].hitPoint());
                 }
@@ -156,11 +156,11 @@ void Foam::distanceSurface::createGeometry()
                 {
                     volumeType vT = volType[i];
 
-                    if (vT == volumeType::OUTSIDE)
+                    if (vT == volumeType::outside)
                     {
                         fld[i] = Foam::mag(cc[i] - nearest[i].hitPoint());
                     }
-                    else if (vT == volumeType::INSIDE)
+                    else if (vT == volumeType::inside)
                     {
                         fld[i] = -Foam::mag(cc[i] - nearest[i].hitPoint());
                     }
@@ -211,12 +211,12 @@ void Foam::distanceSurface::createGeometry()
             {
                 volumeType vT = volType[i];
 
-                if (vT == volumeType::OUTSIDE)
+                if (vT == volumeType::outside)
                 {
                     pointDistance_[i] =
                         Foam::mag(pts[i] - nearest[i].hitPoint());
                 }
-                else if (vT == volumeType::INSIDE)
+                else if (vT == volumeType::inside)
                 {
                     pointDistance_[i] =
                         -Foam::mag(pts[i] - nearest[i].hitPoint());

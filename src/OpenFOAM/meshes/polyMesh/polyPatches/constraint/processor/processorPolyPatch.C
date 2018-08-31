@@ -627,12 +627,11 @@ Foam::label Foam::processorPolyPatch::matchFace
         return -1;
     }
 
-    enum CirculatorBase::direction circulateDirection
-        = CirculatorBase::CLOCKWISE;
+    CirculatorBase::direction circulateDirection = CirculatorBase::direction::clockwise;
 
     if (!sameOrientation)
     {
-        circulateDirection = CirculatorBase::ANTICLOCKWISE;
+        circulateDirection = CirculatorBase::direction::anticlockwise;
     }
 
     label matchFp = -1;
@@ -679,7 +678,7 @@ Foam::label Foam::processorPolyPatch::matchFace
             }
             while
             (
-                aCirc.circulate(CirculatorBase::CLOCKWISE),
+                aCirc.circulate(CirculatorBase::direction::clockwise),
                 bCirc2.circulate(circulateDirection)
             );
 

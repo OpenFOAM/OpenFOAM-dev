@@ -186,7 +186,7 @@ bool linearDistance::cellSize(const point& pt, scalar& size) const
         if
         (
             sideMode_ == smInside
-         && vTL[0] == volumeType::INSIDE
+         && vTL[0] == volumeType::inside
         )
         {
             size = sizeFunction(hitPt, dist, hitIndex);
@@ -196,7 +196,7 @@ bool linearDistance::cellSize(const point& pt, scalar& size) const
         else if
         (
             sideMode_ == smOutside
-         && vTL[0] == volumeType::OUTSIDE
+         && vTL[0] == volumeType::outside
         )
         {
             size = sizeFunction(hitPt, dist, hitIndex);

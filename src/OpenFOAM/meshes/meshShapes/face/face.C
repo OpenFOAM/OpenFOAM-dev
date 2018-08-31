@@ -336,7 +336,7 @@ int Foam::face::compare(const face& a, const face& b)
 
             break;
         }
-    } while (bCirc.circulate(CirculatorBase::CLOCKWISE));
+    } while (bCirc.circulate(CirculatorBase::direction::clockwise));
 
     // If the circulator has stopped then faces a and b do not share a matching
     // point. Doesn't work on matching, single element face.
@@ -355,8 +355,8 @@ int Foam::face::compare(const face& a, const face& b)
     }
     while
     (
-        aCirc.circulate(CirculatorBase::CLOCKWISE),
-        bCirc.circulate(CirculatorBase::CLOCKWISE)
+        aCirc.circulate(CirculatorBase::direction::clockwise),
+        bCirc.circulate(CirculatorBase::direction::clockwise)
     );
 
     // If the circulator has stopped then faces a and b matched.
@@ -383,8 +383,8 @@ int Foam::face::compare(const face& a, const face& b)
     }
     while
     (
-        aCirc.circulate(CirculatorBase::CLOCKWISE),
-        bCirc.circulate(CirculatorBase::ANTICLOCKWISE)
+        aCirc.circulate(CirculatorBase::direction::clockwise),
+        bCirc.circulate(CirculatorBase::direction::anticlockwise)
     );
 
     // If the circulator has stopped then faces a and b matched.

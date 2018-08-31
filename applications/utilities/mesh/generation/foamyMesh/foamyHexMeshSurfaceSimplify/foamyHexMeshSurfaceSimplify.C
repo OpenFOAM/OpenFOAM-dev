@@ -112,7 +112,7 @@ class distanceCalc
             surfaces,
             samples,
             scalarField(1, great),
-            volumeType::OUTSIDE,
+            volumeType::outside,
             nearestSurfaces,
             distance
         );

@@ -134,7 +134,7 @@ Foam::volumeType Foam::treeDataEdge::getVolumeType
     const point& sample
 ) const
 {
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 

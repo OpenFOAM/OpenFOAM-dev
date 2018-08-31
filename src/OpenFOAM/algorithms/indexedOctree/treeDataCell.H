@@ -204,7 +204,7 @@ public:
             ) const
             {
                 NotImplemented;
-                return volumeType::UNKNOWN;
+                return volumeType::unknown;
             }
 
             //- Does (bb of) shape at index overlap bb

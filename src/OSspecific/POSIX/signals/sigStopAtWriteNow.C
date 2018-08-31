@@ -100,7 +100,7 @@ void Foam::sigStopAtWriteNow::sigHandler(int)
     Info<< "sigStopAtWriteNow :"
         << " setting up write and stop at end of the next iteration"
         << nl << endl;
-    runTimePtr_->stopAt(Time::saWriteNow);
+    runTimePtr_->stopAt(Time::stopAtControl::writeNow);
 
     //// Throw signal (to old handler)
     // raise(signal_);

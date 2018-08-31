@@ -113,54 +113,66 @@ public:
 
         //- Bits used for octant/point coding.
         //  Every octant/corner point is the combination of three faces.
-        enum octantBit
+        struct octantBit
         {
-            RIGHTHALF = 0x1 << 0,
-            TOPHALF   = 0x1 << 1,
-            FRONTHALF = 0x1 << 2
+            enum
+            {
+                rightHalf = 0x1 << 0,
+                topHalf   = 0x1 << 1,
+                frontHalf = 0x1 << 2
+            };
         };
 
         //- Face codes
-        enum faceId
+        struct faceId
         {
-            LEFT   = 0,
-            RIGHT  = 1,
-            BOTTOM = 2,
-            TOP    = 3,
-            BACK   = 4,
-            FRONT  = 5
+            enum
+            {
+                left   = 0,
+                right  = 1,
+                bottom = 2,
+                top    = 3,
+                back   = 4,
+                front  = 5
+            };
         };
 
         //- Bits used for face coding
-        enum faceBit
+        struct faceBit
         {
-            NOFACE    = 0,
-            LEFTBIT   = 0x1 << LEFT,    //1
-            RIGHTBIT  = 0x1 << RIGHT,   //2
-            BOTTOMBIT = 0x1 << BOTTOM,  //4
-            TOPBIT    = 0x1 << TOP,     //8
-            BACKBIT   = 0x1 << BACK,    //16
-            FRONTBIT  = 0x1 << FRONT,   //32
+            enum
+            {
+                noFace    = 0,
+                left      = 0x1 << faceId::left,    //1
+                right     = 0x1 << faceId::right,   //2
+                bottom    = 0x1 << faceId::bottom,  //4
+                top       = 0x1 << faceId::top,     //8
+                back      = 0x1 << faceId::back,    //16
+                front     = 0x1 << faceId::front,   //32
+            };
         };
 
         //- Edges codes.
-        //  E01 = edge between 0 and 1.
-        enum edgeId
+        //  e01 = edge between 0 and 1.
+        struct edgeId
         {
-            E01 = 0,
-            E13 = 1,
-            E23 = 2,
-            E02 = 3,
+            enum
+            {
+                e01 = 0,
+                e13 = 1,
+                e23 = 2,
+                e02 = 3,
 
-            E45 = 4,
-            E57 = 5,
-            E67 = 6,
-            E46 = 7,
+                e45 = 4,
+                e57 = 5,
+                e67 = 6,
+                e46 = 7,
 
-            E04 = 8,
-            E15 = 9,
-            E37 = 10,
-            E26 = 11
+                e04 = 8,
+                e15 = 9,
+                e37 = 10,
+                e26 = 11
+            };
         };
 
         //- Face to point addressing

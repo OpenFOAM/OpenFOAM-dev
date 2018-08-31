@@ -150,7 +150,7 @@ bool linearSpatial::cellSize
     if
     (
         sideMode_ == smInside
-     && vTL[0] == volumeType::INSIDE
+     && vTL[0] == volumeType::inside
     )
     {
         size = sizeFunction(pt);
@@ -160,7 +160,7 @@ bool linearSpatial::cellSize
     else if
     (
         sideMode_ == smOutside
-     && vTL[0] == volumeType::OUTSIDE
+     && vTL[0] == volumeType::outside
     )
     {
         size = sizeFunction(pt);

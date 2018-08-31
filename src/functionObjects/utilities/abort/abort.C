@@ -143,7 +143,7 @@ bool Foam::functionObjects::abort::execute()
         {
             case actionType::noWriteNow :
             {
-                if (time_.stopAt(Time::saNoWriteNow))
+                if (time_.stopAt(Time::stopAtControl::noWriteNow))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << time_.timeIndex()
@@ -155,7 +155,7 @@ bool Foam::functionObjects::abort::execute()
 
             case actionType::writeNow :
             {
-                if (time_.stopAt(Time::saWriteNow))
+                if (time_.stopAt(Time::stopAtControl::writeNow))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << time_.timeIndex()
@@ -167,7 +167,7 @@ bool Foam::functionObjects::abort::execute()
 
             case actionType::nextWrite :
             {
-                if (time_.stopAt(Time::saNextWrite))
+                if (time_.stopAt(Time::stopAtControl::nextWrite))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << time_.timeIndex()

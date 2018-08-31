@@ -61,7 +61,7 @@ Foam::volumeType Foam::dynamicTreeDataPoint::getVolumeType
     const point& sample
 ) const
 {
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 

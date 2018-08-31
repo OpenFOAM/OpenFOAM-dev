@@ -45,8 +45,8 @@ void Foam::crankConRod::timeAdjustment()
 
     if
     (
-        writeControl_ == wcRunTime
-     || writeControl_ == wcAdjustableRunTime
+        writeControl_ == writeControl::runTime
+        || writeControl_ == writeControl::adjustableRunTime
     )
     {
         writeInterval_ = degToTime(writeInterval_);

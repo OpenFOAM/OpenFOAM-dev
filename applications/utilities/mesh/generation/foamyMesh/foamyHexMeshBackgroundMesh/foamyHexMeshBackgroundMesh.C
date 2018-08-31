@@ -357,11 +357,11 @@ tmp<scalarField> signedDistance
 
             volumeType vT = volType[i];
 
-            if (vT == volumeType::OUTSIDE)
+            if (vT == volumeType::outside)
             {
                 fld[pointi] = dist;
             }
-            else if (vT == volumeType::INSIDE)
+            else if (vT == volumeType::inside)
             {
                 fld[i] = -dist;
             }

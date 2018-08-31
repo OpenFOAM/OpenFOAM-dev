@@ -260,7 +260,7 @@ Foam::boolList Foam::triSurfaceSearch::calcInside
         {
             inside[sampleI] = false;
         }
-        else if (tree().getVolumeType(sample) == volumeType::INSIDE)
+        else if (tree().getVolumeType(sample) == volumeType::inside)
         {
             inside[sampleI] = true;
         }

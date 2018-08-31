@@ -47,7 +47,7 @@ Description
         {
             Info<< "Iterate forwards over face : " << circ() << endl;
 
-        } while (circ.circulate(CirculatorBase::CLOCKWISE));
+        } while (circ.circulate(CirculatorBase::direction::clockwise));
     \endcode
 
     \code
@@ -63,8 +63,11 @@ Description
         }
         while
         (
-            circClockwise.circulate(CirculatorBase::CLOCKWISE),
-            circAnticlockwise.circulate(CirculatorBase::ANTICLOCKWISE)
+            circClockwise.circulate(CirculatorBase::direction::clockwise),
+            circAnticlockwise.circulate
+            (
+                CirculatorBase::direction::anticlockwise
+            )
         );
     \endcode
 
@@ -164,7 +167,11 @@ public:
         inline size_type size() const;
 
         //- Circulate around the list in the given direction
-        inline bool circulate(const CirculatorBase::direction dir = NONE);
+        inline bool circulate
+        (
+            const CirculatorBase::direction dir =
+                CirculatorBase::direction::none
+        );
 
         //- Set the fulcrum to the current position of the iterator
         inline void setFulcrumToIterator();

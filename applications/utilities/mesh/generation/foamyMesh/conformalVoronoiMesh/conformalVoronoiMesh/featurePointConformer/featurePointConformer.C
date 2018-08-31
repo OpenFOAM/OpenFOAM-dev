@@ -340,7 +340,7 @@ void Foam::featurePointConformer::createMasterAndSlavePoints
             );
         }
 
-    } while (circ.circulate(CirculatorBase::CLOCKWISE));
+    } while (circ.circulate(CirculatorBase::direction::clockwise));
 
     addMasterAndSlavePoints
     (

@@ -602,7 +602,7 @@ void Foam::searchableBox::getVolumeType
 ) const
 {
     volType.setSize(points.size());
-    volType = volumeType::INSIDE;
+    volType = volumeType::inside;
 
     forAll(points, pointi)
     {
@@ -612,7 +612,7 @@ void Foam::searchableBox::getVolumeType
         {
             if (pt[dir] < min()[dir] || pt[dir] > max()[dir])
             {
-                volType[pointi] = volumeType::OUTSIDE;
+                volType[pointi] = volumeType::outside;
                 break;
             }
         }

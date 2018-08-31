@@ -266,7 +266,7 @@ Foam::labelList Foam::conformalVoronoiMesh::calcCellZones
                     volTypeInsidePoint
                 );
 
-                if (volTypeInsidePoint[0] == volumeType::OUTSIDE)
+                if (volTypeInsidePoint[0] == volumeType::outside)
                 {
                     selectInside = false;
                 }
@@ -283,11 +283,11 @@ Foam::labelList Foam::conformalVoronoiMesh::calcCellZones
                     if
                     (
                         (
-                            volType[pointi] == volumeType::INSIDE
+                            volType[pointi] == volumeType::inside
                          && selectInside
                         )
                      || (
-                            volType[pointi] == volumeType::OUTSIDE
+                            volType[pointi] == volumeType::outside
                          && !selectInside
                         )
                     )

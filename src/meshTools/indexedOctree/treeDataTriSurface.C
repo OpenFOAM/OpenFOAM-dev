@@ -57,21 +57,21 @@ Foam::volumeType Foam::treeDataPrimitivePatch<Foam::triSurface>::getVolumeType
 
     if (t == triSurfaceTools::UNKNOWN)
     {
-        return volumeType::UNKNOWN;
+        return volumeType::unknown;
     }
     else if (t == triSurfaceTools::INSIDE)
     {
-        return volumeType::INSIDE;
+        return volumeType::inside;
     }
     else if (t == triSurfaceTools::OUTSIDE)
     {
-        return volumeType::OUTSIDE;
+        return volumeType::outside;
     }
     else
     {
         FatalErrorInFunction
             << "problem" << abort(FatalError);
-        return volumeType::UNKNOWN;
+        return volumeType::unknown;
     }
 }
 

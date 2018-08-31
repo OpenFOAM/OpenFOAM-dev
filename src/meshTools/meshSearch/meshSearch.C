@@ -847,7 +847,7 @@ Foam::List<Foam::pointIndexHit> Foam::meshSearch::intersections
 
 bool Foam::meshSearch::isInside(const point& p) const
 {
-    return (boundaryTree().getVolumeType(p) == volumeType::INSIDE);
+    return (boundaryTree().getVolumeType(p) == volumeType::inside);
 }
 
 

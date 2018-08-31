@@ -58,13 +58,13 @@ int main(int argc, char *argv[])
             << cStart.prev() << " / " << cStart() << " / " << cStart.next()
             << endl;
 
-    } while (cStart.circulate(CirculatorBase::CLOCKWISE));
+    } while (cStart.circulate(CirculatorBase::direction::clockwise));
 
     if (cStart.size()) do
     {
         Info<< "Iterate backwards over face : " << cStart() << endl;
 
-    } while (cStart.circulate(CirculatorBase::ANTICLOCKWISE));
+    } while (cStart.circulate(CirculatorBase::direction::anticlockwise));
 
 
     Info<< nl << nl << "Test non-const circulator" << nl << endl;
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             << cStart2.prev() << " / " << cStart2() << " / " << cStart2.next()
             << endl;
 
-    } while (cStart2.circulate(CirculatorBase::CLOCKWISE));
+    } while (cStart2.circulate(CirculatorBase::direction::clockwise));
 
     if (cStart2.size()) do
     {
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
         cStart2() += 1;
 
         Info<< " -> " << cStart2() << endl;
-    } while (cStart2.circulate(CirculatorBase::CLOCKWISE));
+    } while (cStart2.circulate(CirculatorBase::direction::clockwise));
 
     Info<< "Face after : " << f << endl;
 
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
     {
         Info<< "Iterate forwards over face : " << cZero() << endl;
 
-    } while (cZero.circulate(CirculatorBase::CLOCKWISE));
+    } while (cZero.circulate(CirculatorBase::direction::clockwise));
 
     fZero = face(identity(5));
 
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
     {
         Info<< "Iterate forwards over face : " << cZero() << endl;
 
-    } while (cZero.circulate(CirculatorBase::CLOCKWISE));
+    } while (cZero.circulate(CirculatorBase::direction::clockwise));
 
 
     Info<< nl << nl << "Simultaneously go forwards/backwards over face " << f
@@ -171,8 +171,8 @@ int main(int argc, char *argv[])
     }
     while
     (
-        circForward.circulate(CirculatorBase::CLOCKWISE),
-        circBackward.circulate(CirculatorBase::ANTICLOCKWISE)
+        circForward.circulate(CirculatorBase::direction::clockwise),
+        circBackward.circulate(CirculatorBase::direction::anticlockwise)
     );
 
     Info<< "\nEnd\n" << endl;

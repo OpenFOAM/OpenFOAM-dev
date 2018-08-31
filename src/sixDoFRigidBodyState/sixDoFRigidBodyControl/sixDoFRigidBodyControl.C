@@ -109,7 +109,7 @@ bool Foam::functionObjects::sixDoFRigidBodyControl::execute()
      && meanAngularVelocity_ < convergedAngularVelocity_
     )
     {
-        time_.stopAt(Time::saWriteNow);
+        time_.stopAt(Time::stopAtControl::writeNow);
     }
 
     return true;

@@ -331,11 +331,11 @@ void Foam::shellSurfaces::findHigherLevel
             (
                 (
                     modes_[shellI] == INSIDE
-                 && volType[i] == volumeType::INSIDE
+                 && volType[i] == volumeType::inside
                 )
              || (
                     modes_[shellI] == OUTSIDE
-                 && volType[i] == volumeType::OUTSIDE
+                 && volType[i] == volumeType::outside
                 )
             )
             {
