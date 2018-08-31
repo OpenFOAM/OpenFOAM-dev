@@ -15,17 +15,17 @@ scalar randomScalar(const scalar min, const scalar max)
         "Scalar and long are not the same size"
     );
     static std::default_random_engine generator(std::time(0));
-    static std::uniform_int_distribution<long>
-        distribution
-        (
-            std::numeric_limits<long>::min(),
-            std::numeric_limits<long>::max()
-        );
+    static std::uniform_int_distribution<long> distribution
+    (
+        std::numeric_limits<long>::min(),
+        std::numeric_limits<long>::max()
+    );
     scalar x;
     do
     {
         long i = distribution(generator);
-        x = reinterpret_cast<scalar&>(i);
+        scalar* ptr = reinterpret_cast<scalar*>(&i);
+        x = *ptr;
     }
     while (min > mag(x) || mag(x) > max || !std::isfinite(x));
     return x;
