@@ -66,6 +66,8 @@ SourceFiles
 
 namespace Foam
 {
+namespace radiation
+{
 
 /*---------------------------------------------------------------------------*\
              Class MarshakRadiationFvPatchScalarField Declaration
@@ -200,6 +202,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace radiation
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

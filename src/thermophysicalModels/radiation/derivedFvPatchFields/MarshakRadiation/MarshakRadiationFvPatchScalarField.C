@@ -32,7 +32,8 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
+Foam::radiation::MarshakRadiationFvPatchScalarField::
+MarshakRadiationFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -48,7 +49,8 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 }
 
 
-Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
+Foam::radiation::MarshakRadiationFvPatchScalarField::
+MarshakRadiationFvPatchScalarField
 (
     const MarshakRadiationFvPatchScalarField& ptf,
     const fvPatch& p,
@@ -68,7 +70,8 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 {}
 
 
-Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
+Foam::radiation::MarshakRadiationFvPatchScalarField::
+MarshakRadiationFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -97,7 +100,8 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 }
 
 
-Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
+Foam::radiation::MarshakRadiationFvPatchScalarField::
+MarshakRadiationFvPatchScalarField
 (
     const MarshakRadiationFvPatchScalarField& ptf
 )
@@ -113,7 +117,8 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 {}
 
 
-Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
+Foam::radiation::MarshakRadiationFvPatchScalarField::
+MarshakRadiationFvPatchScalarField
 (
     const MarshakRadiationFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
@@ -132,7 +137,7 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::MarshakRadiationFvPatchScalarField::autoMap
+void Foam::radiation::MarshakRadiationFvPatchScalarField::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -142,7 +147,7 @@ void Foam::MarshakRadiationFvPatchScalarField::autoMap
 }
 
 
-void Foam::MarshakRadiationFvPatchScalarField::rmap
+void Foam::radiation::MarshakRadiationFvPatchScalarField::rmap
 (
     const fvPatchScalarField& ptf,
     const labelList& addr
@@ -153,7 +158,7 @@ void Foam::MarshakRadiationFvPatchScalarField::rmap
 }
 
 
-void Foam::MarshakRadiationFvPatchScalarField::updateCoeffs()
+void Foam::radiation::MarshakRadiationFvPatchScalarField::updateCoeffs()
 {
     if (this->updated())
     {
@@ -190,7 +195,10 @@ void Foam::MarshakRadiationFvPatchScalarField::updateCoeffs()
 }
 
 
-void Foam::MarshakRadiationFvPatchScalarField::write(Ostream& os) const
+void Foam::radiation::MarshakRadiationFvPatchScalarField::write
+(
+    Ostream& os
+) const
 {
     mixedFvPatchScalarField::write(os);
     radiationCoupledBase::write(os);
@@ -202,11 +210,14 @@ void Foam::MarshakRadiationFvPatchScalarField::write(Ostream& os) const
 
 namespace Foam
 {
+namespace radiation
+{
     makePatchTypeField
     (
         fvPatchScalarField,
         MarshakRadiationFvPatchScalarField
     );
+}
 }
 
 

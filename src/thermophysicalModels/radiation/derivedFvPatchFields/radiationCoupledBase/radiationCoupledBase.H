@@ -48,6 +48,8 @@ SourceFiles
 
 namespace Foam
 {
+namespace radiation
+{
 
 /*---------------------------------------------------------------------------*\
                     Class radiationCoupledBase Declaration
@@ -163,6 +165,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace radiation
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

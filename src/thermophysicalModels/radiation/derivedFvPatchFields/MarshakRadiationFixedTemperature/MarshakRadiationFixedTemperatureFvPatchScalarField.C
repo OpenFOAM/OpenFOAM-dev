@@ -32,7 +32,7 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::
+Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::
 MarshakRadiationFixedTemperatureFvPatchScalarField
 (
     const fvPatch& p,
@@ -49,7 +49,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 }
 
 
-Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::
+Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::
 MarshakRadiationFixedTemperatureFvPatchScalarField
 (
     const MarshakRadiationFixedTemperatureFvPatchScalarField& ptf,
@@ -70,7 +70,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 {}
 
 
-Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::
+Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::
 MarshakRadiationFixedTemperatureFvPatchScalarField
 (
     const fvPatch& p,
@@ -94,7 +94,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 }
 
 
-Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::
+Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::
 MarshakRadiationFixedTemperatureFvPatchScalarField
 (
     const MarshakRadiationFixedTemperatureFvPatchScalarField& ptf
@@ -111,7 +111,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 {}
 
 
-Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::
+Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::
 MarshakRadiationFixedTemperatureFvPatchScalarField
 (
     const MarshakRadiationFixedTemperatureFvPatchScalarField& ptf,
@@ -131,7 +131,8 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::autoMap
+void Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::
+autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -142,7 +143,7 @@ void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::autoMap
 }
 
 
-void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::rmap
+void Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::rmap
 (
     const fvPatchScalarField& ptf,
     const labelList& addr
@@ -157,7 +158,8 @@ void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::rmap
 }
 
 
-void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::updateCoeffs()
+void Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::
+updateCoeffs()
 {
     if (this->updated())
     {
@@ -190,7 +192,7 @@ void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::updateCoeffs()
 }
 
 
-void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::write
+void Foam::radiation::MarshakRadiationFixedTemperatureFvPatchScalarField::write
 (
     Ostream& os
 ) const
@@ -205,11 +207,14 @@ void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::write
 
 namespace Foam
 {
+namespace radiation
+{
     makePatchTypeField
     (
         fvPatchScalarField,
         MarshakRadiationFixedTemperatureFvPatchScalarField
     );
+}
 }
 
 
