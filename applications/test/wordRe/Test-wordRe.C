@@ -44,10 +44,10 @@ int main(int argc, char *argv[])
     Foam::string s2("this .* file");
     const char * s3 = "this .* file";
 
-    wordRe(s1, wordRe::DETECT).info(Info) << endl;
+    wordRe(s1, wordRe::compOption::detect).info(Info) << endl;
     wordRe(s2).info(Info) << endl;
-    wordRe(s2, wordRe::DETECT).info(Info) << endl;
-    wordRe(s3, wordRe::REGEXP).info(Info) << endl;
+    wordRe(s2, wordRe::compOption::detect).info(Info) << endl;
+    wordRe(s3, wordRe::compOption::regExp).info(Info) << endl;
 
     wre = "this .* file";
     wre.info(Info) << endl;
@@ -60,25 +60,25 @@ int main(int argc, char *argv[])
     wre.info(Info) << " before" << endl;
     wre.uncompile();
     wre.info(Info) << " uncompiled" << endl;
-    wre.compile(wordRe::DETECT);
-    wre.info(Info) << " after DETECT" << endl;
-    wre.compile(wordRe::NOCASE);
-    wre.info(Info) << " after NOCASE" << endl;
-    wre.compile(wordRe::DETECT_NOCASE);
-    wre.info(Info) << " after DETECT_NOCASE" << endl;
+    wre.compile(wordRe::compOption::detect);
+    wre.info(Info) << " after compOption::detect" << endl;
+    wre.compile(wordRe::compOption::noCase);
+    wre.info(Info) << " after noCase" << endl;
+    wre.compile(wordRe::compOption::detectNoCase);
+    wre.info(Info) << " after compOption::detectNoCase" << endl;
 
     wre = "something .* value";
     wre.info(Info) << " before" << endl;
     wre.uncompile();
     wre.info(Info) << " uncompiled" << endl;
-    wre.compile(wordRe::DETECT);
-    wre.info(Info) << " after DETECT" << endl;
+    wre.compile(wordRe::compOption::detect);
+    wre.info(Info) << " after compOption::detect" << endl;
     wre.uncompile();
     wre.info(Info) << " uncompiled" << endl;
     wre.recompile();
     wre.info(Info) << " recompiled" << endl;
 
-    wre.set("something .* value", wordRe::LITERAL);
+    wre.set("something .* value", wordRe::compOption::literal);
     wre.info(Info) << " set as LITERAL" << endl;
 
     IOobject::writeDivider(Info);
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
             << endl;
 
         wordRe wre2;
-        wre2.set(wre, wordRe::NOCASE);
+        wre2.set(wre, wordRe::compOption::noCase);
 
         wre2.info(Info)
             << " match:" << wre2.match(str)
