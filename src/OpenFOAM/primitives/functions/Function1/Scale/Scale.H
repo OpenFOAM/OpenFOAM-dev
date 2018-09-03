@@ -25,8 +25,9 @@ Class
     Foam::Function1Types::Scale
 
 Description
-    Function1 which scales a given 'value' function by a scalar 'scale'
-    function.
+    Function1 which scales a given 'value' function by a 'scale' scalar function
+    and scales the 'x' argument of the 'value' and 'scale' functions by the
+    optional 'xScale' scalar function.
 
     This is particularly useful to ramp a time-varying value by one of the
     monotonic ramp functions.
@@ -57,11 +58,53 @@ Description
         }
     \endverbatim
 
+    Simplified usage to scale by a constant factor, e.g. 2:
+    \verbatim
+        <entryName>
+        {
+            type      scale;
+
+            scale     2;
+
+            value
+            {
+                type        sine;
+
+                frequency   10;
+                amplitude   1;
+                scale       (1 0.1 0);
+                level       (10 1 0);
+            }
+        }
+    \endverbatim
+
+    Usage including the optional 'xScale' function:
+    \verbatim
+        <entryName>
+        {
+            type      scale;
+
+            xScale    0.5;
+            scale     2;
+
+            value
+            {
+                type        sine;
+
+                frequency   10;
+                amplitude   1;
+                scale       (1 0.1 0);
+                level       (10 1 0);
+            }
+        }
+    \endverbatim
+
     Where:
     \table
-        Property | Description                                  | Required
-        value    | Function of type Function1<Type>             | yes
-        scale    | Scaling function of type Function1<scalar>   | yes
+        Property | Description                                    | Required
+        value    | Function of type Function1<Type>               | yes
+        scale    | Scaling function of type Function1<scalar>     | yes
+        xScale   | 'x' scaling function of type Function1<scalar> | no
     \endtable
 
 SourceFiles
@@ -91,6 +134,9 @@ class Scale
     public Function1<Type>
 {
     // Private data
+
+        //- Argument scaling function
+        autoPtr<Function1<scalar>> xScale_;
 
         //- Scalar scaling function
         autoPtr<Function1<scalar>> scale_;

@@ -30,7 +30,8 @@ License
 template<class Type>
 inline Type Foam::Function1Types::Scale<Type>::value(const scalar t) const
 {
-    return scale_->value(t)*value_->value(t);
+    const scalar st = xScale_->value(t)*t;
+    return scale_->value(st)*value_->value(st);
 }
 
 
