@@ -36,6 +36,8 @@ Description
     \verbatim
     delta           Prandtl;
 
+    kappa           0.41;
+
     PrandtlCoeffs
     {
         delta   cubeRootVol;
@@ -45,8 +47,6 @@ Description
             deltaCoeff      1;
         }
 
-        // Default coefficients
-        kappa           0.41;
         Cdelta          0.158;
     }
     \endverbatim
