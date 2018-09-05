@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the natural logarithm of the specified scalar field
+
+\*---------------------------------------------------------------------------*/
+
+type            log;
+libs            ("libfieldFunctionObjects.so");
+
+field           <fieldName>;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+
+// ************************************************************************* //
