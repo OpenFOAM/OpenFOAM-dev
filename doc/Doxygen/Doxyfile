@@ -795,7 +795,7 @@ INPUT_ENCODING         = UTF-8
 
 FILE_PATTERNS          = *.H \
                          *.C \
-                         *.dox
+                         *.L
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
@@ -810,7 +810,11 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = $(WM_PROJECT_DIR)/src/mesh/blockMesh/blockMesh/blockMesh.C
+EXCLUDE                = \
+    $(WM_PROJECT_DIR)/src/mesh/blockMesh/blockMesh/blockMesh.C \
+    $(WM_PROJECT_DIR)/src/dynamicMesh/polyTopoChange/polyTopoChange/removeFaces.C \
+    $(WM_PROJECT_DIR)/src/meshTools/sets/topoSets/topoSet.C \
+    $(WM_PROJECT_DIR)/src/conversion/polyDualMesh/polyDualMesh.C
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
