@@ -24,8 +24,6 @@ License
 Application
     gambitToFoam
 
-    \file gambitToFoam.C
-
 Description
     Converts a GAMBIT mesh to OpenFOAM format.
 
