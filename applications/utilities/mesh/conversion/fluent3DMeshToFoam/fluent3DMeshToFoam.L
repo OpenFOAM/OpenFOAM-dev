@@ -21,12 +21,6 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    fluent3DMeshToFoam
-
-Description
-    Converts a Fluent mesh to OpenFOAM format.
-
 \*---------------------------------------------------------------------------*/
 
 %{
