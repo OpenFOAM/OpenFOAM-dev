@@ -168,7 +168,7 @@ void Foam::Cloud<ParticleType>::move
     // Initialise the stepFraction moved for the particles
     forAllIter(typename Cloud<ParticleType>, *this, pIter)
     {
-        pIter().stepFraction() = 0;
+        pIter().reset();
     }
 
     // List of lists of particles to be transferred for all of the

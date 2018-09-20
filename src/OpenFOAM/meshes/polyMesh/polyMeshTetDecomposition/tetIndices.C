@@ -25,13 +25,6 @@ License
 
 #include "tetIndices.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-const Foam::label Foam::tetIndices::maxNWarnings = 100;
-
-Foam::label Foam::tetIndices::nWarnings = 0;
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::tetIndices::tetIndices()
