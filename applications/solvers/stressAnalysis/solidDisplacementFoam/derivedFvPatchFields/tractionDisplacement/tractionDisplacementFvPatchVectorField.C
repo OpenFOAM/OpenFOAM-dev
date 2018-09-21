@@ -24,17 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tractionDisplacementFvPatchVectorField.H"
-#include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-tractionDisplacementFvPatchVectorField::
+Foam::tractionDisplacementFvPatchVectorField::
 tractionDisplacementFvPatchVectorField
 (
     const fvPatch& p,
@@ -50,7 +45,7 @@ tractionDisplacementFvPatchVectorField
 }
 
 
-tractionDisplacementFvPatchVectorField::
+Foam::tractionDisplacementFvPatchVectorField::
 tractionDisplacementFvPatchVectorField
 (
     const tractionDisplacementFvPatchVectorField& tdpvf,
@@ -65,7 +60,7 @@ tractionDisplacementFvPatchVectorField
 {}
 
 
-tractionDisplacementFvPatchVectorField::
+Foam::tractionDisplacementFvPatchVectorField::
 tractionDisplacementFvPatchVectorField
 (
     const fvPatch& p,
@@ -82,7 +77,7 @@ tractionDisplacementFvPatchVectorField
 }
 
 
-tractionDisplacementFvPatchVectorField::
+Foam::tractionDisplacementFvPatchVectorField::
 tractionDisplacementFvPatchVectorField
 (
     const tractionDisplacementFvPatchVectorField& tdpvf
@@ -94,7 +89,7 @@ tractionDisplacementFvPatchVectorField
 {}
 
 
-tractionDisplacementFvPatchVectorField::
+Foam::tractionDisplacementFvPatchVectorField::
 tractionDisplacementFvPatchVectorField
 (
     const tractionDisplacementFvPatchVectorField& tdpvf,
@@ -109,7 +104,7 @@ tractionDisplacementFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void tractionDisplacementFvPatchVectorField::autoMap
+void Foam::tractionDisplacementFvPatchVectorField::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -120,7 +115,7 @@ void tractionDisplacementFvPatchVectorField::autoMap
 }
 
 
-void tractionDisplacementFvPatchVectorField::rmap
+void Foam::tractionDisplacementFvPatchVectorField::rmap
 (
     const fvPatchVectorField& ptf,
     const labelList& addr
@@ -136,7 +131,7 @@ void tractionDisplacementFvPatchVectorField::rmap
 }
 
 
-void tractionDisplacementFvPatchVectorField::updateCoeffs()
+void Foam::tractionDisplacementFvPatchVectorField::updateCoeffs()
 {
     if (updated())
     {
@@ -202,7 +197,7 @@ void tractionDisplacementFvPatchVectorField::updateCoeffs()
 }
 
 
-void tractionDisplacementFvPatchVectorField::write(Ostream& os) const
+void Foam::tractionDisplacementFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     traction_.writeEntry("traction", os);
@@ -213,14 +208,14 @@ void tractionDisplacementFvPatchVectorField::write(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makePatchTypeField
-(
-    fvPatchVectorField,
-    tractionDisplacementFvPatchVectorField
-);
+namespace Foam
+{
+    makePatchTypeField
+    (
+        fvPatchVectorField,
+        tractionDisplacementFvPatchVectorField
+    );
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

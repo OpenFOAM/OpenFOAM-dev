@@ -36,7 +36,6 @@ SourceFiles
 #ifndef tractionDisplacementFvPatchVectorField_H
 #define tractionDisplacementFvPatchVectorField_H
 
-#include "fvPatchFields.H"
 #include "fixedGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,7 +51,6 @@ class tractionDisplacementFvPatchVectorField
 :
     public fixedGradientFvPatchVectorField
 {
-
     // Private Data
 
         vectorField traction_;
@@ -146,7 +144,7 @@ public:
                 return pressure_;
             }
 
-            virtual  scalarField& pressure()
+            virtual scalarField& pressure()
             {
                 return pressure_;
             }
