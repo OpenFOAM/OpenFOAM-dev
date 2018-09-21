@@ -1,6 +1,6 @@
 #include "readMechanicalProperties.H"
 #include "readThermalProperties.H"
-
+mesh.Sf();
 Info<< "Reading field D\n" << endl;
 volVectorField D
 (
@@ -77,3 +77,5 @@ else
 }
 
 mesh.setFluxRequired(D.name());
+
+#include "createFvOptions.H"

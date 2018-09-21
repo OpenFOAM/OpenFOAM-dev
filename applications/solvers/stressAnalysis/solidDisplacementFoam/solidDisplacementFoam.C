@@ -36,6 +36,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "fvOptions.H"
 #include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -68,10 +69,16 @@ int main(int argc, char *argv[])
             if (thermalStress)
             {
                 volScalarField& T = Tptr();
-                solve
+                fvScalarMatrix TEqn
                 (
-                    fvm::ddt(T) == fvm::laplacian(DT, T)
+                    fvm::ddt(T) == fvm::laplacian(DT, T) + fvOptions(T)
                 );
+
+                fvOptions.constrain(TEqn);
+
+                TEqn.solve();
+
+                fvOptions.correct(T);
             }
 
             {
@@ -81,6 +88,7 @@ int main(int argc, char *argv[])
                  ==
                     fvm::laplacian(2*mu + lambda, D, "laplacian(DD,D)")
                   + divSigmaExp
+                  + fvOptions.d2dt2(D)
                 );
 
                 if (thermalStress)
@@ -89,8 +97,7 @@ int main(int argc, char *argv[])
                     DEqn += fvc::grad(threeKalpha*T);
                 }
 
-                // DEqn.setComponentReference(1, 0, vector::X, 0);
-                // DEqn.setComponentReference(1, 0, vector::Z, 0);
+                fvOptions.constrain(DEqn);
 
                 initialResidual = DEqn.solve().max().initialResidual();
 
