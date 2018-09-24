@@ -166,6 +166,30 @@ namespace Foam
     );
 
     typedef
+        IsothermalPhaseModel
+        <
+            MultiComponentPhaseModel
+            <
+                InertPhaseModel
+                <
+                    MovingPhaseModel
+                    <
+                        ThermoPhaseModel<phaseModel, rhoReactionThermo>
+                    >
+                >
+            >
+        >
+        multiComponentIsothermalPhaseModel;
+
+    addNamedToRunTimeSelectionTable
+    (
+        phaseModel,
+        multiComponentIsothermalPhaseModel,
+        phaseSystem,
+        multiComponentIsothermalPhaseModel
+    );
+
+    typedef
         AnisothermalPhaseModel
         <
             MultiComponentPhaseModel
