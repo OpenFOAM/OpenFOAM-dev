@@ -145,7 +145,7 @@ void Foam::singleRegionCorrectorConvergenceControl::printCorrResidualControls
             << corrResidualControl_[i].relTol << nl;
     }
 
-    Info<< control_.algorithmSpace() << "  Calclations will do " << n
+    Info<< control_.algorithmSpace() << "  Calculations will do " << n
         << " corrections" << (corrResidualControl_.empty() ? "" :
            " if the convergence criteria are not met") << nl << endl;
 }
