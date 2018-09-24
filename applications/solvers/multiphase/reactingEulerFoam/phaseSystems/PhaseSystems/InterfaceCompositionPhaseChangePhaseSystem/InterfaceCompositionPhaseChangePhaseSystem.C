@@ -129,7 +129,7 @@ InterfaceCompositionPhaseChangePhaseSystem
             FatalErrorInFunction
                 << "An interfacial composition model is specified for the "
                 << "unordered " << pair << " pair. Composition models only "
-                << "apply to ordered pairs. A entry for an "
+                << "apply to ordered pairs. An entry for a "
                 << phasePairKey("A", "B", true) << " pair means a model for "
                 << "the A side of the A-B interface; i.e., \"A in the presence "
                 << "of B\""
