@@ -286,6 +286,14 @@ inline Foam::vector Foam::particle::position() const
 }
 
 
+inline void Foam::particle::reset()
+{
+    stepFraction_ = 0;
+    nBehind_ = 0;
+    behind_ = 0;
+}
+
+
 void Foam::particle::patchData(vector& normal, vector& displacement) const
 {
     if (!onBoundaryFace())

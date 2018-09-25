@@ -123,27 +123,42 @@ InterfaceCompositionPhaseChangePhaseSystem
     {
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
+        const phaseModel& phase = pair.phase1();
+        const phaseModel& otherPhase = pair.phase2();
 
         if (!pair.ordered())
         {
             FatalErrorInFunction
                 << "An interfacial composition model is specified for the "
                 << "unordered " << pair << " pair. Composition models only "
-                << "apply to ordered pairs. A entry for an "
+                << "apply to ordered pairs. An entry for a "
                 << phasePairKey("A", "B", true) << " pair means a model for "
                 << "the A side of the A-B interface; i.e., \"A in the presence "
                 << "of B\""
                 << exit(FatalError);
         }
 
-        const phasePairKey key(pair.phase1().name(), pair.phase2().name());
 
-        if (!massTransferModels_[key][pair.index(pair.phase1())].valid())
+        const phasePairKey key(phase.name(), otherPhase.name());
+
+        if (!this->phasePairs_.found(key))
+        {
+            FatalErrorInFunction
+                << "A mass transfer model the " << key << " pair is not "
+                << "specified. This is required by the corresponding interface "
+                << "composition model."
+                << exit(FatalError);
+        }
+
+        const phasePair& uoPair = this->phasePairs_[key];
+
+        if (!massTransferModels_[uoPair][uoPair.index(phase)].valid())
         {
             FatalErrorInFunction
                 << "A mass transfer model for the " << pair.phase1().name()
-                << " side of the " << key << " pair is not specified. This is "
-                << "required by the corresponding interface composition model."
+                << " side of the " << uoPair << " pair is not "
+                << "specified. This is required by the corresponding interface "
+                << "composition model."
                 << exit(FatalError);
         }
     }
@@ -180,7 +195,6 @@ InterfaceCompositionPhaseChangePhaseSystem
 
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
-        const phasePair unorderedPair(pair.phase1(), pair.phase2());
 
         iDmdtSu_.insert(pair, new HashPtrTable<volScalarField>());
         iDmdtSp_.insert(pair, new HashPtrTable<volScalarField>());
@@ -317,13 +331,14 @@ massTransfer() const
             this->phasePairs_[interfaceCompositionModelIter.key()];
         const phaseModel& phase = pair.phase1();
         const phaseModel& otherPhase = pair.phase2();
-        const phasePair unorderedPair(phase, otherPhase);
+        const phasePair& unorderedPair =
+            this->phasePairs_[phasePair(phase, otherPhase)];
 
         const volScalarField& Tf(*this->Tf_[unorderedPair]);
 
         const volScalarField K
         (
-            massTransferModels_[unorderedPair][pair.index(phase)]->K()
+            massTransferModels_[unorderedPair][unorderedPair.index(phase)]->K()
         );
 
         forAllConstIter(hashedWordList, compositionModel.species(), memberIter)

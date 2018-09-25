@@ -94,16 +94,6 @@ class tetIndices
         label tetPti_;
 
 
-    // Private static data
-
-        //- Maximum number of bad tet warnings
-        static const label maxNWarnings;
-
-        //- Current number of bad tet warnings. Warnings stop when this reaches
-        //  the maximum number.
-        static label nWarnings;
-
-
 public:
 
     // Constructors
