@@ -24,7 +24,6 @@ boundaryField
     rotor
     {
         type            epsilonWallFunction;
-        U               Urel;
         value           uniform 3.75e-4;
     }
 

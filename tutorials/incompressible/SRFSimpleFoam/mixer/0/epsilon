@@ -34,13 +34,11 @@ boundaryField
     innerWall
     {
         type            epsilonWallFunction;
-        U               Urel;
         value           uniform 14.855;
     }
     outerWall
     {
         type            epsilonWallFunction;
-        U               Urel;
         value           uniform 14.855;
     }
     cyclic_half0
