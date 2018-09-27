@@ -93,8 +93,12 @@ Foam::mixtureViscosityModels::BinghamPlastic::mu
             pow
             (
                 scalar(10),
-                yieldStressExponent_
-               *(max(alpha_, scalar(0)) + yieldStressOffset_)
+                min
+                (
+                    log10(vGreat),
+                    yieldStressExponent_
+                   *(max(alpha_, scalar(0)) + yieldStressOffset_)
+                )
             )
           - pow
             (
