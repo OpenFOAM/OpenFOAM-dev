@@ -41,6 +41,30 @@ public:
     typedef arg2 type;
 };
 
+template<class Type>
+inline const Type& operator+(const Type& t, const one&)
+{
+    return t + 1;
+}
+
+template<class Type>
+inline const Type& operator+(const one&, const Type& t)
+{
+    return 1 + t;
+}
+
+template<class Type>
+inline const Type& operator-(const Type& t, const one&)
+{
+    return t - 1;
+}
+
+template<class Type>
+inline const Type& operator-(const one&, const Type& t)
+{
+    return 1 - t;
+}
+
 inline const one& operator*(const one& o, const one&)
 {
     return o;

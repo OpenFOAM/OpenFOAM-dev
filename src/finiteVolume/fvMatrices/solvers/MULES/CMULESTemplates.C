@@ -233,6 +233,20 @@ void Foam::MULES::limiterCorr
         MULEScontrols.lookupOrDefault<scalar>("extremaCoeff", 0)
     );
 
+    const scalar boundaryExtremaCoeff
+    (
+        MULEScontrols.lookupOrDefault<scalar>
+        (
+            "boundaryExtremaCoeff",
+            extremaCoeff
+        )
+    );
+
+    const scalar boundaryDeltaExtremaCoeff
+    (
+        max(boundaryExtremaCoeff - extremaCoeff, 0)
+    );
+
     const labelUList& owner = mesh.owner();
     const labelUList& neighb = mesh.neighbour();
     tmp<volScalarField::Internal> tVsc = mesh.Vsc();
@@ -331,12 +345,20 @@ void Foam::MULES::limiterCorr
         }
         else
         {
-            forAll(phiCorrPf, pFacei)
+            // Add the optional additional allowed boundary extrema
+            if (boundaryDeltaExtremaCoeff > 0)
             {
-                const label pfCelli = pFaceCells[pFacei];
+                forAll(phiCorrPf, pFacei)
+                {
+                    const label pfCelli = pFaceCells[pFacei];
 
-                psiMaxn[pfCelli] = max(psiMaxn[pfCelli], psiMax[pfCelli]);
-                psiMinn[pfCelli] = min(psiMinn[pfCelli], psiMin[pfCelli]);
+                    const scalar extrema =
+                        boundaryDeltaExtremaCoeff
+                       *(psiMax[pfCelli] - psiMin[pfCelli]);
+
+                    psiMaxn[pfCelli] += extrema;
+                    psiMinn[pfCelli] -= extrema;
+                }
             }
         }
 

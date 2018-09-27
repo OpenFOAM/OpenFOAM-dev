@@ -26,6 +26,8 @@ solvers
         nLimiterIter    3;
         alphaApplyPrevCorr  yes;
 
+        boundaryExtremaCoeff 1;
+
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-6;
