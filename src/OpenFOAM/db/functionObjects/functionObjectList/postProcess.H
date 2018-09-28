@@ -92,41 +92,11 @@ if (argList::postProcess(argc, argv))
     #include INCLUDE_FILE(CREATE_CONTROL)
     #endif
 
-    // Externally stored dictionary for functionObjectList
-    // if not constructed from runTime
-    dictionary functionsControlDict("controlDict");
-
-    HashSet<word> selectedFields;
-
-    // Construct functionObjectList
-    autoPtr<functionObjectList> functionsPtr
-    (
-        functionObjectList::New
-        (
-            args,
-            runTime,
-            functionsControlDict,
-            selectedFields
-        )
-    );
-
     forAll(timeDirs, timei)
     {
         runTime.setTime(timeDirs[timei], timei);
 
         Info<< "Time = " << runTime.timeName() << endl;
-
-        if (mesh.readUpdate() != polyMesh::UNCHANGED)
-        {
-            // Update functionObjects if mesh changes
-            functionsPtr = functionObjectList::New
-            (
-                args,
-                runTime,
-                functionsControlDict,
-                selectedFields
-            );
-        }
 
         FatalIOError.throwExceptions();
 
@@ -142,13 +112,25 @@ if (argList::postProcess(argc, argv))
             #include INCLUDE_FILE(CREATE_FIELDS_3)
             #endif
 
-            functionsPtr->execute();
+            // Externally stored dictionary for functionObjectList
+            // if not constructed from runTime
+            dictionary functionsControlDict("controlDict");
 
-            // Execute the functionObject 'end()' function for the last time
-            if (timei == timeDirs.size()-1)
-            {
-                functionsPtr->end();
-            }
+            HashSet<word> selectedFields;
+
+            // Construct functionObjectList
+            autoPtr<functionObjectList> functionsPtr
+            (
+                functionObjectList::New
+                (
+                    args,
+                    runTime,
+                    functionsControlDict,
+                    selectedFields
+                )
+            );
+
+            functionsPtr->execute();
         }
         catch (IOerror& err)
         {
