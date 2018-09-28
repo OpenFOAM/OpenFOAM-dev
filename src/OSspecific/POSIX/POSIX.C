@@ -38,6 +38,7 @@ Description
 #include "timer.H"
 #include "IFstream.H"
 #include "DynamicList.H"
+#include "HashSet.H"
 #include "IOstreams.H"
 #include "Pstream.H"
 
@@ -126,7 +127,7 @@ Foam::string Foam::hostName(bool full)
     char buf[128];
     ::gethostname(buf, sizeof(buf));
 
-    // implementation as per hostname from net-tools
+    // Implementation as per hostname from net-tools
     if (full)
     {
         struct hostent *hp = ::gethostbyname(buf);
@@ -145,7 +146,7 @@ Foam::string Foam::domainName()
     char buf[128];
     ::gethostname(buf, sizeof(buf));
 
-    // implementation as per hostname from net-tools
+    // Implementation as per hostname from net-tools
     struct hostent *hp = ::gethostbyname(buf);
     if (hp)
     {
@@ -298,7 +299,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
         }
     }
 
-    // empty names are meaningless
+    // Empty names are meaningless
     if (pathName.empty())
     {
         return false;
@@ -671,7 +672,6 @@ Foam::fileNameList Foam::readDir
 
     if (POSIX::debug)
     {
-        // InfoInFunction
         Pout<< FUNCTION_NAME << " : reading directory " << directory << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -680,20 +680,15 @@ Foam::fileNameList Foam::readDir
     }
 
     // Setup empty string list MAXTVALUES long
-    fileNameList dirEntries(maxNnames);
+    HashSet<fileName> dirEntries(maxNnames);
 
     // Pointers to the directory entries
     DIR *source;
     struct dirent *list;
 
-    // Temporary variables and counters
-    label nEntries = 0;
-
     // Attempt to open directory and set the structure pointer
     if ((source = ::opendir(directory.c_str())) == nullptr)
     {
-        dirEntries.setSize(0);
-
         if (POSIX::debug)
         {
             InfoInFunction
@@ -707,7 +702,7 @@ Foam::fileNameList Foam::readDir
         {
             fileName fName(list->d_name);
 
-            // ignore files beginning with ., i.e. '.', '..' and '.*'
+            // Ignore files beginning with ., i.e. '.', '..' and '.*'
             if (fName.size() && fName[0] != '.')
             {
                 word fExt = fName.ext();
@@ -728,12 +723,7 @@ Foam::fileNameList Foam::readDir
                 {
                     if ((directory/fName).type(false, followLink) == type)
                     {
-                        if (nEntries >= dirEntries.size())
-                        {
-                            dirEntries.setSize(dirEntries.size() + maxNnames);
-                        }
-
-                        dirEntries[nEntries++] = fName;
+                        bool filtered = false;
 
                         if (filterVariants)
                         {
@@ -741,23 +731,26 @@ Foam::fileNameList Foam::readDir
                             {
                                 if (fExt == fileStat::variantExts_[i])
                                 {
-                                    dirEntries[nEntries - 1] = fName.lessExt();
+                                    dirEntries.insert(fName.lessExt());
+                                    filtered = true;
                                     break;
                                 }
                             }
+                        }
+
+                        if (!filtered)
+                        {
+                            dirEntries.insert(fName);
                         }
                     }
                 }
             }
         }
 
-        // Reset the length of the entries list
-        dirEntries.setSize(nEntries);
-
         ::closedir(source);
     }
 
-    return dirEntries;
+    return dirEntries.toc();
 }
 
 
@@ -924,7 +917,6 @@ bool Foam::ln(const fileName& src, const fileName& dst)
 {
     if (POSIX::debug)
     {
-        // InfoInFunction
         Pout<< FUNCTION_NAME
             << " : Create softlink from : " << src << " to " << dst << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
@@ -965,7 +957,6 @@ bool Foam::mv(const fileName& src, const fileName& dst, const bool followLink)
 {
     if (POSIX::debug)
     {
-        // InfoInFunction
         Pout<< FUNCTION_NAME << " : Move : " << src << " to " << dst << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -994,7 +985,6 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
 {
     if (POSIX::debug)
     {
-        // InfoInFunction
         Pout<< FUNCTION_NAME
             << " : moving : " << src << " to extension " << ext << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
@@ -1017,7 +1007,7 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
                 dstName += index;
             }
 
-            // avoid overwriting existing files, except for the last
+            // Avoid overwriting existing files, except for the last
             // possible index where we have no choice
             if (!exists(dstName, false, false) || n == maxIndex)
             {
@@ -1027,7 +1017,7 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
         }
     }
 
-    // fall-through: nothing to do
+    // Fall-through: nothing to do
     return false;
 }
 
@@ -1036,7 +1026,6 @@ bool Foam::rm(const fileName& file)
 {
     if (POSIX::debug)
     {
-        // InfoInFunction
         Pout<< FUNCTION_NAME << " : Removing : " << file << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -1067,7 +1056,6 @@ bool Foam::rmDir(const fileName& directory)
 {
     if (POSIX::debug)
     {
-        // InfoInFunction
         Pout<< FUNCTION_NAME << " : removing directory " << directory << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -1173,7 +1161,7 @@ bool Foam::ping
 {
     struct hostent *hostPtr;
     volatile int sockfd;
-    struct sockaddr_in destAddr;      // will hold the destination addr
+    struct sockaddr_in destAddr;      // Will hold the destination addr
     u_int addr;
 
     if ((hostPtr = ::gethostbyname(destName.c_str())) == nullptr)
@@ -1231,7 +1219,6 @@ bool Foam::ping
         {
             return true;
         }
-        // perror("connect");
 
         return false;
     }
@@ -1302,13 +1289,14 @@ void* Foam::dlSym(void* handle, const std::string& symbol)
             << "dlSym(void*, const std::string&)"
             << " : dlsym of " << symbol << std::endl;
     }
-    // clear any old errors - see manpage dlopen
+
+    // Clear any old errors - see manpage dlopen
     (void) ::dlerror();
 
-    // get address of symbol
+    // Get address of symbol
     void* fun = ::dlsym(handle, symbol.c_str());
 
-    // find error (if any)
+    // Find error (if any)
     char *error = ::dlerror();
 
     if (error)
@@ -1333,13 +1321,13 @@ bool Foam::dlSymFound(void* handle, const std::string& symbol)
                 << " : dlsym of " << symbol << std::endl;
         }
 
-        // clear any old errors - see manpage dlopen
+        // Clear any old errors - see manpage dlopen
         (void) ::dlerror();
 
-        // get address of symbol
+        // Get address of symbol
         (void) ::dlsym(handle, symbol.c_str());
 
-        // symbol can be found if there was no error
+        // Symbol can be found if there was no error
         return !::dlerror();
     }
     else
