@@ -38,6 +38,85 @@ namespace Foam
     defineTypeNameAndDebug(meshSearch, 0);
 
     scalar meshSearch::tol_ = 1e-3;
+
+    // Intersection operation that checks previous successful hits so that they
+    // are not duplicated
+    class findUniqueIntersectOp
+    :
+        public treeDataFace::findIntersectOp
+    {
+    public:
+
+        const indexedOctree<treeDataFace>& tree_;
+
+        const List<pointIndexHit>& hits_;
+
+    public:
+
+        //- Construct from components
+        findUniqueIntersectOp
+        (
+            const indexedOctree<treeDataFace>& tree,
+            const List<pointIndexHit>& hits
+        )
+        :
+            treeDataFace::findIntersectOp(tree),
+            tree_(tree),
+            hits_(hits)
+        {}
+
+        //- Calculate intersection of triangle with ray. Sets result
+        //  accordingly
+        bool operator()
+        (
+            const label index,
+            const point& start,
+            const point& end,
+            point& intersectionPoint
+        ) const
+        {
+            const primitiveMesh& mesh = tree_.shapes().mesh();
+
+            // Check whether this hit has already happened. If the new face
+            // index is the same as an existing hit then return no new hit. If
+            // the new face shares a point with an existing hit face and the
+            // line passes through both faces in the same direction, then this
+            // is also assumed to be a duplicate hit.
+            const label newFacei = tree_.shapes().faceLabels()[index];
+            const face& newFace = mesh.faces()[newFacei];
+            const scalar newDot = mesh.faceAreas()[newFacei] & (end - start);
+            forAll(hits_, hiti)
+            {
+                const label oldFacei = hits_[hiti].index();
+                const face& oldFace = mesh.faces()[oldFacei];
+                const scalar oldDot =
+                    mesh.faceAreas()[oldFacei] & (end - start);
+
+                if
+                (
+                    hits_[hiti].index() == newFacei
+                 || (
+                        newDot*oldDot > 0
+                     && (labelHashSet(newFace) & labelHashSet(oldFace)).size()
+                    )
+                )
+                {
+                    return false;
+                }
+            }
+
+            const bool hit =
+                treeDataFace::findIntersectOp::operator()
+                (
+                    index,
+                    start,
+                    end,
+                    intersectionPoint
+                );
+
+            return hit;
+        }
+    };
 }
 
 
@@ -466,25 +545,6 @@ Foam::label Foam::meshSearch::findNearestBoundaryFaceWalk
 }
 
 
-Foam::vector Foam::meshSearch::offset
-(
-    const point& bPoint,
-    const label bFacei,
-    const vector& dir
-) const
-{
-    // Get the neighbouring cell
-    label ownerCelli = mesh_.faceOwner()[bFacei];
-
-    const point& c = mesh_.cellCentres()[ownerCelli];
-
-    // Typical dimension: distance from point on face to cell centre
-    scalar typDim = mag(c - bPoint);
-
-    return tol_*typDim*dir;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::meshSearch::meshSearch
@@ -804,40 +864,21 @@ Foam::List<Foam::pointIndexHit> Foam::meshSearch::intersections
 ) const
 {
     DynamicList<pointIndexHit> hits;
+    pointIndexHit curHit;
 
-    vector edgeVec = pEnd - pStart;
-    edgeVec /= mag(edgeVec);
+    findUniqueIntersectOp iop(boundaryTree(), hits);
 
-    point pt = pStart;
-
-    pointIndexHit bHit;
-    do
+    while (true)
     {
-        bHit = intersection(pt, pEnd);
+        // Get the next hit, or quit
+        curHit = boundaryTree().findLine(pStart, pEnd, iop);
+        if (!curHit.hit()) break;
 
-        if (bHit.hit())
-        {
-            hits.append(bHit);
+        // Change index into octreeData into face label
+        curHit.setIndex(boundaryTree().shapes().faceLabels()[curHit.index()]);
 
-            const vector& area = mesh_.faceAreas()[bHit.index()];
-
-            scalar typDim = Foam::sqrt(mag(area));
-
-            if ((mag(bHit.hitPoint() - pEnd)/typDim) < small)
-            {
-                break;
-            }
-
-            // Restart from hitPoint shifted a little bit in the direction
-            // of the destination
-
-            pt =
-                bHit.hitPoint()
-              + offset(bHit.hitPoint(), bHit.index(), edgeVec);
-        }
-
-    } while (bHit.hit());
-
+        hits.append(curHit);
+    }
 
     hits.shrink();
 
