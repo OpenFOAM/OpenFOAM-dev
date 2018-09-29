@@ -666,10 +666,6 @@ Foam::fileNameList Foam::readDir
     const bool followLink
 )
 {
-    // Initial filename list size
-    // also used as increment if initial size found to be insufficient
-    static const int maxNnames = 100;
-
     if (POSIX::debug)
     {
         Pout<< FUNCTION_NAME << " : reading directory " << directory << endl;
@@ -679,8 +675,8 @@ Foam::fileNameList Foam::readDir
         }
     }
 
-    // Setup empty string list MAXTVALUES long
-    HashSet<fileName> dirEntries(maxNnames);
+    // Create empty set of file names
+    HashSet<fileName> dirEntries;
 
     // Pointers to the directory entries
     DIR *source;
