@@ -41,26 +41,22 @@ public:
     typedef arg2 type;
 };
 
-template<class Type>
-inline Type operator+(const Type& t, const one&)
+inline scalar operator+(const scalar& t, const one&)
 {
     return t + 1;
 }
 
-template<class Type>
-inline Type operator+(const one&, const Type& t)
+inline scalar operator+(const one&, const scalar& t)
 {
     return 1 + t;
 }
 
-template<class Type>
-inline Type operator-(const Type& t, const one&)
+inline scalar operator-(const scalar& t, const one&)
 {
     return t - 1;
 }
 
-template<class Type>
-inline Type operator-(const one&, const Type& t)
+inline scalar operator-(const one&, const scalar& t)
 {
     return 1 - t;
 }
