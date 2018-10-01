@@ -16,7 +16,7 @@ FoamFile
 
 solvers
 {
-    p
+    "(p|pcorr)"
     {
         solver          GAMG;
         smoother        GaussSeidel;
@@ -32,7 +32,7 @@ solvers
         relTol          0.1;
     }
 
-    pFinal
+    "(p|pcorr)Final"
     {
         $p;
         relTol         0;
