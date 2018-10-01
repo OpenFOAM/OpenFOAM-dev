@@ -16,6 +16,8 @@ FoamFile
 
 internalFacesOnly true;
 
+fields true;
+
 baffles
 {
     baffleFaces
