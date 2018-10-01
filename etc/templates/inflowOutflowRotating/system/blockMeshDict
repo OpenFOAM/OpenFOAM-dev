@@ -22,11 +22,8 @@ FoamFile
 backgroundMesh
 {
     radOut     3.06; // larger than fixed.obj by ~ 1/cos(45/boxCells)
-    radOutN   -3.06;
     radIn      1.02; // larger than rotatingZone.obj (see above)
-    radInN    -1.02;
     radBox     0.30; // ~30% of rotatingZone.obj
-    radBoxN   -0.30;
 
     zMin       0;
     zMax       10;   // External boundary axial length
@@ -37,6 +34,10 @@ backgroundMesh
     zCells     50;   // Cells in axial direction
 
     outGrading 2.0;  // Expansion ratio in outer region, radial direction
+
+    radOutN    #neg $radOut;
+    radInN     #neg $radIn;
+    radBoxN    #neg $radBox;
 }
 
 geometry
