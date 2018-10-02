@@ -28,7 +28,7 @@
 # Description
 #     Monitor data with Gnuplot from time-value(s) graphs written by OpenFOAM
 #     e.g. by functionObjects
-#     - requires gnuplot, gnuplot_x11
+#     - requires gnuplot
 #
 #------------------------------------------------------------------------------
 usage() {
@@ -41,11 +41,13 @@ options:
   -title    | -t <title> set the graph title (default "Data Monitoring")
   -logscale | -l         plots data (y-axis) on log scale, e.g. for residuals
   -refresh  | -r <time>  refreshes display every <time> sec (default 10s)
-  -yrange   | -y <range> sets data (y-axis) <range>, format "[0:1]"
+  -yrange   | -y <range> sets data (y-axis) range, format "[0:1]"
+  -size     | -s <size>  set the size of the output plot, format "640,480"
+  -ascii    | -a         show the graph by printing ascii in the terminal
 
 Monitor data with Gnuplot from time-value(s) graphs written by OpenFOAM
 e.g. by functionObjects
-- requires gnuplot, gnuplot_x11
+- requires gnuplot
 
 Example:
   foamMonitor -l postProcessing/residuals/0/residuals.dat
@@ -62,7 +64,7 @@ error() {
 
 plotFileHeader() {
     cat<<EOF
-set term x11 1 font "helvetica,17" linewidth 1.5 persist noraise
+set term $gpterminal $size
 $logscale
 $yrange
 set title "$title"
@@ -91,6 +93,9 @@ refresh=10
 logscale=""
 yrange=""
 title="Data Monitoring"
+size=""
+gpterminal='x11 1 font "helvetica,17" linewidth 1.5 persist noraise'
+
 command -v gnuplot >/dev/null 2>&1 || error "Gnuplot not installed"
 
 # parse options
@@ -123,6 +128,15 @@ do
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         yrange="set yrange $2"
         shift 2
+        ;;
+    -s | -size)
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        size="size $2"
+        shift 2
+        ;;
+    -a | -ascii)
+        gpterminal="dumb"
+        shift 1
         ;;
     -*)
         error "unknown option: '$*'"
