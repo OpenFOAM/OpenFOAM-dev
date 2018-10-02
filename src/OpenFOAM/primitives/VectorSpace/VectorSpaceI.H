@@ -409,7 +409,7 @@ inline scalar mag
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline VectorSpace<Form, Cmpt, Ncmpts> normalised
+inline Form normalised
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
