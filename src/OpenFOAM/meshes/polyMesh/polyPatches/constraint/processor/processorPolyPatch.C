@@ -627,7 +627,8 @@ Foam::label Foam::processorPolyPatch::matchFace
         return -1;
     }
 
-    CirculatorBase::direction circulateDirection = CirculatorBase::direction::clockwise;
+    CirculatorBase::direction circulateDirection =
+        CirculatorBase::direction::clockwise;
 
     if (!sameOrientation)
     {

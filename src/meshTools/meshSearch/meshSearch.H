@@ -135,15 +135,6 @@ class meshSearch
                 const label seedFacei
             ) const;
 
-            //- Calculate offset vector in direction dir with as length a
-            //  fraction of the cell size (of the cell straddling boundary face)
-            vector offset
-            (
-                const point& bPoint,
-                const label bFacei,
-                const vector& dir
-            ) const;
-
 
         //- Disallow default bitwise copy construct
         meshSearch(const meshSearch&);

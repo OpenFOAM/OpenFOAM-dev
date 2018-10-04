@@ -56,63 +56,36 @@ void Foam::sampledSets::lineFace::calcSamples
     DynamicList<scalar>& samplingCurveDist
 )
 {
-    // Test for an inward pointing first hit. If this exists, then the start
-    // point is outside, and the sampling should begin from the hit.
-    label bHitI = -1;
+    // Look for a starting location within the mesh
+    vector startPt = start;
+    label startFaceI = -1, startCellI = searchEngine.findCell(start);
+
+    // Get all the hits of the line with the boundaries
     const List<pointIndexHit> bHits =
         searchEngine.intersections(start, end);
-    if (bHits.size())
-    {
-        const label bFaceI = bHits[0].index();
-        const vector bNormal = normalised(mesh.faceAreas()[bFaceI]);
-        const scalar bDot = bNormal & (end - start);
-        if (bDot < 0)
-        {
-            bHitI = 0;
-        }
-    }
 
-    // If an initial inward pointing hit was not found then initialise the
-    // within the cell containing the start point
-    vector startPt = vector::max;
-    label startFaceI = -1, startCellI = -1;
-    if (bHitI == -1)
+    // Loop over the hits, starting new segments each time
+    label bHitI = startCellI == -1 ? 0 : -1;
+    label sampleSegmentI = 0;
+    for (; bHitI < bHits.size(); ++ bHitI)
     {
-        startPt = start;
-        startFaceI = -1;
-        startCellI = searchEngine.findCell(start);
-    }
-
-    // If neither hits nor a containing cell for the start point were found then
-    // the line is completely outside the mesh. Return without generating any
-    // sampling points.
-    if (bHits.size() == 0 && startCellI == -1)
-    {
-        return;
-    }
-
-    // If nothing is set by now then something has gone wrong
-    if (bHitI == -1 && startCellI == -1)
-    {
-        FatalErrorInFunction
-            << "The initial location for the line " << start << " to " << end
-            << "could not be found" << exit(FatalError);
-    }
-
-    // Loop over the hits, starting a new segment at every second hit
-    for
-    (
-        label sampleSegmentI = 0;
-        bHitI < bHits.size();
-        bHitI += 2, sampleSegmentI += 1
-    )
-    {
-        // Set the start point and topology, unless starting within a cell
-        if (bHitI != -1)
+        // If a boundary start point, then initialise to the current hit
+        if (bHitI >= 0)
         {
             startPt = bHits[bHitI].hitPoint();
             startFaceI = bHits[bHitI].index();
             startCellI = mesh.faceOwner()[startFaceI];
+        }
+
+        // If the hit points outward, move on to the next one
+        if (startFaceI != -1)
+        {
+            const vector bNormal = normalised(mesh.faceAreas()[startFaceI]);
+            const scalar bDot = bNormal & (end - start);
+            if (bDot > 0)
+            {
+                continue;
+            }
         }
 
         // Create a particle. If we are starting on a boundary face, track
@@ -159,6 +132,8 @@ void Foam::sampledSets::lineFace::calcSamples
                 break;
             }
         }
+
+        ++ sampleSegmentI;
     }
 }
 

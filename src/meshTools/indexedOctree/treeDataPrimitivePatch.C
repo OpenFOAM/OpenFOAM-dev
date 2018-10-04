@@ -644,7 +644,14 @@ bool Foam::treeDataPrimitivePatch<PatchType>::findIntersection
             points[f[0]],
             points[f[1]],
             points[f[2]]
-        ).intersection(start, dir, intersection::algorithm::halfRay, shape.planarTol_);
+        )
+       .intersection
+        (
+            start,
+            dir,
+            intersection::algorithm::halfRay,
+            shape.planarTol_
+        );
     }
     else
     {
