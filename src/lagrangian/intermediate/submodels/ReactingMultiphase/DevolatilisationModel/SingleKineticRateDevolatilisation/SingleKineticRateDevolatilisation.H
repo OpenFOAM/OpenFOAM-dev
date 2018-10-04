@@ -33,8 +33,8 @@ Description
 
     Where:
         kappa = rate constant
-        A1    = activation energy (user input)
-        E     = pre-exponential factor (user input)
+        A1    = pre-exponential factor (user input)
+        E     = activation energy (user input)
         R     = universal gas constant
         T     = temperature
 
