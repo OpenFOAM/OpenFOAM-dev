@@ -43,6 +43,7 @@ License
 
 #include "constTransport.H"
 #include "sutherlandTransport.H"
+#include "WLFTransport.H"
 
 #include "icoPolynomial.H"
 #include "hPolynomialThermo.H"
@@ -405,6 +406,18 @@ makeThermos
     sensibleInternalEnergy,
     janafThermo,
     Boussinesq,
+    specie
+);
+
+makeThermos
+(
+    rhoThermo,
+    heRhoThermo,
+    pureMixture,
+    WLFTransport,
+    sensibleInternalEnergy,
+    hConstThermo,
+    rhoConst,
     specie
 );
 
