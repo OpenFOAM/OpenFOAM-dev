@@ -45,6 +45,9 @@ makeBaseTurbulenceModel
 #include "Stokes.H"
 makeLaminarModel(Stokes);
 
+#include "generalizedNewtonian.H"
+makeLaminarModel(generalizedNewtonian);
+
 #include "Maxwell.H"
 makeLaminarModel(Maxwell);
 

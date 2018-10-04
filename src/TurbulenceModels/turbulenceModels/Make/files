@@ -63,5 +63,14 @@ RASBCs = RAS/derivedFvPatchFields
 $(RASBCs)/turbulentMixingLengthDissipationRateInlet/turbulentMixingLengthDissipationRateInletFvPatchScalarField.C
 $(RASBCs)/turbulentMixingLengthFrequencyInlet/turbulentMixingLengthFrequencyInletFvPatchScalarField.C
 
+generalizedNewtonianViscosityModels = laminar/generalizedNewtonian/generalizedNewtonianViscosityModels
+$(generalizedNewtonianViscosityModels)/generalizedNewtonianViscosityModel/generalizedNewtonianViscosityModel.C
+$(generalizedNewtonianViscosityModels)/generalizedNewtonianViscosityModel/generalizedNewtonianViscosityModelNew.C
+$(generalizedNewtonianViscosityModels)/CrossPowerLaw/CrossPowerLaw.C
+$(generalizedNewtonianViscosityModels)/BirdCarreau/BirdCarreau.C
+$(generalizedNewtonianViscosityModels)/Casson/Casson.C
+$(generalizedNewtonianViscosityModels)/HerschelBulkley/HerschelBulkley.C
+$(generalizedNewtonianViscosityModels)/powerLaw/powerLaw.C
+$(generalizedNewtonianViscosityModels)/strainRateFunction/strainRateFunction.C
 
 LIB = $(FOAM_LIBBIN)/libturbulenceModels
