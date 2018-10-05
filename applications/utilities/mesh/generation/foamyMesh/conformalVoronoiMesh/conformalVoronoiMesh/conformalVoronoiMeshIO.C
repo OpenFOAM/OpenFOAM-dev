@@ -591,6 +591,8 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
     const fileName& instance,
     const pointField& points,
     faceList& faces,
+    labelList& owner,
+    labelList& neighbour,
     const wordList& patchNames,
     const PtrList<dictionary>& patchDicts
 ) const
@@ -730,6 +732,8 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
         if (nReorderedFaces > 0)
         {
             inplaceReorder(faceMap, faces);
+            inplaceReorder(faceMap, owner);
+            inplaceReorder(faceMap, neighbour);
         }
 
         // Rotate faces (rotation is already in new face indices).
@@ -791,6 +795,8 @@ void Foam::conformalVoronoiMesh::writeMesh
             instance,
             points,
             faces,
+            owner,
+            neighbour,
             patchNames,
             patchDicts
         );

@@ -316,8 +316,8 @@ inline Foam::treeBoundBox Foam::treeBoundBox::extend(const scalar s) const
 {
     // Numbers that don't approximate rational fractions with which to make the
     // box asymmetric. These are between one and two.
-    static const vector a = vector::uniform(sqrt(1.25) + 0.5);
-    static const vector b = vector::uniform(sqrt(2.0));
+    static const vector a((sqrt(5.0) + 1)/2, sqrt(2.0), (sqrt(13.0) - 1)/2);
+    static const vector b(a.y(), a.z(), a.x());
 
     treeBoundBox bb(*this);
 
