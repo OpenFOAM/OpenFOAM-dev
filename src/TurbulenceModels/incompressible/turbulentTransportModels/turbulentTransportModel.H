@@ -61,12 +61,12 @@ namespace Foam
         typedef RASModel<turbulenceModel> RASModel;
         typedef LESModel<turbulenceModel> LESModel;
 
-        template<class BasicCompressibleTurbulenceModel>
-        autoPtr<BasicCompressibleTurbulenceModel> New
+        template<class BasicIncompressibleTurbulenceModel>
+        autoPtr<BasicIncompressibleTurbulenceModel> New
         (
             const volVectorField& U,
             const surfaceScalarField& phi,
-            const typename BasicCompressibleTurbulenceModel::transportModel&
+            const typename BasicIncompressibleTurbulenceModel::transportModel&
                 transport,
             const word& propertiesName = turbulenceModel::propertiesName
         );

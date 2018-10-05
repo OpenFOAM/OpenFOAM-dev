@@ -31,17 +31,17 @@ namespace Foam
 {
     namespace incompressible
     {
-        template<class BasicCompressibleTurbulenceModel>
-        autoPtr<BasicCompressibleTurbulenceModel> New
+        template<class BasicIncompressibleTurbulenceModel>
+        autoPtr<BasicIncompressibleTurbulenceModel> New
         (
             const volVectorField& U,
             const surfaceScalarField& phi,
-            const typename BasicCompressibleTurbulenceModel::transportModel&
+            const typename BasicIncompressibleTurbulenceModel::transportModel&
                 transport,
             const word& propertiesName
         )
         {
-            return BasicCompressibleTurbulenceModel::New
+            return BasicIncompressibleTurbulenceModel::New
             (
                 geometricOneField(),
                 geometricOneField(),
