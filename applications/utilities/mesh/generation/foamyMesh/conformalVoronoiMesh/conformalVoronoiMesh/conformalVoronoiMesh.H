@@ -847,6 +847,8 @@ private:
             const fileName& instance,
             const pointField& points,
             faceList& faces,
+            labelList& owner,
+            labelList& neighbour,
             const wordList& patchNames,
             const PtrList<dictionary>& patchDicts
         ) const;
