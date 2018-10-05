@@ -10,12 +10,45 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      transportProperties;
+    location    "system";
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-transportModel  Newtonian;
+solvers
+{
+    p
+    {
+        solver          GAMG;
+        smoother        DIC;
 
-nu              1.5e-05;
+        tolerance       1e-6;
+        relTol          0.1;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
+
+    "U.*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
+        tolerance       1e-5;
+        relTol          0;
+    }
+}
+
+PIMPLE
+{
+    momentumPredictor   no;
+    nOuterCorrectors    5;
+    nCorrectors         1;
+    nNonOrthogonalCorrectors 0;
+}
+
 
 // ************************************************************************* //
