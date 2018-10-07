@@ -1424,7 +1424,7 @@ EXT_LINKS_IN_WINDOW    = NO
 # Minimum value: 8, maximum value: 50, default value: 10.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-FORMULA_FONTSIZE       = 10
+FORMULA_FONTSIZE       = 16
 
 # Use the FORMULA_TRANPARENT tag to determine whether or not the images
 # generated for formulas are transparent PNGs. Transparent PNGs are not
