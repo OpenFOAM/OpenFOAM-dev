@@ -349,14 +349,14 @@ bool Foam::KinematicParcel<ParcelType>::move
 
         p.age() += dt;
 
-        if (p.onFace())
+        if (p.active() && p.onFace())
         {
             cloud.functions().postFace(p, ttd.keepParticle);
         }
 
         cloud.functions().postMove(p, dt, start, ttd.keepParticle);
 
-        if (p.onFace() && ttd.keepParticle)
+        if (p.active() && p.onFace() && ttd.keepParticle)
         {
             p.hitFace(f*s - d, f, cloud, ttd);
         }
