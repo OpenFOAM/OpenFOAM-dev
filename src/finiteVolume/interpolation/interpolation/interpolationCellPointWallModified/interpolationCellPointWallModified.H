@@ -22,19 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::interpolationCellPoint
+    Foam::interpolationCellPointWallModified
 
 Description
-    Given cell centre values and point (vertex) values decompose into
-    tetrahedra and linear interpolate within them.
+    As interpolationCellPoint, but with the point field modified on wall faces.
+
+    This method is defined only for vectors. The point field is extrapolated
+    from the cells to the wall faces, and then rotated towards the (reverse)
+    point normal so that the vectors do not point out of the domain. The result
+    is also scaled so so if the necessary rotation exceeds 90 degrees, it is
+    clamped to zero.
+
+    This prevents unresolvable drag-rebound couplings when applied to the
+    velocity interpolation in a Lagrangian simulation.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef interpolationCellPoint_H
-#define interpolationCellPoint_H
+#ifndef interpolationCellPointWallModified_H
+#define interpolationCellPointWallModified_H
 
-#include "interpolation.H"
-#include "cellPointWeight.H"
+#include "interpolationCellPoint.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -42,65 +49,43 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class interpolationCellPoint Declaration
+             Class interpolationCellPointWallModified Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class interpolationCellPoint
+class interpolationCellPointWallModified
 :
-    public interpolation<Type>
+    public interpolationCellPoint<Type>
 {
-protected:
+private:
 
-    // Protected data
+    // Private member functions
 
-        //- Interpolated volfield
-        const GeometricField<Type, pointPatchField, pointMesh> psip_;
+        //- Compute the point field for a type. This just throws an error. This
+        //  interpolation method is only defined for vector fields.
+        template <class TYPE>
+        tmp<GeometricField<TYPE, pointPatchField, pointMesh>> calcPointField
+        (
+            const GeometricField<TYPE, fvPatchField, volMesh>& psi
+        ) const;
+
+        //- Compute the point field for a vector type
+        tmp<pointVectorField> calcPointField(const volVectorField& psi) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("cellPoint");
+    TypeName("cellPointWallModified");
 
 
     // Constructors
 
         //- Construct from components
-        interpolationCellPoint
+        interpolationCellPointWallModified
         (
             const GeometricField<Type, fvPatchField, volMesh>& psi
         );
-
-        //- Construct from components
-        interpolationCellPoint
-        (
-            const GeometricField<Type, fvPatchField, volMesh>& psi,
-            tmp<GeometricField<Type, pointPatchField, pointMesh>> psip
-        );
-
-
-    // Member Functions
-
-        //- Interpolate field for the given cellPointWeight
-        inline Type interpolate(const cellPointWeight& cpw) const;
-
-        //- Interpolate field to the given point in the given cell
-        inline Type interpolate
-        (
-            const vector& position,
-            const label celli,
-            const label facei = -1
-        ) const;
-
-        //- Interpolate field to the given coordinates in the tetrahedron
-        //  defined by the given indices.
-        inline Type interpolate
-        (
-            const barycentric& coordinates,
-            const tetIndices& tetIs,
-            const label facei = -1
-        ) const;
 };
 
 
@@ -110,12 +95,8 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "interpolationCellPointI.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #ifdef NoRepository
-    #include "interpolationCellPoint.C"
+    #include "interpolationCellPointWallModified.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
