@@ -31,16 +31,16 @@ Description
     are calculated using:
 
         \f[
-            U = frac{U_f}{K} ln(\frac{z + z_0}{z_0})
+            U = frac{U_f}{\kappa} ln(\frac{z + z_0}{z_0})
         \f]
 
     where
 
     \vartable
-        U_f | frictional velocity
-        K   | Von Karman's constant
-        z_0 | surface roughness length
-        z   | vertical co-ordinate
+        U_f    | frictional velocity
+        \kappa | Von Karman's constant
+        z_0    | surface roughness length
+        z      | vertical co-ordinate
     \endvartable
 
 Usage
