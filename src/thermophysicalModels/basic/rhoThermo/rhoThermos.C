@@ -36,6 +36,7 @@ License
 #include "adiabaticPerfectFluid.H"
 
 #include "hConstThermo.H"
+#include "eConstThermo.H"
 #include "janafThermo.H"
 #include "sensibleEnthalpy.H"
 #include "sensibleInternalEnergy.H"
@@ -296,7 +297,7 @@ makeThermos
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
-    hConstThermo,
+    eConstThermo,
     rhoConst,
     specie
 );
@@ -308,7 +309,7 @@ makeThermos
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
-    hConstThermo,
+    eConstThermo,
     perfectFluid,
     specie
 );
@@ -320,7 +321,7 @@ makeThermos
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
-    hConstThermo,
+    eConstThermo,
     adiabaticPerfectFluid,
     specie
 );
@@ -416,7 +417,7 @@ makeThermos
     pureMixture,
     WLFTransport,
     sensibleInternalEnergy,
-    hConstThermo,
+    eConstThermo,
     rhoConst,
     specie
 );
