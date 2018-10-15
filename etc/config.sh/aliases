@@ -82,7 +82,7 @@ wmRefresh()
 {
     wmProjectDir=$WM_PROJECT_DIR
     foamSettings=$FOAM_SETTINGS
-    wmUnset
+    . $wmProjectDir/etc/config.sh/unset
     . $wmProjectDir/etc/bashrc $foamSettings
 }
 
