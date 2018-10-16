@@ -89,35 +89,35 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::limit
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::Cp
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::Cv
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cv_ + this->CpMCv(p, T) + EquationOfState::Cp(p, T);
+    return Cv_; // + EquationOfState::Cv(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::Ha
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::Es
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Hs(p, T) + Hc();
+    return Cv_*T; // + EquationOfState::E(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::Hs
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::Ea
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cv_*T + p/EquationOfState::rho(p, T) + EquationOfState::H(p, T);
+    return Es(p, T) + Hc();
 }
 
 

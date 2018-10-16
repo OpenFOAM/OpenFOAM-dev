@@ -73,7 +73,7 @@ inline Foam::scalar Foam::rhoConst<Specie>::rho(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::rhoConst<Specie>::H(scalar p, scalar T) const
 {
-    return 0;
+    return p/rho_;
 }
 
 

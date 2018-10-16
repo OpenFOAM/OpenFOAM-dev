@@ -297,7 +297,7 @@ makeThermos
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
-    eConstThermo,
+    hConstThermo,
     rhoConst,
     specie
 );
@@ -310,7 +310,43 @@ makeThermos
     constTransport,
     sensibleInternalEnergy,
     eConstThermo,
+    rhoConst,
+    specie
+);
+
+makeThermos
+(
+    rhoThermo,
+    heRhoThermo,
+    pureMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    hConstThermo,
     perfectFluid,
+    specie
+);
+
+makeThermos
+(
+    rhoThermo,
+    heRhoThermo,
+    pureMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    eConstThermo,
+    perfectFluid,
+    specie
+);
+
+makeThermos
+(
+    rhoThermo,
+    heRhoThermo,
+    pureMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    hConstThermo,
+    adiabaticPerfectFluid,
     specie
 );
 

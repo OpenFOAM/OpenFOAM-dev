@@ -168,6 +168,8 @@ public:
             //- Entropy [J/(kg K)]
             inline scalar S(const scalar p, const scalar T) const;
 
+            #include "HtoEthermo.H"
+
 
         // Derivative term used for Jacobian
 

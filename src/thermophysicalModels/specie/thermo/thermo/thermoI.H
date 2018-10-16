@@ -106,14 +106,6 @@ Foam::species::thermo<Thermo, Type>::heName()
 
 template<class Thermo, template<class> class Type>
 inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::Cv(const scalar p, const scalar T) const
-{
-    return this->Cp(p, T) - this->CpMCv(p, T);
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::Cpv(const scalar p, const scalar T) const
 {
     return Type<thermo<Thermo, Type>>::Cpv(*this, p, T);
@@ -146,22 +138,6 @@ inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::HE(const scalar p, const scalar T) const
 {
     return Type<thermo<Thermo, Type>>::HE(*this, p, T);
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::Es(const scalar p, const scalar T) const
-{
-    return this->Hs(p, T) - p/this->rho(p, T);
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::Ea(const scalar p, const scalar T) const
-{
-    return this->Ha(p, T) - p/this->rho(p, T);
 }
 
 
