@@ -95,7 +95,7 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::Cv
     const scalar T
 ) const
 {
-    return Cv_; // + EquationOfState::Cv(p, T);
+    return Cv_ + EquationOfState::Cv(p, T);
 }
 
 
@@ -106,7 +106,7 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::Es
     const scalar T
 ) const
 {
-    return Cv_*T; // + EquationOfState::E(p, T);
+    return Cv_*T + EquationOfState::E(p, T);
 }
 
 

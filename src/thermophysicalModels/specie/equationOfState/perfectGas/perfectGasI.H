@@ -89,6 +89,20 @@ inline Foam::scalar Foam::perfectGas<Specie>::Cp(scalar p, scalar T) const
 
 
 template<class Specie>
+inline Foam::scalar Foam::perfectGas<Specie>::E(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::perfectGas<Specie>::Cv(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::perfectGas<Specie>::S(scalar p, scalar T) const
 {
     return -this->R()*log(p/Pstd);

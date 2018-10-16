@@ -107,6 +107,20 @@ inline Foam::scalar Foam::perfectFluid<Specie>::Cp(scalar p, scalar T) const
 
 
 template<class Specie>
+inline Foam::scalar Foam::perfectFluid<Specie>::E(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::perfectFluid<Specie>::Cv(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
 inline Foam::scalar Foam::perfectFluid<Specie>::S(scalar p, scalar T) const
 {
     return -this->R()*log(p/Pstd);
