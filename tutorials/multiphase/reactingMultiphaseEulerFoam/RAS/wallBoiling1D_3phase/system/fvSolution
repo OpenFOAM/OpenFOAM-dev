@@ -98,6 +98,7 @@ relaxationFactors
     {
         ".*"            1;
         "h.*"           0.5;
+        "e.*"           0.5;
         "k.*"           0.5;
         "epsilon.*"     0.5;
     }
