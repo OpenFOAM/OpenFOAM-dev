@@ -147,7 +147,6 @@ Foam::scalar Foam::Polynomial<PolySize>::value(const scalar x) const
 {
     scalar val = this->v_[0];
 
-    // avoid costly pow() in calculation
     scalar powX = 1;
     for (label i=1; i<PolySize; ++i)
     {
@@ -171,7 +170,6 @@ Foam::scalar Foam::Polynomial<PolySize>::derivative(const scalar x) const
 
     if (PolySize > 1)
     {
-        // avoid costly pow() in calculation
         deriv += this->v_[1];
 
         scalar powX = 1;
@@ -198,7 +196,6 @@ Foam::scalar Foam::Polynomial<PolySize>::integral
     const scalar x2
 ) const
 {
-    // avoid costly pow() in calculation
     scalar powX1 = x1;
     scalar powX2 = x2;
 
