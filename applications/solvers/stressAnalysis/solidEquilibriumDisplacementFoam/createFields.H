@@ -25,7 +25,7 @@ volVectorField Dcorr
     ),
     D
 );
-Dcorr *= 0.0;
+Dcorr = Zero;
 
 Info<< "Calculating stress field sigmaD\n" << endl;
 volSymmTensorField sigmaD
