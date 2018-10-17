@@ -83,7 +83,7 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
 
 void Foam::diameterModels::driftModels::phaseChange::correct()
 {
-    iDmdt_ *= 0.0;
+    iDmdt_ = Zero;
 
     forAll(pairNames_, i)
     {
@@ -96,7 +96,7 @@ void Foam::diameterModels::driftModels::phaseChange::correct()
             );
     }
 
-    N_ *= 0.0;
+    N_ = Zero;
 
     forAll(popBal_.sizeGroups(), i)
     {

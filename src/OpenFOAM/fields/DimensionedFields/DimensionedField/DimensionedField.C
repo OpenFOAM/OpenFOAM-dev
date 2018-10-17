@@ -476,6 +476,13 @@ void DimensionedField<Type, GeoMesh>::operator=
 }
 
 
+template<class Type, class GeoMesh>
+void DimensionedField<Type, GeoMesh>::operator=(const zero&)
+{
+    Field<Type>::operator=(Zero);
+}
+
+
 #define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
                                                                                \
 template<class Type, class GeoMesh>                                            \

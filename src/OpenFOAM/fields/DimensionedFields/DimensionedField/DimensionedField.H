@@ -317,6 +317,7 @@ public:
         void operator=(const DimensionedField<Type, GeoMesh>&);
         void operator=(const tmp<DimensionedField<Type, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
+        void operator=(const zero&);
 
         void operator+=(const DimensionedField<Type, GeoMesh>&);
         void operator+=(const tmp<DimensionedField<Type, GeoMesh>>&);

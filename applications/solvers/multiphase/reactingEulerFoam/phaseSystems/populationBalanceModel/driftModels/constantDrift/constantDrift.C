@@ -69,7 +69,7 @@ Foam::diameterModels::driftModels::constantDrift::constantDrift
 
 void Foam::diameterModels::driftModels::constantDrift::correct()
 {
-    N_ *= 0.0;
+    N_ = Zero;
 
     forAll(popBal_.sizeGroups(), i)
     {

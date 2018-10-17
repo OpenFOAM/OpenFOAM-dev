@@ -422,7 +422,7 @@ void Foam::diameterModels::populationBalanceModel::calcDeltas()
                 }
                 else if (0.5*sizeGroups_[j].x().value() <= v_[i].value())
                 {
-                    delta_[i][j] *= 0.0;
+                    delta_[i][j].value() = 0;
                 }
             }
         }
@@ -539,8 +539,8 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
         (neg(1 - rx_()) + neg(1 - rx_()/(1 - rx_())))*driftRate_()
        *fi.phase()/((rx_() - 1)*sizeGroups_[i].x());
 
-    rx_() *= 0.0;
-    rdx_() *= 0.0;
+    rx_() = Zero;
+    rdx_() = Zero;
 
     if (i < sizeGroups_.size() - 2)
     {
@@ -652,8 +652,8 @@ void Foam::diameterModels::populationBalanceModel::sources()
 {
     forAll(sizeGroups_, i)
     {
-        Su_[i] *= 0.0;
-        SuSp_[i] *= 0.0;
+        Su_[i] = Zero;
+        SuSp_[i] = Zero;
     }
 
     forAllConstIter
@@ -663,7 +663,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
         phasePairIter
     )
     {
-        pDmdt_(phasePairIter())->ref() *= 0.0;
+        pDmdt_(phasePairIter())->ref() = Zero;
     }
 
     // Since the calculation of the rates is computationally expensive,
@@ -681,7 +681,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
                 if (fi.x() + fj.x() > sizeGroups_.last().x()) break;
 
-                coalescenceRate_() *= 0.0;
+                coalescenceRate_() = Zero;
 
                 forAll(coalescence_, model)
                 {
@@ -717,7 +717,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
             while (delta_[j][i].value() != 0.0)
             {
-                binaryBreakupRate_() *= 0.0;
+                binaryBreakupRate_() = Zero;
 
                 forAll(binaryBreakup_, model)
                 {
@@ -739,7 +739,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
         if (drift_.size() != 0)
         {
-            driftRate_() *= 0.0;
+            driftRate_() = Zero;
 
             forAll(drift_, model)
             {
@@ -751,7 +751,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
         if (nucleation_.size() != 0)
         {
-            nucleationRate_() *= 0.0;
+            nucleationRate_() = Zero;
 
             forAll(nucleation_, model)
             {
@@ -770,7 +770,7 @@ void Foam::diameterModels::populationBalanceModel::dmdt()
     {
         velocityGroup& velGroup = velocityGroups_[v];
 
-        velGroup.dmdt() *= 0.0;
+        velGroup.dmdt() = Zero;
 
         forAll(sizeGroups_, i)
         {
@@ -787,7 +787,7 @@ void Foam::diameterModels::populationBalanceModel::dmdt()
 
 void Foam::diameterModels::populationBalanceModel::calcAlphas()
 {
-    alphas_() *= 0.0;
+    alphas_() = Zero;
 
     forAll(velocityGroups_, v)
     {
@@ -831,7 +831,7 @@ Foam::diameterModels::populationBalanceModel::calcDsm()
 
 void Foam::diameterModels::populationBalanceModel::calcVelocity()
 {
-    U_() *= 0.0;
+    U_() = Zero;
 
     forAll(velocityGroups_, v)
     {

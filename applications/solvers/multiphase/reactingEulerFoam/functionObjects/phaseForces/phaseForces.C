@@ -235,7 +235,7 @@ bool Foam::functionObjects::phaseForces::execute()
         const word& type = iter.key();
         volVectorField& force = *iter();
 
-        force *= 0.0;
+        force = Zero;
 
         forAllConstIter
         (

@@ -1233,6 +1233,17 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
+(
+    const zero&
+)
+{
+    ref() = Zero;
+    boundaryFieldRef() = Zero;
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::operator==
 (
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
@@ -1259,6 +1270,17 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator==
 {
     ref() = dt;
     boundaryFieldRef() == dt.value();
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::operator==
+(
+    const zero&
+)
+{
+    ref() = Zero;
+    boundaryFieldRef() == Zero;
 }
 
 

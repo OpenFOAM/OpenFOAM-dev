@@ -414,8 +414,8 @@ bool Foam::functionObjects::sizeDistribution::write()
     scalarField V(filterField(mesh().V()));
     combineFields(V);
 
-    sumN_ *= 0.0;
-    sumV_ *= 0.0;
+    sumN_ = 0;
+    sumV_ = 0;
 
     forAll(N_, i)
     {
