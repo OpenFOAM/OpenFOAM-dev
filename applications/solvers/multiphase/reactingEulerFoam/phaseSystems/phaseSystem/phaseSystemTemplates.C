@@ -402,6 +402,38 @@ const modelType& Foam::phaseSystem::lookupSubModel
 
 
 template<class modelType>
+bool Foam::phaseSystem::foundBlendedSubModel(const phasePair& key) const
+{
+    if
+    (
+        mesh().foundObject<BlendedInterfacialModel<modelType>>
+        (
+            IOobject::groupName
+            (
+                BlendedInterfacialModel<modelType>::typeName,
+                key.name()
+            )
+        )
+     || mesh().foundObject<BlendedInterfacialModel<modelType>>
+        (
+            IOobject::groupName
+            (
+                BlendedInterfacialModel<modelType>::typeName,
+                key.otherName()
+            )
+        )
+    )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+template<class modelType>
 const Foam::BlendedInterfacialModel<modelType>&
 Foam::phaseSystem::lookupBlendedSubModel(const phasePair& key) const
 {

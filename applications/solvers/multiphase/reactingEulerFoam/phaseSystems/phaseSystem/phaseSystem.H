@@ -369,6 +369,10 @@ public:
                 const phaseModel& continuous
             ) const;
 
+            //- Check availability of a blended sub model for a given phase pair
+            template<class modelType>
+            bool foundBlendedSubModel(const phasePair& key) const;
+
             //- Return a blended sub model between a phase pair
             template<class modelType>
             const BlendedInterfacialModel<modelType>&

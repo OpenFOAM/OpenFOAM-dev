@@ -26,12 +26,14 @@ Class
 
 Description
     This function object calculates and outputs the blended interfacial forces
-    acting on a given phase (drag, virtual mass, lift, wall-lubrication and
-    turbulent dispersion). It works only in combination with the
-    reactingEulerFoam solvers. For a simulation involving more than two phases,
-    the accumulated force is calculated by looping over all phasePairs involving
-    that phase. The fields are stored in the database so that they can be
-    processed further, e.g. with the fieldAveraging functionObject.
+    acting on a given phase, i.e. drag, virtual mass, lift, wall-lubrication and
+    turbulent dispersion. Note that it works only in run-time processing mode
+    and in combination with the reactingEulerFoam solvers.
+
+    For a simulation involving more than two phases, the accumulated force is
+    calculated by looping over all phasePairs involving that phase. The fields
+    are stored in the database so that they can be processed further, e.g. with
+    the fieldAveraging functionObject.
 
     Example of function object specification:
     \verbatim
@@ -39,10 +41,11 @@ Description
     {
         type            phaseForces;
         libs ("libreactingEulerFoamFunctionObjects.so");
-        writeControl    outputTime;
+        writeControl    writeTime;
         writeInterval   1;
-        log             false;
+
         ...
+
         phaseName       water;
     }
     \endverbatim
@@ -85,30 +88,6 @@ class phaseForces
 :
     public fvMeshFunctionObject
 {
-    // Private data
-
-        //- Phase for which forces are evaluated
-        const phaseModel& phase_;
-
-        //- Constant access to phaseSystem
-        const phaseSystem& fluid_;
-
-        //- Drag force
-        volVectorField dragForce_;
-
-        //- Virtual mass force
-        volVectorField virtualMassForce_;
-
-        //- Lift force
-        volVectorField liftForce_;
-
-        //- Wall lubrication force
-        volVectorField wallLubricationForce_;
-
-        //- Turbulent dispersion force
-        volVectorField turbulentDispersionForce_;
-
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -117,20 +96,25 @@ class phaseForces
         //- Disallow default bitwise assignment
         void operator=(const phaseForces&);
 
-        //- Evaluate and return the drag force
-        tmp<volVectorField> dragForce() const;
 
-        //- Evaluate and return the virtual mass force
-        tmp<volVectorField> virtualMassForce() const;
+protected:
 
-        //- Evaluate and return the lift force
-        tmp<volVectorField> liftForce() const;
+    // Protected data
 
-        //- Evaluate and return the wall lubrication force
-        tmp<volVectorField> wallLubricationForce() const;
+        HashPtrTable<volVectorField> forceFields_;
 
-        //- Evaluate and return the turbulent dispersion force
-        tmp<volVectorField> turbulentDispersionForce() const;
+        //- Phase for which forces are evaluated
+        const phaseModel& phase_;
+
+        //- Constant access to phaseSystem
+        const phaseSystem& fluid_;
+
+
+    // Protected Member Functions
+
+        //- Evaluate and return non-drag force
+        template<class modelType>
+        tmp<volVectorField> nonDragForce(const phasePair& key) const;
 
 
 public:
