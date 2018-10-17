@@ -62,7 +62,7 @@ void Foam::diameterModels::breakupModels::powerLaw::setBreakupRate
     const label i
 )
 {
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
 
     breakupRate.primitiveFieldRef() = pow(fi.x().value(), power_);
 }

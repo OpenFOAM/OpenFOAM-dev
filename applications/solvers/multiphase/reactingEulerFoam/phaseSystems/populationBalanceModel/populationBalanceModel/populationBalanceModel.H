@@ -211,10 +211,10 @@ class populationBalanceModel
         const phaseModel& continuousPhase_;
 
         //- velocityGroups belonging to this populationBalance
-        List<velocityGroup*> velocityGroups_;
+        UPtrList<velocityGroup> velocityGroups_;
 
         //- sizeGroups belonging to this populationBalance
-        List<sizeGroup*> sizeGroups_;
+        UPtrList<sizeGroup> sizeGroups_;
 
         //- List of unordered phasePairs in this populationBalance
         phasePairTable phasePairs_;
@@ -270,18 +270,21 @@ class populationBalanceModel
         //- Zeroeth order rate
         autoPtr<volScalarField> nucleationRate_;
 
-        //- Total void fraction of phases belonging to this populationBalance
-        volScalarField alphas_;
+        //- Total void fraction
+        autoPtr<volScalarField> alphas_;
+
+        //- Mean Sauter diameter
+        autoPtr<volScalarField> dsm_;
 
         //- Average velocity
-        volVectorField U_;
+        autoPtr<volVectorField> U_;
 
 
     // Private member functions
 
         void registerVelocityAndSizeGroups();
 
-        void add(sizeGroup* group);
+        void add(sizeGroup& group);
 
         void createPhasePairs();
 
@@ -310,6 +313,8 @@ class populationBalanceModel
         void dmdt();
 
         void calcAlphas();
+
+        tmp<volScalarField> calcDsm();
 
         void calcVelocity();
 
@@ -389,10 +394,10 @@ public:
         inline const phaseModel& continuousPhase() const;
 
         //- Return the velocityGroups belonging to this populationBalance
-        inline const List<velocityGroup*>& velocityGroups() const;
+        inline const UPtrList<velocityGroup>& velocityGroups() const;
 
         //- Return the sizeGroups belonging to this populationBalance
-        inline const List<sizeGroup*>& sizeGroups() const;
+        inline const UPtrList<sizeGroup>& sizeGroups() const;
 
         //- Return list of unordered phasePairs in this populationBalance
         inline const phasePairTable& phasePairs() const;

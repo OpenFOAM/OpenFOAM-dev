@@ -76,21 +76,21 @@ Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::calcNik
     const label k
 ) const
 {
-    const dimensionedScalar& xi = breakup_.popBal().sizeGroups()[i]->x();
-    const dimensionedScalar& xk = breakup_.popBal().sizeGroups()[k]->x();
-    const List<sizeGroup*>& sizeGroups = breakup_.popBal().sizeGroups();
+    const dimensionedScalar& xi = breakup_.popBal().sizeGroups()[i].x();
+    const dimensionedScalar& xk = breakup_.popBal().sizeGroups()[k].x();
+    const UPtrList<sizeGroup>& sizeGroups = breakup_.popBal().sizeGroups();
 
     if (i == 0)
     {
-        return (sizeGroups[i+1]->x() - xi)/xk;
+        return (sizeGroups[i+1].x() - xi)/xk;
     }
     else if (i == k)
     {
-        return (xi - sizeGroups[i-1]->x())/xk;
+        return (xi - sizeGroups[i-1].x())/xk;
     }
     else
     {
-        return (sizeGroups[i+1]->x() - xi)/xk + (xi - sizeGroups[i-1]->x())/xk;
+        return (sizeGroups[i+1].x() - xi)/xk + (xi - sizeGroups[i-1].x())/xk;
     }
 }
 

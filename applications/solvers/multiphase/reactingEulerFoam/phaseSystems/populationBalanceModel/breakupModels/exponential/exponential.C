@@ -63,7 +63,7 @@ void Foam::diameterModels::breakupModels::exponential::setBreakupRate
     const label i
 )
 {
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
 
     breakupRate.primitiveFieldRef() =
         C_*exp(exponent_*fi.x().value());

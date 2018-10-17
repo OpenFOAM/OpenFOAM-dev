@@ -62,8 +62,8 @@ void Foam::diameterModels::coalescenceModels::hydrodynamic::addToCoalescenceRate
     const label j
 )
 {
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
-    const sizeGroup& fj = *popBal_.sizeGroups()[j];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
+    const sizeGroup& fj = popBal_.sizeGroups()[j];
 
     coalescenceRate.primitiveFieldRef() +=
         pow3((fi.d().value() + fj.d().value()));

@@ -189,9 +189,6 @@ wallLubrication
 turbulentDispersion
 ();
 
-bubbleInducedTurbulence
-();
-
 // Minimum allowable pressure
 pMin            10000;
 

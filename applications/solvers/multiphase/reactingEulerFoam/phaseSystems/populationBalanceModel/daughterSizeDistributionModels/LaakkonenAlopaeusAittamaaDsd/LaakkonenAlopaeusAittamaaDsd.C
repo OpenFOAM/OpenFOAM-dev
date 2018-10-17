@@ -77,13 +77,13 @@ LaakkonenAlopaeusAittamaaDsd::calcNik
     const label k
 ) const
 {
-    const dimensionedScalar& xi = breakup_.popBal().sizeGroups()[i]->x();
-    const dimensionedScalar& xk = breakup_.popBal().sizeGroups()[k]->x();
-    const List<sizeGroup*>& sizeGroups = breakup_.popBal().sizeGroups();
+    const dimensionedScalar& xi = breakup_.popBal().sizeGroups()[i].x();
+    const dimensionedScalar& xk = breakup_.popBal().sizeGroups()[k].x();
+    const UPtrList<sizeGroup>& sizeGroups = breakup_.popBal().sizeGroups();
 
     if (i == 0)
     {
-        const dimensionedScalar& xii = sizeGroups[i+1]->x();
+        const dimensionedScalar& xii = sizeGroups[i+1].x();
 
         return
             (
@@ -95,7 +95,7 @@ LaakkonenAlopaeusAittamaaDsd::calcNik
     }
     else if (i == k)
     {
-        const dimensionedScalar& x = sizeGroups[i-1]->x();
+        const dimensionedScalar& x = sizeGroups[i-1].x();
 
         return
             (
@@ -107,8 +107,8 @@ LaakkonenAlopaeusAittamaaDsd::calcNik
     }
     else
     {
-        const dimensionedScalar& x = sizeGroups[i-1]->x();
-        const dimensionedScalar& xii = sizeGroups[i+1]->x();
+        const dimensionedScalar& x = sizeGroups[i-1].x();
+        const dimensionedScalar& xii = sizeGroups[i+1].x();
 
         return
             (

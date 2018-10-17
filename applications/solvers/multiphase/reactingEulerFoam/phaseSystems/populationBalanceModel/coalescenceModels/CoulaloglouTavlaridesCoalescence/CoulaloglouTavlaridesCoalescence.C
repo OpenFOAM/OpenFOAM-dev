@@ -74,8 +74,8 @@ addToCoalescenceRate
 )
 {
     const phaseModel& continuousPhase = popBal_.continuousPhase();
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
-    const sizeGroup& fj = *popBal_.sizeGroups()[j];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
+    const sizeGroup& fj = popBal_.sizeGroups()[j];
 
     coalescenceRate +=
         C1_*(pow(fi.x(), 2.0/3.0) + pow(fj.x(), 2.0/3.0))

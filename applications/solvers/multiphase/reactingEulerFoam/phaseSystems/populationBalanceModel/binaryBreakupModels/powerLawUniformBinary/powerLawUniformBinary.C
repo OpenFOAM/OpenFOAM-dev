@@ -71,7 +71,7 @@ addToBinaryBreakupRate
     const label j
 )
 {
-    const sizeGroup& fj = *popBal_.sizeGroups()[j];
+    const sizeGroup& fj = popBal_.sizeGroups()[j];
 
     binaryBreakupRate.primitiveFieldRef() +=
         pow(fj.x().value(), power_)*2.0/fj.x().value();

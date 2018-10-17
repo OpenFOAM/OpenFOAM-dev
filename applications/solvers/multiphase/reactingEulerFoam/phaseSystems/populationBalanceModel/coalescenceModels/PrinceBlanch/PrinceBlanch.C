@@ -61,10 +61,10 @@ PrinceBlanch
     coalescenceModel(popBal, dict),
     C1_("C1", dimless, dict.lookupOrDefault<scalar>("C1", 0.356)),
     h0_("h0", dimLength, dict.lookupOrDefault<scalar>("h0", 1e-4)),
-    hf_("hf", dimLength, dict.lookupOrDefault<scalar>("h0", 1e-8)),
-    turbulentCollisions_(dict.lookup("turbulentCollisions")),
-    buoyantCollisions_(dict.lookup("buoyantCollisions")),
-    laminarShearCollisions_(dict.lookup("laminarShearCollisions"))
+    hf_("hf", dimLength, dict.lookupOrDefault<scalar>("hf", 1e-8)),
+    turbulence_(dict.lookup("turbulence")),
+    buoyancy_(dict.lookup("buoyancy")),
+    laminarShear_(dict.lookup("laminarShear"))
 {}
 
 
@@ -79,8 +79,8 @@ addToCoalescenceRate
 )
 {
     const phaseModel& continuousPhase = popBal_.continuousPhase();
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
-    const sizeGroup& fj = *popBal_.sizeGroups()[j];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
+    const sizeGroup& fj = popBal_.sizeGroups()[j];
     const uniformDimensionedVectorField& g =
         popBal_.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
@@ -100,7 +100,7 @@ addToCoalescenceRate
         )
     );
 
-    if (turbulentCollisions_)
+    if (turbulence_)
     {
         coalescenceRate +=
             (
@@ -111,7 +111,7 @@ addToCoalescenceRate
            *collisionEfficiency;
     }
 
-    if (buoyantCollisions_)
+    if (buoyancy_)
     {
         dimensionedScalar Sij(pi/4.0*sqr(fi.d() + fj.d()));
 
@@ -135,7 +135,7 @@ addToCoalescenceRate
            *collisionEfficiency;
     }
 
-    if (laminarShearCollisions_)
+    if (laminarShear_)
     {
         FatalErrorInFunction
             << "Laminar shear collision contribution not implemented for "

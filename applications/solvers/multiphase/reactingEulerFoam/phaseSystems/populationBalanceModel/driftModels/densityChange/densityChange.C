@@ -65,11 +65,11 @@ void Foam::diameterModels::driftModels::densityChangeDrift::addToDriftRate
     const label i
 )
 {
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
     volScalarField& rho = const_cast<volScalarField&>(fi.phase().rho()());
 
     driftRate -= (fvc::ddt(rho) + (fvc::grad(rho)&popBal_.U()))
-       *popBal_.sizeGroups()[i]->x()/rho;
+       *popBal_.sizeGroups()[i].x()/rho;
 }
 
 

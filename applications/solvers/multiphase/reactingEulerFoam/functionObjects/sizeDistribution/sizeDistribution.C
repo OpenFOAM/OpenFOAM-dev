@@ -161,8 +161,6 @@ void Foam::functionObjects::sizeDistribution::initialise
         << "    total cells  = " << nCells_ << nl
         << "    total volume = " << volume_
         << nl << endl;
-
-    Info<< nl << endl;
 }
 
 
@@ -202,11 +200,6 @@ void Foam::functionObjects::sizeDistribution::setCellZoneCells()
                << "Unknown region type. Valid region types are:"
                 << regionTypeNames_ << nl << exit(FatalError);
         }
-    }
-
-    if (debug)
-    {
-        Pout<< "Selected region size = " << cellId_.size() << endl;
     }
 }
 
@@ -312,7 +305,7 @@ void Foam::functionObjects::sizeDistribution::writeFileHeader
             forAll(popBal_.sizeGroups(), sizeGroupi)
             {
                 const diameterModels::sizeGroup& fi =
-                    *popBal_.sizeGroups()[sizeGroupi];
+                    popBal_.sizeGroups()[sizeGroupi];
 
                 switch (abszissaType_)
                 {
@@ -426,8 +419,7 @@ bool Foam::functionObjects::sizeDistribution::write()
 
     forAll(N_, i)
     {
-        const Foam::diameterModels::sizeGroup& fi =
-            *popBal_.sizeGroups()[i];
+        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
 
         const volScalarField& alpha = fi.VelocityGroup().phase();
 
@@ -463,7 +455,7 @@ bool Foam::functionObjects::sizeDistribution::write()
                     forAll(N_, i)
                     {
                         const Foam::diameterModels::sizeGroup& fi =
-                            *popBal_.sizeGroups()[i];
+                            popBal_.sizeGroups()[i];
 
                         switch (abszissaType_)
                         {
@@ -494,7 +486,7 @@ bool Foam::functionObjects::sizeDistribution::write()
                 forAll(popBal_.sizeGroups(), i)
                 {
                     const Foam::diameterModels::sizeGroup& fi =
-                        *popBal_.sizeGroups()[i];
+                        popBal_.sizeGroups()[i];
 
                     scalar result(0.0);
                     scalar delta(0.0);

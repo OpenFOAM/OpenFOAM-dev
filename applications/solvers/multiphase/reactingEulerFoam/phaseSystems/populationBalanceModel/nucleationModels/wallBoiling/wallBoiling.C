@@ -150,7 +150,7 @@ Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
     const label i
 )
 {
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
     const phaseModel& phase = fi.phase();
     const volScalarField& rho = phase.rho();
     const tmp<volScalarField> talphat(turbulence_.alphat());

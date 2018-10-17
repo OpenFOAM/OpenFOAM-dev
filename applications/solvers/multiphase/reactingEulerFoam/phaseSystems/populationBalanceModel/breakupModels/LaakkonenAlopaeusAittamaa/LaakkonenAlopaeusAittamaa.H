@@ -63,9 +63,10 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        C1           | Coefficient C1          | no          | 6.0
-        C2           | Coefficient C2          | no          | 0.04
-        C3           | Coefficient C3          | no          | 0.01
+        C1           | coefficient C1          | no          | 6.0
+        C2           | coefficient C2          | no          | 0.04
+        C3           | coefficient C3          | no          | 0.01
+        daughterSizeDistributionModel | inh. from breakupModel | inherited |
     \endtable
 
 SourceFiles

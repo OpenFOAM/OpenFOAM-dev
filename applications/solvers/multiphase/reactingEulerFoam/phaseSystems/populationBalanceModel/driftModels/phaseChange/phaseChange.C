@@ -100,7 +100,7 @@ void Foam::diameterModels::driftModels::phaseChange::correct()
 
     forAll(popBal_.sizeGroups(), i)
     {
-        const sizeGroup& fi = *popBal_.sizeGroups()[i];
+        const sizeGroup& fi = popBal_.sizeGroups()[i];
 
         N_ += fi*max(fi.phase(), small)/fi.x();
     }
@@ -113,7 +113,7 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
     const label i
 )
 {
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
 
     driftRate += iDmdt_/(N_*fi.phase().rho());
 }
