@@ -31,7 +31,6 @@ Description
 
 #include "IStringStream.H"
 #include "Polynomial.H"
-#include "polynomialFunction.H"
 #include "Random.H"
 #include "cpuTime.H"
 
@@ -111,14 +110,12 @@ int main(int argc, char *argv[])
     scalar sum = 0.0;
 
     Info<< "null poly = " << (Polynomial<8>()) << nl
-        << "null poly = " << (polynomialFunction(8)) << nl
         << endl;
 
     Polynomial<8> poly(coeff);
     Polynomial<9> intPoly(poly.integral(0.0));
 
     IStringStream is(polyDef);
-    polynomialFunction polyfunc(is);
 
     Info<< "poly = " << poly << nl
         << "intPoly = " << intPoly << nl
@@ -131,18 +128,8 @@ int main(int argc, char *argv[])
         << "3*poly - 2*poly = " << 3*poly - 2*poly << nl
         << endl;
 
-    Info<< nl << "--- as polynomialFunction" << nl << endl;
-    Info<< "polyf = " << polyfunc << nl
-        << "intPoly = " << poly.integral(0.0) << nl
+    Info<< "intPoly = " << poly.integral(0.0) << nl
         << endl;
-
-    Info<< "2*polyf = " << 2*polyfunc << nl
-        << "polyf+polyf = " << polyfunc + polyfunc << nl
-        << "3*polyf = " << 3*polyfunc << nl
-        << "polyf+polyf+polyf = " << polyfunc + polyfunc + polyfunc << nl
-        << "3*polyf - 2*polyf = " << 3*polyfunc - 2*polyfunc << nl
-        << endl;
-
 
     Polynomial<8> polyCopy = poly;
     Info<< "poly, polyCopy = " << poly << ", " << polyCopy << nl << endl;
@@ -196,18 +183,6 @@ int main(int argc, char *argv[])
     }
     Info<< "value:        " << sum
         << " in " << timer.cpuTimeIncrement() << " s\n";
-
-    for (int loop = 0; loop < n; ++loop)
-    {
-        sum = 0.0;
-        for (label iter = 0; iter < nIters; ++iter)
-        {
-            sum += polyfunc.value(loop+iter);
-        }
-    }
-    Info<< "via function: " << sum
-        << " in " << timer.cpuTimeIncrement() << " s\n";
-
 
     for (int loop = 0; loop < n; ++loop)
     {
