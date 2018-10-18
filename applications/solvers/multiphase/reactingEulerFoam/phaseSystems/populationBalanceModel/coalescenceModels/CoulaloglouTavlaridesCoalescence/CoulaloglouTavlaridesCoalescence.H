@@ -55,11 +55,11 @@ Description
 
     References:
     \verbatim
-        "Description of interaction processes in agitated liquid-liquid
-         dispersions"
-        Coulaloglou, C.A., Tavlarides, L.L.
-        Chemical Engineering Science, Vol. 32, Issue 11, 1977, pp. 1289-1297
-        Eq. 37, p. 1294
+        Coulaloglou, C. A., & Tavlarides, L. L. (1977).
+        Description of interaction processes in agitated liquid-liquid
+        dispersions.
+        Chemical Engineering Science, 32(11), 1289-1297.
+        Eq. 37, p. 1294.
     \endverbatim
 
 Usage

@@ -29,18 +29,17 @@ Description
 
     References:
     \verbatim
-        "Implementation and Comparison of Correlations for interfacial Forces
-         in a Gas-Liquid System within an Euler-Euler Framework"
-        Otromke, M.,
-        PhD Thesis, April 2013
+        Otromke, M. (2013).
+        Implementation and Comparison of Correlations for interfacial Forces in
+        a Gas-Liquid System within an Euler-Euler Framework.
+        PhD Thesis.
     \endverbatim
 
     \verbatim
-        "Modelling hydrodynamics and turbulence in a bubble column using the
-         Euler-Lagrange procedure"
-        Lain, S., Brodera, D., Sommerfelda, M., Goza, M.F.,
-        International Journal of Multiphase Flow
-        Volume 28, Issue 8, August 2002, pp. 1381-1407
+        Laın, S., Bröder, D., Sommerfeld, M., & Göz, M. F. (2002).
+        Modelling hydrodynamics and turbulence in a bubble column using the
+        Euler–Lagrange procedure.
+        International journal of multiphase flow, 28(8), 1381-1407.
     \endverbatim
 
 SourceFiles

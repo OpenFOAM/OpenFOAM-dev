@@ -29,9 +29,9 @@ Description
 
     Reference:
     \verbatim
-        "Hydrodynamics"
-        Lamb, H.,
-        Cambridge University Press, 1895
+        Lamb, H. (1993).
+        Hydrodynamics.
+        Cambridge university press.
     \endverbatim
 
 SourceFiles

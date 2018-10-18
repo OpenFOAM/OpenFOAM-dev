@@ -29,10 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "Drag Coefficient and relative velocity in bubbly, droplet and
-         particulate flows",
-        Ishii, M., Zuber, N.,
-        AIChE Journal 5, Vol. 25, 1979, pp. 843-855.
+        Ishii, M., & Zuber, N. (1979).
+        Drag coefficient and relative velocity in bubbly, droplet or particulate
+        flows.
+        AIChE Journal, 25(5), 843-855.
     \endverbatim
 
 SourceFiles

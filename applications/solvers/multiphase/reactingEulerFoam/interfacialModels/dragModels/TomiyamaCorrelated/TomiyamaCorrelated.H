@@ -29,11 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "Terminal velocity of single bubbles in surface tension force dominant
-         regime"
-        Tomiyama, T., Celata, G.P., Hosokawa, S., Yoshida, S.,
-        International Journal of Multiphase Flow
-        Volume 28, Issue 9, September 2002, pp. 1497-1519
+        Tomiyama, A., Celata, G. P., Hosokawa, S., & Yoshida, S. (2002).
+        Terminal velocity of single bubbles in surface tension force dominant
+        regime.
+        International Journal of Multiphase Flow, 28(9), 1497-1519.
     \endverbatim
 
 SourceFiles

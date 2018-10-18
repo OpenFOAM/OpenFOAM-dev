@@ -29,10 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "Eulerian Two-Phase Flow Theory Applied to Fluidization"
-        Enwald, H., Peirano, E., Almstedt, A-E.,
-        Int. J. Multiphase Flow, Vol. 22, Suppl, 1996, pp. 21-66
-        Eq. 86-87, p. 40
+        Enwald, H., Peirano, E., & Almstedt, A. E. (1996).
+        Eulerian two-phase flow theory applied to fluidization.
+        International Journal of Multiphase Flow, 22, 21-66.
+        Eq. 86-87, p. 40.
     \endverbatim
 
 SourceFiles

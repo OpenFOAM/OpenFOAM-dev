@@ -29,19 +29,18 @@ Description
 
     References:
     \verbatim
-        "Multifluid Eulerian modeling of dense gas–solids fluidized bed
-         hydrodynamics: Influence of the dissipation parameters"
-        Reuge, N.,
-        Chemical Engineering Science
-        Volume 63, Issue 22, November 2008, pp. 5540-5551
+        Reuge, N., Cadoret, L., Coufort-Saudejaud, C., Pannala, S., Syamlal, M.,
+        & Caussat, B. (2008).
+        Multifluid Eulerian modeling of dense gas–solids fluidized bed
+        hydrodynamics: influence of the dissipation parameters.
+        Chemical Engineering Science, 63(22), 5540-5551.
     \endverbatim
 
     \verbatim
-        "Frictional-collisional constitutive relations for granular materials,
-         with application to plane shearing"
-        Johnson, P.C., and Jackson, R.,
-        Journal of Fluid Mechanics
-        Volume 176, March 1987, pp. 67-93
+        Johnson, P. C., & Jackson, R. (1987).
+        Frictional–collisional constitutive relations for granular materials,
+        with application to plane shearing.
+        Journal of fluid Mechanics, 176, 67-93.
     \endverbatim
 
 SourceFiles

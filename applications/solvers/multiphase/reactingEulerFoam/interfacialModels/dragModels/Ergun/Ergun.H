@@ -25,10 +25,13 @@ Class
     Foam::dragModels::Ergun
 
 Description
-    H, Enwald, E. Peirano, A-E Almstedt
-    'Eulerian Two-Phase Flow Theory Applied to Fluidization'
-    Int. J. Multiphase Flow, Vol. 22, Suppl, pp. 21-66 (1996)
-    Eq. 104, p. 42
+
+    Reference:
+    \verbatim
+        Enwald, H., Peirano, E., & Almstedt, A. E. (1996).
+        Eulerian two-phase flow theory applied to fluidization.
+        International Journal of Multiphase Flow, 22, 21-66.
+    \endverbatim
 
 SourceFiles
     Ergun.C

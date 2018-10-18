@@ -39,19 +39,19 @@ Description
 
     References:
     \verbatim
-        "On the modeling of multidimensional effects in boiling channels"
-        Kurul, N., Podowski, M.Z.,
-        ANS Proceedings, National Heat Transfer Conference,
-        Minneapolis, Minnesota, USA, July 28-31, 1991,
-        ISBN: 0-89448-162-1, pp. 30-40
+        Kurul, N., & Podowski, M.Z. (1991).
+        On the modeling of multidimensional effects in boiling channels.
+        ANS. Proc. National Heat Transfer Con. Minneapolis, Minnesota, USA,
+        1991.
+        ISBN: 0-89448-162-1, pp. 30-40.
     \endverbatim
 
     \verbatim
-        "Development and validation of a boiling model for OpenFOAM
-        multiphase solver"
-        Peltola, J., Pättikangas, T.J.H.,
-        CFD4NRS-4 Conference Proceedings, paper 59,
-        Daejeon, Korea, September 10-12 2012
+        Peltola, J., & Pättikangas, T.J.H. (2012).
+        Development and validation of a boiling model for OpenFOAM multiphase
+        solver.
+        CFD4NRS-4 Conference Proceedings, Daejeon, Korea, 2012.
+        paper 59.
     \endverbatim
 
 Usage

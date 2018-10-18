@@ -29,11 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "Analysis of phase distribution in fully developed laminar bubbly
-         two-phase flow"
-        Antal, S.P., Lahey Jr, R.T., and Flaherty, J.E.
-        International Journal of Multiphase Flow
-        Volume 17, Issue 5, September 1991, pp. 635-652
+        Antal, S. P., Lahey Jr, R. T., & Flaherty, J. E. (1991).
+        Analysis of phase distribution in fully developed laminar bubbly
+        two-phase flow.
+        International Journal of Multiphase Flow, 17(5), 635-652.
     \endverbatim
 
 SourceFiles

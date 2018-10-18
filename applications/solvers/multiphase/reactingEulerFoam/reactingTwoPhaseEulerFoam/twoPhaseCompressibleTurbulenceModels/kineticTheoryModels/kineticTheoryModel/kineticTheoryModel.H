@@ -29,10 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "Derivation, implementation, and validation of computer simulation
-         models for gas-solid fluidized beds",
-        van Wachem, B.G.M.,
-        Ph.D. Thesis, Delft University of Technology, Amsterdam, 2000.
+        van Wachem, B. G. M. (2000).
+        Derivation, implementation, and validation of computer simulation models
+        for gas-solid fluidized beds.
+        PhD Thesis, TU Delft.
     \endverbatim
 
     There are no default model coefficients.

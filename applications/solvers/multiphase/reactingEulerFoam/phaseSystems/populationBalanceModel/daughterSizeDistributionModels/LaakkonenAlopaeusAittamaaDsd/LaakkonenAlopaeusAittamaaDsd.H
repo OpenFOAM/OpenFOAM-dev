@@ -46,19 +46,19 @@ Description
 
     References:
     \verbatim
-        "Validation of bubble breakage, coalescence and mass transfer models for
-         gas-liquid dispersion in agitated vessel"
-        Laakkonen, M., Alopaeus, V., Aittamaa, J.
-        Chemical Engineering Science, Vol. 61, 2006, pp. 218-228
-        Eq. 3, p. 220
+        Laakkonen, M., Alopaeus, V., & Aittamaa, J. (2006).
+        Validation of bubble breakage, coalescence and mass transfer models for
+        gas-liquid dispersion in agitated vessel.
+        Chemical engineering science, 61(1), 218-228.
+        Eq. 3, p. 220.
     \endverbatim
 
     \verbatim
-        "On the solution of population balance equations by
-         discretization - I. A fixed pivot technique."
-        Kumar, S. & Ramkrishna, D.
-        Chemical Engineering Science, Vol. 51(8) 1996, 1311-1332.
-        Eq. 33, p. 1318
+        Kumar, S., & Ramkrishna, D. (1996).
+        On the solution of population balance equations by discretization-I.
+        A fixed pivot technique.
+        Chemical Engineering Science, 51(8), 1311-1332.
+        Eq. 33, p. 1318.
     \endverbatim
 
 Usage

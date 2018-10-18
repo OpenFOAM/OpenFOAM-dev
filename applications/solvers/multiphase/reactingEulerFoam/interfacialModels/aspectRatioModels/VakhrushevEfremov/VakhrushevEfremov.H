@@ -29,11 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "Interpolation formula for computing the velocities of single gas
-         bubbles in liquids"
-        Vakhrushev, I.A. and Efremov, G.I.,
-        Chemistry and Technology of Fuels and Oils
-        Volume 6, Issue 5, May 1970, pp. 376-379,
+        Vakhrushev, I. A., & Efremov, G. I. (1970).
+        Interpolation formula for computing the velocities of single gas bubbles
+        in liquids.
+        Chemistry and Technology of Fuels and Oils, 6(5), 376-379.
     \endverbatim
 
 SourceFiles

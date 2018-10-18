@@ -29,9 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "Multiphase flow and fluidization",
-        Gidaspow, D.,
-        Academic Press, New York, 1994.
+        Gidaspow, D. (1994).
+        Multiphase flow and fluidization: continuum and kinetic theory
+        descriptions.
+        Academic press, New York.
     \endverbatim
 
 SourceFiles

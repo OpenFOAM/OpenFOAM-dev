@@ -29,19 +29,18 @@ Description
 
     References:
     \verbatim
-        "Implementation and Comparison of Correlations for interfacial Forces
-        in a Gas-Liquid System within an Euler-Euler Framework"
-        Otromke, M.,
-        PhD Thesis
-        April 2013
+        Otromke, M. (2013).
+        Implementation and Comparison of Correlations for interfacial Forces in
+        a Gas-Liquid System within an Euler-Euler Framework.
+        PhD Thesis.
     \endverbatim
 
     \verbatim
-        "The Favre averaged drag model for turbulent dispersion in Eulerian
-         multi-phase flows"
-        Burns, A.D., Frank, T., Hamill, I., Shi, J.M.,
-        5th international conference on multiphase flow
-        Volume 4, Paper 392, May 2004
+        Burns, A. D., Frank, T., Hamill, I., & Shi, J. M. (2004, May).
+        The Favre averaged drag model for turbulent dispersion in Eulerian
+        multi-phase flows.
+        In 5th international conference on multiphase flow,
+        ICMF (Vol. 4, pp. 1-17).
     \endverbatim
 
 SourceFiles

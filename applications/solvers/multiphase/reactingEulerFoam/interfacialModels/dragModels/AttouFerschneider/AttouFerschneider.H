@@ -31,11 +31,10 @@ Description
 
     Reference:
     \verbatim
-        "Modeling of laboratory and commercial scale hydro-processing reactors
-        using CFD"
-        Gunjal, P.R., Ranade, V.V.,
-        Chemical Engineering Science
-        Volume 62, Issues 18-20, September-October 2007, pp. 5512 - 5526
+        Gunjal, P. R., & Ranade, V. V. (2007).
+        Modeling of laboratory and commercial scale hydro-processing reactors
+        using CFD.
+        Chemical Engineering Science, 62(18-20), 5512-5526.
     \endverbatim
 
 SourceFiles

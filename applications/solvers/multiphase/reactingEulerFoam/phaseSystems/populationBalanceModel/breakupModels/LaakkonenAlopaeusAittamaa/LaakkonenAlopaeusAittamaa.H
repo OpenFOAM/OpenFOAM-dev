@@ -53,11 +53,11 @@ Description
 
     References:
     \verbatim
-        "Validation of bubble breakage, coalescence and mass transfer models for
-         gas-liquid dispersion in agitated vessel"
-        Laakkonen, M., Alopaeus, V., Aittamaa, J.
-        Chemical Engineering Science, Vol. 61, 2006, pp. 218-228
-        Eq. 2-3, p. 220
+        Laakkonen, M., Alopaeus, V., & Aittamaa, J. (2006).
+        Validation of bubble breakage, coalescence and mass transfer models for
+        gas-liquid dispersion in agitated vessel.
+        Chemical engineering science, 61(1), 218-228.
+        Eq. 2-3, p. 220.
     \endverbatim
 
 Usage

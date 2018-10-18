@@ -29,11 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "Drag Coefficients of Bubbles. 2nd Report. Drag Coefficient for a Swarm
-         of Bubbles and its Applicability to Transient Flow."
-        Tomiyama, A., Kataoka, I., Fukuda, T., and Sakaguchi, T.,
-        Nippon Kikai Gakkai Ronbunshu
-        Volume 61, Issue 588, 1995, pp. 2810-2817
+        Tomiyama, A., Kataoka, I., Fukuda, T., & Sakaguchi, T. (1995).
+        Drag coefficients of bubbles: 2nd report, drag coefficient for a swarm
+        of bubbles and its applicability to transient flow.
+        JSME Journal of Fluid Engineering, 61, 2810-2817.
     \endverbatim
 
 SourceFiles

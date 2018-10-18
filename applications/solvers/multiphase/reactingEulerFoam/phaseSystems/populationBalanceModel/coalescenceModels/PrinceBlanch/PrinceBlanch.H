@@ -102,9 +102,9 @@ Description
 
     References:
     \verbatim
-        "Bubble Coalescence and Break-Up in Air-Sparged Bubble-Columns"
-        Prince, M.J., Blanch, H.W.
-        AIChE Journal, Vol. 36, Issue 10, 1990, pp. 1485-1499
+        Prince, M. J., & Blanch, H. W. (1990).
+        Bubble coalescence and break‐up in air‐sparged bubble columns.
+        AIChE journal, 36(10), 1485-1499.
     \endverbatim
 
 Usage

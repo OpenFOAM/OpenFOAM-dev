@@ -29,18 +29,18 @@ Description
 
     References:
     \verbatim
-        "Implementation and Comparison of Correlations for interfacial Forces
-         in a Gas-Liquid System within an Euler-Euler Framework"
-        Otromke, M.
-        PhD Thesis
-        April 2013
+        Otromke, M. (2013).
+        Implementation and Comparison of Correlations for interfacial Forces in
+        a Gas-Liquid System within an Euler-Euler Framework.
+        PhD Thesis.
     \endverbatim
 
     \verbatim
-        "Advances in Computational Fluid Dynamics (CFD) of 3-dimensional Gas-
-         Liquid Multiphase Flows"
-        Frank, T.
-        NAFEMS Seminar: Simulation of Complex Flows (CFD), April 2005, pp. 1-18
+        Frank, T. (2005, April).
+        Advances in computational fluid dynamics (CFD) of 3-dimensional
+        gas-liquid multiphase flows.
+        In NAFEMS Seminar: Simulation of Complex Flows (CFD)-Applications and
+        Trends, Wiesbaden, Germany (pp. 1-18).
     \endverbatim
 
 SourceFiles

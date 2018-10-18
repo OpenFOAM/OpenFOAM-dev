@@ -30,8 +30,8 @@ Description
     Reference:
     \verbatim
         Cole, R. (1960).
-        A photographic study of pool boiling in the region of the
-        critical heat flux.
+        A photographic study of pool boiling in the region of the critical heat
+        flux.
         AIChE Journal, 6(4), 533-538.
     \endverbatim
 

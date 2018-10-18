@@ -29,17 +29,16 @@ Description
 
     References:
     \verbatim
-        "Implementation and Comparison of Correlations for interfacial Forces
-         in a Gas-Liquid System within an Euler-Euler Framework"
-        Otromke, M.,
-        PhD Thesis, April 2013
+        Otromke, M. (2013).
+        Implementation and Comparison of Correlations for interfacial Forces in
+        a Gas-Liquid System within an Euler-Euler Framework.
+        PhD Thesis.
     \endverbatim
 
     \verbatim
-        "Lateral forces on spheres in turbulent uniform shear flow"
-        Moraga, F.J., Bonetto, F.J., Lahey, R.T.,
-        International Journal of Multiphase Flow
-        Volume 25, Issues 6-7, September 1999, pp. 1321-1372
+        Moraga, F. J., Bonetto, F. J., & Lahey, R. T. (1999).
+        Lateral forces on spheres in turbulent uniform shear flow.
+        International Journal of Multiphase Flow, 25(6-7), 1321-1372.
     \endverbatim
 
 SourceFiles

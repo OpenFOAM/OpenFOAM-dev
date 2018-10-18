@@ -29,17 +29,16 @@ Description
 
     References:
     \verbatim
-        "Implementation and Comparison of Correlations for interfacial Forces
-         in a Gas-Liquid System within an Euler-Euler Framework"
-        Otromke, M.
-        PhD Thesis, April 2013
+        Otromke, M. (2013).
+        Implementation and Comparison of Correlations for interfacial Forces in
+        a Gas-Liquid System within an Euler-Euler Framework.
+        PhD Thesis.
     \endverbatim
 
     \verbatim
-        "Struggle with Computational Bubble Dynamics"
-        Tomiyama, A.,
-        Multiphase Science and Technology
-        Volume 10, Issue 4, 1998, pp. 369-405
+        Tomiyama, A. (1998).
+        Struggle with computational bubble dynamics.
+        Multiphase Science and Technology, 10(4), 369-405.
     \endverbatim
 
 SourceFiles

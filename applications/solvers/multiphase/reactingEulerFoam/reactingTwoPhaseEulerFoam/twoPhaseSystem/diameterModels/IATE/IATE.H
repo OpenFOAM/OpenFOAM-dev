@@ -33,10 +33,11 @@ Description
     per unit volume.  In every other respect this model is as presented in the
     paper:
 
+    Reference:
     \verbatim
-        "Development of Interfacial Area Transport Equation"
-        Ishii, M., Kim, S. and Kelly, J.,
-        Nuclear Engineering and Technology, Vol.37 No.6 December 2005
+        Ishii, M., Kim, S., & Kelly, J. (2005).
+        Development of interfacial area transport equation.
+        Nuclear Engineering and Technology, 37(6), 525-536.
     \endverbatim
 
 SourceFiles
