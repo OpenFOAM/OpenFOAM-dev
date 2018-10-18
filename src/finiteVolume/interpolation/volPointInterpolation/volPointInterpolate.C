@@ -222,13 +222,10 @@ void Foam::volPointInterpolation::interpolateBoundaryField
     tmp<Field<Type>> tboundaryVals(flatBoundaryField(vf));
     const Field<Type>& boundaryVals = tboundaryVals();
 
-
     // Do points on 'normal' patches from the surrounding patch faces
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     forAll(boundary.meshPoints(), i)
     {
-        label pointi = boundary.meshPoints()[i];
+        const label pointi = boundary.meshPoints()[i];
 
         if (isPatchPoint_[pointi])
         {
@@ -258,6 +255,74 @@ void Foam::volPointInterpolation::interpolateBoundaryField
     // a coupled point to have its master on a different patch so
     // to make sure just push master data to slaves.
     pushUntransformedData(pfi);
+
+
+    // Detect whether the field has overridden constraint patch types. If not,
+    // we are done, so return.
+    bool havePatchTypes = false;
+    wordList patchTypes(pf.boundaryField().size(), word::null);
+    forAll(pf.boundaryField(), patchi)
+    {
+        const word patchType = pf.boundaryField()[patchi].patchType();
+        if (patchType != word::null)
+        {
+            havePatchTypes = true;
+            patchTypes[patchi] = patchType;
+        }
+    }
+    if (!havePatchTypes)
+    {
+        return;
+    }
+
+    // If the patch types have been overridden than we need to re-normalise the
+    // boundary points weights. Re-calculate the weight sum.
+    pointScalarField psw
+    (
+        IOobject
+        (
+            "volPointSumWeights",
+            mesh().polyMesh::instance(),
+            mesh()
+        ),
+        pointMesh::New(mesh()),
+        dimensionedScalar("zero", dimless, 0),
+        wordList
+        (
+            pf.boundaryField().size(),
+            calculatedPointPatchField<scalar>::typeName
+        ),
+        patchTypes
+    );
+
+    scalarField& pswi = psw.primitiveFieldRef();
+
+    forAll(boundary.meshPoints(), i)
+    {
+        const label pointi = boundary.meshPoints()[i];
+
+        if (isPatchPoint_[pointi])
+        {
+            pswi[pointi] = sum(boundaryPointWeights_[i]);
+        }
+    }
+
+    pointConstraints::syncUntransformedData(mesh(), pswi, plusEqOp<scalar>());
+
+    addSeparated(psw);
+
+    pushUntransformedData(pswi);
+
+    // Apply the new weight sum to the result to re-normalise it
+    forAll(boundary.meshPoints(), i)
+    {
+        const label pointi = boundary.meshPoints()[i];
+
+        if (isPatchPoint_[pointi])
+        {
+            pfi[pointi] /= pswi[pointi];
+        }
+    }
 }
 
 
