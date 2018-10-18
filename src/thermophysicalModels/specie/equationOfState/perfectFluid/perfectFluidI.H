@@ -95,7 +95,9 @@ inline Foam::scalar Foam::perfectFluid<Specie>::rho(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::perfectFluid<Specie>::H(scalar p, scalar T) const
 {
-    return 0;
+    const scalar RT = this->R()*T;
+
+    return -rho0_*RT/(rho0_ + p/RT);
 }
 
 

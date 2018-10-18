@@ -23,10 +23,8 @@ thermoType
     thermo          hRefConst;
     equationOfState perfectFluid;
     specie          specie;
-    energy          sensibleEnthalpy;
+    energy          sensibleInternalEnergy;
 }
-
-dpdt yes;
 
 pressureWorkAlphaLimit 0;
 
