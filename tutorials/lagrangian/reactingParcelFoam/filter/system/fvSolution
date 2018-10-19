@@ -70,13 +70,13 @@ solvers
         relTol          0;
     }
 
-    h
+    e
     {
         $Yi;
         relTol          0.1;
     }
 
-    hFinal
+    eFinal
     {
         $Yi;
     }
@@ -95,7 +95,7 @@ relaxationFactors
 {
     equations
     {
-        ".*Final"       1;
+        ".*"       1;
     }
 }
 

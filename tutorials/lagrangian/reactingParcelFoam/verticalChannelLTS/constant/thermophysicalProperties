@@ -21,7 +21,7 @@ thermoType
     mixture         reactingMixture;
     transport       polynomial;
     thermo          hPolynomial;
-    energy          sensibleEnthalpy;
+    energy          sensibleInternalEnergy;
     equationOfState icoPolynomial;
     specie          specie;
 }
@@ -41,9 +41,6 @@ liquids
 
 solids
 {}
-
-// de-activate the pressure-work term when running local time-stepping
-dpdt            no;
 
 
 // ************************************************************************* //

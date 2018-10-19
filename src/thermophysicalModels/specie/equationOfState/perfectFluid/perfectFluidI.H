@@ -146,7 +146,10 @@ inline Foam::scalar Foam::perfectFluid<Specie>::Z(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::perfectFluid<Specie>::CpMCv(scalar p, scalar T) const
 {
-    return 0;
+    const scalar R = this->R();
+    const scalar rho = this->rho(p, T);
+
+    return R*sqr(p/(rho*R*T));
 }
 
 

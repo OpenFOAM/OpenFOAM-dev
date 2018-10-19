@@ -21,12 +21,10 @@ thermoType
     mixture         reactingMixture;
     transport       polynomial;
     thermo          hPolynomial;
-    energy          sensibleEnthalpy;
+    energy          sensibleInternalEnergy;
     equationOfState icoPolynomial;
     specie          specie;
 }
-
-dpdt no;
 
 chemistryReader foamChemistryReader;
 

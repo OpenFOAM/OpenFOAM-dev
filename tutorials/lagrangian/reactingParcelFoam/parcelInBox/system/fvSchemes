@@ -23,16 +23,17 @@ ddtSchemes
 gradSchemes
 {
     default         Gauss linear;
-    grad(p)         Gauss linear;
 }
 
 divSchemes
 {
     default         none;
+
     div(phi,U)      Gauss upwind;
     div(phid,p)     Gauss upwind;
     div(phi,K)      Gauss upwind;
-    div(phi,h)     Gauss upwind;
+    div(phiv,p)     Gauss upwind;
+    div(phi,e)      Gauss upwind;
     div(phi,k)      Gauss upwind;
     div(phi,epsilon) Gauss upwind;
     div(phi,omega) Gauss upwind;

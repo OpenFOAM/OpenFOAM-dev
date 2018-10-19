@@ -17,7 +17,7 @@ FoamFile
 
 solvers
 {
-    "(rho|.*Final)"
+    "rho.*"
     {
         solver          PCG;
         preconditioner  DIC;
@@ -46,7 +46,7 @@ solvers
         $p_rgh;
     }
 
-    "(U|Yi|h|k|omega|.*Final)"
+    "(U|Yi|h|e|k|omega).*"
     {
         solver          smoothSolver;
         smoother        GaussSeidel;

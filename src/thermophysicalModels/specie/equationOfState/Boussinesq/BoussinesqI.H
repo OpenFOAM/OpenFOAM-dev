@@ -96,9 +96,7 @@ inline Foam::scalar Foam::Boussinesq<Specie>::rho
 template<class Specie>
 inline Foam::scalar Foam::Boussinesq<Specie>::H(scalar p, scalar T) const
 {
-    const scalar rho = this->rho(p, T);
-
-    return (p/rho)*(1 - rho0_*beta_*T/rho);
+    return p/this->rho(p, T);
 }
 
 
@@ -163,7 +161,7 @@ inline Foam::scalar Foam::Boussinesq<Specie>::CpMCv
     scalar T
 ) const
 {
-    return this->R();
+    return 0;
 }
 
 

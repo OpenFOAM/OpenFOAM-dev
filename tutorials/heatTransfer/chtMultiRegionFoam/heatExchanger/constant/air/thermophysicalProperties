@@ -23,7 +23,7 @@ thermoType
     thermo          hPolynomial;
     equationOfState icoPolynomial;
     specie          specie;
-    energy          sensibleEnthalpy;
+    energy          sensibleInternalEnergy;
 }
 
 mixture

@@ -107,6 +107,7 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::H
     scalar T
 ) const
 {
+    // ***HGW This needs to be added, it is not 0
     return 0;
 }
 
@@ -129,6 +130,7 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::E
     scalar T
 ) const
 {
+    // ***HGW This needs to be added, it is H - p/rho
     return 0;
 }
 

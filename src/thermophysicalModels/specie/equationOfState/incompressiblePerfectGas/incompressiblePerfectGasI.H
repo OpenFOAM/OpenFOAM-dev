@@ -96,7 +96,7 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::H
     scalar T
 ) const
 {
-    return 0;
+    return p/this->rho(p, T);
 }
 
 
@@ -173,7 +173,7 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::CpMCv
     scalar T
 ) const
 {
-    return this->R();
+    return 0;
 }
 
 
