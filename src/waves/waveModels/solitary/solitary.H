@@ -29,10 +29,12 @@ Description
 
     Reference:
     \verbatim
-        "Water Wave Mechanics For Engineers And Scientists"
-        R G Dean and R A Dalrymple
-        Pages 314-317
+        Dean, R. G., & Dalrymple, R. A. (1991).
+        Water wave mechanics for engineers and scientists (Vol. 2).
+        World Scientific Publishing Company.
     \endverbatim
+
+    See pages 314-317.
 
 SourceFiles
     solitary.C

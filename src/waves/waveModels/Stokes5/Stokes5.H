@@ -29,10 +29,10 @@ Description
 
     Reference:
     \verbatim
-        "A Fifth Order Stokes Theory for Steady Waves"
-        J D Fenton
-        Journal of Waterway, Port, Coastal, and Ocean Engineering (1985),
-        Volume 111, Issue 2, Pages 216-234
+        Fenton, J. D. (1985).
+        A fifth-order Stokes theory for steady waves.
+        Journal of waterway, port, coastal, and ocean engineering, 111(2),
+        216-234.
     \endverbatim
 
 SourceFiles

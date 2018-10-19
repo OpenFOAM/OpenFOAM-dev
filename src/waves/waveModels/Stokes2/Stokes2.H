@@ -29,11 +29,12 @@ Description
 
     Reference:
     \verbatim
-        "On the Theory of Oscillatory Waves"
-        G G Stokes
-        Transactions of the Cambridge Philosophical Society (1847), Volume 8,
-        Pages 441-455, Equations 18 and 19
+        Stokes, G.G. (1847)
+        On the theory of oscillatory waves.
+        Transactions of the Cambridge Philosophical Society, 8, 441.
     \endverbatim
+
+    See equations 18 and 19.
 
 SourceFiles
     Stokes2.C
