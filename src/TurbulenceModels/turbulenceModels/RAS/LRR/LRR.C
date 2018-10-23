@@ -25,7 +25,7 @@ License
 
 #include "LRR.H"
 #include "fvOptions.H"
-#include "wallFvPatch.H"
+#include "wallDist.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
