@@ -24,5 +24,5 @@ inline scalar Ha
     const scalar T
 ) const
 {
-    return Es(p, T) + p/EquationOfState::rho(p, T);
+    return Ea(p, T) + p/EquationOfState::rho(p, T);
 }
