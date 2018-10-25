@@ -20,7 +20,7 @@ thermoType
     type            heRhoThermo;
     mixture         pureMixture;
     transport       const;
-    thermo          hConst;
+    thermo          eConst;
     equationOfState perfectFluid;
     specie          specie;
     energy          sensibleInternalEnergy;
@@ -48,7 +48,7 @@ inertSpecie H2O;
     thermodynamics
     {
         Hf          -1.5879e+07;
-        Cp          4195;
+        Cv          4195;
     }
     transport
     {
@@ -71,7 +71,7 @@ AIR
     thermodynamics
     {
         Hf          0;
-        Cp          4195;
+        Cv          4195;
     }
     transport
     {

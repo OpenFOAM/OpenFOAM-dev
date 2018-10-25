@@ -7,7 +7,6 @@ inline scalar Cp
     return Cv(p, T) + EquationOfState::CpMCv(p, T);
 }
 
-
 inline scalar Hs
 (
     const scalar p,
@@ -16,7 +15,6 @@ inline scalar Hs
 {
     return Es(p, T) + p/EquationOfState::rho(p, T);
 }
-
 
 inline scalar Ha
 (
