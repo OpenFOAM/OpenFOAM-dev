@@ -104,8 +104,8 @@ public:
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
-        //- Correct the thermodynamics
-        virtual void correctThermo();
+        //- Correct the energy transport e.g. alphat and Tf
+        virtual void correctEnergyTransport();
 
         //- Correct the interface thermodynamics
         virtual void correctInterfaceThermo();

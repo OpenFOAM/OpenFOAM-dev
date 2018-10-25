@@ -252,9 +252,9 @@ heatTransfer() const
 
 template<class BasePhaseSystem>
 void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::
-correctThermo()
+correctEnergyTransport()
 {
-    phaseSystem::correctThermo();
+    BasePhaseSystem::correctEnergyTransport();
 
     correctInterfaceThermo();
 }
