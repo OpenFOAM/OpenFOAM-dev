@@ -217,6 +217,59 @@ bool Foam::functionObjects::turbulenceFields::execute()
             }
         }
     }
+    else if (obr_.foundObject<compressibleTurbulenceModel>(modelName()))
+    {
+        const compressibleTurbulenceModel& model =
+            obr_.lookupObject<compressibleTurbulenceModel>(modelName());
+
+        forAllConstIter(wordHashSet, fieldSet_, iter)
+        {
+            const word& f = iter.key();
+            switch (compressibleFieldNames_[f])
+            {
+                case compressibleField::k:
+                {
+                    processField<scalar>(f, model.k());
+                    break;
+                }
+                case compressibleField::epsilon:
+                {
+                    processField<scalar>(f, model.epsilon());
+                    break;
+                }
+                case compressibleField::omega:
+                {
+                    processField<scalar>(f, omega(model));
+                    break;
+                }
+                case compressibleField::mut:
+                {
+                    processField<scalar>(f, model.mut());
+                    break;
+                }
+                case compressibleField::muEff:
+                {
+                    processField<scalar>(f, model.muEff());
+                    break;
+                }
+                case compressibleField::R:
+                {
+                    processField<symmTensor>(f, model.R());
+                    break;
+                }
+                case compressibleField::devRhoReff:
+                {
+                    processField<symmTensor>(f, model.devRhoReff());
+                    break;
+                }
+                default:
+                {
+                    FatalErrorInFunction
+                        << "Invalid field selection" << exit(FatalError);
+                }
+            }
+        }
+    }
     else if (obr_.foundObject<incompressible::turbulenceModel>(modelName()))
     {
         const incompressible::turbulenceModel& model =
