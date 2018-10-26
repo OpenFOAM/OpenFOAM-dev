@@ -52,8 +52,9 @@ Description
 Usage
     \table
         Property     | Description                 | Required | Default value
-        type         | type name: processorField   | yes      |
-        fields       | fields to store (see below) | yes      |
+        type         | Type name: processorField   | yes      |
+        fields       | Fields to store (see below) | yes      |
+        prefix       | If true prefix fields       | no       | no
     \endtable
 
     Where \c fields can include:
@@ -139,6 +140,10 @@ protected:
 
         //- Fields to load
         wordHashSet fieldSet_;
+
+        //- Optional field prefix to avoid name clashes
+        //  Defaults to null
+        word prefix_;
 
 
     // Protected Member Functions

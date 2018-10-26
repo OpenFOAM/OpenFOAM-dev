@@ -133,13 +133,22 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
         fieldSet_.insert(wordList(dict.lookup("fields")));
     }
 
+    if (dict.lookupOrDefault<Switch>("prefix", false))
+    {
+        prefix_ = modelName() + ':';
+    }
+    else
+    {
+        prefix_ = word::null;
+    }
+
     Info<< type() << " " << name() << ": ";
     if (fieldSet_.size())
     {
         Info<< "storing fields:" << nl;
         forAllConstIter(wordHashSet, fieldSet_, iter)
         {
-            Info<< "    " << modelName() << ':' << iter.key() << nl;
+            Info<< "    " << prefix_ + iter.key() << nl;
         }
         Info<< endl;
     }
@@ -338,7 +347,7 @@ bool Foam::functionObjects::turbulenceFields::write()
 {
     forAllConstIter(wordHashSet, fieldSet_, iter)
     {
-        const word fieldName = modelName() + ':' + iter.key();
+        const word fieldName = prefix_ + iter.key();
         writeObject(fieldName);
     }
 
