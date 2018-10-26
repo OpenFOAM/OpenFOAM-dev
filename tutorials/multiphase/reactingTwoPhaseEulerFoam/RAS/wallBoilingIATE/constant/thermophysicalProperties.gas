@@ -23,8 +23,10 @@ thermoType
     thermo          hRefConst;
     equationOfState perfectGas;
     specie          specie;
-    energy          sensibleInternalEnergy;
+    energy          sensibleEnthalpy;
 }
+
+dpdt no;
 
 mixture
 {
@@ -36,7 +38,6 @@ mixture
     {
         rho        1;
     }
-
     thermodynamics
     {
         Hf          0;

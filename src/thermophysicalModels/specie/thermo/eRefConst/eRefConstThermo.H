@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::eConstThermo
+    Foam::eRefConstThermo
 
 Description
-    Constant properties thermodynamics package templated on an equation of
-    state
+    Constant properties thermodynamics package
+    templated into the EquationOfState.
 
 SourceFiles
-    eConstThermoI.H
-    eConstThermo.C
+    eRefConstThermoI.H
+    eRefConstThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef eConstThermo_H
-#define eConstThermo_H
-
-#include "thermo.H"
+#ifndef eRefConstThermo_H
+#define eRefConstThermo_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,65 +44,64 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-template<class EquationOfState> class eConstThermo;
+template<class EquationOfState> class eRefConstThermo;
 
 template<class EquationOfState>
-inline eConstThermo<EquationOfState> operator+
+inline eRefConstThermo<EquationOfState> operator+
 (
-    const eConstThermo<EquationOfState>&,
-    const eConstThermo<EquationOfState>&
+    const eRefConstThermo<EquationOfState>&,
+    const eRefConstThermo<EquationOfState>&
 );
 
 template<class EquationOfState>
-inline eConstThermo<EquationOfState> operator*
+inline eRefConstThermo<EquationOfState> operator*
 (
     const scalar,
-    const eConstThermo<EquationOfState>&
+    const eRefConstThermo<EquationOfState>&
 );
 
 template<class EquationOfState>
-inline eConstThermo<EquationOfState> operator==
+inline eRefConstThermo<EquationOfState> operator==
 (
-    const eConstThermo<EquationOfState>&,
-    const eConstThermo<EquationOfState>&
+    const eRefConstThermo<EquationOfState>&,
+    const eRefConstThermo<EquationOfState>&
 );
 
 template<class EquationOfState>
 Ostream& operator<<
 (
     Ostream&,
-    const eConstThermo<EquationOfState>&
+    const eRefConstThermo<EquationOfState>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                        Class eConstThermo Declaration
+                           Class eRefConstThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class EquationOfState>
-class eConstThermo
+class eRefConstThermo
 :
     public EquationOfState
 {
     // Private data
 
-        //- Heat capacity at constant volume
-        //  Note: input in [J/(kg K)], but internally uses [J/(kmol K)]
         scalar Cv_;
-
-        //- Heat of formation
-        //  Note: input in [J/kg], but internally uses [J/kmol]
         scalar Hf_;
+        scalar Tref_;
+        scalar Eref_;
 
 
     // Private Member Functions
 
         //- Construct from components
-        inline eConstThermo
+        inline eRefConstThermo
         (
             const EquationOfState& st,
             const scalar cv,
-            const scalar hf
+            const scalar hf,
+            const scalar tref,
+            const scalar eref
         );
 
 
@@ -113,16 +110,16 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        eConstThermo(const dictionary& dict);
+        eRefConstThermo(const dictionary& dict);
 
         //- Construct as named copy
-        inline eConstThermo(const word&, const eConstThermo&);
+        inline eRefConstThermo(const word&, const eRefConstThermo&);
 
         //- Construct and return a clone
-        inline autoPtr<eConstThermo> clone() const;
+        inline autoPtr<eRefConstThermo> clone() const;
 
-        // Selector from dictionary
-        inline static autoPtr<eConstThermo> New(const dictionary& dict);
+        //- Selector from dictionary
+        inline static autoPtr<eRefConstThermo> New(const dictionary& dict);
 
 
     // Member Functions
@@ -130,7 +127,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "eConst<" + EquationOfState::typeName() + '>';
+            return "eRefConst<" + EquationOfState::typeName() + '>';
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_
@@ -174,27 +171,27 @@ public:
 
     // Member operators
 
-        inline void operator+=(const eConstThermo&);
+        inline void operator+=(const eRefConstThermo&);
 
 
     // Friend operators
 
-        friend eConstThermo operator+ <EquationOfState>
+        friend eRefConstThermo operator+ <EquationOfState>
         (
-            const eConstThermo&,
-            const eConstThermo&
+            const eRefConstThermo&,
+            const eRefConstThermo&
         );
 
-        friend eConstThermo operator* <EquationOfState>
+        friend eRefConstThermo operator* <EquationOfState>
         (
             const scalar,
-            const eConstThermo&
+            const eRefConstThermo&
         );
 
-        friend eConstThermo operator== <EquationOfState>
+        friend eRefConstThermo operator== <EquationOfState>
         (
-            const eConstThermo&,
-            const eConstThermo&
+            const eRefConstThermo&,
+            const eRefConstThermo&
         );
 
 
@@ -203,7 +200,7 @@ public:
         friend Ostream& operator<< <EquationOfState>
         (
             Ostream&,
-            const eConstThermo&
+            const eRefConstThermo&
         );
 };
 
@@ -214,10 +211,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "eConstThermoI.H"
+#include "eRefConstThermoI.H"
 
 #ifdef NoRepository
-    #include "eConstThermo.C"
+    #include "eRefConstThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

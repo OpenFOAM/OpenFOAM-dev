@@ -37,6 +37,7 @@ License
 #include "sensibleEnthalpy.H"
 
 #include "hRefConstThermo.H"
+#include "eRefConstThermo.H"
 
 #include "constTransport.H"
 
@@ -86,7 +87,7 @@ constTransport
 <
     species::thermo
     <
-        hRefConstThermo
+        eRefConstThermo
         <
             perfectGas<specie>
         >,
@@ -99,7 +100,7 @@ constTransport
 <
     species::thermo
     <
-        hRefConstThermo
+        eRefConstThermo
         <
             perfectFluid<specie>
         >,
@@ -112,7 +113,7 @@ constTransport
 <
     species::thermo
     <
-        hRefConstThermo
+        eRefConstThermo
         <
             rhoConst<specie>
         >,
@@ -182,7 +183,7 @@ makeThermos
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
-    hRefConstThermo,
+    eRefConstThermo,
     perfectGas,
     specie
 );
@@ -194,7 +195,7 @@ makeThermos
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
-    hRefConstThermo,
+    eRefConstThermo,
     perfectFluid,
     specie
 );
@@ -206,7 +207,7 @@ makeThermos
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
-    hRefConstThermo,
+    eRefConstThermo,
     rhoConst,
     specie
 );
