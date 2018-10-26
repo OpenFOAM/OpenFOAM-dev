@@ -98,10 +98,9 @@ fi
 
 #------------------------------------------------------------------------------
 # Main code. Do all checks.
-#
 
 # Builtin whitespace check to avoid trailing space, including CR-LF endings
-bad=$(git diff-index --cached --check $against --) || die "$bad"
+bad=$(git diff-index --cached --check $against -- ':(exclude)*.md') || die "$bad"
 
 # Check for illegal code, e.g. <TAB>, etc
 checkIllegalCode
