@@ -111,10 +111,20 @@ surfaceTension
 
 saturationModel
 {
-    type constant;
+    type function1;
 
-    Tsat 373;
-    pSat 1e5;
+    function csvFile;
+    functionCoeffs
+    {
+        nHeaderLine         1;
+        refColumn           0;
+        componentColumns    (1);
+        separator           ",";
+        mergeSeparators     no;
+        file                "Tsat_water_1_2bar.csv";
+        outOfBounds         clamp;
+        interpolationScheme linear;
+    };
 };
 
 aspectRatio
