@@ -55,10 +55,6 @@ Foam::diameterModel::~diameterModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModel::correct()
-{}
-
-
 bool Foam::diameterModel::read(const dictionary& phaseProperties)
 {
     diameterProperties_ = phaseProperties.optionalSubDict(type() + "Coeffs");

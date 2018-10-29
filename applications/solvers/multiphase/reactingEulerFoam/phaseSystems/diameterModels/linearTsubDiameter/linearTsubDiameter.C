@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "isothermalDiameter.H"
+#include "linearTsubDiameter.H"
+#include "phaseSystem.H"
+#include "saturationModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,12 +34,12 @@ namespace Foam
 {
 namespace diameterModels
 {
-    defineTypeNameAndDebug(isothermal, 0);
+    defineTypeNameAndDebug(linearTsub, 0);
 
     addToRunTimeSelectionTable
     (
         diameterModel,
-        isothermal,
+        linearTsub,
         dictionary
     );
 }
@@ -46,15 +48,33 @@ namespace diameterModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::isothermal::isothermal
+Foam::diameterModels::linearTsub::linearTsub
 (
     const dictionary& diameterProperties,
     const phaseModel& phase
 )
 :
     diameterModel(diameterProperties, phase),
-    d0_("d0", dimLength, diameterProperties_),
-    p0_("p0", dimPressure, diameterProperties_),
+    liquidPhaseName_(diameterProperties.lookup("liquidPhase")),
+    d2_("d2", dimLength, diameterProperties.lookupOrDefault("d2", 0.0015)),
+    Tsub2_
+    (
+        "Tsub2",
+         dimTemperature,
+         diameterProperties.lookupOrDefault("Tsub2", 0)
+    ),
+    d1_
+    (
+        "d1",
+        dimLength,
+        diameterProperties.lookupOrDefault("d1", 0.00015)
+    ),
+    Tsub1_
+    (
+        "Tsub1",
+        dimTemperature,
+        diameterProperties.lookupOrDefault("Tsub1", 13.5)
+    ),
     d_
     (
         IOobject
@@ -66,35 +86,63 @@ Foam::diameterModels::isothermal::isothermal
             IOobject::AUTO_WRITE
         ),
         phase_.mesh(),
-        d0_
+        d1_
     )
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::diameterModels::isothermal::~isothermal()
+Foam::diameterModels::linearTsub::~linearTsub()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::isothermal::d() const
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::d() const
 {
-    const volScalarField& p = phase_.db().lookupObject<volScalarField>("p");
+    // Lookup the fluid model
+    const phaseSystem& fluid =
+        refCast<const phaseSystem>
+        (
+            phase_.mesh().lookupObject<phaseSystem>("phaseProperties")
+        );
 
-    d_ = d0_*pow(p0_/p, 1.0/3.0);
+    const phaseModel& liquid(fluid.phases()[liquidPhaseName_]);
+
+    if (phase_.mesh().foundObject<saturationModel>("saturationModel"))
+    {
+        const saturationModel& satModel =
+            phase_.mesh().lookupObject<saturationModel>("saturationModel");
+
+        const volScalarField Tsub
+        (
+            liquid.thermo().T() - satModel.Tsat(liquid.thermo().p())
+        );
+
+        d_ = max
+        (
+            d1_,
+            min
+            (
+                d2_,
+                (d1_*(Tsub - Tsub2_) + d2_*(Tsub - Tsub1_))/(Tsub2_ - Tsub1_)
+            )
+        );
+    }
 
     return d_;
 }
 
 
-bool Foam::diameterModels::isothermal::read(const dictionary& phaseProperties)
+bool Foam::diameterModels::linearTsub::read(const dictionary& phaseProperties)
 {
     diameterModel::read(phaseProperties);
-
-    diameterProperties_.lookup("d0") >> d0_;
-    diameterProperties_.lookup("p0") >> p0_;
+    diameterProperties_.lookup("liquidPhase") >> liquidPhaseName_;
+    diameterProperties_.lookup("d2") >> d2_;
+    diameterProperties_.lookup("Tsub2") >> Tsub2_;
+    diameterProperties_.lookup("d1") >> d1_;
+    diameterProperties_.lookup("Tsub1") >> Tsub1_;
 
     return true;
 }
