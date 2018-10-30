@@ -43,8 +43,6 @@
     multivariateSurfaceInterpolationScheme<scalar>::fieldTable& fields =
         fieldsFluid[i];
 
-    volScalarField& Qdot = QdotFluid[i];
-
     radiation::radiationModel& rad = radiation[i];
 
     IOMRFZoneList& MRF = MRFfluid[i];

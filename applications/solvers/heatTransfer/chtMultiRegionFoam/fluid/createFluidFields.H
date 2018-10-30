@@ -15,7 +15,6 @@ PtrList<volScalarField> KFluid(fluidRegions.size());
 PtrList<volScalarField> dpdtFluid(fluidRegions.size());
 PtrList<multivariateSurfaceInterpolationScheme<scalar>::fieldTable>
     fieldsFluid(fluidRegions.size());
-PtrList<volScalarField> QdotFluid(fluidRegions.size());
 
 List<scalar> initialMassFluid(fluidRegions.size());
 
@@ -244,25 +243,6 @@ forAll(fluidRegions, i)
         fieldsFluid[i].add(thermoFluid[i].composition().Y()[j]);
     }
     fieldsFluid[i].add(thermoFluid[i].he());
-
-    Info<< "    Adding to QdotFluid\n" << endl;
-    QdotFluid.set
-    (
-        i,
-        new volScalarField
-        (
-            IOobject
-            (
-                "Qdot",
-                runTime.timeName(),
-                fluidRegions[i],
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            fluidRegions[i],
-            dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
-        )
-    );
 
     Info<< "    Adding MRF\n" << endl;
     MRFfluid.set
