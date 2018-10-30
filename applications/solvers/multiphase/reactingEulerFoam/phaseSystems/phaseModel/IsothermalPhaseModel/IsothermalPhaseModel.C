@@ -54,17 +54,18 @@ void Foam::IsothermalPhaseModel<BasePhaseModel>::correctThermo()
 {
     BasePhaseModel::correctThermo();
 
-    // If not pure, then the species fractions may have changed, so the thermo
-    // needs correcting, but without changing the temperature. Re-calculate the
-    // energy, then run the standard thermo correction. This could be made more
-    // efficient, as the THE steps in the thermo correction are not strictly
-    // necessary, but doing so would require expanding the thermo interface.
-    if (!this->pure())
-    {
-        this->thermo_->he() =
-            this->thermo().he(this->thermo().p(), this->thermo().T());
-        this->thermo_->correct();
-    }
+    // Correct the thermo, but make sure that the temperature remains the same
+    tmp<volScalarField> TCopy
+    (
+        new volScalarField
+        (
+            this->thermo().T().name() + ":Copy",
+            this->thermo().T()
+        )
+    );
+    this->thermo_->he() = this->thermo().he(this->thermo().p(), TCopy);
+    this->thermo_->correct();
+    this->thermo_->T() = TCopy;
 }
 
 
