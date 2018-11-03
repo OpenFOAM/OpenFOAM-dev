@@ -138,9 +138,7 @@ const Foam::autoPtr<Foam::diameterModel>& Foam::phaseModel::dPtr() const
 
 
 void Foam::phaseModel::correct()
-{
-    diameterModel_->correct();
-}
+{}
 
 
 void Foam::phaseModel::correctKinematics()

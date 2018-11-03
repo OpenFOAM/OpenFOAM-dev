@@ -42,6 +42,7 @@ License
 
 #include "constTransport.H"
 #include "sutherlandTransport.H"
+#include "WLFTransport.H"
 
 #include "homogeneousMixture.H"
 #include "inhomogeneousMixture.H"
@@ -468,6 +469,18 @@ makeReactionThermo
     sensibleInternalEnergy,
     janafThermo,
     Boussinesq,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    WLFTransport,
+    sensibleInternalEnergy,
+    eConstThermo,
+    rhoConst,
     specie
 );
 

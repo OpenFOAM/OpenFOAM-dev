@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,68 +22,78 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModel
+    Foam::linearTsub
 
 Description
-    A2stract base-class for dispersed-phase particle diameter models.
+    Vapour bubble diameter model for modelling of condensation of vapour
+    bubbles. Calculates bubble diameter as a function of liquid phase
+    subcooling.
+
+    Reference:
+    \verbatim
+        Anglart, H., Nylund, O., Kurul, N., & Podowski, M. Z. (1997).
+        CFD prediction of flow and phase distribution in fuel assemblies with
+        spacers.
+        Nuclear Engineering and Design, 177(1-3), 215-228.
+    \endverbatim
 
 SourceFiles
-    diameterModel.C
-    newDiameterModel.C
+    linearTsub.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef diameterModel_H
-#define diameterModel_H
+#ifndef linearTsubDiameter_H
+#define linearTsubDiameter_H
 
-#include "dictionary.H"
-#include "phaseModel.H"
-#include "runTimeSelectionTables.H"
+#include "diameterModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-/*---------------------------------------------------------------------------*\
-                       Class diameterModel Declaration
-\*---------------------------------------------------------------------------*/
-
-class diameterModel
+namespace diameterModels
 {
 
-protected:
+/*---------------------------------------------------------------------------*\
+                           Class linearTsub Declaration
+\*---------------------------------------------------------------------------*/
 
-    // Protected data
+class linearTsub
+:
+    public diameterModel
+{
+    // Private data
 
-        dictionary diameterProperties_;
-        const phaseModel& phase_;
+        //- Name of the liquid phase that is used to determine subcooling
+        //  temperature
+        word liquidPhaseName_;
+
+        //- Reference diameter for low subcooling temperature
+        dimensionedScalar d2_;
+
+        //- Subcooling temperature where low subcooling diamter is reached
+        dimensionedScalar Tsub2_;
+
+        //- Reference diameter for high subcooling temperature
+        dimensionedScalar d1_;
+
+        //- Subcooling temperature where high subcooling diamter is reached
+        dimensionedScalar Tsub1_;
+
+        //- Actual diameter field
+        mutable volScalarField d_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("diameterModel");
-
-
-    // Declare runtime construction
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            diameterModel,
-            dictionary,
-            (
-                const dictionary& diameterProperties,
-                const phaseModel& phase
-            ),
-            (diameterProperties, phase)
-        );
+    TypeName("linearTsub");
 
 
     // Constructors
 
-        diameterModel
+        //- Construct from components
+        linearTsub
         (
             const dictionary& diameterProperties,
             const phaseModel& phase
@@ -91,42 +101,22 @@ public:
 
 
     //- Destructor
-    virtual ~diameterModel();
-
-
-    // Selectors
-
-        static autoPtr<diameterModel> New
-        (
-            const dictionary& diameterProperties,
-            const phaseModel& phase
-        );
+    virtual ~linearTsub();
 
 
     // Member Functions
 
-        //- Return the phase diameter properties dictionary
-        const dictionary& diameterProperties() const
-        {
-            return diameterProperties_;
-        }
-
-        //- Return the phase
-        const phaseModel& phase() const
-        {
-            return phase_;
-        }
-
-        //- Return the phase mean diameter field
-        virtual tmp<volScalarField> d() const = 0;
+        //- Return the diameter field
+        virtual tmp<volScalarField> d() const;
 
         //- Read phaseProperties dictionary
-        virtual bool read(const dictionary& phaseProperties) = 0;
+        virtual bool read(const dictionary& phaseProperties);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace diameterModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

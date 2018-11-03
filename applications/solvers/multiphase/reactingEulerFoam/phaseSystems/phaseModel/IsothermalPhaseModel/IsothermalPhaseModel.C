@@ -51,7 +51,22 @@ Foam::IsothermalPhaseModel<BasePhaseModel>::~IsothermalPhaseModel()
 
 template<class BasePhaseModel>
 void Foam::IsothermalPhaseModel<BasePhaseModel>::correctThermo()
-{}
+{
+    BasePhaseModel::correctThermo();
+
+    // Correct the thermo, but make sure that the temperature remains the same
+    tmp<volScalarField> TCopy
+    (
+        new volScalarField
+        (
+            this->thermo().T().name() + ":Copy",
+            this->thermo().T()
+        )
+    );
+    this->thermo_->he() = this->thermo().he(this->thermo().p(), TCopy);
+    this->thermo_->correct();
+    this->thermo_->T() = TCopy;
+}
 
 
 template<class BasePhaseModel>

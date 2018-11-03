@@ -19,7 +19,7 @@
      ==
         rho*(U&g)
       + rad.Sh(thermo, he)
-      + Qdot
+      + reaction.Qdot()
       + fvOptions(rho, he)
     );
 

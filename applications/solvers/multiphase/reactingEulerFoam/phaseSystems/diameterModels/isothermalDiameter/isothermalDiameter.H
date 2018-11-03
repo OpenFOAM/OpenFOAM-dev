@@ -61,7 +61,7 @@ class isothermal
         dimensionedScalar p0_;
 
         //- Actual diameter field
-        volScalarField d_;
+        mutable volScalarField d_;
 
 
 public:
@@ -88,9 +88,6 @@ public:
 
         //- Return the diameter field
         virtual tmp<volScalarField> d() const;
-
-        //- Correct the diameter field
-        virtual void correct();
 
         //- Read phaseProperties dictionary
         virtual bool read(const dictionary& phaseProperties);
