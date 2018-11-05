@@ -277,6 +277,9 @@ class populationBalanceModel
         //- Average velocity
         autoPtr<volVectorField> U_;
 
+        //- Counter for interval between source term updates
+        label sourceUpdateCounter_;
+
 
     // Private member functions
 
@@ -316,6 +319,14 @@ class populationBalanceModel
 
         void calcVelocity();
 
+        //- Return whether the sources should be updated on this iteration
+        bool updateSources();
+
+        //- Return the number of corrections
+        inline label nCorr() const;
+
+        //- Return the interval at which the sources are updated
+        inline label sourceUpdateInterval() const;
 
 public:
 
