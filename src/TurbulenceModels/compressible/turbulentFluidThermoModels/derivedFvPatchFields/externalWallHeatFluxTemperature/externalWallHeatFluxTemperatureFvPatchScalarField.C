@@ -360,7 +360,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         case fixedPower:
         {
             refGrad() = (Q_/gSum(patch().magSf()) + qr)/kappa(Tp);
-            refValue() = 0;
+            refValue() = Tp;
             valueFraction() = 0;
 
             break;
@@ -368,7 +368,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         case fixedHeatFlux:
         {
             refGrad() = (q_ + qr)/kappa(Tp);
-            refValue() = 0;
+            refValue() = Tp;
             valueFraction() = 0;
 
             break;
