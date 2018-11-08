@@ -841,6 +841,15 @@ void Foam::diameterModels::populationBalanceModel::calcVelocity()
     }
 }
 
+bool Foam::diameterModels::populationBalanceModel::updateSources()
+{
+    const bool result = sourceUpdateCounter_ % sourceUpdateInterval() == 0;
+
+    ++ sourceUpdateCounter_;
+
+    return result;
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -927,7 +936,11 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     nucleationRate_(),
     alphas_(),
     dsm_(),
-    U_()
+    U_(),
+    sourceUpdateCounter_
+    (
+        (mesh_.time().timeIndex()*nCorr())%sourceUpdateInterval()
+    )
 {
     this->registerVelocityAndSizeGroups();
 
@@ -1224,22 +1237,14 @@ Foam::diameterModels::populationBalanceModel::continuousTurbulence() const
 void Foam::diameterModels::populationBalanceModel::solve()
 {
     const dictionary& solutionControls = mesh_.solverDict(name_);
-    bool solveOnFinalIterOnly
-        (
-            solutionControls.lookupOrDefault<bool>
-            (
-                "solveOnFinalIterOnly",
-                false
-            )
-        );
+    bool solveOnFinalIterOnly =
+        solutionControls.lookupOrDefault<bool>("solveOnFinalIterOnly", false);
 
     if (!solveOnFinalIterOnly || pimple_.finalIter())
     {
-        label nCorr(readLabel(solutionControls.lookup("nCorr")));
-        scalar tolerance
-            (
-                readScalar(solutionControls.lookup("tolerance"))
-            );
+        const label nCorr = this->nCorr();
+        const scalar tolerance =
+            readScalar(solutionControls.lookup("tolerance"));
 
         if (nCorr > 0)
         {
@@ -1257,7 +1262,10 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 << iCorr
                 << endl;
 
-            sources();
+            if (updateSources())
+            {
+                sources();
+            }
 
             dmdt();
 

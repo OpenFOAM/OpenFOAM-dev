@@ -23,6 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
+
+inline Foam::label Foam::diameterModels::populationBalanceModel::nCorr() const
+{
+    return mesh_.solverDict(name_).lookupType<label>("nCorr");
+}
+
+
+inline Foam::label
+Foam::diameterModels::populationBalanceModel::sourceUpdateInterval() const
+{
+    return
+        mesh_.solverDict(name_)
+       .lookupOrDefault<label>("sourceUpdateInterval", 1);
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::phaseSystem&
