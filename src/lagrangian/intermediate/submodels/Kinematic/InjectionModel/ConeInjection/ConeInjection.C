@@ -30,6 +30,81 @@ License
 
 using namespace Foam::constant::mathematical;
 
+// * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * * //
+
+template<class CloudType>
+void Foam::ConeInjection<CloudType>::setInjectionMethod()
+{
+    const word injectionMethod =
+        this->coeffDict().template lookupOrDefault<word>
+        (
+            "injectionMethod",
+            word::null
+        );
+
+    if (injectionMethod == "point" || injectionMethod == word::null)
+    {
+        injectionMethod_ = imPoint;
+
+        updateMesh();
+    }
+    else if (injectionMethod == "disc")
+    {
+        injectionMethod_ = imDisc;
+
+        this->coeffDict().lookup("dInner") >> dInner_;
+        this->coeffDict().lookup("dOuter") >> dOuter_;
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "injectionMethod must be either 'point' or 'disc'"
+            << exit(FatalError);
+    }
+}
+
+
+template<class CloudType>
+void Foam::ConeInjection<CloudType>::setFlowType()
+{
+    const word flowType =
+        this->coeffDict().template lookupOrDefault<word>
+        (
+            "flowType",
+            word::null
+        );
+
+    if (flowType == "constantVelocity" || flowType == word::null)
+    {
+        flowType_ = ftConstantVelocity;
+
+        Umag_.reset(this->coeffDict());
+    }
+    else if (flowType == "pressureDrivenVelocity")
+    {
+        flowType_ = ftPressureDrivenVelocity;
+
+        Pinj_.reset(this->coeffDict());
+    }
+    else if (flowType == "flowRateAndDischarge")
+    {
+        flowType_ = ftFlowRateAndDischarge;
+
+        this->coeffDict().lookup("dInner") >> dInner_;
+        this->coeffDict().lookup("dOuter") >> dOuter_;
+
+        Cd_.reset(this->coeffDict());
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "flowType must be either 'constantVelocity', "
+            << "'pressureDrivenVelocity' or 'flowRateAndDischarge'"
+            << exit(FatalError);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
@@ -41,14 +116,17 @@ Foam::ConeInjection<CloudType>::ConeInjection
 )
 :
     InjectionModel<CloudType>(dict, owner, modelName, typeName),
-    positionAxis_(this->coeffDict().lookup("positionAxis")),
-    injectorCells_(positionAxis_.size()),
-    injectorTetFaces_(positionAxis_.size()),
-    injectorTetPts_(positionAxis_.size()),
+    injectionMethod_(imPoint),
+    flowType_(ftConstantVelocity),
+    position_(this->coeffDict().lookup("position")),
+    direction_(this->coeffDict().lookup("direction")),
+    injectorCell_(-1),
+    injectorTetFace_(-1),
+    injectorTetPt_(-1),
     duration_(readScalar(this->coeffDict().lookup("duration"))),
-    parcelsPerInjector_
+    parcelsPerSecond_
     (
-        readScalar(this->coeffDict().lookup("parcelsPerInjector"))
+        readScalar(this->coeffDict().lookup("parcelsPerSecond"))
     ),
     flowRateProfile_
     (
@@ -56,15 +134,6 @@ Foam::ConeInjection<CloudType>::ConeInjection
         (
             owner.db().time(),
             "flowRateProfile",
-            this->coeffDict()
-        )
-    ),
-    Umag_
-    (
-        TimeFunction1<scalar>
-        (
-            owner.db().time(),
-            "Umag",
             this->coeffDict()
         )
     ),
@@ -93,26 +162,28 @@ Foam::ConeInjection<CloudType>::ConeInjection
             this->coeffDict().subDict("sizeDistribution"), owner.rndGen()
         )
     ),
-    nInjected_(this->parcelsAddedTotal()),
-    tanVec1_(positionAxis_.size()),
-    tanVec2_(positionAxis_.size())
+    tanVec1_(vector::max),
+    tanVec2_(vector::max),
+    dInner_(vGreat),
+    dOuter_(vGreat),
+    Umag_(owner.db().time(), "Umag"),
+    Cd_(owner.db().time(), "Cd"),
+    Pinj_(owner.db().time(), "Pinj")
 {
     duration_ = owner.db().time().userTimeToTime(duration_);
 
+    setInjectionMethod();
+
+    setFlowType();
+
     // Normalise direction vector and determine direction vectors
-    // tangential to injector axis direction
-    forAll(positionAxis_, i)
-    {
-        vector& axis = positionAxis_[i].second();
-
-        axis /= mag(axis);
-
-        tanVec1_[i] = normalised(perpendicular(axis));
-        tanVec2_[i] = normalised(axis^tanVec1_[i]);
-    }
+    // tangential to injector direction
+    direction_ /= mag(direction_);
+    tanVec1_ = normalised(perpendicular(direction_));
+    tanVec2_ = normalised(direction_^tanVec1_);
 
     // Set total volume to inject
-    this->volumeTotal_ = flowRateProfile_.integrate(0.0, duration_);
+    this->volumeTotal_ = flowRateProfile_.integrate(0, duration_);
 
     updateMesh();
 }
@@ -125,20 +196,26 @@ Foam::ConeInjection<CloudType>::ConeInjection
 )
 :
     InjectionModel<CloudType>(im),
-    positionAxis_(im.positionAxis_),
-    injectorCells_(im.injectorCells_),
-    injectorTetFaces_(im.injectorTetFaces_),
-    injectorTetPts_(im.injectorTetPts_),
+    injectionMethod_(im.injectionMethod_),
+    flowType_(im.flowType_),
+    position_(im.position_),
+    direction_(im.direction_),
+    injectorCell_(im.injectorCell_),
+    injectorTetFace_(im.injectorTetFace_),
+    injectorTetPt_(im.injectorTetPt_),
     duration_(im.duration_),
-    parcelsPerInjector_(im.parcelsPerInjector_),
+    parcelsPerSecond_(im.parcelsPerSecond_),
     flowRateProfile_(im.flowRateProfile_),
-    Umag_(im.Umag_),
     thetaInner_(im.thetaInner_),
     thetaOuter_(im.thetaOuter_),
     sizeDistribution_(im.sizeDistribution_().clone().ptr()),
-    nInjected_(im.nInjected_),
     tanVec1_(im.tanVec1_),
-    tanVec2_(im.tanVec2_)
+    tanVec2_(im.tanVec2_),
+    dInner_(im.dInner_),
+    dOuter_(im.dOuter_),
+    Umag_(im.Umag_),
+    Cd_(im.Cd_),
+    Pinj_(im.Pinj_)
 {}
 
 
@@ -155,15 +232,23 @@ template<class CloudType>
 void Foam::ConeInjection<CloudType>::updateMesh()
 {
     // Set/cache the injector cells
-    forAll(positionAxis_, i)
+    switch (injectionMethod_)
     {
-        this->findCellAtPosition
-        (
-            injectorCells_[i],
-            injectorTetFaces_[i],
-            injectorTetPts_[i],
-            positionAxis_[i].first()
-        );
+        case imPoint:
+        {
+            this->findCellAtPosition
+            (
+                injectorCell_,
+                injectorTetFace_,
+                injectorTetPt_,
+                position_
+            );
+            break;
+        }
+        default:
+        {
+            break;
+        }
     }
 }
 
@@ -182,18 +267,13 @@ Foam::label Foam::ConeInjection<CloudType>::parcelsToInject
     const scalar time1
 )
 {
-    if ((time0 >= 0.0) && (time0 < duration_))
+    if (time0 >= 0 && time0 < duration_)
     {
-        const scalar targetVolume = flowRateProfile_.integrate(0, time1);
+        //// Standard calculation
+        //return floor(parcelsPerSecond_*(time1 - time0));
 
-        const label targetParcels =
-            parcelsPerInjector_*targetVolume/this->volumeTotal_;
-
-        const label nToInject = targetParcels - nInjected_;
-
-        nInjected_ += nToInject;
-
-        return positionAxis_.size()*nToInject;
+        // Modified calculation to make numbers exact
+        return floor(parcelsPerSecond_*time1 - this->parcelsAddedTotal());
     }
     else
     {
@@ -209,13 +289,13 @@ Foam::scalar Foam::ConeInjection<CloudType>::volumeToInject
     const scalar time1
 )
 {
-    if ((time0 >= 0.0) && (time0 < duration_))
+    if (time0 >= 0 && time0 < duration_)
     {
         return flowRateProfile_.integrate(time0, time1);
     }
     else
     {
-        return 0.0;
+        return 0;
     }
 }
 
@@ -232,12 +312,40 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
     label& tetPti
 )
 {
-    const label i = parcelI % positionAxis_.size();
+    Random& rndGen = this->owner().rndGen();
 
-    position = positionAxis_[i].first();
-    cellOwner = injectorCells_[i];
-    tetFacei = injectorTetFaces_[i];
-    tetPti = injectorTetPts_[i];
+    switch (injectionMethod_)
+    {
+        case imPoint:
+        {
+            position = position_;
+            cellOwner = injectorCell_;
+            tetFacei = injectorTetFace_;
+            tetPti = injectorTetPt_;
+            break;
+        }
+        case imDisc:
+        {
+            const scalar beta = twoPi*rndGen.globalScalar01();
+            const scalar frac = rndGen.globalScalar01();
+            const vector tanVec = tanVec1_*cos(beta) + tanVec2_*sin(beta);
+            const scalar d = sqrt((1 - frac)*sqr(dInner_) + frac*sqr(dOuter_));
+            position = position_ + d/2*tanVec;
+            this->findCellAtPosition
+            (
+                cellOwner,
+                tetFacei,
+                tetPti,
+                position,
+                false
+            );
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
 }
 
 
@@ -250,29 +358,92 @@ void Foam::ConeInjection<CloudType>::setProperties
     typename CloudType::parcelType& parcel
 )
 {
-    Random& rnd = this->owner().rndGen();
+    Random& rndGen = this->owner().rndGen();
 
-    // set particle velocity
-    const label i = parcelI % positionAxis_.size();
+    const scalar t = time - this->SOI_;
 
-    scalar t = time - this->SOI_;
-    scalar ti = thetaInner_.value(t);
-    scalar to = thetaOuter_.value(t);
-    scalar coneAngle = degToRad(rnd.scalarAB(ti, to));
+    // Get the angle from the axis and the vector perpendicular from the axis.
+    // If injecting at a point, then these are calculated from two new random
+    // numbers. If a disc, then these calculations have already been done in
+    // setPositionAndCell, so the angle and vector can be reverse engineered
+    // from the position.
+    scalar theta = vGreat;
+    vector tanVec = vector::max;
+    switch (injectionMethod_)
+    {
+        case imPoint:
+        {
+            const scalar beta = twoPi*rndGen.scalar01();
+            const scalar frac = rndGen.scalar01();
+            tanVec = tanVec1_*cos(beta) + tanVec2_*sin(beta);
+            theta =
+                degToRad
+                (
+                    sqrt
+                    (
+                        (1 - frac)*sqr(thetaInner_.value(t))
+                        + frac*sqr(thetaOuter_.value(t))
+                    )
+                );
+            break;
+        }
+        case imDisc:
+        {
+            const scalar r = mag(parcel.position() - position_);
+            const scalar frac = (2*r - dInner_)/(dOuter_ - dInner_);
+            tanVec = normalised(parcel.position() - position_);
+            theta =
+                degToRad
+                (
+                    (1 - frac)*thetaInner_.value(t)
+                    + frac*thetaOuter_.value(t)
+                );
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
 
-    scalar alpha = sin(coneAngle);
-    scalar dcorr = cos(coneAngle);
-    scalar beta = twoPi*rnd.sample01<scalar>();
+    // The direction of injection
+    const vector dirVec =
+        normalised(cos(theta)*direction_ + sin(theta)*tanVec);
 
-    vector normal = alpha*(tanVec1_[i]*cos(beta) + tanVec2_[i]*sin(beta));
-    vector dirVec = dcorr*positionAxis_[i].second();
-    dirVec += normal;
-    dirVec /= mag(dirVec);
+    // Set the velocity
+    switch (flowType_)
+    {
+        case ftConstantVelocity:
+        {
+            parcel.U() = Umag_.value(t)*dirVec;
+            break;
+        }
+        case ftPressureDrivenVelocity:
+        {
+            const scalar pAmbient = this->owner().pAmbient();
+            const scalar rho = parcel.rho();
+            const scalar Umag = ::sqrt(2*(Pinj_.value(t) - pAmbient)/rho);
+            parcel.U() = Umag*dirVec;
+            break;
+        }
+        case ftFlowRateAndDischarge:
+        {
+            const scalar A = 0.25*pi*(sqr(dOuter_) - sqr(dInner_));
+            const scalar massFlowRate =
+                this->massTotal()*flowRateProfile_.value(t)/this->volumeTotal();
+            const scalar Umag =
+                massFlowRate/(parcel.rho()*Cd_.value(t)*A);
+            parcel.U() = Umag*dirVec;
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
 
-    parcel.U() = Umag_.value(t)*dirVec;
-
-    // set particle diameter
-    parcel.d() = sizeDistribution_().sample();
+    // Set the particle diameter
+    parcel.d() = sizeDistribution_->sample();
 }
 
 

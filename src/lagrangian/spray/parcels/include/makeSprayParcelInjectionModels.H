@@ -30,7 +30,6 @@ License
 
 #include "CellZoneInjection.H"
 #include "ConeInjection.H"
-#include "ConeNozzleInjection.H"
 #include "FieldActivatedInjection.H"
 #include "InflationInjection.H"
 #include "ManualInjection.H"
@@ -46,7 +45,6 @@ License
                                                                                \
     makeInjectionModelType(CellZoneInjection, CloudType);                      \
     makeInjectionModelType(ConeInjection, CloudType);                          \
-    makeInjectionModelType(ConeNozzleInjection, CloudType);                    \
     makeInjectionModelType(FieldActivatedInjection, CloudType);                \
     makeInjectionModelType(InflationInjection, CloudType);                     \
     makeInjectionModelType(ManualInjection, CloudType);                        \

@@ -77,15 +77,11 @@ subModels
             type            coneInjection;
             SOI             0.000;
             duration        20.000;
-            positionAxis
-            (
-                ((0.3 0.35 1.45) (0 0 -1))
-                ((0.6 0.35 1.45) (0 0 -1))
-            );
+            position        (0.3 0.35 1.45);
+            direction       (0 0 -1);
 
             massTotal       10;
-            parcelsPerInjector 20000;
-            parcelsPerSecond 500;
+            parcelsPerSecond 1000;
             parcelBasisType mass;
             flowRateProfile constant 0.1;
             Umag            constant 3.0;
@@ -103,6 +99,12 @@ subModels
                     n               0.5;
                 }
             }
+        }
+
+        model2
+        {
+            $model1;
+            position        (0.6 0.35 1.45);
         }
     }
 

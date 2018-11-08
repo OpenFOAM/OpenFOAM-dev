@@ -78,14 +78,14 @@ subModels
     {
         model1
         {
-            type            coneNozzleInjection;
+            type            coneInjection;
             SOI             0;
             massTotal       6.0e-6;
             parcelBasisType mass;
             injectionMethod disc;
             flowType        flowRateAndDischarge;
-            outerDiameter   1.9e-4;
-            innerDiameter   0;
+            dInner          0;
+            dOuter          1.9e-4;
             duration        1.25e-3;
             position        (0 0.0995 0);
             direction       (0 -1 0);
