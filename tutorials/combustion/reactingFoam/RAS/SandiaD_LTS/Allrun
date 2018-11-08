@@ -18,6 +18,7 @@ runApplication setFields
 foamDictionary -entry "startTime" -set "0" system/controlDict
 foamDictionary -entry "writeInterval" -set "1500" system/controlDict
 foamDictionary -entry "endTime" -set "1500" system/controlDict
+rm -rf constant/chemistryProperties > /dev/null 2>&1
 foamDictionary -entry "chemistry" -set "off" constant/chemistryProperties
 
 runApplication $application
@@ -26,8 +27,11 @@ runApplication $application
 foamDictionary -entry "startTime" -set "1500" system/controlDict
 foamDictionary -entry "writeInterval" -set "100" system/controlDict
 foamDictionary -entry "endTime" -set "5000" system/controlDict
+rm -rf constant/chemistryProperties > /dev/null 2>&1
 foamDictionary -entry "chemistry" -set "on" constant/chemistryProperties
 
 runApplication -o $application
+
+rm -rf constant/chemistryProperties > /dev/null 2>&1
 
 #------------------------------------------------------------------------------

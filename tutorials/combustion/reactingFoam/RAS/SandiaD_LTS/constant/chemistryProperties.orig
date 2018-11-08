@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeEtc "caseDicts/solvers/chemistry/TDAC/chemistryProperties.cfg"
+#includeEtc "caseDicts/solvers/chemistry/TDAC/chemistryPropertiesFlame.cfg"
 
 chemistryType
 {
@@ -26,32 +26,31 @@ chemistryType
 chemistry       on;
 
 initialChemicalTimeStep 1e-7;
+//maxChemicalTimeStep 1e-3;
 
 odeCoeffs
 {
     solver          seulex;
-    absTol          1e-12;
+    absTol          1e-8;
     relTol          1e-1;
+}
+
+importantSpecies
+{
+    CO2;
+    H2O;
+    CH4;
+    O2;
 }
 
 reduction
 {
     tolerance   1e-4;
-
-    // Search initiating set (SIS) of species, needed for most methods
-    initialSet
-    {
-        CO;
-        IC8H18;
-        HO2;
-    }
 }
 
-// Tabulation is not effective for single-cell ignition calculations
 tabulation
 {
-    method    none;
+    tolerance   3e-3;
 }
-
 
 // ************************************************************************* //
