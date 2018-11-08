@@ -116,7 +116,26 @@ bool Foam::functionEntries::includeEtcEntry::execute
         {
             Info<< fName << endl;
         }
+
+        // Cache the FoamFile entry if present
+        dictionary foamFileDict;
+        if (parentDict.found("FoamFile"))
+        {
+            foamFileDict = parentDict.subDict("FoamFile");
+        }
+
+        // Read and clear the FoamFile entry
         parentDict.read(ifs);
+
+        // Reinstate original FoamFile entry
+        if (!foamFileDict.isNull())
+        {
+            dictionary parentDictTmp(parentDict);
+            parentDict.clear();
+            parentDict.add("FoamFile", foamFileDict);
+            parentDict += parentDictTmp;
+        }
+
         return true;
     }
     else
