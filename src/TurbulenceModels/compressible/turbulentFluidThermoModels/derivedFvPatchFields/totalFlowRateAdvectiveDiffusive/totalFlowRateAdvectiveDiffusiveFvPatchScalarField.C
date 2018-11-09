@@ -154,11 +154,8 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
 
     const label patchi = patch().index();
 
-    const LESModel<EddyDiffusivity<compressible::turbulenceModel>>& turbModel =
-        db().lookupObject
-        <
-            LESModel<EddyDiffusivity<compressible::turbulenceModel>>
-        >
+    const compressible::turbulenceModel& turbModel =
+        db().lookupObject<compressible::turbulenceModel>
         (
             IOobject::groupName
             (
