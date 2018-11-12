@@ -1,3 +1,4 @@
+if (constProp != "temperature")
 {
     volScalarField& h = thermo.he();
 
