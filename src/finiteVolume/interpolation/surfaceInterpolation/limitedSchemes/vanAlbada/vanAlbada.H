@@ -72,9 +72,9 @@ public:
         const vector& d
     ) const
     {
-        scalar r = LimiterFunc::r
+        const scalar r = max
         (
-            faceFlux, phiP, phiN, gradcP, gradcN, d
+            LimiterFunc::r(faceFlux, phiP, phiN, gradcP, gradcN, d), 0
         );
 
         return r*(r + 1)/(sqr(r) + 1);
