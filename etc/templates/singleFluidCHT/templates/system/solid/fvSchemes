@@ -16,7 +16,7 @@ FoamFile
 
 ddtSchemes
 {
-    // for transient, replace steadyState, e.g. with Euler
+    // For transient, replace steadyState, e.g. with Euler
     default         steadyState;
 }
 

@@ -16,6 +16,7 @@ FoamFile
 
 ddtSchemes
 {
+    // For transient, replace steadyState, e.g. with Euler
     default         steadyState;
 }
 
@@ -34,8 +35,10 @@ divSchemes
 {
     default         none;
 
+    // For transient, remove "bounded"
     div(phi,U)      bounded Gauss linearUpwind limited;
 
+    // For transient, remove "bounded"
     turbulence      bounded Gauss limitedLinear 1;
     div(phi,k)      $turbulence;
     div(phi,omega)  $turbulence;
