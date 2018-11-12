@@ -16,12 +16,26 @@ FoamFile
 
 solvers
 {
-    "(p|pcorr)"
+    p
     {
         solver          GAMG;
-        smoother        GaussSeidel;
+        smoother        DIC;
         tolerance       1e-6;
         relTol          0.1;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol         0;
+    }
+
+    "pcorr.*"
+    {
+        $p;
+        tolerance       1e-2;
+        relTol          0;
+
     }
 
     "(U|k|omega|epsilon)"
@@ -32,15 +46,10 @@ solvers
         relTol          0.1;
     }
 
-    "(p|pcorr)Final"
-    {
-        $p;
-        relTol         0;
-    }
-
     "(U|k|omega|epsilon)Final"
     {
         $U;
+
         relTol          0;
     }
 }
