@@ -25,17 +25,112 @@ Class
     Foam::ConeInjection
 
 Description
-    Multi-point cone injection model.
+    This injector injects particles in a number of cones. The user specifies a
+    position and a direction to inject at, and two angles to inject between.
+    Optionally, this injector can introduce particles over a disc, instead of
+    at a point, in which case inner and outer diameters of the disc are also
+    specified.
 
-    User specifies:
-      - time of start of injection
-      - list of injector positions and directions (along injection axes)
-      - number of parcels to inject per injector
-      - parcel velocities
-      - inner and outer half-cone angles
+    The velocity is specified either as constant, or it is calculated from an
+    injection pressure, or it is calculated from the injector mass flow rate
+    and a discharge coefficient; i.e.:
 
-    Properties:
-      - Parcel diameters obtained by distribution model
+    Constant velocity:
+    \f[
+    U = U_{constant}
+    \f]
+
+    Pressure driven velocity:
+    \f[
+    U = \sqrt{2(p_{injection} - p)/\rho}
+    \f]
+
+    Flow rate and discharge:
+    \f[
+    U = \dot{m}/(\rho A C_{discharge})
+    \f]
+
+Usage
+    \table
+    Property        | Description                    | Required | Default
+    position        | The injection position         | yes      |
+    direction       | The injection direction        | yes      |
+    thetaInner      | The inner cone angle           | yes      |
+    thetaOuter      | The outer cone angle           | yes      |
+    injectionMethod | Inject at a point or on a disc | no       | point
+    dInner          | The inner disc diameter        |\\
+                                               if disc or flowRateAndDischarge |
+    dInner          | The outer disc diameter        |\\
+                                               if disc or flowRateAndDischarge |
+    flowType        | Inject with constantVelocity, pressureDrivenVelocity \\
+                                 or flowRateAndDischarge | no | constantVelocity
+    Umag            | The injection velocity         | if constantVelocity |
+    Pinj            | The injection pressure         |\\
+                                                     if pressureDrivenVelocity |
+    Cd              | The discharge coefficient      | if flowRateAndDischarge |
+    \endtable
+
+    Example specification:
+
+    \verbatim
+    injectionModels
+    {
+        model1
+        {
+            type            coneInjection;
+
+            // Times
+            SOI             0;
+            duration        1;
+
+            // Quantities
+            massTotal       0; // <-- not used with these settings
+            parcelBasisType fixed;
+            parcelsPerSecond 1000000;
+            flowRateProfile constant 1;
+            nParticle       1;
+
+            // Sizes
+            sizeDistribution
+            {
+                type        fixedValue;
+                fixedValueDistribution
+                {
+                    value   0.0025;
+                }
+            }
+
+            // Geometry
+            position        (-0.15 -0.1 0);
+            direction       (1 0 0);
+            thetaInner      0;
+            thetaOuter      45;
+
+            // - Inject at a point
+            injectionMethod point;
+
+            //// - Or, inject over a disc:
+            //injectionMethod disc;
+            //dInner          0;
+            //dOuter          0.05;
+
+            // Velocity
+
+            // - Inject with constant velocity
+            flowType        constantVelocity;
+            Umag            1;
+
+            //// - Or, inject with flow rate and discharge coefficient
+            ////   This also requires massTotal, dInner and dOuter
+            //flowType        flowRateAndDischarge;
+            //Cd              0.9;
+
+            //// - Or, inject at a pressure
+            //flowType        pressureDrivenVelocity;
+            //Pinj            10e5;
+        }
+    }
+    \endverbatim
 
 SourceFiles
     ConeInjection.C
@@ -47,7 +142,6 @@ SourceFiles
 
 #include "InjectionModel.H"
 #include "distributionModel.H"
-#include "vectorList.H"
 #include "TimeFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -64,31 +158,57 @@ class ConeInjection
 :
     public InjectionModel<CloudType>
 {
+public:
+
+    //- Injection method enumeration
+    enum injectionMethod
+    {
+        imPoint,
+        imDisc
+    };
+
+    //- Flow type enumeration
+    enum flowType
+    {
+        ftConstantVelocity,
+        ftPressureDrivenVelocity,
+        ftFlowRateAndDischarge
+    };
+
+
+private:
+
     // Private data
 
-        //- List of position and axis for each injector
-        List<Tuple2<vector, vector>> positionAxis_;
+        //- Point/disc injection method
+        injectionMethod injectionMethod_;
 
-        //- List of cell labels corresponding to injector positions
-        labelList injectorCells_;
+        //- Flow type
+        flowType flowType_;
 
-        //- List of tetFace labels corresponding to injector positions
-        labelList injectorTetFaces_;
+        //- Position of the injector
+        vector position_;
 
-        //- List of tetPt labels corresponding to injector positions
-        labelList injectorTetPts_;
+        //- Centreline direction in which to inject
+        vector direction_;
+
+        //- Cell label corresponding to the injector position
+        label injectorCell_;
+
+        //- Tet-face label corresponding to the injector position
+        label injectorTetFace_;
+
+        //- Tet-point label corresponding to the injector position
+        label injectorTetPt_;
 
         //- Injection duration [s]
         scalar duration_;
 
-        //- Number of parcels to introduce per injector
-        const label parcelsPerInjector_;
+        //- Number of parcels to introduce per second
+        const label parcelsPerSecond_;
 
         //- Flow rate profile relative to SOI []
         const TimeFunction1<scalar> flowRateProfile_;
-
-        //- Parcel velocity magnitude relative to SOI [m/s]
-        const TimeFunction1<scalar> Umag_;
 
         //- Inner half-cone angle relative to SOI [deg]
         const TimeFunction1<scalar> thetaInner_;
@@ -99,17 +219,44 @@ class ConeInjection
         //- Parcel size distribution model
         const autoPtr<distributionModel> sizeDistribution_;
 
-        //- Number of parcels per injector already injected
-        mutable label nInjected_;
-
 
         // Tangential vectors to the direction vector
 
             //- First tangential vector
-            vectorList tanVec1_;
+            vector tanVec1_;
 
             //- Second tangential vector
-            vectorList tanVec2_;
+            vector tanVec2_;
+
+
+        // Disc geometry
+
+            //- The inner disc diameter [m]
+            scalar dInner_;
+
+            //- The outer disc diameter [m]
+            scalar dOuter_;
+
+
+        // Velocity model coefficients
+
+            //- Parcel velocity [m/s]
+            TimeFunction1<scalar> Umag_;
+
+            //- Discharge coefficient []
+            TimeFunction1<scalar> Cd_;
+
+            //- Injection pressure [Pa]
+            TimeFunction1<scalar> Pinj_;
+
+
+    // Private Member Functions
+
+        //- Set the injection type
+        void setInjectionMethod();
+
+        //- Set the injection flow type
+        void setFlowType();
 
 
 public:
