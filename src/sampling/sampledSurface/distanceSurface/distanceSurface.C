@@ -50,7 +50,6 @@ void Foam::distanceSurface::createGeometry()
 
     // Clear any stored topologies
     facesPtr_.clear();
-    isoSurfCellPtr_.clear();
     isoSurfPtr_.clear();
 
     // Clear derived data
@@ -265,33 +264,16 @@ void Foam::distanceSurface::createGeometry()
 
 
     //- Direct from cell field and point field.
-    if (cell_)
-    {
-        isoSurfCellPtr_.reset
+    isoSurfPtr_.reset
+    (
+        new isoSurface
         (
-            new isoSurfaceCell
-            (
-                fvm,
-                cellDistance,
-                pointDistance_,
-                distance_,
-                regularise_
-            )
-        );
-    }
-    else
-    {
-        isoSurfPtr_.reset
-        (
-            new isoSurface
-            (
-                cellDistance,
-                pointDistance_,
-                distance_,
-                regularise_
-            )
-        );
-    }
+            cellDistance,
+            pointDistance_,
+            distance_,
+            regularise_
+        )
+    );
 
     if (debug)
     {
@@ -330,24 +312,13 @@ Foam::distanceSurface::distanceSurface
     ),
     distance_(readScalar(dict.lookup("distance"))),
     signed_(readBool(dict.lookup("signed"))),
-    cell_(dict.lookupOrDefault("cell", true)),
     regularise_(dict.lookupOrDefault("regularise", true)),
     average_(dict.lookupOrDefault("average", false)),
     zoneKey_(keyType::null),
     needsUpdate_(true),
-    isoSurfCellPtr_(nullptr),
     isoSurfPtr_(nullptr),
     facesPtr_(nullptr)
-{
-//    dict.readIfPresent("zone", zoneKey_);
-//
-//    if (debug && zoneKey_.size() && mesh.cellZones().findZoneID(zoneKey_) < 0)
-//    {
-//        Info<< "cellZone " << zoneKey_
-//            << " not found - using entire mesh" << endl;
-//    }
-}
-
+{}
 
 
 Foam::distanceSurface::distanceSurface
@@ -384,12 +355,10 @@ Foam::distanceSurface::distanceSurface
     ),
     distance_(distance),
     signed_(signedDistance),
-    cell_(cell),
     regularise_(regularise),
     average_(average),
     zoneKey_(keyType::null),
     needsUpdate_(true),
-    isoSurfCellPtr_(nullptr),
     isoSurfPtr_(nullptr),
     facesPtr_(nullptr)
 {}

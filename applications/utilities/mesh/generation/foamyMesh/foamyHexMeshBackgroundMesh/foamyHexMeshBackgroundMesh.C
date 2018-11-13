@@ -41,7 +41,7 @@ Description
 #include "cellShape.H"
 #include "cellModeller.H"
 #include "DynamicField.H"
-#include "isoSurfaceCell.H"
+#include "isoSurface.H"
 #include "vtkSurfaceWriter.H"
 #include "syncTools.H"
 
@@ -716,9 +716,8 @@ int main(int argc, char *argv[])
             }
         }
 
-        isoSurfaceCell iso
+        isoSurface iso
         (
-            fvm,
             cellDistance,
             pointDistance,
             0,      // distance,

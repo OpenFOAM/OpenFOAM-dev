@@ -20,9 +20,6 @@ EXE_INC = \
 
 EXE_LIBS = \
     $(CGAL_LIBS) \
-    -lboost_thread \
-    -lmpfr \
-    -lgmp \
     -lconformalVoronoiMesh \
     -ldecompositionMethods /* -L$(FOAM_LIBBIN)/dummy -lscotchDecomp */ \
     -ltriSurface \

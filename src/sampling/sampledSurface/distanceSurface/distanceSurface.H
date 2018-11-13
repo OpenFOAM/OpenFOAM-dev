@@ -27,8 +27,6 @@ Class
 Description
     A sampledSurface defined by a distance to a surface.
 
-    Uses either isoSurfaceCell or isoSurface.
-
 SourceFiles
     distanceSurface.C
 
@@ -39,7 +37,6 @@ SourceFiles
 
 #include "sampledSurface.H"
 #include "searchableSurface.H"
-#include "isoSurfaceCell.H"
 #include "isoSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -66,9 +63,6 @@ class distanceSurface
         //- Signed distance
         const bool signed_;
 
-        //- Whether to use isoSurfaceCell or isoSurface
-        const bool cell_;
-
         //- Whether to coarsen
         const Switch regularise_;
 
@@ -87,9 +81,6 @@ class distanceSurface
 
         //- Distance to points
         scalarField pointDistance_;
-
-        //- Constructed iso surface
-        autoPtr<isoSurfaceCell> isoSurfCellPtr_;
 
         //- Constructed iso surface
         autoPtr<isoSurface> isoSurfPtr_;
@@ -191,14 +182,7 @@ public:
 
         const triSurface& surface() const
         {
-            if (cell_)
-            {
-                return isoSurfCellPtr_();
-            }
-            else
-            {
-                return isoSurfPtr_();
-            }
+            return isoSurfPtr_();
         }
 
         //- Sample field on surface

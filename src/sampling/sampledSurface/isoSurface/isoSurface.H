@@ -248,8 +248,6 @@ class isoSurface
         ) const;
 
 
-        //- Note: cannot use simpler isoSurfaceCell::generateTriPoints since
-        //  the need here to sometimes pass in remote 'snappedPoints'
         template<class Type>
         void generateTriPoints
         (
@@ -344,10 +342,6 @@ class isoSurface
         );
 
 public:
-
-    //- Declare friendship with isoSurfaceCell to share some functionality
-    friend class isoSurfaceCell;
-
 
     //- Runtime type information
     TypeName("isoSurface");
