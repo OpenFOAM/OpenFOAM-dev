@@ -602,20 +602,20 @@ int main(int argc, char *argv[])
 
     {
         // Apply a distanceSurface to it.
-        const fvMesh& fvm = backgroundMesh.mesh();
+        const fvMesh& mesh = backgroundMesh.mesh();
 
         volScalarField cellDistance
         (
             IOobject
             (
                 "cellDistance",
-                fvm.time().timeName(),
-                fvm.time(),
+                mesh.time().timeName(),
+                mesh.time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
             ),
-            fvm,
+            mesh,
             dimensionedScalar("zero", dimLength, 0)
         );
 
@@ -639,14 +639,14 @@ int main(int argc, char *argv[])
             cellDistance.primitiveFieldRef() = signedDistance
             (
                 distSqr,
-                fvm.C(),
+                mesh.C(),
                 geometry,
                 surfaces
             );
             // Patch fields
-            forAll(fvm.C().boundaryField(), patchi)
+            forAll(mesh.C().boundaryField(), patchi)
             {
-                const pointField& cc = fvm.C().boundaryField()[patchi];
+                const pointField& cc = mesh.C().boundaryField()[patchi];
                 fvPatchScalarField& fld =
                     cellDistance.boundaryFieldRef()[patchi];
                 scalarField patchDistSqr
@@ -656,7 +656,7 @@ int main(int argc, char *argv[])
                 fld = signedDistance(patchDistSqr, cc, geometry, surfaces);
             }
 
-            // On processor patches the fvm.C() will already be the cell centre
+            // On processor patches the mesh.C() will already be the cell centre
             // on the opposite side so no need to swap cellDistance.
 
             if (writeMesh)
@@ -672,23 +672,23 @@ int main(int argc, char *argv[])
             IOobject
             (
                 "pointDistance",
-                fvm.time().timeName(),
-                fvm.time(),
+                mesh.time().timeName(),
+                mesh.time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
             ),
-            pointMesh::New(fvm),
+            pointMesh::New(mesh),
             dimensionedScalar("zero", dimLength, 0)
         );
         {
-            scalarField pointDistSqr(fvm.nPoints(), -sqr(great));
-            for (label facei = 0; facei < fvm.nInternalFaces(); facei++)
+            scalarField pointDistSqr(mesh.nPoints(), -sqr(great));
+            for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
             {
-                label own = fvm.faceOwner()[facei];
+                label own = mesh.faceOwner()[facei];
                 label ownDistSqr = distSqr[own];
 
-                const face& f = fvm.faces()[facei];
+                const face& f = mesh.faces()[facei];
                 forAll(f, fp)
                 {
                     pointDistSqr[f[fp]] = max(pointDistSqr[f[fp]], ownDistSqr);
@@ -696,7 +696,7 @@ int main(int argc, char *argv[])
             }
             syncTools::syncPointList
             (
-                fvm,
+                mesh,
                 pointDistSqr,
                 maxEqOp<scalar>(),
                 -sqr(great)             // null value
@@ -705,7 +705,7 @@ int main(int argc, char *argv[])
             pointDistance.primitiveFieldRef() = signedDistance
             (
                 pointDistSqr,
-                fvm.points(),
+                mesh.points(),
                 geometry,
                 surfaces
             );
@@ -718,16 +718,16 @@ int main(int argc, char *argv[])
 
         isoSurface iso
         (
+            mesh,
             cellDistance,
             pointDistance,
-            0,      // distance,
-            false   // regularise
+            0
         );
 
         isoFaces.setSize(iso.size());
         forAll(isoFaces, i)
         {
-            isoFaces[i] = iso[i].triFaceFace();
+            isoFaces[i] = iso[i];
         }
         isoPoints = iso.points();
     }

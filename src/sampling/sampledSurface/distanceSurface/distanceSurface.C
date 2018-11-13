@@ -49,13 +49,12 @@ void Foam::distanceSurface::createGeometry()
     }
 
     // Clear any stored topologies
-    facesPtr_.clear();
     isoSurfPtr_.clear();
 
     // Clear derived data
     clearGeom();
 
-    const fvMesh& fvm = static_cast<const fvMesh&>(mesh());
+    const fvMesh& mesh = static_cast<const fvMesh&>(this->mesh());
 
     // Distance to cell centres
     // ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,13 +66,13 @@ void Foam::distanceSurface::createGeometry()
             IOobject
             (
                 "cellDistance",
-                fvm.time().timeName(),
-                fvm.time(),
+                mesh.time().timeName(),
+                mesh.time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
             ),
-            fvm,
+            mesh,
             dimensionedScalar("zero", dimLength, 0)
         )
     );
@@ -81,7 +80,7 @@ void Foam::distanceSurface::createGeometry()
 
     // Internal field
     {
-        const pointField& cc = fvm.C();
+        const pointField& cc = mesh.C();
         scalarField& fld = cellDistance.primitiveFieldRef();
 
         List<pointIndexHit> nearest;
@@ -132,9 +131,9 @@ void Foam::distanceSurface::createGeometry()
 
     // Patch fields
     {
-        forAll(fvm.C().boundaryField(), patchi)
+        forAll(mesh.C().boundaryField(), patchi)
         {
-            const pointField& cc = fvm.C().boundaryField()[patchi];
+            const pointField& cc = mesh.C().boundaryField()[patchi];
             fvPatchScalarField& fld = cellDistanceBf[patchi];
 
             List<pointIndexHit> nearest;
@@ -188,9 +187,9 @@ void Foam::distanceSurface::createGeometry()
 
 
     // Distance to points
-    pointDistance_.setSize(fvm.nPoints());
+    pointDistance_.setSize(mesh.nPoints());
     {
-        const pointField& pts = fvm.points();
+        const pointField& pts = mesh.points();
 
         List<pointIndexHit> nearest;
         surfPtr_().findNearest
@@ -247,13 +246,13 @@ void Foam::distanceSurface::createGeometry()
             IOobject
             (
                 "pointDistance",
-                fvm.time().timeName(),
-                fvm.time(),
+                mesh.time().timeName(),
+                mesh.time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
             ),
-            pointMesh::New(fvm),
+            pointMesh::New(mesh),
             dimensionedScalar("zero", dimLength, 0)
         );
         pDist.primitiveFieldRef() = pointDistance_;
@@ -268,10 +267,11 @@ void Foam::distanceSurface::createGeometry()
     (
         new isoSurface
         (
+            mesh,
             cellDistance,
             pointDistance_,
             distance_,
-            regularise_
+            regularise_ ? isoSurface::DIAGCELL : isoSurface::NONE
         )
     );
 
@@ -316,8 +316,7 @@ Foam::distanceSurface::distanceSurface
     average_(dict.lookupOrDefault("average", false)),
     zoneKey_(keyType::null),
     needsUpdate_(true),
-    isoSurfPtr_(nullptr),
-    facesPtr_(nullptr)
+    isoSurfPtr_(nullptr)
 {}
 
 
@@ -330,7 +329,6 @@ Foam::distanceSurface::distanceSurface
     const word& surfaceName,
     const scalar distance,
     const bool signedDistance,
-    const bool cell,
     const Switch regularise,
     const Switch average
 )
@@ -359,8 +357,7 @@ Foam::distanceSurface::distanceSurface
     average_(average),
     zoneKey_(keyType::null),
     needsUpdate_(true),
-    isoSurfPtr_(nullptr),
-    facesPtr_(nullptr)
+    isoSurfPtr_(nullptr)
 {}
 
 
@@ -383,12 +380,8 @@ bool Foam::distanceSurface::expire()
     if (debug)
     {
         Pout<< "distanceSurface::expire :"
-            << " have-facesPtr_:" << facesPtr_.valid()
             << " needsUpdate_:" << needsUpdate_ << endl;
     }
-
-    // Clear any stored topologies
-    facesPtr_.clear();
 
     // Clear derived data
     clearGeom();
@@ -409,7 +402,6 @@ bool Foam::distanceSurface::update()
     if (debug)
     {
         Pout<< "distanceSurface::update :"
-            << " have-facesPtr_:" << facesPtr_.valid()
             << " needsUpdate_:" << needsUpdate_ << endl;
     }
 

@@ -227,11 +227,11 @@ void Foam::sampledCuttingPlane::createGeometry()
     (
         new isoSurface
         (
+            mesh,
             cellDistance,
             pointDistance_,
-            0.0,
-            regularise_,
-            mergeTol_
+            0,
+            regularise_ ? isoSurface::DIAGCELL : isoSurface::NONE
         )
     );
 
@@ -254,7 +254,6 @@ Foam::sampledCuttingPlane::sampledCuttingPlane
 :
     sampledSurface(name, mesh, dict),
     plane_(dict),
-    mergeTol_(dict.lookupOrDefault("mergeTol", 1e-6)),
     regularise_(dict.lookupOrDefault("regularise", true)),
     average_(dict.lookupOrDefault("average", false)),
     zoneID_(dict.lookupOrDefault("zone", word::null), mesh.cellZones()),
@@ -262,8 +261,7 @@ Foam::sampledCuttingPlane::sampledCuttingPlane
     needsUpdate_(true),
     subMeshPtr_(nullptr),
     cellDistancePtr_(nullptr),
-    isoSurfPtr_(nullptr),
-    facesPtr_(nullptr)
+    isoSurfPtr_(nullptr)
 {
     if (zoneID_.index() != -1)
     {
@@ -307,12 +305,8 @@ bool Foam::sampledCuttingPlane::expire()
     if (debug)
     {
         Pout<< "sampledCuttingPlane::expire :"
-            << " have-facesPtr_:" << facesPtr_.valid()
             << " needsUpdate_:" << needsUpdate_ << endl;
     }
-
-    // Clear any stored topologies
-    facesPtr_.clear();
 
     // Clear derived data
     clearGeom();
@@ -333,7 +327,6 @@ bool Foam::sampledCuttingPlane::update()
     if (debug)
     {
         Pout<< "sampledCuttingPlane::update :"
-            << " have-facesPtr_:" << facesPtr_.valid()
             << " needsUpdate_:" << needsUpdate_ << endl;
     }
 

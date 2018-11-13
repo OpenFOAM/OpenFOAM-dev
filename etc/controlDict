@@ -566,7 +566,6 @@ DebugSwitches
     inversePointDistance 0;
     inverseVolume       0;
     isoSurface          0;
-    isoSurfaceCell      0;
     jplot               0;
     jumpCyclic          0;
     kEpsilon            0;

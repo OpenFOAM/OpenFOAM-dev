@@ -11,6 +11,7 @@ EXE_INC = \
     -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
     -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude \
+    -I$(LIB_SRC)/surfMesh/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
@@ -23,6 +24,7 @@ EXE_LIBS = \
     -lconformalVoronoiMesh \
     -ldecompositionMethods /* -L$(FOAM_LIBBIN)/dummy -lscotchDecomp */ \
     -ltriSurface \
+    -lsurfMesh \
     -lmeshTools \
     -lfileFormats \
     -lsampling \

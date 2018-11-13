@@ -85,9 +85,6 @@ class distanceSurface
         //- Constructed iso surface
         autoPtr<isoSurface> isoSurfPtr_;
 
-        //- Triangles converted to faceList
-        mutable autoPtr<faceList> facesPtr_;
-
 
     // Private Member Functions
 
@@ -133,7 +130,6 @@ public:
             const word& surfaceName,
             const scalar distance,
             const bool signedDistance,
-            const bool cell,
             const Switch regularise,
             const Switch average
         );
@@ -166,21 +162,10 @@ public:
         //- Faces of surface
         virtual const faceList& faces() const
         {
-            if (facesPtr_.empty())
-            {
-                const triSurface& s = surface();
-
-                facesPtr_.reset(new faceList(s.size()));
-
-                forAll(s, i)
-                {
-                    facesPtr_()[i] = s[i].triFaceFace();
-                }
-            }
-            return facesPtr_;
+            return surface().faces();
         }
 
-        const triSurface& surface() const
+        const isoSurface& surface() const
         {
             return isoSurfPtr_();
         }
