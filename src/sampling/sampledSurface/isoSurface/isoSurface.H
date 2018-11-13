@@ -25,35 +25,8 @@ Class
     Foam::isoSurface
 
 Description
-    A surface formed by the iso value.
-    After "Regularised Marching Tetrahedra: improved iso-surface extraction",
-    G.M. Treece, R.W. Prager and A.H. Gee.
-
-    Note:
-    - does tets without using cell centres/cell values. Not tested.
-    - regularisation can create duplicate triangles/non-manifold surfaces.
-    Current handling of those is bit ad-hoc for now and not perfect.
-    - regularisation does not do boundary points so as to preserve the
-      boundary perfectly.
-    - uses geometric merge with fraction of bounding box as distance.
-    - triangles can be between two cell centres so constant sampling
-      does not make sense.
-    - on empty patches behaves like zero gradient.
-    - does not do 2D correctly, creates non-flat iso surface.
-    - on processor boundaries might two overlapping (identical) triangles
-      (one from either side)
-
-    The handling on coupled patches is a bit complex. All fields
-    (values and coordinates) get rewritten so
-    - empty patches get zerogradient (value) and facecentre (coordinates)
-    - separated processor patch faces get interpolate (value) and facecentre
-      (coordinates). (this is already the default for cyclics)
-    - non-separated processor patch faces keep opposite value and cell centre
-
-    Now the triangle generation on non-separated processor patch faces
-    can use the neighbouring value. Any separated processor face or cyclic
-    face gets handled just like any boundary face.
-
+    Marching tet iso surface algorithm with optional filtering to keep only
+    points originating from mesh edges.
 
 SourceFiles
     isoSurface.C
@@ -63,19 +36,19 @@ SourceFiles
 #ifndef isoSurface_H
 #define isoSurface_H
 
-#include "triSurface.H"
 #include "labelPair.H"
 #include "pointIndexHit.H"
 #include "PackedBoolList.H"
-#include "volFields.H"
-#include "slicedVolFields.H"
+#include "MeshedSurface.H"
+#include "edgeList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class fvMesh;
+class polyMesh;
+class tetMatcher;
 
 /*---------------------------------------------------------------------------*\
                        Class isoSurface Declaration
@@ -83,263 +56,146 @@ class fvMesh;
 
 class isoSurface
 :
-    public triSurface
+    public MeshedSurface<face>
 {
-    // Private data
+public:
 
-        enum segmentCutType
+        enum filterType
         {
-            NEARFIRST,      // intersection close to e.first()
-            NEARSECOND,     //  ,,                   e.second()
-            NOTNEAR         // no intersection
+            NONE,       // No filtering
+            DIAGCELL,   // Remove points from face-diagonal and pyramid
+                        // (vertex to cell-centre) edges
+            CELL        // Only remove points from pyramid edges
         };
+
+
+private:
+
+    // Private data
 
         enum cellCutType
         {
-            NOTCUT,     // not cut
-            SPHERE,     // all edges to cell centre cut
-            CUT         // normal cut
+            NOTCUT,     // Not cut
+            SPHERE,     // All edges to cell centre cut
+            CUT         // Normal cut
         };
 
 
         //- Reference to mesh
-        const fvMesh& mesh_;
+        const polyMesh& mesh_;
+
+        const scalarField& cVals_;
 
         const scalarField& pVals_;
 
-        //- Input volScalarField with separated coupled patches rewritten
-        autoPtr<slicedVolScalarField> cValsPtr_;
-
-        //- Isosurface value
+        //- Iso value
         const scalar iso_;
 
-        //- Regularise?
-        const Switch regularise_;
+        //- Per point: originating mesh vertex/cc. See encoding above
+        edgeList pointToVerts_;
 
-        //- When to merge points
-        const scalar mergeDistance_;
-
-
-        //- Whether face might be cut
-        List<cellCutType> faceCutType_;
-
-        //- Whether cell might be cut
-        List<cellCutType> cellCutType_;
-
-        //- Estimated number of cut cells
-        label nCutCells_;
-
-        //- For every triangle the original cell in mesh
+        //- For every face the original cell in mesh
         labelList meshCells_;
 
-        //- For every unmerged triangle point the point in the triSurface
-        labelList triPointMergeMap_;
+        //- For every point the originating face in mesh
+        labelList pointToFace_;
 
 
     // Private Member Functions
 
-        // Point synchronisation
+        //- Does any edge of triangle cross iso value?
+        bool isTriCut
+        (
+            const triFace& tri,
+            const scalarField& pointValues
+        ) const;
 
-            //- Does tensor differ (to within mergeTolerance) from identity
-            bool noTransform(const tensor& tt) const;
+        //- Determine whether cell is cut
+        cellCutType calcCutType
+        (
+            const bool isTet,
+            const label
+        ) const;
 
-            //- Is patch a collocated (i.e. non-separated) coupled patch?
-            static bool collocatedPatch(const polyPatch&);
+        //- Determine for all mesh whether cell is cut
+        label calcCutTypes
+        (
+            tetMatcher& tet,
+            List<cellCutType>& cellCutTypes
+        );
 
-            //- Per face whether is collocated
-            PackedBoolList collocatedFaces(const coupledPolyPatch&) const;
+        //- Generate single point on edge
+        label generatePoint
+        (
+            const label facei,
+            const bool edgeIsDiag,
+            const edge& vertices,
 
-            //- Synchronise points on all non-separated coupled patches
-            void syncUnseparatedPoints
+            DynamicList<edge>& pointToVerts,
+            DynamicList<label>& pointToFace,
+            DynamicList<bool>& pointFromDiag,
+            EdgeMap<label>& vertsToPoint
+        ) const;
+
+        //- Generate triangles from tet
+        void generateTriPoints
+        (
+            const label facei,
+            const FixedList<scalar, 4>& s,
+            const FixedList<point, 4>& p,
+            const FixedList<label, 4>& pIndex,
+            const FixedList<bool, 6>& edgeIsDiag,
+
+            DynamicList<edge>& pointToVerts,
+            DynamicList<label>& pointToFace,
+            DynamicList<bool>& pointFromDiag,
+
+            EdgeMap<label>& vertsToPoint,
+            DynamicList<label>& verts
+        ) const;
+
+        //- Generate triangles from cell
+        void generateTriPoints
+        (
+            const polyMesh& mesh,
+            const label celli,
+            const bool isTet,
+
+            DynamicList<edge>& pointToVerts,
+            DynamicList<label>& pointToFace,
+            DynamicList<bool>& pointFromDiag,
+
+            EdgeMap<label>& vertsToPoint,
+            DynamicList<label>& verts,
+            DynamicList<label>& faceLabels
+        ) const;
+
+
+        // Simplification
+
+            void triangulateOutside
             (
-                pointField& collapsedPoint,
-                const point& nullValue
+                const bool filterDiag,
+                const PrimitivePatch<face, SubList, const pointField&>& pp,
+                const boolList& pointFromDiag,
+                const labelList& pointToFace,
+                const label cellID,
+
+                DynamicList<face>& compactFaces,
+                DynamicList<label>& compactCellIDs
             ) const;
 
+            MeshedSurface<face> removeInsidePoints
+            (
+                const bool filterDiag,
+                const MeshedSurface<face>& s,
+                const boolList& pointFromDiag,
+                const labelList& pointToFace,
+                const labelList& start,              // Per cell:starting tri
+                DynamicList<label>& pointCompactMap, // Per point the original
+                DynamicList<label>& compactCellIDs   // Per face the cellID
+            ) const;
 
-        //- Get location of iso value as fraction in between s0,s1
-        scalar isoFraction
-        (
-            const scalar s0,
-            const scalar s1
-        ) const;
-
-        //- Check if any edge of a face is cut
-        bool isEdgeOfFaceCut
-        (
-            const scalarField& pVals,
-            const face& f,
-            const bool ownLower,
-            const bool neiLower
-        ) const;
-
-        //- Get neighbour value and position.
-        void getNeighbour
-        (
-            const labelList& boundaryRegion,
-            const volVectorField& meshC,
-            const volScalarField& cVals,
-            const label celli,
-            const label facei,
-            scalar& nbrValue,
-            point& nbrPoint
-        ) const;
-
-        //- Determine for every face/cell whether it (possibly) generates
-        //  triangles.
-        void calcCutTypes
-        (
-            const labelList& boundaryRegion,
-            const volVectorField& meshC,
-            const volScalarField& cVals,
-            const scalarField& pVals
-        );
-
-        static point calcCentre(const triSurface&);
-
-        //- Determine per cc whether all near cuts can be snapped to single
-        //  point.
-        void calcSnappedCc
-        (
-            const labelList& boundaryRegion,
-            const volVectorField& meshC,
-            const volScalarField& cVals,
-            const scalarField& pVals,
-            DynamicList<point>& snappedPoints,
-            labelList& snappedCc
-        ) const;
-
-        //- Determine per point whether all near cuts can be snapped to single
-        //  point.
-        void calcSnappedPoint
-        (
-            const PackedBoolList& isBoundaryPoint,
-            const labelList& boundaryRegion,
-            const volVectorField& meshC,
-            const volScalarField& cVals,
-            const scalarField& pVals,
-            DynamicList<point>& snappedPoints,
-            labelList& snappedPoint
-        ) const;
-
-
-        //- Return input field with coupled (and empty) patch values rewritten
-        template<class Type>
-        tmp<SlicedGeometricField
-        <Type, fvPatchField, slicedFvPatchField, volMesh>>
-        adaptPatchFields
-        (
-            const GeometricField<Type, fvPatchField, volMesh>& fld
-        ) const;
-
-        //- Generate single point by interpolation or snapping
-        template<class Type>
-        Type generatePoint
-        (
-            const scalar s0,
-            const Type& p0,
-            const bool hasSnap0,
-            const Type& snapP0,
-
-            const scalar s1,
-            const Type& p1,
-            const bool hasSnap1,
-            const Type& snapP1
-        ) const;
-
-
-        template<class Type>
-        void generateTriPoints
-        (
-            const scalar s0,
-            const Type& p0,
-            const bool hasSnap0,
-            const Type& snapP0,
-
-            const scalar s1,
-            const Type& p1,
-            const bool hasSnap1,
-            const Type& snapP1,
-
-            const scalar s2,
-            const Type& p2,
-            const bool hasSnap2,
-            const Type& snapP2,
-
-            const scalar s3,
-            const Type& p3,
-            const bool hasSnap3,
-            const Type& snapP3,
-
-            DynamicList<Type>& points
-        ) const;
-
-        template<class Type>
-        label generateFaceTriPoints
-        (
-            const volScalarField& cVals,
-            const scalarField& pVals,
-
-            const GeometricField<Type, fvPatchField, volMesh>& cCoords,
-            const Field<Type>& pCoords,
-
-            const DynamicList<Type>& snappedPoints,
-            const labelList& snappedCc,
-            const labelList& snappedPoint,
-            const label facei,
-
-            const scalar neiVal,
-            const Type& neiPt,
-            const bool hasNeiSnap,
-            const Type& neiSnapPt,
-
-            DynamicList<Type>& triPoints,
-            DynamicList<label>& triMeshCells
-        ) const;
-
-        template<class Type>
-        void generateTriPoints
-        (
-            const volScalarField& cVals,
-            const scalarField& pVals,
-
-            const GeometricField<Type, fvPatchField, volMesh>& cCoords,
-            const Field<Type>& pCoords,
-
-            const DynamicList<Type>& snappedPoints,
-            const labelList& snappedCc,
-            const labelList& snappedPoint,
-
-            DynamicList<Type>& triPoints,
-            DynamicList<label>& triMeshCells
-        ) const;
-
-        template<class Type>
-        static tmp<Field<Type>> interpolate
-        (
-            const label nPoints,
-            const labelList& triPointMergeMap,
-            const DynamicList<Type>& unmergedValues
-        );
-
-        triSurface stitchTriPoints
-        (
-            const bool checkDuplicates,
-            const List<point>& triPoints,
-            labelList& triPointReverseMap,  // unmerged to merged point
-            labelList& triMap               // merged to unmerged triangle
-        ) const;
-
-        //- Check single triangle for (topological) validity
-        static bool validTri(const triSurface&, const label);
-
-        static triSurface subsetMesh
-        (
-            const triSurface& s,
-            const labelList& newToOldFaces,
-            labelList& oldToNewPoints,
-            labelList& newToOldPoints
-        );
 
 public:
 
@@ -349,36 +205,44 @@ public:
 
     // Constructors
 
-        //- Construct from cell values and point values. Uses boundaryField
-        //  for boundary values. Holds reference to cellIsoVals and
-        //  pointIsoVals.
+        //- Construct from dictionary
         isoSurface
         (
-            const volScalarField& cellIsoVals,
-            const scalarField& pointIsoVals,
+            const polyMesh& mesh,
+            const scalarField& cellValues,
+            const scalarField& pointValues,
             const scalar iso,
-            const bool regularise,
-            const scalar mergeTol = 1e-6    // fraction of bounding box
+            const filterType filter = DIAGCELL
         );
 
 
     // Member Functions
 
-        //- For every triangle the original cell in mesh
+        //- For every face original cell in mesh
         const labelList& meshCells() const
         {
             return meshCells_;
         }
 
-        //- Interpolates cCoords,pCoords. Uses the references to the original
-        //  fields used to create the iso surface.
+        //- For every point originating face (pyramid) in mesh
+        const labelList& pointToFace() const
+        {
+            return pointToFace_;
+        }
+
+        //- Per point: originating mesh vertex/cc. See encoding above·
+        const edgeList& pointToVerts() const
+        {
+            return pointToVerts_;
+        }
+
+        //- Interpolates cCoords,pCoords.
         template<class Type>
         tmp<Field<Type>> interpolate
         (
-            const GeometricField<Type, fvPatchField, volMesh>& cCoords,
+            const Field<Type>& cCoords,
             const Field<Type>& pCoords
         ) const;
-
 };
 
 
