@@ -22,7 +22,7 @@ surfaceScalarField phiHbyA
 
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
-const bool closedVolume = adjustPhi(phiHbyA, U, p_rgh);
+const bool closedVolume = mesh.steady() && adjustPhi(phiHbyA, U, p_rgh);
 const bool adjustMass = closedVolume && !thermo.incompressible();
 
 phiHbyA += phig;
