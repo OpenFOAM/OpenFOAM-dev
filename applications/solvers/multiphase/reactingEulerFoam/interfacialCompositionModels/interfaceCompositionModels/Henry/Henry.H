@@ -25,11 +25,12 @@ Class
     Foam::interfaceCompositionModels::Henry
 
 Description
-    Henry's law for gas solubiliy in liquid. The concentration of the dissolved
-    species in the liquid is proportional to its partial pressure in the gas.
-    The dimensionless constant of proportionality between concentrations on
-    each side of the interface is \f$k\f$, and is given for each species.
-    Mixing in the gas is assumed to be ideal.
+    Henry's law for gas solubility in liquid. The concentration of a dissolved
+    species in the liquid is proportional to its partial pressure in the gas. A
+    dimensionless solubility, \f$k\f$, is given for each species. This is the
+    ratio of the concentration of the species in the liquid to the
+    corresponding concentration in the gas; i.e., \f$k =
+    c_{i,liq}/c_{i,gas}\f$. Mixing in the gas is assumed to be ideal.
 
 SourceFiles
     Henry.C
@@ -62,7 +63,7 @@ class Henry
 {
     // Private data
 
-        //- Solubility coefficients
+        //- Dimensionless solubility coefficients
         const scalarList k_;
 
         //- The remaining solvent species fraction
