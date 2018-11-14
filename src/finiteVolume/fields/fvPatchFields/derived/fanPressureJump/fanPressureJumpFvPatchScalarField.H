@@ -22,22 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fanFvPatchField
+    Foam::fanPressureJumpFvPatchScalarField
 
 Description
-    This boundary condition provides a jump condition, using the \c cyclic
-    condition as a base.
+    This boundary condition provides a pressure jump condition, using
+    the \c cyclic condition as a base.
 
     The jump is specified as a \c Function1 type, to enable the use of, e.g.
-    constant, polynomial, table values.
+    constant, polynomial, table values. This boundary condition can operate
+    in two modes - standard and backward compatibility.
+    In standard mode, jump is specified as a function of total volumetric
+    flow rate through the patch. In backward compatibility mode, the boundary
+    conditions serves as a direct replacement for the fanFvPatchField, where
+    jump is defined as a function of local velocity.
 
 Usage
     \table
         Property     | Description             | Required    | Default value
         patchType    | underlying patch type should be \c cyclic| yes |
-        jumpTable    | jump data, e.g. \c csvFile | yes      |
+        fanCurve     | fan curve, e.g. \c csvFile | yes      |
+        jumpTable    | jump data (backward compatibility mode) | no       |
+        reverse      | reverse jump direction  | no | false
         phi          | flux field name         | no          | phi
-        rho          | density field name      | no          | none
+        rho          | density field name      | no          | rho
     \endtable
 
     Example of the boundary condition specification:
@@ -46,14 +53,14 @@ Usage
     {
         type            fan;
         patchType       cyclic;
-        jumpTable       csvFile;
+        fanCurve       csvFile;
         csvFileCoeffs
         {
             hasHeaderLine   1;
             refColumn       0;
             componentColumns 1(1);
             separator       ",";
-            file           "$FOAM_CASE/constant/pressureVsU";
+            file           "$FOAM_CASE/constant/pressureVsQ";
         }
         value           uniform 0;
     }
@@ -69,17 +76,14 @@ See also
     Foam::Function1Types
 
 SourceFiles
-    fanFvPatchField.C
-    fanFvPatchFields.H
-    fanFvPatchFields.C
-    fanFvPatchFieldsFwd.H
+    fanPressureJumpFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fanFvPatchField_H
-#define fanFvPatchField_H
+#ifndef fanPressureJumpFvPatchScalarField_H
+#define fanPressureJumpFvPatchScalarField_H
 
-#include "uniformJumpFvPatchField.H"
+#include "fixedJumpFvPatchFields.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -88,15 +92,23 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class fanFvPatchField Declaration
+              Class fanPressureJumpFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class fanFvPatchField
+class fanPressureJumpFvPatchScalarField
 :
-    public uniformJumpFvPatchField<Type>
+    public fixedJumpFvPatchScalarField
 {
     // Private data
+
+        //- Fan curve
+        autoPtr<Function1<scalar>> fanCurve_;
+
+        //- Jump table (backward compatibility)
+        autoPtr<Function1<scalar>> jumpTable_;
+
+        //- Set true to reverse jump direction
+        Switch reverse_;
 
         //- Name of the flux transporting the field
         word phiName_;
@@ -115,66 +127,66 @@ class fanFvPatchField
 public:
 
     //- Runtime type information
-    TypeName("fan");
+    TypeName("fanPressureJump");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        fanFvPatchField
+        fanPressureJumpFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        fanFvPatchField
+        fanPressureJumpFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<scalar, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given fanFvPatchField onto a new patch
-        fanFvPatchField
+        //- Construct by mapping given patch onto a new patch
+        fanPressureJumpFvPatchScalarField
         (
-            const fanFvPatchField<Type>&,
+            const fanPressureJumpFvPatchScalarField&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy
-        fanFvPatchField
+        fanPressureJumpFvPatchScalarField
         (
-            const fanFvPatchField<Type>&
+            const fanPressureJumpFvPatchScalarField&
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
+        virtual tmp<fvPatchScalarField> clone() const
         {
-            return tmp<fvPatchField<Type>>
+            return tmp<fvPatchScalarField>
             (
-                new fanFvPatchField<Type>(*this)
+                new fanPressureJumpFvPatchScalarField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        fanFvPatchField
+        fanPressureJumpFvPatchScalarField
         (
-            const fanFvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const fanPressureJumpFvPatchScalarField&,
+            const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type>> clone
+        virtual tmp<fvPatchField<scalar>> clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<scalar, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type>>
+            return tmp<fvPatchField<scalar>>
             (
-                new fanFvPatchField<Type>(*this, iF)
+                new fanPressureJumpFvPatchScalarField(*this, iF)
             );
         }
 
@@ -189,28 +201,9 @@ public:
 };
 
 
-//- Specialisation of the jump-condition for the pressure
-template<>
-void fanFvPatchField<scalar>::calcFanJump();
-
-template<>
-fanFvPatchField<scalar>::fanFvPatchField
-(
-    const fvPatch&,
-    const DimensionedField<scalar, volMesh>&,
-    const dictionary&
-);
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "fanFvPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

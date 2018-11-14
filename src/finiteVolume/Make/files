@@ -139,7 +139,7 @@ $(derivedFvPatchFields)/codedFixedValue/codedFixedValueFvPatchFields.C
 $(derivedFvPatchFields)/codedMixed/codedMixedFvPatchFields.C
 $(derivedFvPatchFields)/cylindricalInletVelocity/cylindricalInletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/externalCoupledMixed/externalCoupledMixedFvPatchFields.C
-$(derivedFvPatchFields)/fan/fanFvPatchFields.C
+$(derivedFvPatchFields)/fanPressureJump/fanPressureJumpFvPatchScalarField.C
 $(derivedFvPatchFields)/fanPressure/fanPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/fixedFluxPressure/fixedFluxPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/fixedFluxExtrapolatedPressure/fixedFluxExtrapolatedPressureFvPatchScalarField.C
