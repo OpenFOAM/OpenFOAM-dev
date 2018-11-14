@@ -648,10 +648,11 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     const dictionary& dict,
     const label index,
     const polyBoundaryMesh& bm,
-    const word& patchType
+    const word& patchType,
+    const transformType defaultTransform
 )
 :
-    coupledPolyPatch(name, dict, index, bm, patchType),
+    coupledPolyPatch(name, dict, index, bm, patchType, defaultTransform),
     neighbPatchName_(dict.lookupOrDefault("neighbourPatch", word::null)),
     coupleGroup_(dict),
     neighbPatchID_(-1),

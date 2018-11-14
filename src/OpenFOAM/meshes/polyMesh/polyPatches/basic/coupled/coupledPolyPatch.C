@@ -493,7 +493,8 @@ Foam::coupledPolyPatch::coupledPolyPatch
     const dictionary& dict,
     const label index,
     const polyBoundaryMesh& bm,
-    const word& patchType
+    const word& patchType,
+    const transformType defaultTransform
 )
 :
     polyPatch(name, dict, index, bm, patchType),
@@ -502,7 +503,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
     (
         dict.found("transform")
       ? transformTypeNames.read(dict.lookup("transform"))
-      : UNKNOWN
+      : defaultTransform
     )
 {}
 

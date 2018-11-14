@@ -2795,6 +2795,7 @@ void Foam::polyTopoChange::modifyPoint
 
     // Always active
     retiredPoints_.erase(pointi);
+
     // Always provided old point
     oldPoints_.set(pointi, oldPt);
 }

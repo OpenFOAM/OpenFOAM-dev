@@ -202,7 +202,8 @@ public:
             const dictionary& dict,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType
+            const word& patchType,
+            const transformType defaultTransform = UNKNOWN
         );
 
         //- Construct as copy, resetting the boundary mesh
