@@ -73,8 +73,8 @@ relaxationFactors
 {
     equations
     {
-        "h.*"           1;
-        "U.*"           1;
+        h               1;
+        U               1;
     }
 }
 

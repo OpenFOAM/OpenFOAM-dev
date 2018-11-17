@@ -1,4 +1,3 @@
-fvMesh& mesh = solidRegions[i];
 solidThermo& thermo = thermos[i];
 
 tmp<volScalarField> trho = thermo.rho();

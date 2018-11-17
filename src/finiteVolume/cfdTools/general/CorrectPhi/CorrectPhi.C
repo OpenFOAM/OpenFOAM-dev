@@ -103,10 +103,7 @@ void Foam::CorrectPhi
 
         pcorrEqn.setReference(0, 0);
 
-        pcorrEqn.solve
-        (
-            mesh.solver(pcorr.select(pimple.finalNonOrthogonalIter()))
-        );
+        pcorrEqn.solve(pimple.finalNonOrthogonalIter());
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -178,10 +175,7 @@ void Foam::CorrectPhi
             divRhoU
         );
 
-        pcorrEqn.solve
-        (
-            mesh.solver(pcorr.select(pimple.finalNonOrthogonalIter()))
-        );
+        pcorrEqn.solve(pimple.finalNonOrthogonalIter());
 
         if (pimple.finalNonOrthogonalIter())
         {

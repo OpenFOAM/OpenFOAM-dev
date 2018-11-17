@@ -94,7 +94,7 @@ baffles
             {
                 p
                 {
-                    type            fan;
+                    type            fanPressureJump;
                     patchType       cyclic;
                     jump            uniform 0;
                     value           uniform 0;

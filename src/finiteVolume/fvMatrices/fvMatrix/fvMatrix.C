@@ -673,15 +673,18 @@ void Foam::fvMatrix<Type>::relax(const scalar alpha)
 template<class Type>
 void Foam::fvMatrix<Type>::relax()
 {
-    word name = psi_.select
+    if
     (
         psi_.mesh().data::template lookupOrDefault<bool>
         ("finalIteration", false)
-    );
-
-    if (psi_.mesh().relaxEquation(name))
+     && psi_.mesh().relaxEquation(psi_.name() + "Final")
+    )
     {
-        relax(psi_.mesh().equationRelaxationFactor(name));
+        relax(psi_.mesh().equationRelaxationFactor(psi_.name() + "Final"));
+    }
+    else if (psi_.mesh().relaxEquation(psi_.name()))
+    {
+        relax(psi_.mesh().equationRelaxationFactor(psi_.name()));
     }
 }
 
@@ -1329,50 +1332,6 @@ void Foam::checkMethod
             << " [" << dt.name() << dt.dimensions() << " ]"
             << abort(FatalError);
     }
-}
-
-
-template<class Type>
-Foam::SolverPerformance<Type> Foam::solve
-(
-    fvMatrix<Type>& fvm,
-    const dictionary& solverControls
-)
-{
-    return fvm.solve(solverControls);
-}
-
-template<class Type>
-Foam::SolverPerformance<Type> Foam::solve
-(
-    const tmp<fvMatrix<Type>>& tfvm,
-    const dictionary& solverControls
-)
-{
-    SolverPerformance<Type> solverPerf =
-        const_cast<fvMatrix<Type>&>(tfvm()).solve(solverControls);
-
-    tfvm.clear();
-
-    return solverPerf;
-}
-
-
-template<class Type>
-Foam::SolverPerformance<Type> Foam::solve(fvMatrix<Type>& fvm)
-{
-    return fvm.solve();
-}
-
-template<class Type>
-Foam::SolverPerformance<Type> Foam::solve(const tmp<fvMatrix<Type>>& tfvm)
-{
-    SolverPerformance<Type> solverPerf =
-        const_cast<fvMatrix<Type>&>(tfvm()).solve();
-
-    tfvm.clear();
-
-    return solverPerf;
 }
 
 

@@ -46,7 +46,7 @@ while (pimple.correctNonOrthogonal())
         p_rghEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
     }
 
-    p_rghEqn.solve(mesh.solver(p_rgh.select(pimple.finalInnerIter())));
+    p_rghEqn.solve(pimple.finalInnerIter());
 
     if (pimple.finalNonOrthogonalIter())
     {

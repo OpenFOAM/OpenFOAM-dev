@@ -63,7 +63,7 @@ solvers
         relTol          0;
     }
 
-    "(Yi|O2|N2|H2O)"
+    "(Yi|O2|N2|H2O).*"
     {
         $hFinal;
     }
@@ -80,7 +80,7 @@ relaxationFactors
 {
     equations
     {
-        ".*Final"       1;
+        ".*"        1;
     }
 }
 

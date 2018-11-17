@@ -49,7 +49,7 @@ solvers
         $U;
     }
 
-    Yi
+    "Yi.*"
     {
         solver          PBiCG;
         preconditioner  DILU;

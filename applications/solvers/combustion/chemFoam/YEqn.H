@@ -3,10 +3,6 @@
     {
         volScalarField& Yi = Y[specieI];
 
-        solve
-        (
-            fvm::ddt(rho, Yi) - chemistry.RR(specieI),
-            mesh.solver("Yi")
-        );
+        solve(fvm::ddt(rho, Yi) - chemistry.RR(specieI), "Yi");
     }
 }

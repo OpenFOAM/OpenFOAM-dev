@@ -33,7 +33,7 @@ solvers
         relTol          0.1;
     }
 
-    G
+    "G.*"
     {
         $p_rgh;
         tolerance       1e-05;

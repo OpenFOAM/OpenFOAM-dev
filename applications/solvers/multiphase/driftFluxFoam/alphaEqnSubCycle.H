@@ -54,7 +54,7 @@
           - fvm::laplacian(turbulence->nut(), alpha1)
         );
 
-        alpha1Eqn.solve(mesh.solver("alpha1Diffusion"));
+        alpha1Eqn.solve("alpha1Diffusion");
 
         alphaPhi += alpha1Eqn.flux();
         alpha2 = 1.0 - alpha1;

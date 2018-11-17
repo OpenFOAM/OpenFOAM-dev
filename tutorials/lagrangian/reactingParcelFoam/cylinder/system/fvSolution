@@ -48,7 +48,7 @@ solvers
         tolerance       1e-05;
     }
 
-    "(k|epsilon)"
+    "(k|epsilon).*"
     {
         $UFinal;
     }
@@ -68,14 +68,7 @@ solvers
         relTol          0;
     }
 
-    "(h|Yi|O2|N2|H2O)"
-    {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-        tolerance       1e-6;
-        relTol          0;
-    }
-    hFinal
+    "(h|Yi|O2|N2|H2O).*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
@@ -99,7 +92,7 @@ relaxationFactors
 {
     equations
     {
-        ".*Final"       1;
+        ".*"        1;
     }
 }
 

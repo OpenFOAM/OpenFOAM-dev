@@ -35,7 +35,7 @@
           - fvm::laplacian(rhorAUf, p)
         );
 
-        pEqn.solve(mesh.solver(p.select(pimple.finalInnerIter())));
+        pEqn.solve(pimple.finalInnerIter());
 
         if (pimple.finalNonOrthogonalIter())
         {

@@ -140,9 +140,6 @@ public:
             //- Return the solver controls dictionary for the given field
             const dictionary& solverDict(const word& name) const;
 
-            //- Return the solver controls dictionary for the given field
-            const dictionary& solver(const word& name) const;
-
 
         // Read
 

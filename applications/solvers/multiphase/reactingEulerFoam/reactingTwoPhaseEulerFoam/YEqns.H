@@ -20,7 +20,7 @@
             );
 
             Y1iEqn.relax();
-            Y1iEqn.solve(mesh.solver("Yi"));
+            Y1iEqn.solve("Yi");
         }
     }
 
@@ -39,7 +39,7 @@
             );
 
             Y2iEqn.relax();
-            Y2iEqn.solve(mesh.solver("Yi"));
+            Y2iEqn.solve("Yi");
         }
     }
 }

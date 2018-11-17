@@ -71,7 +71,7 @@ solvers
     };
 
 
-    Ii
+    "Ii.*"
     {
         solver                  GAMG;
         tolerance               1e-4;
@@ -81,7 +81,7 @@ solvers
         nPostSweeps             1;
     }
 
-    G
+    "G.*"
     {
         solver          PCG;
         preconditioner  DIC;

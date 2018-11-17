@@ -51,7 +51,7 @@ solvers
         relTol          0;
     }
 
-    Yi
+    "Yi.*"
     {
         $hFinal;
     }

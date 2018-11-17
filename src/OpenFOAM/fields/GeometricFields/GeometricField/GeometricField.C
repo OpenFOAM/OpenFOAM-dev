@@ -959,8 +959,6 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::relax(const scalar alpha)
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::relax()
 {
-    word name = this->name();
-
     if
     (
         this->mesh().data::template lookupOrDefault<bool>
@@ -968,14 +966,14 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::relax()
             "finalIteration",
             false
         )
+     && this->mesh().relaxField(this->name() + "Final")
     )
     {
-        name += "Final";
+        relax(this->mesh().fieldRelaxationFactor(this->name() + "Final"));
     }
-
-    if (this->mesh().relaxField(name))
+    else if (this->mesh().relaxField(this->name()))
     {
-        relax(this->mesh().fieldRelaxationFactor(name));
+        relax(this->mesh().fieldRelaxationFactor(this->name()));
     }
 }
 

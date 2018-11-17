@@ -269,11 +269,7 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
 
         IiEq.relax();
 
-        const solverPerformance ILambdaSol = solve
-        (
-            IiEq,
-            mesh_.solver("Ii")
-        );
+        const solverPerformance ILambdaSol = solve(IiEq, "Ii");
 
         const scalar initialRes =
             ILambdaSol.initialResidual()*omega_/dom_.omegaMax();

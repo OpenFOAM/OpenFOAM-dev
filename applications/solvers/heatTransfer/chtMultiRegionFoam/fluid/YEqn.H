@@ -52,7 +52,7 @@ if (Y.size())
 
             fvOptions.constrain(YiEqn);
 
-            YiEqn.solve(mesh.solver("Yi"));
+            YiEqn.solve("Yi");
 
             fvOptions.correct(Yi);
 

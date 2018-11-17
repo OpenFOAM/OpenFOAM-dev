@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
                       - fvm::laplacian(ghrAUf, h)
                     );
 
-                    hEqn.solve(mesh.solver(h.select(pimple.finalInnerIter())));
+                    hEqn.solve(pimple.finalInnerIter());
 
                     if (pimple.finalNonOrthogonalIter())
                     {

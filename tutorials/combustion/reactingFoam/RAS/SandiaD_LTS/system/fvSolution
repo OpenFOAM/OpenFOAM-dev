@@ -49,7 +49,7 @@ solvers
         $U;
     }
 
-    Yi
+    "Yi.*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
@@ -57,7 +57,7 @@ solvers
         relTol          0.1;
     }
 
-    G
+    "G.*"
     {
         solver          PCG;
         preconditioner  DIC;

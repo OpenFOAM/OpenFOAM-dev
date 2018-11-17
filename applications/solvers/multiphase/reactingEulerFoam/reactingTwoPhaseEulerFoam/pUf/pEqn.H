@@ -339,7 +339,7 @@ while (pimple.correct())
             solve
             (
                 pEqn,
-                mesh.solver(p_rgh.select(pimple.finalInnerIter()))
+                pimple.finalInnerIter()
             );
         }
 

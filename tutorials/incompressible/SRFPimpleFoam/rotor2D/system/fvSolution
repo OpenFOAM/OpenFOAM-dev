@@ -73,9 +73,7 @@ relaxationFactors
 {
     equations
     {
-        "Urel.*"        1;
-        "k.*"           1;
-        "epsilon.*"     1;
+        ".*"        1;
     }
 }
 

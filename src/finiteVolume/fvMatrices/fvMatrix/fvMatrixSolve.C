@@ -311,17 +311,44 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::fvSolver::solve()
 
 
 template<class Type>
-Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve(const word& name)
 {
     return solve
     (
         psi_.mesh().solverDict
         (
-            psi_.select
-            (
-                psi_.mesh().data::template lookupOrDefault<bool>
-                ("finalIteration", false)
-            )
+            psi_.mesh().data::template lookupOrDefault<bool>
+            ("finalIteration", false)
+          ? word(name + "Final")
+          : name
+        )
+    );
+}
+
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve(const char* name)
+{
+    return solve(word(name));
+}
+
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve(const bool final)
+{
+    return solve(psi_.mesh().solverDict(psi_.select(final)));
+}
+
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
+{
+    return solve
+    (
+        psi_.mesh().data::template lookupOrDefault<bool>
+        (
+            "finalIteration",
+            false
         )
     );
 }
@@ -363,6 +390,102 @@ Foam::tmp<Foam::Field<Type>> Foam::fvMatrix<Type>::residual() const
     }
 
     return tres;
+}
+
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::solve
+(
+    fvMatrix<Type>& fvm,
+    const word& name
+)
+{
+    return fvm.solve(name);
+}
+
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::solve
+(
+    fvMatrix<Type>& fvm,
+    const char* name
+)
+{
+    return fvm.solve(name);
+}
+
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::solve
+(
+    const tmp<fvMatrix<Type>>& tfvm,
+    const word& name
+)
+{
+    SolverPerformance<Type> solverPerf =
+        const_cast<fvMatrix<Type>&>(tfvm()).solve(name);
+
+    tfvm.clear();
+
+    return solverPerf;
+}
+
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::solve
+(
+    const tmp<fvMatrix<Type>>& tfvm,
+    const char* name
+)
+{
+    SolverPerformance<Type> solverPerf =
+        const_cast<fvMatrix<Type>&>(tfvm()).solve(name);
+
+    tfvm.clear();
+
+    return solverPerf;
+}
+
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::solve(fvMatrix<Type>& fvm, const bool final)
+{
+    return fvm.solve(final);
+}
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::solve
+(
+    const tmp<fvMatrix<Type>>& tfvm,
+    const bool final
+)
+{
+    SolverPerformance<Type> solverPerf =
+        const_cast<fvMatrix<Type>&>(tfvm()).solve(final);
+
+    tfvm.clear();
+
+    return solverPerf;
+}
+
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::solve(fvMatrix<Type>& fvm)
+{
+    return fvm.solve();
+}
+
+template<class Type>
+Foam::SolverPerformance<Type> Foam::solve(const tmp<fvMatrix<Type>>& tfvm)
+{
+    SolverPerformance<Type> solverPerf =
+        const_cast<fvMatrix<Type>&>(tfvm()).solve();
+
+    tfvm.clear();
+
+    return solverPerf;
 }
 
 

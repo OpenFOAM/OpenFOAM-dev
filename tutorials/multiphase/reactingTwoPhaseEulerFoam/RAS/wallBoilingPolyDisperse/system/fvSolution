@@ -76,7 +76,7 @@ solvers
         minIter         1;
     }
 
-    Yi
+    "Yi.*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
@@ -114,8 +114,8 @@ relaxationFactors
     equations
     {
         ".*"            1;
-        "h.*"           0.3;
-        "e.*"           0.3;
+        h               0.3;
+        e               0.3;
     }
 }
 

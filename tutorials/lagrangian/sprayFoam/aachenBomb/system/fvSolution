@@ -62,23 +62,18 @@ solvers
         relTol          0;
     }
 
-    "(Yi|O2|N2|H2O)"
+    "(h|Yi|O2|N2|H2O)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-6;
-        relTol          0;
-    }
-
-    h
-    {
-        $Yi;
         relTol          0.1;
     }
 
-    hFinal
+    "(h|Yi|O2|N2|H2O)Final"
     {
         $Yi;
+        relTol          0;
     }
 }
 
@@ -94,7 +89,7 @@ relaxationFactors
 {
     equations
     {
-        ".*Final"       1;
+        ".*"        1;
     }
 }
 

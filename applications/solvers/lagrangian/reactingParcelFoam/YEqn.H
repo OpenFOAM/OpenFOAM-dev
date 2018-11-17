@@ -37,7 +37,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
 
             fvOptions.constrain(YEqn);
 
-            YEqn.solve(mesh.solver("Yi"));
+            YEqn.solve("Yi");
 
             fvOptions.correct(Yi);
 

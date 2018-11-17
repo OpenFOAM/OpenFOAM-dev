@@ -24,7 +24,7 @@
             );
 
             YiEqn.relax();
-            YiEqn.solve(mesh.solver("Yi"));
+            YiEqn.solve("Yi");
         }
     }
 }

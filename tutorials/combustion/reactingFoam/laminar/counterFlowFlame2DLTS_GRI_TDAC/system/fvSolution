@@ -50,7 +50,7 @@ solvers
         relTol          0.1;
     }
 
-    Yi
+    "Yi.*"
     {
         $U;
         relTol          0.1;
