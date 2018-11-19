@@ -79,7 +79,8 @@ bool Foam::pimpleNoLoopControl::read()
     }
 
     // The SIMPLErho keyword is maintained here for backwards compatibility
-    simpleRho_ = dict().lookupOrDefault<bool>("SIMPLErho", false);
+    simpleRho_ = mesh().steady();
+    simpleRho_ = dict().lookupOrDefault<bool>("SIMPLErho", simpleRho_);
     simpleRho_ = dict().lookupOrDefault<bool>("simpleRho", simpleRho_);
 
     turbOnFinalIterOnly_ =
