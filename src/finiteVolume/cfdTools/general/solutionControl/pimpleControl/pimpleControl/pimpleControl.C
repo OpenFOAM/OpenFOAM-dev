@@ -48,11 +48,19 @@ Foam::pimpleControl::pimpleControl(fvMesh& mesh, const word& algorithmName)
     {
         printCorrResidualControls(nCorrPimple_);
     }
-    else
+
+    Info<< nl << algorithmName << ": Operating solver in "
+        << (mesh.steady() ? "steady-state" : mesh.transient() ? "transient" :
+            "mixed steady-state/transient") << " mode with " << nCorrPimple_
+        << " outer corrector" << (nCorrPimple_ == 1 ? "" : "s") << nl;
+
+    if (nCorrPimple_ == 1)
     {
-        Info<< nl << algorithmName << ": Operating solver in PISO mode" << nl
-            << endl;
+        Info<< algorithmName << ": Operating solver in "
+            << (mesh.steady() ? "SIMPLE" : "PISO") << " mode" << nl;
     }
+
+    Info<< nl << endl;
 }
 
 
