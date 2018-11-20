@@ -107,8 +107,7 @@
 
         solve
         (
-            p_rghEqnComp1() + p_rghEqnComp2() + p_rghEqnIncomp,
-            pimple.finalInnerIter()
+            p_rghEqnComp1() + p_rghEqnComp2() + p_rghEqnIncomp
         );
 
         if (pimple.finalNonOrthogonalIter())

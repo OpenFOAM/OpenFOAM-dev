@@ -311,8 +311,7 @@ while (pimple.correct())
 
         solve
         (
-            pEqnComp1() + pEqnComp2() + pEqnIncomp,
-            pimple.finalInnerIter()
+            pEqnComp1() + pEqnComp2() + pEqnIncomp
         );
 
         // Correct fluxes and velocities on last non-orthogonal iteration

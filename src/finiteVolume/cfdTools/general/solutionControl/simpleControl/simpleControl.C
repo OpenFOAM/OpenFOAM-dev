@@ -62,6 +62,12 @@ bool Foam::simpleControl::read()
 }
 
 
+bool Foam::simpleControl::nonOrthSubLoop() const
+{
+    return true;
+}
+
+
 bool Foam::simpleControl::run(Time& time)
 {
     read();

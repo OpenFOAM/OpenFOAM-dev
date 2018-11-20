@@ -69,7 +69,7 @@ constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
             pressureControl.refValue()
         );
 
-        p_rghEqn.solve(pimple.finalInnerIter());
+        p_rghEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {

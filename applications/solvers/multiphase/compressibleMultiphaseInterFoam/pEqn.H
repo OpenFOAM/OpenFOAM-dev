@@ -86,12 +86,7 @@
             phasei++;
         }
 
-        solve
-        (
-            p_rghEqnComp
-          + p_rghEqnIncomp,
-            pimple.finalInnerIter()
-        );
+        solve(p_rghEqnComp + p_rghEqnIncomp);
 
         if (pimple.finalNonOrthogonalIter())
         {

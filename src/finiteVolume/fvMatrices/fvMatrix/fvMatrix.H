@@ -406,15 +406,6 @@ public:
             //  Solver controls read from fvSolution
             SolverPerformance<Type> solve(const word& name);
 
-            //- Solve segregated or coupled returning the solution statistics.
-            //  Solver controls read from fvSolution
-            //  Required to avoid ambiguity from char* -> bool conversion
-            SolverPerformance<Type> solve(const char* name);
-
-            //- Solve returning the solution statistics.
-            //  Solver controls read from fvSolution
-            SolverPerformance<Type> solve(const bool final);
-
             //- Solve returning the solution statistics.
             //  Solver controls read from fvSolution
             SolverPerformance<Type> solve();
@@ -567,12 +558,6 @@ void checkMethod
 template<class Type>
 SolverPerformance<Type> solve(fvMatrix<Type>&, const word&);
 
-//- Solve returning the solution statistics given convergence tolerance
-//  Use the given solver controls
-//  Required to avoid ambiguity from char* -> bool conversion
-template<class Type>
-SolverPerformance<Type> solve(fvMatrix<Type>&, const char*);
-
 //- Solve returning the solution statistics given convergence tolerance,
 //  deleting temporary matrix after solution.
 //  Use the given solver controls
@@ -582,28 +567,6 @@ SolverPerformance<Type> solve
     const tmp<fvMatrix<Type>>&,
     const word&
 );
-
-//- Solve returning the solution statistics given convergence tolerance,
-//  deleting temporary matrix after solution.
-//  Use the given solver controls
-//  Required to avoid ambiguity from char* -> bool conversion
-template<class Type>
-SolverPerformance<Type> solve
-(
-    const tmp<fvMatrix<Type>>&,
-    const char*
-);
-
-//- Solve returning the solution statistics given convergence tolerance
-//  Solver controls read fvSolution
-template<class Type>
-SolverPerformance<Type> solve(fvMatrix<Type>&, const bool final);
-
-//- Solve returning the solution statistics given convergence tolerance,
-//  deleting temporary matrix after solution.
-//  Solver controls read fvSolution
-template<class Type>
-SolverPerformance<Type> solve(const tmp<fvMatrix<Type>>&, const bool final);
 
 //- Solve returning the solution statistics given convergence tolerance
 //  Solver controls read fvSolution

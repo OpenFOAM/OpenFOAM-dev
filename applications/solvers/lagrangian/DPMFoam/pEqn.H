@@ -34,7 +34,7 @@
 
         pEqn.setReference(pRefCell, pRefValue);
 
-        pEqn.solve(pimple.finalInnerIter());
+        pEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {

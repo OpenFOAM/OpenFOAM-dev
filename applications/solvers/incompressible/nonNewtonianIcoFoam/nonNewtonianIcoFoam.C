@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 
                 pEqn.setReference(pRefCell, pRefValue);
 
-                pEqn.solve(piso.finalInnerIter());
+                pEqn.solve();
 
                 if (piso.finalNonOrthogonalIter())
                 {

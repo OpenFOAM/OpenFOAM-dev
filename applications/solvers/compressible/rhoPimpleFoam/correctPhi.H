@@ -1,3 +1,5 @@
+nonOrthogonalSolutionControl pcorrControl(mesh, pimple.algorithmName());
+
 CorrectPhi
 (
     U,
@@ -7,5 +9,5 @@ CorrectPhi
     psi,
     dimensionedScalar("rAUf", dimTime, 1),
     divrhoU(),
-    pimple
+    pcorrControl
 );

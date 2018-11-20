@@ -34,7 +34,7 @@ License
 #include "zeroGradientFvPatchFields.H"
 #include "adjustPhi.H"
 #include "fvcMeshPhi.H"
-#include "pimpleControl.H"
+#include "nonOrthogonalSolutionControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,7 +46,7 @@ void Foam::CorrectPhi
     const volScalarField& p,
     const RAUfType& rAUf,
     const DivUType& divU,
-    pimpleControl& pimple
+    nonOrthogonalSolutionControl& pcorrControl
 )
 {
     const fvMesh& mesh = U.mesh();
@@ -92,7 +92,7 @@ void Foam::CorrectPhi
 
     mesh.setFluxRequired(pcorr.name());
 
-    while (pimple.correctNonOrthogonal())
+    while (pcorrControl.correctNonOrthogonal())
     {
         // Solve for pcorr such that the divergence of the corrected flux
         // matches the divU provided (from previous iteration, time-step...)
@@ -103,9 +103,9 @@ void Foam::CorrectPhi
 
         pcorrEqn.setReference(0, 0);
 
-        pcorrEqn.solve(pimple.finalNonOrthogonalIter());
+        pcorrEqn.solve();
 
-        if (pimple.finalNonOrthogonalIter())
+        if (pcorrControl.finalNonOrthogonalIter())
         {
             phi -= pcorrEqn.flux();
         }
@@ -123,7 +123,7 @@ void Foam::CorrectPhi
     const volScalarField& psi,
     const RAUfType& rAUf,
     const DivRhoUType& divRhoU,
-    pimpleControl& pimple
+    nonOrthogonalSolutionControl& pcorrControl
 )
 {
     const fvMesh& mesh = U.mesh();
@@ -162,7 +162,7 @@ void Foam::CorrectPhi
 
     mesh.setFluxRequired(pcorr.name());
 
-    while (pimple.correctNonOrthogonal())
+    while (pcorrControl.correctNonOrthogonal())
     {
         // Solve for pcorr such that the divergence of the corrected flux
         // matches the divRhoU provided (from previous iteration, time-step...)
@@ -175,9 +175,9 @@ void Foam::CorrectPhi
             divRhoU
         );
 
-        pcorrEqn.solve(pimple.finalNonOrthogonalIter());
+        pcorrEqn.solve();
 
-        if (pimple.finalNonOrthogonalIter())
+        if (pcorrControl.finalNonOrthogonalIter())
         {
             phi += pcorrEqn.flux();
         }

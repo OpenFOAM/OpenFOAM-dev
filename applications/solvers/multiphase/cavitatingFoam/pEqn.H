@@ -35,7 +35,7 @@
           - fvm::laplacian(rhorAUf, p)
         );
 
-        pEqn.solve(pimple.finalInnerIter());
+        pEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {

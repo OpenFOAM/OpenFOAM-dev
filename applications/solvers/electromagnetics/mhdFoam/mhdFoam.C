@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
                     );
 
                     pEqn.setReference(pRefCell, pRefValue);
-                    pEqn.solve(piso.finalInnerIter());
+                    pEqn.solve();
 
                     if (piso.finalNonOrthogonalIter())
                     {
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
                     fvm::laplacian(rABf, pB) == fvc::div(phiB)
                 );
 
-                pBEqn.solve(bpiso.finalInnerIter());
+                pBEqn.solve();
 
                 if (bpiso.finalNonOrthogonalIter())
                 {

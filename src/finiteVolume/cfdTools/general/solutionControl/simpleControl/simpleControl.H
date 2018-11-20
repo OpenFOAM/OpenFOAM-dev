@@ -91,6 +91,13 @@ public:
             //- Read controls
             virtual bool read();
 
+
+        // Access
+
+            //- Return true as the non-orthogonality loop is subsidiary
+            virtual bool nonOrthSubLoop() const;
+
+
         // Evolution
 
             //- Time run loop

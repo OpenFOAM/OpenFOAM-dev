@@ -290,8 +290,7 @@ while (pimple.correct())
 
         solve
         (
-            pEqnComp1() + pEqnComp2() + pEqnIncomp,
-            pimple.finalInnerIter()
+            pEqnComp1() + pEqnComp2() + pEqnIncomp
         );
 
         if (pimple.finalNonOrthogonalIter())

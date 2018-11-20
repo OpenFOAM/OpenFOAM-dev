@@ -27,7 +27,7 @@ if (pimple.transonic())
             betav*fvOptions(psi, p, rho.name())
         );
 
-        pEqn.solve(pimple.finalInnerIter());
+        pEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -57,7 +57,7 @@ else
             betav*fvOptions(psi, p, rho.name())
         );
 
-        pEqn.solve(pimple.finalInnerIter());
+        pEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {

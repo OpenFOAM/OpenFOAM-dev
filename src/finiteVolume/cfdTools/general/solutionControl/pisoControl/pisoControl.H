@@ -90,6 +90,7 @@ public:
             //- Read controls
             virtual bool read();
 
+
         // Access
 
             //- Maximum number of PISO correctors
@@ -104,6 +105,9 @@ public:
             //- Flag to indicate the last inner iteration (last PISO and last
             //  non-orthogonal)
             inline bool finalInnerIter() const;
+
+            //- Return true as the non-orthogonality loop is subsidiary
+            virtual bool nonOrthSubLoop() const;
 
 
         // Evolution

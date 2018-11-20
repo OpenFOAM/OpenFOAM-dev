@@ -26,7 +26,7 @@ while (piso.correctNonOrthogonal())
 
     pEqn.setReference(pRefCell, pRefValue);
 
-    pEqn.solve(piso.finalInnerIter());
+    pEqn.solve();
 
     if (piso.finalNonOrthogonalIter())
     {

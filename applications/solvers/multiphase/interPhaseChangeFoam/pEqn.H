@@ -52,7 +52,7 @@
 
         p_rghEqn.setReference(pRefCell, pRefValue);
 
-        p_rghEqn.solve(pimple.finalInnerIter());
+        p_rghEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {

@@ -336,11 +336,7 @@ while (pimple.correct())
                 pEqn += pEqnComp2();
             }
 
-            solve
-            (
-                pEqn,
-                pimple.finalInnerIter()
-            );
+            pEqn.solve();
         }
 
         if (pimple.finalNonOrthogonalIter())

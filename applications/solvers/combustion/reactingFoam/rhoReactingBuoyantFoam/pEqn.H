@@ -41,7 +41,7 @@ while (pimple.correctNonOrthogonal())
       - fvm::laplacian(rhorAUf, p_rgh)
     );
 
-    p_rghEqn.solve(pimple.finalInnerIter());
+    p_rghEqn.solve();
 
     if (pimple.finalNonOrthogonalIter())
     {

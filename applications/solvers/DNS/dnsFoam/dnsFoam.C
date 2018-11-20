@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
                 fvm::laplacian(rAUf, p) == fvc::div(phiHbyA)
             );
 
-            pEqn.solve(piso.finalInnerIter());
+            pEqn.solve();
 
             phi = phiHbyA - pEqn.flux();
 
