@@ -67,4 +67,6 @@ subtract/subtract.C
 
 interfaceHeight/interfaceHeight.C
 
+age/age.C
+
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects
