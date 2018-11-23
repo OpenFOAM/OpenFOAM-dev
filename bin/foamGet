@@ -146,7 +146,7 @@ searchDirs="\
     $FOAM_ETC/caseDicts"
 
 ext="ANY"
-tgt="system"
+tgt=""
 while [ "$#" -gt 0 ]
 do
    case "$1" in
@@ -184,6 +184,19 @@ done
 [ $# -gt 1 ] && error "$# arguments \"$*\" specified: only 1 permitted"
 [ $# -eq 1 ] || error "missing argument: no file name/prefix <file> supplied"
 prefix="$1"
+
+[ "$tgt" ] || \
+    case "$prefix" in
+       All*)
+          tgt="."
+          ;;
+       *Properties|*Cloud)
+          tgt="constant"
+          ;;
+       *)
+          tgt="system"
+          ;;
+    esac
 
 [ -s "system/controlDict" ] || \
     echo "Warning: cannot find OpenFOAM case directory (no system/controlDict file)"
