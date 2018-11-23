@@ -16,9 +16,6 @@ intersectSurfaces()
         surfaceBooleanFeatures "$@" intersection
 }
 
-# Set application name
-application=$(getApplication)
-
 # Run the surface preparation script
 ./constant/triSurface/surfaceProcess.sh > log.surfaceProcess 2>&1
 

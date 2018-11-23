@@ -4,8 +4,6 @@ cd ${0%/*} || exit 1    # run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-application=$(getApplication)
-
 runApplication blockMesh
 
 echo "Creating channel"
@@ -14,7 +12,7 @@ while [ "$i" -lt 3 ] ; do
     cp system/extrudeMeshDict.${i} system/extrudeMeshDict
     echo "Running extrudeMesh, instance" ${i}
     extrudeMesh > log.extrudeMesh.${i}
-    i=`expr $i + 1`
+    i=$((i + 1))
 done
 
 #------------------------------------------------------------------------------
