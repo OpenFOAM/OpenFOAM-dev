@@ -74,9 +74,11 @@ Foam::functionObjects::age::age
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    nCorr_(readLabel(dict.lookup("nCorr"))),
     phiName_(),
-    rhoName_()
+    rhoName_(),
+    nCorr_(0),
+    schemesField_()
+
 {
     read(dict);
 }
@@ -97,6 +99,8 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
 
     dict.readIfPresent("nCorr", nCorr_);
 
+    schemesField_ = dict.lookupOrDefault<word>("schemesField", typeName);
+
     return true;
 }
 
@@ -107,7 +111,7 @@ bool Foam::functionObjects::age::execute()
     (
         IOobject
         (
-            "age",
+            typeName,
             mesh_.time().timeName(),
             mesh_,
             IOobject::READ_IF_PRESENT,
@@ -117,6 +121,8 @@ bool Foam::functionObjects::age::execute()
         dimensionedScalar("zero", dimTime, 0),
         patchTypes()
     );
+
+    const word divScheme("div(phi," + schemesField_ + ")");
 
     // This only works because the null constructed inletValue for an
     // inletOutletFvPatchField is zero. If we needed any other value we would
@@ -134,14 +140,23 @@ bool Foam::functionObjects::age::execute()
 
         for (label i = 0; i <= nCorr_; ++ i)
         {
-            solve(fvm::div(phi, t) == rho);
+            solve
+            (
+                fvm::div(phi, t, divScheme) == rho,
+                schemesField_
+            );
         }
     }
     else
     {
         for (label i = 0; i <= nCorr_; ++ i)
         {
-            solve(fvm::div(phi, t) == dimensionedScalar("one", dimless, 1));
+            solve
+            (
+                fvm::div(phi, t, divScheme)
+             == dimensionedScalar("one", dimless, 1),
+                schemesField_
+            );
         }
     }
 

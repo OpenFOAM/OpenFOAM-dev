@@ -40,10 +40,12 @@ Description
 
 Usage
     \table
-        Property | Description                   | Required   | Default value
-        nCorr    | The number of correctors      | yes        |
-        phi      | The name of the flux field    | no         | phi
-        rho      | The name of the density field | no         | rho
+        Property | Description                   | Required | Default value
+        phi      | The name of the flux field    | no       | phi
+        rho      | The name of the density field | no       | rho
+        nCorr    | The number of correctors      | no       | 0
+        schemesField | The name of the field from which schemes are taken | \\
+        no | age
     \endtable
 
     \verbatim
@@ -55,9 +57,10 @@ Usage
         writeControl    writeTime;
         writeInterval   1;
 
-        nCorr           10;
         phi             phi;
         rho             rho;
+        nCorr           10;
+        schemesField    k;
     }
     \endverbatim
 
@@ -89,14 +92,17 @@ class age
 {
     // Private data
 
-        //- Number of corrections
-        label nCorr_;
-
         //- The name of the flux field
         word phiName_;
 
         //- The name of the density field
         word rhoName_;
+
+        //- Number of corrections
+        label nCorr_;
+
+        //- Name of field from which schemes are taken
+        word schemesField_;
 
 
     // Private Member Functions
