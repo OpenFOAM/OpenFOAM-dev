@@ -193,6 +193,9 @@ prefix="$1"
        *Properties|*Cloud)
           tgt="constant"
           ;;
+       s)
+          tgt="0"
+          ;;
        *)
           tgt="system"
           ;;
