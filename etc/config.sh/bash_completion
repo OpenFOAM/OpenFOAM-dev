@@ -5880,9 +5880,12 @@ _foamGet_ ()
 {
     _searchDirs () {
         _dirs=="\
+            ${HOME}/.OpenFOAM/$WM_PROJECT_VERSION \
             ${HOME}/.OpenFOAM \
-            $WM_PROJECT_SITE \
-            $WM_PROJECT_INST_DIR/site \
+            $WM_PROJECT_SITE/$WM_PROJECT_VERSION/etc \
+            $WM_PROJECT_SITE/etc \
+            $WM_PROJECT_INST_DIR/site/$WM_PROJECT_VERSION/etc \
+            $WM_PROJECT_INST_DIR/site/etc \
             $FOAM_ETC/caseDicts"
 
         _files=""

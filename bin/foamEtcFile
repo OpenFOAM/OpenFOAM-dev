@@ -227,7 +227,7 @@ esac
 case "$mode" in
 *g*)  # group (site)
     siteDir="${WM_PROJECT_SITE:-$prefixDir/site}"
-    dirList="$dirList $siteDir/$version $siteDir"
+    dirList="$dirList $siteDir/$version/etc $siteDir/etc"
     ;;
 esac
 

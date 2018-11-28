@@ -54,21 +54,21 @@ Foam::fileNameList Foam::findEtcDirs(const fileName& local)
     }
 
     // Search for group (site) directories in
-    // * $WM_PROJECT_SITE/VERSION
-    // * $WM_PROJECT_SITE
+    // * $WM_PROJECT_SITE/VERSION/etc/
+    // * $WM_PROJECT_SITE/etc/
     //
     searchDir = getEnv("WM_PROJECT_SITE");
     if (searchDir.size())
     {
         if (isDir(searchDir))
         {
-            fileName fullName = searchDir/FOAMversion/local;
+            fileName fullName = searchDir/FOAMversion/"etc"/local;
             if (isDir(fullName))
             {
                 dirs.append(fullName);
             }
 
-            fullName = searchDir/local;
+            fullName = searchDir/"etc"/local;
             if (isDir(fullName))
             {
                 dirs.append(fullName);
@@ -78,19 +78,19 @@ Foam::fileNameList Foam::findEtcDirs(const fileName& local)
     else
     {
         // Or search for group (site) files in
-        // * $WM_PROJECT_INST_DIR/site/VERSION
-        // * $WM_PROJECT_INST_DIR/site
+        // * $WM_PROJECT_INST_DIR/site/VERSION/etc/
+        // * $WM_PROJECT_INST_DIR/site/etc/
         //
         searchDir = getEnv("WM_PROJECT_INST_DIR");
         if (isDir(searchDir))
         {
-            fileName fullName = searchDir/"site"/FOAMversion/local;
+            fileName fullName = searchDir/"site/etc"/FOAMversion/local;
             if (isDir(fullName))
             {
                 dirs.append(fullName);
             }
 
-            fullName = searchDir/"site"/local;
+            fullName = searchDir/"site/etc"/local;
             if (isDir(fullName))
             {
                 dirs.append(fullName);
@@ -153,15 +153,15 @@ Foam::fileNameList Foam::findEtcFiles
     }
 
     // Search for group (site) files in
-    // * $WM_PROJECT_SITE/VERSION
-    // * $WM_PROJECT_SITE
+    // * $WM_PROJECT_SITE/VERSION/etc/
+    // * $WM_PROJECT_SITE/etc/
     //
     searchDir = getEnv("WM_PROJECT_SITE");
     if (searchDir.size())
     {
         if (isDir(searchDir))
         {
-            fileName fullName = searchDir/FOAMversion/name;
+            fileName fullName = searchDir/FOAMversion/"etc"/name;
             if (isFile(fullName))
             {
                 results.append(fullName);
@@ -171,7 +171,7 @@ Foam::fileNameList Foam::findEtcFiles
                 }
             }
 
-            fullName = searchDir/name;
+            fullName = searchDir/"etc"/name;
             if (isFile(fullName))
             {
                 results.append(fullName);
@@ -185,13 +185,13 @@ Foam::fileNameList Foam::findEtcFiles
     else
     {
         // Or search for group (site) files in
-        // * $WM_PROJECT_INST_DIR/site/VERSION
-        // * $WM_PROJECT_INST_DIR/site
+        // * $WM_PROJECT_INST_DIR/site/VERSION/etc/
+        // * $WM_PROJECT_INST_DIR/site/etc/
         //
         searchDir = getEnv("WM_PROJECT_INST_DIR");
         if (isDir(searchDir))
         {
-            fileName fullName = searchDir/"site"/FOAMversion/name;
+            fileName fullName = searchDir/"site/etc"/FOAMversion/name;
             if (isFile(fullName))
             {
                 results.append(fullName);
@@ -201,7 +201,7 @@ Foam::fileNameList Foam::findEtcFiles
                 }
             }
 
-            fullName = searchDir/"site"/name;
+            fullName = searchDir/"site/etc"/name;
             if (isFile(fullName))
             {
                 results.append(fullName);

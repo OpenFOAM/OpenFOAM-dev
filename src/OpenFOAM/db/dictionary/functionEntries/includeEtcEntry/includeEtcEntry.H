@@ -35,11 +35,11 @@ Description
       - ~/.OpenFOAM/\<VERSION\>
       - ~/.OpenFOAM/
     - \b group (site) settings (when $WM_PROJECT_SITE is set):
-      - $WM_PROJECT_SITE/\<VERSION\>
-      - $WM_PROJECT_SITE
+      - $WM_PROJECT_SITE/\<VERSION\>/etc/
+      - $WM_PROJECT_SITE/etc/
     - \b group (site) settings (when $WM_PROJECT_SITE is not set):
-      - $WM_PROJECT_INST_DIR/site/\<VERSION\>
-      - $WM_PROJECT_INST_DIR/site/
+      - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/
+      - $WM_PROJECT_INST_DIR/site/etc/
     - \b other (shipped) settings:
       - $WM_PROJECT_DIR/etc/
 
