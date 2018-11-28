@@ -222,8 +222,8 @@ Foam::levelSetAverage
                 levelC.boundaryField()[patchi],
                 levelP.boundaryField()[patchi].patchInternalField()(),
                 positiveC.boundaryField()[patchi],
-                negativeP.boundaryField()[patchi].patchInternalField()(),
-                positiveC.boundaryField()[patchi],
+                positiveP.boundaryField()[patchi].patchInternalField()(),
+                negativeC.boundaryField()[patchi],
                 negativeP.boundaryField()[patchi].patchInternalField()()
             );
     }
