@@ -132,7 +132,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
 ) const
 {
     const scalar A = alpha(t);
-    const scalarField Z(max(scalar(0), 1 - mag(xz.component(1)/depth())));
+    const scalarField Z(max(scalar(0), 1 + xz.component(1)/depth()));
     const scalarField P(Pi(t, u, xz.component(0)));
 
     return
@@ -144,7 +144,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
                 (4 + 2*A - 6*A*sqr(Z))*P
               + (- 7*A + 9*A*sqr(Z))*sqr(P)
             ),
-          - A*Z*depth()*k(t)*tanh(parameter(t, u, xz.component(0)))
+            A*Z*depth()*k(t)*tanh(parameter(t, u, xz.component(0)))
            *(
                 (2 + A - A*sqr(Z))*P
               + (- 7*A + 3*A*sqr(Z))*sqr(P)

@@ -315,6 +315,8 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
         xyz.replace(2, height(t, p));
     }
 
+    xyz.replace(2, - xyz.component(2));
+
     return UMean(t) + (velocity(t, xyz) & axes);
 }
 

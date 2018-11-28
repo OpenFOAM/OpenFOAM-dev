@@ -82,16 +82,16 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::vi
     const scalarField z(xz.component(1));
 
     const scalarField phi(angle(t, u, x));
-    const scalarField kz(- k()*z);
+    const scalarField kz(k()*z);
 
     if (deep())
     {
-        return i*exp(- mag(kz))*zip(cos(i*phi), sin(i*phi));
+        return i*exp(kz)*zip(cos(i*phi), sin(i*phi));
     }
     else
     {
         const scalar kd = k()*depth();
-        const scalarField kdz(max(scalar(0), kd - mag(kz)));
+        const scalarField kdz(max(scalar(0), kd + kz));
         return i*zip(cosh(i*kdz)*cos(i*phi), sinh(i*kdz)*sin(i*phi))/sinh(kd);
     }
 }
