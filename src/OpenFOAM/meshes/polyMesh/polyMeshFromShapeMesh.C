@@ -140,7 +140,7 @@ void Foam::polyMesh::setTopology
 )
 {
     // Calculate the faces of all cells
-    // Initialise maximum possible numer of mesh faces to 0
+    // Initialise maximum possible number of mesh faces to 0
     label maxFaces = 0;
 
     // Set up a list of face shapes for each cell
@@ -156,7 +156,7 @@ void Foam::polyMesh::setTopology
         // Initialise cells to -1 to flag undefined faces
         static_cast<labelList&>(cells[celli]) = -1;
 
-        // Count maximum possible numer of mesh faces
+        // Count maximum possible number of mesh faces
         maxFaces += cellsFaceShapes[celli].size();
     }
 

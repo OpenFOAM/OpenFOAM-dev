@@ -103,7 +103,7 @@ patches) the slave patches are simply defined using 'dummy' entries, e.g.:
 
 Boundary conditions must then be applied to all geometric patches in the usual,
 manner, and the cases can be executed in parallel (as shown when running the
-Allrun-parallel script) without any speacial treatment, i.e. the case set-up is
+Allrun-parallel script) without any special treatment, i.e. the case set-up is
 the same as when operating in serial mode.
 
 

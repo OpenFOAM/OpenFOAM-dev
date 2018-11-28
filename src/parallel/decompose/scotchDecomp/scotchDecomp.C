@@ -229,7 +229,7 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
 
             label version = 0;
             str << version << nl;
-            // Numer of vertices
+            // Number of vertices
             str << xadj.size()-1 << ' ' << adjncy.size() << nl;
             // Numbering starts from 0
             label baseval = 0;

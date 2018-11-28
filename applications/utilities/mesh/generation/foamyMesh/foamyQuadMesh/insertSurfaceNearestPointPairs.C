@@ -49,7 +49,7 @@ bool Foam::CV2D::dualCellSurfaceIntersection
 
             point e1 = toPoint3D(circumcenter(ec->first->neighbor(ec->second)));
 
-            // If other edge end is ouside bounding box then edge cuts boundary
+            // If other edge end is outside bounding box then edge cuts boundary
             if (!qSurf_.globalBounds().contains(e1))
             {
                 return true;

@@ -152,7 +152,7 @@ bool Foam::fileFormats::STLsurfaceFormatCore::readBINARY
         points_[ptI++] = stlTri.b();
         points_[ptI++] = stlTri.c();
 
-        // interprete stl attribute as a zone
+        // interpret stl attribute as a zone
         const label origId = stlTri.attrib();
 
         Map<label>::const_iterator fnd = lookup.find(origId);

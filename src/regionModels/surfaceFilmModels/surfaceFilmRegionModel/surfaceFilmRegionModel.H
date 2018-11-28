@@ -105,7 +105,7 @@ public:
 
         // Access
 
-            //- Return the accleration due to gravity
+            //- Return the acceleration due to gravity
             inline const dimensionedVector& g() const;
 
             //- External hook to add sources to the film
