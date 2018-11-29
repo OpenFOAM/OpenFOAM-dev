@@ -449,10 +449,14 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const scalarField magUp(mag(Uw.patchInternalField() - Uw));
             const scalarField magGradUw(mag(Uw.snGrad()));
 
-            const fvPatchScalarField& rhow =
+            const fvPatchScalarField& rhoLiquidw =
                 turbModel.rho().boundaryField()[patchi];
-            const fvPatchScalarField& hew =
-            liquid.thermo().he().boundaryField()[patchi];
+
+            const fvPatchScalarField& rhoVaporw =
+                vaporTurbModel.rho().boundaryField()[patchi];
+
+            const fvPatchScalarField& pw =
+                liquid.thermo().p().boundaryField()[patchi];
 
             const fvPatchScalarField& Tw =
                 liquid.thermo().T().boundaryField()[patchi];
@@ -460,7 +464,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
             const scalarField uTau(Cmu25*sqrt(kw));
 
-            const scalarField yPlus(uTau*y/(muw/rhow));
+            const scalarField yPlus(uTau*y/(muw/rhoLiquidw));
 
             const scalarField Pr(muw/alphaw);
 
@@ -471,12 +475,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const scalarField P(this->Psmooth(Prat));
 
             const scalarField yPlusTherm(this->yPlusTherm(P, Prat));
-
-            const fvPatchScalarField& rhoLiquidw =
-                turbModel.rho().boundaryField()[patchi];
-
-            const fvPatchScalarField& rhoVaporw =
-                vaporTurbModel.rho().boundaryField()[patchi];
 
             tmp<volScalarField> tCp = liquid.thermo().Cp();
             const volScalarField& Cp = tCp();
@@ -490,12 +488,21 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const fvPatchScalarField& Tsatw(Tsat.boundaryField()[patchi]);
             const scalarField Tsatc(Tsatw.patchInternalField());
 
-            const fvPatchScalarField& pw =
-                liquid.thermo().p().boundaryField()[patchi];
+            const fvPatchScalarField& hew
+                = liquid.thermo().he().boundaryField()[patchi];
+
+            const scalarField hw =
+            (
+                liquid.thermo().he().member() == "e"
+              ? hew.patchInternalField() + pw/rhoLiquidw.patchInternalField()
+              : hew.patchInternalField()
+            );
 
             const scalarField L
             (
-                vapor.thermo().he(pw, Tsatc, patchi) - hew.patchInternalField()
+                vapor.thermo().he().member() == "e"
+              ? vapor.thermo().he(pw, Tsatc, patchi) + pw/rhoVaporw - hw
+              : vapor.thermo().he(pw, Tsatc, patchi) - hw
             );
 
             // Liquid phase fraction at the wall
@@ -583,7 +590,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 // Quenching heat transfer coefficient
                 const scalarField hQ
                 (
-                    2*(alphaw*Cpw)*fDep*sqrt((0.8/fDep)/(pi*alphaw/rhow))
+                    2*(alphaw*Cpw)*fDep*sqrt((0.8/fDep)/(pi*alphaw/rhoLiquidw))
                 );
 
                 // Quenching heat flux

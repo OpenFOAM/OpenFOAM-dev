@@ -246,6 +246,30 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
             *eqns[phase1.name()] += negPart(*this->wMDotL_[pair]);
             *eqns[phase2.name()] -= posPart(*this->wMDotL_[pair]);
+
+            if
+            (
+                phase1.thermo().he().member() == "e"
+             || phase2.thermo().he().member() == "e"
+            )
+            {
+                const volScalarField dmdt
+                (
+                    this->iDmdt(pair) + this->wDmdt(pair)
+                );
+
+                if (phase1.thermo().he().member() == "e")
+                {
+                    *eqns[phase1.name()] +=
+                        phase1.thermo().p()*dmdt/phase1.thermo().rho();
+                }
+
+                if (phase2.thermo().he().member() == "e")
+                {
+                    *eqns[phase2.name()] -=
+                        phase2.thermo().p()*dmdt/phase2.thermo().rho();
+                }
+            }
         }
     }
 
@@ -340,16 +364,42 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
         const volScalarField& he1(phase1.thermo().he());
         const volScalarField& he2(phase2.thermo().he());
 
+        const volScalarField& p(phase1.thermo().p());
+
         volScalarField& iDmdt(*this->iDmdt_[pair]);
         volScalarField& Tf(*this->Tf_[pair]);
 
-        volScalarField hef1(phase1.thermo().he(phase1.thermo().p(), Tf));
-        volScalarField hef2(phase2.thermo().he(phase2.thermo().p(), Tf));
+        volScalarField hf1
+        (
+            he1.member() == "e"
+          ? phase1.thermo().he(p, Tf) + p/phase1.rho()
+          : phase1.thermo().he(p, Tf)
+        );
+        volScalarField hf2
+        (
+            he2.member() == "e"
+          ? phase2.thermo().he(p, Tf) + p/phase2.rho()
+          : phase2.thermo().he(p, Tf)
+        );
+
+        volScalarField h1
+        (
+            he1.member() == "e"
+          ? he1 + p/phase1.rho()
+          : tmp<volScalarField>(he1)
+        );
+
+        volScalarField h2
+        (
+            he2.member() == "e"
+          ? he2 + p/phase2.rho()
+          : tmp<volScalarField>(he2)
+        );
 
         volScalarField L
         (
-            (neg0(iDmdt)*hef2 + pos(iDmdt)*he2)
-          - (pos0(iDmdt)*hef1 + neg(iDmdt)*he1)
+            (neg0(iDmdt)*hf2 + pos(iDmdt)*h2)
+          - (pos0(iDmdt)*hf1 + neg(iDmdt)*h1)
         );
 
         volScalarField iDmdtNew(iDmdt);
