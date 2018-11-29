@@ -173,7 +173,7 @@ namespace Foam
     <
         species::thermo
         <
-            hConstThermo
+            eConstThermo
             <
                 perfectGas<specie>
             >,
@@ -199,7 +199,7 @@ namespace Foam
     <
         species::thermo
         <
-            hConstThermo
+            eConstThermo
             <
                 incompressiblePerfectGas<specie>
             >,
@@ -254,7 +254,7 @@ namespace Foam
     <
         species::thermo
         <
-            hConstThermo
+            eConstThermo
             <
                 adiabaticPerfectFluid<specie>
             >,
