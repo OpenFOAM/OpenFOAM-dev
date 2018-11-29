@@ -11,10 +11,10 @@ runApplication $application
 
 if ! isTest $@
 then
-    foamDictionary system/controlDict -entry endTime -set 5
-    foamDictionary system/controlDict -entry startTime -set 2
-    foamDictionary 2/T.liquid -entry boundaryField.wall2.q -set 'uniform 1e5'
-    foamDictionary 2/U.liquid -entry boundaryField.inlet.type -set 'fixedValue'
+    foamDictionary system/controlDict -entry endTime -set 4
+    foamDictionary system/controlDict -entry startTime -set 0.5
+    foamDictionary 0.5/T.liquid -entry boundaryField.wall2.q -set 'uniform 1e5'
+    foamDictionary 0.5/U.liquid -entry boundaryField.inlet.type -set 'fixedValue'
     runApplication -a $application
 fi
 
