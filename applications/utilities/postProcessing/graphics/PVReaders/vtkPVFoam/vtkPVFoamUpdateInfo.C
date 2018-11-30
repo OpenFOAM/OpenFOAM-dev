@@ -199,7 +199,7 @@ void Foam::vtkPVFoam::updateInfoLagrangian
     forAll(times, timei)
     {
         cloudDirs +=
-            readDir
+            fileHandler().readDir
             (
                 dbPtr_->path()/times[timei].name()/lagrangianPrefix,
                 fileType::directory
