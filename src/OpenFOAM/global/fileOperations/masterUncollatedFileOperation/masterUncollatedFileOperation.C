@@ -579,6 +579,13 @@ Foam::fileOperations::masterUncollatedFileOperation::read
         {
             if (procValid[0])
             {
+                if (filePaths[0].empty())
+                {
+                    FatalIOErrorInFunction(filePaths[0])
+                        << "cannot find file " << io.objectPath()
+                        << exit(FatalIOError);
+                }
+
                 DynamicList<label> validProcs(Pstream::nProcs(comm));
                 for
                 (
@@ -683,7 +690,7 @@ Foam::fileOperations::masterUncollatedFileOperation::read
                     << " Done reading " << buf.size() << " bytes" << endl;
             }
             const fileName& fName = filePaths[Pstream::myProcNo(comm)];
-            isPtr.reset(new IStringStream(fName, buf));
+            isPtr.reset(new IStringStream(fName, buf, IOstream::BINARY));
 
             if (!io.readHeader(isPtr()))
             {
@@ -2446,7 +2453,10 @@ Foam::fileOperations::masterUncollatedFileOperation::NewIFstream
             // Note: IPstream is not an IStream so use a IStringStream to
             //       convert the buffer. Note that we construct with a string
             //       so it holds a copy of the buffer.
-            return autoPtr<ISstream>(new IStringStream(filePath, buf));
+            return autoPtr<ISstream>
+            (
+                new IStringStream(filePath, buf, IOstream::BINARY)
+            );
         }
     }
     else

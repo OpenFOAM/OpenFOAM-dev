@@ -402,7 +402,7 @@ Foam::fileOperations::collatedFileOperation::collatedFileOperation
 
 Foam::fileOperations::collatedFileOperation::~collatedFileOperation()
 {
-    if (myComm_ != -1)
+    if (myComm_ != -1 && myComm_ != UPstream::worldComm)
     {
         UPstream::freeCommunicator(myComm_);
     }
