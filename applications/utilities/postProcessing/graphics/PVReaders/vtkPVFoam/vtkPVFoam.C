@@ -322,6 +322,20 @@ Foam::vtkPVFoam::vtkPVFoam
             << "region=" << meshRegion_ << endl;
     }
 
+    // Pre-load any libraries
+    dlLibraryTable dlTable;
+
+    string libsString(getEnv("FOAM_LIBS"));
+    if (!libsString.empty())
+    {
+        IStringStream is(libsString);
+        fileNameList libNames(is);
+        forAll(libNames, i)
+        {
+            dlTable.open(libNames[i]);
+        }
+    }
+
     // Create time object
     dbPtr_.reset
     (
