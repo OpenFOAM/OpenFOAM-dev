@@ -25,6 +25,7 @@ License
 
 #include "ConeInjection.H"
 #include "TimeFunction1.H"
+#include "Constant.H"
 #include "mathematicalConstants.H"
 #include "unitConversion.H"
 
@@ -118,8 +119,25 @@ Foam::ConeInjection<CloudType>::ConeInjection
     InjectionModel<CloudType>(dict, owner, modelName, typeName),
     injectionMethod_(imPoint),
     flowType_(ftConstantVelocity),
-    position_(this->coeffDict().lookup("position")),
-    direction_(this->coeffDict().lookup("direction")),
+    position_
+    (
+        TimeFunction1<vector>
+        (
+            owner.db().time(),
+            "position",
+            this->coeffDict()
+        )
+    ),
+    positionIsConstant_(isA<Function1Types::Constant<vector>>(position_)),
+    direction_
+    (
+        TimeFunction1<vector>
+        (
+            owner.db().time(),
+            "direction",
+            this->coeffDict()
+        )
+    ),
     injectorCell_(-1),
     injectorTetFace_(-1),
     injectorTetPt_(-1),
@@ -162,8 +180,6 @@ Foam::ConeInjection<CloudType>::ConeInjection
             this->coeffDict().subDict("sizeDistribution"), owner.rndGen()
         )
     ),
-    tanVec1_(vector::max),
-    tanVec2_(vector::max),
     dInner_(vGreat),
     dOuter_(vGreat),
     Umag_(owner.db().time(), "Umag"),
@@ -175,12 +191,6 @@ Foam::ConeInjection<CloudType>::ConeInjection
     setInjectionMethod();
 
     setFlowType();
-
-    // Normalise direction vector and determine direction vectors
-    // tangential to injector direction
-    direction_ /= mag(direction_);
-    tanVec1_ = normalised(perpendicular(direction_));
-    tanVec2_ = normalised(direction_^tanVec1_);
 
     // Set total volume to inject
     this->volumeTotal_ = flowRateProfile_.integrate(0, duration_);
@@ -199,6 +209,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
     injectionMethod_(im.injectionMethod_),
     flowType_(im.flowType_),
     position_(im.position_),
+    positionIsConstant_(im.positionIsConstant_),
     direction_(im.direction_),
     injectorCell_(im.injectorCell_),
     injectorTetFace_(im.injectorTetFace_),
@@ -209,8 +220,6 @@ Foam::ConeInjection<CloudType>::ConeInjection
     thetaInner_(im.thetaInner_),
     thetaOuter_(im.thetaOuter_),
     sizeDistribution_(im.sizeDistribution_().clone().ptr()),
-    tanVec1_(im.tanVec1_),
-    tanVec2_(im.tanVec2_),
     dInner_(im.dInner_),
     dOuter_(im.dOuter_),
     Umag_(im.Umag_),
@@ -231,24 +240,16 @@ Foam::ConeInjection<CloudType>::~ConeInjection()
 template<class CloudType>
 void Foam::ConeInjection<CloudType>::updateMesh()
 {
-    // Set/cache the injector cells
-    switch (injectionMethod_)
+    if (injectionMethod_ == imPoint && positionIsConstant_)
     {
-        case imPoint:
-        {
-            this->findCellAtPosition
-            (
-                injectorCell_,
-                injectorTetFace_,
-                injectorTetPt_,
-                position_
-            );
-            break;
-        }
-        default:
-        {
-            break;
-        }
+        vector position = position_.value(0);
+        this->findCellAtPosition
+        (
+            injectorCell_,
+            injectorTetFace_,
+            injectorTetPt_,
+            position
+        );
     }
 }
 
@@ -305,7 +306,7 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
 (
     const label parcelI,
     const label,
-    const scalar,
+    const scalar time,
     vector& position,
     label& cellOwner,
     label& tetFacei,
@@ -314,23 +315,42 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
 {
     Random& rndGen = this->owner().rndGen();
 
+    const scalar t = time - this->SOI_;
+
     switch (injectionMethod_)
     {
         case imPoint:
         {
-            position = position_;
-            cellOwner = injectorCell_;
-            tetFacei = injectorTetFace_;
-            tetPti = injectorTetPt_;
+            position = position_.value(t);
+            if (positionIsConstant_)
+            {
+                cellOwner = injectorCell_;
+                tetFacei = injectorTetFace_;
+                tetPti = injectorTetPt_;
+            }
+            else
+            {
+                this->findCellAtPosition
+                (
+                    cellOwner,
+                    tetFacei,
+                    tetPti,
+                    position,
+                    false
+                );
+            }
             break;
         }
         case imDisc:
         {
             const scalar beta = twoPi*rndGen.globalScalar01();
             const scalar frac = rndGen.globalScalar01();
-            const vector tanVec = tanVec1_*cos(beta) + tanVec2_*sin(beta);
+            const vector n = normalised(direction_.value(t));
+            const vector t1 = normalised(perpendicular(n));
+            const vector t2 = normalised(n ^ t1);
+            const vector tanVec = t1*cos(beta) + t2*sin(beta);
             const scalar d = sqrt((1 - frac)*sqr(dInner_) + frac*sqr(dOuter_));
-            position = position_ + d/2*tanVec;
+            position = position_.value(t) + d/2*tanVec;
             this->findCellAtPosition
             (
                 cellOwner,
@@ -375,7 +395,10 @@ void Foam::ConeInjection<CloudType>::setProperties
         {
             const scalar beta = twoPi*rndGen.scalar01();
             const scalar frac = rndGen.scalar01();
-            tanVec = tanVec1_*cos(beta) + tanVec2_*sin(beta);
+            const vector n = normalised(direction_.value(t));
+            const vector t1 = normalised(perpendicular(n));
+            const vector t2 = normalised(n ^ t1);
+            tanVec = t1*cos(beta) + t2*sin(beta);
             theta =
                 degToRad
                 (
@@ -389,9 +412,9 @@ void Foam::ConeInjection<CloudType>::setProperties
         }
         case imDisc:
         {
-            const scalar r = mag(parcel.position() - position_);
+            const scalar r = mag(parcel.position() - position_.value(t));
             const scalar frac = (2*r - dInner_)/(dOuter_ - dInner_);
-            tanVec = normalised(parcel.position() - position_);
+            tanVec = normalised(parcel.position() - position_.value(t));
             theta =
                 degToRad
                 (
@@ -408,7 +431,11 @@ void Foam::ConeInjection<CloudType>::setProperties
 
     // The direction of injection
     const vector dirVec =
-        normalised(cos(theta)*direction_ + sin(theta)*tanVec);
+        normalised
+        (
+            cos(theta)*normalised(direction_.value(t))
+          + sin(theta)*tanVec
+        );
 
     // Set the velocity
     switch (flowType_)

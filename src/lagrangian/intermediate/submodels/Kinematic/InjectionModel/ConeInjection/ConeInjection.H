@@ -187,10 +187,13 @@ private:
         flowType flowType_;
 
         //- Position of the injector
-        vector position_;
+        const TimeFunction1<vector> position_;
+
+        //- Is the position constant?
+        const bool positionIsConstant_;
 
         //- Centreline direction in which to inject
-        vector direction_;
+        const TimeFunction1<vector> direction_;
 
         //- Cell label corresponding to the injector position
         label injectorCell_;
@@ -218,15 +221,6 @@ private:
 
         //- Parcel size distribution model
         const autoPtr<distributionModel> sizeDistribution_;
-
-
-        // Tangential vectors to the direction vector
-
-            //- First tangential vector
-            vector tanVec1_;
-
-            //- Second tangential vector
-            vector tanVec2_;
 
 
         // Disc geometry
