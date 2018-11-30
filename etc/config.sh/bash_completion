@@ -5879,11 +5879,13 @@ complete -o filenames -o nospace -F _foamExec_ foamExec
 _foamGet_ ()
 {
     _searchDirs () {
-        _dirs=="\
+        _dirs="\
             ${HOME}/.OpenFOAM/$WM_PROJECT_VERSION \
-            ${HOME}/.OpenFOAM \
-            $WM_PROJECT_SITE/$WM_PROJECT_VERSION/etc \
-            $WM_PROJECT_SITE/etc \
+            ${HOME}/.OpenFOAM"
+        [ -n "$WM_PROJECT_SITE" ] && _dirs=" \
+                $WM_PROJECT_SITE/$WM_PROJECT_VERSION/etc \
+                $WM_PROJECT_SITE/etc"
+        _dirs+=" \
             $WM_PROJECT_INST_DIR/site/$WM_PROJECT_VERSION/etc \
             $WM_PROJECT_INST_DIR/site/etc \
             $FOAM_ETC/caseDicts"
