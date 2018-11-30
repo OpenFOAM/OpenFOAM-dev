@@ -147,13 +147,13 @@ public:
             }
 
             //- Return name
-            const word& name() const
+            virtual const word& name() const
             {
                 return polyPatch_.name();
             }
 
             //- Return start label of this patch in the polyMesh face list
-            label start() const
+            virtual label start() const
             {
                 return polyPatch_.start();
             }
