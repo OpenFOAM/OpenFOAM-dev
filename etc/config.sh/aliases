@@ -71,7 +71,7 @@ alias run='cd $FOAM_RUN'
 # Refresh the environment
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # For backward-compatibility unalias wmRefresh if it is defined as an alias
-if declare -f wmRefresh > /dev/null
+if command -V wmRefresh | head -1 | grep -q "function"
 then
     unset wmRefresh
 else
