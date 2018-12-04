@@ -491,7 +491,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const fvPatchScalarField& hew
                 = liquid.thermo().he().boundaryField()[patchi];
 
-            const scalarField hw =
+            const scalarField hw
             (
                 liquid.thermo().he().member() == "e"
               ? hew.patchInternalField() + pw/rhoLiquidw.patchInternalField()
