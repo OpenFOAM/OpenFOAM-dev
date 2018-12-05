@@ -43,6 +43,9 @@ Usage
       - \par -set \<value\>
         Adds or replaces the entry
 
+      - \par -merge \<value\>
+        Merges the entry
+
       - \par -remove
         Remove the selected entry
 
@@ -263,6 +266,12 @@ int main(int argc, char *argv[])
         "value",
         "Add a new entry"
     );
+    argList::addOption
+    (
+        "merge",
+        "value",
+        "Merge entry"
+    );
     argList::addBoolOption
     (
         "remove",
@@ -366,9 +375,11 @@ int main(int argc, char *argv[])
         (
             args.optionReadIfPresent("set", newValue)
          || args.optionReadIfPresent("add", newValue)
+         || args.optionReadIfPresent("merge", newValue)
         )
         {
             const bool overwrite = args.optionFound("set");
+            const bool merge = args.optionFound("merge");
 
             Pair<word> dAk(dictAndKeyword(scopedName));
 
@@ -382,7 +393,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                const_cast<dictionary&>(d).add(ePtr, false);
+                const_cast<dictionary&>(d).add(ePtr, merge);
             }
             changed = true;
 
