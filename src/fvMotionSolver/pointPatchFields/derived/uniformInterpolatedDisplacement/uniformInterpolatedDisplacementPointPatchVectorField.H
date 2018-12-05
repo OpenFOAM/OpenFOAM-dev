@@ -56,13 +56,12 @@ SourceFiles
 #define uniformInterpolatedDisplacementPointPatchVectorField_H
 
 #include "fixedValuePointPatchField.H"
+#include "dynamicMeshPointInterpolator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class interpolationWeights;
 
 /*---------------------------------------------------------------------------*\
     Class uniformInterpolatedDisplacementPointPatchVectorField Declaration
@@ -74,26 +73,8 @@ class uniformInterpolatedDisplacementPointPatchVectorField
 {
     // Private data
 
-        //- Name of displacement field
-        const word fieldName_;
+        autoPtr<dynamicMeshPointInterpolator> pointInterpolator_;
 
-        const word interpolationScheme_;
-
-        //- Times with pre-specified displacement
-        wordList timeNames_;
-
-        //- Times with pre-specified displacement
-        scalarField timeVals_;
-
-        //- User-specified interpolator
-        autoPtr<interpolationWeights> interpolatorPtr_;
-
-
-        //- Cached interpolation times
-        labelList currentIndices_;
-
-        //- Cached interpolation weights
-        scalarField currentWeights_;
 
 public:
 

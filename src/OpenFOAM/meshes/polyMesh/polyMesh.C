@@ -1068,6 +1068,73 @@ const Foam::pointField& Foam::polyMesh::oldPoints() const
 }
 
 
+Foam::IOobject Foam::polyMesh::points0IO
+(
+    const polyMesh& mesh
+)
+{
+    const word instance
+    (
+        mesh.time().findInstance
+        (
+            mesh.meshDir(),
+            "points0",
+            IOobject::READ_IF_PRESENT
+        )
+    );
+
+    if (instance != mesh.time().constant())
+    {
+        // Points0 written to a time folder
+
+        return IOobject
+        (
+            "points0",
+            instance,
+            polyMesh::meshSubDir,
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        );
+    }
+    else
+    {
+        // Check that points0 are actually in constant directory
+
+        IOobject io
+        (
+            "points0",
+            instance,
+            polyMesh::meshSubDir,
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        );
+
+        if (io.typeHeaderOk<pointIOField>())
+        {
+            return io;
+        }
+        else
+        {
+            // Copy of original mesh points
+            return IOobject
+            (
+                "points",
+                instance,
+                polyMesh::meshSubDir,
+                mesh,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            );
+        }
+    }
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 (
     const pointField& newPoints

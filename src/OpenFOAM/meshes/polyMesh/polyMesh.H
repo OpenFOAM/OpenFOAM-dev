@@ -421,6 +421,9 @@ public:
             //- Return old points for mesh motion
             virtual const pointField& oldPoints() const;
 
+            //- Return IO object for points0
+            static IOobject points0IO(const polyMesh& mesh);
+
             //- Return boundary mesh
             const polyBoundaryMesh& boundaryMesh() const
             {

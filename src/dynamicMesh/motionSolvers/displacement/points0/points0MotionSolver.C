@@ -33,77 +33,6 @@ namespace Foam
     defineTypeNameAndDebug(points0MotionSolver, 0);
 }
 
-
-// * * * * * * * * * * * * * Protected Data Members * * * * * * * * * * * * * //
-
-Foam::IOobject Foam::points0MotionSolver::points0IO
-(
-    const polyMesh& mesh
-) const
-{
-    const word instance =
-        time().findInstance
-        (
-            mesh.meshDir(),
-            "points0",
-            IOobject::READ_IF_PRESENT
-        );
-
-    if (instance != time().constant())
-    {
-        // points0 written to a time folder
-
-        return
-            IOobject
-            (
-                "points0",
-                instance,
-                polyMesh::meshSubDir,
-                mesh,
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE,
-                false
-            );
-    }
-    else
-    {
-        // check that points0 are actually in constant directory
-
-        IOobject io
-        (
-            "points0",
-            instance,
-            polyMesh::meshSubDir,
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE,
-            false
-        );
-
-        if (io.typeHeaderOk<pointIOField>())
-        {
-            return io;
-        }
-        else
-        {
-            // copy of original mesh points
-
-            return
-                IOobject
-                (
-                    "points",
-                    instance,
-                    polyMesh::meshSubDir,
-                    mesh,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE,
-                    false
-                );
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::points0MotionSolver::points0MotionSolver
@@ -114,7 +43,7 @@ Foam::points0MotionSolver::points0MotionSolver
 )
 :
     motionSolver(mesh, dict, type),
-    points0_(pointIOField(points0IO(mesh)))
+    points0_(pointIOField(polyMesh::points0IO(mesh)))
 {
     if (points0_.size() != mesh.nPoints())
     {

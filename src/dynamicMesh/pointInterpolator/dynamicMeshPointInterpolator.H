@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,96 +22,85 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::points0MotionSolver
+    Foam::dynamicMeshPointInterpolator
 
 Description
-    Virtual base class for displacement motion solvers.
+    Interpolates pointVectorFields.
 
 SourceFiles
-    points0MotionSolver.C
+    dynamicMeshPointInterpolator.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef points0MotionSolver_H
-#define points0MotionSolver_H
+#ifndef dynamicMeshPointInterpolator_H
+#define dynamicMeshPointInterpolator_H
 
-#include "motionSolver.H"
-#include "pointFields.H"
-#include "pointIOField.H"
+#include "primitiveFields.H"
+#include "pointFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class mapPolyMesh;
+class polyMesh;
+class interpolationWeights;
 
 /*---------------------------------------------------------------------------*\
-                   Class points0MotionSolver Declaration
+                           Class dynamicInterpolatedFvMesh Declaration
 \*---------------------------------------------------------------------------*/
 
-class points0MotionSolver
-:
-    public motionSolver
+class dynamicMeshPointInterpolator
 {
-protected:
+    // Private data
 
-    // Protected data
+        //- Reference to mesh
+        const polyMesh& mesh_;
 
-        //- Starting points
-        pointIOField points0_;
+        //- Name of displacement field
+        const word fieldName_;
 
+        const word interpolationScheme_;
 
-private:
+        //- Times with pre-specified displacement
+        wordList timeNames_;
 
-    // Private Member Functions
+        //- Times with pre-specified displacement
+        scalarField timeVals_;
 
-        //- Disallow default bitwise copy construct
-        points0MotionSolver(const points0MotionSolver&);
+        //- User-specified interpolator
+        mutable autoPtr<interpolationWeights> interpolatorPtr_;
 
-        //- Disallow default bitwise assignment
-        void operator=(const points0MotionSolver&);
+        //- Cached interpolation times
+        mutable labelList currentIndices_;
+
+        //- Cached interpolation weights
+        mutable scalarField currentWeights_;
+
 
 public:
-
-    //- Runtime type information
-    TypeName("points0MotionSolver");
-
 
     // Constructors
 
         //- Construct from mesh and dictionary
-        points0MotionSolver
+        dynamicMeshPointInterpolator
         (
-            const polyMesh&,
-            const IOdictionary&,
-            const word& type
+            const polyMesh& mesh,
+            const dictionary& dict
         );
 
 
     //- Destructor
-    virtual ~points0MotionSolver();
+    ~dynamicMeshPointInterpolator();
 
 
     // Member Functions
 
-        //- Return reference to the reference field
-        pointField& points0()
-        {
-            return points0_;
-        }
+        //- Return interpolated pointField for the currentTime
+        tmp<pointVectorField> curPointField() const;
 
-        //- Return reference to the reference field
-        const pointField& points0() const
-        {
-            return points0_;
-        }
-
-        //- Update local data for geometry changes
-        virtual void movePoints(const pointField&);
-
-        //-  Update local data for topology changes
-        virtual void updateMesh(const mapPolyMesh&);
+        //- Write
+        void write(Ostream&) const;
 };
 
 

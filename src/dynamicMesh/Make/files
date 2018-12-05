@@ -136,4 +136,6 @@ polyMeshFilter/polyMeshFilter.C
 pointPatchDist/externalPointEdgePoint.C
 pointPatchDist/pointPatchDist.C
 
+pointInterpolator/dynamicMeshPointInterpolator.C
+
 LIB = $(FOAM_LIBBIN)/libdynamicMesh

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,96 +22,99 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::points0MotionSolver
+    Foam::dynamicInterpolatedFvMesh
 
 Description
-    Virtual base class for displacement motion solvers.
+    Interpolates pre-specified motion specified as a set of pointVectorFields.
+
+    The motion can be provided either as a set of displacement or position
+    fields and the entry \c displacement specified accordingly.
+
+Usage
+    Example:
+    \verbatim
+    dynamicFvMesh   dynamicInterpolatedFvMesh;
+
+    displacementLaplacianCoeffs
+    {
+        field               wantedDisplacement;
+        displacement        yes;
+        interpolationScheme linear;
+    }
+    \endverbatim
+
+    This will scan the case for \c wantedDisplacement \c pointVectorFields in
+    the time directories and interpolate those in time (using \c linear
+    interpolation) to obtain the current displacement.  The advantage of
+    specifying displacement in this way is that it automatically works in
+    parallel using \c decomposePar to decompose the set of \c pointVectorFields
+    provided.
 
 SourceFiles
-    points0MotionSolver.C
+    dynamicInterpolatedFvMesh.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef points0MotionSolver_H
-#define points0MotionSolver_H
+#ifndef dynamicInterpolatedFvMesh_H
+#define dynamicInterpolatedFvMesh_H
 
-#include "motionSolver.H"
-#include "pointFields.H"
-#include "pointIOField.H"
+#include "dynamicFvMesh.H"
+#include "dynamicMeshPointInterpolator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class mapPolyMesh;
-
 /*---------------------------------------------------------------------------*\
-                   Class points0MotionSolver Declaration
+                    Class dynamicInterpolatedFvMesh Declaration
 \*---------------------------------------------------------------------------*/
 
-class points0MotionSolver
+class dynamicInterpolatedFvMesh
 :
-    public motionSolver
+    public dynamicFvMesh
 {
-protected:
+    // Private data
 
-    // Protected data
+        dictionary dynamicMeshCoeffs_;
+
+        dynamicMeshPointInterpolator pointInterpolator_;
+
+        const Switch displacement_;
 
         //- Starting points
-        pointIOField points0_;
+        autoPtr<pointIOField> points0_;
 
-
-private:
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        points0MotionSolver(const points0MotionSolver&);
+        dynamicInterpolatedFvMesh(const dynamicInterpolatedFvMesh&);
 
         //- Disallow default bitwise assignment
-        void operator=(const points0MotionSolver&);
+        void operator=(const dynamicInterpolatedFvMesh&);
+
 
 public:
 
     //- Runtime type information
-    TypeName("points0MotionSolver");
+    TypeName("dynamicInterpolatedFvMesh");
 
 
     // Constructors
 
-        //- Construct from mesh and dictionary
-        points0MotionSolver
-        (
-            const polyMesh&,
-            const IOdictionary&,
-            const word& type
-        );
+        //- Construct from IOobject
+        dynamicInterpolatedFvMesh(const IOobject& io);
 
 
     //- Destructor
-    virtual ~points0MotionSolver();
+    ~dynamicInterpolatedFvMesh();
 
 
     // Member Functions
 
-        //- Return reference to the reference field
-        pointField& points0()
-        {
-            return points0_;
-        }
-
-        //- Return reference to the reference field
-        const pointField& points0() const
-        {
-            return points0_;
-        }
-
-        //- Update local data for geometry changes
-        virtual void movePoints(const pointField&);
-
-        //-  Update local data for topology changes
-        virtual void updateMesh(const mapPolyMesh&);
+        //- Update the mesh for both mesh motion and topology change
+        virtual bool update();
 };
 
 

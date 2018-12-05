@@ -29,11 +29,9 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(dynamicFvMesh, 0);
-
-defineRunTimeSelectionTable(dynamicFvMesh, IOobject);
+    defineTypeNameAndDebug(dynamicFvMesh, 0);
+    defineRunTimeSelectionTable(dynamicFvMesh, IOobject);
 }
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
