@@ -45,7 +45,7 @@ boundaryField
     right
     {
         type            outletPhaseMeanVelocity;
-        Umean           2;
+        UnMean          2;
         alpha           alpha.water;
     }
     top
