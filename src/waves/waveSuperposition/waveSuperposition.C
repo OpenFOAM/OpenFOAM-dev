@@ -347,7 +347,21 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pGas
     const vectorField& p
 ) const
 {
-    return - pLiquid(t, p);
+    tensor axes;
+    scalar u;
+    vectorField xyz(p.size());
+    transformation(p, axes, u, xyz);
+
+    axes = tensor(- axes.x(), - axes.y(), axes.z());
+
+    if (heightAboveWave_)
+    {
+        xyz.replace(2, height(t, p));
+    }
+
+    xyz.replace(2, - xyz.component(2));
+
+    return pressure(t, xyz);
 }
 
 
