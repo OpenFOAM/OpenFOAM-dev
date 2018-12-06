@@ -9,41 +9,30 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    location    "0";
-    object      U;
+    class       dictionary;
+    location    "constant";
+    object      waveProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+origin          (0 0 0);
 
-internalField   uniform (2 0 0);
+direction       (1 0 0);
 
-boundaryField
-{
-    #includeEtc "caseDicts/setConstraintTypes"
+waves
+(
+    Airy
+    {
+        length      300;
+        amplitude   2.5;
+        phase       0;
+        angle       0;
+    }
+);
 
-    left
-    {
-        type            waveVelocity;
-        UMean           (2 0 0);
-    }
-    right
-    {
-        type            outletPhaseMeanVelocity;
-        UnMean          2;
-        alpha           alpha.water;
-    }
-    top
-    {
-        type            pressureInletOutletVelocity;
-        value           uniform (0 0 0);
-    }
-    bottom
-    {
-        type            noSlip;
-    }
-}
+scale           table ((1200 1) (1800 0));
+
+crossScale      constant 1;
 
 
 // ************************************************************************* //

@@ -115,37 +115,37 @@ Foam::wavePressureFvPatchScalarField::wavePressureFvPatchScalarField
 
 Foam::tmp<Foam::scalarField> Foam::wavePressureFvPatchScalarField::p() const
 {
+    const scalar t = db().time().timeOutputValue();
+    const waveSuperposition& waves = waveSuperposition::New(db());
     const waveVelocityFvPatchVectorField& Up =
         refCast<const waveVelocityFvPatchVectorField>
         (
             patch().lookupPatchField<volVectorField, scalar>(UName_)
         );
 
-    const scalar t = db().time().timeOutputValue();
-
     return
         levelSetAverage
         (
             patch(),
-            Up.waves().height(t, patch().Cf()),
-            Up.waves().height(t, patch().patch().localPoints()),
-            Up.waves().pGas(t, patch().Cf())(),
-            Up.waves().pGas(t, patch().patch().localPoints())(),
-            Up.waves().pLiquid(t, patch().Cf())(),
-            Up.waves().pLiquid(t, patch().patch().localPoints())()
+            waves.height(t, patch().Cf() + Up.offset()),
+            waves.height(t, patch().patch().localPoints() + Up.offset()),
+            waves.pGas(t, patch().Cf() + Up.offset())(),
+            waves.pGas(t, patch().patch().localPoints() + Up.offset())(),
+            waves.pLiquid(t, patch().Cf() + Up.offset())(),
+            waves.pLiquid(t, patch().patch().localPoints() + Up.offset())()
         );
 }
 
 
 Foam::tmp<Foam::scalarField> Foam::wavePressureFvPatchScalarField::pn() const
 {
+    const scalar t = db().time().timeOutputValue();
+    const waveSuperposition& waves = waveSuperposition::New(db());
     const waveVelocityFvPatchVectorField& Up =
         refCast<const waveVelocityFvPatchVectorField>
         (
             patch().lookupPatchField<volVectorField, scalar>(UName_)
         );
-
-    const scalar t = db().time().timeOutputValue();
 
     const fvMeshSubset& subset = Up.faceCellSubset();
     const fvMesh& meshs = subset.subMesh();
@@ -156,12 +156,12 @@ Foam::tmp<Foam::scalarField> Foam::wavePressureFvPatchScalarField::pn() const
         levelSetAverage
         (
             meshs,
-            Up.waves().height(t, meshs.cellCentres())(),
-            Up.waves().height(t, meshs.points())(),
-            Up.waves().pGas(t, meshs.cellCentres())(),
-            Up.waves().pGas(t, meshs.points())(),
-            Up.waves().pLiquid(t, meshs.cellCentres())(),
-            Up.waves().pLiquid(t, meshs.points())()
+            waves.height(t, meshs.cellCentres() + Up.offset())(),
+            waves.height(t, meshs.points() + Up.offset())(),
+            waves.pGas(t, meshs.cellCentres() + Up.offset())(),
+            waves.pGas(t, meshs.points() + Up.offset())(),
+            waves.pLiquid(t, meshs.cellCentres() + Up.offset())(),
+            waves.pLiquid(t, meshs.points() + Up.offset())()
         )
     );
 

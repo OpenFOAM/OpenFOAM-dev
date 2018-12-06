@@ -61,7 +61,6 @@ Foam::waveModels::Stokes2::~Stokes2()
 Foam::tmp<Foam::scalarField> Foam::waveModels::Stokes2::elevation
 (
     const scalar t,
-    const scalar u,
     const scalarField& x
 ) const
 {
@@ -77,15 +76,14 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::Stokes2::elevation
     }
 
     return
-        Airy::elevation(t, u, x)
-      + (1/k())*sqr(ka)*B22*cos(2*angle(t, u, x));
+        Airy::elevation(t, x)
+      + (1/k())*sqr(ka)*B22*cos(2*angle(t, x));
 }
 
 
 Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes2::velocity
 (
     const scalar t,
-    const scalar u,
     const vector2DField& xz
 ) const
 {
@@ -100,8 +98,8 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes2::velocity
     }
 
     return
-        Airy::velocity(t, u, xz)
-      + celerity()*sqr(ka)*A22ByA11*vi(2, t, u, xz);
+        Airy::velocity(t, xz)
+      + celerity()*sqr(ka)*A22ByA11*vi(2, t, xz);
 }
 
 

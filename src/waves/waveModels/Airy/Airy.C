@@ -56,11 +56,10 @@ Foam::scalar Foam::waveModels::Airy::celerity() const
 Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::angle
 (
     const scalar t,
-    const scalar u,
     const scalarField& x
 ) const
 {
-    return phase_ + k()*(x - (u + celerity())*t);
+    return phase_ + k()*(x - celerity()*t);
 }
 
 
@@ -74,14 +73,13 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::vi
 (
     const label i,
     const scalar t,
-    const scalar u,
     const vector2DField& xz
 ) const
 {
     const scalarField x(xz.component(0));
     const scalarField z(xz.component(1));
 
-    const scalarField phi(angle(t, u, x));
+    const scalarField phi(angle(t, x));
     const scalarField kz(k()*z);
 
     if (deep())
@@ -132,38 +130,35 @@ Foam::waveModels::Airy::~Airy()
 Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::elevation
 (
     const scalar t,
-    const scalar u,
     const scalarField& x
 ) const
 {
-    return amplitude(t)*cos(angle(t, u, x));
+    return amplitude(t)*cos(angle(t, x));
 }
 
 
 Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::velocity
 (
     const scalar t,
-    const scalar u,
     const vector2DField& xz
 ) const
 {
     const scalar ka = k()*amplitude(t);
 
-    return celerity()*ka*vi(1, t, u, xz);
+    return celerity()*ka*vi(1, t, xz);
 }
 
 
 Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::pressure
 (
     const scalar t,
-    const scalar u,
     const vector2DField& xz
 ) const
 {
     // It is a fluke of the formulation that the time derivative of the velocity
     // potential equals the x-derivative multiplied by the celerity. This allows
     // for this shortcut in evaluating the unsteady pressure.
-    return celerity()*velocity(t, u, xz)->component(0);
+    return celerity()*velocity(t, xz)->component(0);
 }
 
 
