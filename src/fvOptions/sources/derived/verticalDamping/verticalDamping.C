@@ -62,12 +62,12 @@ void Foam::fv::verticalDamping::add
     const DimensionedField<scalar, volMesh>& V = mesh_.V();
 
     // Calculate the scale
-    scalarField s(mesh_.nCells(), ramp_.valid() ? 0 : 1);
+    scalarField s(mesh_.nCells(), scale_.valid() ? 0 : 1);
     forAll(origins_, i)
     {
         const vectorField& c = mesh_.cellCentres();
         const scalarField x((c - origins_[i]) & directions_[i]);
-        s = max(s, ramp_->value(x));
+        s = max(s, scale_->value(x));
     }
 
     // Check dimensions
@@ -121,7 +121,7 @@ Foam::fv::verticalDamping::verticalDamping
 :
     cellSetOption(name, modelType, dict, mesh),
     lambda_("lambda", dimless/dimTime, coeffs_.lookup("lambda")),
-    ramp_(),
+    scale_(),
     origins_(),
     directions_()
 {
@@ -176,30 +176,30 @@ bool Foam::fv::verticalDamping::read(const dictionary& dict)
                 coeffs_.lookup(lambda_.name())
             );
 
-        const bool foundRamp = coeffs_.found("ramp");
+        const bool foundScale = coeffs_.found("scale");
         const bool foundOgn = coeffs_.found("origin");
         const bool foundDir = coeffs_.found("direction");
         const bool foundOgns = coeffs_.found("origins");
         const bool foundDirs = coeffs_.found("directions");
         const bool foundAll =
-            foundRamp
+            foundScale
          && (
                 (foundOgn && foundDir && !foundOgns && !foundDirs)
              || (!foundOgn && !foundDir && foundOgns && foundDirs)
             );
          const bool foundAny =
-            foundRamp || foundOgn || foundDir || foundOgns || foundDirs;
+            foundScale || foundOgn || foundDir || foundOgns || foundDirs;
 
         if (!foundAll)
         {
-            ramp_ = autoPtr<Function1<scalar>>();
+            scale_ = autoPtr<Function1<scalar>>();
             origins_.clear();
             directions_.clear();
         }
 
         if (foundAll)
         {
-            ramp_ = Function1<scalar>::New("ramp", coeffs_);
+            scale_ = Function1<scalar>::New("scale", coeffs_);
             if (foundOgn)
             {
                 origins_.setSize(1);
@@ -233,9 +233,9 @@ bool Foam::fv::verticalDamping::read(const dictionary& dict)
         if (!foundAll && foundAny)
         {
             WarningInFunction
-                << "The ramping specification is incomplete. \"ramp\", "
+                << "The scaling specification is incomplete. \"scale\", "
                 << "\"origin\" and \"direction\" (or \"origins\" and "
-                << "\"directions\"), must all be specified in order to ramp "
+                << "\"directions\"), must all be specified in order to scale "
                 << "the damping. The damping will be applied uniformly across "
                 << "the cell set." << endl << endl;
         }

@@ -36,7 +36,6 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         Umean        | mean velocity normal to the boundary [m/s] | yes |
-        ramp         | ramping function for the mean flow speed | no | None
         alpha        | phase-fraction field    | yes |
     \endtable
 
@@ -81,10 +80,7 @@ class outletPhaseMeanVelocityFvPatchVectorField
     // Private data
 
         //- Inlet integral flow rate
-        scalar Umean_;
-
-        //- Ramp for the mean flow rate
-        autoPtr<Function1<scalar>> ramp_;
+        autoPtr<Function1<scalar>> Umean_;
 
         //- Name of the phase-fraction field
         word alphaName_;

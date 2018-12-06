@@ -39,8 +39,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF),
-    Umean_(0),
-    ramp_(),
+    Umean_(nullptr),
     alphaName_("none")
 {
     refValue() = Zero;
@@ -59,8 +58,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(ptf, p, iF, mapper),
-    Umean_(ptf.Umean_),
-    ramp_(ptf.ramp_, false),
+    Umean_(ptf.Umean_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -74,13 +72,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF),
-    Umean_(readScalar(dict.lookup("Umean"))),
-    ramp_
-    (
-        dict.found("ramp")
-      ? Function1<scalar>::New("ramp", dict)
-      : autoPtr<Function1<scalar>>()
-    ),
+    Umean_(Function1<scalar>::New("Umean", dict)),
     alphaName_(dict.lookup("alpha"))
 {
     refValue() = Zero;
@@ -108,8 +100,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(ptf),
-    Umean_(ptf.Umean_),
-    ramp_(ptf.ramp_, false),
+    Umean_(ptf.Umean_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -122,8 +113,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(ptf, iF),
-    Umean_(ptf.Umean_),
-    ramp_(ptf.ramp_, false),
+    Umean_(ptf.Umean_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -155,7 +145,7 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::updateCoeffs()
 
     // Set the refValue and valueFraction to adjust the boundary field
     // such that the phase mean is Umean_
-    const scalar Umean = (ramp_.valid() ? ramp_->value(t) : 1)*Umean_;
+    const scalar Umean = Umean_->value(t);
     if (Uzgmean >= Umean)
     {
         refValue() = Zero;
@@ -178,11 +168,7 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::write
 {
     fvPatchField<vector>::write(os);
 
-    os.writeKeyword("Umean") << Umean_ << token::END_STATEMENT << nl;
-    if (ramp_.valid())
-    {
-        ramp_->writeData(os);
-    }
+    Umean_->writeData(os);
     os.writeKeyword("alpha") << alphaName_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
 }
