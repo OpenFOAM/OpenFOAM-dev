@@ -46,17 +46,13 @@ void Foam::fv::solidificationMeltingSource::apply
 
     dimensionedScalar L("L", dimEnergy/dimMass, L_);
 
-    // contributions added to rhs of solver equation
+    // Contributions added to rhs of solver equation
     if (eqn.psi().dimensions() == dimTemperature)
     {
-        // isothermal phase change - only include time derivative
-        // eqn -= L/Cp*(fvc::ddt(rho, alpha1_) + fvc::div(phi, alpha1_));
         eqn -= L/Cp*(fvc::ddt(rho, alpha1_));
     }
     else
     {
-        // isothermal phase change - only include time derivative
-        // eqn -= L*(fvc::ddt(rho, alpha1_) + fvc::div(phi, alpha1_));
         eqn -= L*(fvc::ddt(rho, alpha1_));
     }
 }
