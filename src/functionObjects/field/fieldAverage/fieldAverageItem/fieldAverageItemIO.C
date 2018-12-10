@@ -116,21 +116,25 @@ Foam::Ostream& Foam::functionObjects::operator<<
     );
 
     os  << faItem.fieldName_ << nl << token::BEGIN_BLOCK << nl;
-    os.writeKeyword("mean") << faItem.mean_ << token::END_STATEMENT << nl;
-    os.writeKeyword("prime2Mean") << faItem.mean_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("base") << faItem.baseTypeNames_[faItem.base_]
-        << token::END_STATEMENT << nl;
+
+    os.writeKeyword("mean")
+        << faItem.mean_ << token::END_STATEMENT << nl;
+
+    os.writeKeyword("prime2Mean")
+        << faItem.prime2Mean_ << token::END_STATEMENT << nl;
+
+    os.writeKeyword("base")
+        << faItem.baseTypeNames_[faItem.base_] << token::END_STATEMENT << nl;
 
     if (faItem.window_ > 0)
     {
-        os.writeKeyword("window") << faItem.window_
-            << token::END_STATEMENT << nl;
+        os.writeKeyword("window")
+            << faItem.window_ << token::END_STATEMENT << nl;
 
         if (faItem.windowName_ != "")
         {
-            os.writeKeyword("windowName") << faItem.windowName_
-                << token::END_STATEMENT << nl;
+            os.writeKeyword("windowName")
+                << faItem.windowName_ << token::END_STATEMENT << nl;
         }
     }
 
