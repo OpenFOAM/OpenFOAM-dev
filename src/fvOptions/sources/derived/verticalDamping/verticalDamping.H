@@ -83,7 +83,7 @@ Usage
         // origins         ((1200 0 0) (1200 -300 0) (1200 300 0));
         // directions      ((1 0 0) (0 -1 0) (0 1 0));
 
-        ramp
+        scale
         {
             type        halfCosineRamp;
             start       0;
@@ -132,13 +132,13 @@ private:
         //- Damping coefficient [1/s]
         dimensionedScalar lambda_;
 
-        //- The ramping function
-        autoPtr<Function1<scalar>> ramp_;
+        //- The scaling function
+        autoPtr<Function1<scalar>> scale_;
 
-        //- Origins of the ramping coordinate
+        //- Origins of the scaling coordinate
         vectorField origins_;
 
-        //- Directions of increasing ramping coordinate
+        //- Directions of increasing scaling coordinate
         vectorField directions_;
 
 

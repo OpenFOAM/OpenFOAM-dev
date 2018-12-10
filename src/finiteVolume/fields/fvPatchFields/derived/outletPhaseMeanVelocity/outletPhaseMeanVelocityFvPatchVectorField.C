@@ -39,8 +39,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF),
-    Umean_(0),
-    ramp_(),
+    UnMean_(nullptr),
     alphaName_("none")
 {
     refValue() = Zero;
@@ -59,8 +58,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(ptf, p, iF, mapper),
-    Umean_(ptf.Umean_),
-    ramp_(ptf.ramp_, false),
+    UnMean_(ptf.UnMean_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -74,13 +72,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF),
-    Umean_(readScalar(dict.lookup("Umean"))),
-    ramp_
-    (
-        dict.found("ramp")
-      ? Function1<scalar>::New("ramp", dict)
-      : autoPtr<Function1<scalar>>()
-    ),
+    UnMean_(Function1<scalar>::New("UnMean", dict)),
     alphaName_(dict.lookup("alpha"))
 {
     refValue() = Zero;
@@ -108,8 +100,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(ptf),
-    Umean_(ptf.Umean_),
-    ramp_(ptf.ramp_, false),
+    UnMean_(ptf.UnMean_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -122,8 +113,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(ptf, iF),
-    Umean_(ptf.Umean_),
-    ramp_(ptf.ramp_, false),
+    UnMean_(ptf.UnMean_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -148,23 +138,23 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::updateCoeffs()
     // Get the patchInternalField (zero-gradient field)
     vectorField Uzg(patchInternalField());
 
-    // Calculate the phase mean zero-gradient velocity
-    scalar Uzgmean =
+    // Calculate the phase mean zero-gradient normal velocity
+    const scalar UnzgMean =
         gSum(alphap*(patch().Sf() & Uzg))
        /gSum(alphap*patch().magSf());
 
     // Set the refValue and valueFraction to adjust the boundary field
-    // such that the phase mean is Umean_
-    const scalar Umean = (ramp_.valid() ? ramp_->value(t) : 1)*Umean_;
-    if (Uzgmean >= Umean)
+    // such that the phase mean is UnMean_
+    const scalar UnMean = UnMean_->value(t);
+    if (UnzgMean >= UnMean)
     {
         refValue() = Zero;
-        valueFraction() = 1.0 - Umean/Uzgmean;
+        valueFraction() = 1.0 - UnMean/UnzgMean;
     }
     else
     {
-        refValue() = (Umean + Uzgmean)*patch().nf();
-        valueFraction() = 1.0 - Uzgmean/Umean;
+        refValue() = (UnMean + UnzgMean)*patch().nf();
+        valueFraction() = 1.0 - UnzgMean/UnMean;
     }
 
     mixedFvPatchField<vector>::updateCoeffs();
@@ -178,11 +168,7 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::write
 {
     fvPatchField<vector>::write(os);
 
-    os.writeKeyword("Umean") << Umean_ << token::END_STATEMENT << nl;
-    if (ramp_.valid())
-    {
-        ramp_->writeData(os);
-    }
+    UnMean_->writeData(os);
     os.writeKeyword("alpha") << alphaName_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
 }

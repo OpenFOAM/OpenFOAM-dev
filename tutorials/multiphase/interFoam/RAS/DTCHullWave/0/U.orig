@@ -15,11 +15,11 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Umean 1.668;
+UMean 1.668;
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (#neg $Umean 0 0);
+internalField   uniform (#neg $UMean 0 0);
 
 boundaryField
 {
@@ -31,7 +31,7 @@ boundaryField
         type            waveVelocity;
         origin          (0 0 0.244);
         direction       (-1 0 0);
-        speed           $Umean;
+        speed           $UMean;
         waves
         (
             Stokes2
@@ -49,7 +49,7 @@ boundaryField
     {
         type            outletPhaseMeanVelocity;
         alpha           alpha.water;
-        Umean           $Umean;
+        UnMean          $UMean;
         value           $internalField;
     }
 

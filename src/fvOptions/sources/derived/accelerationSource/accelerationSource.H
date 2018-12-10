@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::velocityRamping
+    Foam::fv::accelerationSource
 
 Description
     This fvOption applies an explicit acceleration force to components of the
@@ -31,14 +31,15 @@ Description
 Usage
     Example usage:
     \verbatim
-    velocityRamping
+    accelerationSource
     {
-        type        velocityRamping;
+        type        accelerationSource;
         active      on;
         selectionMode all;
         U           U;
-        velocity    (-2.572 0 0);
-        ramp
+        velocity    scale;
+        value       (-2.572 0 0);
+        scale
         {
             type        halfCosineRamp;
             start       0;
@@ -48,12 +49,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    velocityRamping.C
+    accelerationSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef velocityRamping_H
-#define velocityRamping_H
+#ifndef accelerationSource_H
+#define accelerationSource_H
 
 #include "cellSetOption.H"
 #include "Function1.H"
@@ -66,10 +67,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class velocityRamping Declaration
+                       Class accelerationSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class velocityRamping
+class accelerationSource
 :
     public cellSetOption
 {
@@ -77,11 +78,8 @@ private:
 
     // Private data
 
-        //- Velocity at the end of the ramp
-        vector velocity_;
-
-        //- Ramp function
-        autoPtr<Function1<scalar>> ramp_;
+        //- Time-varying velocity
+        autoPtr<Function1<vector>> velocity_;
 
 
     // Private Member Functions
@@ -99,13 +97,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("velocityRamping");
+    TypeName("accelerationSource");
 
 
     // Constructors
 
         //- Construct from components
-        velocityRamping
+        accelerationSource
         (
             const word& name,
             const word& modelType,
@@ -115,7 +113,7 @@ public:
 
 
     //- Destructor
-    virtual ~velocityRamping()
+    virtual ~accelerationSource()
     {}
 
 
@@ -163,7 +161,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "velocityRampingTemplates.C"
+    #include "accelerationSourceTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

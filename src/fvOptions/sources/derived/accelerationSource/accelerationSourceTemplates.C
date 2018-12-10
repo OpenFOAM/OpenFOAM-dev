@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class AlphaRhoFieldType>
-void Foam::fv::velocityRamping::add
+void Foam::fv::accelerationSource::add
 (
     const AlphaRhoFieldType& alphaRho,
     fvMatrix<vector>& eqn,
@@ -37,7 +37,7 @@ void Foam::fv::velocityRamping::add
 
     const scalar t = mesh_.time().value();
     const scalar dt = mesh_.time().deltaTValue();
-    const vector dU = velocity_*(ramp_->value(t) - ramp_->value(t - dt));
+    const vector dU = velocity_->value(t) - velocity_->value(t - dt);
     const vector a = dU/mesh_.time().deltaTValue();
 
     forAll(cells_, i)

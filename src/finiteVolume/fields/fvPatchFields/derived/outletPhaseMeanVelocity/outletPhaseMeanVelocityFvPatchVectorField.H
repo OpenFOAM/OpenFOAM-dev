@@ -35,8 +35,7 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        Umean        | mean velocity normal to the boundary [m/s] | yes |
-        ramp         | ramping function for the mean flow speed | no | None
+        UnMean       | mean velocity normal to the boundary [m/s] | yes |
         alpha        | phase-fraction field    | yes |
     \endtable
 
@@ -45,7 +44,7 @@ Usage
     <patchName>
     {
         type            outletPhaseMeanVelocity;
-        Umean           1.2;
+        UnMean          1.2;
         alpha           alpha.water;
         value           uniform (1.2 0 0);
     }
@@ -71,7 +70,7 @@ SourceFiles
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-    Class outletPhaseMeanVelocityFvPatchVectorField Declaration
+         Class outletPhaseMeanVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
 class outletPhaseMeanVelocityFvPatchVectorField
@@ -80,11 +79,8 @@ class outletPhaseMeanVelocityFvPatchVectorField
 {
     // Private data
 
-        //- Inlet integral flow rate
-        scalar Umean_;
-
-        //- Ramp for the mean flow rate
-        autoPtr<Function1<scalar>> ramp_;
+        //- Mean velocity normal to the boundary
+        autoPtr<Function1<scalar>> UnMean_;
 
         //- Name of the phase-fraction field
         word alphaName_;
