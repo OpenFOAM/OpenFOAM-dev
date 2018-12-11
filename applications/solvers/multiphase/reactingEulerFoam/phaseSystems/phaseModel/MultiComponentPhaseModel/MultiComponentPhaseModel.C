@@ -46,9 +46,9 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, index),
-    Sc_
+    Sct_
     (
-        "Sc",
+        "Sct",
         dimless,
         fluid.subDict(phaseName)
     ),
@@ -159,7 +159,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
       - fvm::laplacian
         (
             fvc::interpolate(alpha)
-           *fvc::interpolate(this->muEff()/Sc_),
+           *fvc::interpolate(this->muEff()/Sct_),
             Yi
         )
      ==

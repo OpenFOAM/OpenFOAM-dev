@@ -128,32 +128,29 @@ public:
         //- Get the (scalar) value of gravity.
         scalar g() const;
 
-        //- Get the wave elevation at a given time, mean velocity and local
-        //  coordinates. Local x is aligned with the mean velocity.
+        //- Get the wave elevation at a given time and local coordinates. Local
+        //  x is aligned with the direction of propagation.
         virtual tmp<scalarField> elevation
         (
             const scalar t,
-            const scalar u,
             const scalarField& x
         ) const = 0;
 
-        //- Get the wave velocity at a given time, mean velocity and local
-        //  coordinates. Local x is aligned with the mean velocity, and z with
-        //  negative gravity.
+        //- Get the wave velocity at a given time and local coordinates. Local
+        //  x is aligned with the direction of propagation, and z with negative
+        //  gravity.
         virtual tmp<vector2DField> velocity
         (
             const scalar t,
-            const scalar u,
             const vector2DField& xz
         ) const = 0;
 
-        //- Get the wave pressure at a given time, mean velocity and local
-        //  coordinates. Local x is aligned with the mean velocity, and z with
-        //  negative gravity.
+        //- Get the wave pressure at a given time and local coordinates. Local
+        //  x is aligned with the direction of propagation, and z with negative
+        //  gravity.
         virtual tmp<scalarField> pressure
         (
             const scalar t,
-            const scalar u,
             const vector2DField& xz
         ) const = 0;
 

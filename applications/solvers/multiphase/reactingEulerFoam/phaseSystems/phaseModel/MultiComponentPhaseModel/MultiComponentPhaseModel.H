@@ -56,8 +56,8 @@ protected:
 
     // Protected data
 
-        //- Schmidt number
-        dimensionedScalar Sc_;
+        //- Turbulent Schmidt number
+        dimensionedScalar Sct_;
 
         //- Residual phase fraction
         dimensionedScalar residualAlpha_;

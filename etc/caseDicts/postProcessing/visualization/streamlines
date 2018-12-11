@@ -10,12 +10,111 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-nLines  20;
-start   (0 -4 1e-06); // Ensure that points do not coincide with
-end     (0  4 1e-06); // mesh faces, but instead lie inside cells
+#includeEtc "caseDicts/postProcessing/visualization/streamlines.cfg"
+
 fields  (U p);
 
-// Must be last entry
-#includeEtc "caseDicts/postProcessing/visualization/streamlines.cfg"
+// Streamline direction: forward, backward, both
+direction       both;
+
+// Select from methods with sub-dictionary settings below
+seedMethod      lineCell;
+
+// Seeding along a line
+lineCell
+{
+    type            lineCell;   // lineCellFace, lineFace
+    start           (0 -1 1);
+    end             (0  1 1);
+}
+
+lineUniform
+{
+    type            lineUniform;
+    start           (0 -1 1);
+    end             (0  1 1);
+    nPoints         50;
+}
+
+circleRandom
+{
+    type            circleRandom;
+    centre          (0 0 0);
+    radius          1;
+    normal          (1 0 0);
+    nPoints         50;
+}
+
+arcUniform
+{
+    type            arcUniform;
+    centre          (0 0 0);
+    normal          (1 0 0);
+    radial          (0 1 0);
+    startAngle      0;    // rad
+    endAngle        3.14; // rad
+    nPoints         50;
+}
+
+// Seeding within a volume region
+boxUniform
+{
+    type            boxUniform;
+    box             (-1 -1 -1) (1 1 1);
+    nPoints         (3 3 3);
+}
+
+sphereRandom
+{
+    type            sphereRandom;
+    centre          (0 0 0);
+    radius          1;
+    nPoints         50;
+}
+
+// Seeding at points on a surface
+triSurfaceMesh
+{
+    type            triSurfaceMesh;
+    surface         <surfaceMeshFile>; // in constant/triSurface directory
+}
+
+// Seeding at a boundary
+boundaryRandom
+{
+    type            boundaryRandom;
+    patches         (<patch1> <patch2>);
+    nPoints         50;
+}
+
+// Seeding a set of points
+points
+{
+    type            points;
+    points          (
+                        (0 -1 1)
+                        (0  0 1)
+                        (0  1 1)
+                    );
+    ordered         on;
+}
+
+boundaryPoints
+{
+    type            boundaryPoints;
+    points          (
+                        (0 -1 1)
+                        (0  0 1)
+                        (0  1 1)
+                    );
+    maxDistance     1;
+}
+
+// DO NOT REMOVE from END of file; sets the seedSampleSet
+seedSampleSet
+{
+    ${$seedMethod};
+    axis x;
+}
 
 // ************************************************************************* //

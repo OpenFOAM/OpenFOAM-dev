@@ -27,7 +27,8 @@ Class
 Description
     This boundary condition provides a wavePressure condition. This sets the
     pressure to a value specified by a superposition of wave models. All the
-    parameters are looked up from the corresponding velocity condition.
+    wave modelling parameters are obtained from a centrally registered
+    waveSuperposition class.
 
     This functions like an outletInlet condition. Faces on which the flow is
     leaving the domain have a value set by the wave model. Faces on which the
@@ -55,6 +56,8 @@ Usage
     }
     \endverbatim
 
+See also
+    Foam::waveSuperposition
 
 SourceFiles
     wavePressureFvPatchScalarField.C

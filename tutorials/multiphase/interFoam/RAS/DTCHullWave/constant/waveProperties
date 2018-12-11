@@ -5,18 +5,32 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      waveProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type            streamLine;
-libs            ("libfieldFunctionObjects.so");
+origin          (0 0 0.244);
 
-executeControl  writeTime;
-writeControl    writeTime;
+direction       (-1 0 0);
 
-setFormat       vtk;
+waves
+(
+    Stokes2
+    {
+        length      3;
+        amplitude   0.04;
+        phase       0;
+        angle       0;
+    }
+);
 
-lifeTime        10000;
-nSubCycle       5;
+scale           table ((4 1) (12 0));
 
-cloudName       particleTracks;
 
 // ************************************************************************* //

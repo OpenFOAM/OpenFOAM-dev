@@ -26,18 +26,42 @@ License
 #include "waveSuperposition.H"
 #include "uniformDimensionedFields.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+const Foam::word Foam::waveSuperposition::dictName("waveProperties");
+
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+const Foam::waveSuperposition& Foam::waveSuperposition::New
+(
+    const objectRegistry& db
+)
+{
+    if (db.foundObject<waveSuperposition>(dictName))
+    {
+        return db.lookupObject<waveSuperposition>(dictName);
+    }
+    else
+    {
+        waveSuperposition* ptr = new waveSuperposition(db);
+        ptr->store();
+        return *ptr;
+    }
+}
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::waveSuperposition::transformation
 (
     const vectorField& p,
     tensor& axes,
-    scalar& u,
     vectorField& xyz
 ) const
 {
     const uniformDimensionedVectorField& g =
-        db_.lookupObject<uniformDimensionedVectorField>("g");
+        db().lookupObject<uniformDimensionedVectorField>("g");
     const scalar magG = mag(g.value());
     const vector gHat = g.value()/magG;
 
@@ -46,8 +70,6 @@ void Foam::waveSuperposition::transformation
     const vector dSurfHat = direction_/magDSurf;
 
     axes = tensor(dSurfHat, - gHat ^ dSurfHat, - gHat);
-
-    u = speed_*magDSurf;
 
     xyz = axes & (p - origin_);
 }
@@ -64,7 +86,7 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::elevation
     forAll(waveModels_, wavei)
     {
         const vector2D d(cos(waveAngles_[wavei]), sin(waveAngles_[wavei]));
-        result += waveModels_[wavei].elevation(t, d.x()*speed_, d & xy);
+        result += waveModels_[wavei].elevation(t, d & xy);
     }
 
     return scale(xy)*result;
@@ -92,7 +114,7 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::velocity
         );
         const vector2DField uw
         (
-            waveModels_[wavei].velocity(t, d.x()*speed_, xz)
+            waveModels_[wavei].velocity(t, xz)
         );
         result += zip
         (
@@ -129,9 +151,9 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pressure
         );
         const vector2DField uw
         (
-            waveModels_[wavei].velocity(t, d.x()*speed_, xz)
+            waveModels_[wavei].velocity(t, xz)
         );
-        result += waveModels_[wavei].pressure(t, d.x()*speed_, xz);
+        result += waveModels_[wavei].pressure(t, xz);
     }
 
     tmp<scalarField> s = scale(zip(xyz.component(0), xyz.component(1)));
@@ -174,67 +196,36 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::scale
 
 Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
 :
-    db_(db),
-    origin_(vector::zero),
-    direction_(vector(1, 0, 0)),
-    speed_(0),
-    waveModels_(),
-    waveAngles_(),
-    ramp_(),
-    scale_(),
-    crossScale_(),
-    heightAboveWave_(false)
-{}
-
-
-Foam::waveSuperposition::waveSuperposition(const waveSuperposition& waves)
-:
-    db_(waves.db_),
-    origin_(waves.origin_),
-    direction_(waves.direction_),
-    speed_(waves.speed_),
-    waveModels_(waves.waveModels_),
-    waveAngles_(waves.waveAngles_),
-    ramp_(waves.ramp_, false),
-    scale_(waves.scale_, false),
-    crossScale_(waves.crossScale_, false),
-    heightAboveWave_(waves.heightAboveWave_)
-{}
-
-
-Foam::waveSuperposition::waveSuperposition
-(
-    const objectRegistry& db,
-    const dictionary& dict
-)
-:
-    db_(db),
-    origin_(dict.lookup("origin")),
-    direction_(dict.lookup("direction")),
-    speed_(readScalar(dict.lookup("speed"))),
-    waveModels_(),
-    waveAngles_(),
-    ramp_
+    IOdictionary
     (
-        dict.found("ramp")
-      ? Function1<scalar>::New("ramp", dict)
-      : autoPtr<Function1<scalar>>()
+        IOobject
+        (
+            dictName,
+            db.time().constant(),
+            db,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
     ),
+    origin_(lookup("origin")),
+    direction_(lookup("direction")),
+    waveModels_(),
+    waveAngles_(),
     scale_
     (
-        dict.found("scale")
-      ? Function1<scalar>::New("scale", dict)
+        found("scale")
+      ? Function1<scalar>::New("scale", *this)
       : autoPtr<Function1<scalar>>()
     ),
     crossScale_
     (
-        dict.found("crossScale")
-      ? Function1<scalar>::New("crossScale", dict)
+        found("crossScale")
+      ? Function1<scalar>::New("crossScale", *this)
       : autoPtr<Function1<scalar>>()
     ),
-    heightAboveWave_(dict.lookupOrDefault<Switch>("heightAboveWave", false))
+    heightAboveWave_(lookupOrDefault<Switch>("heightAboveWave", false))
 {
-    const PtrList<entry> waveEntries(dict.lookup("waves"));
+    const PtrList<entry> waveEntries(lookup("waves"));
 
     waveModels_.setSize(waveEntries.size());
     waveAngles_.setSize(waveEntries.size());
@@ -267,9 +258,8 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::height
 ) const
 {
     tensor axes;
-    scalar u;
     vectorField xyz(p.size());
-    transformation(p, axes, u, xyz);
+    transformation(p, axes, xyz);
 
     return
         xyz.component(2)
@@ -284,16 +274,15 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::ULiquid
 ) const
 {
     tensor axes;
-    scalar u;
     vectorField xyz(p.size());
-    transformation(p, axes, u, xyz);
+    transformation(p, axes, xyz);
 
     if (heightAboveWave_)
     {
         xyz.replace(2, height(t, p));
     }
 
-    return UMean(t) + (velocity(t, xyz) & axes);
+    return velocity(t, xyz) & axes;
 }
 
 
@@ -304,9 +293,8 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
 ) const
 {
     tensor axes;
-    scalar u;
     vectorField xyz(p.size());
-    transformation(p, axes, u, xyz);
+    transformation(p, axes, xyz);
 
     axes = tensor(- axes.x(), - axes.y(), axes.z());
 
@@ -317,7 +305,7 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
 
     xyz.replace(2, - xyz.component(2));
 
-    return UMean(t) + (velocity(t, xyz) & axes);
+    return velocity(t, xyz) & axes;
 }
 
 
@@ -328,9 +316,8 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pLiquid
 ) const
 {
     tensor axes;
-    scalar u;
     vectorField xyz(p.size());
-    transformation(p, axes, u, xyz);
+    transformation(p, axes, xyz);
 
     if (heightAboveWave_)
     {
@@ -348,9 +335,8 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pGas
 ) const
 {
     tensor axes;
-    scalar u;
     vectorField xyz(p.size());
-    transformation(p, axes, u, xyz);
+    transformation(p, axes, xyz);
 
     axes = tensor(- axes.x(), - axes.y(), axes.z());
 
@@ -369,7 +355,6 @@ void Foam::waveSuperposition::write(Ostream& os) const
 {
     os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
     os.writeKeyword("direction") << direction_ << token::END_STATEMENT << nl;
-    os.writeKeyword("speed") << speed_ << token::END_STATEMENT << nl;
     os.writeKeyword("waves") << nl << token::BEGIN_LIST << nl << incrIndent;
     forAll(waveModels_, wavei)
     {
@@ -380,10 +365,6 @@ void Foam::waveSuperposition::write(Ostream& os) const
             << nl << decrIndent << indent << token::END_BLOCK << nl;
     }
     os  << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
-    if (ramp_.valid())
-    {
-        ramp_->writeData(os);
-    }
     if (scale_.valid())
     {
         scale_->writeData(os);

@@ -62,24 +62,22 @@ Foam::scalar Foam::waveModels::solitary::celerity(const scalar t) const
 Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::parameter
 (
     const scalar t,
-    const scalar u,
     const scalarField& x
 ) const
 {
-    return k(t)*(x - offset_ - (u + celerity(t))*t);
+    return k(t)*(x - offset_ - celerity(t)*t);
 }
 
 
 Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::Pi
 (
     const scalar t,
-    const scalar u,
     const scalarField& x
 ) const
 {
     const scalar clip = log(great);
 
-    return 1/sqr(cosh(max(- clip, min(clip, parameter(t, u, x)))));
+    return 1/sqr(cosh(max(- clip, min(clip, parameter(t, x)))));
 }
 
 
@@ -116,24 +114,22 @@ Foam::waveModels::solitary::~solitary()
 Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::elevation
 (
     const scalar t,
-    const scalar u,
     const scalarField& x
 ) const
 {
-    return amplitude(t)*Pi(t, u, x);
+    return amplitude(t)*Pi(t, x);
 }
 
 
 Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
 (
     const scalar t,
-    const scalar u,
     const vector2DField& xz
 ) const
 {
     const scalar A = alpha(t);
     const scalarField Z(max(scalar(0), 1 + xz.component(1)/depth()));
-    const scalarField P(Pi(t, u, xz.component(0)));
+    const scalarField P(Pi(t, xz.component(0)));
 
     return
         celerity(t)
@@ -144,7 +140,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
                 (4 + 2*A - 6*A*sqr(Z))*P
               + (- 7*A + 9*A*sqr(Z))*sqr(P)
             ),
-            A*Z*depth()*k(t)*tanh(parameter(t, u, xz.component(0)))
+            A*Z*depth()*k(t)*tanh(parameter(t, xz.component(0)))
            *(
                 (2 + A - A*sqr(Z))*P
               + (- 7*A + 3*A*sqr(Z))*sqr(P)
@@ -156,7 +152,6 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
 Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::pressure
 (
     const scalar t,
-    const scalar u,
     const vector2DField& xz
 ) const
 {

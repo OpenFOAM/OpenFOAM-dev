@@ -122,20 +122,19 @@ Foam::waveAlphaFvPatchScalarField::waveAlphaFvPatchScalarField
 Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alpha() const
 {
     const scalar t = db().time().timeOutputValue();
-
+    const waveSuperposition& waves = waveSuperposition::New(db());
     const waveVelocityFvPatchVectorField& Up =
         refCast<const waveVelocityFvPatchVectorField>
         (
             patch().lookupPatchField<volVectorField, scalar>(UName_)
         );
-    const waveSuperposition& waves = Up.waves();
 
     return
         levelSetFraction
         (
             patch(),
-            waves.height(t, patch().Cf()),
-            waves.height(t, patch().patch().localPoints()),
+            waves.height(t, patch().Cf() + Up.offset()),
+            waves.height(t, patch().patch().localPoints() + Up.offset()),
             !liquid_
         );
 }
@@ -143,13 +142,13 @@ Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alpha() const
 
 Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alphan() const
 {
+    const scalar t = db().time().timeOutputValue();
+    const waveSuperposition& waves = waveSuperposition::New(db());
     const waveVelocityFvPatchVectorField& Up =
         refCast<const waveVelocityFvPatchVectorField>
         (
             patch().lookupPatchField<volVectorField, scalar>(UName_)
         );
-
-    const scalar t = db().time().timeOutputValue();
 
     const fvMeshSubset& subset = Up.faceCellSubset();
     const fvMesh& meshs = subset.subMesh();
@@ -160,8 +159,8 @@ Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alphan() const
         levelSetFraction
         (
             meshs,
-            Up.waves().height(t, meshs.cellCentres())(),
-            Up.waves().height(t, meshs.points())(),
+            waves.height(t, meshs.cellCentres() + Up.offset())(),
+            waves.height(t, meshs.points() + Up.offset())(),
             !liquid_
         )
     );

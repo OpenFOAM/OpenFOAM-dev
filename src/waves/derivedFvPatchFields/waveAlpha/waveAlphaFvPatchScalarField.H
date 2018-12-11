@@ -27,7 +27,8 @@ Class
 Description
     This boundary condition provides a waveAlpha condition. This sets the phase
     fraction to that specified by a superposition of wave models. All the
-    parameters are looked up from the corresponding velocity condition.
+    wave modelling parameters are obtained from a centrally registered
+    waveSuperposition class.
 
     Flow reversal will occur in the event that the amplitude of the velocity
     oscillation is greater than the mean flow. This triggers special handling,
@@ -58,9 +59,13 @@ Usage
     {
         type        waveAlpha;
         U           U;
+        liquid      true;
         inletOutlet true;
     }
     \endverbatim
+
+See also
+    Foam::waveSuperposition
 
 SourceFiles
     waveAlphaFvPatchScalarField.C
