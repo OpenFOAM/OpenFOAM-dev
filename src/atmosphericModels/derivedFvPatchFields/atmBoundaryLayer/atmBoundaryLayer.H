@@ -154,6 +154,19 @@ class atmBoundaryLayer
         //- Friction velocity
         scalarField Ustar_;
 
+        //- True if the boundary layer is offset within the domain
+        bool offset_;
+
+        //- Velocity of the flow below the boundary layer
+        const scalar Ulower_;
+
+        //- Turbulence kinetic energy of the flow below the boundary layer
+        const scalar kLower_;
+
+        //- Turbulence kinetic energy dissipation rate of the flow below the
+        //  boundary layer
+        const scalar epsilonLower_;
+
 
 public:
 

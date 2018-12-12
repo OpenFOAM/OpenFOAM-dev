@@ -42,7 +42,11 @@ atmBoundaryLayer::atmBoundaryLayer()
     Zref_(0),
     z0_(0),
     zGround_(0),
-    Ustar_(0)
+    Ustar_(0),
+    offset_(false),
+    Ulower_(0),
+    kLower_(0),
+    epsilonLower_(0)
 {}
 
 
@@ -56,7 +60,11 @@ atmBoundaryLayer::atmBoundaryLayer(const vectorField& p, const dictionary& dict)
     Zref_(readScalar(dict.lookup("Zref"))),
     z0_("z0", dict, p.size()),
     zGround_("zGround", dict, p.size()),
-    Ustar_(p.size())
+    Ustar_(p.size()),
+    offset_(dict.found("Ulower")),
+    Ulower_(dict.lookupOrDefault<scalar>("Ulower", 0)),
+    kLower_(dict.lookupOrDefault<scalar>("kLower", 0)),
+    epsilonLower_(dict.lookupOrDefault<scalar>("epsilonLower", 0))
 {
     if (mag(flowDir_) < small || mag(zDir_) < small)
     {
@@ -75,33 +83,41 @@ atmBoundaryLayer::atmBoundaryLayer(const vectorField& p, const dictionary& dict)
 
 atmBoundaryLayer::atmBoundaryLayer
 (
-    const atmBoundaryLayer& ptf,
+    const atmBoundaryLayer& abl,
     const fvPatchFieldMapper& mapper
 )
 :
-    flowDir_(ptf.flowDir_),
-    zDir_(ptf.zDir_),
-    kappa_(ptf.kappa_),
-    Cmu_(ptf.Cmu_),
-    Uref_(ptf.Uref_),
-    Zref_(ptf.Zref_),
-    z0_(ptf.z0_, mapper),
-    zGround_(ptf.zGround_, mapper),
-    Ustar_(ptf.Ustar_, mapper)
+    flowDir_(abl.flowDir_),
+    zDir_(abl.zDir_),
+    kappa_(abl.kappa_),
+    Cmu_(abl.Cmu_),
+    Uref_(abl.Uref_),
+    Zref_(abl.Zref_),
+    z0_(abl.z0_, mapper),
+    zGround_(abl.zGround_, mapper),
+    Ustar_(abl.Ustar_, mapper),
+    offset_(abl.offset_),
+    Ulower_(abl.Ulower_),
+    kLower_(abl.kLower_),
+    epsilonLower_(abl.epsilonLower_)
 {}
 
 
-atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& blpvf)
+atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
 :
-    flowDir_(blpvf.flowDir_),
-    zDir_(blpvf.zDir_),
-    kappa_(blpvf.kappa_),
-    Cmu_(blpvf.Cmu_),
-    Uref_(blpvf.Uref_),
-    Zref_(blpvf.Zref_),
-    z0_(blpvf.z0_),
-    zGround_(blpvf.zGround_),
-    Ustar_(blpvf.Ustar_)
+    flowDir_(abl.flowDir_),
+    zDir_(abl.zDir_),
+    kappa_(abl.kappa_),
+    Cmu_(abl.Cmu_),
+    Uref_(abl.Uref_),
+    Zref_(abl.Zref_),
+    z0_(abl.z0_),
+    zGround_(abl.zGround_),
+    Ustar_(abl.Ustar_),
+    offset_(abl.offset_),
+    Ulower_(abl.Ulower_),
+    kLower_(abl.kLower_),
+    epsilonLower_(abl.epsilonLower_)
 {}
 
 
@@ -129,25 +145,54 @@ void atmBoundaryLayer::rmap
 
 tmp<vectorField> atmBoundaryLayer::U(const vectorField& p) const
 {
-    scalarField Un
+    const scalarField Un
     (
         (Ustar_/kappa_)
-       *log(((zDir_ & p) - zGround_ + z0_)/z0_)
+       *log(max((zDir_ & p) - zGround_ + z0_, z0_)/z0_)
     );
 
-    return flowDir_*Un;
+    if (offset_)
+    {
+        return flowDir_*Un + flowDir_*Ulower_;
+    }
+    else
+    {
+        return flowDir_*Un;
+    }
 }
 
 
 tmp<scalarField> atmBoundaryLayer::k(const vectorField& p) const
 {
-    return sqr(Ustar_)/sqrt(Cmu_);
+    tmp<scalarField> tk
+    (
+        sqr(Ustar_)/sqrt(Cmu_)
+    );
+
+    if (offset_)
+    {
+        const scalarField z = (zDir_ & p) - zGround_;
+        tk.ref() = pos0(z)*tk() + neg(z)*kLower_;
+    }
+
+    return tk;
 }
 
 
 tmp<scalarField> atmBoundaryLayer::epsilon(const vectorField& p) const
 {
-    return pow3(Ustar_)/(kappa_*((zDir_ & p) - zGround_ + z0_));
+    tmp<scalarField> tepsilon
+    (
+        pow3(Ustar_)/(kappa_*((zDir_ & p) - zGround_ + z0_))
+    );
+
+    if (offset_)
+    {
+        const scalarField z = (zDir_ & p) - zGround_;
+        tepsilon.ref() = pos0(z)*tepsilon() + neg(z)*epsilonLower_;
+    }
+
+    return tepsilon;
 }
 
 
@@ -166,6 +211,17 @@ void atmBoundaryLayer::write(Ostream& os) const
         << Uref_ << token::END_STATEMENT << nl;
     os.writeKeyword("Zref")
         << Zref_ << token::END_STATEMENT << nl;
+
+    if (offset_)
+    {
+        os.writeKeyword("Ulower")
+            << Ulower_ << token::END_STATEMENT << nl;
+        os.writeKeyword("kLower")
+            << kLower_ << token::END_STATEMENT << nl;
+        os.writeKeyword("epsilonLower")
+            << epsilonLower_ << token::END_STATEMENT << nl;
+    }
+
     zGround_.writeEntry("zGround", os) ;
 }
 
