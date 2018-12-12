@@ -142,10 +142,10 @@ noFilesMessage () {
 searchDirs="\
     ${HOME}/.OpenFOAM/$WM_PROJECT_VERSION \
     ${HOME}/.OpenFOAM"
-[ -n "$WM_PROJECT_SITE" ] && searchDirs+=" \
+[ -n "$WM_PROJECT_SITE" ] && searchDirs="$searchDirs \
     $WM_PROJECT_SITE/$WM_PROJECT_VERSION/etc \
     $WM_PROJECT_SITE/etc"
-searchDirs+=" \
+searchDirs="$searchDirs \
     $WM_PROJECT_INST_DIR/site/$WM_PROJECT_VERSION/etc \
     $WM_PROJECT_INST_DIR/site/etc \
     $FOAM_ETC/caseDicts"
