@@ -20,6 +20,11 @@ surfaces
     "gasInlet.stl"
     "stirrer.stl"
     "outlet.stl"
+    "shaft.stl"
+    "shaftRotating.stl"
+    "rotating.stl"
+    "baffles.stl"
+    "sparger.stl"
 );
 
 // Identify a feature when angle between faces < includedAngle

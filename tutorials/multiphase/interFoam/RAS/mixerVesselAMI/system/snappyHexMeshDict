@@ -192,6 +192,30 @@ castellatedMeshControls
     features
     (
         {
+           file "shaftRotating.eMesh";
+           levels ((1 1));
+        }
+        {
+           file "shaft.eMesh";
+           levels ((1 1));
+        }
+        {
+           file "sparger.eMesh";
+           levels ((1 1));
+        }
+        {
+           file "stirrer.eMesh";
+           levels ((1 1));
+        }
+        {
+           file "baffles.eMesh";
+           levels ((1 1));
+        }
+        {
+           file "rotating.eMesh";
+           levels ((1 1));
+        }
+        {
            file "gasInlet.eMesh";
            levels ((1 1));
         }
@@ -520,7 +544,7 @@ meshQualityControls
     //    <0 = inside out tet,
     //     0 = flat tet
     //     1 = regular tet
-    minTetQuality 1e-9;
+    minTetQuality -1e-30;
 
     // Minimum face area. Set to <0 to disable.
     minArea -1;
