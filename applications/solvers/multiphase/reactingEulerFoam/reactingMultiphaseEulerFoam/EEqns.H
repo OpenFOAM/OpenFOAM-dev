@@ -12,8 +12,10 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
         phaseModel& phase = fluid.anisothermalPhases()[anisothermalPhasei];
 
         const volScalarField& alpha = phase;
-        tmp<volScalarField> rho = phase.rho();
-        tmp<volVectorField> U = phase.U();
+        tmp<volScalarField> tRho = phase.rho();
+        const volScalarField& rho = tRho();
+        tmp<volVectorField> tU = phase.U();
+        const volVectorField& U = tU();
 
         fvScalarMatrix EEqn
         (
