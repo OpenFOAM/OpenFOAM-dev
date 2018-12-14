@@ -39,18 +39,20 @@ License
 
 #define makeChemistryReductionMethod(SS, Comp, Thermo)                         \
                                                                                \
-    typedef chemistryReductionMethods::SS<Comp, Thermo> SS##Comp##Thermo;      \
+    typedef chemistryReductionMethods::SS<Comp, Thermo>                        \
+        chemistryReductionMethod##SS##Comp##Thermo;                            \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        SS##Comp##Thermo,                                                      \
+        chemistryReductionMethod##SS##Comp##Thermo,                            \
         (#SS"<" + word(Comp::typeName_())                                      \
       + "," + Thermo::typeName() + ">").c_str(),                               \
         0                                                                      \
     );                                                                         \
                                                                                \
     chemistryReductionMethod<Comp, Thermo>::                                   \
-        adddictionaryConstructorToTable<SS##Comp##Thermo>                      \
+        adddictionaryConstructorToTable                                        \
+        <chemistryReductionMethod##SS##Comp##Thermo>                           \
         add##chemistryReductionMethods##SS##Comp##Thermo##ConstructorToTable_;
 
 

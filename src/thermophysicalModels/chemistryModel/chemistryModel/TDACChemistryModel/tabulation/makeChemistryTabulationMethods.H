@@ -34,18 +34,20 @@ License
 
 #define makeChemistryTabulationMethod(SS, Comp, Thermo)                        \
                                                                                \
-    typedef chemistryTabulationMethods::SS<Comp, Thermo> SS##Comp##Thermo;     \
+    typedef chemistryTabulationMethods::SS<Comp, Thermo>                       \
+        chemistryTabulationMethod##SS##Comp##Thermo;                           \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        SS##Comp##Thermo,                                                      \
+        chemistryTabulationMethod##SS##Comp##Thermo,                           \
         (#SS"<" + word(Comp::typeName_())                                      \
       + "," + Thermo::typeName() + ">").c_str(),                               \
         0                                                                      \
     );                                                                         \
                                                                                \
     chemistryTabulationMethod<Comp, Thermo>::                                  \
-        adddictionaryConstructorToTable<SS##Comp##Thermo>                      \
+        adddictionaryConstructorToTable                                        \
+        <chemistryTabulationMethod##SS##Comp##Thermo>                          \
         add##chemistryTabulationMethods##SS##Comp##Thermo##ConstructorToTable_;
 
 
