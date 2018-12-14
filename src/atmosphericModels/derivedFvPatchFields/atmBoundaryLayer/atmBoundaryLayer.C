@@ -171,7 +171,7 @@ tmp<scalarField> atmBoundaryLayer::k(const vectorField& p) const
 
     if (offset_)
     {
-        const scalarField z = (zDir_ & p) - zGround_;
+        const scalarField z((zDir_ & p) - zGround_);
         tk.ref() = pos0(z)*tk() + neg(z)*kLower_;
     }
 
@@ -188,7 +188,7 @@ tmp<scalarField> atmBoundaryLayer::epsilon(const vectorField& p) const
 
     if (offset_)
     {
-        const scalarField z = (zDir_ & p) - zGround_;
+        const scalarField z((zDir_ & p) - zGround_);
         tepsilon.ref() = pos0(z)*tepsilon() + neg(z)*epsilonLower_;
     }
 

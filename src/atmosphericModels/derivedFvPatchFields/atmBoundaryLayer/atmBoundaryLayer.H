@@ -82,6 +82,9 @@ Usage
         Zref         | Reference height [m]             | yes       |
         z0           | Surface roughness height [m]     | yes       |
         zGround      | Minimum z-coordinate [m]         | yes       |
+        Ulower       | Velocity below the BL            | no        |
+        kLower       | Turbulence k below the BL        | no        |
+        epsilonLower | Turbulence epsilon below the BL  | no        |
     \endtable
 
     Example of the boundary condition specification:
