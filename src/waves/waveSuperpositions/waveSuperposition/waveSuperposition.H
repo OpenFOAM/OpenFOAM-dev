@@ -153,6 +153,21 @@ class waveSuperposition
 
 public:
 
+    //- Runtime type information
+    TypeName("wave");
+
+
+    // Declare runtime construction
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        waveSuperposition,
+        objectRegistry,
+        (const objectRegistry& db),
+        (db)
+    );
+
+
     // Static Data
 
         //- The name of the dictionary
@@ -171,12 +186,6 @@ public:
         //- Construct from a database
         waveSuperposition(const objectRegistry& db);
 
-        //- Construct a copy
-        waveSuperposition(const waveSuperposition& waves);
-
-        //- Construct from a database and gravity
-        waveSuperposition(const objectRegistry& db, const dictionary& dict);
-
 
     //- Destructor
     ~waveSuperposition();
@@ -184,20 +193,54 @@ public:
 
     // Member Functions
 
+        // Access
+
+            //- Return the origin of the wave coordinate system
+            const vector& origin() const
+            {
+                return origin_;
+            }
+
+            //- Return the direction of the wave coordinate system
+            const vector& direction() const
+            {
+                return direction_;
+            }
+
         //- Get the height above the waves at a given time and global positions
-        tmp<scalarField> height(const scalar t, const vectorField& p) const;
+        virtual tmp<scalarField> height
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Get the liquid velocity at a given time and global positions
-        tmp<vectorField> ULiquid(const scalar t, const vectorField& p) const;
+        virtual tmp<vectorField> ULiquid
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Get the gas velocity at a given time and global positions
-        tmp<vectorField> UGas(const scalar t, const vectorField& p) const;
+        virtual tmp<vectorField> UGas
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Get the liquid pressure at a given time and global positions
-        tmp<scalarField> pLiquid(const scalar t, const vectorField& p) const;
+        virtual tmp<scalarField> pLiquid
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Get the gas pressure at a given time and global positions
-        tmp<scalarField> pGas(const scalar t, const vectorField& p) const;
+        virtual tmp<scalarField> pGas
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Inherit write from regIOobject
         using regIOobject::write;

@@ -25,14 +25,35 @@ License
 
 #include "atmBoundaryLayer.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
+const Foam::scalar Foam::atmBoundaryLayer::kappaDefault_ = 0.41;
+
+const Foam::scalar Foam::atmBoundaryLayer::CmuDefault_ = 0.09;
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::atmBoundaryLayer::init()
 {
+    if (mag(flowDir_) < small || mag(zDir_) < small)
+    {
+        FatalErrorInFunction
+            << "magnitude of n or z must be greater than zero"
+            << abort(FatalError);
+    }
+
+    // Ensure direction vectors are normalized
+    flowDir_ /= mag(flowDir_);
+    zDir_ /= mag(zDir_);
+
+    Ustar_ = kappa_*Uref_/(log((Zref_ + z0_)/z0_));
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-atmBoundaryLayer::atmBoundaryLayer()
+Foam::atmBoundaryLayer::atmBoundaryLayer()
 :
     flowDir_(Zero),
     zDir_(Zero),
@@ -50,12 +71,49 @@ atmBoundaryLayer::atmBoundaryLayer()
 {}
 
 
-atmBoundaryLayer::atmBoundaryLayer(const vectorField& p, const dictionary& dict)
+Foam::atmBoundaryLayer::atmBoundaryLayer
+(
+    const vector& flowDir,
+    const vector& zDir,
+    const scalar Uref,
+    const scalar Zref,
+    const scalarField& z0,
+    const scalarField& zGround,
+    const scalar kappa,
+    const scalar Cmu,
+    const scalar Ulower,
+    const scalar kLower,
+    const scalar epsilonLower
+)
+:
+    flowDir_(flowDir),
+    zDir_(zDir),
+    kappa_(kappa),
+    Cmu_(Cmu),
+    Uref_(Uref),
+    Zref_(Zref),
+    z0_(z0),
+    zGround_(zGround),
+    Ustar_(z0.size()),
+    offset_(Ulower != 0),
+    Ulower_(Ulower),
+    kLower_(kLower),
+    epsilonLower_(epsilonLower)
+{
+    init();
+}
+
+
+Foam::atmBoundaryLayer::atmBoundaryLayer
+(
+    const vectorField& p,
+    const dictionary& dict
+)
 :
     flowDir_(dict.lookup("flowDir")),
     zDir_(dict.lookup("zDir")),
-    kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
-    Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
+    kappa_(dict.lookupOrDefault<scalar>("kappa", kappaDefault_)),
+    Cmu_(dict.lookupOrDefault<scalar>("Cmu", CmuDefault_)),
     Uref_(readScalar(dict.lookup("Uref"))),
     Zref_(readScalar(dict.lookup("Zref"))),
     z0_("z0", dict, p.size()),
@@ -66,22 +124,11 @@ atmBoundaryLayer::atmBoundaryLayer(const vectorField& p, const dictionary& dict)
     kLower_(dict.lookupOrDefault<scalar>("kLower", 0)),
     epsilonLower_(dict.lookupOrDefault<scalar>("epsilonLower", 0))
 {
-    if (mag(flowDir_) < small || mag(zDir_) < small)
-    {
-        FatalErrorInFunction
-            << "magnitude of n or z must be greater than zero"
-            << abort(FatalError);
-    }
-
-    // Ensure direction vectors are normalized
-    flowDir_ /= mag(flowDir_);
-    zDir_ /= mag(zDir_);
-
-    Ustar_ = kappa_*Uref_/(log((Zref_ + z0_)/z0_));
+    init();
 }
 
 
-atmBoundaryLayer::atmBoundaryLayer
+Foam::atmBoundaryLayer::atmBoundaryLayer
 (
     const atmBoundaryLayer& abl,
     const fvPatchFieldMapper& mapper
@@ -103,7 +150,7 @@ atmBoundaryLayer::atmBoundaryLayer
 {}
 
 
-atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
+Foam::atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
 :
     flowDir_(abl.flowDir_),
     zDir_(abl.zDir_),
@@ -123,7 +170,7 @@ atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void atmBoundaryLayer::autoMap(const fvPatchFieldMapper& m)
+void Foam::atmBoundaryLayer::autoMap(const fvPatchFieldMapper& m)
 {
     z0_.autoMap(m);
     zGround_.autoMap(m);
@@ -131,7 +178,7 @@ void atmBoundaryLayer::autoMap(const fvPatchFieldMapper& m)
 }
 
 
-void atmBoundaryLayer::rmap
+void Foam::atmBoundaryLayer::rmap
 (
     const atmBoundaryLayer& blptf,
     const labelList& addr
@@ -143,7 +190,10 @@ void atmBoundaryLayer::rmap
 }
 
 
-tmp<vectorField> atmBoundaryLayer::U(const vectorField& p) const
+Foam::tmp<Foam::vectorField> Foam::atmBoundaryLayer::U
+(
+    const vectorField& p
+) const
 {
     const scalarField Un
     (
@@ -162,7 +212,10 @@ tmp<vectorField> atmBoundaryLayer::U(const vectorField& p) const
 }
 
 
-tmp<scalarField> atmBoundaryLayer::k(const vectorField& p) const
+Foam::tmp<Foam::scalarField> Foam::atmBoundaryLayer::k
+(
+    const vectorField& p
+) const
 {
     tmp<scalarField> tk
     (
@@ -179,7 +232,10 @@ tmp<scalarField> atmBoundaryLayer::k(const vectorField& p) const
 }
 
 
-tmp<scalarField> atmBoundaryLayer::epsilon(const vectorField& p) const
+Foam::tmp<Foam::scalarField> Foam::atmBoundaryLayer::epsilon
+(
+    const vectorField& p
+) const
 {
     tmp<scalarField> tepsilon
     (
@@ -196,7 +252,7 @@ tmp<scalarField> atmBoundaryLayer::epsilon(const vectorField& p) const
 }
 
 
-void atmBoundaryLayer::write(Ostream& os) const
+void Foam::atmBoundaryLayer::write(Ostream& os) const
 {
     z0_.writeEntry("z0", os) ;
     os.writeKeyword("flowDir")
@@ -225,9 +281,5 @@ void atmBoundaryLayer::write(Ostream& os) const
     zGround_.writeEntry("zGround", os) ;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

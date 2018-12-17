@@ -128,6 +128,15 @@ namespace Foam
 
 class atmBoundaryLayer
 {
+    // Private static data
+
+        //- Default value of the Von Karman constant
+        static const scalar kappaDefault_;
+
+        //- Default value of the turbulent viscosity coefficient
+        static const scalar CmuDefault_;
+
+
     // Private data
 
         //- Flow direction
@@ -171,12 +180,34 @@ class atmBoundaryLayer
         const scalar epsilonLower_;
 
 
+    // Private member functions
+
+        //- Initialisation shared by multiple constructors
+        void init();
+
+
 public:
 
     // Constructors
 
         //- Construct null
         atmBoundaryLayer();
+
+        //- Construct from components
+        atmBoundaryLayer
+        (
+            const vector& flowDir,
+            const vector& zDir,
+            const scalar Uref,
+            const scalar Zref,
+            const scalarField& z0,
+            const scalarField& zGround,
+            const scalar kappa = kappaDefault_,
+            const scalar Cmu = CmuDefault_,
+            const scalar ULower = 0,
+            const scalar kLower = 0,
+            const scalar epsilonLower = 0
+        );
 
         //- Construct from the coordinates field and dictionary
         atmBoundaryLayer(const vectorField& p, const dictionary&);

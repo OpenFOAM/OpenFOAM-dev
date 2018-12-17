@@ -5,7 +5,9 @@ waveModels/Stokes2/Stokes2.C
 waveModels/Stokes5/Stokes5.C
 waveModels/solitary/solitary.C
 
-waveSuperposition/waveSuperposition.C
+waveSuperpositions/waveSuperposition/waveSuperposition.C
+waveSuperpositions/waveSuperposition/newWaveSuperposition.C
+waveSuperpositions/waveAtmBoundaryLayerSuperposition/waveAtmBoundaryLayerSuperposition.C
 
 derivedFvPatchFields/waveAlpha/waveAlphaFvPatchScalarField.C
 derivedFvPatchFields/waveVelocity/waveVelocityFvPatchVectorField.C

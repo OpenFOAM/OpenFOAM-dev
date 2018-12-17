@@ -25,29 +25,22 @@ License
 
 #include "waveSuperposition.H"
 #include "uniformDimensionedFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 const Foam::word Foam::waveSuperposition::dictName("waveProperties");
 
-
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
-const Foam::waveSuperposition& Foam::waveSuperposition::New
-(
-    const objectRegistry& db
-)
+namespace Foam
 {
-    if (db.foundObject<waveSuperposition>(dictName))
-    {
-        return db.lookupObject<waveSuperposition>(dictName);
-    }
-    else
-    {
-        waveSuperposition* ptr = new waveSuperposition(db);
-        ptr->store();
-        return *ptr;
-    }
+    defineTypeNameAndDebug(waveSuperposition, 0);
+    defineRunTimeSelectionTable(waveSuperposition, objectRegistry);
+    addToRunTimeSelectionTable
+    (
+        waveSuperposition,
+        waveSuperposition,
+        objectRegistry
+    );
 }
 
 
