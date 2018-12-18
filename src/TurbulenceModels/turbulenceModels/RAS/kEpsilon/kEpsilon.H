@@ -158,26 +158,20 @@ public:
         //- Return the effective diffusivity for k
         tmp<volScalarField> DkEff() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField
-                (
-                    "DkEff",
-                    (this->nut_/sigmak_ + this->nu())
-                )
+                "DkEff",
+                (this->nut_/sigmak_ + this->nu())
             );
         }
 
         //- Return the effective diffusivity for epsilon
         tmp<volScalarField> DepsilonEff() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField
-                (
-                    "DepsilonEff",
-                    (this->nut_/sigmaEps_ + this->nu())
-                )
+                "DepsilonEff",
+                (this->nut_/sigmaEps_ + this->nu())
             );
         }
 

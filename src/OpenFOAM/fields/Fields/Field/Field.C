@@ -251,7 +251,6 @@ Foam::Field<Type>::Field(const UIndirectList<Type>& list)
 {}
 
 
-#ifndef NoConstructFromTmp
 template<class Type>
 Foam::Field<Type>::Field(const tmp<Field<Type>>& tf)
 :
@@ -259,7 +258,6 @@ Foam::Field<Type>::Field(const tmp<Field<Type>>& tf)
 {
     tf.clear();
 }
-#endif
 
 
 template<class Type>

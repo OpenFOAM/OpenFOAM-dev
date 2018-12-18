@@ -165,18 +165,20 @@ public:
         //- Return the effective diffusivity for q
         tmp<volScalarField> DqEff() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField("DqEff", nut_ + nu())
+                "DqEff",
+                nut_ + nu()
             );
         }
 
         //- Return the effective diffusivity for epsilon
         tmp<volScalarField> DzetaEff() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField("DzetaEff", nut_/sigmaZeta_ + nu())
+                "DzetaEff",
+                nut_/sigmaZeta_ + nu()
             );
         }
 

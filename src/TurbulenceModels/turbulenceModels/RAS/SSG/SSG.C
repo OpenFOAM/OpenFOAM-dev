@@ -253,13 +253,10 @@ bool SSG<BasicTurbulenceModel>::read()
 template<class BasicTurbulenceModel>
 tmp<volSymmTensorField> SSG<BasicTurbulenceModel>::DREff() const
 {
-    return tmp<volSymmTensorField>
+    return volSymmTensorField::New
     (
-        new volSymmTensorField
-        (
-            "DREff",
-            (Cs_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
-        )
+        "DREff",
+        (Cs_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
     );
 }
 
@@ -267,13 +264,10 @@ tmp<volSymmTensorField> SSG<BasicTurbulenceModel>::DREff() const
 template<class BasicTurbulenceModel>
 tmp<volSymmTensorField> SSG<BasicTurbulenceModel>::DepsilonEff() const
 {
-    return tmp<volSymmTensorField>
+    return volSymmTensorField::New
     (
-        new volSymmTensorField
-        (
-            "DepsilonEff",
-            (Ceps_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
-        )
+        "DepsilonEff",
+        (Ceps_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
     );
 }
 

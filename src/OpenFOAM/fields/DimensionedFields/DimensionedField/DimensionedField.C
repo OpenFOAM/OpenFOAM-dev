@@ -154,7 +154,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {}
 
 
-#ifndef NoConstructFromTmp
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
@@ -172,7 +171,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {
     tdf.clear();
 }
-#endif
 
 
 template<class Type, class GeoMesh>
@@ -247,7 +245,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {}
 
 
-#ifndef NoConstructFromTmp
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
@@ -266,7 +263,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {
     tdf.clear();
 }
-#endif
 
 
 template<class Type, class GeoMesh>

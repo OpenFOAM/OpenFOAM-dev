@@ -240,18 +240,20 @@ public:
         //- Return the effective diffusivity for k
         tmp<volScalarField> DkEff(const volScalarField& alphaT) const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField("DkEff", alphaT/Sigmak_ + nu())
+                "DkEff",
+                alphaT/Sigmak_ + nu()
             );
         }
 
         //- Return the effective diffusivity for omega
         tmp<volScalarField> DomegaEff(const volScalarField& alphaT) const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField("DomegaEff", alphaT/Sigmaw_ + nu())
+                "DomegaEff",
+                alphaT/Sigmaw_ + nu()
             );
         }
 
@@ -276,19 +278,11 @@ public:
         //- Return the total fluctuation kinetic energy
         virtual tmp<volScalarField> k() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        "k",
-                        mesh_.time().timeName(),
-                        mesh_
-                    ),
-                    kt_ + kl_,
-                    omega_.boundaryField().types()
-                )
+                "k",
+                kt_ + kl_,
+                omega_.boundaryField().types()
             );
         }
 

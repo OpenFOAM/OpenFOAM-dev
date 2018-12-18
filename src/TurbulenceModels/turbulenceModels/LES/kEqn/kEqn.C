@@ -141,20 +141,10 @@ bool kEqn<BasicTurbulenceModel>::read()
 template<class BasicTurbulenceModel>
 tmp<volScalarField> kEqn<BasicTurbulenceModel>::epsilon() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            this->Ce_*k()*sqrt(k())/this->delta()
-        )
+        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        this->Ce_*k()*sqrt(k())/this->delta()
     );
 }
 

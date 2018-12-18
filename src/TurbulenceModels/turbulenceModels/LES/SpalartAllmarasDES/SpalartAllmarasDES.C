@@ -359,9 +359,10 @@ template<class BasicTurbulenceModel>
 tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::
 DnuTildaEff() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField("DnuTildaEff", (nuTilda_ + this->nu())/sigmaNut_)
+        "DnuTildaEff",
+        (nuTilda_ + this->nu())/sigmaNut_
     );
 }
 
@@ -383,16 +384,9 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::LESRegion() const
 
     tmp<volScalarField> tLESRegion
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "DES::LESRegion",
-                this->mesh_.time().timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "DES::LESRegion",
             neg(dTilda(chi, fv1, fvc::grad(this->U_)) - y_)
         )
     );

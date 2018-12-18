@@ -185,21 +185,14 @@ template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
 Foam::laminarModel<BasicTurbulenceModel>::nut() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
+        this->mesh_,
+        dimensionedScalar
         (
-            IOobject
-            (
-                IOobject::groupName("nut", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar("nut", dimViscosity, 0.0)
+            IOobject::groupName("nut", this->alphaRhoPhi_.group()),
+            dimViscosity,
+            0
         )
     );
 }
@@ -223,12 +216,10 @@ template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
 Foam::laminarModel<BasicTurbulenceModel>::nuEff() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject::groupName("nuEff", this->alphaRhoPhi_.group()), this->nu()
-        )
+        IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+        this->nu()
     );
 }
 
@@ -248,21 +239,14 @@ template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
 Foam::laminarModel<BasicTurbulenceModel>::k() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
+        this->mesh_,
+        dimensionedScalar
         (
-            IOobject
-            (
-                IOobject::groupName("k", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar("k", sqr(this->U_.dimensions()), 0.0)
+            IOobject::groupName("k", this->alphaRhoPhi_.group()),
+            sqr(this->U_.dimensions()),
+            0
         )
     );
 }
@@ -272,24 +256,14 @@ template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
 Foam::laminarModel<BasicTurbulenceModel>::epsilon() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
+        this->mesh_,
+        dimensionedScalar
         (
-            IOobject
-            (
-                IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar
-            (
-                "epsilon", sqr(this->U_.dimensions())/dimTime, 0.0
-            )
+            IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+            sqr(this->U_.dimensions())/dimTime,
+            0
         )
     );
 }
@@ -299,24 +273,14 @@ template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volSymmTensorField>
 Foam::laminarModel<BasicTurbulenceModel>::R() const
 {
-    return tmp<volSymmTensorField>
+    return volSymmTensorField::New
     (
-        new volSymmTensorField
+        this->mesh_,
+        dimensionedSymmTensor
         (
-            IOobject
-            (
-                IOobject::groupName("R", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedSymmTensor
-            (
-                "R", sqr(this->U_.dimensions()), Zero
-            )
+            IOobject::groupName("R", this->alphaRhoPhi_.group()),
+            sqr(this->U_.dimensions()),
+            Zero
         )
     );
 }

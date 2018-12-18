@@ -102,18 +102,15 @@ nu
 {
     tmp<volScalarField> tnu
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
+            nu0.mesh(),
+            dimensionedScalar
             (
                 IOobject::groupName(type() + ":nu", nu0.group()),
-                nu0.time().timeName(),
-                nu0.db(),
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            nu0.mesh(),
-            dimensionedScalar("0", dimViscosity, 0)
+                dimViscosity,
+                0
+            )
         )
     );
 

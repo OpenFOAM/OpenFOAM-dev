@@ -189,15 +189,12 @@ continuousGasKEpsilon<BasicTurbulenceModel>::nuEff() const
         )
     );
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
-            blend*this->nut_
-          + (1.0 - blend)*rhoEff()*nutEff_/this->transport().rho()
-          + this->nu()
-        )
+        IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+        blend*this->nut_
+      + (1.0 - blend)*rhoEff()*nutEff_/this->transport().rho()
+      + this->nu()
     );
 }
 
@@ -213,13 +210,10 @@ continuousGasKEpsilon<BasicTurbulenceModel>::rhoEff() const
     const virtualMassModel& virtualMass =
         fluid.lookupSubModel<virtualMassModel>(gas, liquid);
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject::groupName("rhoEff", this->alphaRhoPhi_.group()),
-            gas.rho() + (virtualMass.Cvm() + 3.0/20.0)*liquid.rho()
-        )
+        IOobject::groupName("rhoEff", this->alphaRhoPhi_.group()),
+        gas.rho() + (virtualMass.Cvm() + 3.0/20.0)*liquid.rho()
     );
 }
 
@@ -279,21 +273,11 @@ continuousGasKEpsilon<BasicTurbulenceModel>::R() const
 {
     tmp<volScalarField> tk(this->k());
 
-    return tmp<volSymmTensorField>
+    return volSymmTensorField::New
     (
-        new volSymmTensorField
-        (
-            IOobject
-            (
-                IOobject::groupName("R", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            ((2.0/3.0)*I)*tk() - (nutEff_)*dev(twoSymm(fvc::grad(this->U_))),
-            tk().boundaryField().types()
-        )
+        IOobject::groupName("R", this->alphaRhoPhi_.group()),
+        ((2.0/3.0)*I)*tk() - (nutEff_)*dev(twoSymm(fvc::grad(this->U_))),
+        tk().boundaryField().types()
     );
 }
 

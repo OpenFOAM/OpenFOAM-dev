@@ -130,22 +130,12 @@ template<class BasicTurbulenceModel>
 tmp<Foam::volSymmTensorField>
 Maxwell<BasicTurbulenceModel>::devRhoReff() const
 {
-    return tmp<volSymmTensorField>
+    return volSymmTensorField::New
     (
-        new volSymmTensorField
-        (
-            IOobject
-            (
-                IOobject::groupName("devRhoReff", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            this->alpha_*this->rho_*sigma_
-          - (this->alpha_*this->rho_*this->nu())
-           *dev(twoSymm(fvc::grad(this->U_)))
-        )
+        IOobject::groupName("devRhoReff", this->alphaRhoPhi_.group()),
+        this->alpha_*this->rho_*sigma_
+      - (this->alpha_*this->rho_*this->nu())
+       *dev(twoSymm(fvc::grad(this->U_)))
     );
 }
 

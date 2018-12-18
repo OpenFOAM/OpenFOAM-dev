@@ -223,9 +223,7 @@ public:
         Field(const Xfer<Field<Type>>&);
 
         //- Construct as copy of tmp<Field>
-        #ifndef NoConstructFromTmp
         Field(const tmp<Field<Type>>&);
-        #endif
 
         //- Construct from Istream
         Field(Istream&);

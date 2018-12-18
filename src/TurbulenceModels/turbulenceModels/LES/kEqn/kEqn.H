@@ -149,9 +149,10 @@ public:
         //- Return the effective diffusivity for k
         tmp<volScalarField> DkEff() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField("DkEff", this->nut_ + this->nu())
+                "DkEff",
+                this->nut_ + this->nu()
             );
         }
 

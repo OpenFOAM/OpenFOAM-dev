@@ -370,12 +370,10 @@ public:
         );
 
         //- Construct as copy of tmp<GeometricField> deleting argument
-        #ifndef NoConstructFromTmp
         GeometricField
         (
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&
         );
-        #endif
 
         //- Construct as copy resetting IO parameters
         GeometricField
@@ -385,13 +383,11 @@ public:
         );
 
         //- Construct as copy of tmp<GeometricField> resetting IO parameters
-        #ifndef NoConstructFromTmp
         GeometricField
         (
             const IOobject&,
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&
         );
-        #endif
 
         //- Construct as copy resetting name
         GeometricField
@@ -401,13 +397,11 @@ public:
         );
 
         //- Construct as copy resetting name
-        #ifndef NoConstructFromTmp
         GeometricField
         (
             const word& newName,
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&
         );
-        #endif
 
         //- Construct as copy resetting IO parameters and patch type
         GeometricField
@@ -427,7 +421,6 @@ public:
         );
 
         //- Construct as copy resetting IO parameters and boundary types
-        #ifndef NoConstructFromTmp
         GeometricField
         (
             const IOobject&,
@@ -435,10 +428,44 @@ public:
             const wordList& patchFieldTypes,
             const wordList& actualPatchTypes = wordList()
         );
-        #endif
 
         //- Clone
         tmp<GeometricField<Type, PatchField, GeoMesh>> clone() const;
+
+        //- Return a temporary field constructed from name, mesh, dimensionSet
+        //  and patch type.
+        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        (
+            const word& name,
+            const Mesh&,
+            const dimensionSet&,
+            const word& patchFieldType=PatchField<Type>::calculatedType()
+        );
+
+        //- Return a temporary field constructed from mesh, dimensioned<Type>
+        //  and patch type.
+        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        (
+            const Mesh&,
+            const dimensioned<Type>&,
+            const word& patchFieldType=PatchField<Type>::calculatedType()
+        );
+
+        //- Rename temporary field and return
+        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        (
+            const word& newName,
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+        );
+
+        //- Rename and reset patch fields types of temporary field and return
+        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        (
+            const word& newName,
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList()
+        );
 
 
     //- Destructor

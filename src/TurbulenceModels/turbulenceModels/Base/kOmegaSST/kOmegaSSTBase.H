@@ -281,22 +281,20 @@ public:
         //- Return the effective diffusivity for k
         tmp<volScalarField> DkEff(const volScalarField& F1) const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField("DkEff", alphaK(F1)*this->nut_ + this->nu())
+                "DkEff",
+                alphaK(F1)*this->nut_ + this->nu()
             );
         }
 
         //- Return the effective diffusivity for omega
         tmp<volScalarField> DomegaEff(const volScalarField& F1) const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField
-                (
-                    "DomegaEff",
-                    alphaOmega(F1)*this->nut_ + this->nu()
-                )
+                "DomegaEff",
+                alphaOmega(F1)*this->nut_ + this->nu()
             );
         }
 
@@ -309,19 +307,11 @@ public:
         //- Return the turbulence kinetic energy dissipation rate
         virtual tmp<volScalarField> epsilon() const
         {
-              return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        "epsilon",
-                        this->mesh_.time().timeName(),
-                        this->mesh_
-                    ),
-                    betaStar_*k_*omega_,
-                    omega_.boundaryField().types()
-                )
+                "epsilon",
+                betaStar_*k_*omega_,
+                omega_.boundaryField().types()
             );
         }
 

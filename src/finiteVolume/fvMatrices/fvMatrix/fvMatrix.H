@@ -263,9 +263,7 @@ public:
         fvMatrix(const fvMatrix<Type>&);
 
         //- Construct as copy of tmp<fvMatrix<Type>> deleting argument
-        #ifndef NoConstructFromTmp
         fvMatrix(const tmp<fvMatrix<Type>>&);
-        #endif
 
         //- Construct from Istream given field to solve for
         fvMatrix(const GeometricField<Type, fvPatchField, volMesh>&, Istream&);

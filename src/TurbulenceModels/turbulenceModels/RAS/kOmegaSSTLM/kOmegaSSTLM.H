@@ -258,26 +258,20 @@ public:
         //  momentum-thickness Reynolds number
         tmp<volScalarField> DReThetatEff() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField
-                (
-                    "DReThetatEff",
-                    sigmaThetat_*(this->nut_ + this->nu())
-                )
+                "DReThetatEff",
+                sigmaThetat_*(this->nut_ + this->nu())
             );
         }
 
         //- Return the effective diffusivity for intermittency
         tmp<volScalarField> DgammaIntEff() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField
-                (
-                    "DgammaIntEff",
-                    this->nut_ + this->nu()
-                )
+                "DgammaIntEff",
+                this->nut_ + this->nu()
             );
         }
 

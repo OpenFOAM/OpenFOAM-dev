@@ -101,22 +101,11 @@ Foam::eddyViscosity<BasicTurbulenceModel>::R() const
         }
     }
 
-    return tmp<volSymmTensorField>
+    return volSymmTensorField::New
     (
-        new volSymmTensorField
-        (
-            IOobject
-            (
-                IOobject::groupName("R", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            ((2.0/3.0)*I)*tk() - (nut_)*dev(twoSymm(fvc::grad(this->U_))),
-            patchFieldTypes
-        )
+        IOobject::groupName("R", this->alphaRhoPhi_.group()),
+        ((2.0/3.0)*I)*tk() - (nut_)*dev(twoSymm(fvc::grad(this->U_))),
+        patchFieldTypes
     );
 }
 

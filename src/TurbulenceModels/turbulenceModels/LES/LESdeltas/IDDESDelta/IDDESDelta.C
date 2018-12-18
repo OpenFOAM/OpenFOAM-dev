@@ -51,18 +51,10 @@ void Foam::LESModels::IDDESDelta::calcDelta()
 
     tmp<volScalarField> tfaceToFacenMax
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "faceToFaceMax",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
             mesh,
-            dimensionedScalar("zero", dimLength, 0.0)
+            dimensionedScalar("faceToFaceMax", dimLength, 0)
         )
     );
 

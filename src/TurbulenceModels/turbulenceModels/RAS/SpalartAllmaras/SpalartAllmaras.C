@@ -292,9 +292,10 @@ bool SpalartAllmaras<BasicTurbulenceModel>::read()
 template<class BasicTurbulenceModel>
 tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::DnuTildaEff() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField("DnuTildaEff", (nuTilda_ + this->nu())/sigmaNut_)
+        "DnuTildaEff",
+        (nuTilda_ + this->nu())/sigmaNut_
     );
 }
 
@@ -302,19 +303,10 @@ tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::DnuTildaEff() const
 template<class BasicTurbulenceModel>
 tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::k() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "k",
-                this->runTime_.timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("0", dimensionSet(0, 2, -2, 0, 0), 0)
-        )
+        this->mesh_,
+        dimensionedScalar("k", dimensionSet(0, 2, -2, 0, 0), 0)
     );
 }
 
@@ -327,19 +319,10 @@ tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::epsilon() const
         << "Spalart-Allmaras model. Returning zero field"
         << endl;
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "epsilon",
-                this->runTime_.timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("0", dimensionSet(0, 2, -3, 0, 0), 0)
-        )
+        this->mesh_,
+        dimensionedScalar("epsilon", dimensionSet(0, 2, -3, 0, 0), 0)
     );
 }
 

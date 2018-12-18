@@ -208,13 +208,10 @@ public:
         //- Return the effective viscosity
         virtual tmp<volScalarField> nuEff() const
         {
-            return tmp<volScalarField>
+            return volScalarField::New
             (
-                new volScalarField
-                (
-                    IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
-                    this->nut() + this->nu()
-                )
+                IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+                this->nut() + this->nu()
             );
         }
 

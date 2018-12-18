@@ -516,6 +516,13 @@ inline fileName typeFilePath(const IOobject& io)
     );
 }
 
+inline IOobject unregister(const IOobject& io)
+{
+    IOobject uio(io);
+    uio.registerObject() = false;
+    return uio;
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

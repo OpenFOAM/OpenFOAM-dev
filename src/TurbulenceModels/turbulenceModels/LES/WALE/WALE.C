@@ -53,33 +53,25 @@ tmp<volScalarField> WALE<BasicTurbulenceModel>::k
 {
     volScalarField magSqrSd(magSqr(Sd(gradU)));
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
+        IOobject::groupName("k", this->alphaRhoPhi_.group()),
+        sqr(sqr(Cw_)*this->delta()/Ck_)*
         (
-            IOobject
-            (
-                IOobject::groupName("k", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_
-            ),
-            sqr(sqr(Cw_)*this->delta()/Ck_)*
-            (
-                pow3(magSqrSd)
-               /(
-                   sqr
-                   (
-                       pow(magSqr(symm(gradU)), 5.0/2.0)
-                     + pow(magSqrSd, 5.0/4.0)
-                   )
-                 + dimensionedScalar
-                   (
-                       "small",
-                       dimensionSet(0, 0, -10, 0, 0),
-                       small
-                   )
+            pow3(magSqrSd)
+           /(
+               sqr
+               (
+                   pow(magSqr(symm(gradU)), 5.0/2.0)
+                 + pow(magSqrSd, 5.0/4.0)
                )
-            )
+             + dimensionedScalar
+               (
+                   "small",
+                   dimensionSet(0, 0, -10, 0, 0),
+                   small
+               )
+           )
         )
     );
 }
@@ -174,20 +166,10 @@ tmp<volScalarField> WALE<BasicTurbulenceModel>::epsilon() const
 {
     volScalarField k(this->k(fvc::grad(this->U_)));
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            this->Ce_*k*sqrt(k)/this->delta()
-        )
+        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        this->Ce_*k*sqrt(k)/this->delta()
     );
 }
 

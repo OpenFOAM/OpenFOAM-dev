@@ -103,20 +103,14 @@ template<class TransportModel>
 Foam::tmp<Foam::volScalarField>
 Foam::PhaseIncompressibleTurbulenceModel<TransportModel>::pPrime() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
+        this->mesh_,
+        dimensionedScalar
         (
-            IOobject
-            (
-                IOobject::groupName("pPrime", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            this->mesh_,
-            dimensionedScalar("pPrimef", dimPressure, 0.0)
+            IOobject::groupName("pPrime", this->alphaRhoPhi_.group()),
+            dimPressure,
+            0
         )
     );
 }
@@ -126,20 +120,14 @@ template<class TransportModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::PhaseIncompressibleTurbulenceModel<TransportModel>::pPrimef() const
 {
-    return tmp<surfaceScalarField>
+    return surfaceScalarField::New
     (
-        new surfaceScalarField
+        this->mesh_,
+        dimensionedScalar
         (
-            IOobject
-            (
-                IOobject::groupName("pPrimef", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            this->mesh_,
-            dimensionedScalar("pPrimef", dimPressure, 0.0)
+            IOobject::groupName("pPrimef", this->alphaRhoPhi_.group()),
+            dimPressure,
+            0
         )
     );
 }

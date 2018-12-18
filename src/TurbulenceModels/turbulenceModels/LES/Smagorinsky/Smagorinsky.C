@@ -47,18 +47,10 @@ tmp<volScalarField> Smagorinsky<BasicTurbulenceModel>::k
     volScalarField b((2.0/3.0)*tr(D));
     volScalarField c(2*Ck_*this->delta()*(dev(D) && D));
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("k", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_
-            ),
-            sqr((-b + sqrt(sqr(b) + 4*a*c))/(2*a))
-        )
+        IOobject::groupName("k", this->alphaRhoPhi_.group()),
+        sqr((-b + sqrt(sqr(b) + 4*a*c))/(2*a))
     );
 }
 
@@ -143,18 +135,10 @@ tmp<volScalarField> Smagorinsky<BasicTurbulenceModel>::epsilon() const
 {
     volScalarField k(this->k(fvc::grad(this->U_)));
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_
-            ),
-            this->Ce_*k*sqrt(k)/this->delta()
-        )
+        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        this->Ce_*k*sqrt(k)/this->delta()
     );
 }
 
