@@ -85,11 +85,20 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
     {
         const token variable(ePtr->stream());
 
-        // Negate variable
+        // Convert to a string
         OStringStream os(is.format());
-        os << '-' << variable;
+        os << variable;
+        const string str(os.str());
 
-        return os.str();
+        // Negate
+        if (str[0] == '-')
+        {
+            return str(1, str.size() - 1);
+        }
+        else
+        {
+            return '-' + str;
+        }
     }
     else
     {
