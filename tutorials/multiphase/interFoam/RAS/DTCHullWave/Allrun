@@ -23,7 +23,7 @@ done
 
 runApplication snappyHexMesh -overwrite
 
-runApplication setWaves -alpha alpha.water
+runApplication setWaves
 
 runApplication decomposePar
 
