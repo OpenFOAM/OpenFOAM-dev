@@ -123,18 +123,13 @@ Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alpha() const
 {
     const scalar t = db().time().timeOutputValue();
     const waveSuperposition& waves = waveSuperposition::New(db());
-    const waveVelocityFvPatchVectorField& Up =
-        refCast<const waveVelocityFvPatchVectorField>
-        (
-            patch().lookupPatchField<volVectorField, scalar>(UName_)
-        );
 
     return
         levelSetFraction
         (
             patch(),
-            waves.height(t, patch().Cf() + Up.offset()),
-            waves.height(t, patch().patch().localPoints() + Up.offset()),
+            waves.height(t, patch().Cf()),
+            waves.height(t, patch().patch().localPoints()),
             !liquid_
         );
 }
@@ -159,8 +154,8 @@ Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alphan() const
         levelSetFraction
         (
             meshs,
-            waves.height(t, meshs.cellCentres() + Up.offset())(),
-            waves.height(t, meshs.points() + Up.offset())(),
+            waves.height(t, meshs.cellCentres())(),
+            waves.height(t, meshs.points())(),
             !liquid_
         )
     );

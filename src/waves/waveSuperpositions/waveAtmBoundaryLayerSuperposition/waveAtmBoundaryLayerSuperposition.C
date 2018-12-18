@@ -77,19 +77,30 @@ Foam::tmp<Foam::vectorField> Foam::waveAtmBoundaryLayerSuperposition::UGas
             db().lookupObject<uniformDimensionedVectorField>("g").value()
         );
 
-    const scalar h0 = - gHat & origin();
+    const scalar h0 = - gHat & origin_;
 
-    atmBoundaryLayer atm
-    (
-        normalised(UGasRef_),
-      - gHat,
-        mag(UGasRef_),
-        h0 + hRef_,
-        scalarField(p.size(), hWaveMax_ - hWaveMin_),
-        scalarField(p.size(), h0 + hWaveMin_)
-    );
+    const vector UGasRefRel = UGasRef_ - UMean_->value(t);
 
-    return waveSuperposition::UGas(t, p) + atm.U(p);
+    const scalar magUGasRefRel = mag(UGasRefRel);
+
+    tmp<vectorField> tU = waveSuperposition::UGas(t, p);
+
+    if (magUGasRefRel > 0)
+    {
+        atmBoundaryLayer atm
+        (
+            UGasRefRel/magUGasRefRel,
+          - gHat,
+            magUGasRefRel,
+            h0 + hRef_,
+            scalarField(p.size(), hWaveMax_ - hWaveMin_),
+            scalarField(p.size(), h0 + hWaveMin_)
+        );
+
+        tU.ref() += atm.U(p);
+    }
+
+    return tU;
 }
 
 

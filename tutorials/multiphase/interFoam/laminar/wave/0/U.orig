@@ -26,7 +26,6 @@ boundaryField
     left
     {
         type            waveVelocity;
-        UMean           (2 0 0);
     }
     right
     {

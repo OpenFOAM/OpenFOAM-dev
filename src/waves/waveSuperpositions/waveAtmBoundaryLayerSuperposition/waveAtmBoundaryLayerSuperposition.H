@@ -26,24 +26,23 @@ Class
 
 Description
     An extension of waveSuperposition which adds an atmospheric boundary layer
-    model to the gas velocity. The user supplies a gas velocity relative to the
-    mean liquid velocity and a height above the wave coordinate system origin
-    at which that velocity is reached. Also needed are a maximum and minimum
-    wave height which are used to set the surface roughness in the boundary
-    layer model. It is not trivial to determine these from an arbitrary
-    superposition of differently oriented wave models, so they are required as
-    user inputs instead. For a pure sinusoidal wave, the maximum and minimum
-    wave heights can be set to positive and negative amplitude, respectively.
+    model to the gas velocity. The user supplies a gas velocity and a height
+    above the wave coordinate system origin at which that velocity is reached.
+    Also needed are a maximum and minimum wave height which are used to set the
+    surface roughness in the boundary layer model. It is not trivial to
+    determine these from an arbitrary superposition of differently oriented
+    wave models, so they are required as user inputs instead. For a pure
+    sinusoidal wave, the maximum and minimum wave heights can be set to
+    positive and negative amplitude, respectively.
 
 Usage
     \table
-        Property | Description                             | Req'd? | Default
-        UGasRef  | The gas velocity relative to the \\
-                   liquid at the reference height          | yes    |
+        Property | Description                              | Req'd? | Default
+        UGasRef  | The gas velocity at the reference height | yes    |
         hRef     | The reference height relative to the \\
-                   origin of the wave coordinate system    | yes    |
-        hWaveMin | The minimum wave elevation              | yes    |
-        hWaveMax | The maximum wave elevation              | yes    |
+                   origin of the wave coordinate system     | yes    |
+        hWaveMin | The minimum wave elevation               | yes    |
+        hWaveMax | The maximum wave elevation               | yes    |
     \endtable
 
     Example specification:

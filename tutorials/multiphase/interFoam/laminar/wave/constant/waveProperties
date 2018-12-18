@@ -30,6 +30,8 @@ waves
     }
 );
 
+UMean           (2 0 0);
+
 scale           table ((1200 1) (1800 0));
 
 crossScale      constant 1;

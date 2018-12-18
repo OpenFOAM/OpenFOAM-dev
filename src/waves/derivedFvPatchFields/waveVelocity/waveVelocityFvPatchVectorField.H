@@ -62,7 +62,6 @@ Usage
         phi         | Name of the flux field                 | no     | phi
         p           | Name of the pressure field             | no     | p
         inletOutlet | does the condition behave like inletOutlet | no | true
-        UMean       | velocity of the mean flow              | yes    |
         ramp        | ramping function for the mean flow speed | no   | None
     \endtable
 
@@ -74,7 +73,6 @@ Usage
         phi         phi;
         p           p;
         inletOutlet yes;
-        UMean       (2 0 0);
         ramp        constant 1;
     }
     \endverbatim
@@ -118,9 +116,6 @@ class waveVelocityFvPatchVectorField
 
         //- Act as an inlet/outlet patch?
         const Switch inletOutlet_;
-
-        //- Mean velocity
-        const autoPtr<Function1<vector>> UMean_;
 
         //- Mesh subset corresponding to the patch adjacent cells
         mutable autoPtr<fvMeshSubset> faceCellSubset_;
@@ -217,18 +212,6 @@ public:
 
             //- Return the current modelled velocity field in the neighbour cell
             tmp<vectorField> Un() const;
-
-            //- Return the mean velocity
-            inline vector UMean() const
-            {
-                return UMean_->value(db().time().timeOutputValue());
-            }
-
-            //- Return the distance offset for the wave models
-            inline vector offset() const
-            {
-                return - UMean_->integrate(0, db().time().timeOutputValue());
-            }
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();

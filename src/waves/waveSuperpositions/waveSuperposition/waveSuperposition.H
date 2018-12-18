@@ -36,6 +36,7 @@ Usage
         origin     | origin of the wave coordinate system    | yes    |
         direction  | direction of the wave coordinate system | yes    |
         waves      | list of wave models to superimpose      | yes    |
+        UMean      | velocity of the mean flow               | yes    |
         scale      | scale factor in the direction           | no     | None
         crossScale | scale factor perpendicular to the direction | no | None
         heightAboveWave | use the height above the wave as the vertical \\
@@ -63,6 +64,7 @@ Usage
             angle       0;
         }
     );
+    UMean       (2 0 0);
     scale       table ((100 1) (200 0));
     crossScale  constant 1;
     heightAboveWave no;
@@ -92,7 +94,9 @@ class waveSuperposition
 :
     public IOdictionary
 {
-    // Private Data
+protected:
+
+    // Protected Data
 
         //- The origin of the wave coordinate system
         const vector origin_;
@@ -106,6 +110,9 @@ class waveSuperposition
         //- The angle relative to the direction at which the waves propagate
         scalarList waveAngles_;
 
+        //- Mean velocity
+        const autoPtr<Function1<vector>> UMean_;
+
         //- Scaling in the local x-direction
         const autoPtr<Function1<scalar>> scale_;
 
@@ -117,11 +124,12 @@ class waveSuperposition
         const Switch heightAboveWave_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Get the transformation to actual coordinates
         void transformation
         (
+            const scalar t,
             const vectorField& p,
             tensor& axes,
             vectorField& xyz
@@ -192,20 +200,6 @@ public:
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the origin of the wave coordinate system
-            const vector& origin() const
-            {
-                return origin_;
-            }
-
-            //- Return the direction of the wave coordinate system
-            const vector& direction() const
-            {
-                return direction_;
-            }
 
         //- Get the height above the waves at a given time and global positions
         virtual tmp<scalarField> height

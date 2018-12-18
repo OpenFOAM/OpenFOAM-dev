@@ -42,7 +42,6 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
     phiName_("phi"),
     pName_("p"),
     inletOutlet_(true),
-    UMean_(nullptr),
     faceCellSubset_(nullptr),
     faceCellSubsetTimeIndex_(-1)
 {
@@ -63,7 +62,6 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     pName_(dict.lookupOrDefault<word>("p", "p")),
     inletOutlet_(dict.lookupOrDefault<Switch>("inletOutlet", true)),
-    UMean_(Function1<vector>::New("UMean", dict)),
     faceCellSubset_(nullptr),
     faceCellSubsetTimeIndex_(-1)
 {
@@ -94,7 +92,6 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
     phiName_(ptf.phiName_),
     pName_(ptf.pName_),
     inletOutlet_(ptf.inletOutlet_),
-    UMean_(ptf.UMean_, false),
     faceCellSubset_(nullptr),
     faceCellSubsetTimeIndex_(-1)
 {}
@@ -109,7 +106,6 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
     phiName_(ptf.phiName_),
     pName_(ptf.pName_),
     inletOutlet_(ptf.inletOutlet_),
-    UMean_(ptf.UMean_, false),
     faceCellSubset_(nullptr),
     faceCellSubsetTimeIndex_(-1)
 {}
@@ -125,7 +121,6 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
     phiName_(ptf.phiName_),
     pName_(ptf.pName_),
     inletOutlet_(ptf.inletOutlet_),
-    UMean_(ptf.UMean_, false),
     faceCellSubset_(nullptr),
     faceCellSubsetTimeIndex_(-1)
 {}
@@ -165,16 +160,15 @@ Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::U() const
     const waveSuperposition& waves = waveSuperposition::New(db());
 
     return
-        UMean_->value(t)
-      + levelSetAverage
+        levelSetAverage
         (
             patch(),
-            waves.height(t, patch().Cf() + offset()),
-            waves.height(t, patch().patch().localPoints() + offset()),
-            waves.UGas(t, patch().Cf() + offset())(),
-            waves.UGas(t, patch().patch().localPoints() + offset())(),
-            waves.ULiquid(t, patch().Cf() + offset())(),
-            waves.ULiquid(t, patch().patch().localPoints() + offset())()
+            waves.height(t, patch().Cf()),
+            waves.height(t, patch().patch().localPoints()),
+            waves.UGas(t, patch().Cf())(),
+            waves.UGas(t, patch().patch().localPoints())(),
+            waves.ULiquid(t, patch().Cf())(),
+            waves.ULiquid(t, patch().patch().localPoints())()
         );
 }
 
@@ -190,16 +184,15 @@ Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::Un() const
 
     const vectorField Us
     (
-        UMean_->value(t)
-      + levelSetAverage
+        levelSetAverage
         (
             meshs,
-            waves.height(t, meshs.cellCentres() + offset())(),
-            waves.height(t, meshs.points() + offset())(),
-            waves.UGas(t, meshs.cellCentres() + offset())(),
-            waves.UGas(t, meshs.points() + offset())(),
-            waves.ULiquid(t, meshs.cellCentres() + offset())(),
-            waves.ULiquid(t, meshs.points() + offset())()
+            waves.height(t, meshs.cellCentres())(),
+            waves.height(t, meshs.points())(),
+            waves.UGas(t, meshs.cellCentres())(),
+            waves.UGas(t, meshs.points())(),
+            waves.ULiquid(t, meshs.cellCentres())(),
+            waves.ULiquid(t, meshs.points())()
         )
     );
 
@@ -297,7 +290,6 @@ void Foam::waveVelocityFvPatchVectorField::write
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
     writeEntryIfDifferent<Switch>(os, "inletOutlet", true, inletOutlet_);
-    UMean_->writeData(os);
 }
 
 

@@ -117,22 +117,17 @@ Foam::tmp<Foam::scalarField> Foam::wavePressureFvPatchScalarField::p() const
 {
     const scalar t = db().time().timeOutputValue();
     const waveSuperposition& waves = waveSuperposition::New(db());
-    const waveVelocityFvPatchVectorField& Up =
-        refCast<const waveVelocityFvPatchVectorField>
-        (
-            patch().lookupPatchField<volVectorField, scalar>(UName_)
-        );
 
     return
         levelSetAverage
         (
             patch(),
-            waves.height(t, patch().Cf() + Up.offset()),
-            waves.height(t, patch().patch().localPoints() + Up.offset()),
-            waves.pGas(t, patch().Cf() + Up.offset())(),
-            waves.pGas(t, patch().patch().localPoints() + Up.offset())(),
-            waves.pLiquid(t, patch().Cf() + Up.offset())(),
-            waves.pLiquid(t, patch().patch().localPoints() + Up.offset())()
+            waves.height(t, patch().Cf()),
+            waves.height(t, patch().patch().localPoints()),
+            waves.pGas(t, patch().Cf())(),
+            waves.pGas(t, patch().patch().localPoints())(),
+            waves.pLiquid(t, patch().Cf())(),
+            waves.pLiquid(t, patch().patch().localPoints())()
         );
 }
 
@@ -156,12 +151,12 @@ Foam::tmp<Foam::scalarField> Foam::wavePressureFvPatchScalarField::pn() const
         levelSetAverage
         (
             meshs,
-            waves.height(t, meshs.cellCentres() + Up.offset())(),
-            waves.height(t, meshs.points() + Up.offset())(),
-            waves.pGas(t, meshs.cellCentres() + Up.offset())(),
-            waves.pGas(t, meshs.points() + Up.offset())(),
-            waves.pLiquid(t, meshs.cellCentres() + Up.offset())(),
-            waves.pLiquid(t, meshs.points() + Up.offset())()
+            waves.height(t, meshs.cellCentres())(),
+            waves.height(t, meshs.points())(),
+            waves.pGas(t, meshs.cellCentres())(),
+            waves.pGas(t, meshs.points())(),
+            waves.pLiquid(t, meshs.cellCentres())(),
+            waves.pLiquid(t, meshs.points())()
         )
     );
 

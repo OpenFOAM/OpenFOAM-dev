@@ -48,6 +48,7 @@ namespace Foam
 
 void Foam::waveSuperposition::transformation
 (
+    const scalar t,
     const vectorField& p,
     tensor& axes,
     vectorField& xyz
@@ -64,7 +65,7 @@ void Foam::waveSuperposition::transformation
 
     axes = tensor(dSurfHat, - gHat ^ dSurfHat, - gHat);
 
-    xyz = axes & (p - origin_);
+    xyz = axes & (p - origin_ - UMean_->integrate(0, t));
 }
 
 
@@ -204,6 +205,7 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
     direction_(lookup("direction")),
     waveModels_(),
     waveAngles_(),
+    UMean_(Function1<vector>::New("UMean", *this)),
     scale_
     (
         found("scale")
@@ -252,7 +254,7 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::height
 {
     tensor axes;
     vectorField xyz(p.size());
-    transformation(p, axes, xyz);
+    transformation(t, p, axes, xyz);
 
     return
         xyz.component(2)
@@ -268,14 +270,14 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::ULiquid
 {
     tensor axes;
     vectorField xyz(p.size());
-    transformation(p, axes, xyz);
+    transformation(t, p, axes, xyz);
 
     if (heightAboveWave_)
     {
         xyz.replace(2, height(t, p));
     }
 
-    return velocity(t, xyz) & axes;
+    return UMean_->value(t) + (velocity(t, xyz) & axes);
 }
 
 
@@ -287,7 +289,7 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
 {
     tensor axes;
     vectorField xyz(p.size());
-    transformation(p, axes, xyz);
+    transformation(t, p, axes, xyz);
 
     axes = tensor(- axes.x(), - axes.y(), axes.z());
 
@@ -298,7 +300,7 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
 
     xyz.replace(2, - xyz.component(2));
 
-    return velocity(t, xyz) & axes;
+    return UMean_->value(t) + (velocity(t, xyz) & axes);
 }
 
 
@@ -310,7 +312,7 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pLiquid
 {
     tensor axes;
     vectorField xyz(p.size());
-    transformation(p, axes, xyz);
+    transformation(t, p, axes, xyz);
 
     if (heightAboveWave_)
     {
@@ -329,7 +331,7 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pGas
 {
     tensor axes;
     vectorField xyz(p.size());
-    transformation(p, axes, xyz);
+    transformation(t, p, axes, xyz);
 
     axes = tensor(- axes.x(), - axes.y(), axes.z());
 
@@ -358,6 +360,7 @@ void Foam::waveSuperposition::write(Ostream& os) const
             << nl << decrIndent << indent << token::END_BLOCK << nl;
     }
     os  << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
+    UMean_->writeData(os);
     if (scale_.valid())
     {
         scale_->writeData(os);

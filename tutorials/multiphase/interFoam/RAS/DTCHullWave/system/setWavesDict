@@ -14,14 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-U.orig
-{
-    #include "$FOAM_CASE/0/U.orig";
-}
-
 alpha   alpha.water;
-
-UMean   $U.orig.boundaryField.inlet.UMean;
 
 
 // ************************************************************************* //

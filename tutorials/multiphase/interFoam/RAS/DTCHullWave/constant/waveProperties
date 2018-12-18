@@ -30,6 +30,10 @@ waves
     }
 );
 
+UxMean          -1.668;
+
+UMean           ($UxMean 0 0);
+
 scale           table ((4 1) (12 0));
 
 

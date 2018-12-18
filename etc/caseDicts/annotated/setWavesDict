@@ -24,8 +24,5 @@ U       U;
 // under the waves (true) or the gas over the waves (false)
 liquid  true;
 
-// The mean flow velocity over which to superimpose waves
-UMean   (1 0 0);
-
 
 // ************************************************************************* //
