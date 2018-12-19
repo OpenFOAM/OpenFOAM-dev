@@ -276,6 +276,64 @@ DimensionedField<Type, GeoMesh>::clone() const
 }
 
 
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
+DimensionedField<Type, GeoMesh>::New
+(
+    const word& name,
+    const Mesh& mesh,
+    const dimensionSet& ds
+)
+{
+    return tmp<DimensionedField<Type, GeoMesh>>
+    (
+        new DimensionedField<Type, GeoMesh>
+        (
+            IOobject
+            (
+                name,
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            ds,
+            false
+        )
+    );
+}
+
+
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
+DimensionedField<Type, GeoMesh>::New
+(
+    const word& newName,
+    const tmp<DimensionedField<Type, GeoMesh>>& tdf
+)
+{
+    return tmp<DimensionedField<Type, GeoMesh>>
+    (
+        new DimensionedField<Type, GeoMesh>
+        (
+            IOobject
+            (
+                newName,
+                tdf().instance(),
+                tdf().local(),
+                tdf().db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            tdf
+        )
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh>
