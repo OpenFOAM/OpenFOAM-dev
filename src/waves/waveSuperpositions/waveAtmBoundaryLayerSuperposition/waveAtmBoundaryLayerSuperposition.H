@@ -50,7 +50,7 @@ Usage
     type        waveAtmBoundaryLayer;
     // parameters for waveSuperposition ...
     UGasRef     (10 0 0);
-    hRed        10;
+    hRef        10;
     hWaveMin    -2;
     hWaveMax    3;
     \endverbatim
