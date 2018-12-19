@@ -446,9 +446,21 @@ public:
         //  and patch type.
         static tmp<GeometricField<Type, PatchField, GeoMesh>> New
         (
+            const word& name,
             const Mesh&,
             const dimensioned<Type>&,
             const word& patchFieldType=PatchField<Type>::calculatedType()
+        );
+
+        //- Return a temporary field constructed from mesh, dimensioned<Type>
+        //  and patch types.
+        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        (
+            const word& name,
+            const Mesh&,
+            const dimensioned<Type>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList()
         );
 
         //- Rename temporary field and return

@@ -212,16 +212,9 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H() const
 {
     tmp<volScalarField> tHphi
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "H("+psi_.name()+')',
-                psi_.instance(),
-                psi_.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "H("+psi_.name()+')',
             psi_.mesh(),
             dimensions_/dimVol,
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -244,16 +237,9 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H1() const
 {
     tmp<volScalarField> tH1
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "H(1)",
-                psi_.instance(),
-                psi_.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "H(1)",
             psi_.mesh(),
             dimensions_/(dimVol*psi_.dimensions()),
             extrapolatedCalculatedFvPatchScalarField::typeName

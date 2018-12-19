@@ -640,22 +640,11 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::meshPhi
     const GeometricField<Type, fvPatchField, volMesh>&
 )
 {
-    return tmp<surfaceScalarField>
+    return surfaceScalarField::New
     (
-        new surfaceScalarField
-        (
-            IOobject
-            (
-                "meshPhi",
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh(),
-            dimensionedScalar("0", dimVolume/dimTime, 0.0)
-        )
+        "meshPhi",
+        mesh(),
+        dimensionedScalar(dimVolume/dimTime, 0)
     );
 }
 

@@ -72,16 +72,13 @@ Foam::tmp<Foam::volScalarField> Foam::fv::localEulerDdt::localRSubDeltaT
     const label nAlphaSubCycles
 )
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
+        rSubDeltaTName,
+        nAlphaSubCycles
+       *mesh.objectRegistry::lookupObject<volScalarField>
         (
-            rSubDeltaTName,
-            nAlphaSubCycles
-           *mesh.objectRegistry::lookupObject<volScalarField>
-            (
-                rDeltaTName
-            )
+            rDeltaTName
         )
     );
 }

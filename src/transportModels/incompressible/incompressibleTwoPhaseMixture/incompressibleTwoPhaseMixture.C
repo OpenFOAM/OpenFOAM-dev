@@ -129,14 +129,11 @@ Foam::incompressibleTwoPhaseMixture::mu() const
         min(max(alpha1_, scalar(0)), scalar(1))
     );
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            "mu",
-            limitedAlpha1*rho1_*nuModel1_->nu()
-          + (scalar(1) - limitedAlpha1)*rho2_*nuModel2_->nu()
-        )
+        "mu",
+        limitedAlpha1*rho1_*nuModel1_->nu()
+      + (scalar(1) - limitedAlpha1)*rho2_*nuModel2_->nu()
     );
 }
 
@@ -149,14 +146,11 @@ Foam::incompressibleTwoPhaseMixture::muf() const
         min(max(fvc::interpolate(alpha1_), scalar(0)), scalar(1))
     );
 
-    return tmp<surfaceScalarField>
+    return surfaceScalarField::New
     (
-        new surfaceScalarField
-        (
-            "muf",
-            alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
-          + (scalar(1) - alpha1f)*rho2_*fvc::interpolate(nuModel2_->nu())
-        )
+        "muf",
+        alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
+      + (scalar(1) - alpha1f)*rho2_*fvc::interpolate(nuModel2_->nu())
     );
 }
 
@@ -169,16 +163,13 @@ Foam::incompressibleTwoPhaseMixture::nuf() const
         min(max(fvc::interpolate(alpha1_), scalar(0)), scalar(1))
     );
 
-    return tmp<surfaceScalarField>
+    return surfaceScalarField::New
     (
-        new surfaceScalarField
+        "nuf",
         (
-            "nuf",
-            (
-                alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
-              + (scalar(1) - alpha1f)*rho2_*fvc::interpolate(nuModel2_->nu())
-            )/(alpha1f*rho1_ + (scalar(1) - alpha1f)*rho2_)
-        )
+            alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
+          + (scalar(1) - alpha1f)*rho2_*fvc::interpolate(nuModel2_->nu())
+        )/(alpha1f*rho1_ + (scalar(1) - alpha1f)*rho2_)
     );
 }
 

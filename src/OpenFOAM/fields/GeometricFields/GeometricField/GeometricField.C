@@ -750,6 +750,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>>
 Foam::GeometricField<Type, PatchField, GeoMesh>::New
 (
+    const word& name,
     const Mesh& mesh,
     const dimensioned<Type>& dt,
     const word& patchFieldType
@@ -761,7 +762,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
         (
             IOobject
             (
-                dt.name(),
+                name,
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
@@ -771,6 +772,40 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             mesh,
             dt,
             patchFieldType
+        )
+    );
+}
+
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>>
+Foam::GeometricField<Type, PatchField, GeoMesh>::New
+(
+    const word& name,
+    const Mesh& mesh,
+    const dimensioned<Type>& dt,
+    const wordList& patchFieldTypes,
+    const wordList& actualPatchTypes
+)
+{
+    return tmp<GeometricField<Type, PatchField, GeoMesh>>
+    (
+        new GeometricField<Type, PatchField, GeoMesh>
+        (
+            IOobject
+            (
+                name,
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dt,
+            patchFieldTypes,
+            actualPatchTypes
         )
     );
 }

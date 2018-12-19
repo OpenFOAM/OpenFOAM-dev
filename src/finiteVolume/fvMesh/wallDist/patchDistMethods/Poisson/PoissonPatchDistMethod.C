@@ -80,16 +80,11 @@ bool Foam::patchDistMethods::Poisson::correct
     {
         tyPsi_ = tmp<volScalarField>
         (
-            new volScalarField
+            volScalarField::New
             (
-                IOobject
-                (
-                    "yPsi",
-                    mesh_.time().timeName(),
-                    mesh_
-                ),
+                "yPsi",
                 mesh_,
-                dimensionedScalar("yPsi", sqr(dimLength), 0.0),
+                dimensionedScalar(sqr(dimLength), 0),
                 y.boundaryFieldRef().types()
             )
         );

@@ -168,16 +168,11 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
 {
     tmp<volVectorField> tacceleration
     (
-        new volVectorField
+        volVectorField::New
         (
-            IOobject
-            (
-                "MRFZoneList:acceleration",
-                U.mesh().time().timeName(),
-                U.mesh()
-            ),
+            "MRFZoneList:acceleration",
             U.mesh(),
-            dimensionedVector("0", U.dimensions()/dimTime, Zero)
+            dimensionedVector(U.dimensions()/dimTime, Zero)
         )
     );
     volVectorField& acceleration = tacceleration.ref();

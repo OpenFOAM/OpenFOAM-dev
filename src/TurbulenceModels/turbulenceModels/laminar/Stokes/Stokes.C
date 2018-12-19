@@ -88,13 +88,9 @@ Stokes<BasicTurbulenceModel>::nut() const
 {
     return volScalarField::New
     (
+        IOobject::groupName("nut", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedScalar
-        (
-            IOobject::groupName("nut", this->alphaRhoPhi_.group()),
-            dimViscosity,
-            0
-        )
+        dimensionedScalar(dimViscosity, 0)
     );
 }
 
@@ -142,13 +138,9 @@ Stokes<BasicTurbulenceModel>::k() const
 {
     return volScalarField::New
     (
+        IOobject::groupName("k", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedScalar
-        (
-            IOobject::groupName("k", this->alphaRhoPhi_.group()),
-            sqr(this->U_.dimensions()),
-            0
-        )
+        dimensionedScalar(sqr(this->U_.dimensions()), 0)
     );
 }
 
@@ -159,13 +151,9 @@ Stokes<BasicTurbulenceModel>::epsilon() const
 {
     return volScalarField::New
     (
+        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedScalar
-        (
-            IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-            sqr(this->U_.dimensions())/dimTime,
-            0
-        )
+        dimensionedScalar(sqr(this->U_.dimensions())/dimTime, 0)
     );
 }
 
@@ -176,13 +164,9 @@ Stokes<BasicTurbulenceModel>::R() const
 {
     return volSymmTensorField::New
     (
+        IOobject::groupName("R", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedSymmTensor
-        (
-            IOobject::groupName("R", this->alphaRhoPhi_.group()),
-            sqr(this->U_.dimensions()),
-            Zero
-        )
+        dimensionedSymmTensor(sqr(this->U_.dimensions()), Zero)
     );
 }
 

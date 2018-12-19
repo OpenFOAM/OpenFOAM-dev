@@ -185,21 +185,10 @@ Foam::vectorField Foam::SRF::SRFModel::velocity
 
 Foam::tmp<Foam::volVectorField> Foam::SRF::SRFModel::U() const
 {
-    return tmp<volVectorField>
+    return volVectorField::New
     (
-        new volVectorField
-        (
-            IOobject
-            (
-                "Usrf",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            omega_
-          ^ ((mesh_.C() - origin_) - axis_*(axis_ & (mesh_.C() - origin_)))
-        )
+        "Usrf",
+        omega_ ^ ((mesh_.C() - origin_) - axis_*(axis_ & (mesh_.C() - origin_)))
     );
 }
 
@@ -210,19 +199,7 @@ Foam::tmp<Foam::volVectorField> Foam::SRF::SRFModel::Uabs() const
 
     tmp<volVectorField> tUabs
     (
-        new volVectorField
-        (
-            IOobject
-            (
-                "Uabs",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            Usrf
-        )
+        volVectorField::New("Uabs", Usrf)
     );
 
     volVectorField& Uabs = tUabs.ref();

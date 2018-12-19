@@ -305,8 +305,9 @@ tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::k() const
 {
     return volScalarField::New
     (
+        "k",
         this->mesh_,
-        dimensionedScalar("k", dimensionSet(0, 2, -2, 0, 0), 0)
+        dimensionedScalar(dimensionSet(0, 2, -2, 0, 0), 0)
     );
 }
 
@@ -321,8 +322,9 @@ tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::epsilon() const
 
     return volScalarField::New
     (
+        "epsilon",
         this->mesh_,
-        dimensionedScalar("epsilon", dimensionSet(0, 2, -3, 0, 0), 0)
+        dimensionedScalar(dimensionSet(0, 2, -3, 0, 0), 0)
     );
 }
 

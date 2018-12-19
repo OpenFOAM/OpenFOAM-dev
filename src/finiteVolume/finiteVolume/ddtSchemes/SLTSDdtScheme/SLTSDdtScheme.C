@@ -97,16 +97,11 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
 
     tmp<volScalarField> trDeltaT
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "rDeltaT",
-                phi.instance(),
-                mesh()
-            ),
+            "rDeltaT",
             mesh(),
-            dimensionedScalar("rDeltaT", dimless/dimTime, 0.0),
+            dimensionedScalar(dimless/dimTime, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -837,22 +832,11 @@ tmp<surfaceScalarField> SLTSDdtScheme<Type>::meshPhi
     const GeometricField<Type, fvPatchField, volMesh>&
 )
 {
-    return tmp<surfaceScalarField>
+    return surfaceScalarField::New
     (
-        new surfaceScalarField
-        (
-            IOobject
-            (
-                "meshPhi",
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh(),
-            dimensionedScalar("0", dimVolume/dimTime, 0.0)
-        )
+        "meshPhi",
+        mesh(),
+        dimensionedScalar(dimVolume/dimTime, 0)
     );
 }
 

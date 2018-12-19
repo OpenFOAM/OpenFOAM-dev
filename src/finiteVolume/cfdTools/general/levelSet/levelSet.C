@@ -154,16 +154,11 @@ Foam::tmp<Foam::volScalarField> Foam::levelSetFraction
 
     tmp<volScalarField> tResult
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "levelSetFraction",
-                mesh.time().timeName(),
-                mesh
-            ),
+            "levelSetFraction",
             mesh,
-            dimensionedScalar("0", dimless, 0)
+            dimensionedScalar(dimless, 0)
         )
     );
     volScalarField& result = tResult.ref();

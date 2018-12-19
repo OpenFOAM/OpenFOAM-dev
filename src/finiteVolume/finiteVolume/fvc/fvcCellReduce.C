@@ -46,18 +46,15 @@ Foam::fvc::cellReduce
 
     tmp<volFieldType> tresult
     (
-        new volFieldType
+        volFieldType::New
         (
-            IOobject
-            (
-                "cellReduce(" + ssf.name() + ')',
-                ssf.instance(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "cellReduce(" + ssf.name() + ')',
             mesh,
-            dimensioned<Type>("initialValue", ssf.dimensions(), nullValue),
+            dimensioned<Type>
+            (
+                ssf.dimensions(),
+                nullValue
+            ),
             extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );

@@ -53,8 +53,9 @@ void Foam::LESModels::IDDESDelta::calcDelta()
     (
         volScalarField::New
         (
+            "faceToFaceMax",
             mesh,
-            dimensionedScalar("faceToFaceMax", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         )
     );
 

@@ -55,20 +55,12 @@ tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
 
     tmp<volScalarField> treconField
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "reconstruct("+ssf.name()+')',
-                ssf.instance(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "reconstruct("+ssf.name()+')',
             mesh,
             dimensionedScalar
             (
-                "0",
                 ssf.dimensions()/dimArea,
                 scalar(0)
             ),

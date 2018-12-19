@@ -105,13 +105,9 @@ Foam::PhaseIncompressibleTurbulenceModel<TransportModel>::pPrime() const
 {
     return volScalarField::New
     (
+        IOobject::groupName("pPrime", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedScalar
-        (
-            IOobject::groupName("pPrime", this->alphaRhoPhi_.group()),
-            dimPressure,
-            0
-        )
+        dimensionedScalar(dimPressure, 0)
     );
 }
 
@@ -122,13 +118,9 @@ Foam::PhaseIncompressibleTurbulenceModel<TransportModel>::pPrimef() const
 {
     return surfaceScalarField::New
     (
+        IOobject::groupName("pPrimef", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedScalar
-        (
-            IOobject::groupName("pPrimef", this->alphaRhoPhi_.group()),
-            dimPressure,
-            0
-        )
+        dimensionedScalar(dimPressure, 0)
     );
 }
 

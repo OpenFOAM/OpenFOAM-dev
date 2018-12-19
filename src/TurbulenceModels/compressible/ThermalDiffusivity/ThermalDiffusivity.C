@@ -120,12 +120,9 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::alphat() const
 {
     return volScalarField::New
     (
+        IOobject::groupName("alphat", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedScalar
-        (
-            IOobject::groupName("alphat", this->alphaRhoPhi_.group()),
-            dimDensity*dimViscosity, 0
-        )
+        dimensionedScalar(dimDensity*dimViscosity, 0)
     );
 }
 

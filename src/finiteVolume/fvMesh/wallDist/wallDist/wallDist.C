@@ -38,20 +38,12 @@ namespace Foam
 
 void Foam::wallDist::constructn() const
 {
-    n_ = tmp<volVectorField>
+    n_ = volVectorField::New
     (
-        new volVectorField
-        (
-            IOobject
-            (
-                "n" & patchTypeName_,
-                mesh().time().timeName(),
-                mesh()
-            ),
-            mesh(),
-            dimensionedVector("n" & patchTypeName_, dimless, Zero),
-            patchDistMethod::patchTypes<vector>(mesh(), patchIDs_)
-        )
+        "n" & patchTypeName_,
+        mesh(),
+        dimensionedVector(dimless, Zero),
+        patchDistMethod::patchTypes<vector>(mesh(), patchIDs_)
     );
 
     const fvPatchList& patches = mesh().boundary();

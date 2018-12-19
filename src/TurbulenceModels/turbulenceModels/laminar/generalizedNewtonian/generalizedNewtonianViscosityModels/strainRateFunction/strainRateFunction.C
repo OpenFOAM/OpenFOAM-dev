@@ -104,13 +104,9 @@ nu
     (
         volScalarField::New
         (
+            IOobject::groupName(type() + ":nu", nu0.group()),
             nu0.mesh(),
-            dimensionedScalar
-            (
-                IOobject::groupName(type() + ":nu", nu0.group()),
-                dimViscosity,
-                0
-            )
+            dimensionedScalar(dimViscosity, 0)
         )
     );
 
