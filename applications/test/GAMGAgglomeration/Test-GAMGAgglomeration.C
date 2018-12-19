@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
                 IOobject::AUTO_WRITE
             ),
             mesh,
-            dimensionedScalar("aggomeration", dimless, 0.0)
+            dimensionedScalar("aggomeration", dimless, 0)
         );
         scalarField& fld = scalarAgglomeration.primitiveFieldRef();
         forAll(fld, celli)
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("aggomeration", dimless, 0.0)
+                dimensionedScalar("aggomeration", dimless, 0)
             );
             scalarField& fld = scalarAgglomeration.primitiveFieldRef();
             forAll(fld, celli)

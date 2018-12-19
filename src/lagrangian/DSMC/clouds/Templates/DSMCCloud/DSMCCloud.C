@@ -377,7 +377,7 @@ void Foam::DSMCCloud<ParcelType>::collisions()
 template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::resetFields()
 {
-    q_ = dimensionedScalar("zero",  dimensionSet(1, 0, -3, 0, 0), 0.0);
+    q_ = dimensionedScalar("zero",  dimensionSet(1, 0, -3, 0, 0), 0);
 
     fD_ = dimensionedVector
     (
@@ -388,9 +388,9 @@ void Foam::DSMCCloud<ParcelType>::resetFields()
 
     rhoN_ = dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), vSmall);
     rhoM_ =  dimensionedScalar("zero",  dimensionSet(1, -3, 0, 0, 0), vSmall);
-    dsmcRhoN_ = dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), 0.0);
-    linearKE_ = dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0.0);
-    internalE_ = dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0.0);
+    dsmcRhoN_ = dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), 0);
+    linearKE_ = dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0);
+    internalE_ = dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0);
     iDof_ = dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), vSmall);
 
     momentum_ = dimensionedVector
@@ -735,7 +735,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("zero",  dimensionSet(0, 3, -1, 0, 0), 0.0),
+        dimensionedScalar("zero",  dimensionSet(0, 3, -1, 0, 0), 0),
         zeroGradientFvPatchScalarField::typeName
     ),
     collisionSelectionRemainder_
@@ -760,7 +760,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("zero",  dimensionSet(1, 0, -3, 0, 0), 0.0)
+        dimensionedScalar("zero",  dimensionSet(1, 0, -3, 0, 0), 0)
     ),
     fD_
     (
@@ -817,7 +817,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), 0.0)
+        dimensionedScalar("zero",  dimensionSet(0, -3, 0, 0, 0), 0)
     ),
     linearKE_
     (
@@ -830,7 +830,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0.0)
+        dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0)
     ),
     internalE_
     (
@@ -843,7 +843,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0.0)
+        dimensionedScalar("zero",  dimensionSet(1, -1, -2, 0, 0), 0)
     ),
     iDof_
     (
@@ -891,7 +891,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero",  dimensionSet(0, 0, 0, 1, 0), 0.0)
+            dimensionedScalar("zero",  dimensionSet(0, 0, 0, 1, 0), 0)
         )
     ),
     boundaryU_

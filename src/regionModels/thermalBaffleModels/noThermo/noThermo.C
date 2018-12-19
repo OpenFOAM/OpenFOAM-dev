@@ -105,7 +105,7 @@ const tmp<volScalarField> noThermo::Cp() const
                 false
             ),
             primaryMesh(),
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 }

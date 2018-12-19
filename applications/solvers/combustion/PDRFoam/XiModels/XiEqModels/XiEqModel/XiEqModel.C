@@ -110,7 +110,7 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
                 false
             ),
             mesh,
-            dimensionedScalar("zero", Nv.dimensions(), 0.0)
+            dimensionedScalar("zero", Nv.dimensions(), 0)
         )
     );
     volScalarField& N = tN.ref();

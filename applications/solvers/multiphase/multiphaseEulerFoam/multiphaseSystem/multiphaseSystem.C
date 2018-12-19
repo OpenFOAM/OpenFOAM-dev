@@ -401,7 +401,7 @@ Foam::multiphaseSystem::multiphaseSystem
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("alphas", dimless, 0.0)
+        dimensionedScalar("alphas", dimless, 0)
     ),
 
     sigmas_(lookup("sigmas")),
@@ -842,7 +842,7 @@ Foam::multiphaseSystem::nearInterface() const
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("nearInterface", dimless, 0.0)
+            dimensionedScalar("nearInterface", dimless, 0)
         )
     );
 

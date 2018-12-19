@@ -70,7 +70,7 @@ Foam::RASModels::phasePressureModel::phasePressureModel
         coeffDict_.lookup("g0")
     )
 {
-    nut_ == dimensionedScalar("zero", nut_.dimensions(), 0.0);
+    nut_ == dimensionedScalar("zero", nut_.dimensions(), 0);
 
     if (type == typeName)
     {

@@ -103,7 +103,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::basicSubGrid::XiEq() const
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("zero", Nv.dimensions(), 0.0)
+        dimensionedScalar("zero", Nv.dimensions(), 0)
     );
     N.primitiveFieldRef() = Nv.primitiveField()*Cw;
 

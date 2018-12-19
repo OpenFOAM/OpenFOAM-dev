@@ -124,7 +124,7 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
                 false
             ),
             p.mesh(),
-            dimensionedScalar("Su0", dimVelocity, 0.0)
+            dimensionedScalar("Su0", dimVelocity, 0)
         )
     );
 
@@ -179,7 +179,7 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
                 false
             ),
             p.mesh(),
-            dimensionedScalar("Su0", dimVelocity, 0.0)
+            dimensionedScalar("Su0", dimVelocity, 0)
         )
     );
 

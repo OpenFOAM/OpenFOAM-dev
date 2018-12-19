@@ -469,7 +469,7 @@ Foam::KinematicCloud<CloudType>::vDotSweep() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless/dimTime, 0.0),
+            dimensionedScalar("zero", dimless/dimTime, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -508,7 +508,7 @@ Foam::KinematicCloud<CloudType>::theta() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless, 0.0),
+            dimensionedScalar("zero", dimless, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -547,7 +547,7 @@ Foam::KinematicCloud<CloudType>::alpha() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless, 0.0)
+            dimensionedScalar("zero", dimless, 0)
         )
     );
 
@@ -584,7 +584,7 @@ Foam::KinematicCloud<CloudType>::rhoEff() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimDensity, 0.0)
+            dimensionedScalar("zero", dimDensity, 0)
         )
     );
 

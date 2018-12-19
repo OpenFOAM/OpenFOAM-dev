@@ -386,7 +386,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
                 IOobject::AUTO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero",  dimMass, 0.0)
+            dimensionedScalar("zero",  dimMass, 0)
         )
     )
 {

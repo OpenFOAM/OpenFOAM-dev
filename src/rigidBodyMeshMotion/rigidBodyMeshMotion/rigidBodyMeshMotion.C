@@ -76,7 +76,7 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
             false
         ),
         pointMesh::New(mesh),
-        dimensionedScalar("zero", dimless, 0.0)
+        dimensionedScalar("zero", dimless, 0)
     )
 {}
 

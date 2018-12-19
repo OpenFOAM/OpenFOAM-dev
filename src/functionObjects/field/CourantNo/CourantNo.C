@@ -84,7 +84,7 @@ bool Foam::functionObjects::CourantNo::calc()
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar("0", dimless, 0.0),
+                dimensionedScalar("0", dimless, 0),
                 zeroGradientFvPatchScalarField::typeName
             )
         );

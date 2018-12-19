@@ -231,7 +231,7 @@ v2f<BasicTurbulenceModel>::v2f
         this->mesh_
     ),
     v2Min_(dimensionedScalar("v2Min", v2_.dimensions(), small)),
-    fMin_(dimensionedScalar("fMin", f_.dimensions(), 0.0))
+    fMin_(dimensionedScalar("fMin", f_.dimensions(), 0))
 {
     bound(k_, this->kMin_);
     bound(epsilon_, this->epsilonMin_);

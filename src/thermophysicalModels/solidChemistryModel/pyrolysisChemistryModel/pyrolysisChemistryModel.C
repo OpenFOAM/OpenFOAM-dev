@@ -137,7 +137,7 @@ pyrolysisChemistryModel
                     IOobject::NO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
             )
         );
     }
@@ -642,7 +642,7 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimMass, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimMass, 0)
         )
     );
 

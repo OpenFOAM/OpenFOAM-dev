@@ -1119,7 +1119,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("cellId", dimless, 0.0)
+        dimensionedScalar("cellId", dimless, 0)
     );
 
     forAll(foamCellMap, celli)
@@ -1139,7 +1139,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("cellType", dimless, 0.0)
+        dimensionedScalar("cellType", dimless, 0)
     );
 
     forAll(foamCellType, celli)

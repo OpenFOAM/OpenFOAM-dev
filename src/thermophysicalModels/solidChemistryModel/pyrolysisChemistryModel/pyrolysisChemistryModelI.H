@@ -92,7 +92,7 @@ RRg() const
                 IOobject::NO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
         )
     );
 

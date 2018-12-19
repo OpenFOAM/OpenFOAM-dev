@@ -78,7 +78,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::yPlus::calcYPlus
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("0", dimless, 0.0)
+            dimensionedScalar("0", dimless, 0)
         )
     );
 

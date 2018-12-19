@@ -72,7 +72,7 @@ FSD<ReactionThermo, ThermoType>::FSD
             IOobject::AUTO_WRITE
         ),
         this->mesh(),
-        dimensionedScalar("zero", dimless, 0.0)
+        dimensionedScalar("zero", dimless, 0)
     ),
     YFuelFuelStream_(dimensionedScalar("YFuelStream", dimless, 1.0)),
     YO2OxiStream_(dimensionedScalar("YOxiStream", dimless, 0.23)),
@@ -339,7 +339,7 @@ template<class ReactionThermo, class ThermoType>
 void FSD<ReactionThermo, ThermoType>::correct()
 {
     this->wFuel_ ==
-        dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0.0);
+        dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0);
 
     calculateSourceNorm();
 }

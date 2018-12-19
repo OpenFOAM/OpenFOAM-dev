@@ -1653,7 +1653,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
             false
         ),
         pMesh(),
-        dimensionedScalar("medialRatio", dimless, 0.0)
+        dimensionedScalar("medialRatio", dimless, 0)
     ),
     medialDist_
     (
@@ -1667,7 +1667,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
             false
         ),
         pMesh(),
-        dimensionedScalar("pointMedialDist", dimLength, 0.0)
+        dimensionedScalar("pointMedialDist", dimLength, 0)
     ),
     medialVec_
     (

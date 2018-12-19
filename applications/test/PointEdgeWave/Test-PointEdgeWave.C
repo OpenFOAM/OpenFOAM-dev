@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         pointMesh::New(mesh),
-        dimensionedScalar("wallDist", dimLength, 0.0)
+        dimensionedScalar("wallDist", dimLength, 0)
     );
 
     forAll(allPointInfo, pointi)

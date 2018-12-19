@@ -115,7 +115,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
                     IOobject::NO_WRITE
                 ),
                 mesh_,
-                dimensionedScalar(Dname, phi.dimensions()/dimLength, 0.0)
+                dimensionedScalar(Dname, phi.dimensions()/dimLength, 0)
             )
         );
     }

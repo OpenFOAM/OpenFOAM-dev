@@ -92,7 +92,7 @@ Foam::multiphaseMixture::multiphaseMixture
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("rhoPhi", dimMass/dimTime, 0.0)
+        dimensionedScalar("rhoPhi", dimMass/dimTime, 0)
     ),
 
     alphas_
@@ -106,7 +106,7 @@ Foam::multiphaseMixture::multiphaseMixture
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("alphas", dimless, 0.0)
+        dimensionedScalar("alphas", dimless, 0)
     ),
 
     nu_
@@ -544,7 +544,7 @@ Foam::multiphaseMixture::nearInterface() const
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("nearInterface", dimless, 0.0)
+            dimensionedScalar("nearInterface", dimless, 0)
         )
     );
 

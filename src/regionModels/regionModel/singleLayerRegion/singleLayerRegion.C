@@ -75,7 +75,7 @@ void Foam::regionModels::singleLayerRegion::constructMeshObjects()
                 NO_WRITE
             ),
             regionMesh(),
-            dimensionedScalar("zero", dimArea, 0.0),
+            dimensionedScalar("zero", dimArea, 0),
             zeroGradientFvPatchField<scalar>::typeName
         )
     );

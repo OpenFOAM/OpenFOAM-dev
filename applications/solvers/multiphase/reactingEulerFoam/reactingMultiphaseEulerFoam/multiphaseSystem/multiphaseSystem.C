@@ -519,7 +519,7 @@ Foam::multiphaseSystem::multiphaseSystem
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("alphas", dimless, 0.0)
+        dimensionedScalar("alphas", dimless, 0)
     ),
 
     cAlphas_(lookup("interfaceCompression")),
@@ -611,7 +611,7 @@ Foam::multiphaseSystem::nearInterface() const
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("nearInterface", dimless, 0.0)
+            dimensionedScalar("nearInterface", dimless, 0)
         )
     );
 

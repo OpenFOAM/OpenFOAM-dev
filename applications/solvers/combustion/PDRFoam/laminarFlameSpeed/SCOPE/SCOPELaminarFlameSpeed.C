@@ -255,7 +255,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Su0pTphi
                 IOobject::NO_WRITE
             ),
             p.mesh(),
-            dimensionedScalar("Su0", dimVelocity, 0.0)
+            dimensionedScalar("Su0", dimVelocity, 0)
         )
     );
 
@@ -304,7 +304,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Su0pTphi
                 IOobject::NO_WRITE
             ),
             p.mesh(),
-            dimensionedScalar("Su0", dimVelocity, 0.0)
+            dimensionedScalar("Su0", dimVelocity, 0)
         )
     );
 
@@ -358,7 +358,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Ma
                 IOobject::NO_WRITE
             ),
             phi.mesh(),
-            dimensionedScalar("Ma", dimless, 0.0)
+            dimensionedScalar("Ma", dimless, 0)
         )
     );
 

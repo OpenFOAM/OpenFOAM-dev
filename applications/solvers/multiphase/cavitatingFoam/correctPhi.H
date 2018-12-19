@@ -12,7 +12,7 @@ correctUphiBCs(U, phi);
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("pcorr", p.dimensions(), 0.0),
+        dimensionedScalar("pcorr", p.dimensions(), 0),
         pcorrTypes
     );
 

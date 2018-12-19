@@ -123,7 +123,7 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
                         false
                     ),
                     this->mesh(),
-                    dimensionedScalar("zero", dimMass/dimTime/dimVolume, 0.0)
+                    dimensionedScalar("zero", dimMass/dimTime/dimVolume, 0)
                 )
             );
 
@@ -252,7 +252,7 @@ Foam::ReactingCloud<CloudType>::Srho(volScalarField& rho) const
                     false
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimTime/dimVolume, 0.0)
+                dimensionedScalar("zero", dimMass/dimTime/dimVolume, 0)
             )
         );
 

@@ -188,7 +188,7 @@ Foam::interfaceProperties::interfaceProperties
             alpha1_.mesh()
         ),
         alpha1_.mesh(),
-        dimensionedScalar("nHatf", dimArea, 0.0)
+        dimensionedScalar("nHatf", dimArea, 0)
     ),
 
     K_
@@ -200,7 +200,7 @@ Foam::interfaceProperties::interfaceProperties
             alpha1_.mesh()
         ),
         alpha1_.mesh(),
-        dimensionedScalar("K", dimless/dimLength, 0.0)
+        dimensionedScalar("K", dimless/dimLength, 0)
     )
 {
     calculateK();

@@ -25,7 +25,7 @@ volScalarField threeKalpha
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("0", dimensionSet(0, 2, -2 , -1, 0), 0.0)
+    dimensionedScalar("0", dimensionSet(0, 2, -2 , -1, 0), 0)
 );
 
 
@@ -40,7 +40,7 @@ volScalarField DT
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("0", dimensionSet(0, 2, -1 , 0, 0), 0.0)
+    dimensionedScalar("0", dimensionSet(0, 2, -1 , 0, 0), 0)
 );
 
 

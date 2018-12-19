@@ -96,7 +96,7 @@ if (ign.ignited())
     );
 
   // volScalarField l = 0.337*k*sqrt(k)/epsilon;
-  // Reta *= max((l - dimensionedScalar("dl", dimLength, 1.5e-3))/l, 0.0);
+  // Reta *= max((l - dimensionedScalar("dl", dimLength, 1.5e-3))/l, 0);
 
     // Calculate Xi flux
     // ~~~~~~~~~~~~~~~~~

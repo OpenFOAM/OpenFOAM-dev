@@ -468,7 +468,7 @@ Foam::tmp<Foam::scalarField> Foam::snappySnapDriver::edgePatchDist
     //            IOobject::AUTO_WRITE
     //        ),
     //        pMesh,
-    //        dimensionedScalar("pointDist", dimless, 0.0)
+    //        dimensionedScalar("pointDist", dimless, 0)
     //    );
     //
     //    forAll(allEdgeInfo, edgeI)

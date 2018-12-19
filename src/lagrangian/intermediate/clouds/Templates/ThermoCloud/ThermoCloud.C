@@ -71,7 +71,7 @@ void Foam::ThermoCloud<CloudType>::setModels()
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimArea, 0.0)
+                dimensionedScalar("zero", dimArea, 0)
             )
         );
 
@@ -88,7 +88,7 @@ void Foam::ThermoCloud<CloudType>::setModels()
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", pow4(dimTemperature), 0.0)
+                dimensionedScalar("zero", pow4(dimTemperature), 0)
             )
         );
 
@@ -176,7 +176,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
                 IOobject::AUTO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy, 0.0)
+            dimensionedScalar("zero", dimEnergy, 0)
         )
     ),
     hsCoeff_
@@ -192,7 +192,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
                 IOobject::AUTO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy/dimTemperature, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimTemperature, 0)
         )
     )
 {

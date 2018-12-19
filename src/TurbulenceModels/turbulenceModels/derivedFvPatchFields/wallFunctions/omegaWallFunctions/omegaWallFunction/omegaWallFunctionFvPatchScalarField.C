@@ -123,7 +123,7 @@ void omegaWallFunctionFvPatchScalarField::createAveragingWeights()
             false // do not register
         ),
         mesh,
-        dimensionedScalar("zero", dimless, 0.0)
+        dimensionedScalar("zero", dimless, 0)
     );
 
     DynamicList<label> omegaPatches(bf.size());

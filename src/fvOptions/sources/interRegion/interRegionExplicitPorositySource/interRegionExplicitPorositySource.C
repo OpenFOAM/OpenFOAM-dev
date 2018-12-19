@@ -232,7 +232,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedScalar("zero", dimDensity, 0.0)
+        dimensionedScalar("zero", dimDensity, 0)
     );
 
     volScalarField muNbr
@@ -246,7 +246,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedScalar("zero", dimViscosity, 0.0)
+        dimensionedScalar("zero", dimViscosity, 0)
     );
 
     const volScalarField& mu =

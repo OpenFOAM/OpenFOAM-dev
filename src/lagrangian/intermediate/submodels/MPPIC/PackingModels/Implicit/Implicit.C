@@ -53,7 +53,7 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
             IOobject::NO_WRITE
         ),
         this->owner().mesh(),
-        dimensionedScalar("zero", dimless, 0.0),
+        dimensionedScalar("zero", dimless, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
     phiCorrect_(nullptr),

@@ -58,7 +58,7 @@ volScalarField rhoEffLagrangian
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("zero", dimDensity, 0.0)
+    dimensionedScalar("zero", dimDensity, 0)
 );
 
 // dynamic pressure field - used externally (optional)
@@ -73,7 +73,7 @@ volScalarField pDyn
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("zero", dimPressure, 0.0)
+    dimensionedScalar("zero", dimPressure, 0)
 );
 
 
@@ -140,7 +140,7 @@ volScalarField Qdot
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
+    dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0)
 );
 
 #include "createMRF.H"
