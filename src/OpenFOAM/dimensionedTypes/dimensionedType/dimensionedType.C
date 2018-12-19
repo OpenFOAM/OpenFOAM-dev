@@ -76,11 +76,33 @@ Foam::dimensioned<Type>::dimensioned
 (
     const word& name,
     const dimensionSet& dimSet,
-    const Type t
+    const Type& t
 )
 :
     name_(name),
     dimensions_(dimSet),
+    value_(t)
+{}
+
+
+template<class Type>
+Foam::dimensioned<Type>::dimensioned
+(
+    const dimensionSet& dimSet,
+    const Type& t
+)
+:
+    name_(::Foam::name(t)),
+    dimensions_(dimSet),
+    value_(t)
+{}
+
+
+template<class Type>
+Foam::dimensioned<Type>::dimensioned(const Type& t)
+:
+    name_(::Foam::name(t)),
+    dimensions_(dimless),
     value_(t)
 {}
 

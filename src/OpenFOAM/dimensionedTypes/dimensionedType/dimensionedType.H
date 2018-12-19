@@ -91,19 +91,19 @@ public:
 
     // Constructors
 
-        //- Construct given a name, a value and its dimensionSet.
-        dimensioned(const word&, const dimensionSet&, const Type);
+        //- Construct given name, dimensions and value
+        dimensioned(const word&, const dimensionSet&, const Type&);
+
+        //- Construct given dimensions and value
+        //  with the name obtained from the value
+        dimensioned(const dimensionSet&, const Type&);
+
+        //- Construct dimensionless given value only
+        //  with a name obtained from the value
+        dimensioned(const Type&);
 
         //- Construct from a dimensioned<Type> changing the name.
         dimensioned(const word&, const dimensioned<Type>&);
-
-        //- Construct given a value (creates dimensionless value).
-        dimensioned(const Type& t)
-        :
-            name_(::Foam::name(t)),
-            dimensions_(dimless),
-            value_(t)
-        {}
 
         //- Construct from Istream.
         dimensioned(Istream&);
