@@ -40,6 +40,7 @@ options:
   -block            use blockMesh reader  (uses .blockMesh extension)
   -builtin          use VTK builtin OpenFOAM reader  (uses .foam extension)
   -case <dir>       specify alternative case directory, default is the cwd
+  -empty            launch ParaView without opening any data files
   -region <name>    specify alternative mesh region
   -touch            only create the file  (eg, .blockMesh, .OpenFOAM, etc)
   -touchAll         create .blockMesh, .OpenFOAM files (and for all regions)
@@ -57,6 +58,38 @@ error() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     usage
     exit 1
+}
+
+pvExec () {
+    paraview "$@" 2> /dev/null && return 0
+
+    pvFallback
+    paraview --mesa "$@"
+}
+
+pvFallback () {
+    cat <<EOF
+**********************************************************
+ParaView failed to open using available graphics hardware.
+Trying fallback to software rendering using MESA.
+**********************************************************
+EOF
+}
+
+noPVReader () {
+    cat<<EOF
+FATAL ERROR: The official reader module for OpenFOAM data does not exist on
+your system.  This means that the version of ParaView you are using was not
+compiled with OpenFOAM, or distributed with a packaged version of OpenFOAM.
+
+For information on packaged versions of OpenFOAM/ParaView and compilation of
+OpenFOAM/ParaView, see https://openfoam.org/download
+
+Alternatively, you might be able to view your OpenFOAM data with the reader
+module provided with ParaView by running:
+    paraFoam -builtin
+
+EOF
 }
 
 # We want to do nice exit when running paraview to give paraview opportunity
@@ -96,6 +129,10 @@ do
         cd "$2" 2>/dev/null || error "directory does not exist:  '$2'"
         shift 2
         ;;
+    -empty)
+        echo "Launching ParaView without opening any files."
+        pvExec && exit 0
+        ;;
     -region)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         regionName=$2
@@ -125,20 +162,9 @@ do
 done
 
 # Check that reader module has been built
-if [ $requirePV -eq 1 -a ! -f "$PV_PLUGIN_PATH/libPVFoamReader_SM.so" ]
-then
-    cat<< BUILDREADER
-
-FATAL ERROR: ParaView reader module libraries do not exist
-
-Please build the reader module before continuing:
-cd \$FOAM_UTILITIES/postProcessing/graphics/PVReaders
-./Allwclean
-./Allwmake
-
-BUILDREADER
-    exit 1
-fi
+[ $requirePV -eq 1 ] && \
+    ! [ -f "$PV_PLUGIN_PATH/libPVFoamReader_SM.so" ] && \
+    noPVReader && exit 1
 
 # Check for --data=... argument
 hasDataArg()
@@ -157,7 +183,6 @@ hasDataArg()
 }
 
 hasDataArg "$@"
-
 
 # Get a sensible caseName from the directory name
 caseName=${PWD##*/}
@@ -179,7 +204,7 @@ fi
 case "${optTouch:-false}" in
 all)
     extension=OpenFOAM
-    if [ -f system/blockMeshDict -o -f constant/polyMesh/blockMeshDict ]
+    if [ -f system/blockMeshDict ] || [ -f constant/polyMesh/blockMeshDict ]
     then
         touch "$caseName.blockMesh"
         echo "Created '$caseName.blockMesh'"
@@ -189,12 +214,10 @@ all)
     # Discover probable regions
     for region in constant/*
     do
-        if [ -d "$region" -a -d "$region"/polyMesh ]
-        then
-            regionName=${region##*/}
-            touch "$caseName{$regionName}.$extension"
+        [ -d "$region" ] && [ -d "${region}/polyMesh" ] && \
+            regionName=${region##*/} && \
+            touch "$caseName{$regionName}.$extension" && \
             echo "Created '$caseName{$regionName}.$extension'"
-        fi
     done
     exit 0
     ;;
@@ -217,7 +240,7 @@ if [ "${hasData:-false}" = true ]
 then
 
     # Has --data=.., send directly to paraview
-    exec paraview "$@"
+    pvExec "$@"
 
 else
 
@@ -265,7 +288,7 @@ else
         echo "Cannot locate OpenFOAM-format case files"
         printf "Would you like to open ParaView anyway <Y|n>:"
         read open
-        [ "$open" = "" ] || echo "$open" | grep -iqE "^y" && paraview
+        [ "$open" = "" ] || echo "$open" | grep -iqE "^y" && pvExec
         exit
     }
 
@@ -277,8 +300,8 @@ else
     }
 
     # For now filter out any ld.so errors. Caused by non-system compiler?
-    paraview --data="$caseFile" "$@" 2>&1 \
-        | fgrep -v 'Inconsistency detected by ld.so'
+    pvExec --data="$caseFile" "$@" 2>&1 \
+        | grep -v -F 'Inconsistency detected by ld.so'
 fi
 
 
