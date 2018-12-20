@@ -2766,7 +2766,7 @@ void Foam::meshRefinement::dumpRefinementLevel() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless, 0)
+            dimensionedScalar(dimless, 0)
         );
 
         const labelList& cellLevel = meshCutter_.cellLevel();
@@ -2795,7 +2795,7 @@ void Foam::meshRefinement::dumpRefinementLevel() const
                 false
             ),
             pMesh,
-            dimensionedScalar("zero", dimless, 0)
+            dimensionedScalar(dimless, 0)
         );
 
         const labelList& pointLevel = meshCutter_.pointLevel();

@@ -118,7 +118,7 @@ bool Foam::functionObjects::age::execute()
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("zero", dimTime, 0),
+        dimensionedScalar(dimTime, 0),
         patchTypes()
     );
 
@@ -154,7 +154,7 @@ bool Foam::functionObjects::age::execute()
             solve
             (
                 fvm::div(phi, t, divScheme)
-             == dimensionedScalar("one", dimless, 1),
+             == dimensionedScalar(dimless, 1),
                 schemesField_
             );
         }

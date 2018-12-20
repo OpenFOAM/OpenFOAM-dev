@@ -84,7 +84,7 @@ Foam::radiation::cloudScatter::sigmaEff() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless/dimLength, 0)
+            dimensionedScalar(dimless/dimLength, 0)
         )
     );
 

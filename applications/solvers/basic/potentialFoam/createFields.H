@@ -98,7 +98,7 @@ volScalarField Phi
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("Phi", dimLength*dimVelocity, 0),
+    dimensionedScalar(dimLength*dimVelocity, 0),
     PhiBCTypes
 );
 

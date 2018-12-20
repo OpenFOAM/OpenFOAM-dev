@@ -122,7 +122,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::r
                 max
                 (
                     Omega,
-                    dimensionedScalar("small", Omega.dimensions(), small)
+                    dimensionedScalar(Omega.dimensions(), small)
                 )
                 *sqr(kappa_*dTilda)
             ),
@@ -440,7 +440,7 @@ void SpalartAllmarasDES<BasicTurbulenceModel>::correct()
     fvOptions.constrain(nuTildaEqn.ref());
     solve(nuTildaEqn);
     fvOptions.correct(nuTilda_);
-    bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0));
+    bound(nuTilda_, dimensionedScalar(nuTilda_.dimensions(), 0));
     nuTilda_.correctBoundaryConditions();
 
     correctNut();

@@ -55,7 +55,7 @@ Foam::motionSmootherData::motionSmootherData
             IOobject::AUTO_WRITE
         ),
         pMesh,
-        dimensionedScalar("scale", dimless, 1.0)
+        dimensionedScalar(dimless, 1.0)
     ),
     oldPoints_(pMesh().points())
 {}
@@ -89,7 +89,7 @@ Foam::motionSmootherData::motionSmootherData
             IOobject::AUTO_WRITE
         ),
         displacement.mesh(),
-        dimensionedScalar("scale", dimless, 1.0)
+        dimensionedScalar(dimless, 1.0)
     ),
     oldPoints_(displacement.mesh()().points())
 {}

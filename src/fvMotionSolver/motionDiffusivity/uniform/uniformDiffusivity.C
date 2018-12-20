@@ -61,7 +61,7 @@ Foam::uniformDiffusivity::uniformDiffusivity
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("1.0", dimless, 1.0)
+        dimensionedScalar(dimless, 1.0)
     )
 {}
 

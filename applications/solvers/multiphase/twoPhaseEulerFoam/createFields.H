@@ -73,7 +73,7 @@ volScalarField dpdt
         mesh
     ),
     mesh,
-    dimensionedScalar("dpdt", p.dimensions()/dimTime, 0)
+    dimensionedScalar(p.dimensions()/dimTime, 0)
 );
 
 

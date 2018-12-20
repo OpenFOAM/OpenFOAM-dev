@@ -84,7 +84,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::interface::K
                 false
             ),
             Ur.mesh(),
-            dimensionedScalar("K", dimDensity/dimTime, 0)
+            dimensionedScalar(dimDensity/dimTime, 0)
         )
     );
 }

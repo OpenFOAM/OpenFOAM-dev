@@ -41,7 +41,7 @@ else
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("0", dimMass/dimLength/dimTime, 0)
+            dimensionedScalar(dimMass/dimLength/dimTime, 0)
         )
     );
 }

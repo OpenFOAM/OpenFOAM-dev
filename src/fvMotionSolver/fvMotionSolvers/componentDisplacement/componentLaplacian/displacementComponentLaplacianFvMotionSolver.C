@@ -67,12 +67,7 @@ displacementComponentLaplacianFvMotionSolver
             IOobject::AUTO_WRITE
         ),
         fvMesh_,
-        dimensionedScalar
-        (
-            "cellDisplacement",
-            pointDisplacement_.dimensions(),
-            0
-        ),
+        dimensionedScalar(pointDisplacement_.dimensions(), 0),
         cellMotionBoundaryTypes<scalar>(pointDisplacement_.boundaryField())
     ),
     pointLocation_(nullptr),

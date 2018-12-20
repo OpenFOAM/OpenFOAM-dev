@@ -247,7 +247,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("0", dimArea, 0)
+            dimensionedScalar(dimArea, 0)
         );
         UIndirectList<scalar>(area.primitiveField(), cells_) = area_;
 

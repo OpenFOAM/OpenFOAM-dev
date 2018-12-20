@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
                 IOobject::AUTO_WRITE
             ),
             mesh,
-            dimensionedScalar("patchDist", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
         scalarField pf(vsf.boundaryField()[patch.index()].size());
         forAll(pf, facei)
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
                 IOobject::AUTO_WRITE
             ),
             mesh,
-            dimensionedScalar("otherPatchDist", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
         vsf.boundaryFieldRef()[patch.index()] = pwd;
 

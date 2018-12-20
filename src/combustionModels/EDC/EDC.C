@@ -65,7 +65,7 @@ Foam::combustionModels::EDC<ReactionThermo>::EDC
             IOobject::AUTO_WRITE
         ),
         this->mesh(),
-        dimensionedScalar("kappa", dimless, 0)
+        dimensionedScalar(dimless, 0)
     )
 {}
 

@@ -2653,7 +2653,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                     false
                 ),
                 mesh,
-                dimensionedScalar("zero", dimless, 0),
+                dimensionedScalar(dimless, 0),
                 fixedValueFvPatchScalarField::typeName
             );
             const polyBoundaryMesh& pbm = mesh.boundaryMesh();
@@ -2691,7 +2691,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                     false
                 ),
                 mesh,
-                dimensionedScalar("zero", dimless, 0),
+                dimensionedScalar(dimless, 0),
                 fixedValueFvPatchScalarField::typeName
             );
 
@@ -2726,7 +2726,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                     false
                 ),
                 mesh,
-                dimensionedScalar("zero", dimless, 0),
+                dimensionedScalar(dimless, 0),
                 fixedValueFvPatchScalarField::typeName
             );
 

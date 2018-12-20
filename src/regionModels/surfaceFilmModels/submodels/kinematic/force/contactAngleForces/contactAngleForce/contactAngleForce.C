@@ -81,11 +81,11 @@ void contactAngleForce::initialise()
                 false
             ),
             filmModel_.regionMesh(),
-            dimensionedScalar("y", dimLength, great)
+            dimensionedScalar(dimLength, great)
         );
         dist.correct(y);
 
-        mask_ = pos0(y - dimensionedScalar("dLim", dimLength, dLim));
+        mask_ = pos0(y - dimensionedScalar(dimLength, dLim));
     }
 }
 
@@ -112,7 +112,7 @@ contactAngleForce::contactAngleForce
             IOobject::NO_WRITE
         ),
         filmModel_.regionMesh(),
-        dimensionedScalar("mask", dimless, 1.0)
+        dimensionedScalar(dimless, 1.0)
     )
 {
     initialise();

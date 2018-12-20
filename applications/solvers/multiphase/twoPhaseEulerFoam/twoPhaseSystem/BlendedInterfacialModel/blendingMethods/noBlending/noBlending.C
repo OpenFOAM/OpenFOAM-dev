@@ -86,7 +86,6 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethods::noBlending::f1
                 mesh,
                 dimensionedScalar
                 (
-                    "f",
                     dimless,
                     phase2.name() != continuousPhase_
                 )
@@ -117,7 +116,6 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethods::noBlending::f2
                 mesh,
                 dimensionedScalar
                 (
-                    "f",
                     dimless,
                     phase1.name() == continuousPhase_
                 )

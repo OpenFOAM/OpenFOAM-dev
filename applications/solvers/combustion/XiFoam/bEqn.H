@@ -18,7 +18,7 @@ if (ign.ignited())
     dimensionedScalar dMgb = 1.0e-3*
         (b*c*mgb)().weightedAverage(mesh.V())
        /((b*c)().weightedAverage(mesh.V()) + small)
-      + dimensionedScalar("ddMgb", mgb.dimensions(), small);
+      + dimensionedScalar(mgb.dimensions(), small);
 
     mgb += dMgb;
 
@@ -91,12 +91,12 @@ if (ign.ignited())
         up
       / (
             sqrt(epsilon*tauEta)
-          + dimensionedScalar("1e-8", up.dimensions(), 1e-8)
+          + dimensionedScalar(up.dimensions(), 1e-8)
         )
     );
 
   // volScalarField l = 0.337*k*sqrt(k)/epsilon;
-  // Reta *= max((l - dimensionedScalar("dl", dimLength, 1.5e-3))/l, 0);
+  // Reta *= max((l - dimensionedScalar(dimLength, 1.5e-3))/l, 0);
 
     // Calculate Xi flux
     // ~~~~~~~~~~~~~~~~~
@@ -243,7 +243,7 @@ if (ign.ignited())
                 rho*max
                 (
                     sigmat - sigmas,
-                    dimensionedScalar("0", sigmat.dimensions(), 0)
+                    dimensionedScalar(sigmat.dimensions(), 0)
                 ),
                 Xi
             )

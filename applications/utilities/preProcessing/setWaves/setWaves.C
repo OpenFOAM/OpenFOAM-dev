@@ -133,13 +133,13 @@ int main(int argc, char *argv[])
         (
             IOobject("h", runTime.timeName(), mesh),
             mesh,
-            dimensionedScalar("0", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
         pointScalarField hp
         (
             IOobject("hp", runTime.timeName(), mesh),
             pMesh,
-            dimensionedScalar("0", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
         volVectorField uGas
         (

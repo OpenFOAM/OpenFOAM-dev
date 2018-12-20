@@ -84,7 +84,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::Gulder::XiEq() const
         up
       / (
             sqrt(epsilon*tauEta)
-          + dimensionedScalar("1e-8", up.dimensions(), 1e-8)
+          + dimensionedScalar(up.dimensions(), 1e-8)
         )
     );
 

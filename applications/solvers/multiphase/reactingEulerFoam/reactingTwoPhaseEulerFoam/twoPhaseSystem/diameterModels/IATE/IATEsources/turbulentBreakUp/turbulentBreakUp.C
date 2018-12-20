@@ -75,7 +75,7 @@ Foam::diameterModels::IATEsources::turbulentBreakUp::R
             iate_.phase().mesh()
         ),
         iate_.phase().mesh(),
-        dimensionedScalar("R", kappai.dimensions()/dimTime, 0)
+        dimensionedScalar(kappai.dimensions()/dimTime, 0)
     );
 
     const scalar Cti = Cti_.value();

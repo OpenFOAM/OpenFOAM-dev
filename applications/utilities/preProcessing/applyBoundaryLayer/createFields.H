@@ -69,7 +69,7 @@ volScalarField mask
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("zero", dimless, 0),
+    dimensionedScalar(dimless, 0),
     zeroGradientFvPatchScalarField::typeName
 );
 

@@ -179,7 +179,7 @@ heatTransfer() const
            /max
             (
                 Ks.first()() + Ks.second()(),
-                dimensionedScalar("small", heatTransferModel::dimK, small)
+                dimensionedScalar(heatTransferModel::dimK, small)
             )
         );
 

@@ -96,9 +96,8 @@ Foam::tmp<Foam::volScalarField> Foam::radiation::opaqueSolid::Rp() const
             mesh_,
             dimensionedScalar
             (
-                "Rp",
                 constant::physicoChemical::sigma.dimensions()/dimLength,
-                0.0
+                0
             )
         )
     );
@@ -121,10 +120,7 @@ Foam::radiation::opaqueSolid::Ru() const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar
-            (
-                "Ru", dimMass/dimLength/pow3(dimTime), 0.0
-            )
+            dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 }

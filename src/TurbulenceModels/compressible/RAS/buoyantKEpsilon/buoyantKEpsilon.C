@@ -146,7 +146,7 @@ buoyantKEpsilon<BasicTurbulenceModel>::epsilonSource() const
         volScalarField u
         (
             mag(this->U_ - gHat*v)
-          + dimensionedScalar("small", dimVelocity, small)
+          + dimensionedScalar(dimVelocity, small)
         );
 
         return -fvm::SuSp(this->C1_*tanh(mag(v)/u)*Gcoef(), this->epsilon_);

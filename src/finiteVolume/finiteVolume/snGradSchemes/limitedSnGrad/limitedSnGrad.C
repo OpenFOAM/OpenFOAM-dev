@@ -68,9 +68,9 @@ limitedSnGrad<Type>::correction
            *mag(snGradScheme<Type>::snGrad(vf, deltaCoeffs(vf), "SndGrad"))
            /(
                 (1 - limitCoeff_)*mag(corr)
-              + dimensionedScalar("small", corr.dimensions(), small)
+              + dimensionedScalar(corr.dimensions(), small)
             ),
-            dimensionedScalar("one", dimless, 1.0)
+            dimensionedScalar(dimless, 1.0)
         )
     );
 

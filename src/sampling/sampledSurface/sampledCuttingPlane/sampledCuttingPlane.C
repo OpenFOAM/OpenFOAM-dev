@@ -115,7 +115,7 @@ void Foam::sampledCuttingPlane::createGeometry()
                 false
             ),
             mesh,
-            dimensionedScalar("zero", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         )
     );
     volScalarField& cellDistance = cellDistancePtr_();
@@ -213,7 +213,7 @@ void Foam::sampledCuttingPlane::createGeometry()
                 false
             ),
             pointMesh::New(mesh),
-            dimensionedScalar("zero", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
         pDist.primitiveFieldRef() = pointDistance_;
 

@@ -100,7 +100,6 @@ Foam::fv::solidificationMeltingSource::Cp() const
                         mesh_,
                         dimensionedScalar
                         (
-                            "Cp",
                             dimEnergy/dimMass/dimTemperature,
                             CpRef
                         ),
@@ -231,7 +230,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("alpha1", dimless, 0),
+        dimensionedScalar(dimless, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
     curTimeIndex_(-1),

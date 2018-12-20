@@ -25,7 +25,7 @@ volScalarField threeKalpha
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("0", dimensionSet(0, 2, -2 , -1, 0), 0)
+    dimensionedScalar(dimensionSet(0, 2, -2 , -1, 0), 0)
 );
 
 
@@ -40,7 +40,7 @@ volScalarField DT
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("0", dimensionSet(0, 2, -1 , 0, 0), 0)
+    dimensionedScalar(dimensionSet(0, 2, -1 , 0, 0), 0)
 );
 
 
@@ -72,7 +72,6 @@ if (thermalStress)
                 mesh,
                 dimensionedScalar
                 (
-                    "C",
                     dimensionSet(0, 2, -2 , -1, 0),
                     CValue
                 )
@@ -127,7 +126,6 @@ if (thermalStress)
                 mesh,
                 dimensionedScalar
                 (
-                    "rhoK",
                     dimensionSet(1, 1, -3 , -1, 0),
                     rhoKValue
                 )
@@ -183,7 +181,6 @@ if (thermalStress)
                 mesh,
                 dimensionedScalar
                 (
-                    "alpha",
                     inv(dimTemperature),
                     alphaValue
                 )

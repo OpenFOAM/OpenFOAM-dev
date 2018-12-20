@@ -204,7 +204,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
                 IOobject::NO_READ
             ),
             mesh,
-            dimensionedScalar("zero", dimless, 0),
+            dimensionedScalar(dimless, 0),
             zeroGradientFvPatchScalarField::typeName
         );
         volCosAngle.primitiveFieldRef() = cosAngle;
@@ -346,7 +346,7 @@ void curvatureSeparation::correct
                 IOobject::NO_READ
             ),
             mesh,
-            dimensionedScalar("zero", dimForce, 0),
+            dimensionedScalar(dimForce, 0),
             zeroGradientFvPatchScalarField::typeName
         );
         volFnet.primitiveFieldRef() = Fnet;

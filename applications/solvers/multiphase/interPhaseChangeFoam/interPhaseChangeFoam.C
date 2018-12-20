@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
                     mesh
                 ),
                 mesh,
-                dimensionedScalar("0", dimMass/dimTime, 0)
+                dimensionedScalar(dimMass/dimTime, 0)
             );
 
             #include "alphaControls.H"

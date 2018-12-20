@@ -342,7 +342,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::rho() const
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar("rho", dimDensity, rhoRef_)
+                dimensionedScalar(dimDensity, rhoRef_)
             )
         );
     }

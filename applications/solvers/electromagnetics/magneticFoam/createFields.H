@@ -49,7 +49,7 @@
             mesh
         ),
         mesh,
-        dimensionedScalar("Mr", dimensionSet(0, 1, 0, 0, 0, 1, 0), 0)
+        dimensionedScalar(dimensionSet(0, 1, 0, 0, 0, 1, 0), 0)
     );
 
     forAll(magnets, i)

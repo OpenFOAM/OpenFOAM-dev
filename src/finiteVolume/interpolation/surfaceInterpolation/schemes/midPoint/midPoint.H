@@ -112,7 +112,7 @@ public:
                         false
                     ),
                     this->mesh(),
-                    dimensionedScalar("0.5", dimless, 0.5)
+                    dimensionedScalar(dimless, 0.5)
                 )
             );
 

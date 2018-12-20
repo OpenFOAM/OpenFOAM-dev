@@ -79,7 +79,7 @@ constantRadiation::constantRadiation
             IOobject::AUTO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("one", dimless, 1.0)
+        dimensionedScalar(dimless, 1.0)
     ),
     absorptivity_(readScalar(coeffDict_.lookup("absorptivity"))),
     timeStart_(readScalar(coeffDict_.lookup("timeStart"))),
@@ -116,7 +116,7 @@ tmp<volScalarField> constantRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0)
+            dimensionedScalar(dimMass/pow3(dimTime), 0)
         )
     );
 

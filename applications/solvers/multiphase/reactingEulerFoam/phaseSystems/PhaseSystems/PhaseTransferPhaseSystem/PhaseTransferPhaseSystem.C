@@ -210,7 +210,7 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::correct()
     )
     {
         *rDmdt_[phaseTransferModelIter.key()] =
-            dimensionedScalar("zero", dimDensity/dimTime, 0);
+            dimensionedScalar(dimDensity/dimTime, 0);
     }
 
     forAllConstIter

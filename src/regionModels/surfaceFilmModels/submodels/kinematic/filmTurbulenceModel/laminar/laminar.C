@@ -111,7 +111,7 @@ tmp<volScalarField> laminar::mut() const
                 IOobject::NO_WRITE
             ),
             filmModel_.regionMesh(),
-            dimensionedScalar("zero", dimMass/dimLength/dimTime, 0)
+            dimensionedScalar(dimMass/dimLength/dimTime, 0)
         )
     );
 }

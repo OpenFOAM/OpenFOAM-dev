@@ -732,8 +732,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.time().timeName(),
-                mesh,
+                mesh.thisDb().time().timeName(),
+                mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
@@ -763,8 +763,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.time().timeName(),
-                mesh,
+                mesh.thisDb().time().timeName(),
+                mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
@@ -796,8 +796,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.time().timeName(),
-                mesh,
+                mesh.thisDb().time().timeName(),
+                mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
@@ -1173,14 +1173,9 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::T() const
 {
     tmp<GeometricField<Type, PatchField, GeoMesh>> result
     (
-        new GeometricField<Type, PatchField, GeoMesh>
+        GeometricField<Type, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                this->name() + ".T()",
-                this->instance(),
-                this->db()
-            ),
+            this->name() + ".T()",
             this->mesh(),
             this->dimensions()
         )
@@ -1210,14 +1205,9 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::component
 {
     tmp<GeometricField<cmptType, PatchField, GeoMesh>> Component
     (
-        new GeometricField<cmptType, PatchField, GeoMesh>
+        GeometricField<cmptType, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                this->name() + ".component(" + Foam::name(d) + ')',
-                this->instance(),
-                this->db()
-            ),
+            this->name() + ".component(" + Foam::name(d) + ')',
             this->mesh(),
             this->dimensions()
         )

@@ -202,12 +202,7 @@ Foam::basicThermo::basicThermo
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar
-        (
-            "zero",
-            dimensionSet(1, -1, -1, 0, 0),
-            Zero
-        )
+        dimensionedScalar(dimensionSet(1, -1, -1, 0, 0), Zero)
     ),
 
     dpdt_(lookupOrDefault<Switch>("dpdt", true))
@@ -262,12 +257,7 @@ Foam::basicThermo::basicThermo
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar
-        (
-            "zero",
-            dimensionSet(1, -1, -1, 0, 0),
-            Zero
-        )
+        dimensionedScalar(dimensionSet(1, -1, -1, 0, 0), Zero)
     )
 {}
 

@@ -78,7 +78,7 @@ Foam::InertPhaseModel<BasePhaseModel>::Qdot() const
                 this->mesh()
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0)
+            dimensionedScalar(dimEnergy/dimTime/dimVolume, 0)
         )
     );
 }

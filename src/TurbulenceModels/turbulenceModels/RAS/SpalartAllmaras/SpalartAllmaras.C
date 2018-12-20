@@ -102,7 +102,7 @@ tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::fw
                max
                (
                    Stilda,
-                   dimensionedScalar("small", Stilda.dimensions(), small)
+                   dimensionedScalar(Stilda.dimensions(), small)
                )
               *sqr(kappa_*y_)
             ),
@@ -366,7 +366,7 @@ void SpalartAllmaras<BasicTurbulenceModel>::correct()
     fvOptions.constrain(nuTildaEqn.ref());
     solve(nuTildaEqn);
     fvOptions.correct(nuTilda_);
-    bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0));
+    bound(nuTilda_, dimensionedScalar(nuTilda_.dimensions(), 0));
     nuTilda_.correctBoundaryConditions();
 
     correctNut(fv1);

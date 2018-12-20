@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     {
         fvScalarMatrix PhiEqn
         (
-            fvm::laplacian(dimensionedScalar("1", dimless, 1), Phi)
+            fvm::laplacian(dimensionedScalar(dimless, 1), Phi)
          ==
             fvc::div(phi)
         );

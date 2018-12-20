@@ -82,7 +82,7 @@ frictionalPressure
     const volScalarField& alpha = phase;
 
     return
-        dimensionedScalar("1e24", dimensionSet(1, -1, -2, 0, 0), 1e24)
+        dimensionedScalar(dimensionSet(1, -1, -2, 0, 0), 1e24)
        *pow(Foam::max(alpha - alphaMinFriction, scalar(0)), 10.0);
 }
 
@@ -99,7 +99,7 @@ frictionalPressurePrime
     const volScalarField& alpha = phase;
 
     return
-        dimensionedScalar("1e25", dimensionSet(1, -1, -2, 0, 0), 1e25)
+        dimensionedScalar(dimensionSet(1, -1, -2, 0, 0), 1e25)
        *pow(Foam::max(alpha - alphaMinFriction, scalar(0)), 9.0);
 }
 
@@ -130,7 +130,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
                 false
             ),
             phase.mesh(),
-            dimensionedScalar("nu", dimensionSet(0, 2, -1, 0, 0), 0)
+            dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0)
         )
     );
 

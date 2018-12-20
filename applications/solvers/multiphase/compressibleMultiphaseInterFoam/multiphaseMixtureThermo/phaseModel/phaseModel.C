@@ -61,7 +61,7 @@ Foam::phaseModel::phaseModel
             IOobject::AUTO_WRITE
         ),
         p.mesh(),
-        dimensionedScalar("0", dimless/dimTime, 0)
+        dimensionedScalar(dimless/dimTime, 0)
     )
 {
     {

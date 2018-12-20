@@ -58,7 +58,7 @@ laplacian
             IOobject::NO_READ
         ),
         vf.mesh(),
-        dimensionedScalar("1", dimless, 1.0)
+        dimensionedScalar(dimless, 1.0)
     );
 
     return fvm::laplacian(Gamma, vf, name);
@@ -82,7 +82,7 @@ laplacian
             IOobject::NO_READ
         ),
         vf.mesh(),
-        dimensionedScalar("1", dimless, 1.0)
+        dimensionedScalar(dimless, 1.0)
     );
 
     return fvm::laplacian

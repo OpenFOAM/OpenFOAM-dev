@@ -52,7 +52,7 @@ tmp<volScalarField> realizableKE<BasicTurbulenceModel>::rCmu
         (2*sqrt(2.0))*((S&S)&&S)
        /(
             magS*S2
-          + dimensionedScalar("small", dimensionSet(0, 0, -3, 0, 0), small)
+          + dimensionedScalar(dimensionSet(0, 0, -3, 0, 0), small)
         )
     );
 

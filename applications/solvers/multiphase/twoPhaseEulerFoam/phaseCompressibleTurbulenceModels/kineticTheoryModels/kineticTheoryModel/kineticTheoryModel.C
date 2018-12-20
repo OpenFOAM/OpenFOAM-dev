@@ -142,7 +142,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
             IOobject::NO_WRITE
         ),
         U.mesh(),
-        dimensionedScalar("zero", dimensionSet(0, 2, -1, 0, 0), 0)
+        dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0)
     ),
 
     gs0_
@@ -156,7 +156,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
             IOobject::NO_WRITE
         ),
         U.mesh(),
-        dimensionedScalar("zero", dimensionSet(0, 0, 0, 0, 0), 0)
+        dimensionedScalar(dimensionSet(0, 0, 0, 0, 0), 0)
     ),
 
     kappa_
@@ -170,7 +170,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
             IOobject::NO_WRITE
         ),
         U.mesh(),
-        dimensionedScalar("zero", dimensionSet(1, -1, -1, 0, 0), 0)
+        dimensionedScalar(dimensionSet(1, -1, -1, 0, 0), 0)
     ),
 
     nuFric_
@@ -184,7 +184,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
             IOobject::AUTO_WRITE
         ),
         U.mesh(),
-        dimensionedScalar("zero", dimensionSet(0, 2, -1, 0, 0), 0)
+        dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0)
     )
 {
     if (type == typeName)

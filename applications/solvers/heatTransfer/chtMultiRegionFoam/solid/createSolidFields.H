@@ -100,7 +100,7 @@ forAll(solidRegions, i)
                     IOobject::NO_WRITE
                 ),
                 solidRegions[i],
-                dimensionedScalar("1", dimless, scalar(1))
+                dimensionedScalar(dimless, scalar(1))
             )
         );
     }

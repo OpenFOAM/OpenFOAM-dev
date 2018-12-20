@@ -38,7 +38,6 @@
                 mesh,
                 dimensionedScalar
                 (
-                    "rho",
                     dimMass/dimVolume,
                     rhoValue
                 )
@@ -93,7 +92,6 @@
                 mesh,
                 dimensionedScalar
                 (
-                    "Erho",
                     dimMass/dimLength/sqr(dimTime),
                     rhoEValue
                 )
@@ -147,7 +145,6 @@
                 mesh,
                 dimensionedScalar
                 (
-                    "nu",
                     dimless,
                     nuValue
                 )

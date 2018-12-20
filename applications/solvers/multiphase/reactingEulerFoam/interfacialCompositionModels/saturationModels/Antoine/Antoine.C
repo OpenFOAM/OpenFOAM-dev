@@ -68,7 +68,7 @@ Foam::saturationModels::Antoine::pSat
 ) const
 {
     return
-        dimensionedScalar("one", dimPressure, 1)
+        dimensionedScalar(dimPressure, 1)
        *exp(A_ + B_/(C_ + T));
 }
 
@@ -100,7 +100,7 @@ Foam::saturationModels::Antoine::Tsat
 ) const
 {
     return
-        B_/(log(p*dimensionedScalar("one", dimless/dimPressure, 1)) - A_)
+        B_/(log(p*dimensionedScalar(dimless/dimPressure, 1)) - A_)
       - C_;
 }
 

@@ -45,7 +45,7 @@ NonRandomTwoLiquid
             pair.phase1().mesh()
         ),
         pair.phase1().mesh(),
-        dimensionedScalar("one", dimless, 1)
+        dimensionedScalar(dimless, 1)
     ),
     gamma2_
     (
@@ -56,7 +56,7 @@ NonRandomTwoLiquid
             pair.phase1().mesh()
         ),
         pair.phase1().mesh(),
-        dimensionedScalar("one", dimless, 1)
+        dimensionedScalar(dimless, 1)
     ),
     beta12_("", dimless/dimTemperature, 0),
     beta21_("", dimless/dimTemperature, 0)

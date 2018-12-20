@@ -307,7 +307,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
             false
         ),
         p.mesh(),
-        dimensionedScalar("EqR", dimless, 0)
+        dimensionedScalar(dimless, 0)
     );
 
     if (psiuReactionThermo_.composition().contains("ft"))
@@ -339,7 +339,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
                 false
             ),
             p.mesh(),
-            dimensionedScalar("Su0", dimVelocity, 0)
+            dimensionedScalar(dimVelocity, 0)
         )
     );
 

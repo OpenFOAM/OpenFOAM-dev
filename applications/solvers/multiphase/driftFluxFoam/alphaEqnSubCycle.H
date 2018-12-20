@@ -8,7 +8,7 @@
             mesh
         ),
         mesh,
-        dimensionedScalar("0", phi.dimensions(), 0)
+        dimensionedScalar(phi.dimensions(), 0)
     );
 
     surfaceScalarField phir(fvc::flux(UdmModel.Udm()));
@@ -25,7 +25,7 @@
                 mesh
             ),
             mesh,
-            dimensionedScalar("0", phi.dimensions(), 0)
+            dimensionedScalar(phi.dimensions(), 0)
         );
 
         for

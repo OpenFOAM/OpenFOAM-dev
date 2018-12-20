@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("rAUf", dimTime, 1.0)
+        dimensionedScalar(dimTime, 1.0)
     );
 
     if (correctPhi)

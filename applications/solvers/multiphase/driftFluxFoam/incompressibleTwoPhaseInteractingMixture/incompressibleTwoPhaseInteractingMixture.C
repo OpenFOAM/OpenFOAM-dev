@@ -102,7 +102,7 @@ incompressibleTwoPhaseInteractingMixture
             U_.db()
         ),
         U_.mesh(),
-        dimensionedScalar("mu", dimensionSet(1, -1, -1, 0, 0), 0),
+        dimensionedScalar(dimensionSet(1, -1, -1, 0, 0), 0),
         calculatedFvPatchScalarField::typeName
     )
 {

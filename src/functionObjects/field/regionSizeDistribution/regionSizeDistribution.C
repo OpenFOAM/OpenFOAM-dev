@@ -501,7 +501,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimless, 0)
+            dimensionedScalar(dimless, 0)
         );
         Info<< "    Dumping region as volScalarField to " << region.name()
             << endl;

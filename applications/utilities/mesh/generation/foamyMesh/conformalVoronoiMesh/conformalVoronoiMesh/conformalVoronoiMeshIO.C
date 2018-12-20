@@ -1121,7 +1121,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
                 IOobject::AUTO_WRITE
             ),
             mesh,
-            dimensionedScalar("cellSize", dimLength, 0),
+            dimensionedScalar(dimLength, 0),
             zeroGradientFvPatchScalarField::typeName
         );
 
@@ -1147,7 +1147,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //         IOobject::AUTO_WRITE
         //     ),
         //     mesh,
-        //     dimensionedScalar("cellVolume", dimLength, 0),
+        //     dimensionedScalar(dimLength, 0),
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
@@ -1166,7 +1166,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //         IOobject::AUTO_WRITE
         //     ),
         //     mesh,
-        //     dimensionedScalar("cellVolume", dimVolume, 0),
+        //     dimensionedScalar(dimVolume, 0),
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
@@ -1185,7 +1185,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //         IOobject::AUTO_WRITE
         //     ),
         //     mesh,
-        //     dimensionedScalar("cellSize", dimLength, 0),
+        //     dimensionedScalar(dimLength, 0),
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
@@ -1231,7 +1231,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
     //             IOobject::AUTO_WRITE
     //         ),
     //         ptMesh,
-    //         dimensionedScalar("ptTargetCellSize", dimLength, 0),
+    //         dimensionedScalar(dimLength, 0),
     //         pointPatchVectorField::calculatedType()
     //     );
 

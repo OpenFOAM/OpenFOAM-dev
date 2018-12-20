@@ -150,7 +150,7 @@ void Foam::ParticleErosion<CloudType>::preEvolve()
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimVolume, 0)
+                dimensionedScalar(dimVolume, 0)
             )
         );
     }

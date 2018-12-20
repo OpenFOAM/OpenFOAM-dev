@@ -113,7 +113,7 @@ Foam::saturationModels::constantSaturationConditions::pSatPrime
                 false
             ),
             T.mesh(),
-            dimensionedScalar("zero", dimPressure/dimTemperature, 0)
+            dimensionedScalar(dimPressure/dimTemperature, 0)
         )
     );
 }
@@ -139,7 +139,7 @@ Foam::saturationModels::constantSaturationConditions::lnPSat
                 false
             ),
             T.mesh(),
-            dimensionedScalar("lnPSat", dimless, log(pSat_.value()))
+            dimensionedScalar(dimless, log(pSat_.value()))
         )
     );
 }

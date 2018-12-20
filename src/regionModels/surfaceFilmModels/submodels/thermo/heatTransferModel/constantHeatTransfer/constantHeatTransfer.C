@@ -90,7 +90,6 @@ tmp<volScalarField> constantHeatTransfer::h() const
             filmModel_.regionMesh(),
             dimensionedScalar
             (
-                "c0",
                 dimEnergy/dimTime/sqr(dimLength)/dimTemperature,
                 c0_
             )

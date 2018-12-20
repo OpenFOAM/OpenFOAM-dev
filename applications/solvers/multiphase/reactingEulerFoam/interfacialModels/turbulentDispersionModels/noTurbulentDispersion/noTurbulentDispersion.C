@@ -84,7 +84,7 @@ Foam::turbulentDispersionModels::noTurbulentDispersion::D() const
                 false
             ),
             mesh,
-            dimensionedScalar("zero", dimD, 0)
+            dimensionedScalar(dimD, 0)
         )
     );
 }

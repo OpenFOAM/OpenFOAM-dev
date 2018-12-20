@@ -63,7 +63,7 @@ Foam::viscosityModels::Casson::calcNu() const
                    /max
                     (
                         strainRate(),
-                        dimensionedScalar("vSmall", dimless/dimTime, vSmall)
+                        dimensionedScalar(dimless/dimTime, vSmall)
                     )
                 ) + sqrt(m_)
             )

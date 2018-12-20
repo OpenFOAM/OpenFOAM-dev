@@ -140,12 +140,7 @@ public:
                         false
                     ),
                     this->mesh(),
-                    dimensionedScalar
-                    (
-                        "blendingFactor",
-                        dimless,
-                        blendingFactor_
-                    )
+                    dimensionedScalar(dimless, blendingFactor_)
                 )
             );
         }
@@ -170,12 +165,7 @@ public:
                         false
                     ),
                     this->mesh(),
-                    dimensionedScalar
-                    (
-                        "blendedLimiter",
-                        dimless,
-                        1 - blendingFactor_
-                    )
+                    dimensionedScalar(dimless, 1 - blendingFactor_)
                 )
             );
         }

@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("facesAgglomeration", dimless, 0)
+            dimensionedScalar(dimless, 0)
         );
 
         volScalarField::Boundary& facesAgglomerationBf =

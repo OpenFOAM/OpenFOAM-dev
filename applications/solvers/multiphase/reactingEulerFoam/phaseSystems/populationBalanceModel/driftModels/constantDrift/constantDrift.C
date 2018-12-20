@@ -60,7 +60,7 @@ Foam::diameterModels::driftModels::constantDrift::constantDrift
             popBal.mesh()
         ),
         popBal.mesh(),
-        dimensionedScalar("Sui", inv(dimVolume), Zero)
+        dimensionedScalar(inv(dimVolume), Zero)
     )
 {}
 

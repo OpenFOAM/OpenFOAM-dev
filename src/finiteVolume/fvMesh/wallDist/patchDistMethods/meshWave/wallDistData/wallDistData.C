@@ -47,7 +47,7 @@ Foam::wallDistData<TransferType>::wallDistData
             mesh
         ),
         mesh,
-        dimensionedScalar("y", dimLength, great)
+        dimensionedScalar(dimLength, great)
     ),
     cellDistFuncs(mesh),
     field_(field),

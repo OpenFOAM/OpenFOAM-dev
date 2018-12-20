@@ -1965,7 +1965,7 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
-        dimensionedScalar("level0Edge", dimLength, getLevel0EdgeLength())
+        dimensionedScalar(dimLength, getLevel0EdgeLength())
     ),
     history_
     (
@@ -2093,7 +2093,6 @@ Foam::hexRef8::hexRef8
         ),
         dimensionedScalar
         (
-            "level0Edge",
             dimLength,
             (level0Edge >= 0 ? level0Edge : getLevel0EdgeLength())
         )
@@ -2201,7 +2200,6 @@ Foam::hexRef8::hexRef8
         ),
         dimensionedScalar
         (
-            "level0Edge",
             dimLength,
             (level0Edge >= 0 ? level0Edge : getLevel0EdgeLength())
         )
@@ -3079,7 +3077,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
     //            false
     //        ),
     //        fMesh,
-    //        dimensionedScalar("zero", dimless, 0)
+    //        dimensionedScalar(dimless, 0)
     //    );
     //
     //    forAll(wantedLevel, celli)

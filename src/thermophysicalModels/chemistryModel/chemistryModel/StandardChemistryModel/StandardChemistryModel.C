@@ -80,7 +80,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
                     IOobject::NO_WRITE
                 ),
                 thermo.p().mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
+                dimensionedScalar(dimMass/dimVolume/dimTime, 0)
             )
         );
     }
@@ -288,7 +288,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimTime, small),
+            dimensionedScalar(dimTime, small),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -362,7 +362,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::Qdot() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
+            dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
         )
     );
 
@@ -405,7 +405,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
                 IOobject::NO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
+            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
         )
     );
 

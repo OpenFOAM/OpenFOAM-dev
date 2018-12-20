@@ -79,7 +79,7 @@ tmp<fvScalarMatrix> kOmegaSSTSAS<BasicTurbulenceModel>::Qsas
                     magSqr(fvc::grad(this->omega_)()())/sqr(this->omega_()),
                     magSqr(fvc::grad(this->k_)()())/sqr(this->k_())
                 ),
-                dimensionedScalar("0", dimensionSet(0, 0, -2, 0, 0), 0)
+                dimensionedScalar(dimensionSet(0, 0, -2, 0, 0), 0)
             ),
             // Limit SAS production of omega for numerical stability,
             // particularly during start-up

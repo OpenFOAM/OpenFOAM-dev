@@ -119,7 +119,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::createAveragingWeights()
             false // do not register
         ),
         mesh,
-        dimensionedScalar("zero", dimless, 0)
+        dimensionedScalar(dimless, 0)
     );
 
     DynamicList<label> epsilonPatches(bf.size());

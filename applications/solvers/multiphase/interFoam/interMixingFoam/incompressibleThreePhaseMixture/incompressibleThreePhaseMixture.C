@@ -116,7 +116,7 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
             U.db()
         ),
         U.mesh(),
-        dimensionedScalar("nu", dimensionSet(0, 2, -1, 0, 0), 0),
+        dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0),
         calculatedFvPatchScalarField::typeName
     ),
 

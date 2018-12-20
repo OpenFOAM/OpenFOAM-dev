@@ -13,7 +13,7 @@
     // Set the reciprocal time-step from the local Courant number
     rDeltaT.ref() = max
     (
-        1/dimensionedScalar("maxDeltaT", dimTime, maxDeltaT),
+        1/dimensionedScalar(dimTime, maxDeltaT),
         fvc::surfaceSum(amaxSf)()()
        /((2*maxCo)*mesh.V())
     );

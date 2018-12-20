@@ -143,7 +143,7 @@ Foam::tmp<Foam::volScalarField> Foam::PDRDragModels::basic::Gk() const
                 IOobject::NO_WRITE
             ),
             U_.mesh(),
-            dimensionedScalar("zero", dimMass/dimLength/pow(dimTime, 3), 0)
+            dimensionedScalar(dimMass/dimLength/pow(dimTime, 3), 0)
         )
     );
 

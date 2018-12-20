@@ -62,7 +62,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::dsm() const
                 phase_.mesh()
             ),
             phase_.mesh(),
-            dimensionedScalar("invDsm", inv(dimLength), Zero)
+            dimensionedScalar(inv(dimLength), Zero)
         )
     );
 
@@ -93,7 +93,7 @@ Foam::diameterModels::velocityGroup::fSum() const
                 phase_.mesh()
             ),
             phase_.mesh(),
-            dimensionedScalar("sumSizeGroups", dimless, 0)
+            dimensionedScalar(dimless, 0)
         )
     );
 
@@ -213,7 +213,7 @@ Foam::diameterModels::velocityGroup::velocityGroup
             IOobject::AUTO_WRITE
         ),
         phase.mesh(),
-        dimensionedScalar("d", dimLength, Zero)
+        dimensionedScalar(dimLength, Zero)
     ),
     dmdt_
     (
@@ -224,7 +224,7 @@ Foam::diameterModels::velocityGroup::velocityGroup
             phase.mesh()
         ),
         phase.mesh(),
-        dimensionedScalar("dmdt", dimDensity/dimTime, Zero)
+        dimensionedScalar(dimDensity/dimTime, Zero)
     )
 {
     if

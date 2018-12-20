@@ -53,16 +53,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
+        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Func "(" + gf1.name() + ')',                                  \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            #Func "(" + gf1.name() + ')',                                      \
             gf1.mesh(),                                                        \
             Dfunc(gf1.dimensions())                                            \
         )                                                                      \
@@ -122,16 +115,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
+        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Op + gf1.name(),                                              \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            #Op + gf1.name(),                                                  \
             gf1.mesh(),                                                        \
             Dfunc(gf1.dimensions())                                            \
         )                                                                      \
@@ -203,16 +189,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
+        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Func "(" + gf1.name() + ',' + gf2.name() + ')',               \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            #Func "(" + gf1.name() + ',' + gf2.name() + ')',                   \
             gf1.mesh(),                                                        \
             Func(gf1.dimensions(), gf2.dimensions())                           \
         )                                                                      \
@@ -331,16 +310,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
+        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Func "(" + dt1.name() + ',' + gf2.name() + ')',               \
-                gf2.instance(),                                                \
-                gf2.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            #Func "(" + dt1.name() + ',' + gf2.name() + ')',                   \
             gf2.mesh(),                                                        \
             Func(dt1.dimensions(), gf2.dimensions())                           \
         )                                                                      \
@@ -422,16 +394,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
+        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Func "(" + gf1.name() + ',' + dt2.name() + ')',               \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            #Func "(" + gf1.name() + ',' + dt2.name() + ')',                   \
             gf1.mesh(),                                                        \
             Func(gf1.dimensions(), dt2.dimensions())                           \
         )                                                                      \
@@ -522,16 +487,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
+        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + gf1.name() + OpName + gf2.name() + ')',                  \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            '(' + gf1.name() + OpName + gf2.name() + ')',                      \
             gf1.mesh(),                                                        \
             gf1.dimensions() Op gf2.dimensions()                               \
         )                                                                      \
@@ -650,16 +608,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
+        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + dt1.name() + OpName + gf2.name() + ')',                  \
-                gf2.instance(),                                                \
-                gf2.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            '(' + dt1.name() + OpName + gf2.name() + ')',                      \
             gf2.mesh(),                                                        \
             dt1.dimensions() Op gf2.dimensions()                               \
         )                                                                      \
@@ -741,16 +692,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
+        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + gf1.name() + OpName + dt2.name() + ')',                  \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            '(' + gf1.name() + OpName + dt2.name() + ')',                      \
             gf1.mesh(),                                                        \
             gf1.dimensions() Op dt2.dimensions()                               \
         )                                                                      \

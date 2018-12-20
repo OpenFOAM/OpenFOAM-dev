@@ -1428,7 +1428,7 @@ void writeCellToRegion(const fvMesh& mesh, const labelList& cellRegion)
                 false
             ),
             mesh,
-            dimensionedScalar("zero", dimless, 0),
+            dimensionedScalar(dimless, 0),
             zeroGradientFvPatchScalarField::typeName
         );
         forAll(cellRegion, celli)

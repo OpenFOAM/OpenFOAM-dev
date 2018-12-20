@@ -113,7 +113,7 @@ ThermalPhaseChangePhaseSystem
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimDensity/dimTime, 0)
+                dimensionedScalar(dimDensity/dimTime, 0)
             )
         );
 
@@ -132,7 +132,7 @@ ThermalPhaseChangePhaseSystem
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimDensity/dimTime, 0)
+                dimensionedScalar(dimDensity/dimTime, 0)
             )
         );
 
@@ -151,7 +151,7 @@ ThermalPhaseChangePhaseSystem
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0)
+                dimensionedScalar(dimEnergy/dimTime/dimVolume, 0)
             )
         );
     }
@@ -415,7 +415,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
         }
         else
         {
-            iDmdtNew == dimensionedScalar("0", iDmdt.dimensions(), 0);
+            iDmdtNew == dimensionedScalar(iDmdt.dimensions(), 0);
         }
 
         volScalarField H1(heatTransferModelIter().first()->K());

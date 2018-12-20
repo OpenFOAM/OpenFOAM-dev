@@ -140,7 +140,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("one", dimless, 1.0),
+        dimensionedScalar(dimless, 1.0),
         zeroGradientFvPatchScalarField::typeName
     );
 

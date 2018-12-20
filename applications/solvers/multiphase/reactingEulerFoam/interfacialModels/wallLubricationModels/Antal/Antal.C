@@ -76,7 +76,7 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Antal::Fi() const
     (
         max
         (
-            dimensionedScalar("zero", dimless/dimLength, 0),
+            dimensionedScalar(dimless/dimLength, 0),
             Cw1_/pair_.dispersed().d() + Cw2_/yWall()
         )
        *pair_.continuous().rho()

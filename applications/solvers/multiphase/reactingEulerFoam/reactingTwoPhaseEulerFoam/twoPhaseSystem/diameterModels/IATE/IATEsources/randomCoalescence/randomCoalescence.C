@@ -76,7 +76,7 @@ Foam::diameterModels::IATEsources::randomCoalescence::R
             iate_.phase().mesh()
         ),
         iate_.phase().mesh(),
-        dimensionedScalar("R", dimless/dimTime, 0)
+        dimensionedScalar(dimless/dimTime, 0)
     );
 
     const scalar Crc = Crc_.value();

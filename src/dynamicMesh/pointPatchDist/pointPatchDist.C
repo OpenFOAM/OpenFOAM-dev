@@ -46,7 +46,7 @@ Foam::pointPatchDist::pointPatchDist
             pMesh.db()
         ),
         pMesh,
-        dimensionedScalar("y", dimLength, great)
+        dimensionedScalar(dimLength, great)
     ),
     points_(points),
     patchIDs_(patchIDs),

@@ -104,8 +104,8 @@ nu
             (
                 max
                 (
-                    dimensionedScalar("one", dimTime, 1.0)*strainRate,
-                    dimensionedScalar("small", dimless, small)
+                    dimensionedScalar(dimTime, 1.0)*strainRate,
+                    dimensionedScalar(dimless, small)
                 ),
                 n_.value() - scalar(1)
             )

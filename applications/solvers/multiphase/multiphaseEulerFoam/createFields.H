@@ -37,7 +37,7 @@ surfaceScalarField phi
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("phi", dimArea*dimVelocity, 0)
+    dimensionedScalar(dimArea*dimVelocity, 0)
 );
 
 multiphaseSystem fluid(U, phi);

@@ -80,7 +80,7 @@ tmp<volScalarField> createScalarField
                 false
             ),
             mesh,
-            dimensionedScalar("zero", dimless, 0),
+            dimensionedScalar(dimless, 0),
             zeroGradientFvPatchScalarField::typeName
         )
     );

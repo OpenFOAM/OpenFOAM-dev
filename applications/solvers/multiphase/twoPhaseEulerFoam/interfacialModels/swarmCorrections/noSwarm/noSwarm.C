@@ -75,7 +75,7 @@ Foam::tmp<Foam::volScalarField> Foam::swarmCorrections::noSwarm::Cs() const
                     mesh
                 ),
                 mesh,
-                dimensionedScalar("one", dimless, 1)
+                dimensionedScalar(dimless, 1)
             )
         );
 }

@@ -7,7 +7,7 @@ volScalarField::Internal Sp
         mesh
     ),
     mesh,
-    dimensionedScalar("Sp", dgdt.dimensions(), 0)
+    dimensionedScalar(dgdt.dimensions(), 0)
 );
 
 volScalarField::Internal Su
@@ -19,7 +19,7 @@ volScalarField::Internal Su
         mesh
     ),
     mesh,
-    dimensionedScalar("Su", dgdt.dimensions(), 0)
+    dimensionedScalar(dgdt.dimensions(), 0)
 );
 
 forAll(dgdt, celli)

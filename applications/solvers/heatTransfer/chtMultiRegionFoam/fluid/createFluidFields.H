@@ -116,7 +116,7 @@ forAll(fluidRegions, i)
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE
             ),
-            dimensionedScalar("hRef", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         )
     );
 
@@ -225,7 +225,6 @@ forAll(fluidRegions, i)
             fluidRegions[i],
             dimensionedScalar
             (
-                "dpdt",
                 thermoFluid[i].p().dimensions()/dimTime,
                 0
             )

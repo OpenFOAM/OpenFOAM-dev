@@ -217,7 +217,7 @@ Foam::radiation::blackBodyEmission::deltaLambdaT
                 IOobject::NO_WRITE
             ),
             T.mesh(),
-            dimensionedScalar("deltaLambdaT", dimless, 1.0)
+            dimensionedScalar(dimless, 1.0)
         )
     );
 

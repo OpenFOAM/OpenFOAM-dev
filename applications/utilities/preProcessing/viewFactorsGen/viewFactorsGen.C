@@ -828,7 +828,7 @@ int main(int argc, char *argv[])
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("viewFactorField", dimless, 0)
+            dimensionedScalar(dimless, 0)
         );
 
         volScalarField::Boundary& viewFactorFieldBf =

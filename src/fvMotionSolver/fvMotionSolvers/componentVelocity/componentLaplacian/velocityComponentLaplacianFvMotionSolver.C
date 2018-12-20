@@ -66,12 +66,7 @@ velocityComponentLaplacianFvMotionSolver
             IOobject::AUTO_WRITE
         ),
         fvMesh_,
-        dimensionedScalar
-        (
-            "cellMotionU",
-            pointMotionU_.dimensions(),
-            0
-        ),
+        dimensionedScalar(pointMotionU_.dimensions(), 0),
         cellMotionBoundaryTypes<scalar>(pointMotionU_.boundaryField())
     ),
     diffusivityPtr_

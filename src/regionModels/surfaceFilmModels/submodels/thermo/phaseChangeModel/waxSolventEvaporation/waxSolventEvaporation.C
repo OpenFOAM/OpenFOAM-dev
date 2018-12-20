@@ -196,7 +196,7 @@ void waxSolventEvaporation::correctModel
             false
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimDensity*dimVelocity, 0)
+        dimensionedScalar(dimDensity*dimVelocity, 0)
     );
 
     volScalarField::Internal evapRateInf
@@ -211,7 +211,7 @@ void waxSolventEvaporation::correctModel
             false
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimDensity*dimVelocity, 0)
+        dimensionedScalar(dimDensity*dimVelocity, 0)
     );
 
     bool filmPresent = false;
@@ -321,7 +321,7 @@ void waxSolventEvaporation::correctModel
         max
         (
            -film.rhoSp()(),
-            dimensionedScalar("zero", film.rhoSp().dimensions(), 0)
+            dimensionedScalar(film.rhoSp().dimensions(), 0)
         )
     );
 

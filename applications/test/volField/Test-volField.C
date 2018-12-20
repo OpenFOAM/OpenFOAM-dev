@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
           + fvm::div(phi, st)
           - fvm::laplacian
             (
-                dimensionedScalar("D", sqr(dimLength)/dimTime, 1),
+                dimensionedScalar(sqr(dimLength)/dimTime, 1),
                 st
             )
          ==

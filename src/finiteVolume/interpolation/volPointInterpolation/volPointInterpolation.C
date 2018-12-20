@@ -263,7 +263,7 @@ void Foam::volPointInterpolation::makeWeights()
             mesh()
         ),
         pointMesh::New(mesh()),
-        dimensionedScalar("zero", dimless, 0)
+        dimensionedScalar(dimless, 0)
     );
 
 

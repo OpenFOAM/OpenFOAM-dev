@@ -119,7 +119,7 @@ PopulationBalancePhaseSystem
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimDensity/dimTime, 0)
+                dimensionedScalar(dimDensity/dimTime, 0)
             )
         );
     }

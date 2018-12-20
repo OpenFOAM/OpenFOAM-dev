@@ -79,7 +79,7 @@ void Foam::CorrectPhi
             mesh
         ),
         mesh,
-        dimensionedScalar("pcorr", p.dimensions(), 0),
+        dimensionedScalar(p.dimensions(), 0),
         pcorrTypes
     );
 
@@ -156,7 +156,7 @@ void Foam::CorrectPhi
             mesh
         ),
         mesh,
-        dimensionedScalar("pcorr", p.dimensions(), 0),
+        dimensionedScalar(p.dimensions(), 0),
         pcorrTypes
     );
 

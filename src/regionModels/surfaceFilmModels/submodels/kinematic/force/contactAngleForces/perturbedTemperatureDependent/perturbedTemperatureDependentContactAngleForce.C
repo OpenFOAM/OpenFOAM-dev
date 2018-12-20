@@ -92,7 +92,7 @@ perturbedTemperatureDependentContactAngleForce::theta() const
                 filmModel_.regionMesh()
             ),
             filmModel_.regionMesh(),
-            dimensionedScalar("0", dimless, 0)
+            dimensionedScalar(dimless, 0)
         )
     );
 

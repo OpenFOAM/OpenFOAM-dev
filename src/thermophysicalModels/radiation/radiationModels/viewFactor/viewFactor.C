@@ -693,9 +693,8 @@ Foam::tmp<Foam::volScalarField> Foam::radiation::viewFactor::Rp() const
             mesh_,
             dimensionedScalar
             (
-                "zero",
                 dimMass/pow3(dimTime)/dimLength/pow4(dimTemperature),
-                0.0
+                0
             )
         )
     );
@@ -719,7 +718,7 @@ Foam::radiation::viewFactor::Ru() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0)
+            dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 }

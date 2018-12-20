@@ -62,7 +62,7 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
             popBal.mesh()
         ),
         popBal.mesh(),
-        dimensionedScalar("Sui", dimDensity/dimTime, Zero)
+        dimensionedScalar(dimDensity/dimTime, Zero)
     ),
     N_
     (
@@ -73,7 +73,7 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
             popBal.mesh()
         ),
         popBal.mesh(),
-        dimensionedScalar("Sui", inv(dimVolume), Zero)
+        dimensionedScalar(inv(dimVolume), Zero)
     )
 {}
 

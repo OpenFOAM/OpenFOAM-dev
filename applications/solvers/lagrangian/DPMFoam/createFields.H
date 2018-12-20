@@ -119,7 +119,7 @@ volScalarField alphac
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("0", dimless, 0)
+    dimensionedScalar(dimless, 0)
 );
 
 word kinematicCloudName("kinematicCloud");

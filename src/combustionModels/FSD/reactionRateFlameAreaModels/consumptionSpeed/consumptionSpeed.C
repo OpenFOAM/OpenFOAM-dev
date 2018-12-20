@@ -95,7 +95,6 @@ Foam::tmp<Foam::volScalarField> Foam::consumptionSpeed::omega0Sigma
             sigma.mesh(),
             dimensionedScalar
             (
-                "omega0",
                 dimensionSet(1, -2, -1, 0, 0, 0, 0),
                 0
             )

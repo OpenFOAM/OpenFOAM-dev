@@ -286,7 +286,7 @@ void Foam::volPointInterpolation::interpolateBoundaryField
             mesh()
         ),
         pointMesh::New(mesh()),
-        dimensionedScalar("zero", dimless, 0),
+        dimensionedScalar(dimless, 0),
         wordList
         (
             pf.boundaryField().size(),

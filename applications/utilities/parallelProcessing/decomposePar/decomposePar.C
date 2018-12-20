@@ -521,7 +521,7 @@ int main(int argc, char *argv[])
                         IOobject::AUTO_WRITE
                     ),
                     mesh,
-                    dimensionedScalar("cellDist", dimless, 0)
+                    dimensionedScalar(dimless, 0)
                 );
 
                 forAll(procIds, celli)

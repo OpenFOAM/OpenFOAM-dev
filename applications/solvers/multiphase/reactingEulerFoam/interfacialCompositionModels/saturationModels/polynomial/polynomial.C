@@ -111,7 +111,7 @@ Foam::saturationModels::polynomial::Tsat
                 IOobject::NO_WRITE
             ),
             p.mesh(),
-            dimensionedScalar("zero", dimTemperature, 0)
+            dimensionedScalar(dimTemperature, 0)
         )
     );
 

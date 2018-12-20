@@ -77,7 +77,7 @@ Foam::virtualMassModels::noVirtualMass::Cvm() const
                     mesh
                 ),
                 mesh,
-                dimensionedScalar("zero", dimless, 0)
+                dimensionedScalar(dimless, 0)
             )
         );
 }
@@ -86,7 +86,7 @@ Foam::virtualMassModels::noVirtualMass::Cvm() const
 Foam::tmp<Foam::volScalarField>
 Foam::virtualMassModels::noVirtualMass::K() const
 {
-    return Cvm()*dimensionedScalar("zero", dimDensity, 0);
+    return Cvm()*dimensionedScalar(dimDensity, 0);
 }
 
 

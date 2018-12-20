@@ -87,7 +87,7 @@ Foam::moleFractions<ThermoType>::moleFractions
                         mesh_
                     ),
                     mesh_,
-                    dimensionedScalar("X", dimless, 0)
+                    dimensionedScalar(dimless, 0)
                 )
             );
         }

@@ -101,16 +101,9 @@ pow
 
     tmp<GeometricField<powProductType, PatchField, GeoMesh>> tPow
     (
-        new GeometricField<powProductType, PatchField, GeoMesh>
+        GeometricField<powProductType, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + gf.name() + ',' + name(r) + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "pow(" + gf.name() + ',' + name(r) + ')',
             gf.mesh(),
             pow(gf.dimensions(), r)
         )
@@ -142,16 +135,9 @@ pow
 
     tmp<GeometricField<powProductType, PatchField, GeoMesh>> tPow
     (
-        new GeometricField<powProductType, PatchField, GeoMesh>
+        GeometricField<powProductType, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + gf.name() + ',' + name(r) + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "pow(" + gf.name() + ',' + name(r) + ')',
             gf.mesh(),
             pow(gf.dimensions(), r)
         )
@@ -193,16 +179,9 @@ sqr(const GeometricField<Type, PatchField, GeoMesh>& gf)
 
     tmp<GeometricField<outerProductType, PatchField, GeoMesh>> tSqr
     (
-        new GeometricField<outerProductType, PatchField, GeoMesh>
+        GeometricField<outerProductType, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "sqr(" + gf.name() + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "sqr(" + gf.name() + ')',
             gf.mesh(),
             sqr(gf.dimensions())
         )
@@ -231,16 +210,9 @@ sqr(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
 
     tmp<GeometricField<outerProductType, PatchField, GeoMesh>> tSqr
     (
-        new GeometricField<outerProductType, PatchField, GeoMesh>
+        GeometricField<outerProductType, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "sqr(" + gf.name() + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "sqr(" + gf.name() + ')',
             gf.mesh(),
             sqr(gf.dimensions())
         )
@@ -273,16 +245,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
 {
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tMagSqr
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "magSqr(" + gf.name() + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "magSqr(" + gf.name() + ')',
             gf.mesh(),
             sqr(gf.dimensions())
         )
@@ -303,16 +268,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tMagSqr
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "magSqr(" + gf.name() + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "magSqr(" + gf.name() + ')',
             gf.mesh(),
             sqr(gf.dimensions())
         )
@@ -345,16 +303,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
 {
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tMag
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "mag(" + gf.name() + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "mag(" + gf.name() + ')',
             gf.mesh(),
             gf.dimensions()
         )
@@ -375,16 +326,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tMag
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "mag(" + gf.name() + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "mag(" + gf.name() + ')',
             gf.mesh(),
             gf.dimensions()
         )
@@ -431,16 +375,9 @@ cmptAv(const GeometricField<Type, PatchField, GeoMesh>& gf)
 
     tmp<GeometricField<cmptType, PatchField, GeoMesh>> CmptAv
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "cmptAv(" + gf.name() + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "cmptAv(" + gf.name() + ')',
             gf.mesh(),
             gf.dimensions()
         )
@@ -470,16 +407,9 @@ cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
 
     tmp<GeometricField<cmptType, PatchField, GeoMesh>> CmptAv
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "cmptAv(" + gf.name() + ')',
-                gf.instance(),
-                gf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "cmptAv(" + gf.name() + ')',
             gf.mesh(),
             gf.dimensions()
         )
@@ -628,16 +558,9 @@ operator op                                                                    \
     typedef typename product<Type1, Type2>::type productType;                  \
     tmp<GeometricField<productType, PatchField, GeoMesh>> tRes                 \
     (                                                                          \
-        new GeometricField<productType, PatchField, GeoMesh>                   \
+        GeometricField<productType, PatchField, GeoMesh>::New                  \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + gf1.name() + #op + gf2.name() + ')',                     \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            '(' + gf1.name() + #op + gf2.name() + ')',                         \
             gf1.mesh(),                                                        \
             gf1.dimensions() op gf2.dimensions()                               \
         )                                                                      \
@@ -772,16 +695,9 @@ operator op                                                                    \
                                                                                \
     tmp<GeometricField<productType, PatchField, GeoMesh>> tRes                 \
     (                                                                          \
-        new GeometricField<productType, PatchField, GeoMesh>                   \
+        GeometricField<productType, PatchField, GeoMesh>::New                  \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + gf1.name() + #op + dvs.name() + ')',                     \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            '(' + gf1.name() + #op + dvs.name() + ')',                         \
             gf1.mesh(),                                                        \
             gf1.dimensions() op dvs.dimensions()                               \
         )                                                                      \
@@ -884,16 +800,9 @@ operator op                                                                    \
     typedef typename product<Form, Type>::type productType;                    \
     tmp<GeometricField<productType, PatchField, GeoMesh>> tRes                 \
     (                                                                          \
-        new GeometricField<productType, PatchField, GeoMesh>                   \
+        GeometricField<productType, PatchField, GeoMesh>::New                  \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + dvs.name() + #op + gf1.name() + ')',                     \
-                gf1.instance(),                                                \
-                gf1.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            '(' + dvs.name() + #op + gf1.name() + ')',                         \
             gf1.mesh(),                                                        \
             dvs.dimensions() op gf1.dimensions()                               \
         )                                                                      \

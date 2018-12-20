@@ -86,7 +86,7 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Frank::Fi() const
         )
        *max
         (
-            dimensionedScalar("zero", dimless/dimLength, 0),
+            dimensionedScalar(dimless/dimLength, 0),
             (1 - yTilde)/(Cwd_*y*pow(yTilde, p_ - 1))
         )
        *pair_.continuous().rho()

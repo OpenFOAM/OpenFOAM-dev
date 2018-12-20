@@ -55,7 +55,7 @@
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("phiHbyA", dimArea*dimVelocity, 0)
+        dimensionedScalar(dimArea*dimVelocity, 0)
     );
 
     volScalarField rho("rho", fluid.rho());
@@ -176,7 +176,7 @@
             mesh
         ),
         mesh,
-        dimensionedScalar("rAUf", dimensionSet(-1, 3, 1, 0, 0), 0)
+        dimensionedScalar(dimensionSet(-1, 3, 1, 0, 0), 0)
     );
 
     phasei = 0;
@@ -237,7 +237,7 @@
             surfaceScalarField mSfGradp("mSfGradp", pEqnIncomp.flux()/rAUf);
 
             phasei = 0;
-            phi = dimensionedScalar("phi", phi.dimensions(), 0);
+            phi = dimensionedScalar(phi.dimensions(), 0);
             forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
             {
                 phaseModel& phase = iter();

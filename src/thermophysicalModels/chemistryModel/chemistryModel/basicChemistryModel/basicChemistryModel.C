@@ -70,7 +70,7 @@ Foam::basicChemistryModel::basicChemistryModel(basicThermo& thermo)
             IOobject::NO_WRITE
         ),
         mesh(),
-        dimensionedScalar("deltaTChem0", dimTime, deltaTChemIni_)
+        dimensionedScalar(dimTime, deltaTChemIni_)
     )
 {}
 

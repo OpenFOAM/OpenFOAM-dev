@@ -151,7 +151,7 @@ void Foam::multiphaseSystem::solveAlphas()
             mesh_
         ),
         mesh_,
-        dimensionedScalar("sumAlpha", dimless, 0)
+        dimensionedScalar(dimless, 0)
     );
 
     phasei = 0;
@@ -401,7 +401,7 @@ Foam::multiphaseSystem::multiphaseSystem
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("alphas", dimless, 0)
+        dimensionedScalar(dimless, 0)
     ),
 
     sigmas_(lookup("sigmas")),
@@ -560,12 +560,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::Cvm
                 mesh_
             ),
             mesh_,
-            dimensionedScalar
-            (
-                "Cvm",
-                dimensionSet(1, -3, 0, 0, 0),
-                0
-            )
+            dimensionedScalar(dimensionSet(1, -3, 0, 0, 0), 0)
         )
     );
 
@@ -743,12 +738,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::dragCoeff
                 mesh_
             ),
             mesh_,
-            dimensionedScalar
-            (
-                "dragCoeff",
-                dimensionSet(1, -3, -1, 0, 0),
-                0
-            )
+            dimensionedScalar(dimensionSet(1, -3, -1, 0, 0), 0)
         )
     );
 
@@ -791,12 +781,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
                 mesh_
             ),
             mesh_,
-            dimensionedScalar
-            (
-                "surfaceTension",
-                dimensionSet(1, -2, -2, 0, 0),
-                0
-            )
+            dimensionedScalar(dimensionSet(1, -2, -2, 0, 0), 0)
         )
     );
 
@@ -814,7 +799,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
             if (sigma != sigmas_.end())
             {
                 tSurfaceTension.ref() +=
-                    dimensionedScalar("sigma", dimSigma_, sigma())
+                    dimensionedScalar(dimSigma_, sigma())
                    *fvc::interpolate(K(phase1, phase2))*
                     (
                         fvc::interpolate(phase2)*fvc::snGrad(phase1)
@@ -842,7 +827,7 @@ Foam::multiphaseSystem::nearInterface() const
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("nearInterface", dimless, 0)
+            dimensionedScalar(dimless, 0)
         )
     );
 
@@ -899,7 +884,7 @@ void Foam::multiphaseSystem::solve()
                         mesh_
                     ),
                     mesh_,
-                    dimensionedScalar("0", dimensionSet(0, 3, -1, 0, 0), 0)
+                    dimensionedScalar(dimensionSet(0, 3, -1, 0, 0), 0)
                 )
             );
 

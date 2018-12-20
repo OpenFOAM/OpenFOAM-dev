@@ -292,7 +292,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
                 new uniformDimensionedScalarField
                 (
                     rio,
-                    dimensionedScalar("zero", dimLength, masterLen)
+                    dimensionedScalar(dimLength, masterLen)
                 )
             );
         }

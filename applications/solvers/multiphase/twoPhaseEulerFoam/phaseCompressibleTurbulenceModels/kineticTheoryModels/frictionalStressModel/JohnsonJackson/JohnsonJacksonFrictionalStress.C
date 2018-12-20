@@ -124,7 +124,7 @@ Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::nu
     const volSymmTensorField& D
 ) const
 {
-    return dimensionedScalar("0.5", dimTime, 0.5)*pf*sin(phi_);
+    return dimensionedScalar(dimTime, 0.5)*pf*sin(phi_);
 }
 
 

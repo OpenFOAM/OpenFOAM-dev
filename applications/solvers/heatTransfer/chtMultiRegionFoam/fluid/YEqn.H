@@ -27,7 +27,7 @@ if (Y.size())
             (
                 IOobject("Yt", runTime.timeName(), mesh),
                 mesh,
-                dimensionedScalar("Yt", dimless, 0)
+                dimensionedScalar(dimless, 0)
             )
         );
     }

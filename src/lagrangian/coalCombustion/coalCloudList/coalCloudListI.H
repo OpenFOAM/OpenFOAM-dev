@@ -91,7 +91,7 @@ Foam::coalCloudList::hsTrans() const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimEnergy, 0)
+            dimensionedScalar(dimEnergy, 0)
         )
     );
 
@@ -157,7 +157,7 @@ Foam::coalCloudList::rhoTrans() const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass, 0)
+            dimensionedScalar(dimMass, 0)
         )
     );
 
@@ -193,7 +193,7 @@ Foam::coalCloudList::Srho() const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
+            dimensionedScalar(dimDensity/dimTime, 0)
         )
     );
 
@@ -227,7 +227,7 @@ Foam::coalCloudList::Srho
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
+            dimensionedScalar(dimDensity/dimTime, 0)
         )
     );
 

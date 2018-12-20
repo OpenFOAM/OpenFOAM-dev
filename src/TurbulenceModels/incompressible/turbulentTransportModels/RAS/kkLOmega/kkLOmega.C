@@ -57,7 +57,7 @@ tmp<volScalarField> kkLOmega::fINT() const
         min
         (
             kt_/(Cint_*(kl_ + kt_ + kMin_)),
-            dimensionedScalar("1.0", dimless, 1.0)
+            dimensionedScalar(dimless, 1.0)
         )
     );
 }
@@ -193,7 +193,7 @@ tmp<volScalarField> kkLOmega::phiNAT
             ReOmega
           - CnatCrit_
           / (
-                fNatCrit + dimensionedScalar("ROTvSmall", dimless, rootVSmall)
+                fNatCrit + dimensionedScalar(dimless, rootVSmall)
             ),
             scalar(0)
         )
@@ -615,7 +615,7 @@ void kkLOmega::correct()
         pow
         (
             lambdaEff
-           /(lambdaT + dimensionedScalar("small", dimLength, rootVSmall)),
+           /(lambdaT + dimensionedScalar(dimLength, rootVSmall)),
             2.0/3.0
         )
     );

@@ -123,7 +123,7 @@ waxSolventViscosity::waxSolventViscosity
             IOobject::AUTO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimDynamicViscosity, 0),
+        dimensionedScalar(dimDynamicViscosity, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
     muWaxModel_
@@ -146,7 +146,7 @@ waxSolventViscosity::waxSolventViscosity
             IOobject::AUTO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimDynamicViscosity, 0),
+        dimensionedScalar(dimDynamicViscosity, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
     muSolventModel_

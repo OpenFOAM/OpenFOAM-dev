@@ -75,7 +75,7 @@ Foam::patchDistMethods::meshWave::meshWave
 
 bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
 {
-    y = dimensionedScalar("yWall", dimLength, great);
+    y = dimensionedScalar(dimLength, great);
 
     // Calculate distance starting from patch faces
     patchWave wave(mesh_, patchIDs_, correctWalls_);
@@ -109,7 +109,7 @@ bool Foam::patchDistMethods::meshWave::correct
     volVectorField& n
 )
 {
-    y = dimensionedScalar("yWall", dimLength, great);
+    y = dimensionedScalar(dimLength, great);
 
     // Collect pointers to data on patches
     UPtrList<vectorField> patchData(mesh_.boundaryMesh().size());

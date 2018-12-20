@@ -45,7 +45,7 @@ Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::Henry
             pair.phase1().mesh()
         ),
         pair.phase1().mesh(),
-        dimensionedScalar("one", dimless, 1)
+        dimensionedScalar(dimless, 1)
     )
 {
     if (k_.size() != this->speciesNames_.size())
@@ -127,7 +127,7 @@ Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::YfPrime
                 this->pair_.phase1().mesh()
             ),
             this->pair_.phase1().mesh(),
-            dimensionedScalar("zero", dimless/dimTemperature, 0)
+            dimensionedScalar(dimless/dimTemperature, 0)
         )
     );
 }

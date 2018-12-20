@@ -128,7 +128,7 @@ Foam::volScalarField& Foam::LocalInteraction<CloudType>::massEscape()
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimMass, 0)
+                dimensionedScalar(dimMass, 0)
             )
         );
     }
@@ -157,7 +157,7 @@ Foam::volScalarField& Foam::LocalInteraction<CloudType>::massStick()
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimMass, 0)
+                dimensionedScalar(dimMass, 0)
             )
         );
     }

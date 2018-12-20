@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("one", dimless, 1.0),
+        dimensionedScalar(dimless, 1.0),
         zeroGradientFvPatchScalarField::typeName
     );
     Info<< "Writing one field "
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("one", dimless, 1.0),
+        dimensionedScalar(dimless, 1.0),
         calculatedFvsPatchScalarField::typeName
     );
     Info<< "Writing surface one field "
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         pointMesh::New(mesh),
-        dimensionedScalar("one", dimless, 1.0),
+        dimensionedScalar(dimless, 1.0),
         calculatedPointPatchScalarField::typeName
     );
     pointX.primitiveFieldRef() = mesh.points().component(0);

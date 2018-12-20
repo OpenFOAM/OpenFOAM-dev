@@ -15,7 +15,7 @@ Info<< "Creating base fields for time " << runTime.timeName() << endl;
             false
         ),
         mesh,
-        dimensionedScalar("Ydefault", dimless, 1)
+        dimensionedScalar(dimless, 1)
     );
 
     Ydefault.write();
@@ -32,7 +32,7 @@ Info<< "Creating base fields for time " << runTime.timeName() << endl;
             false
         ),
         mesh,
-        dimensionedScalar("p", dimPressure, p0)
+        dimensionedScalar(dimPressure, p0)
     );
 
     p.write();
@@ -49,7 +49,7 @@ Info<< "Creating base fields for time " << runTime.timeName() << endl;
             false
         ),
         mesh,
-        dimensionedScalar("T", dimTemperature, T0)
+        dimensionedScalar(dimTemperature, T0)
     );
 
     T.write();

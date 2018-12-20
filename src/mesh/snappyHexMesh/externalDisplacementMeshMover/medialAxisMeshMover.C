@@ -1613,7 +1613,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
             IOobject::AUTO_WRITE
         ),
         pMesh(),
-        dimensionedScalar("scale", dimless, 1.0)
+        dimensionedScalar(dimless, 1.0)
     ),
     oldPoints_(mesh().points()),
     meshMover_
@@ -1653,7 +1653,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
             false
         ),
         pMesh(),
-        dimensionedScalar("medialRatio", dimless, 0)
+        dimensionedScalar(dimless, 0)
     ),
     medialDist_
     (
@@ -1667,7 +1667,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
             false
         ),
         pMesh(),
-        dimensionedScalar("pointMedialDist", dimLength, 0)
+        dimensionedScalar(dimLength, 0)
     ),
     medialVec_
     (

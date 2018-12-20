@@ -74,7 +74,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kd
                     false
                 ),
                 this->mesh_,
-                dimensionedScalar("zero", dragModel::dimK, 0)
+                dimensionedScalar(dragModel::dimK, 0)
             )
         );
     }
@@ -108,7 +108,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kdf
                     false
                 ),
                 this->mesh_,
-                dimensionedScalar("zero", dragModel::dimK, 0)
+                dimensionedScalar(dragModel::dimK, 0)
             )
         );
     }
@@ -142,7 +142,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Vm
                     false
                 ),
                 this->mesh_,
-                dimensionedScalar("zero", virtualMassModel::dimK, 0)
+                dimensionedScalar(virtualMassModel::dimK, 0)
             )
         );
     }

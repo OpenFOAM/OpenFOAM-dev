@@ -77,7 +77,7 @@ bool Foam::conformalVoronoiMesh::distributeBackground(const Triangulation& mesh)
                 IOobject::NO_WRITE
             ),
             bMesh,
-            dimensionedScalar("weight", dimless, 1e-2),
+            dimensionedScalar(dimless, 1e-2),
             zeroGradientFvPatchScalarField::typeName
         );
 

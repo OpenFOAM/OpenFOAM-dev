@@ -101,7 +101,7 @@ void Foam::VoidFraction<CloudType>::preEvolve()
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimless, 0)
+                dimensionedScalar(dimless, 0)
             )
         );
     }

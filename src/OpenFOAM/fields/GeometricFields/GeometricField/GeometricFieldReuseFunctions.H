@@ -97,14 +97,9 @@ tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
     {
         tmp<GeometricField<TypeR, PatchField, GeoMesh>> rtgf
         (
-            new GeometricField<TypeR, PatchField, GeoMesh>
+            GeometricField<TypeR, PatchField, GeoMesh>::New
             (
-                IOobject
-                (
-                    name,
-                    gf1.instance(),
-                    gf1.db()
-                ),
+                name,
                 gf1.mesh(),
                 dimensions
             )
@@ -140,19 +135,11 @@ public:
     {
         const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();
 
-        return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
+        return GeometricField<TypeR, PatchField, GeoMesh>::New
         (
-            new GeometricField<TypeR, PatchField, GeoMesh>
-            (
-                IOobject
-                (
-                    name,
-                    gf1.instance(),
-                    gf1.db()
-                ),
-                gf1.mesh(),
-                dimensions
-            )
+            name,
+            gf1.mesh(),
+            dimensions
         );
     }
 };
@@ -181,19 +168,11 @@ public:
         }
         else
         {
-            return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
+            return GeometricField<TypeR, PatchField, GeoMesh>::New
             (
-                new GeometricField<TypeR, PatchField, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        gf1.instance(),
-                        gf1.db()
-                    ),
-                    gf1.mesh(),
-                    dimensions
-                )
+                name,
+                gf1.mesh(),
+                dimensions
             );
         }
     }
@@ -223,19 +202,11 @@ public:
     {
         const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();
 
-        return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
+        return GeometricField<TypeR, PatchField, GeoMesh>::New
         (
-            new GeometricField<TypeR, PatchField, GeoMesh>
-            (
-                IOobject
-                (
-                    name,
-                    gf1.instance(),
-                    gf1.db()
-                ),
-                gf1.mesh(),
-                dimensions
-            )
+            name,
+            gf1.mesh(),
+            dimensions
         );
     }
 };
@@ -274,19 +245,11 @@ public:
         }
         else
         {
-            return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
+            return GeometricField<TypeR, PatchField, GeoMesh>::New
             (
-                new GeometricField<TypeR, PatchField, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        gf1.instance(),
-                        gf1.db()
-                    ),
-                    gf1.mesh(),
-                    dimensions
-                )
+                name,
+                gf1.mesh(),
+                dimensions
             );
         }
     }
@@ -323,19 +286,11 @@ public:
         }
         else
         {
-            return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
+            return GeometricField<TypeR, PatchField, GeoMesh>::New
             (
-                new GeometricField<TypeR, PatchField, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        gf1.instance(),
-                        gf1.db()
-                    ),
-                    gf1.mesh(),
-                    dimensions
-                )
+                name,
+                gf1.mesh(),
+                dimensions
             );
         }
     }
@@ -374,19 +329,11 @@ public:
         }
         else
         {
-            return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
+            return GeometricField<TypeR, PatchField, GeoMesh>::New
             (
-                new GeometricField<TypeR, PatchField, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        gf1.instance(),
-                        gf1.db()
-                    ),
-                    gf1.mesh(),
-                    dimensions
-                )
+                name,
+                gf1.mesh(),
+                dimensions
             );
         }
     }

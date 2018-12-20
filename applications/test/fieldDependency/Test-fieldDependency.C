@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("zero", dimless, 0)
+        dimensionedScalar(dimless, 0)
     );
 
     Info<< "Creating field p\n" << endl;
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("zero", dimless, 0)
+        dimensionedScalar(dimless, 0)
     );
 
 

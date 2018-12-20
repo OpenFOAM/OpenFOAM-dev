@@ -153,7 +153,7 @@ Foam::phaseSystem::phaseSystem
             mesh
         ),
         mesh,
-        dimensionedScalar("dpdt", dimPressure/dimTime, 0)
+        dimensionedScalar(dimPressure/dimTime, 0)
     ),
 
     MRF_(mesh_)
@@ -313,7 +313,7 @@ Foam::phaseSystem::E(const phasePairKey& key) const
                     false
                 ),
                 this->mesh_,
-                dimensionedScalar("zero", dimless, 1)
+                dimensionedScalar(dimless, 1)
             )
         );
     }
@@ -343,7 +343,7 @@ Foam::phaseSystem::sigma(const phasePairKey& key) const
                     false
                 ),
                 this->mesh_,
-                dimensionedScalar("zero", surfaceTensionModel::dimSigma, 0)
+                dimensionedScalar(surfaceTensionModel::dimSigma, 0)
             )
         );
     }
@@ -366,7 +366,7 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdt
                 this->mesh_
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
+            dimensionedScalar(dimDensity/dimTime, 0)
         )
     );
 }

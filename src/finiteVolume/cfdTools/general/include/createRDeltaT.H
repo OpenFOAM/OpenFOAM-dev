@@ -19,7 +19,7 @@ if (LTS)
                 IOobject::AUTO_WRITE
             ),
             mesh,
-            dimensionedScalar("one", dimless/dimTime, 1),
+            dimensionedScalar(dimless/dimTime, 1),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );

@@ -155,7 +155,7 @@ void thixotropicViscosity::correct
             max
             (
                -film.rhoSp(),
-                dimensionedScalar("zero", film.rhoSp().dimensions(), 0)
+                dimensionedScalar(film.rhoSp().dimensions(), 0)
             )/(deltaRho + deltaRho0),
             lambda_
         )

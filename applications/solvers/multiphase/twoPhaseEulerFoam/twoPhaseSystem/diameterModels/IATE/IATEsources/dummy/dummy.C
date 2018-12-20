@@ -57,7 +57,7 @@ Foam::diameterModels::IATEsources::dummy::R() const
                 iate_.phase().mesh()
             ),
             iate_.phase().U().mesh(),
-            dimensionedScalar("R", dimless/dimTime, 0)
+            dimensionedScalar(dimless/dimTime, 0)
         )
     );
 }

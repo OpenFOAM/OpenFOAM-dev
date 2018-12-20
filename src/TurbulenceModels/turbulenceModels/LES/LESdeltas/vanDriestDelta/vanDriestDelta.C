@@ -60,7 +60,7 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
             mesh
         ),
         mesh,
-        dimensionedScalar("ystar", dimLength, great)
+        dimensionedScalar(dimLength, great)
     );
 
     const fvPatchList& patches = mesh.boundary();

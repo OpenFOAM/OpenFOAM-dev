@@ -113,7 +113,7 @@
                 phiCN,
                 upwind<scalar>(mesh, phiCN)
             ).fvmDiv(phiCN, alpha1)
-       // - fvm::Sp(fvc::ddt(dimensionedScalar("1", dimless, 1), mesh)
+       // - fvm::Sp(fvc::ddt(dimensionedScalar(dimless, 1), mesh)
        //           + fvc::div(phiCN), alpha1)
          ==
             Su + fvm::Sp(Sp + divU, alpha1)

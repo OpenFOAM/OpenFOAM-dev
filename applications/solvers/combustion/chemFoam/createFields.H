@@ -59,9 +59,8 @@
         mesh,
         dimensionedScalar
         (
-            "zero",
             dimensionSet(dimEnergy/dimMass/dimTemperature),
-            0.0
+            0
         )
     );
 

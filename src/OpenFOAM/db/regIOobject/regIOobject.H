@@ -67,7 +67,9 @@ class regIOobject
 :
     public IOobject
 {
+
 protected:
+
         //- Helper: check readOpt flags and read if necessary
         bool readHeaderOk
         (

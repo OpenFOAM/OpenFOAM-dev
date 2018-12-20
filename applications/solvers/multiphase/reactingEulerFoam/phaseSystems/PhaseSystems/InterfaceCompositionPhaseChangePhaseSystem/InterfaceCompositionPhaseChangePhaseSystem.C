@@ -215,7 +215,7 @@ InterfaceCompositionPhaseChangePhaseSystem
                         this->mesh()
                     ),
                     this->mesh(),
-                    dimensionedScalar("zero", dimDensity/dimTime, 0)
+                    dimensionedScalar(dimDensity/dimTime, 0)
                 )
             );
 
@@ -231,7 +231,7 @@ InterfaceCompositionPhaseChangePhaseSystem
                         this->mesh()
                     ),
                     this->mesh(),
-                    dimensionedScalar("zero", dimDensity/dimTime, 0)
+                    dimensionedScalar(dimDensity/dimTime, 0)
                 )
             );
         }
@@ -431,7 +431,7 @@ correctInterfaceThermo()
                     this->mesh()
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
+                dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
             );
             volScalarField mDotLPrime
             (
@@ -442,7 +442,7 @@ correctInterfaceThermo()
                     this->mesh()
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", mDotL.dimensions()/dimTemperature, 0)
+                dimensionedScalar(mDotL.dimensions()/dimTemperature, 0)
             );
 
             // Add latent heats from forward and backward models

@@ -44,7 +44,7 @@ Foam::interfaceCompositionModels::Raoult<Thermo, OtherThermo>::Raoult
             pair.phase1().mesh()
         ),
         pair.phase1().mesh(),
-        dimensionedScalar("one", dimless, 1)
+        dimensionedScalar(dimless, 1)
     ),
     YNonVapourPrime_
     (
@@ -55,7 +55,7 @@ Foam::interfaceCompositionModels::Raoult<Thermo, OtherThermo>::Raoult
             pair.phase1().mesh()
         ),
         pair.phase1().mesh(),
-        dimensionedScalar("zero", dimless/dimTemperature, 0)
+        dimensionedScalar(dimless/dimTemperature, 0)
     )
 {
     forAllConstIter(hashedWordList, this->speciesNames_, iter)

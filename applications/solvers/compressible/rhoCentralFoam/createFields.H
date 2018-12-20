@@ -72,7 +72,7 @@ surfaceScalarField pos
         mesh
     ),
     mesh,
-    dimensionedScalar("pos", dimless, 1.0)
+    dimensionedScalar(dimless, 1.0)
 );
 
 surfaceScalarField neg
@@ -84,7 +84,7 @@ surfaceScalarField neg
         mesh
     ),
     mesh,
-    dimensionedScalar("neg", dimless, -1.0)
+    dimensionedScalar(dimless, -1.0)
 );
 
 surfaceScalarField phi("phi", fvc::flux(rhoU));

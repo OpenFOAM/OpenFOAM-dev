@@ -287,7 +287,7 @@ kEpsilonLopesdaCosta<BasicTurbulenceModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensionedScalar("CdSigma", dimless/dimLength, 0)
+        dimensionedScalar(dimless/dimLength, 0)
     ),
     betap_
     (
@@ -298,7 +298,7 @@ kEpsilonLopesdaCosta<BasicTurbulenceModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensionedScalar("betap", dimless, 0)
+        dimensionedScalar(dimless, 0)
     ),
     betad_
     (
@@ -309,7 +309,7 @@ kEpsilonLopesdaCosta<BasicTurbulenceModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensionedScalar("betad", dimless, 0)
+        dimensionedScalar(dimless, 0)
     ),
     C4_
     (
@@ -320,7 +320,7 @@ kEpsilonLopesdaCosta<BasicTurbulenceModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensionedScalar("C4", dimless, 0)
+        dimensionedScalar(dimless, 0)
     ),
     C5_
     (
@@ -331,7 +331,7 @@ kEpsilonLopesdaCosta<BasicTurbulenceModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensionedScalar("C5", dimless, 0)
+        dimensionedScalar(dimless, 0)
     ),
 
     k_

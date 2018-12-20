@@ -82,7 +82,7 @@ volVectorField P
 V == max
 (
     P.component(Foam::vector::X) - strike,
-    dimensionedScalar("0", V.dimensions(), 0)
+    dimensionedScalar(V.dimensions(), 0)
 );
 
 volScalarField delta

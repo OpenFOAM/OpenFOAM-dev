@@ -616,7 +616,7 @@ int main(int argc, char *argv[])
                 false
             ),
             mesh,
-            dimensionedScalar("zero", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
 
         const searchableSurfaces& geometry = geometryToConformTo.geometry();
@@ -679,7 +679,7 @@ int main(int argc, char *argv[])
                 false
             ),
             pointMesh::New(mesh),
-            dimensionedScalar("zero", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
         {
             scalarField pointDistSqr(mesh.nPoints(), -sqr(great));

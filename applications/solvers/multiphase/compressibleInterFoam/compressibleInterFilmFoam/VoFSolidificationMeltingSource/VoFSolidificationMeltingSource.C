@@ -136,7 +136,7 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("alpha1", dimless, 0),
+        dimensionedScalar(dimless, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
     curTimeIndex_(-1)

@@ -73,7 +73,7 @@ Foam::saturationModels::AntoineExtended::pSat
 ) const
 {
     return
-        dimensionedScalar("one", dimPressure/pow(dimTemperature, D_), 1)
+        dimensionedScalar(dimPressure/pow(dimTemperature, D_), 1)
        *exp(A_ + B_/(C_ + T) + E_*pow(T, F_))
        *pow(T, D_);
 }
@@ -98,7 +98,7 @@ Foam::saturationModels::AntoineExtended::lnPSat
     return
         A_
       + B_/(C_ + T)
-      + D_*log(T*dimensionedScalar("one", dimless/dimTemperature, 1))
+      + D_*log(T*dimensionedScalar(dimless/dimTemperature, 1))
       + E_*pow(T, F_);
 }
 

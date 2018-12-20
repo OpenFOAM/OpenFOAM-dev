@@ -77,7 +77,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::noLift::Cl() const
                 false
             ),
             mesh,
-            dimensionedScalar("Cl", dimless, 0)
+            dimensionedScalar(dimless, 0)
         )
     );
 }
@@ -125,7 +125,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::liftModels::noLift::Ff() const
                 false
             ),
             mesh,
-            dimensionedScalar("zero", dimF*dimArea, 0)
+            dimensionedScalar(dimF*dimArea, 0)
         )
     );
 }

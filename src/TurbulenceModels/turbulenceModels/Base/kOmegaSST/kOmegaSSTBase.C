@@ -45,7 +45,7 @@ kOmegaSST<TurbulenceModel, BasicTurbulenceModel>::kOmegaSST::F1
     tmp<volScalarField> CDkOmegaPlus = max
     (
         CDkOmega,
-        dimensionedScalar("1.0e-10", dimless/sqr(dimTime), 1.0e-10)
+        dimensionedScalar(dimless/sqr(dimTime), 1.0e-10)
     );
 
     tmp<volScalarField> arg1 = min

@@ -115,7 +115,7 @@ bool Foam::functionObjects::turbulenceIntensity::execute()
                /max
                 (
                     max(uPrime, mag(turbModel.U())),
-                    dimensionedScalar("small", dimVelocity, small)
+                    dimensionedScalar(dimVelocity, small)
                 )
             );
     }

@@ -79,7 +79,7 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::rd
            max
            (
                magGradU,
-               dimensionedScalar("small", magGradU.dimensions(), small)
+               dimensionedScalar(magGradU.dimensions(), small)
            )*sqr(this->kappa_*this->y_)
        ),
        scalar(10)
@@ -138,7 +138,7 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::dTilda
 
     return max
     (
-        dimensionedScalar("small", dimLength, small),
+        dimensionedScalar(dimLength, small),
         fHyb*(1 + fRestore*Psi)*this->y_
       + (1 - fHyb)*this->CDES_*Psi*this->delta()
     );
