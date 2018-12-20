@@ -310,6 +310,36 @@ template<class Type, class GeoMesh>
 Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
 DimensionedField<Type, GeoMesh>::New
 (
+    const word& name,
+    const Mesh& mesh,
+    const dimensioned<Type>& dt
+)
+{
+    return tmp<DimensionedField<Type, GeoMesh>>
+    (
+        new DimensionedField<Type, GeoMesh>
+        (
+            IOobject
+            (
+                name,
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dt,
+            false
+        )
+    );
+}
+
+
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
+DimensionedField<Type, GeoMesh>::New
+(
     const word& newName,
     const tmp<DimensionedField<Type, GeoMesh>>& tdf
 )
@@ -356,14 +386,9 @@ DimensionedField<Type, GeoMesh>::component
 {
     tmp<DimensionedField<cmptType, GeoMesh>> result
     (
-        new DimensionedField<cmptType, GeoMesh>
+        DimensionedField<cmptType, GeoMesh>::New
         (
-            IOobject
-            (
-                name() + ".component(" + ::Foam::name(d) + ')',
-                instance(),
-                db()
-            ),
+            name() + ".component(" + ::Foam::name(d) + ')',
             mesh_,
             dimensions_
         )
@@ -409,14 +434,9 @@ DimensionedField<Type, GeoMesh>::T() const
 {
     tmp<DimensionedField<Type, GeoMesh>> result
     (
-        new DimensionedField<Type, GeoMesh>
+        DimensionedField<Type, GeoMesh>::New
         (
-            IOobject
-            (
-                name() + ".T()",
-                instance(),
-                db()
-            ),
+            name() + ".T()",
             mesh_,
             dimensions_
         )

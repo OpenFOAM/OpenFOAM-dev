@@ -47,14 +47,9 @@ pow
 
     tmp<DimensionedField<powProductType, GeoMesh>> tPow
     (
-        new DimensionedField<powProductType, GeoMesh>
+        DimensionedField<powProductType, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + df.name() + ',' + name(r) + ')',
-                df.instance(),
-                df.db()
-            ),
+            "pow(" + df.name() + ',' + name(r) + ')',
             df.mesh(),
             pow(df.dimensions(), r)
         )
@@ -101,14 +96,9 @@ sqr(const DimensionedField<Type, GeoMesh>& df)
 
     tmp<DimensionedField<outerProductType, GeoMesh>> tSqr
     (
-        new DimensionedField<outerProductType, GeoMesh>
+        DimensionedField<outerProductType, GeoMesh>::New
         (
-            IOobject
-            (
-                "sqr(" + df.name() + ')',
-                df.instance(),
-                df.db()
-            ),
+            "sqr(" + df.name() + ')',
             df.mesh(),
             sqr(df.dimensions())
         )
@@ -151,14 +141,9 @@ tmp<DimensionedField<scalar, GeoMesh>> magSqr
 {
     tmp<DimensionedField<scalar, GeoMesh>> tMagSqr
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "magSqr(" + df.name() + ')',
-                df.instance(),
-                df.db()
-            ),
+            "magSqr(" + df.name() + ')',
             df.mesh(),
             sqr(df.dimensions())
         )
@@ -201,14 +186,9 @@ tmp<DimensionedField<scalar, GeoMesh>> mag
 {
     tmp<DimensionedField<scalar, GeoMesh>> tMag
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "mag(" + df.name() + ')',
-                df.instance(),
-                df.db()
-            ),
+            "mag(" + df.name() + ')',
             df.mesh(),
             df.dimensions()
         )
@@ -255,14 +235,9 @@ cmptAv(const DimensionedField<Type, GeoMesh>& df)
 
     tmp<DimensionedField<cmptType, GeoMesh>> CmptAv
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "cmptAv(" + df.name() + ')',
-                df.instance(),
-                df.db()
-            ),
+            "cmptAv(" + df.name() + ')',
             df.mesh(),
             df.dimensions()
         )
@@ -377,14 +352,9 @@ operator op                                                                    \
     typedef typename product<Type1, Type2>::type productType;                  \
     tmp<DimensionedField<productType, GeoMesh>> tRes                           \
     (                                                                          \
-        new DimensionedField<productType, GeoMesh>                             \
+        DimensionedField<productType, GeoMesh>::New                            \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + df1.name() + #op + df2.name() + ')',                     \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            '(' + df1.name() + #op + df2.name() + ')',                         \
             df1.mesh(),                                                        \
             df1.dimensions() op df2.dimensions()                               \
         )                                                                      \
@@ -492,14 +462,9 @@ operator op                                                                    \
                                                                                \
     tmp<DimensionedField<productType, GeoMesh>> tRes                           \
     (                                                                          \
-        new DimensionedField<productType, GeoMesh>                             \
+        DimensionedField<productType, GeoMesh>::New                            \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + df1.name() + #op + dvs.name() + ')',                     \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            '(' + df1.name() + #op + dvs.name() + ')',                         \
             df1.mesh(),                                                        \
             df1.dimensions() op dvs.dimensions()                               \
         )                                                                      \
@@ -572,14 +537,9 @@ operator op                                                                    \
     typedef typename product<Form, Type>::type productType;                    \
     tmp<DimensionedField<productType, GeoMesh>> tRes                           \
     (                                                                          \
-        new DimensionedField<productType, GeoMesh>                             \
+        DimensionedField<productType, GeoMesh>::New                            \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + dvs.name() + #op + df1.name() + ')',                     \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            '(' + dvs.name() + #op + df1.name() + ')',                         \
             df1.mesh(),                                                        \
             dvs.dimensions() op df1.dimensions()                               \
         )                                                                      \
