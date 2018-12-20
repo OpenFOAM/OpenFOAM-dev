@@ -57,16 +57,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
 {
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tRes
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "stabilise(" + gsf.name() + ',' + ds.name() + ')',
-                gsf.instance(),
-                gsf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "stabilise(" + gsf.name() + ',' + ds.name() + ')',
             gsf.mesh(),
             ds.dimensions() + gsf.dimensions()
         )
@@ -154,16 +147,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + gsf1.name() + ',' + gsf2.name() + ')',
-                gsf1.instance(),
-                gsf1.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "pow(" + gsf1.name() + ',' + gsf2.name() + ')',
             gsf1.mesh(),
             dimless
         )
@@ -330,16 +316,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + gsf.name() + ',' + ds.name() + ')',
-                gsf.instance(),
-                gsf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "pow(" + gsf.name() + ',' + ds.name() + ')',
             gsf.mesh(),
             pow(gsf.dimensions(), ds)
         )
@@ -440,16 +419,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + ds.name() + ',' + gsf.name() + ')',
-                gsf.instance(),
-                gsf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "pow(" + ds.name() + ',' + gsf.name() + ')',
             gsf.mesh(),
             dimless
         )
@@ -556,16 +528,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
 {
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "atan2(" + gsf1.name() + ',' + gsf2.name() + ')',
-                gsf1.instance(),
-                gsf1.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "atan2(" + gsf1.name() + ',' + gsf2.name() + ')',
             gsf1.mesh(),
             atan2(gsf1.dimensions(), gsf2.dimensions())
         )
@@ -683,16 +648,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
 {
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "atan2(" + gsf.name() + ',' + ds.name() + ')',
-                gsf.instance(),
-                gsf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "atan2(" + gsf.name() + ',' + ds.name() + ')',
             gsf.mesh(),
             atan2(gsf.dimensions(), ds)
         )
@@ -772,16 +730,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
 {
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
     (
-        new GeometricField<scalar, PatchField, GeoMesh>
+        GeometricField<scalar, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "atan2(" + ds.name() + ',' + gsf.name() + ')',
-                gsf.instance(),
-                gsf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "atan2(" + ds.name() + ',' + gsf.name() + ')',
             gsf.mesh(),
             atan2(ds, gsf.dimensions())
         )
@@ -913,16 +864,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
                                                                                \
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tFunc                     \
     (                                                                          \
-        new GeometricField<scalar, PatchField, GeoMesh>                        \
+        GeometricField<scalar, PatchField, GeoMesh>::New                       \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #func "(" + gsf.name() + ')',                                  \
-                gsf.instance(),                                                \
-                gsf.db(),                                                      \
-                IOobject::NO_READ,                                             \
-                IOobject::NO_WRITE                                             \
-            ),                                                                 \
+            #func "(" + gsf.name() + ')',                                      \
             gsf.mesh(),                                                        \
             dimless                                                            \
         )                                                                      \

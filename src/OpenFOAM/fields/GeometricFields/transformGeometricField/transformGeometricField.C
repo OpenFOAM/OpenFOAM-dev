@@ -69,16 +69,9 @@ tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 {
     tmp<GeometricField<Type, PatchField, GeoMesh>> tranf
     (
-        new GeometricField<Type, PatchField, GeoMesh>
+        GeometricField<Type, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "transform(" + trf.name() + ',' + tf.name() + ')',
-                tf.instance(),
-                tf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "transform(" + trf.name() + ',' + tf.name() + ')',
             tf.mesh(),
             tf.dimensions()
         )
@@ -155,16 +148,9 @@ tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 {
     tmp<GeometricField<Type, PatchField, GeoMesh>> tranf
     (
-        new GeometricField<Type, PatchField, GeoMesh>
+        GeometricField<Type, PatchField, GeoMesh>::New
         (
-            IOobject
-            (
-                "transform(" + t.name() + ',' + tf.name() + ')',
-                tf.instance(),
-                tf.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "transform(" + t.name() + ',' + tf.name() + ')',
             tf.mesh(),
             tf.dimensions()
         )
