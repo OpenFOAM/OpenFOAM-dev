@@ -204,16 +204,9 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
 
     tmp<volVectorField> tKappa
     (
-        new volVectorField
+        volVectorField::New
         (
-            IOobject
-            (
-                "Kappa",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "Kappa",
             mesh,
             dimEnergy/dimTime/dimLength/dimTemperature
         )

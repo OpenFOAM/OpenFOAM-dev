@@ -37,14 +37,9 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
 {                                                                              \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        new DimensionedField<ReturnType, GeoMesh>                              \
+        DimensionedField<ReturnType, GeoMesh>::New                             \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Func "(" + df1.name() + ')',                                  \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            #Func "(" + df1.name() + ')',                                      \
             df1.mesh(),                                                        \
             Dfunc(df1.dimensions())                                            \
         )                                                                      \
@@ -93,14 +88,9 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
 {                                                                              \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        new DimensionedField<ReturnType, GeoMesh>                              \
+        DimensionedField<ReturnType, GeoMesh>::New                             \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Op + df1.name(),                                              \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            #Op + df1.name(),                                                  \
             df1.mesh(),                                                        \
             Dfunc(df1.dimensions())                                            \
         )                                                                      \
@@ -150,14 +140,9 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
 {                                                                              \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        new DimensionedField<ReturnType, GeoMesh>                              \
+        DimensionedField<ReturnType, GeoMesh>::New                             \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Func "(" + df1.name() + ',' + df2.name() + ')',               \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            #Func "(" + df1.name() + ',' + df2.name() + ')',                   \
             df1.mesh(),                                                        \
             Func(df1.dimensions(), df2.dimensions())                           \
         )                                                                      \
@@ -264,14 +249,9 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
 {                                                                              \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        new DimensionedField<ReturnType, GeoMesh>                              \
+        DimensionedField<ReturnType, GeoMesh>::New                             \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Func "(" + dt1.name() + ',' + df2.name() + ')',               \
-                df2.instance(),                                                \
-                df2.db()                                                       \
-            ),                                                                 \
+            #Func "(" + dt1.name() + ',' + df2.name() + ')',                   \
             df2.mesh(),                                                        \
             Func(dt1.dimensions(), df2.dimensions())                           \
         )                                                                      \
@@ -341,14 +321,9 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
 {                                                                              \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        new DimensionedField<ReturnType, GeoMesh>                              \
+        DimensionedField<ReturnType, GeoMesh>::New                             \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #Func "(" + df1.name() + ',' + dt2.name() + ')',               \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            #Func "(" + df1.name() + ',' + dt2.name() + ')',                   \
             df1.mesh(),                                                        \
             Func(df1.dimensions(), dt2.dimensions())                           \
         )                                                                      \
@@ -425,14 +400,9 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
 {                                                                              \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        new DimensionedField<ReturnType, GeoMesh>                              \
+        DimensionedField<ReturnType, GeoMesh>::New                             \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + df1.name() + OpName + df2.name() + ')',                  \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            '(' + df1.name() + OpName + df2.name() + ')',                      \
             df1.mesh(),                                                        \
             df1.dimensions() Op df2.dimensions()                               \
         )                                                                      \
@@ -539,14 +509,9 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
 {                                                                              \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        new DimensionedField<ReturnType, GeoMesh>                              \
+        DimensionedField<ReturnType, GeoMesh>::New                             \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + dt1.name() + OpName + df2.name() + ')',                  \
-                df2.instance(),                                                \
-                df2.db()                                                       \
-            ),                                                                 \
+            '(' + dt1.name() + OpName + df2.name() + ')',                      \
             df2.mesh(),                                                        \
             dt1.dimensions() Op df2.dimensions()                               \
         )                                                                      \
@@ -616,14 +581,9 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
 {                                                                              \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        new DimensionedField<ReturnType, GeoMesh>                              \
+        DimensionedField<ReturnType, GeoMesh>::New                             \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                '(' + df1.name() + OpName + dt2.name() + ')',                  \
-                df1.instance(),                                                \
-                df1.db()                                                       \
-            ),                                                                 \
+            '(' + df1.name() + OpName + dt2.name() + ')',                      \
             df1.mesh(),                                                        \
             df1.dimensions() Op dt2.dimensions()                               \
         )                                                                      \

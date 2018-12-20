@@ -245,6 +245,15 @@ public:
             const dimensionSet&
         );
 
+        //- Return a temporary field constructed from name, mesh
+        //  and dimensionType providing dimensions and value
+        static tmp<DimensionedField<Type, GeoMesh>> New
+        (
+            const word& name,
+            const Mesh& mesh,
+            const dimensioned<Type>&
+        );
+
         //- Rename temporary field and return
         static tmp<DimensionedField<Type, GeoMesh>> New
         (

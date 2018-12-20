@@ -52,19 +52,11 @@ tmp<DimensionedField<TypeR, GeoMesh>> New
     }
     else
     {
-        return tmp<DimensionedField<TypeR, GeoMesh>>
+        return DimensionedField<TypeR, GeoMesh>::New
         (
-            new DimensionedField<TypeR, GeoMesh>
-            (
-                IOobject
-                (
-                    name,
-                    df1.instance(),
-                    df1.db()
-                ),
-                df1.mesh(),
-                dimensions
-            )
+            name,
+            df1.mesh(),
+            dimensions
         );
     }
 }
@@ -84,19 +76,11 @@ public:
     {
         const DimensionedField<Type1, GeoMesh>& df1 = tdf1();
 
-        return tmp<DimensionedField<TypeR, GeoMesh>>
+        return DimensionedField<TypeR, GeoMesh>::New
         (
-            new DimensionedField<TypeR, GeoMesh>
-            (
-                IOobject
-                (
-                    name,
-                    df1.instance(),
-                    df1.db()
-                ),
-                df1.mesh(),
-                dimensions
-            )
+            name,
+            df1.mesh(),
+            dimensions
         );
     }
 };
@@ -125,19 +109,11 @@ public:
         }
         else
         {
-            return tmp<DimensionedField<TypeR, GeoMesh>>
+            return DimensionedField<TypeR, GeoMesh>::New
             (
-                new DimensionedField<TypeR, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        df1.instance(),
-                        df1.db()
-                    ),
-                    df1.mesh(),
-                    dimensions
-                )
+                name,
+                df1.mesh(),
+                dimensions
             );
         }
     }
@@ -159,19 +135,11 @@ public:
     {
         const DimensionedField<Type1, GeoMesh>& df1 = tdf1();
 
-        return tmp<DimensionedField<TypeR, GeoMesh>>
+        return DimensionedField<TypeR, GeoMesh>::New
         (
-            new DimensionedField<TypeR, GeoMesh>
-            (
-                IOobject
-                (
-                    name,
-                    df1.instance(),
-                    df1.db()
-                ),
-                df1.mesh(),
-                dimensions
-            )
+            name,
+            df1.mesh(),
+            dimensions
         );
     }
 };
@@ -202,19 +170,11 @@ public:
         }
         else
         {
-            return tmp<DimensionedField<TypeR, GeoMesh>>
+            return DimensionedField<TypeR, GeoMesh>::New
             (
-                new DimensionedField<TypeR, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        df1.instance(),
-                        df1.db()
-                    ),
-                    df1.mesh(),
-                    dimensions
-                )
+                name,
+                df1.mesh(),
+                dimensions
             );
         }
     }
@@ -245,19 +205,11 @@ public:
         }
         else
         {
-            return tmp<DimensionedField<TypeR, GeoMesh>>
+            return DimensionedField<TypeR, GeoMesh>::New
             (
-                new DimensionedField<TypeR, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        df1.instance(),
-                        df1.db()
-                    ),
-                    df1.mesh(),
-                    dimensions
-                )
+                name,
+                df1.mesh(),
+                dimensions
             );
         }
     }
@@ -296,19 +248,11 @@ public:
         }
         else
         {
-            return tmp<DimensionedField<TypeR, GeoMesh>>
+            return DimensionedField<TypeR, GeoMesh>::New
             (
-                new DimensionedField<TypeR, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        df1.instance(),
-                        df1.db()
-                    ),
-                    df1.mesh(),
-                    dimensions
-                )
+                name,
+                df1.mesh(),
+                dimensions
             );
         }
     }

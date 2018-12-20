@@ -44,14 +44,9 @@ tmp<DimensionedField<scalar, GeoMesh>> stabilise
 {
     tmp<DimensionedField<scalar, GeoMesh>> tRes
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "stabilise(" + dsf.name() + ',' + ds.name() + ')',
-                dsf.instance(),
-                dsf.db()
-            ),
+            "stabilise(" + dsf.name() + ',' + ds.name() + ')',
             dsf.mesh(),
             dsf.dimensions() + ds.dimensions()
         )
@@ -122,14 +117,9 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 
     tmp<DimensionedField<scalar, GeoMesh>> tPow
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
-                dsf1.instance(),
-                dsf1.db()
-            ),
+            "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
             dsf1.mesh(),
             dimless
         )
@@ -276,14 +266,9 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 
     tmp<DimensionedField<scalar, GeoMesh>> tPow
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + dsf.name() + ',' + ds.name() + ')',
-                dsf.instance(),
-                dsf.db()
-            ),
+            "pow(" + dsf.name() + ',' + ds.name() + ')',
             dsf.mesh(),
             pow(dsf.dimensions(), ds)
         )
@@ -371,14 +356,9 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 
     tmp<DimensionedField<scalar, GeoMesh>> tPow
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "pow(" + ds.name() + ',' + dsf.name() + ')',
-                dsf.instance(),
-                dsf.db()
-            ),
+            "pow(" + ds.name() + ',' + dsf.name() + ')',
             dsf.mesh(),
             dimless
         )
@@ -459,14 +439,9 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
 {
     tmp<DimensionedField<scalar, GeoMesh>> tAtan2
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "atan2(" + dsf1.name() + ',' + dsf2.name() + ')',
-                dsf1.instance(),
-                dsf1.db()
-            ),
+            "atan2(" + dsf1.name() + ',' + dsf2.name() + ')',
             dsf1.mesh(),
             atan2(dsf1.dimensions(), dsf2.dimensions())
         )
@@ -563,14 +538,9 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
 {
     tmp<DimensionedField<scalar, GeoMesh>> tAtan2
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "atan2(" + dsf.name() + ',' + ds.name() + ')',
-                dsf.instance(),
-                dsf.db()
-            ),
+            "atan2(" + dsf.name() + ',' + ds.name() + ')',
             dsf.mesh(),
             atan2(dsf.dimensions(), ds)
         )
@@ -634,14 +604,9 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
 {
     tmp<DimensionedField<scalar, GeoMesh>> tAtan2
     (
-        new DimensionedField<scalar, GeoMesh>
+        DimensionedField<scalar, GeoMesh>::New
         (
-            IOobject
-            (
-                "atan2(" + ds.name() + ',' + dsf.name() + ')',
-                dsf.instance(),
-                dsf.db()
-            ),
+            "atan2(" + ds.name() + ',' + dsf.name() + ')',
             dsf.mesh(),
             atan2(ds, dsf.dimensions())
         )
@@ -758,14 +723,9 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                    \
                                                                                \
     tmp<DimensionedField<scalar, GeoMesh>> tFunc                               \
     (                                                                          \
-        new DimensionedField<scalar, GeoMesh>                                  \
+        DimensionedField<scalar, GeoMesh>::New                                 \
         (                                                                      \
-            IOobject                                                           \
-            (                                                                  \
-                #func "(" + name(n) + ',' + dsf.name() + ')',                  \
-                dsf.instance(),                                                \
-                dsf.db()                                                       \
-            ),                                                                 \
+            #func "(" + name(n) + ',' + dsf.name() + ')',                      \
             dsf.mesh(),                                                        \
             dimless                                                            \
         )                                                                      \
