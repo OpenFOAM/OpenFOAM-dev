@@ -12,7 +12,7 @@ volVectorField U
     mesh
 );
 
-U = dimensionedVector("0", U.dimensions(), Zero);
+U = dimensionedVector(U.dimensions(), Zero);
 
 surfaceScalarField phi
 (

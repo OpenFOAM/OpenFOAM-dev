@@ -100,16 +100,9 @@ Foam::saturationModels::polynomial::Tsat
 {
     tmp<volScalarField> tTsat
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Tsat",
-                p.mesh().time().timeName(),
-                p.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "Tsat",
             p.mesh(),
             dimensionedScalar(dimTemperature, 0)
         )

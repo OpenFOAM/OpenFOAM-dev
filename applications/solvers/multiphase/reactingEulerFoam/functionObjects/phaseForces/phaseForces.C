@@ -110,7 +110,7 @@ Foam::functionObjects::phaseForces::phaseForces
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector("0", dimForce/dimVolume, Zero)
+                        dimensionedVector(dimForce/dimVolume, Zero)
                     )
                 );
             }
@@ -133,7 +133,7 @@ Foam::functionObjects::phaseForces::phaseForces
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector("0", dimForce/dimVolume, Zero)
+                        dimensionedVector(dimForce/dimVolume, Zero)
                     )
                 );
             }
@@ -152,7 +152,7 @@ Foam::functionObjects::phaseForces::phaseForces
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector("0", dimForce/dimVolume, Zero)
+                        dimensionedVector(dimForce/dimVolume, Zero)
                     )
                 );
             }
@@ -175,7 +175,7 @@ Foam::functionObjects::phaseForces::phaseForces
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector("0", dimForce/dimVolume, Zero)
+                        dimensionedVector(dimForce/dimVolume, Zero)
                     )
                 );
             }
@@ -198,7 +198,7 @@ Foam::functionObjects::phaseForces::phaseForces
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector("0", dimForce/dimVolume, Zero)
+                        dimensionedVector(dimForce/dimVolume, Zero)
                     )
                 );
             }

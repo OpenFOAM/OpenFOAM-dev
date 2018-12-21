@@ -210,25 +210,22 @@ public:
                     << exit(FatalError);
             }
 
-            return tmp<surfaceScalarField>
+            return surfaceScalarField::New
             (
-                new surfaceScalarField
+                vf.name() + "BlendingFactor",
+                scalar(1)
+              - max
                 (
-                    vf.name() + "BlendingFactor",
-                    scalar(1)
-                  - max
+                    min
                     (
-                        min
                         (
-                            (
-                                mesh.time().deltaT()*mesh.deltaCoeffs()
-                               *mag(tUflux)/mesh.magSf()
-                              - Co1_
-                            )/(Co2_ - Co1_),
-                            scalar(1)
-                        ),
-                        scalar(0)
-                    )
+                            mesh.time().deltaT()*mesh.deltaCoeffs()
+                           *mag(tUflux)/mesh.magSf()
+                          - Co1_
+                        )/(Co2_ - Co1_),
+                        scalar(1)
+                    ),
+                    scalar(0)
                 )
             );
         }

@@ -60,22 +60,11 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kd
     }
     else
     {
-        return tmp<volScalarField>
+        return volScalarField::New
         (
-            new volScalarField
-            (
-                IOobject
-                (
-                    dragModel::typeName + ":K",
-                    this->mesh_.time().timeName(),
-                    this->mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                this->mesh_,
-                dimensionedScalar(dragModel::dimK, 0)
-            )
+            dragModel::typeName + ":K",
+            this->mesh_,
+            dimensionedScalar(dragModel::dimK, 0)
         );
     }
 }
@@ -94,22 +83,11 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kdf
     }
     else
     {
-        return tmp<surfaceScalarField>
+        return surfaceScalarField::New
         (
-            new surfaceScalarField
-            (
-                IOobject
-                (
-                    dragModel::typeName + ":K",
-                    this->mesh_.time().timeName(),
-                    this->mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                this->mesh_,
-                dimensionedScalar(dragModel::dimK, 0)
-            )
+            dragModel::typeName + ":K",
+            this->mesh_,
+            dimensionedScalar(dragModel::dimK, 0)
         );
     }
 }
@@ -128,22 +106,11 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Vm
     }
     else
     {
-        return tmp<volScalarField>
+        return volScalarField::New
         (
-            new volScalarField
-            (
-                IOobject
-                (
-                    virtualMassModel::typeName + ":K",
-                    this->mesh_.time().timeName(),
-                    this->mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                this->mesh_,
-                dimensionedScalar(virtualMassModel::dimK, 0)
-            )
+            virtualMassModel::typeName + ":K",
+            this->mesh_,
+            dimensionedScalar(virtualMassModel::dimK, 0)
         );
     }
 }

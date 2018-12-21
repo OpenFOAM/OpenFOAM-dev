@@ -126,22 +126,11 @@ public:
              const GeometricField<Type, fvPatchField, volMesh>& vf
         ) const
         {
-            return tmp<surfaceScalarField>
+            return surfaceScalarField::New
             (
-                new surfaceScalarField
-                (
-                    IOobject
-                    (
-                        vf.name() + "BlendingFactor",
-                        this->mesh().time().timeName(),
-                        this->mesh(),
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
-                    this->mesh(),
-                    dimensionedScalar(dimless, blendingFactor_)
-                )
+                vf.name() + "BlendingFactor",
+                this->mesh(),
+                dimensionedScalar(dimless, blendingFactor_)
             );
         }
 
@@ -151,22 +140,11 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const
         {
-            return tmp<surfaceScalarField>
+            return surfaceScalarField::New
             (
-                new surfaceScalarField
-                (
-                    IOobject
-                    (
-                        "blendedLimiter",
-                        this->mesh().time().timeName(),
-                        this->mesh(),
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
-                    this->mesh(),
-                    dimensionedScalar(dimless, 1 - blendingFactor_)
-                )
+                "blendedLimiter",
+                this->mesh(),
+                dimensionedScalar(dimless, 1 - blendingFactor_)
             );
         }
 

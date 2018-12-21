@@ -88,7 +88,7 @@ void kinematicSingleLayer::resetPrimaryRegionSourceTerms()
     }
 
     rhoSpPrimary_ == dimensionedScalar(rhoSp_.dimensions(), 0);
-    USpPrimary_ == dimensionedVector("zero", USp_.dimensions(), Zero);
+    USpPrimary_ == dimensionedVector(USp_.dimensions(), Zero);
     pSpPrimary_ == dimensionedScalar(pSp_.dimensions(), 0);
 }
 
@@ -682,7 +682,7 @@ kinematicSingleLayer::kinematicSingleLayer
             IOobject::NO_WRITE
         ),
         primaryMesh(),
-        dimensionedVector("zero", USp_.dimensions(), Zero)
+        dimensionedVector(USp_.dimensions(), Zero)
     ),
     pSpPrimary_
     (
@@ -722,7 +722,7 @@ kinematicSingleLayer::kinematicSingleLayer
             IOobject::NO_WRITE
         ),
         regionMesh(),
-        dimensionedVector("zero", dimVelocity, Zero),
+        dimensionedVector(dimVelocity, Zero),
         this->mappedFieldAndInternalPatchTypes<vector>()
     ),
     pPrimary_

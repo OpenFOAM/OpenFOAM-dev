@@ -129,17 +129,9 @@ JohnsonJacksonSchaeffer::nu
 
     tmp<volScalarField> tnu
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "JohnsonJacksonSchaeffer:nu",
-                phase.mesh().time().timeName(),
-                phase.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "JohnsonJacksonSchaeffer:nu",
             phase.mesh(),
             dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0)
         )

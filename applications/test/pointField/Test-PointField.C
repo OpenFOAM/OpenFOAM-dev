@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         pMesh,
-        dimensionedVector("fvmU", dimLength, Zero),
+        dimensionedVector(dimLength, Zero),
         pointPatchVectorField::calculatedType()
     );
 

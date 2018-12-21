@@ -99,7 +99,7 @@ Foam::phaseModel::phaseModel
             mesh
         ),
         mesh,
-        dimensionedVector("0", dimVelocity/dimTime, Zero)
+        dimensionedVector(dimVelocity/dimTime, Zero)
     ),
     alphaPhi_
     (

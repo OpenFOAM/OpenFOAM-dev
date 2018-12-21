@@ -63,22 +63,11 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::noLift::Cl() const
 {
     const fvMesh& mesh(this->pair_.phase1().mesh());
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "Cl",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh,
-            dimensionedScalar(dimless, 0)
-        )
+        "Cl",
+        mesh,
+        dimensionedScalar(dimless, 0)
     );
 }
 
@@ -87,22 +76,11 @@ Foam::tmp<Foam::volVectorField> Foam::liftModels::noLift::F() const
 {
     const fvMesh& mesh(this->pair_.phase1().mesh());
 
-    return tmp<volVectorField>
+    return volVectorField::New
     (
-        new volVectorField
-        (
-            IOobject
-            (
-                "noLift:F",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh,
-            dimensionedVector("zero", dimF, Zero)
-        )
+        "noLift:F",
+        mesh,
+        dimensionedVector(dimF, Zero)
     );
 }
 
@@ -113,17 +91,9 @@ Foam::tmp<Foam::surfaceScalarField> Foam::liftModels::noLift::Ff() const
 
     return tmp<surfaceScalarField>
     (
-        new surfaceScalarField
+        surfaceScalarField::New
         (
-            IOobject
-            (
-                "noLift:Ff",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "noLift:Ff",
             mesh,
             dimensionedScalar(dimF*dimArea, 0)
         )

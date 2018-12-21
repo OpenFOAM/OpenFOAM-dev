@@ -49,7 +49,7 @@ volVectorField zeta
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedVector("zero", dimLength, Zero)
+    dimensionedVector(dimLength, Zero)
 );
 
 Info<< "Creating field p_gh\n" << endl;

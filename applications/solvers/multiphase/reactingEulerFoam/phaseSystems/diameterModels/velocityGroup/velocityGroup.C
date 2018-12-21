@@ -53,14 +53,9 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::dsm() const
 {
     tmp<volScalarField> tInvDsm
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "invDsm",
-                phase_.time().timeName(),
-                phase_.mesh()
-            ),
+            "invDsm",
             phase_.mesh(),
             dimensionedScalar(inv(dimLength), Zero)
         )
@@ -84,14 +79,9 @@ Foam::diameterModels::velocityGroup::fSum() const
 {
     tmp<volScalarField> tsumSizeGroups
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "sumSizeGroups",
-                phase_.time().timeName(),
-                phase_.mesh()
-            ),
+            "sumSizeGroups",
             phase_.mesh(),
             dimensionedScalar(dimless, 0)
         )

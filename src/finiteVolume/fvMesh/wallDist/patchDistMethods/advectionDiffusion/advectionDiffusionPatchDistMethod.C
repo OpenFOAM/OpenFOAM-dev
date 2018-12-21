@@ -105,7 +105,7 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
             false
         ),
         mesh_,
-        dimensionedVector("ny", dimless, Zero),
+        dimensionedVector(dimless, Zero),
         patchTypes<vector>(mesh_, patchIDs_)
     );
 

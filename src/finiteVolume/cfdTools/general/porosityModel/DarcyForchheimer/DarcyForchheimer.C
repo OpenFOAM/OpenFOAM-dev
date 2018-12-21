@@ -143,7 +143,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedTensor("0", dXYZ_.dimensions(), Zero)
+            dimensionedTensor(dXYZ_.dimensions(), Zero)
         );
         volTensorField Fout
         (
@@ -156,7 +156,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedTensor("0", fXYZ_.dimensions(), Zero)
+            dimensionedTensor(fXYZ_.dimensions(), Zero)
         );
 
         UIndirectList<tensor>(Dout, mesh_.cellZones()[cellZoneIDs_[0]]) = D_[0];

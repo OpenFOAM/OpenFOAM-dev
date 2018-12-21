@@ -73,22 +73,11 @@ Foam::virtualMassModels::constantVirtualMassCoefficient::Cvm() const
 {
     const fvMesh& mesh(this->pair_.phase1().mesh());
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "Cvm",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh,
-            Cvm_
-        )
+        "Cvm",
+        mesh,
+        Cvm_
     );
 }
 

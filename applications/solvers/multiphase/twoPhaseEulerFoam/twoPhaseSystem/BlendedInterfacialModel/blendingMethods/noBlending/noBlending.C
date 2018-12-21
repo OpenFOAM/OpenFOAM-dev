@@ -72,25 +72,12 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethods::noBlending::f1
 {
     const fvMesh& mesh(phase1.mesh());
 
-    return
-        tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "f",
-                    mesh.time().timeName(),
-                    mesh
-                ),
-                mesh,
-                dimensionedScalar
-                (
-                    dimless,
-                    phase2.name() != continuousPhase_
-                )
-            )
-        );
+    return volScalarField::New
+    (
+        "f",
+        mesh,
+        dimensionedScalar(dimless, phase2.name() != continuousPhase_)
+    );
 }
 
 
@@ -102,25 +89,12 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethods::noBlending::f2
 {
     const fvMesh& mesh(phase1.mesh());
 
-    return
-        tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "f",
-                    mesh.time().timeName(),
-                    mesh
-                ),
-                mesh,
-                dimensionedScalar
-                (
-                    dimless,
-                    phase1.name() == continuousPhase_
-                )
-            )
-        );
+    return volScalarField::New
+    (
+        "f",
+        mesh,
+        dimensionedScalar(dimless, phase1.name() == continuousPhase_)
+    );
 }
 
 

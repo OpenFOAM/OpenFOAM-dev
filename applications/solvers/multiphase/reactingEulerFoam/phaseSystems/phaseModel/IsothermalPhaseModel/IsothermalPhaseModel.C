@@ -57,7 +57,7 @@ void Foam::IsothermalPhaseModel<BasePhaseModel>::correctThermo()
     // Correct the thermo, but make sure that the temperature remains the same
     tmp<volScalarField> TCopy
     (
-        new volScalarField
+        volScalarField::New
         (
             this->thermo().T().name() + ":Copy",
             this->thermo().T()

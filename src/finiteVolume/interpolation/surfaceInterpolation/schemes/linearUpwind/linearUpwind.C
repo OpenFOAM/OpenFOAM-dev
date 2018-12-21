@@ -150,17 +150,9 @@ Foam::linearUpwind<Foam::vector>::correction
 
     tmp<surfaceVectorField> tsfCorr
     (
-        new surfaceVectorField
+        surfaceVectorField::New
         (
-            IOobject
-            (
-                "linearUpwind::correction(" + vf.name() + ')',
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "linearUpwind::correction(" + vf.name() + ')',
             mesh,
             dimensioned<vector>(vf.name(), vf.dimensions(), Zero)
         )

@@ -69,7 +69,7 @@ Foam::functionObjects::wallShearStress::calcShearStress
         (
             type(),
             mesh_,
-            dimensionedVector("0", Reff.dimensions(), Zero)
+            dimensionedVector(Reff.dimensions(), Zero)
         )
     );
 

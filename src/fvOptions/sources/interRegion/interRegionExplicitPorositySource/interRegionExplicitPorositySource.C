@@ -154,7 +154,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedVector("zero", U.dimensions(), Zero)
+        dimensionedVector(U.dimensions(), Zero)
     );
 
     // Map local velocity onto neighbour region
@@ -208,7 +208,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedVector("zero", U.dimensions(), Zero)
+        dimensionedVector(U.dimensions(), Zero)
     );
 
     // Map local velocity onto neighbour region

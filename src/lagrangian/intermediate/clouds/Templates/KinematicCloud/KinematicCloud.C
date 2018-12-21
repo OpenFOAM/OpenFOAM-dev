@@ -370,7 +370,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
                 IOobject::AUTO_WRITE
             ),
             mesh_,
-            dimensionedVector("zero", dimMass*dimVelocity, Zero)
+            dimensionedVector(dimMass*dimVelocity, Zero)
         )
     ),
     UCoeff_

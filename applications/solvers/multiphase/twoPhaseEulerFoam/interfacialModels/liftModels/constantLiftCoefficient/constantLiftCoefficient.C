@@ -65,21 +65,12 @@ Foam::liftModels::constantLiftCoefficient::Cl() const
 {
     const fvMesh& mesh(this->pair_.phase1().mesh());
 
-    return
-        tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "zero",
-                    mesh.time().timeName(),
-                    mesh
-                ),
-                mesh,
-                Cl_
-            )
-        );
+    return volScalarField::New
+    (
+        "zero",
+        mesh,
+        Cl_
+    );
 }
 
 

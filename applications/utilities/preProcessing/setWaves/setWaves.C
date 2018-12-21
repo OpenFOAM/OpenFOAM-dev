@@ -145,25 +145,25 @@ int main(int argc, char *argv[])
         (
             IOobject("uGas", runTime.timeName(), mesh),
             mesh,
-            dimensionedVector("0", dimVelocity, vector::zero)
+            dimensionedVector(dimVelocity, vector::zero)
         );
         pointVectorField uGasp
         (
             IOobject("uGasp", runTime.timeName(), mesh),
             pMesh,
-            dimensionedVector("0", dimVelocity, vector::zero)
+            dimensionedVector(dimVelocity, vector::zero)
         );
         volVectorField uLiq
         (
             IOobject("uLiq", runTime.timeName(), mesh),
             mesh,
-            dimensionedVector("0", dimVelocity, vector::zero)
+            dimensionedVector(dimVelocity, vector::zero)
         );
         pointVectorField uLiqp
         (
             IOobject("uLiqp", runTime.timeName(), mesh),
             pMesh,
-            dimensionedVector("0", dimVelocity, vector::zero)
+            dimensionedVector(dimVelocity, vector::zero)
         );
 
         // Cell centres and points

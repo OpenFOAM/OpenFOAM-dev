@@ -67,19 +67,11 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::InertPhaseModel<BasePhaseModel>::Qdot() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("Qdot", this->name()),
-                this->mesh().time().timeName(),
-                this->mesh()
-            ),
-            this->mesh(),
-            dimensionedScalar(dimEnergy/dimTime/dimVolume, 0)
-        )
+        IOobject::groupName("Qdot", this->name()),
+        this->mesh(),
+        dimensionedScalar(dimEnergy/dimTime/dimVolume, 0)
     );
 }
 

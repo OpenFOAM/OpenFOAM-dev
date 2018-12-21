@@ -803,14 +803,9 @@ Foam::diameterModels::populationBalanceModel::calcDsm()
 {
     tmp<volScalarField> tInvDsm
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "invDsm",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "invDsm",
             mesh_,
             dimensionedScalar(inv(dimLength), Zero)
         )
@@ -1134,7 +1129,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     IOobject::AUTO_WRITE
                 ),
                 mesh_,
-                dimensionedVector("U", dimVelocity, Zero)
+                dimensionedVector(dimVelocity, Zero)
             )
         );
     }

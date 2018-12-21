@@ -254,14 +254,9 @@ Foam::multiphaseMixture::surfaceTensionForce() const
 {
     tmp<surfaceScalarField> tstf
     (
-        new surfaceScalarField
+        surfaceScalarField::New
         (
-            IOobject
-            (
-                "surfaceTensionForce",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "surfaceTensionForce",
             mesh_,
             dimensionedScalar(dimensionSet(1, -2, -2, 0, 0), 0)
         )
@@ -530,14 +525,9 @@ Foam::multiphaseMixture::nearInterface() const
 {
     tmp<volScalarField> tnearInt
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "nearInterface",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "nearInterface",
             mesh_,
             dimensionedScalar(dimless, 0)
         )

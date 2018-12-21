@@ -42,14 +42,9 @@ Foam::PhiScheme<Type, PhiLimiter>::limiter
 
     tmp<surfaceScalarField> tLimiter
     (
-        new surfaceScalarField
+        surfaceScalarField::New
         (
-            IOobject
-            (
-                "PhiLimiter",
-                mesh.time().timeName(),
-                mesh
-            ),
+            "PhiLimiter",
             mesh,
             dimless
         )

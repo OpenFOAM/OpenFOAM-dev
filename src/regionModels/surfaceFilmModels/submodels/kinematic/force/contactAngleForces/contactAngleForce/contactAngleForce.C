@@ -135,7 +135,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
         (
             typeName + ":contactForce",
             filmModel_.regionMesh(),
-            dimensionedVector("zero", dimForce/dimArea, Zero)
+            dimensionedVector(dimForce/dimArea, Zero)
         )
     );
 

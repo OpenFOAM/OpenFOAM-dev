@@ -14,6 +14,6 @@ if (!(runTime.timeIndex() % 5))
     if (smi < -small)
     {
         Info<< "Resetting Dcorr to 0" << endl;
-        Dcorr == dimensionedVector("0", Dcorr.dimensions(), Zero);
+        Dcorr == dimensionedVector(Dcorr.dimensions(), Zero);
     }
 }

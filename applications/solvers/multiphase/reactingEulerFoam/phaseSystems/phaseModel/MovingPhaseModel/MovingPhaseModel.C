@@ -441,12 +441,11 @@ Foam::MovingPhaseModel<BasePhaseModel>::K() const
 {
     if (!K_.valid())
     {
-        K_ =
-            new volScalarField
-            (
-                IOobject::groupName("K", this->name()),
-                0.5*magSqr(this->U())
-            );
+        K_ = volScalarField::New
+        (
+            IOobject::groupName("K", this->name()),
+            0.5*magSqr(this->U())
+        );
     }
 
     return tmp<volScalarField>(K_());

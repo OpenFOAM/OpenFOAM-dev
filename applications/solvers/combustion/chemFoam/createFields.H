@@ -75,7 +75,7 @@
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedVector("zero", dimVelocity, Zero)
+        dimensionedVector(dimVelocity, Zero)
     );
 
     #include "createPhi.H"

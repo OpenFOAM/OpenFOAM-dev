@@ -36,7 +36,7 @@ Foam::coalCloudList::UTrans() const
         (
             "UTransEff",
             mesh_,
-            dimensionedVector("zero", dimMass*dimVelocity, Zero)
+            dimensionedVector(dimMass*dimVelocity, Zero)
         )
     );
 

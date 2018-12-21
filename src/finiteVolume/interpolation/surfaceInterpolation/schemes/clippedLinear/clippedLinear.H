@@ -138,14 +138,9 @@ public:
 
             tmp<surfaceScalarField> tclippedLinearWeights
             (
-                new surfaceScalarField
+                surfaceScalarField::New
                 (
-                    IOobject
-                    (
-                        "clippedLinearWeights",
-                        mesh.time().timeName(),
-                        mesh
-                    ),
+                    "clippedLinearWeights",
                     mesh,
                     dimless
                 )

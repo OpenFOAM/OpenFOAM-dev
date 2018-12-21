@@ -110,14 +110,9 @@ public:
 
             tmp<surfaceScalarField> treverseLinearWeights
             (
-                new surfaceScalarField
+                surfaceScalarField::New
                 (
-                    IOobject
-                    (
-                        "reverseLinearWeights",
-                        mesh.time().timeName(),
-                        mesh
-                    ),
+                    "reverseLinearWeights",
                     mesh,
                     dimless
                 )

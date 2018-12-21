@@ -73,22 +73,11 @@ Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::sigma() const
 {
     const fvMesh& mesh(this->pair_.phase1().mesh());
 
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "sigma",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh,
-            sigma_
-        )
+        "sigma",
+        mesh,
+        sigma_
     );
 }
 

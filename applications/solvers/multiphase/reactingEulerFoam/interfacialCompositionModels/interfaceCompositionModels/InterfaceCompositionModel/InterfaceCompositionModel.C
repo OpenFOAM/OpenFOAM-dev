@@ -140,14 +140,9 @@ Foam::InterfaceCompositionModel<Thermo, OtherThermo>::D
 
     tmp<volScalarField> tmpD
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                IOobject::groupName("D", pair_.name()),
-                p.time().timeName(),
-                p.mesh()
-            ),
+            IOobject::groupName("D", pair_.name()),
             p.mesh(),
             dimensionedScalar(dimArea/dimTime, 0)
         )
@@ -194,14 +189,9 @@ Foam::InterfaceCompositionModel<Thermo, OtherThermo>::L
 
     tmp<volScalarField> tmpL
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                IOobject::groupName("L", pair_.name()),
-                p.time().timeName(),
-                p.mesh()
-            ),
+            IOobject::groupName("L", pair_.name()),
             p.mesh(),
             dimensionedScalar(dimEnergy/dimMass, 0)
         )

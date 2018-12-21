@@ -94,9 +94,12 @@ Foam::regIOobject::regIOobject(const regIOobject& rio, bool registerCopy)
     watchIndices_(),
     eventNo_(db().getEvent())
 {
-    if (registerCopy && rio.registered_)
+    if (registerCopy)
     {
-        const_cast<regIOobject&>(rio).checkOut();
+        if (rio.registered_)
+        {
+            const_cast<regIOobject&>(rio).checkOut();
+        }
         checkIn();
     }
 }

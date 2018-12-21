@@ -242,21 +242,18 @@ public:
                 (sumPhi/mesh.V().field())*(0.5*mesh.time().deltaTValue());
             Co.correctBoundaryConditions();
 
-            return tmp<surfaceScalarField>
+            return surfaceScalarField::New
             (
-                new surfaceScalarField
+                vf.name() + "BlendingFactor",
+                scalar(1)
+              - max
                 (
-                    vf.name() + "BlendingFactor",
-                    scalar(1)
-                  - max
+                    min
                     (
-                        min
-                        (
-                            (fvc::interpolate(Co) - Co1_)/(Co2_ - Co1_),
-                            scalar(1)
-                        ),
-                        scalar(0)
-                    )
+                        (fvc::interpolate(Co) - Co1_)/(Co2_ - Co1_),
+                        scalar(1)
+                    ),
+                    scalar(0)
                 )
             );
         }

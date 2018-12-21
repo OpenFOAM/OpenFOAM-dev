@@ -383,18 +383,9 @@ Foam::tmp<Foam::surfaceVectorField> Foam::fvMesh::delta() const
 
     tmp<surfaceVectorField> tdelta
     (
-        new surfaceVectorField
+        surfaceVectorField::New
         (
-            IOobject
-            (
-                "delta",
-                pointsInstance(),
-                meshSubDir,
-                *this,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "delta",
             *this,
             dimLength
         )

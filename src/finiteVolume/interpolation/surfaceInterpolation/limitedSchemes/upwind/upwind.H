@@ -109,22 +109,11 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const
         {
-            return tmp<surfaceScalarField>
+            return surfaceScalarField::New
             (
-                new surfaceScalarField
-                (
-                    IOobject
-                    (
-                        "upwindLimiter",
-                        this->mesh().time().timeName(),
-                        this->mesh(),
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
-                    this->mesh(),
-                    dimensionedScalar(dimless, 0)
-                )
+                "upwindLimiter",
+                this->mesh(),
+                dimensionedScalar(dimless, 0)
             );
         }
 

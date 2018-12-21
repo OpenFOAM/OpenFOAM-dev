@@ -195,20 +195,17 @@ Info << "    Creating total velocity field" << endl;
 
 
 volVectorField totalVelocity
-
 (
     IOobject
     (
-
-    "velocity_total",
-    runTime.timeName(),
-    mesh,
-    IOobject::NO_READ,
-    IOobject::AUTO_WRITE
-
+        "velocity_total",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedVector("zero", dimVelocity, Zero)
+    dimensionedVector(dimVelocity, Zero)
 );
 
 /*---------------------------------------------------------------------------*\

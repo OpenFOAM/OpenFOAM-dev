@@ -551,14 +551,9 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::Cvm
 {
     tmp<volScalarField> tCvm
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Cvm",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "Cvm",
             mesh_,
             dimensionedScalar(dimensionSet(1, -3, 0, 0, 0), 0)
         )
@@ -602,21 +597,11 @@ Foam::tmp<Foam::volVectorField> Foam::multiphaseSystem::Svm
 {
     tmp<volVectorField> tSvm
     (
-        new volVectorField
+        volVectorField::New
         (
-            IOobject
-            (
-                "Svm",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "Svm",
             mesh_,
-            dimensionedVector
-            (
-                "Svm",
-                dimensionSet(1, -2, -2, 0, 0),
-                Zero
-            )
+            dimensionedVector(dimensionSet(1, -2, -2, 0, 0), Zero)
         )
     );
 
@@ -729,14 +714,9 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::dragCoeff
 {
     tmp<volScalarField> tdragCoeff
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "dragCoeff",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "dragCoeff",
             mesh_,
             dimensionedScalar(dimensionSet(1, -3, -1, 0, 0), 0)
         )
@@ -772,14 +752,9 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
 {
     tmp<surfaceScalarField> tSurfaceTension
     (
-        new surfaceScalarField
+        surfaceScalarField::New
         (
-            IOobject
-            (
-                "surfaceTension",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "surfaceTension",
             mesh_,
             dimensionedScalar(dimensionSet(1, -2, -2, 0, 0), 0)
         )
@@ -818,14 +793,9 @@ Foam::multiphaseSystem::nearInterface() const
 {
     tmp<volScalarField> tnearInt
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "nearInterface",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "nearInterface",
             mesh_,
             dimensionedScalar(dimless, 0)
         )

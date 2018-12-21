@@ -190,13 +190,10 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
 
         if (applyGravity_)
         (
-            phiGByA = tmp<surfaceScalarField>
+            phiGByA = surfaceScalarField::New
             (
-                new surfaceScalarField
-                (
-                    "phiGByA",
-                    deltaT*(g & mesh.Sf())*fvc::interpolate(1.0 - rhoc/rho)
-                )
+                "phiGByA",
+                deltaT*(g & mesh.Sf())*fvc::interpolate(1.0 - rhoc/rho)
             )
         );
 
@@ -230,13 +227,10 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         // ~~~~~~~~~~~~~~~~~
 
         // correction volumetric flux
-        phiCorrect_ = tmp<surfaceScalarField>
+        phiCorrect_ = surfaceScalarField::New
         (
-            new surfaceScalarField
-            (
-                cloudName + ":phiCorrect",
-                alphaEqn.flux()/fvc::interpolate(alpha_)
-            )
+            cloudName + ":phiCorrect",
+            alphaEqn.flux()/fvc::interpolate(alpha_)
         );
 
         // limit the correction flux
@@ -253,7 +247,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedVector("zero", dimVelocity, Zero),
+                dimensionedVector(dimVelocity, Zero),
                 fixedValueFvPatchField<vector>::typeName
             );
             U.primitiveFieldRef() = uAverage.primitiveField();

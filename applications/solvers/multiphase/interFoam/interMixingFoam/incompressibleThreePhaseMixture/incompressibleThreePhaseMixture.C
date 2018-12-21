@@ -165,15 +165,12 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
 Foam::tmp<Foam::volScalarField>
 Foam::incompressibleThreePhaseMixture::mu() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            "mu",
-            alpha1_*rho1_*nuModel1_->nu()
-          + alpha2_*rho2_*nuModel2_->nu()
-          + alpha3_*rho3_*nuModel3_->nu()
-        )
+        "mu",
+        alpha1_*rho1_*nuModel1_->nu()
+      + alpha2_*rho2_*nuModel2_->nu()
+      + alpha3_*rho3_*nuModel3_->nu()
     );
 }
 
@@ -185,15 +182,12 @@ Foam::incompressibleThreePhaseMixture::muf() const
     surfaceScalarField alpha2f(fvc::interpolate(alpha2_));
     surfaceScalarField alpha3f(fvc::interpolate(alpha3_));
 
-    return tmp<surfaceScalarField>
+    return surfaceScalarField::New
     (
-        new surfaceScalarField
-        (
-            "mu",
-            alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
-          + alpha2f*rho2_*fvc::interpolate(nuModel2_->nu())
-          + alpha3f*rho3_*fvc::interpolate(nuModel3_->nu())
-        )
+        "mu",
+        alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
+      + alpha2f*rho2_*fvc::interpolate(nuModel2_->nu())
+      + alpha3f*rho3_*fvc::interpolate(nuModel3_->nu())
     );
 }
 
@@ -205,17 +199,14 @@ Foam::incompressibleThreePhaseMixture::nuf() const
     surfaceScalarField alpha2f(fvc::interpolate(alpha2_));
     surfaceScalarField alpha3f(fvc::interpolate(alpha3_));
 
-    return tmp<surfaceScalarField>
+    return surfaceScalarField::New
     (
-        new surfaceScalarField
+        "nu",
         (
-            "nu",
-            (
-                alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
-              + alpha2f*rho2_*fvc::interpolate(nuModel2_->nu())
-              + alpha3f*rho3_*fvc::interpolate(nuModel3_->nu())
-            )/(alpha1f*rho1_ + alpha2f*rho2_ + alpha3f*rho3_)
-        )
+            alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
+          + alpha2f*rho2_*fvc::interpolate(nuModel2_->nu())
+          + alpha3f*rho3_*fvc::interpolate(nuModel3_->nu())
+        )/(alpha1f*rho1_ + alpha2f*rho2_ + alpha3f*rho3_)
     );
 }
 

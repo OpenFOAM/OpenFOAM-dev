@@ -57,7 +57,7 @@ Foam::anisotropicFilter::anisotropicFilter
             mesh
         ),
         mesh,
-        dimensionedVector("zero", dimLength*dimLength, Zero),
+        dimensionedVector(dimLength*dimLength, Zero),
         calculatedFvPatchVectorField::typeName
     )
 {
@@ -97,7 +97,7 @@ Foam::anisotropicFilter::anisotropicFilter
             mesh
         ),
         mesh,
-        dimensionedVector("zero", dimLength*dimLength, Zero),
+        dimensionedVector(dimLength*dimLength, Zero),
         calculatedFvPatchScalarField::typeName
     )
 {

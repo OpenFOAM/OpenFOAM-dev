@@ -51,7 +51,7 @@ Foam::leastSquaresVectors::leastSquaresVectors(const fvMesh& mesh)
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, Zero)
+        dimensionedVector(dimless/dimLength, Zero)
     ),
     nVectors_
     (
@@ -65,7 +65,7 @@ Foam::leastSquaresVectors::leastSquaresVectors(const fvMesh& mesh)
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, Zero)
+        dimensionedVector(dimless/dimLength, Zero)
     )
 {
     calcLeastSquaresVectors();

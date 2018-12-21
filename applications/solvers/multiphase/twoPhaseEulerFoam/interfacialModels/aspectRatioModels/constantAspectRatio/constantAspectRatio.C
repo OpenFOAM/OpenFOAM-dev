@@ -70,21 +70,12 @@ Foam::aspectRatioModels::constantAspectRatio::E() const
 {
     const fvMesh& mesh(this->pair_.phase1().mesh());
 
-    return
-        tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "zero",
-                    mesh.time().timeName(),
-                    mesh
-                ),
-                mesh,
-                E0_
-            )
-        );
+    return volScalarField::New
+    (
+        "zero",
+        mesh,
+        E0_
+    );
 }
 
 

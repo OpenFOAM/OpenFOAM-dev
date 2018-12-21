@@ -244,16 +244,9 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Su0pTphi
 {
     tmp<volScalarField> tSu0
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Su0",
-                p.time().timeName(),
-                p.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "Su0",
             p.mesh(),
             dimensionedScalar(dimVelocity, 0)
         )
@@ -293,16 +286,9 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Su0pTphi
 {
     tmp<volScalarField> tSu0
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Su0",
-                p.time().timeName(),
-                p.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "Su0",
             p.mesh(),
             dimensionedScalar(dimVelocity, 0)
         )
@@ -347,16 +333,9 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Ma
 {
     tmp<volScalarField> tMa
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Ma",
-                phi.time().timeName(),
-                phi.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "Ma",
             phi.mesh(),
             dimensionedScalar(dimless, 0)
         )
@@ -407,16 +386,9 @@ Foam::laminarFlameSpeedModels::SCOPE::Ma() const
 
         return tmp<volScalarField>
         (
-            new volScalarField
+            volScalarField::New
             (
-                IOobject
-                (
-                    "Ma",
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                "Ma",
                 mesh,
                 dimensionedScalar(dimless, Ma(equivalenceRatio_))
             )

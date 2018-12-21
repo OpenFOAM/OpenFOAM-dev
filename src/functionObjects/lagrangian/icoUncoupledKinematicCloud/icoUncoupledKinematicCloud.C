@@ -64,7 +64,7 @@ Foam::functionObjects::icoUncoupledKinematicCloud::icoUncoupledKinematicCloud
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
-        dimensionedVector("g", dimAcceleration, Zero)
+        dimensionedVector(dimAcceleration, Zero)
     ),
     laminarTransport_
     (
