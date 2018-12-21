@@ -1,2 +1,0 @@
-c++DBUG    = -prof_gen
-c++OPT     = -O3

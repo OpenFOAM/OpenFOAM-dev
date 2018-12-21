@@ -45,7 +45,7 @@ SourceFiles
 
 #include <signal.h>
 
-#if defined(linux) || defined(linux64) || defined(linuxIA64) || \
+#if defined(linux) || defined(linux64) || \
     defined(linuxARM7) || defined(linuxPPC64) || defined(linuxPPC64le)
     #define LINUX
 #endif

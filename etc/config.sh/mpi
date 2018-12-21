@@ -172,9 +172,6 @@ HPMPI)
     x86_64)
         _foamAddLib $MPI_ARCH_PATH/lib/linux_amd64
         ;;
-    ia64)
-        _foamAddLib $MPI_ARCH_PATH/lib/linux_ia64
-        ;;
     *)
         echo Unknown processor type `uname -m` 1>&2
         ;;

@@ -164,9 +164,6 @@ case HPMPI:
     case x86_64:
         _foamAddLib $MPI_ARCH_PATH/lib/linux_amd64
         breaksw
-    case ia64:
-        _foamAddLib $MPI_ARCH_PATH/lib/linux_ia64
-        breaksw
     default:
         echo Unknown processor type `uname -m` for Linux
         breaksw

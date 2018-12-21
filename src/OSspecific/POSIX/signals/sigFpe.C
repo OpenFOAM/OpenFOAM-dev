@@ -35,8 +35,6 @@ License
     #endif
     #include <fenv.h>
     #include <malloc.h>
-#elif defined(sgiN32) || defined(sgiN32Gcc)
-    #include <sigfpe.h>
 #endif
 
 #include <limits>
@@ -182,31 +180,7 @@ void Foam::sigFpe::set(const bool verbose)
                 << "Cannot set SIGFPE trapping"
                 << abort(FatalError);
         }
-
-
-        #elif defined(sgiN32) || defined(sgiN32Gcc)
-        supported = true;
-
-        sigfpe_[_DIVZERO].abort=1;
-        sigfpe_[_OVERFL].abort=1;
-        sigfpe_[_INVALID].abort=1;
-
-        sigfpe_[_DIVZERO].trace=1;
-        sigfpe_[_OVERFL].trace=1;
-        sigfpe_[_INVALID].trace=1;
-
-        handle_sigfpes
-        (
-            _ON,
-            _EN_DIVZERO
-          | _EN_INVALID
-          | _EN_OVERFL,
-            0,
-            _ABORT_ON_ERROR,
-            nullptr
-        );
         #endif
-
 
         if (verbose)
         {

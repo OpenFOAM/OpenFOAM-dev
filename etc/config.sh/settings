@@ -74,11 +74,6 @@ Linux)
         esac
         ;;
 
-    ia64)
-        WM_ARCH=linuxIA64
-        export WM_COMPILER=I64
-        ;;
-
     armv7l)
         WM_ARCH=linuxARM7
         export WM_ARCH_OPTION=32

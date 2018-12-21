@@ -1,2 +1,0 @@
-c++DBUG    = -g -DFULLDEBUG -O0
-c++OPT     =
