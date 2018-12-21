@@ -857,16 +857,9 @@ Foam::snappyLayerDriver::makeLayerDisplacementField
     // postprocessable field.
     tmp<pointVectorField> tfld
     (
-        new pointVectorField
+        pointVectorField::New
         (
-            IOobject
-            (
-                "pointDisplacement",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
+            "pointDisplacement",
             pMesh,
             dimensionedVector(dimLength, Zero),
             patchFieldTypes,

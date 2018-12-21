@@ -62,14 +62,9 @@ Foam::interpolationCellPointWallModified<Type>::calcPointField
     // Create the point field
     tmp<pointVectorField> tPsip
     (
-        new pointVectorField
+        pointVectorField::New
         (
-            IOobject
-            (
-                "volPointInterpolateWallModified(" + psi.name() + ')',
-                mesh.time().timeName(),
-                mesh
-            ),
+            "volPointInterpolateWallModified(" + psi.name() + ')',
             pointMesh::New(mesh),
             dimensioned<Type>("zero", psi.dimensions(), Zero)
         )
