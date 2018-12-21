@@ -301,14 +301,10 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         }
 
         // correction velocity
-        uCorrect_ = tmp<volVectorField>
+        uCorrect_ = volVectorField::New
         (
-            new volVectorField
-            (
-                cloudName + ":uCorrect",
-                fvc::reconstruct(phiCorrect_())
-            )
-
+            cloudName + ":uCorrect",
+            fvc::reconstruct(phiCorrect_())
         );
         uCorrect_->correctBoundaryConditions();
 

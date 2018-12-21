@@ -71,75 +71,36 @@ Foam::radiation::constantAbsorptionEmission::~constantAbsorptionEmission()
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::constantAbsorptionEmission::aCont(const label bandI) const
 {
-    tmp<volScalarField> ta
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "a",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            a_
-        )
+        "a",
+        mesh_,
+        a_
     );
-
-    return ta;
 }
 
 
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::constantAbsorptionEmission::eCont(const label bandI) const
 {
-    tmp<volScalarField> te
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "e",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            e_
-        )
+        "e",
+        mesh_,
+        e_
     );
-
-    return te;
 }
 
 
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::constantAbsorptionEmission::ECont(const label bandI) const
 {
-    tmp<volScalarField> tE
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "E",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            E_
-        )
+        "E",
+        mesh_,
+        E_
     );
-
-    return tE;
 }
 
 

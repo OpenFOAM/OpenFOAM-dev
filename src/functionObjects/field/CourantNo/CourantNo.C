@@ -75,14 +75,9 @@ bool Foam::functionObjects::CourantNo::calc()
 
         tmp<volScalarField> tCo
         (
-            new volScalarField
+            volScalarField::New
             (
-                IOobject
-                (
-                    resultName_,
-                    mesh_.time().timeName(),
-                    mesh_
-                ),
+                resultName_,
                 mesh_,
                 dimensionedScalar(dimless, 0),
                 zeroGradientFvPatchScalarField::typeName

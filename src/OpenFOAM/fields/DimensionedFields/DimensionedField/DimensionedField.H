@@ -254,7 +254,14 @@ public:
             const dimensioned<Type>&
         );
 
-        //- Rename temporary field and return
+        //- Return a temporary field constructed from name and a field
+        static tmp<DimensionedField<Type, GeoMesh>> New
+        (
+            const word& newName,
+            const DimensionedField<Type, GeoMesh>&
+        );
+
+        //- Return renamed temporary field
         static tmp<DimensionedField<Type, GeoMesh>> New
         (
             const word& newName,

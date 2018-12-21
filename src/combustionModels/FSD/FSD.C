@@ -148,16 +148,9 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
 
     tmp<volScalarField> tPc
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                this->thermo().phasePropertyName("Pc"),
-                U.time().timeName(),
-                U.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            this->thermo().phasePropertyName("Pc"),
             U.mesh(),
             dimensionedScalar(dimless, 0)
         )
@@ -167,16 +160,9 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
 
     tmp<volScalarField> tomegaFuel
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                this->thermo().phasePropertyName("omegaFuelBar"),
-                U.time().timeName(),
-                U.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            this->thermo().phasePropertyName("omegaFuelBar"),
             U.mesh(),
             dimensionedScalar(omegaFuel.dimensions(), 0)
         )
@@ -293,16 +279,9 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
 
     tmp<volScalarField> tproducts
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                this->thermo().phasePropertyName("products"),
-                U.time().timeName(),
-                U.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            this->thermo().phasePropertyName("products"),
             U.mesh(),
             dimensionedScalar(dimless, 0)
         )

@@ -162,42 +162,22 @@ void kinematicSingleLayer::transferPrimaryRegionSourceFields()
 
 tmp<volScalarField> kinematicSingleLayer::pu()
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                typeName + ":pu",
-                time_.timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            pPrimary_                  // pressure (mapped from primary region)
-          - pSp_                           // accumulated particle impingement
-          - fvc::laplacian(sigma_, delta_) // surface tension
-        )
+        typeName + ":pu",
+        pPrimary_                      // pressure (mapped from primary region)
+      - pSp_                           // accumulated particle impingement
+      - fvc::laplacian(sigma_, delta_) // surface tension
     );
 }
 
 
 tmp<volScalarField> kinematicSingleLayer::pp()
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                typeName + ":pp",
-                time_.timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-           -rho_*gNormClipped() // hydrostatic effect only
-        )
+        typeName + ":pp",
+       -rho_*gNormClipped() // hydrostatic effect only
     );
 }
 
@@ -1101,22 +1081,11 @@ void kinematicSingleLayer::info()
 
 tmp<volScalarField::Internal> kinematicSingleLayer::Srho() const
 {
-    return tmp<volScalarField::Internal>
+    return volScalarField::Internal::New
     (
-        new volScalarField::Internal
-        (
-            IOobject
-            (
-                typeName + ":Srho",
-                time().timeName(),
-                primaryMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            primaryMesh(),
-            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
-        )
+        typeName + ":Srho",
+        primaryMesh(),
+        dimensionedScalar(dimMass/dimVolume/dimTime, 0)
     );
 }
 
@@ -1126,44 +1095,22 @@ tmp<volScalarField::Internal> kinematicSingleLayer::Srho
     const label i
 ) const
 {
-    return tmp<volScalarField::Internal>
+    return volScalarField::Internal::New
     (
-        new volScalarField::Internal
-        (
-            IOobject
-            (
-                typeName + ":Srho(" + Foam::name(i) + ")",
-                time().timeName(),
-                primaryMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            primaryMesh(),
-            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
-        )
+        typeName + ":Srho(" + Foam::name(i) + ")",
+        primaryMesh(),
+        dimensionedScalar(dimMass/dimVolume/dimTime, 0)
     );
 }
 
 
 tmp<volScalarField::Internal> kinematicSingleLayer::Sh() const
 {
-    return tmp<volScalarField::Internal>
+    return volScalarField::Internal::New
     (
-        new volScalarField::Internal
-        (
-            IOobject
-            (
-                typeName + ":Sh",
-                time().timeName(),
-                primaryMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            primaryMesh(),
-            dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
-        )
+        typeName + ":Sh",
+        primaryMesh(),
+        dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
     );
 }
 

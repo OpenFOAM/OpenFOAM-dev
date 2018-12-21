@@ -76,14 +76,9 @@ bool Foam::functionObjects::processorField::execute()
 
     tmp<volScalarField> tprocField
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                name,
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            name,
             mesh_,
             dimensionedScalar(name, dimless, Pstream::myProcNo())
         )

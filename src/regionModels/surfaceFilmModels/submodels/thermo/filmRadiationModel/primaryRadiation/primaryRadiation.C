@@ -92,16 +92,9 @@ tmp<volScalarField> primaryRadiation::Shs()
 {
     tmp<volScalarField> tShs
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                typeName + ":Shs",
-                film().time().timeName(),
-                film().regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            typeName + ":Shs",
             film().regionMesh(),
             dimensionedScalar(dimMass/pow3(dimTime), 0)
         )

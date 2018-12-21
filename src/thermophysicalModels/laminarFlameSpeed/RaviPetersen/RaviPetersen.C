@@ -327,17 +327,9 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
 
     tmp<volScalarField> tSu0
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Su0",
-                p.time().timeName(),
-                p.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "Su0",
             p.mesh(),
             dimensionedScalar(dimVelocity, 0)
         )

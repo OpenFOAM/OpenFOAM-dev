@@ -121,20 +121,10 @@ const Foam::dimensionedVector& Foam::SRF::SRFModel::omega() const
 Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::SRF::SRFModel::Fcoriolis() const
 {
-    return tmp<volVectorField::Internal>
+    return volVectorField::Internal::New
     (
-        new volVectorField::Internal
-        (
-            IOobject
-            (
-                "Fcoriolis",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            2.0*omega_ ^ Urel_
-        )
+        "Fcoriolis",
+        2.0*omega_ ^ Urel_
     );
 }
 
@@ -142,20 +132,10 @@ Foam::SRF::SRFModel::Fcoriolis() const
 Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::SRF::SRFModel::Fcentrifugal() const
 {
-    return tmp<volVectorField::Internal>
+    return volVectorField::Internal::New
     (
-        new volVectorField::Internal
-        (
-            IOobject
-            (
-                "Fcentrifugal",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            omega_ ^ (omega_ ^ (mesh_.C() - origin_))
-        )
+        "Fcentrifugal",
+        omega_ ^ (omega_ ^ (mesh_.C() - origin_))
     );
 }
 

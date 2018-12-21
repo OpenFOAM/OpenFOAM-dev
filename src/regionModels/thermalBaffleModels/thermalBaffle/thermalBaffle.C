@@ -75,17 +75,9 @@ void thermalBaffle::solveEnergy()
 
     tmp<volScalarField> tQ
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "tQ",
-                regionMesh().time().timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "tQ",
             regionMesh(),
             dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
         )

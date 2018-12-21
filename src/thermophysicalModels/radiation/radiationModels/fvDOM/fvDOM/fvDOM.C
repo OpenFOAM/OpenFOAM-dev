@@ -448,23 +448,13 @@ Foam::tmp<Foam::volScalarField> Foam::radiation::fvDOM::Rp() const
     // Construct using contribution from first frequency band
     tmp<volScalarField> tRp
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Rp",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            (
-                4
-               *physicoChemical::sigma
-               *(aLambda_[0] - absorptionEmission_->aDisp(0)())
-               *blackBody_.deltaLambdaT(T_, absorptionEmission_->bands(0))
-            )
+            "Rp",
+            4
+           *physicoChemical::sigma
+           *(aLambda_[0] - absorptionEmission_->aDisp(0)())
+           *blackBody_.deltaLambdaT(T_, absorptionEmission_->bands(0))
         )
     );
 

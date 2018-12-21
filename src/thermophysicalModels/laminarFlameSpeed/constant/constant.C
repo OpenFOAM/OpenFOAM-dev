@@ -69,22 +69,11 @@ Foam::laminarFlameSpeedModels::constant::~constant()
 Foam::tmp<Foam::volScalarField>
 Foam::laminarFlameSpeedModels::constant::operator()() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "Su0",
-                psiuReactionThermo_.T().time().timeName(),
-                psiuReactionThermo_.T().db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            psiuReactionThermo_.T().mesh(),
-            Su_
-        )
+        "Su0",
+        psiuReactionThermo_.T().mesh(),
+        Su_
     );
 }
 

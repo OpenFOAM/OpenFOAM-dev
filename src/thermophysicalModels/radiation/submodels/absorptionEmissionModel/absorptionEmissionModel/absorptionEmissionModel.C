@@ -67,22 +67,11 @@ Foam::radiation::absorptionEmissionModel::a(const label bandI) const
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::absorptionEmissionModel::aCont(const label bandI) const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "aCont",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimless/dimLength, 0)
-        )
+        "aCont",
+        mesh_,
+        dimensionedScalar(dimless/dimLength, 0)
     );
 }
 
@@ -90,22 +79,11 @@ Foam::radiation::absorptionEmissionModel::aCont(const label bandI) const
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::absorptionEmissionModel::aDisp(const label bandI) const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "aDisp",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimless/dimLength, 0)
-        )
+        "aDisp",
+        mesh_,
+        dimensionedScalar(dimless/dimLength, 0)
     );
 }
 
@@ -120,22 +98,11 @@ Foam::radiation::absorptionEmissionModel::e(const label bandI) const
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::absorptionEmissionModel::eCont(const label bandI) const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "eCont",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimless/dimLength, 0)
-        )
+        "eCont",
+        mesh_,
+        dimensionedScalar(dimless/dimLength, 0)
     );
 }
 
@@ -143,22 +110,11 @@ Foam::radiation::absorptionEmissionModel::eCont(const label bandI) const
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::absorptionEmissionModel::eDisp(const label bandI) const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "eDisp",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimless/dimLength, 0)
-        )
+        "eDisp",
+        mesh_,
+        dimensionedScalar(dimless/dimLength, 0)
     );
 }
 
@@ -173,22 +129,11 @@ Foam::radiation::absorptionEmissionModel::E(const label bandI) const
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::absorptionEmissionModel::ECont(const label bandI) const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "ECont",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
-        )
+        "ECont",
+        mesh_,
+        dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
     );
 }
 
@@ -196,22 +141,11 @@ Foam::radiation::absorptionEmissionModel::ECont(const label bandI) const
 Foam::tmp<Foam::volScalarField>
 Foam::radiation::absorptionEmissionModel::EDisp(const label bandI) const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "EDisp",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
-        )
+        "EDisp",
+        mesh_,
+        dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
     );
 }
 

@@ -65,14 +65,9 @@ Foam::functionObjects::wallShearStress::calcShearStress
 {
     tmp<volVectorField> twallShearStress
     (
-        new volVectorField
+        volVectorField::New
         (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            type(),
             mesh_,
             dimensionedVector("0", Reff.dimensions(), Zero)
         )

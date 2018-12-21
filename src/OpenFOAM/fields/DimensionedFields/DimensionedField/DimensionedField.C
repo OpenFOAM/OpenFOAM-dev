@@ -341,6 +341,34 @@ Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
 DimensionedField<Type, GeoMesh>::New
 (
     const word& newName,
+    const DimensionedField<Type, GeoMesh>& df
+)
+{
+    return tmp<DimensionedField<Type, GeoMesh>>
+    (
+        new DimensionedField<Type, GeoMesh>
+        (
+            IOobject
+            (
+                newName,
+                df.instance(),
+                df.local(),
+                df.db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            df
+        )
+    );
+}
+
+
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
+DimensionedField<Type, GeoMesh>::New
+(
+    const word& newName,
     const tmp<DimensionedField<Type, GeoMesh>>& tdf
 )
 {

@@ -179,18 +179,7 @@ void Foam::fv::interRegionHeatTransferModel::addSup
 
     tmp<volScalarField> tTmapped
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                type() + ":Tmapped",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            T
-        )
+        volScalarField::New(type() + ":Tmapped", T)
     );
 
     volScalarField& Tmapped = tTmapped.ref();

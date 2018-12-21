@@ -85,26 +85,16 @@ Foam::fv::solidificationMeltingSource::Cp() const
             {
                 scalar CpRef = readScalar(coeffs_.lookup("CpRef"));
 
-                return tmp<volScalarField>
+                return volScalarField::New
                 (
-                    new volScalarField
+                    name_ + ":Cp",
+                    mesh_,
+                    dimensionedScalar
                     (
-                        IOobject
-                        (
-                            name_ + ":Cp",
-                            mesh_.time().timeName(),
-                            mesh_,
-                            IOobject::NO_READ,
-                            IOobject::NO_WRITE
-                        ),
-                        mesh_,
-                        dimensionedScalar
-                        (
-                            dimEnergy/dimMass/dimTemperature,
-                            CpRef
-                        ),
-                        extrapolatedCalculatedFvPatchScalarField::typeName
-                    )
+                        dimEnergy/dimMass/dimTemperature,
+                        CpRef
+                    ),
+                    extrapolatedCalculatedFvPatchScalarField::typeName
                 );
             }
             else

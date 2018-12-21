@@ -93,17 +93,9 @@ const tmp<volScalarField> noThermo::Cp() const
 
     return tmp<volScalarField>
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "noThermo::Cp",
-                time().timeName(),
-                primaryMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "noThermo::Cp",
             primaryMesh(),
             dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
         )

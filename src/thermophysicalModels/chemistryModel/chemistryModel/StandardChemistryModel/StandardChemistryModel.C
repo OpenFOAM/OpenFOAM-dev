@@ -276,17 +276,9 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
 {
     tmp<volScalarField> ttc
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "tc",
-                this->time().timeName(),
-                this->mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "tc",
             this->mesh(),
             dimensionedScalar(dimTime, small),
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -350,17 +342,9 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::Qdot() const
 {
     tmp<volScalarField> tQdot
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Qdot",
-                this->mesh_.time().timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "Qdot",
             this->mesh_,
             dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
         )
@@ -394,16 +378,9 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
 {
     tmp<volScalarField::Internal> tRR
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                "RR",
-                this->mesh().time().timeName(),
-                this->mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "RR",
             this->mesh(),
             dimensionedScalar(dimMass/dimVolume/dimTime, 0)
         )

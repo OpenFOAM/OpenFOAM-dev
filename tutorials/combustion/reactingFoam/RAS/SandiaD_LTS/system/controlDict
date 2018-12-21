@@ -18,17 +18,17 @@ application     reactingFoam;
 
 startFrom       startTime;
 
-startTime       1500;
+startTime       0;
 
 stopAt          endTime;
 
-endTime         5000;
+endTime         1500;
 
 deltaT          1;
 
 writeControl    runTime;
 
-writeInterval   100;
+writeInterval   1500;
 
 purgeWrite      0;
 

@@ -67,14 +67,9 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
 {
     tmp<volScalarField> twallHeatFlux
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            type(),
             mesh_,
             dimensionedScalar(dimMass/pow3(dimTime), 0)
         )

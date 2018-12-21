@@ -259,21 +259,10 @@ void Foam::radiation::P1::calculate()
 
 Foam::tmp<Foam::volScalarField> Foam::radiation::P1::Rp() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "Rp",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            4.0*absorptionEmission_->eCont()*physicoChemical::sigma
-        )
+        "Rp",
+        4.0*absorptionEmission_->eCont()*physicoChemical::sigma
     );
 }
 

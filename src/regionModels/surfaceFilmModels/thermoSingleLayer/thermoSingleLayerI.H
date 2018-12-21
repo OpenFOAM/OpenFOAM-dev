@@ -61,20 +61,10 @@ inline tmp<volScalarField> thermoSingleLayer::hs
     const volScalarField& T
 ) const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "hs(" + T.name() + ")",
-                time().timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            Cp_*(T - Tref)
-        )
+        "hs(" + T.name() + ")",
+        Cp_*(T - Tref)
     );
 }
 
@@ -86,18 +76,7 @@ inline tmp<volScalarField> thermoSingleLayer::T
 {
     tmp<volScalarField> tT
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "T(" + hs.name() + ")",
-                time().timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            hs/Cp_ + Tref
-        )
+        volScalarField::New("T(" + hs.name() + ")", hs/Cp_ + Tref)
     );
 
     tT.ref().min(Tmax_);

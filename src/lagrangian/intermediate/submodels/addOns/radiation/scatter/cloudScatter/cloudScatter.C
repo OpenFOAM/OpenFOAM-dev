@@ -72,17 +72,9 @@ Foam::radiation::cloudScatter::sigmaEff() const
 {
     tmp<volScalarField> tsigma
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "sigma",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "sigma",
             mesh_,
             dimensionedScalar(dimless/dimLength, 0)
         )

@@ -111,17 +111,9 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
         {
             tmp<volScalarField> trhoTrans
             (
-                new volScalarField
+                volScalarField::New
                 (
-                    IOobject
-                    (
-                        this->name() + ":rhoTrans",
-                        this->db().time().timeName(),
-                        this->db(),
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
+                    this->name() + ":rhoTrans",
                     this->mesh(),
                     dimensionedScalar(dimMass/dimTime/dimVolume, 0)
                 )
@@ -159,17 +151,9 @@ Foam::ReactingCloud<CloudType>::Srho(const label i) const
 {
     tmp<volScalarField::Internal> tRhoi
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                this->name() + ":rhoTrans",
-                this->db().time().timeName(),
-                this->db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            this->name() + ":rhoTrans",
             this->mesh(),
             dimensionedScalar
             (
@@ -195,17 +179,9 @@ Foam::ReactingCloud<CloudType>::Srho() const
 {
     tmp<volScalarField::Internal> trhoTrans
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                this->name() + ":rhoTrans",
-                this->db().time().timeName(),
-                this->db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            this->name() + ":rhoTrans",
             this->mesh(),
             dimensionedScalar
             (
@@ -238,17 +214,9 @@ Foam::ReactingCloud<CloudType>::Srho(volScalarField& rho) const
     {
         tmp<volScalarField> trhoTrans
         (
-            new volScalarField
+            volScalarField::New
             (
-                IOobject
-                (
-                    this->name() + ":rhoTrans",
-                    this->db().time().timeName(),
-                    this->db(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
+                this->name() + ":rhoTrans",
                 this->mesh(),
                 dimensionedScalar(dimMass/dimTime/dimVolume, 0)
             )

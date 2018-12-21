@@ -72,17 +72,9 @@ Foam::radiation::cloudAbsorptionEmission::aDisp(const label) const
 {
     tmp<volScalarField> ta
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "a",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "a",
             mesh_,
             dimensionedScalar(dimless/dimLength, 0)
         )
@@ -107,17 +99,9 @@ Foam::radiation::cloudAbsorptionEmission::eDisp(const label bandI) const
 {
     tmp<volScalarField> te
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "e",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "e",
             mesh_,
             dimensionedScalar(dimless/dimLength, 0)
         )
@@ -132,17 +116,9 @@ Foam::radiation::cloudAbsorptionEmission::EDisp(const label bandI) const
 {
     tmp<volScalarField> tE
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "E",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "E",
             mesh_,
             dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
         )

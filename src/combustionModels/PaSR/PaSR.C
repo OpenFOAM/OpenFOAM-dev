@@ -109,13 +109,10 @@ template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::combustionModels::PaSR<ReactionThermo>::Qdot() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            this->thermo().phasePropertyName(typeName + ":Qdot"),
-            kappa_*laminar<ReactionThermo>::Qdot()
-        )
+        this->thermo().phasePropertyName(typeName + ":Qdot"),
+        kappa_*laminar<ReactionThermo>::Qdot()
     );
 }
 

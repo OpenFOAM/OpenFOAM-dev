@@ -131,16 +131,9 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
 {
     tmp<volVectorField> tForce
     (
-        new volVectorField
+        volVectorField::New
         (
-            IOobject
-            (
-                typeName + ":contactForce",
-                filmModel_.time().timeName(),
-                filmModel_.regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            typeName + ":contactForce",
             filmModel_.regionMesh(),
             dimensionedVector("zero", dimForce/dimArea, Zero)
         )

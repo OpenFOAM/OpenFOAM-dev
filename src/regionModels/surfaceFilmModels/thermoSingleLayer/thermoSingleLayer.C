@@ -726,17 +726,9 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho() const
 {
     tmp<volScalarField::Internal> tSrho
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                "thermoSingleLayer::Srho",
-                time().timeName(),
-                primaryMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "thermoSingleLayer::Srho",
             primaryMesh(),
             dimensionedScalar(dimMass/dimVolume/dimTime, 0)
         )
@@ -778,17 +770,9 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho
 
     tmp<volScalarField::Internal> tSrho
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                "thermoSingleLayer::Srho(" + Foam::name(i) + ")",
-                time_.timeName(),
-                primaryMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "thermoSingleLayer::Srho(" + Foam::name(i) + ")",
             primaryMesh(),
             dimensionedScalar(dimMass/dimVolume/dimTime, 0)
         )
@@ -828,17 +812,9 @@ tmp<volScalarField::Internal> thermoSingleLayer::Sh() const
 {
     tmp<volScalarField::Internal> tSh
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                "thermoSingleLayer::Sh",
-                time().timeName(),
-                primaryMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "thermoSingleLayer::Sh",
             primaryMesh(),
             dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
         )

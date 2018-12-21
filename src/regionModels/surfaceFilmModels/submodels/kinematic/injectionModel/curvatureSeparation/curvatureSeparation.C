@@ -65,7 +65,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
 /*
     tmp<volScalarField> tinvR1
     (
-        new volScalarField("invR1", fvc::div(film().nHat()))
+        volScalarField::New("invR1", fvc::div(film().nHat()))
     );
 */
 
@@ -74,7 +74,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
     volVectorField UHat(U/(mag(U) + smallU));
     tmp<volScalarField> tinvR1
     (
-        new volScalarField("invR1", UHat & (UHat & gradNHat_))
+        volScalarField::New("invR1", UHat & (UHat & gradNHat_))
     );
 
 

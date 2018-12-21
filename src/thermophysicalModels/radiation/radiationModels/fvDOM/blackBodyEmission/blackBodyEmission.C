@@ -206,16 +206,9 @@ Foam::radiation::blackBodyEmission::deltaLambdaT
 {
     tmp<volScalarField> deltaLambdaT
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "deltaLambdaT",
-                T.mesh().time().timeName(),
-                T.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "deltaLambdaT",
             T.mesh(),
             dimensionedScalar(dimless, 1.0)
         )
@@ -244,16 +237,9 @@ Foam::radiation::blackBodyEmission::EbDeltaLambdaT
 {
     tmp<volScalarField> Eb
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Eb",
-                T.mesh().time().timeName(),
-                T.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "Eb",
             physicoChemical::sigma*pow4(T)
         )
     );

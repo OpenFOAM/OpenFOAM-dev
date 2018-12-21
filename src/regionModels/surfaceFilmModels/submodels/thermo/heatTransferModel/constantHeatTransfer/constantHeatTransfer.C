@@ -74,25 +74,14 @@ void constantHeatTransfer::correct()
 
 tmp<volScalarField> constantHeatTransfer::h() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
+        "htc",
+        filmModel_.regionMesh(),
+        dimensionedScalar
         (
-            IOobject
-            (
-                "htc",
-                filmModel_.time().timeName(),
-                filmModel_.regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            filmModel_.regionMesh(),
-            dimensionedScalar
-            (
-                dimEnergy/dimTime/sqr(dimLength)/dimTemperature,
-                c0_
-            )
+            dimEnergy/dimTime/sqr(dimLength)/dimTemperature,
+            c0_
         )
     );
 }

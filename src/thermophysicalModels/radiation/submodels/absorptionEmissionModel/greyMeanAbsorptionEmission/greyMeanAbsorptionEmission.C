@@ -186,16 +186,9 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
 
     tmp<volScalarField> ta
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "aCont" + name(bandI),
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "aCont" + name(bandI),
             mesh(),
             dimensionedScalar(dimless/dimLength, 0),
             extrapolatedCalculatedFvPatchVectorField::typeName
@@ -267,16 +260,9 @@ Foam::radiation::greyMeanAbsorptionEmission::ECont(const label bandI) const
 {
     tmp<volScalarField> E
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "ECont" + name(bandI),
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "ECont" + name(bandI),
             mesh_,
             dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
         )

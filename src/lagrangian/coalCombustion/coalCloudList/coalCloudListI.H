@@ -32,16 +32,9 @@ Foam::coalCloudList::UTrans() const
 {
     tmp<volVectorField::Internal> tfld
     (
-        new volVectorField::Internal
+        volVectorField::Internal::New
         (
-            IOobject
-            (
-                "UTransEff",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "UTransEff",
             mesh_,
             dimensionedVector("zero", dimMass*dimVelocity, Zero)
         )
@@ -80,16 +73,9 @@ Foam::coalCloudList::hsTrans() const
 {
     tmp<volScalarField::Internal> tfld
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                "hsTransEff",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "hsTransEff",
             mesh_,
             dimensionedScalar(dimEnergy, 0)
         )
@@ -146,16 +132,9 @@ Foam::coalCloudList::rhoTrans() const
 {
     tmp<volScalarField::Internal> tfld
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                "rhoTransEff",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "rhoTransEff",
             mesh_,
             dimensionedScalar(dimMass, 0)
         )
@@ -182,16 +161,9 @@ Foam::coalCloudList::Srho() const
 {
     tmp<volScalarField::Internal> tfld
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                "rhoTransEff",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "rhoTransEff",
             mesh_,
             dimensionedScalar(dimDensity/dimTime, 0)
         )
@@ -216,16 +188,9 @@ Foam::coalCloudList::Srho
 {
     tmp<volScalarField::Internal> tfld
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                "rhoTransEff",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "rhoTransEff",
             mesh_,
             dimensionedScalar(dimDensity/dimTime, 0)
         )

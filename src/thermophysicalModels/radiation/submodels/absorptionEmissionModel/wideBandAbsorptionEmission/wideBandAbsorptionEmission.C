@@ -201,16 +201,9 @@ Foam::radiation::wideBandAbsorptionEmission::aCont(const label bandi) const
 
     tmp<volScalarField> ta
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "a",
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "a",
             mesh(),
             dimensionedScalar(dimless/dimLength, 0)
         )
@@ -285,16 +278,9 @@ Foam::radiation::wideBandAbsorptionEmission::ECont(const label bandi) const
 {
     tmp<volScalarField> E
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "E",
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "E",
             mesh(),
             dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
         )

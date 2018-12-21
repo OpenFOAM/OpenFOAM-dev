@@ -82,16 +82,9 @@ Foam::tmp<Foam::volScalarField> Foam::consumptionSpeed::omega0Sigma
 {
     tmp<volScalarField> tomega0
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "omega0",
-                sigma.time().timeName(),
-                sigma.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "omega0",
             sigma.mesh(),
             dimensionedScalar
             (

@@ -72,66 +72,33 @@ Foam::scalar noFilm::CourantNumber() const
 
 tmp<volScalarField::Internal> noFilm::Srho() const
 {
-    return tmp<volScalarField::Internal>
+    return volScalarField::Internal::New
     (
-        new volScalarField::Internal
-        (
-            IOobject
-            (
-                "noFilm::Srho",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
-        )
+        "noFilm::Srho",
+        mesh_,
+        dimensionedScalar(dimMass/dimVolume/dimTime, 0)
     );
 }
 
 
 tmp<volScalarField::Internal> noFilm::Srho(const label i) const
 {
-    return tmp<volScalarField::Internal>
+    return volScalarField::Internal::New
     (
-        new volScalarField::Internal
-        (
-            IOobject
-            (
-                "noFilm::Srho(" + Foam::name(i) + ")",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
-        )
+        "noFilm::Srho(" + Foam::name(i) + ")",
+        mesh_,
+        dimensionedScalar(dimMass/dimVolume/dimTime, 0)
     );
 }
 
 
 tmp<volScalarField::Internal> noFilm::Sh() const
 {
-    return tmp<volScalarField::Internal>
+    return volScalarField::Internal::New
     (
-        new volScalarField::Internal
-        (
-            IOobject
-            (
-                "noFilm::Sh",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            mesh_,
-            dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
-        )
+        "noFilm::Sh",
+        mesh_,
+        dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
     );
 }
 

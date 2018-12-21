@@ -208,23 +208,7 @@ inline tmp<volScalarField> kinematicSingleLayer::deltaMass() const
 
 inline tmp<volScalarField> kinematicSingleLayer::gNorm() const
 {
-    tmp<volScalarField> tgNorm
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "gNorm",
-                time().timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            g_ & nHat()
-        )
-    );
-
-    return tgNorm;
+    return volScalarField::New("gNorm", g_ & nHat());
 }
 
 
@@ -232,18 +216,7 @@ inline tmp<volScalarField> kinematicSingleLayer::gNormClipped() const
 {
     tmp<volScalarField> tgNormClipped
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                "gNormClipped",
-                time().timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            g_ & nHat()
-        )
+        volScalarField::New("gNormClipped", g_ & nHat())
     );
 
     volScalarField& gNormClipped = tgNormClipped.ref();
@@ -255,23 +228,7 @@ inline tmp<volScalarField> kinematicSingleLayer::gNormClipped() const
 
 inline tmp<volVectorField> kinematicSingleLayer::gTan() const
 {
-    tmp<volVectorField> tgTan
-    (
-        new volVectorField
-        (
-            IOobject
-            (
-                "gTan",
-                time().timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            g_ - nHat()*gNorm()
-        )
-    );
-
-    return tgTan;
+    return volVectorField::New("gTan", g_ - nHat()*gNorm());
 }
 
 

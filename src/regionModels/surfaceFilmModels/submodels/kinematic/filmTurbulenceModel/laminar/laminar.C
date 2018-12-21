@@ -72,16 +72,9 @@ tmp<volVectorField> laminar::Us() const
 {
     tmp<volVectorField> tUs
     (
-        new volVectorField
+        volVectorField::New
         (
-            IOobject
-            (
-                typeName + ":Us",
-                filmModel_.regionMesh().time().timeName(),
-                filmModel_.regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            typeName + ":Us",
             filmModel_.regionMesh(),
             dimensionedVector("zero", dimVelocity, Zero),
             extrapolatedCalculatedFvPatchVectorField::typeName
@@ -100,16 +93,9 @@ tmp<volScalarField> laminar::mut() const
 {
     return tmp<volScalarField>
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                typeName + ":mut",
-                filmModel_.regionMesh().time().timeName(),
-                filmModel_.regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            typeName + ":mut",
             filmModel_.regionMesh(),
             dimensionedScalar(dimMass/dimLength/dimTime, 0)
         )
