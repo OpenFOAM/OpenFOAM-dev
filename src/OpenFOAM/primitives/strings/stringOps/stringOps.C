@@ -285,7 +285,7 @@ Foam::string Foam::stringOps::getVariable
     {
         value = getEnv(name);
 
-        if (value.empty())
+        if (!allowEmpty && value.empty())
         {
             FatalIOErrorInFunction
             (
