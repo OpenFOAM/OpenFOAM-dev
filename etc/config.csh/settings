@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -216,30 +216,23 @@ case ThirdParty:
     set mpfr_version=mpfr-3.1.2
     set mpc_version=mpc-1.0.1
     switch ("$WM_COMPILER")
-    case Gcc:
     case Gcc48:
         set gcc_version=gcc-4.8.5
         breaksw
     case Gcc49:
-        set gcc_version=gcc-4.9.3
+        set gcc_version=gcc-4.9.4
         breaksw
-    case Gcc51:
-        set gcc_version=gcc-5.1.0
+    case Gcc55:
+        set gcc_version=gcc-5.5.0
         breaksw
-    case Gcc52:
-        set gcc_version=gcc-5.2.0
+    case Gcc65:
+        set gcc_version=gcc-6.5.0
         breaksw
-    case Gcc53:
-        set gcc_version=gcc-5.3.0
+    case Gcc74:
+        set gcc_version=gcc-7.4.0
         breaksw
-    case Gcc61:
-        set gcc_version=gcc-6.1.0
-        breaksw
-    case Gcc73:
-        set gcc_version=gcc-7.3.0
-        breaksw
-    case Gcc81:
-        set gcc_version=gcc-8.1.0
+    case Gcc82:
+        set gcc_version=gcc-8.2.0
         breaksw
     case Clang:
         # Using clang - not gcc
