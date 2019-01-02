@@ -123,11 +123,10 @@ ${typeName}FixedValuePointPatch${FieldType}
 (
     const pointPatch& p,
     const DimensionedField<${TemplateType}, pointMesh>& iF,
-    const dictionary& dict,
-    const bool valueRequired
+    const dictionary& dict
 )
 :
-    fixedValuePointPatchField<${TemplateType}>(p, iF, dict, valueRequired)
+    fixedValuePointPatchField<${TemplateType}>(p, iF, dict)
 {
     if (${verbose:-false})
     {

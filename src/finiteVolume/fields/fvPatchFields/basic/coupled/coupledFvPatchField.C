@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,11 +58,12 @@ Foam::coupledFvPatchField<Type>::coupledFvPatchField
     const coupledFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
     LduInterfaceField<Type>(refCast<const lduInterface>(p)),
-    fvPatchField<Type>(ptf, p, iF, mapper)
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
 {}
 
 

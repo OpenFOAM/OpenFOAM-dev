@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,40 +44,6 @@ Foam::fvPatchField<Type>::fvPatchField
     updated_(false),
     manipulatedMatrix_(false),
     patchType_(word::null)
-{}
-
-
-template<class Type>
-Foam::fvPatchField<Type>::fvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const Type& value
-)
-:
-    Field<Type>(p.size(), value),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(word::null)
-{}
-
-
-template<class Type>
-Foam::fvPatchField<Type>::fvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const word& patchType
-)
-:
-    Field<Type>(p.size()),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(patchType)
 {}
 
 
@@ -141,7 +107,8 @@ Foam::fvPatchField<Type>::fvPatchField
     const fvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
     Field<Type>(p.size()),
@@ -151,12 +118,15 @@ Foam::fvPatchField<Type>::fvPatchField
     manipulatedMatrix_(false),
     patchType_(ptf.patchType_)
 {
-    // For unmapped faces set to internal field value (zero-gradient)
-    if (notNull(iF) && mapper.hasUnmapped())
+    if (mappingRequired)
     {
-        fvPatchField<Type>::operator=(this->patchInternalField());
+        // For unmapped faces set to internal field value (zero-gradient)
+        if (notNull(iF) && mapper.hasUnmapped())
+        {
+            fvPatchField<Type>::operator=(this->patchInternalField());
+        }
+        this->map(ptf, mapper);
     }
-    this->map(ptf, mapper);
 }
 
 

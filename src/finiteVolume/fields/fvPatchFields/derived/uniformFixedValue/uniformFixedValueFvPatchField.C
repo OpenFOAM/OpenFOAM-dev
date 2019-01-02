@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),   // Don't map
+    fixedValueFvPatchField<Type>(ptf, p, iF, mapper, false), // Don't map
     uniformValue_(ptf.uniformValue_, false)
 {
     // Evaluate since value not mapped

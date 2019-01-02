@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,11 @@ Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
     const calculatedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
-    fvPatchField<Type>(ptf, p, iF, mapper)
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
 {}
 
 

@@ -73,8 +73,7 @@ public:
         (
             const pointPatch&,
             const DimensionedField<${TemplateType}, pointMesh>&,
-            const dictionary&,
-            const bool valueRequired=true
+            const dictionary&
         );
 
         //- Construct by mapping a copy onto a new patch

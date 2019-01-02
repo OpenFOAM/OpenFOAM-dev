@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,8 +34,10 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchVectorField(p, iF, Zero)
-{}
+    fixedValueFvPatchVectorField(p, iF)
+{
+    operator==(Zero);
+}
 
 
 Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
@@ -45,8 +47,10 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF, Zero)
-{}
+    fixedValueFvPatchVectorField(p, iF, dict, false)
+{
+    operator==(Zero);
+}
 
 
 Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
@@ -57,8 +61,10 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchVectorField(p, iF, Zero)
-{}
+    fixedValueFvPatchVectorField(ptf, p, iF, mapper, false) // Don't map
+{
+    operator==(Zero);
+}
 
 
 Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField

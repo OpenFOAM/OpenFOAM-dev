@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,11 +210,10 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
-    const dictionary& dict,
-    const bool valueRequired
+    const dictionary& dict
 )
 :
-    fixedValuePointPatchField<Type>(p, iF, dict, valueRequired),
+    fixedValuePointPatchField<Type>(p, iF, dict),
     codedBase(),
     dict_(dict),
     name_
