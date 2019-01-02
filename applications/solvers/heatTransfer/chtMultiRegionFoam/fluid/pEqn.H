@@ -34,6 +34,8 @@ constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
     fvScalarMatrix p_rghEqnComp
     (
         fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
+     ==
+        fvOptions(psi, p_rgh, rho.name())
     );
 
     if (pimple.transonic())
