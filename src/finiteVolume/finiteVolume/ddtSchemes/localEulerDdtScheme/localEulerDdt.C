@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,13 +72,16 @@ Foam::tmp<Foam::volScalarField> Foam::fv::localEulerDdt::localRSubDeltaT
     const label nAlphaSubCycles
 )
 {
-    return volScalarField::New
+    return tmp<volScalarField>
     (
-        rSubDeltaTName,
-        nAlphaSubCycles
-       *mesh.objectRegistry::lookupObject<volScalarField>
+        new volScalarField
         (
-            rDeltaTName
+            rSubDeltaTName,
+            nAlphaSubCycles
+           *mesh.objectRegistry::lookupObject<volScalarField>
+            (
+                rDeltaTName
+            )
         )
     );
 }
