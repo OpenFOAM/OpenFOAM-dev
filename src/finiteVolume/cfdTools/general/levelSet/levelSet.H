@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ tmp<Field<Type>> levelSetAverage
     const Field<Type>& negativeP
 );
 
-//- As the above oveload, but both in cells and on patch faces
+//- As the above overload, but both in cells and on patch faces
 template<class Type>
 tmp<GeometricField<Type, fvPatchField, volMesh>> levelSetAverage
 (
@@ -94,7 +94,7 @@ tmp<scalarField> levelSetFraction
     const bool above
 );
 
-//- As the above oveload, but on the faces of a patch
+//- As the above overload, but on the faces of a patch
 tmp<scalarField> levelSetFraction
 (
     const fvPatch& patch,
@@ -103,7 +103,7 @@ tmp<scalarField> levelSetFraction
     const bool above
 );
 
-//- As the above oveload, but both in cells and on patch faces
+//- As the above overload, but both in cells and on patch faces
 tmp<volScalarField> levelSetFraction
 (
     const volScalarField& levelC,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,6 +178,51 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
+                            Class areaMagOp Declaration
+\*---------------------------------------------------------------------------*/
+
+class areaMagOp
+:
+    public uniformOp<nil>
+{
+public:
+
+    // Typedefs
+
+        //- Result type
+        typedef scalar result;
+
+
+    // Constructors
+
+        //- Construct null
+        areaMagOp()
+        {}
+
+        //- Construct from base
+        areaMagOp(const uniformOp<nil>& op)
+        :
+            uniformOp<nil>(op)
+        {}
+
+
+    // Member operators
+
+        //- Operate on nothing
+        result operator()() const
+        {
+            return 0;
+        }
+
+        //- Operate on a triangle
+        result operator()(const FixedList<point, 3>& p) const
+        {
+            return result(triPointRef(p[0], p[1], p[2]).mag());
+        }
+};
+
+
+/*---------------------------------------------------------------------------*\
                            Class volumeOp Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -261,6 +306,49 @@ public:
         {
             const FixedList<Type, 3>& x = *this;
             return result(areaOp()(p)*(x[0] + x[1] + x[2])/3);
+        }
+};
+
+
+/*---------------------------------------------------------------------------*\
+                       Class areaMagIntegrateOp Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class areaMagIntegrateOp
+:
+    public FixedList<Type, 3>
+{
+public:
+
+    // Typedefs
+
+        //- Result type
+        typedef Type result;
+
+
+    // Constructors
+
+        //- Construct from base
+        areaMagIntegrateOp(const FixedList<Type, 3>& x)
+        :
+            FixedList<Type, 3>(x)
+        {}
+
+
+    // Member operators
+
+        //- Operate on nothing
+        result operator()() const
+        {
+            return pTraits<result>::zero;
+        }
+
+        //- Operate on a triangle
+        result operator()(const FixedList<point, 3>& p) const
+        {
+            const FixedList<Type, 3>& x = *this;
+            return result(areaMagOp()(p)*(x[0] + x[1] + x[2])/3);
         }
 };
 
