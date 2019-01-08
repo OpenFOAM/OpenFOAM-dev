@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -69,6 +69,8 @@ export ParaView_VERSION=5.4.0
 #export ParaView_VERSION=5.5.0
 export ParaView_MAJOR=detect
 
+#export ParaView_GL=system
+export ParaView_GL=mesa
 
 # Evaluate command-line parameters for ParaView
 _foamParaviewEval()
@@ -144,6 +146,8 @@ then
             export PYTHONPATH=$paraviewPython:$ParaView_LIB_DIR
         fi
     fi
+
+    [ "$ParaView_GL" = mesa ] && alias paraview="paraview --mesa"
 else
     unset PV_PLUGIN_PATH
 fi

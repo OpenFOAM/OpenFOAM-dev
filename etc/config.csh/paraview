@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -63,6 +63,8 @@ setenv ParaView_VERSION 5.4.0
 #setenv ParaView_VERSION 5.5.0
 setenv ParaView_MAJOR detect
 
+#setenv ParaView_GL=system
+setenv ParaView_GL=mesa
 
 # Evaluate command-line parameters for ParaView
 while ( $#argv > 0 )
@@ -127,6 +129,7 @@ if ( -r $ParaView_DIR || -r $paraviewInstDir ) then
             setenv PYTHONPATH ${paraviewPython}:$ParaView_LIB_DIR
         endif
     endif
+    if ("$ParaView_GL" == mesa) alias paraview 'paraview --mesa'
 else
     unsetenv PV_PLUGIN_PATH
 endif
