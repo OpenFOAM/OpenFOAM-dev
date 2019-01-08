@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,17 +62,24 @@ int main(int argc, char *argv[])
         "remove cells from input cellSet to keep to 2:1 ratio"
         " (default is to extend set)"
     );
+    argList::addBoolOption
+    (
+        "noFields",
+        "do not update fields"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
     runTime.functionObjects().off();
+
+    const bool overwrite = args.optionFound("overwrite");
+    const bool minSet = args.optionFound("minSet");
+    const bool fields = !args.optionFound("noFields");
+
     #include "createNamedMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
     word cellSetName(args.args()[1]);
-    const bool overwrite = args.optionFound("overwrite");
-
-    const bool minSet = args.optionFound("minSet");
 
     Info<< "Reading cells to refine from cellSet " << cellSetName
         << nl << endl;
@@ -87,46 +94,13 @@ int main(int argc, char *argv[])
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
 
-    // Read vol fields.
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
 
-    PtrList<volScalarField> vsFlds;
-    ReadFields(mesh, objects, vsFlds);
+    #include "readVolFields.H"
+    #include "readSurfaceFields.H"
+    #include "readPointFields.H"
 
-    PtrList<volVectorField> vvFlds;
-    ReadFields(mesh, objects, vvFlds);
-
-    PtrList<volSphericalTensorField> vstFlds;
-    ReadFields(mesh, objects, vstFlds);
-
-    PtrList<volSymmTensorField> vsymtFlds;
-    ReadFields(mesh, objects, vsymtFlds);
-
-    PtrList<volTensorField> vtFlds;
-    ReadFields(mesh, objects, vtFlds);
-
-    // Read surface fields.
-
-    PtrList<surfaceScalarField> ssFlds;
-    ReadFields(mesh, objects, ssFlds);
-
-    PtrList<surfaceVectorField> svFlds;
-    ReadFields(mesh, objects, svFlds);
-
-    PtrList<surfaceSphericalTensorField> sstFlds;
-    ReadFields(mesh, objects, sstFlds);
-
-    PtrList<surfaceSymmTensorField> ssymtFlds;
-    ReadFields(mesh, objects, ssymtFlds);
-
-    PtrList<surfaceTensorField> stFlds;
-    ReadFields(mesh, objects, stFlds);
-
-    // Read point fields
-    PtrList<pointScalarField> psFlds;
-    ReadFields(pointMesh::New(mesh), objects, psFlds);
-
-    PtrList<pointVectorField> pvFlds;
-    ReadFields(pointMesh::New(mesh), objects, pvFlds);
+    Info<< endl;
 
 
     // Construct refiner without unrefinement. Read existing point/cell level.

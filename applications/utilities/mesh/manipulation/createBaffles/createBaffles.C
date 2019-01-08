@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -502,37 +502,9 @@ int main(int argc, char *argv[])
 
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 
-    PtrList<volScalarField> vsFlds;
-    if (fields) ReadFields(mesh, objects, vsFlds);
-
-    PtrList<volVectorField> vvFlds;
-    if (fields) ReadFields(mesh, objects, vvFlds);
-
-    PtrList<volSphericalTensorField> vstFlds;
-    if (fields) ReadFields(mesh, objects, vstFlds);
-
-    PtrList<volSymmTensorField> vsymtFlds;
-    if (fields) ReadFields(mesh, objects, vsymtFlds);
-
-    PtrList<volTensorField> vtFlds;
-    if (fields) ReadFields(mesh, objects, vtFlds);
-
-    PtrList<surfaceScalarField> ssFlds;
-    if (fields) ReadFields(mesh, objects, ssFlds);
-
-    PtrList<surfaceVectorField> svFlds;
-    if (fields) ReadFields(mesh, objects, svFlds);
-
-    PtrList<surfaceSphericalTensorField> sstFlds;
-    if (fields) ReadFields(mesh, objects, sstFlds);
-
-    PtrList<surfaceSymmTensorField> ssymtFlds;
-    if (fields) ReadFields(mesh, objects, ssymtFlds);
-
-    PtrList<surfaceTensorField> stFlds;
-    if (fields) ReadFields(mesh, objects, stFlds);
-
-
+    #include "readVolFields.H"
+    #include "readSurfaceFields.H"
+    // #include "readPointFields.H"
 
 
     // Creating (if necessary) faceZones

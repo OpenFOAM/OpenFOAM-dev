@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1517,6 +1517,11 @@ int main(int argc, char *argv[])
         "name",
         "base name of the unspecified regions, defaults to \"region\""
     );
+    argList::addBoolOption
+    (
+        "noFields",
+        "do not update fields"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -1545,6 +1550,7 @@ int main(int argc, char *argv[])
     const bool sloppyCellZones  = args.optionFound("sloppyCellZones");
     const bool useFaceZones     = args.optionFound("useFaceZones");
     const bool prefixRegion     = args.optionFound("prefixRegion");
+    const bool fields = !args.optionFound("noFields");
 
     if
     (
@@ -1886,39 +1892,11 @@ int main(int argc, char *argv[])
 
     IOobjectList objects(mesh, runTime.timeName());
 
-    // Read vol fields.
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
 
-    PtrList<volScalarField> vsFlds;
-    ReadFields(mesh, objects, vsFlds);
-
-    PtrList<volVectorField> vvFlds;
-    ReadFields(mesh, objects, vvFlds);
-
-    PtrList<volSphericalTensorField> vstFlds;
-    ReadFields(mesh, objects, vstFlds);
-
-    PtrList<volSymmTensorField> vsymtFlds;
-    ReadFields(mesh, objects, vsymtFlds);
-
-    PtrList<volTensorField> vtFlds;
-    ReadFields(mesh, objects, vtFlds);
-
-    // Read surface fields.
-
-    PtrList<surfaceScalarField> ssFlds;
-    ReadFields(mesh, objects, ssFlds);
-
-    PtrList<surfaceVectorField> svFlds;
-    ReadFields(mesh, objects, svFlds);
-
-    PtrList<surfaceSphericalTensorField> sstFlds;
-    ReadFields(mesh, objects, sstFlds);
-
-    PtrList<surfaceSymmTensorField> ssymtFlds;
-    ReadFields(mesh, objects, ssymtFlds);
-
-    PtrList<surfaceTensorField> stFlds;
-    ReadFields(mesh, objects, stFlds);
+    #include "readVolFields.H"
+    #include "readSurfaceFields.H"
+    // #include "readPointFields.H"
 
     Info<< endl;
 

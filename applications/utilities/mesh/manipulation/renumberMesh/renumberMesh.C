@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -817,62 +817,11 @@ int main(int argc, char *argv[])
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
 
-
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 
-    // Read vol fields.
-
-    PtrList<volScalarField> vsFlds;
-    if (fields) ReadFields(mesh, objects, vsFlds);
-
-    PtrList<volVectorField> vvFlds;
-    if (fields) ReadFields(mesh, objects, vvFlds);
-
-    PtrList<volSphericalTensorField> vstFlds;
-    if (fields) ReadFields(mesh, objects, vstFlds);
-
-    PtrList<volSymmTensorField> vsymtFlds;
-    if (fields) ReadFields(mesh, objects, vsymtFlds);
-
-    PtrList<volTensorField> vtFlds;
-    if (fields) ReadFields(mesh, objects, vtFlds);
-
-
-    // Read surface fields.
-
-    PtrList<surfaceScalarField> ssFlds;
-    if (fields) ReadFields(mesh, objects, ssFlds);
-
-    PtrList<surfaceVectorField> svFlds;
-    if (fields) ReadFields(mesh, objects, svFlds);
-
-    PtrList<surfaceSphericalTensorField> sstFlds;
-    if (fields) ReadFields(mesh, objects, sstFlds);
-
-    PtrList<surfaceSymmTensorField> ssymtFlds;
-    if (fields) ReadFields(mesh, objects, ssymtFlds);
-
-    PtrList<surfaceTensorField> stFlds;
-    if (fields) ReadFields(mesh, objects, stFlds);
-
-
-    // Read point fields.
-
-    PtrList<pointScalarField> psFlds;
-    if (fields) ReadFields(pointMesh::New(mesh), objects, psFlds);
-
-    PtrList<pointVectorField> pvFlds;
-    if (fields) ReadFields(pointMesh::New(mesh), objects, pvFlds);
-
-    PtrList<pointSphericalTensorField> pstFlds;
-    if (fields) ReadFields(pointMesh::New(mesh), objects, pstFlds);
-
-    PtrList<pointSymmTensorField> psymtFlds;
-    if (fields) ReadFields(pointMesh::New(mesh), objects, psymtFlds);
-
-    PtrList<pointTensorField> ptFlds;
-    if (fields) ReadFields(pointMesh::New(mesh), objects, ptFlds);
-
+    #include "readVolFields.H"
+    #include "readSurfaceFields.H"
+    #include "readPointFields.H"
 
     Info<< endl;
 

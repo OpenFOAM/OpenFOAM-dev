@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,15 +60,17 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
 #include "polyTopoChanger.H"
 #include "mapPolyMesh.H"
-#include "ListOps.H"
 #include "slidingInterface.H"
 #include "perfectInterface.H"
-#include "IOobjectList.H"
 #include "ReadFields.H"
+#include "volFields.H"
+#include "surfaceFields.H"
+#include "pointFields.H"
 
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -207,6 +209,11 @@ int main(int argc, char *argv[])
     argList::noParallel();
     #include "addOverwriteOption.H"
     #include "addRegionOption.H"
+    argList::addBoolOption
+    (
+        "noFields",
+        "do not update fields"
+    );
 
     argList::validArgs.append("masterPatch");
     argList::validArgs.append("slavePatch");
@@ -241,6 +248,7 @@ int main(int argc, char *argv[])
     const bool partialCover = args.optionFound("partial");
     const bool perfectCover = args.optionFound("perfect");
     const bool overwrite    = args.optionFound("overwrite");
+    const bool fields = !args.optionFound("noFields");
 
     if (partialCover && perfectCover)
     {
@@ -428,33 +436,11 @@ int main(int argc, char *argv[])
     // Search for list of objects for this time
     IOobjectList objects(mesh, runTime.timeName());
 
-    // Read all current fvFields so they will get mapped
-    Info<< "Reading all current volfields" << endl;
-    PtrList<volScalarField> volScalarFields;
-    ReadFields(mesh, objects, volScalarFields);
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
 
-    PtrList<volVectorField> volVectorFields;
-    ReadFields(mesh, objects, volVectorFields);
-
-    PtrList<volSphericalTensorField> volSphericalTensorFields;
-    ReadFields(mesh, objects, volSphericalTensorFields);
-
-    PtrList<volSymmTensorField> volSymmTensorFields;
-    ReadFields(mesh, objects, volSymmTensorFields);
-
-    PtrList<volTensorField> volTensorFields;
-    ReadFields(mesh, objects, volTensorFields);
-
-    //- Uncomment if you want to interpolate surface fields (usually bad idea)
-    // Info<< "Reading all current surfaceFields" << endl;
-    // PtrList<surfaceScalarField> surfaceScalarFields;
-    // ReadFields(mesh, objects, surfaceScalarFields);
-    //
-    // PtrList<surfaceVectorField> surfaceVectorFields;
-    // ReadFields(mesh, objects, surfaceVectorFields);
-    //
-    // PtrList<surfaceTensorField> surfaceTensorFields;
-    // ReadFields(mesh, objects, surfaceTensorFields);
+    #include "readVolFields.H"
+    // #include "readSurfaceFields.H"
+    #include "readPointFields.H"
 
     if (!overwrite)
     {

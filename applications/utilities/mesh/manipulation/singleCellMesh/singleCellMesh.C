@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,9 +72,16 @@ int main(int argc, char *argv[])
 {
     // constant, not false
     timeSelector::addOptions(true, false);
+    argList::addBoolOption
+    (
+        "noFields",
+        "do not update fields"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
+
+    const bool fields = !args.optionFound("noFields");
 
     instantList timeDirs = timeSelector::select0(runTime, args);
 
@@ -151,28 +158,16 @@ int main(int argc, char *argv[])
         // Read objects in time directory
         IOobjectList objects(mesh, runTime.timeName());
 
-        // Read vol fields.
-        PtrList<volScalarField> vsFlds;
-        ReadFields(mesh, objects, vsFlds);
+        if (fields) Info<< "Reading geometric fields" << nl << endl;
 
-        PtrList<volVectorField> vvFlds;
-        ReadFields(mesh, objects, vvFlds);
-
-        PtrList<volSphericalTensorField> vstFlds;
-        ReadFields(mesh, objects, vstFlds);
-
-        PtrList<volSymmTensorField> vsymtFlds;
-        ReadFields(mesh, objects, vsymtFlds);
-
-        PtrList<volTensorField> vtFlds;
-        ReadFields(mesh, objects, vtFlds);
+        #include "readVolFields.H"
 
         // Map and store the fields on the scMesh.
-        interpolateFields(scMesh(), vsFlds);
-        interpolateFields(scMesh(), vvFlds);
-        interpolateFields(scMesh(), vstFlds);
-        interpolateFields(scMesh(), vsymtFlds);
-        interpolateFields(scMesh(), vtFlds);
+        if (fields) interpolateFields(scMesh(), vsFlds);
+        if (fields) interpolateFields(scMesh(), vvFlds);
+        if (fields) interpolateFields(scMesh(), vstFlds);
+        if (fields) interpolateFields(scMesh(), vsymtFlds);
+        if (fields) interpolateFields(scMesh(), vtFlds);
 
 
         // Write

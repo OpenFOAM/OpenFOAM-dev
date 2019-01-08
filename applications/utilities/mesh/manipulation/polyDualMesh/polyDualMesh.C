@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,7 @@ Note
 #include "ReadFields.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "pointFields.H"
 
 using namespace Foam;
 
@@ -375,6 +376,11 @@ int main(int argc, char *argv[])
         "disable the default behaviour of preserving faceZones by having"
         " multiple faces in between cells"
     );
+    argList::addBoolOption
+    (
+        "noFields",
+        "do not update fields"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -423,6 +429,7 @@ int main(int argc, char *argv[])
         Info<< "Generating multiple cells for points on concave feature edges."
             << nl << endl;
     }
+    const bool fields = !args.optionFound("noFields");
 
 
     // Face(centre)s that need inclusion in the dual mesh
@@ -474,37 +481,13 @@ int main(int argc, char *argv[])
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
 
-    // Read vol fields.
-    PtrList<volScalarField> vsFlds;
-    ReadFields(mesh, objects, vsFlds);
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
 
-    PtrList<volVectorField> vvFlds;
-    ReadFields(mesh, objects, vvFlds);
+    #include "readVolFields.H"
+    #include "readSurfaceFields.H"
+    #include "readPointFields.H"
 
-    PtrList<volSphericalTensorField> vstFlds;
-    ReadFields(mesh, objects, vstFlds);
-
-    PtrList<volSymmTensorField> vsymtFlds;
-    ReadFields(mesh, objects, vsymtFlds);
-
-    PtrList<volTensorField> vtFlds;
-    ReadFields(mesh, objects, vtFlds);
-
-    // Read surface fields.
-    PtrList<surfaceScalarField> ssFlds;
-    ReadFields(mesh, objects, ssFlds);
-
-    PtrList<surfaceVectorField> svFlds;
-    ReadFields(mesh, objects, svFlds);
-
-    PtrList<surfaceSphericalTensorField> sstFlds;
-    ReadFields(mesh, objects, sstFlds);
-
-    PtrList<surfaceSymmTensorField> ssymtFlds;
-    ReadFields(mesh, objects, ssymtFlds);
-
-    PtrList<surfaceTensorField> stFlds;
-    ReadFields(mesh, objects, stFlds);
+    Info<< endl;
 
 
     // Topo change container
