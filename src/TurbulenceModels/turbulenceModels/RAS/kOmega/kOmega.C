@@ -47,6 +47,35 @@ void kOmega<BasicTurbulenceModel>::correctNut()
 }
 
 
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kOmega<BasicTurbulenceModel>::kSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            k_,
+            dimVolume*this->rho_.dimensions()*k_.dimensions()
+            /dimTime
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kOmega<BasicTurbulenceModel>::omegaSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            omega_,
+            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
+        )
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
