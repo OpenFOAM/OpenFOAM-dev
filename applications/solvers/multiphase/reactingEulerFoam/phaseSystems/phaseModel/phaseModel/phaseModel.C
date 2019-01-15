@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,9 @@ const Foam::autoPtr<Foam::diameterModel>& Foam::phaseModel::dPtr() const
 
 
 void Foam::phaseModel::correct()
-{}
+{
+    diameterModel_->correct();
+}
 
 
 void Foam::phaseModel::correctKinematics()

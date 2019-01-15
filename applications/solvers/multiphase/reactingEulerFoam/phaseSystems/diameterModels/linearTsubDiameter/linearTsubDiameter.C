@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,6 +101,12 @@ Foam::diameterModels::linearTsub::~linearTsub()
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::d() const
 {
+    return d_;
+}
+
+
+void Foam::diameterModels::linearTsub::correct()
+{
     // Lookup the fluid model
     const phaseSystem& fluid =
         refCast<const phaseSystem>
@@ -130,8 +136,6 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::d() const
             )
         );
     }
-
-    return d_;
 }
 
 
