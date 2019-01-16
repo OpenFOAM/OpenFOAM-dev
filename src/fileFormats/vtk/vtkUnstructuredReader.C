@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -905,6 +905,19 @@ void Foam::vtkUnstructuredReader::read(ISstream& inFile)
                     f[1] = faceVerts[elemI-2];
                     f[2] = faceVerts[elemI++];
                 }
+            }
+        }
+        else if (tag == "METADATA")
+        {
+            // Read rest of the line
+            string line;
+            inFile.getLine(line);
+
+            // Skip until an empty line is found
+            inFile.getLine(line);
+            while (!line.empty())
+            {
+                inFile.getLine(line);
             }
         }
         else
