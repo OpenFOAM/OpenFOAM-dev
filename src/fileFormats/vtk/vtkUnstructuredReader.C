@@ -29,6 +29,7 @@ License
 #include "stringIOList.H"
 #include "cellModeller.H"
 #include "vectorIOField.H"
+#include "stringOps.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -915,7 +916,7 @@ void Foam::vtkUnstructuredReader::read(ISstream& inFile)
 
             // Skip until an empty line is found
             inFile.getLine(line);
-            while (!line.empty())
+            while (!stringOps::trim(line).empty())
             {
                 inFile.getLine(line);
             }
