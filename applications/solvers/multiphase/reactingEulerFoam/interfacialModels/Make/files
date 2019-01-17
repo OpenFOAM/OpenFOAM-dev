@@ -33,6 +33,7 @@ liftModels/wallDampedLift/wallDampedLift.C
 
 heatTransferModels/heatTransferModel/heatTransferModel.C
 heatTransferModels/heatTransferModel/newHeatTransferModel.C
+heatTransferModels/constantNu/constantNuHeatTransfer.C
 heatTransferModels/RanzMarshall/RanzMarshall.C
 heatTransferModels/sphericalHeatTransfer/sphericalHeatTransfer.C
 
