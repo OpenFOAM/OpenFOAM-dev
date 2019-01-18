@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,10 @@ class timeControl
         // Optional user inputs
 
             //- Activation time - defaults to -vGreat
-            scalar timeStart_;
+            scalar startTime_;
 
             //- De-activation time - defaults to vGreat
-            scalar timeEnd_;
+            scalar endTime_;
 
             //- Number of steps before the dump-time during which deltaT
             //  may be changed (valid for adjustableRunTime)

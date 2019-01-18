@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,16 @@ namespace functionObjects
 
 void Foam::functionObjects::timeControl::readControls()
 {
-    dict_.readIfPresent("timeStart", timeStart_);
-    dict_.readIfPresent("timeEnd", timeEnd_);
+    if (!dict_.readIfPresent("startTime", startTime_))
+    {
+        dict_.readIfPresent("timeStart", startTime_);
+    }
+
+    if (!dict_.readIfPresent("endTime", endTime_))
+    {
+        dict_.readIfPresent("timeEnd", endTime_);
+    }
+
     dict_.readIfPresent("nStepsToStartTimeChange", nStepsToStartTimeChange_);
 }
 
@@ -52,8 +60,8 @@ void Foam::functionObjects::timeControl::readControls()
 bool Foam::functionObjects::timeControl::active() const
 {
     return
-        time_.value() >= timeStart_
-     && time_.value() <= timeEnd_;
+        time_.value() >= startTime_
+     && time_.value() <= endTime_;
 }
 
 
@@ -69,8 +77,8 @@ Foam::functionObjects::timeControl::timeControl
     functionObject(name),
     time_(t),
     dict_(dict),
-    timeStart_(-vGreat),
-    timeEnd_(vGreat),
+    startTime_(-vGreat),
+    endTime_(vGreat),
     nStepsToStartTimeChange_
     (
         dict.lookupOrDefault("nStepsToStartTimeChange", 3)

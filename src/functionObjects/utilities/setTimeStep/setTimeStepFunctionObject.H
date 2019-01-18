@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
     solvers with adjustTimeStep control (e.g. pimpleFoam). Makes no attempt
     to cooperate with other timeStep 'controllers' (maxCo, other
     functionObjects). Supports 'enabled' flag but none of the other ones
-    'timeStart', 'timeEnd', 'writeControl' etc.
+    'startTime', 'endTime', 'writeControl' etc.
 
 SourceFiles
     setTimeStepFunctionObject.C
