@@ -73,6 +73,7 @@ solvers
         preconditioner  DILU;
         tolerance       1e-6;
         relTol          0;
+        minIter         1;
     }
 
     "Yi.*"
@@ -105,6 +106,7 @@ relaxationFactors
     equations
     {
         ".*"            1;
+        "e\..*"         0.1;
     }
 }
 
