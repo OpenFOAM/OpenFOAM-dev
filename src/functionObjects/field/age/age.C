@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "age.H"
-#include "fvCFD.H"
+#include "fvmDdt.H"
+#include "fvmDiv.H"
 #include "inletOutletFvPatchField.H"
 #include "wallFvPatch.H"
 #include "zeroGradientFvPatchField.H"
@@ -124,6 +125,13 @@ bool Foam::functionObjects::age::execute()
 
     const word divScheme("div(phi," + schemesField_ + ")");
 
+    // Set under-relaxation coeff
+    scalar relaxCoeff = 0.0;
+    if (mesh_.relaxEquation(schemesField_))
+    {
+        relaxCoeff = mesh_.equationRelaxationFactor(schemesField_);
+    }
+
     // This only works because the null constructed inletValue for an
     // inletOutletFvPatchField is zero. If we needed any other value we would
     // have to loop over the inletOutlet patches and explicitly set the
@@ -140,23 +148,28 @@ bool Foam::functionObjects::age::execute()
 
         for (label i = 0; i <= nCorr_; ++ i)
         {
-            solve
+            fvScalarMatrix tEqn
             (
-                fvm::div(phi, t, divScheme) == rho,
-                schemesField_
+                fvm::div(phi, t, divScheme) == rho
             );
+
+            tEqn.relax(relaxCoeff);
+
+            tEqn.solve(schemesField_);
         }
     }
     else
     {
         for (label i = 0; i <= nCorr_; ++ i)
         {
-            solve
+            fvScalarMatrix tEqn
             (
-                fvm::div(phi, t, divScheme)
-             == dimensionedScalar(dimless, 1),
-                schemesField_
+                fvm::div(phi, t, divScheme) == dimensionedScalar(1)
             );
+
+            tEqn.relax(relaxCoeff);
+
+            tEqn.solve(schemesField_);
         }
     }
 
