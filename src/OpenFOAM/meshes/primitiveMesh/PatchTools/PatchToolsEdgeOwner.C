@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,23 +27,17 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-Foam::labelList
-Foam::PatchTools::edgeOwner
+template<class FaceList, class PointField>
+Foam::labelList Foam::PatchTools::edgeOwner
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p
+    const PrimitivePatch<FaceList, PointField>& p
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+
     const edgeList& edges = p.edges();
     const labelListList& edgeFaces = p.edgeFaces();
-    const List<Face>& localFaces = p.localFaces();
+    const List<FaceType>& localFaces = p.localFaces();
 
     // create the owner list
     labelList edgeOwner(edges.size(), -1);
@@ -62,7 +56,7 @@ Foam::PatchTools::edgeOwner
             // with multiply connected edges, this is the best we can do
             forAll(nbrFaces, i)
             {
-                const Face& f = localFaces[nbrFaces[i]];
+                const FaceType& f = localFaces[nbrFaces[i]];
 
                 if (f.edgeDirection(edges[edgeI]) > 0)
                 {
@@ -77,7 +71,7 @@ Foam::PatchTools::edgeOwner
                     << "Edge " << edgeI << " vertices:" << edges[edgeI]
                     << " is used by faces " << nbrFaces
                     << " vertices:"
-                    << UIndirectList<Face>(localFaces, nbrFaces)()
+                    << UIndirectList<FaceType>(localFaces, nbrFaces)()
                     << " none of which use the edge vertices in the same order"
                     << nl << "I give up" << abort(FatalError);
             }

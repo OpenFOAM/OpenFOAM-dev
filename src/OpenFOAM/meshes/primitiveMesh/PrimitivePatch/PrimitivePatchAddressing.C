@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,22 +40,12 @@ Description
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcAddressing() const
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::calcAddressing() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcAddressing() : calculating patch addressing"
-            << endl;
+        InfoInFunction << "calculating patch addressing" << endl;
     }
 
     if (edgesPtr_ || faceFacesPtr_ || edgeFacesPtr_ || faceEdgesPtr_)
@@ -68,7 +58,7 @@ calcAddressing() const
     }
 
     // get reference to localFaces
-    const List<Face>& locFcs = localFaces();
+    const List<FaceType>& locFcs = localFaces();
 
     // get reference to pointFaces
     const labelListList& pf = pointFaces();
@@ -128,7 +118,7 @@ calcAddressing() const
     forAll(locFcs, facei)
     {
         // Get reference to vertices of current face and corresponding edges.
-        const Face& curF = locFcs[facei];
+        const FaceType& curF = locFcs[facei];
         const edgeList& curEdges = faceIntoEdges[facei];
 
         // Record the neighbour face.  Multiple connectivity allowed
@@ -293,9 +283,7 @@ calcAddressing() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcAddressing() : finished calculating patch addressing"
-            << endl;
+        InfoInFunction << "Finished calculating patch addressing" << endl;
     }
 }
 

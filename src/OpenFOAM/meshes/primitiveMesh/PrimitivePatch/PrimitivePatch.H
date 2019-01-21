@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,26 +78,26 @@ TemplateName(PrimitivePatch);
                            Class PrimitivePatch Declaration
 \*---------------------------------------------------------------------------*/
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType=point
->
+template<class FaceList, class PointField>
 class PrimitivePatch
 :
     public PrimitivePatchName,
-    public FaceList<Face>
+    public FaceList
 {
 
 public:
 
     // Public typedefs
 
-        typedef Face FaceType;
-        typedef FaceList<Face> FaceListType;
+        typedef FaceList FaceListType;
+
+        typedef typename std::remove_reference<FaceList>::type::value_type
+            FaceType;
+
         typedef PointField PointFieldType;
+
+        typedef typename std::remove_reference<PointField>::type::value_type
+            PointType;
 
 
     // Public data types
@@ -147,7 +147,7 @@ private:
         mutable labelListList* pointFacesPtr_;
 
         //- Faces addressing into local point list
-        mutable List<Face>* localFacesPtr_;
+        mutable List<FaceType>* localFacesPtr_;
 
         //- Labels of mesh points
         mutable labelList* meshPointsPtr_;
@@ -239,21 +239,21 @@ public:
         //- Construct from components
         PrimitivePatch
         (
-            const FaceList<Face>& faces,
+            const FaceList& faces,
             const Field<PointType>& points
         );
 
         //- Construct from components
         PrimitivePatch
         (
-            const Xfer<FaceList<Face>>& faces,
+            const Xfer<FaceList>& faces,
             const Xfer<List<PointType>>& points
         );
 
         //- Construct from components, reuse storage
         PrimitivePatch
         (
-            FaceList<Face>& faces,
+            FaceList& faces,
             Field<PointType>& points,
             const bool reuse
         );
@@ -261,7 +261,7 @@ public:
         //- Construct as copy
         PrimitivePatch
         (
-            const PrimitivePatch<Face, FaceList, PointField, PointType>&
+            const PrimitivePatch<FaceList, PointField>&
         );
 
 
@@ -336,7 +336,7 @@ public:
             const labelListList& pointFaces() const;
 
             //- Return patch faces addressing into local point list
-            const List<Face>& localFaces() const;
+            const List<FaceType>& localFaces() const;
 
 
         // Addressing into mesh
@@ -465,7 +465,7 @@ public:
         //- Assignment
         void operator=
         (
-            const PrimitivePatch<Face, FaceList, PointField, PointType>&
+            const PrimitivePatch<FaceList, PointField>&
         );
 };
 

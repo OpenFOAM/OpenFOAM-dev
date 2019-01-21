@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,23 +29,18 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-Foam::labelListList
-Foam::PatchTools::sortedEdgeFaces
+template<class FaceList, class PointField>
+Foam::labelListList Foam::PatchTools::sortedEdgeFaces
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p
+    const PrimitivePatch<FaceList, PointField>& p
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+    typedef typename PrimitivePatch<FaceList, PointField>::PointType PointType;
+
     const edgeList& edges = p.edges();
     const labelListList& edgeFaces = p.edgeFaces();
-    const List<Face>& localFaces = p.localFaces();
+    const List<FaceType>& localFaces = p.localFaces();
     const Field<PointType>& localPoints = p.localPoints();
 
     // create the lists for the various results. (resized on completion)
@@ -68,7 +63,7 @@ Foam::PatchTools::sortedEdgeFaces
 
             // Get the vertex on 0th face that forms a vector with the first
             // edge point that has the largest angle with the edge
-            const Face& f0 = localFaces[faceNbs[0]];
+            const FaceType& f0 = localFaces[faceNbs[0]];
 
             scalar maxAngle = great;
             vector maxAngleEdgeDir(vector::max);
@@ -107,7 +102,7 @@ Foam::PatchTools::sortedEdgeFaces
             {
                 // Get the vertex on face that forms a vector with the first
                 // edge point that has the largest angle with the edge
-                const Face& f = localFaces[faceNbs[nbI]];
+                const FaceType& f = localFaces[faceNbs[nbI]];
 
                 maxAngle = great;
                 maxAngleEdgeDir = vector::max;

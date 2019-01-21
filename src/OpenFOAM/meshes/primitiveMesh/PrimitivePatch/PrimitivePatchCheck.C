@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,16 +32,8 @@ Description
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-visitPointRegion
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::visitPointRegion
 (
     const label pointi,
     const labelList& pFaces,
@@ -107,16 +99,10 @@ visitPointRegion
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 typename
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::surfaceTopo
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
+Foam::PrimitivePatch<FaceList, PointField>::surfaceTopo
+Foam::PrimitivePatch<FaceList, PointField>::
 surfaceType() const
 {
     if (debug)
@@ -155,15 +141,9 @@ surfaceType() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 bool
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
+Foam::PrimitivePatch<FaceList, PointField>::
 checkTopology
 (
     const bool report,
@@ -215,15 +195,9 @@ checkTopology
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 bool
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
+Foam::PrimitivePatch<FaceList, PointField>::
 checkPointManifold
 (
     const bool report,

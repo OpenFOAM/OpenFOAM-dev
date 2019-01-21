@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,16 +29,8 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-clearGeom()
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::clearGeom()
 {
     if (debug)
     {
@@ -52,16 +44,8 @@ clearGeom()
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-clearTopology()
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::clearTopology()
 {
     if (debug)
     {
@@ -92,16 +76,8 @@ clearTopology()
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-clearPatchMeshAddr()
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::clearPatchMeshAddr()
 {
     if (debug)
     {
@@ -114,16 +90,8 @@ clearPatchMeshAddr()
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-clearOut()
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::clearOut()
 {
     clearGeom();
     clearTopology();

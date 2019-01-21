@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class surfMesh
 :
     public  surfaceRegistry,
     private MeshedSurfaceIOAllocator,
-    public  PrimitivePatch<face, ::Foam::UList, ::Foam::SubField<point>, point>
+    public  PrimitivePatch<::Foam::UList<face>, ::Foam::SubField<point>>
 {
     // friends
     template<class Face> friend class MeshedSurface;
@@ -85,14 +85,8 @@ private:
 
         typedef MeshedSurfaceIOAllocator Allocator;
 
-        typedef PrimitivePatch
-        <
-            face,
-            ::Foam::UList,
-            ::Foam::SubField<point>,
-            point
-        >
-        MeshReference;
+        typedef PrimitivePatch<::Foam::UList<face>, ::Foam::SubField<point>>
+            MeshReference;
 
 
     // Private Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,21 +27,11 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face1,
-    template<class> class FaceList1,
-    class PointField1,
-    class PointType1,
-    class Face2,
-    template<class> class FaceList2,
-    class PointField2,
-    class PointType2
->
+template<class FaceList1, class PointField1, class FaceList2, class PointField2>
 void Foam::PatchTools::matchPoints
 (
-    const PrimitivePatch<Face1, FaceList1, PointField1, PointType1>& p1,
-    const PrimitivePatch<Face2, FaceList2, PointField2, PointType2>& p2,
+    const PrimitivePatch<FaceList1, PointField1>& p1,
+    const PrimitivePatch<FaceList2, PointField2>& p2,
 
     labelList& p1PointLabels,
     labelList& p2PointLabels
@@ -73,21 +63,11 @@ void Foam::PatchTools::matchPoints
 }
 
 
-template
-<
-    class Face1,
-    template<class> class FaceList1,
-    class PointField1,
-    class PointType1,
-    class Face2,
-    template<class> class FaceList2,
-    class PointField2,
-    class PointType2
->
+template<class FaceList1, class PointField1, class FaceList2, class PointField2>
 void Foam::PatchTools::matchEdges
 (
-    const PrimitivePatch<Face1, FaceList1, PointField1, PointType1>& p1,
-    const PrimitivePatch<Face2, FaceList2, PointField2, PointType2>& p2,
+    const PrimitivePatch<FaceList1, PointField1>& p1,
+    const PrimitivePatch<FaceList2, PointField2>& p2,
 
     labelList& p1EdgeLabels,
     labelList& p2EdgeLabels,

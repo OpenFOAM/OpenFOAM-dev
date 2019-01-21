@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,19 +30,11 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-Foam::tmp<Foam::pointField>
-Foam::PatchTools::pointNormals
+template<class FaceList, class PointField>
+Foam::tmp<Foam::pointField> Foam::PatchTools::pointNormals
 (
     const polyMesh& mesh,
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p
+    const PrimitivePatch<FaceList, PointField>& p
 )
 {
     const globalMeshData& globalData = mesh.globalData();
@@ -193,19 +185,11 @@ Foam::PatchTools::pointNormals
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-Foam::tmp<Foam::pointField>
-Foam::PatchTools::edgeNormals
+template<class FaceList, class PointField>
+Foam::tmp<Foam::pointField> Foam::PatchTools::edgeNormals
 (
     const polyMesh& mesh,
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const labelList& patchEdges,
     const labelList& coupledEdges
 )

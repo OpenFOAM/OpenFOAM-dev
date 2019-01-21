@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,22 +27,16 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-bool
-Foam::PatchTools::checkOrientation
+template<class FaceList, class PointField>
+bool Foam::PatchTools::checkOrientation
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const bool report,
     labelHashSet* setPtr
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+
     bool foundError = false;
 
     // Check edge normals, face normals, point normals.
@@ -91,7 +85,7 @@ Foam::PatchTools::checkOrientation
         //
         //- Compute normal from 3 points, use the first as the origin
         // minor warpage should not be a problem
-        const Face& f = p[facei];
+        const FaceType& f = p[facei];
         const point& p0 = p.points()[f[0]];
         const point& p1 = p.points()[f[1]];
         const point& p2 = p.points()[f.last()];
@@ -124,8 +118,8 @@ Foam::PatchTools::checkOrientation
         {
             // we use localFaces() since edges() are LOCAL
             // these are both already available
-            const Face& faceA = p.localFaces()[neighbouringFaces[0]];
-            const Face& faceB = p.localFaces()[neighbouringFaces[1]];
+            const FaceType& faceA = p.localFaces()[neighbouringFaces[0]];
+            const FaceType& faceB = p.localFaces()[neighbouringFaces[1]];
 
             // If the faces are correctly oriented, the edges must go in
             // different directions on connected faces.

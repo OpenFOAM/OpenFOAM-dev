@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,7 +176,7 @@ private:
             void triangulateOutside
             (
                 const bool filterDiag,
-                const PrimitivePatch<face, SubList, const pointField&>& pp,
+                const PrimitivePatch<SubList<face>, const pointField&>& pp,
                 const boolList& pointFromDiag,
                 const labelList& pointToFace,
                 const label cellID,

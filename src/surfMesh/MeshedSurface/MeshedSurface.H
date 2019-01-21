@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ template<class Face> class UnsortedMeshedSurface;
 template<class Face>
 class MeshedSurface
 :
-    public PrimitivePatch<Face, ::Foam::List, pointField, point>,
+    public PrimitivePatch<::Foam::List<Face>, pointField>,
     public fileFormats::surfaceFormatsCore
 {
     // friends - despite different face representationsx
@@ -94,14 +94,7 @@ private:
 
     // Private typedefs for convenience
 
-        typedef PrimitivePatch
-        <
-            Face,
-            ::Foam::List,
-            pointField,
-            point
-        >
-        ParentType;
+        typedef PrimitivePatch<::Foam::List<Face>, pointField> ParentType;
 
         typedef UnsortedMeshedSurface<Face>  FriendType;
         typedef MeshedSurfaceProxy<Face>     ProxyType;

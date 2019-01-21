@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -535,7 +535,7 @@ void Foam::boundaryMesh::read(const polyMesh& mesh)
     //
 
     // Temporary primitivePatch to calculate compact points & faces.
-    PrimitivePatch<face, List, const pointField&> globalPatch
+    PrimitivePatch<faceList, const pointField&> globalPatch
     (
         bFaces,
         mesh.points()

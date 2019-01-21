@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -299,7 +299,7 @@ void Foam::fileFormats::AC3DsurfaceFormat<Face>::write
 
         // Temporary PrimitivePatch to calculate compact points & faces
         // use 'UList' to avoid allocations!
-        PrimitivePatch<Face, UList, const pointField&> patch
+        PrimitivePatch<UList<Face>, const pointField&> patch
         (
             SubList<Face>
             (
