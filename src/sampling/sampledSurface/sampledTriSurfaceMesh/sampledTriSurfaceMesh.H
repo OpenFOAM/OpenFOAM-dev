@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledTriSurfaceMesh
+    Foam::sampledSurfaces::triSurfaceMesh
 
 Description
     A sampledSurface from a triSurfaceMesh. It samples on the points/triangles
@@ -65,8 +65,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledTriSurfaceMesh_H
-#define sampledTriSurfaceMesh_H
+#ifndef sampledSurfaces_triSurfaceMesh_H
+#define sampledSurfaces_triSurfaceMesh_H
 
 #include "sampledSurface.H"
 #include "triSurfaceMesh.H"
@@ -77,14 +77,17 @@ SourceFiles
 namespace Foam
 {
 
-class treeDataFace;
-class meshSearch;
+    class treeDataFace;
+    class meshSearch;
+
+namespace sampledSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                       Class sampledTriSurfaceMesh Declaration
+                       Class triSurfaceMesh Declaration
 \*---------------------------------------------------------------------------*/
 
-class sampledTriSurfaceMesh
+class triSurfaceMesh
 :
     public sampledSurface,
     public MeshedSurface<face>
@@ -109,7 +112,7 @@ private:
         static const NamedEnum<samplingSource, 3> samplingSourceNames_;
 
         //- Surface to sample on
-        const triSurfaceMesh surface_;
+        const Foam::triSurfaceMesh surface_;
 
         //- Whether to sample internal cell values or boundary values
         const samplingSource sampleSource_;
@@ -149,13 +152,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("sampledTriSurfaceMesh");
+    TypeName("triSurfaceMesh");
 
 
     // Constructors
 
         //- Construct from components
-        sampledTriSurfaceMesh
+        triSurfaceMesh
         (
             const word& name,
             const polyMesh& mesh,
@@ -164,7 +167,7 @@ public:
         );
 
         //- Construct from dictionary
-        sampledTriSurfaceMesh
+        triSurfaceMesh
         (
             const word& name,
             const polyMesh& mesh,
@@ -172,7 +175,7 @@ public:
         );
 
         //- Construct from triSurface
-        sampledTriSurfaceMesh
+        triSurfaceMesh
         (
             const word& name,
             const polyMesh& mesh,
@@ -182,7 +185,7 @@ public:
 
 
     //- Destructor
-    virtual ~sampledTriSurfaceMesh();
+    virtual ~triSurfaceMesh();
 
 
     // Member Functions
@@ -286,6 +289,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

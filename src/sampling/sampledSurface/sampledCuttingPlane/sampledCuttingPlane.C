@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,33 +24,27 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledCuttingPlane.H"
-#include "dictionary.H"
-#include "volFields.H"
-#include "volPointInterpolation.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(sampledCuttingPlane, 0);
-    addNamedToRunTimeSelectionTable
-    (
-        sampledSurface,
-        sampledCuttingPlane,
-        word,
-        cuttingPlane
-    );
+namespace sampledSurfaces
+{
+    defineTypeNameAndDebug(cuttingPlane, 0);
+    addToRunTimeSelectionTable(sampledSurface, cuttingPlane, word);
 }
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledCuttingPlane::createGeometry()
+void Foam::sampledSurfaces::cuttingPlane::createGeometry()
 {
     if (debug)
     {
-        Pout<< "sampledCuttingPlane::createGeometry :updating geometry."
+        Pout<< "cuttingPlane::createGeometry :updating geometry."
             << endl;
     }
 
@@ -245,7 +239,7 @@ void Foam::sampledCuttingPlane::createGeometry()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledCuttingPlane::sampledCuttingPlane
+Foam::sampledSurfaces::cuttingPlane::cuttingPlane
 (
     const word& name,
     const polyMesh& mesh,
@@ -288,23 +282,23 @@ Foam::sampledCuttingPlane::sampledCuttingPlane
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledCuttingPlane::~sampledCuttingPlane()
+Foam::sampledSurfaces::cuttingPlane::~cuttingPlane()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::sampledCuttingPlane::needsUpdate() const
+bool Foam::sampledSurfaces::cuttingPlane::needsUpdate() const
 {
     return needsUpdate_;
 }
 
 
-bool Foam::sampledCuttingPlane::expire()
+bool Foam::sampledSurfaces::cuttingPlane::expire()
 {
     if (debug)
     {
-        Pout<< "sampledCuttingPlane::expire :"
+        Pout<< "cuttingPlane::expire :"
             << " needsUpdate_:" << needsUpdate_ << endl;
     }
 
@@ -322,11 +316,11 @@ bool Foam::sampledCuttingPlane::expire()
 }
 
 
-bool Foam::sampledCuttingPlane::update()
+bool Foam::sampledSurfaces::cuttingPlane::update()
 {
     if (debug)
     {
-        Pout<< "sampledCuttingPlane::update :"
+        Pout<< "cuttingPlane::update :"
             << " needsUpdate_:" << needsUpdate_ << endl;
     }
 
@@ -343,7 +337,7 @@ bool Foam::sampledCuttingPlane::update()
 
 
 Foam::tmp<Foam::scalarField>
-Foam::sampledCuttingPlane::sample
+Foam::sampledSurfaces::cuttingPlane::sample
 (
     const volScalarField& vField
 ) const
@@ -353,7 +347,7 @@ Foam::sampledCuttingPlane::sample
 
 
 Foam::tmp<Foam::vectorField>
-Foam::sampledCuttingPlane::sample
+Foam::sampledSurfaces::cuttingPlane::sample
 (
     const volVectorField& vField
 ) const
@@ -363,7 +357,7 @@ Foam::sampledCuttingPlane::sample
 
 
 Foam::tmp<Foam::sphericalTensorField>
-Foam::sampledCuttingPlane::sample
+Foam::sampledSurfaces::cuttingPlane::sample
 (
     const volSphericalTensorField& vField
 ) const
@@ -373,7 +367,7 @@ Foam::sampledCuttingPlane::sample
 
 
 Foam::tmp<Foam::symmTensorField>
-Foam::sampledCuttingPlane::sample
+Foam::sampledSurfaces::cuttingPlane::sample
 (
     const volSymmTensorField& vField
 ) const
@@ -383,7 +377,7 @@ Foam::sampledCuttingPlane::sample
 
 
 Foam::tmp<Foam::tensorField>
-Foam::sampledCuttingPlane::sample
+Foam::sampledSurfaces::cuttingPlane::sample
 (
     const volTensorField& vField
 ) const
@@ -393,7 +387,7 @@ Foam::sampledCuttingPlane::sample
 
 
 Foam::tmp<Foam::scalarField>
-Foam::sampledCuttingPlane::interpolate
+Foam::sampledSurfaces::cuttingPlane::interpolate
 (
     const interpolation<scalar>& interpolator
 ) const
@@ -403,7 +397,7 @@ Foam::sampledCuttingPlane::interpolate
 
 
 Foam::tmp<Foam::vectorField>
-Foam::sampledCuttingPlane::interpolate
+Foam::sampledSurfaces::cuttingPlane::interpolate
 (
     const interpolation<vector>& interpolator
 ) const
@@ -412,7 +406,7 @@ Foam::sampledCuttingPlane::interpolate
 }
 
 Foam::tmp<Foam::sphericalTensorField>
-Foam::sampledCuttingPlane::interpolate
+Foam::sampledSurfaces::cuttingPlane::interpolate
 (
     const interpolation<sphericalTensor>& interpolator
 ) const
@@ -422,7 +416,7 @@ Foam::sampledCuttingPlane::interpolate
 
 
 Foam::tmp<Foam::symmTensorField>
-Foam::sampledCuttingPlane::interpolate
+Foam::sampledSurfaces::cuttingPlane::interpolate
 (
     const interpolation<symmTensor>& interpolator
 ) const
@@ -432,7 +426,7 @@ Foam::sampledCuttingPlane::interpolate
 
 
 Foam::tmp<Foam::tensorField>
-Foam::sampledCuttingPlane::interpolate
+Foam::sampledSurfaces::cuttingPlane::interpolate
 (
     const interpolation<tensor>& interpolator
 ) const
@@ -441,9 +435,9 @@ Foam::sampledCuttingPlane::interpolate
 }
 
 
-void Foam::sampledCuttingPlane::print(Ostream& os) const
+void Foam::sampledSurfaces::cuttingPlane::print(Ostream& os) const
 {
-    os  << "sampledCuttingPlane: " << name() << " :"
+    os  << "cuttingPlane: " << name() << " :"
         << "  plane:" << plane_
         << "  faces:" << faces().size()
         << "  points:" << points().size();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,24 +24,22 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "distanceSurface.H"
-#include "dictionary.H"
-#include "volFields.H"
-#include "volPointInterpolation.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvMesh.H"
-#include "volumeType.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSurfaces
+{
     defineTypeNameAndDebug(distanceSurface, 0);
     addToRunTimeSelectionTable(sampledSurface, distanceSurface, word);
+}
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::distanceSurface::createGeometry()
+void Foam::sampledSurfaces::distanceSurface::createGeometry()
 {
     if (debug)
     {
@@ -285,7 +283,7 @@ void Foam::distanceSurface::createGeometry()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::distanceSurface::distanceSurface
+Foam::sampledSurfaces::distanceSurface::distanceSurface
 (
     const word& name,
     const polyMesh& mesh,
@@ -320,7 +318,7 @@ Foam::distanceSurface::distanceSurface
 {}
 
 
-Foam::distanceSurface::distanceSurface
+Foam::sampledSurfaces::distanceSurface::distanceSurface
 (
     const word& name,
     const polyMesh& mesh,
@@ -363,19 +361,19 @@ Foam::distanceSurface::distanceSurface
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::distanceSurface::~distanceSurface()
+Foam::sampledSurfaces::distanceSurface::~distanceSurface()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::distanceSurface::needsUpdate() const
+bool Foam::sampledSurfaces::distanceSurface::needsUpdate() const
 {
     return needsUpdate_;
 }
 
 
-bool Foam::distanceSurface::expire()
+bool Foam::sampledSurfaces::distanceSurface::expire()
 {
     if (debug)
     {
@@ -397,7 +395,7 @@ bool Foam::distanceSurface::expire()
 }
 
 
-bool Foam::distanceSurface::update()
+bool Foam::sampledSurfaces::distanceSurface::update()
 {
     if (debug)
     {
@@ -417,7 +415,8 @@ bool Foam::distanceSurface::update()
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distanceSurface::sample
+Foam::tmp<Foam::scalarField>
+Foam::sampledSurfaces::distanceSurface::sample
 (
     const volScalarField& vField
 ) const
@@ -426,7 +425,8 @@ Foam::tmp<Foam::scalarField> Foam::distanceSurface::sample
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::distanceSurface::sample
+Foam::tmp<Foam::vectorField>
+Foam::sampledSurfaces::distanceSurface::sample
 (
     const volVectorField& vField
 ) const
@@ -435,7 +435,8 @@ Foam::tmp<Foam::vectorField> Foam::distanceSurface::sample
 }
 
 
-Foam::tmp<Foam::sphericalTensorField> Foam::distanceSurface::sample
+Foam::tmp<Foam::sphericalTensorField>
+Foam::sampledSurfaces::distanceSurface::sample
 (
     const volSphericalTensorField& vField
 ) const
@@ -444,7 +445,8 @@ Foam::tmp<Foam::sphericalTensorField> Foam::distanceSurface::sample
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::distanceSurface::sample
+Foam::tmp<Foam::symmTensorField>
+Foam::sampledSurfaces::distanceSurface::sample
 (
     const volSymmTensorField& vField
 ) const
@@ -453,7 +455,8 @@ Foam::tmp<Foam::symmTensorField> Foam::distanceSurface::sample
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::distanceSurface::sample
+Foam::tmp<Foam::tensorField>
+Foam::sampledSurfaces::distanceSurface::sample
 (
     const volTensorField& vField
 ) const
@@ -462,7 +465,8 @@ Foam::tmp<Foam::tensorField> Foam::distanceSurface::sample
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distanceSurface::interpolate
+Foam::tmp<Foam::scalarField>
+Foam::sampledSurfaces::distanceSurface::interpolate
 (
     const interpolation<scalar>& interpolator
 ) const
@@ -471,7 +475,8 @@ Foam::tmp<Foam::scalarField> Foam::distanceSurface::interpolate
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::distanceSurface::interpolate
+Foam::tmp<Foam::vectorField>
+Foam::sampledSurfaces::distanceSurface::interpolate
 (
     const interpolation<vector>& interpolator
 ) const
@@ -479,7 +484,8 @@ Foam::tmp<Foam::vectorField> Foam::distanceSurface::interpolate
     return interpolateField(interpolator);
 }
 
-Foam::tmp<Foam::sphericalTensorField> Foam::distanceSurface::interpolate
+Foam::tmp<Foam::sphericalTensorField>
+Foam::sampledSurfaces::distanceSurface::interpolate
 (
     const interpolation<sphericalTensor>& interpolator
 ) const
@@ -488,7 +494,8 @@ Foam::tmp<Foam::sphericalTensorField> Foam::distanceSurface::interpolate
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::distanceSurface::interpolate
+Foam::tmp<Foam::symmTensorField>
+Foam::sampledSurfaces::distanceSurface::interpolate
 (
     const interpolation<symmTensor>& interpolator
 ) const
@@ -497,7 +504,8 @@ Foam::tmp<Foam::symmTensorField> Foam::distanceSurface::interpolate
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::distanceSurface::interpolate
+Foam::tmp<Foam::tensorField>
+Foam::sampledSurfaces::distanceSurface::interpolate
 (
     const interpolation<tensor>& interpolator
 ) const
@@ -506,7 +514,7 @@ Foam::tmp<Foam::tensorField> Foam::distanceSurface::interpolate
 }
 
 
-void Foam::distanceSurface::print(Ostream& os) const
+void Foam::sampledSurfaces::distanceSurface::print(Ostream& os) const
 {
     os  << "distanceSurface: " << name() << " :"
         << "  surface:" << surfPtr_().name()

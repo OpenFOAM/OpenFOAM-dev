@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,17 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledThresholdCellFaces.H"
-
 #include "thresholdCellFaces.H"
-#include "volFieldsFwd.H"
-#include "pointFields.H"
-#include "volPointInterpolation.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::sampledThresholdCellFaces::sampleField
+Foam::sampledSurfaces::thresholdCellFaces::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
@@ -48,7 +44,7 @@ Foam::sampledThresholdCellFaces::sampleField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::sampledThresholdCellFaces::interpolateField
+Foam::sampledSurfaces::thresholdCellFaces::interpolateField
 (
     const interpolation<Type>& interpolator
 ) const

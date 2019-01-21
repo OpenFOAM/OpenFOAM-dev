@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,38 +24,31 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledPatchInternalField.H"
-#include "dictionary.H"
-#include "polyMesh.H"
-#include "polyPatch.H"
-#include "volFields.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(sampledPatchInternalField, 0);
-    addNamedToRunTimeSelectionTable
-    (
-        sampledSurface,
-        sampledPatchInternalField,
-        word,
-        patchInternalField
-    );
+namespace sampledSurfaces
+{
+
+    defineTypeNameAndDebug(patchInternalField, 0);
+    addToRunTimeSelectionTable(sampledSurface, patchInternalField, word);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledPatchInternalField::sampledPatchInternalField
+Foam::sampledSurfaces::patchInternalField::patchInternalField
 (
     const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    sampledPatch(name, mesh, dict),
+    patch(name, mesh, dict),
     mappers_(patchIDs().size())
 {
     mappedPatchBase::offsetMode mode = mappedPatchBase::NORMAL;
@@ -137,13 +130,14 @@ Foam::sampledPatchInternalField::sampledPatchInternalField
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledPatchInternalField::~sampledPatchInternalField()
+Foam::sampledSurfaces::patchInternalField::~patchInternalField()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::sampledPatchInternalField::sample
+Foam::tmp<Foam::scalarField>
+Foam::sampledSurfaces::patchInternalField::sample
 (
     const volScalarField& vField
 ) const
@@ -152,7 +146,8 @@ Foam::tmp<Foam::scalarField> Foam::sampledPatchInternalField::sample
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::sampledPatchInternalField::sample
+Foam::tmp<Foam::vectorField>
+Foam::sampledSurfaces::patchInternalField::sample
 (
     const volVectorField& vField
 ) const
@@ -160,7 +155,8 @@ Foam::tmp<Foam::vectorField> Foam::sampledPatchInternalField::sample
     return sampleField(vField);
 }
 
-Foam::tmp<Foam::sphericalTensorField> Foam::sampledPatchInternalField::sample
+Foam::tmp<Foam::sphericalTensorField>
+Foam::sampledSurfaces::patchInternalField::sample
 (
     const volSphericalTensorField& vField
 ) const
@@ -169,7 +165,8 @@ Foam::tmp<Foam::sphericalTensorField> Foam::sampledPatchInternalField::sample
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::sampledPatchInternalField::sample
+Foam::tmp<Foam::symmTensorField>
+Foam::sampledSurfaces::patchInternalField::sample
 (
     const volSymmTensorField& vField
 ) const
@@ -178,7 +175,8 @@ Foam::tmp<Foam::symmTensorField> Foam::sampledPatchInternalField::sample
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::sampledPatchInternalField::sample
+Foam::tmp<Foam::tensorField>
+Foam::sampledSurfaces::patchInternalField::sample
 (
     const volTensorField& vField
 ) const
@@ -187,7 +185,8 @@ Foam::tmp<Foam::tensorField> Foam::sampledPatchInternalField::sample
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::sampledPatchInternalField::interpolate
+Foam::tmp<Foam::scalarField>
+Foam::sampledSurfaces::patchInternalField::interpolate
 (
     const interpolation<scalar>& interpolator
 ) const
@@ -196,7 +195,8 @@ Foam::tmp<Foam::scalarField> Foam::sampledPatchInternalField::interpolate
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::sampledPatchInternalField::interpolate
+Foam::tmp<Foam::vectorField>
+Foam::sampledSurfaces::patchInternalField::interpolate
 (
     const interpolation<vector>& interpolator
 ) const
@@ -206,7 +206,7 @@ Foam::tmp<Foam::vectorField> Foam::sampledPatchInternalField::interpolate
 
 
 Foam::tmp<Foam::sphericalTensorField>
-Foam::sampledPatchInternalField::interpolate
+Foam::sampledSurfaces::patchInternalField::interpolate
 (
     const interpolation<sphericalTensor>& interpolator
 ) const
@@ -215,7 +215,8 @@ Foam::sampledPatchInternalField::interpolate
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::sampledPatchInternalField::interpolate
+Foam::tmp<Foam::symmTensorField>
+Foam::sampledSurfaces::patchInternalField::interpolate
 (
     const interpolation<symmTensor>& interpolator
 ) const
@@ -224,7 +225,8 @@ Foam::tmp<Foam::symmTensorField> Foam::sampledPatchInternalField::interpolate
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::sampledPatchInternalField::interpolate
+Foam::tmp<Foam::tensorField>
+Foam::sampledSurfaces::patchInternalField::interpolate
 (
     const interpolation<tensor>& interpolator
 ) const
@@ -233,9 +235,9 @@ Foam::tmp<Foam::tensorField> Foam::sampledPatchInternalField::interpolate
 }
 
 
-void Foam::sampledPatchInternalField::print(Ostream& os) const
+void Foam::sampledSurfaces::patchInternalField::print(Ostream& os) const
 {
-    os  << "sampledPatchInternalField: " << name() << " :"
+    os  << "patchInternalField: " << name() << " :"
         << "  patches:" << patchNames()
         << "  faces:" << faces().size()
         << "  points:" << points().size();

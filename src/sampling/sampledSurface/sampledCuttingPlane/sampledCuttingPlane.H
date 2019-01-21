@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledCuttingPlane
+    Foam::sampledSurfaces::cuttingPlane
 
 Description
     A sampledSurface defined by a plane using the iso-surface algorithm
@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledCuttingPlane_H
-#define sampledCuttingPlane_H
+#ifndef sampledSurfaces_cuttingPlane_H
+#define sampledSurfaces_cuttingPlane_H
 
 #include "sampledSurface.H"
 #include "isoSurface.H"
@@ -46,12 +46,14 @@ SourceFiles
 
 namespace Foam
 {
+namespace sampledSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                       Class sampledCuttingPlane Declaration
+                       Class cuttingPlane Declaration
 \*---------------------------------------------------------------------------*/
 
-class sampledCuttingPlane
+class cuttingPlane
 :
     public sampledSurface
 {
@@ -113,13 +115,13 @@ class sampledCuttingPlane
 public:
 
     //- Runtime type information
-    TypeName("sampledCuttingPlane");
+    TypeName("cuttingPlane");
 
 
     // Constructors
 
         //- Construct from dictionary
-        sampledCuttingPlane
+        cuttingPlane
         (
             const word& name,
             const polyMesh& mesh,
@@ -128,7 +130,7 @@ public:
 
 
     //- Destructor
-    virtual ~sampledCuttingPlane();
+    virtual ~cuttingPlane();
 
 
     // Member Functions
@@ -230,6 +232,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

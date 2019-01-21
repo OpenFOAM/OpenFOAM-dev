@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledPatch
+    Foam::sampledSurfaces::patch
 
 Description
     A sampledSurface on patches. Non-triangulated by default.
@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledPatch_H
-#define sampledPatch_H
+#ifndef sampledSurfaces_patch_H
+#define sampledSurfaces_patch_H
 
 #include "sampledSurface.H"
 #include "MeshedSurface.H"
@@ -42,12 +42,14 @@ SourceFiles
 
 namespace Foam
 {
+namespace sampledSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                       Class sampledPatch Declaration
+                       Class patch Declaration
 \*---------------------------------------------------------------------------*/
 
-class sampledPatch
+class patch
 :
     public MeshedSurface<face>,
     public sampledSurface
@@ -126,13 +128,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("sampledPatch");
+    TypeName("patch");
 
 
     // Constructors
 
         //- Construct from components
-        sampledPatch
+        patch
         (
             const word& name,
             const polyMesh& mesh,
@@ -141,7 +143,7 @@ public:
         );
 
         //- Construct from dictionary
-        sampledPatch
+        patch
         (
             const word& name,
             const polyMesh& mesh,
@@ -150,7 +152,7 @@ public:
 
 
     //- Destructor
-    virtual ~sampledPatch();
+    virtual ~patch();
 
 
     // Member Functions
@@ -282,6 +284,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

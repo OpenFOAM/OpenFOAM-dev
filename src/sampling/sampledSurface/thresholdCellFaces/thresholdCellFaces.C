@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,19 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thresholdCellFaces.H"
-
-#include "polyMesh.H"
-#include "DynamicList.H"
-
 #include "emptyPolyPatch.H"
-#include "processorPolyPatch.H"
-
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(thresholdCellFaces, 0);
+    defineTypeNameAndDebug(thresholdCellFaces, 0);
 }
 
 

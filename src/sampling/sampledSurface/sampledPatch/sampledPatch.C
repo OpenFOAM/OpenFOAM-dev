@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,26 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledPatch.H"
-#include "dictionary.H"
-#include "polyMesh.H"
-#include "polyPatch.H"
-#include "volFields.H"
 #include "surfaceFields.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(sampledPatch, 0);
-    addNamedToRunTimeSelectionTable(sampledSurface, sampledPatch, word, patch);
+namespace sampledSurfaces
+{
+    defineTypeNameAndDebug(patch, 0);
+    addToRunTimeSelectionTable(sampledSurface, patch, word);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledPatch::sampledPatch
+Foam::sampledSurfaces::patch::patch
 (
     const word& name,
     const polyMesh& mesh,
@@ -58,7 +56,7 @@ Foam::sampledPatch::sampledPatch
 {}
 
 
-Foam::sampledPatch::sampledPatch
+Foam::sampledSurfaces::patch::patch
 (
     const word& name,
     const polyMesh& mesh,
@@ -74,13 +72,13 @@ Foam::sampledPatch::sampledPatch
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledPatch::~sampledPatch()
+Foam::sampledSurfaces::patch::~patch()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::labelList& Foam::sampledPatch::patchIDs() const
+const Foam::labelList& Foam::sampledSurfaces::patch::patchIDs() const
 {
     if (patchIDs_.empty())
     {
@@ -94,13 +92,13 @@ const Foam::labelList& Foam::sampledPatch::patchIDs() const
 }
 
 
-bool Foam::sampledPatch::needsUpdate() const
+bool Foam::sampledSurfaces::patch::needsUpdate() const
 {
     return needsUpdate_;
 }
 
 
-bool Foam::sampledPatch::expire()
+bool Foam::sampledSurfaces::patch::expire()
 {
     // already marked as expired
     if (needsUpdate_)
@@ -120,7 +118,7 @@ bool Foam::sampledPatch::expire()
 }
 
 
-bool Foam::sampledPatch::update()
+bool Foam::sampledSurfaces::patch::update()
 {
     if (!needsUpdate_)
     {
@@ -200,7 +198,7 @@ bool Foam::sampledPatch::update()
 
 
 // remap action on triangulation
-void Foam::sampledPatch::remapFaces(const labelUList& faceMap)
+void Foam::sampledSurfaces::patch::remapFaces(const labelUList& faceMap)
 {
     // recalculate the cells cut
     if (notNull(faceMap) && faceMap.size())
@@ -231,7 +229,7 @@ void Foam::sampledPatch::remapFaces(const labelUList& faceMap)
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::sampledPatch::sample
+Foam::tmp<Foam::scalarField> Foam::sampledSurfaces::patch::sample
 (
     const volScalarField& vField
 ) const
@@ -240,7 +238,7 @@ Foam::tmp<Foam::scalarField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::sampledPatch::sample
+Foam::tmp<Foam::vectorField> Foam::sampledSurfaces::patch::sample
 (
     const volVectorField& vField
 ) const
@@ -249,7 +247,7 @@ Foam::tmp<Foam::vectorField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::sphericalTensorField> Foam::sampledPatch::sample
+Foam::tmp<Foam::sphericalTensorField> Foam::sampledSurfaces::patch::sample
 (
     const volSphericalTensorField& vField
 ) const
@@ -258,7 +256,7 @@ Foam::tmp<Foam::sphericalTensorField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::sampledPatch::sample
+Foam::tmp<Foam::symmTensorField> Foam::sampledSurfaces::patch::sample
 (
     const volSymmTensorField& vField
 ) const
@@ -267,7 +265,7 @@ Foam::tmp<Foam::symmTensorField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::sampledPatch::sample
+Foam::tmp<Foam::tensorField> Foam::sampledSurfaces::patch::sample
 (
     const volTensorField& vField
 ) const
@@ -276,7 +274,7 @@ Foam::tmp<Foam::tensorField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::sampledPatch::sample
+Foam::tmp<Foam::scalarField> Foam::sampledSurfaces::patch::sample
 (
     const surfaceScalarField& sField
 ) const
@@ -285,7 +283,7 @@ Foam::tmp<Foam::scalarField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::sampledPatch::sample
+Foam::tmp<Foam::vectorField> Foam::sampledSurfaces::patch::sample
 (
     const surfaceVectorField& sField
 ) const
@@ -294,7 +292,7 @@ Foam::tmp<Foam::vectorField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::sphericalTensorField> Foam::sampledPatch::sample
+Foam::tmp<Foam::sphericalTensorField> Foam::sampledSurfaces::patch::sample
 (
     const surfaceSphericalTensorField& sField
 ) const
@@ -303,7 +301,7 @@ Foam::tmp<Foam::sphericalTensorField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::sampledPatch::sample
+Foam::tmp<Foam::symmTensorField> Foam::sampledSurfaces::patch::sample
 (
     const surfaceSymmTensorField& sField
 ) const
@@ -312,7 +310,7 @@ Foam::tmp<Foam::symmTensorField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::sampledPatch::sample
+Foam::tmp<Foam::tensorField> Foam::sampledSurfaces::patch::sample
 (
     const surfaceTensorField& sField
 ) const
@@ -321,7 +319,7 @@ Foam::tmp<Foam::tensorField> Foam::sampledPatch::sample
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::sampledPatch::interpolate
+Foam::tmp<Foam::scalarField> Foam::sampledSurfaces::patch::interpolate
 (
     const interpolation<scalar>& interpolator
 ) const
@@ -330,7 +328,7 @@ Foam::tmp<Foam::scalarField> Foam::sampledPatch::interpolate
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::sampledPatch::interpolate
+Foam::tmp<Foam::vectorField> Foam::sampledSurfaces::patch::interpolate
 (
     const interpolation<vector>& interpolator
 ) const
@@ -339,7 +337,7 @@ Foam::tmp<Foam::vectorField> Foam::sampledPatch::interpolate
 }
 
 
-Foam::tmp<Foam::sphericalTensorField> Foam::sampledPatch::interpolate
+Foam::tmp<Foam::sphericalTensorField> Foam::sampledSurfaces::patch::interpolate
 (
     const interpolation<sphericalTensor>& interpolator
 ) const
@@ -348,7 +346,7 @@ Foam::tmp<Foam::sphericalTensorField> Foam::sampledPatch::interpolate
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::sampledPatch::interpolate
+Foam::tmp<Foam::symmTensorField> Foam::sampledSurfaces::patch::interpolate
 (
     const interpolation<symmTensor>& interpolator
 ) const
@@ -357,7 +355,7 @@ Foam::tmp<Foam::symmTensorField> Foam::sampledPatch::interpolate
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::sampledPatch::interpolate
+Foam::tmp<Foam::tensorField> Foam::sampledSurfaces::patch::interpolate
 (
     const interpolation<tensor>& interpolator
 ) const
@@ -366,9 +364,9 @@ Foam::tmp<Foam::tensorField> Foam::sampledPatch::interpolate
 }
 
 
-void Foam::sampledPatch::print(Ostream& os) const
+void Foam::sampledSurfaces::patch::print(Ostream& os) const
 {
-    os  << "sampledPatch: " << name() << " :"
+    os  << "patch: " << name() << " :"
         << "  patches:" << patchNames()
         << "  faces:" << faces().size()
         << "  points:" << points().size();

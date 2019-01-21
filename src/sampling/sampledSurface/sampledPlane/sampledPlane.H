@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledPlane
+    Foam::sampledSurfaces::plane
 
 Description
     A sampledSurface defined by a plane which 'cuts' the mesh using the
@@ -36,8 +36,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledPlane_H
-#define sampledPlane_H
+#ifndef sampledSurfaces_plane_H
+#define sampledSurfaces_plane_H
 
 #include "sampledSurface.H"
 #include "cuttingPlane.H"
@@ -46,12 +46,14 @@ SourceFiles
 
 namespace Foam
 {
+namespace sampledSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class sampledPlane Declaration
+                        Class plane Declaration
 \*---------------------------------------------------------------------------*/
 
-class sampledPlane
+class plane
 :
     public sampledSurface,
     public cuttingPlane
@@ -85,13 +87,13 @@ class sampledPlane
 public:
 
     //- Runtime type information
-    TypeName("sampledPlane");
+    TypeName("plane");
 
 
     // Constructors
 
         //- Construct from components
-        sampledPlane
+        plane
         (
             const word& name,
             const polyMesh& mesh,
@@ -101,7 +103,7 @@ public:
         );
 
         //- Construct from dictionary
-        sampledPlane
+        plane
         (
             const word& name,
             const polyMesh& mesh,
@@ -110,7 +112,7 @@ public:
 
 
     //- Destructor
-    virtual ~sampledPlane();
+    virtual ~plane();
 
 
     // Member Functions
@@ -216,6 +218,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
