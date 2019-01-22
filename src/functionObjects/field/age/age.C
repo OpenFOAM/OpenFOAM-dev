@@ -108,6 +108,12 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
 
 bool Foam::functionObjects::age::execute()
 {
+    return true;
+}
+
+
+bool Foam::functionObjects::age::write()
+{
     volScalarField t
     (
         IOobject
@@ -177,12 +183,6 @@ bool Foam::functionObjects::age::execute()
 
     t.write();
 
-    return true;
-}
-
-
-bool Foam::functionObjects::age::write()
-{
     return true;
 }
 
