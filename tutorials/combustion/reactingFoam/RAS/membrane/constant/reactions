@@ -25,16 +25,7 @@ species
 );
 
 reactions
-{
-    methaneReaction
-    {
-        type     irreversibleArrheniusReaction;
-        reaction "CH4 + 2O2 = CO2 + 2H2O";
-        A        5.2e16;
-        beta     0;
-        Ta       14906;
-    }
-}
+{}
 
 
 // ************************************************************************* //
