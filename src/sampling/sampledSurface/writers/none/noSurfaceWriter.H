@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::proxySurfaceWriter
+    Foam::noSurfaceWriter
 
 Description
-    A surfaceWriter that writes the geometry via the MeshedSurfaceProxy, but
-    which does not support any fields.
+    A dummy surfaceWriter selected to disable surface writing.
 
 SourceFiles
-    proxySurfaceWriter.C
+    noSurfaceWriter.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef proxySurfaceWriter_H
-#define proxySurfaceWriter_H
+#ifndef noSurfaceWriter_H
+#define noSurfaceWriter_H
 
 #include "surfaceWriter.H"
 
@@ -44,45 +43,31 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class proxySurfaceWriter Declaration
+                     Class noSurfaceWriter Declaration
 \*---------------------------------------------------------------------------*/
 
-class proxySurfaceWriter
+class noSurfaceWriter
 :
     public surfaceWriter
 {
 
-    // Private data
-
-        //- The associated file extension
-        word ext_;
-
 public:
 
     //- Runtime type information
-    TypeName("proxy");
+    TypeName("none");
 
 
     // Constructors
 
-        //- Construct for a given extension
-        proxySurfaceWriter(const word& ext);
+        //- Construct null
+        noSurfaceWriter();
 
 
     //- Destructor
-    virtual ~proxySurfaceWriter();
+    virtual ~noSurfaceWriter();
 
 
     // Member Functions
-
-
-        //- True if the surface format supports geometry in a separate file.
-        //  False if geometry and field must be in a single file
-        virtual bool separateGeometry()
-        {
-            return true;
-        }
-
 
         //- Write single surface geometry to file.
         virtual void write
@@ -92,7 +77,8 @@ public:
             const pointField& points,
             const faceList& faces,
             const bool verbose = false
-        ) const;
+        ) const
+        {}
 
         //- Write scalarField for a single surface to file.
         //  One value per face or vertex (isNodeValues = true)

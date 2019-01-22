@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,64 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "proxySurfaceWriter.H"
-#include "MeshedSurfaceProxy.H"
+#include "noSurfaceWriter.H"
 #include "makeSurfaceWriterMethods.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(proxySurfaceWriter, 0);
+    makeSurfaceWriterType(noSurfaceWriter);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::proxySurfaceWriter::proxySurfaceWriter(const word& ext)
+Foam::noSurfaceWriter::noSurfaceWriter()
 :
-    surfaceWriter(),
-    ext_(ext)
+    surfaceWriter()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::proxySurfaceWriter::~proxySurfaceWriter()
+Foam::noSurfaceWriter::~noSurfaceWriter()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::proxySurfaceWriter::write
-(
-    const fileName& outputDir,
-    const fileName& surfaceName,
-    const pointField& points,
-    const faceList& faces,
-    const bool verbose
-) const
-{
-    // avoid bad values
-    if (ext_.empty())
-    {
-        return;
-    }
-
-    if (!isDir(outputDir))
-    {
-        mkDir(outputDir);
-    }
-
-    fileName outName(outputDir/surfaceName + "." + ext_);
-
-    if (verbose)
-    {
-        Info<< "Writing geometry to " << outName << endl;
-    }
-
-    MeshedSurfaceProxy<face>(points, faces).write(outName);
-}
 
 
 // ************************************************************************* //

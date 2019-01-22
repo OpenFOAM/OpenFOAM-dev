@@ -19,7 +19,7 @@ inletMassFlowRate
 
     writeFields     false;
     log             true;
-    surfaceFormat   null;
+    surfaceFormat   none;
 
     regionType      patch;
     name            inlet;
@@ -42,7 +42,7 @@ outletMassFlowRate
 
     writeFields     false;
     log             true;
-    surfaceFormat   null;
+    surfaceFormat   none;
 
     regionType      patch;
     name            outlet;

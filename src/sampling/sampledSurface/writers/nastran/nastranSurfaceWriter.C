@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nastranSurfaceWriter.H"
-#include "IOmanip.H"
-#include "Tuple2.H"
 #include "makeSurfaceWriterMethods.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -111,7 +109,7 @@ void Foam::nastranSurfaceWriter::writeCoord
             os.unsetf(ios_base::left);
             os.setf(ios_base::right);
             os  << setw(8) << pointi + 1
-                << "        " 
+                << "        "
                 << setw(8) << p.x()
                 << setw(8) << p.y()
                 << setw(8) << p.z()

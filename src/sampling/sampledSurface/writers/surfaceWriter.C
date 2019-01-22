@@ -24,12 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceWriter.H"
-
 #include "MeshedSurfaceProxy.H"
 #include "proxySurfaceWriter.H"
-
-#include "HashTable.H"
-#include "word.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
