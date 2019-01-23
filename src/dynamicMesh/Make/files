@@ -111,6 +111,7 @@ motionSolvers/componentVelocity/componentVelocityMotionSolver.C
 motionSolvers/displacement/solidBody/solidBodyMotionSolver/solidBodyMotionSolver.C
 motionSolvers/displacement/solidBody/multiSolidBodyMotionSolver/multiSolidBodyMotionSolver.C
 motionSolvers/displacement/solidBody/interpolatingSolidBodyMotionSolver/interpolatingSolidBodyMotionSolver.C
+motionSolvers/motionSolverList/motionSolverList.C
 
 solidBodyMotionFunctions = motionSolvers/displacement/solidBody/solidBodyMotionFunctions
 $(solidBodyMotionFunctions)/solidBodyMotionFunction/solidBodyMotionFunction.C

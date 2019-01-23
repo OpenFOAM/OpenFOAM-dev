@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,35 +22,37 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::dynamicMotionSolverListFvMesh
+    Foam::motionSolverList
 
 Description
-    Foam::dynamicMotionSolverListFvMesh
+    Motion of the mesh specified as a list of motion solvers.
+
+    The motion solvers are executed in order and the resulting displacements
+    accumulated into an overall displacement and the displaced point positions
+    returned.
 
 SourceFiles
-    dynamicMotionSolverListFvMesh.C
+    motionSolverList.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef dynamicMotionSolverListFvMesh_H
-#define dynamicMotionSolverListFvMesh_H
+#ifndef motionSolverList_H
+#define motionSolverList_H
 
-#include "dynamicFvMesh.H"
+#include "motionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class motionSolver;
-
 /*---------------------------------------------------------------------------*\
-                           Class dynamicMotionSolverListFvMesh Declaration
+                   Class motionSolverList Declaration
 \*---------------------------------------------------------------------------*/
 
-class dynamicMotionSolverListFvMesh
+class motionSolverList
 :
-    public dynamicFvMesh
+    public motionSolver
 {
     // Private data
 
@@ -60,32 +62,41 @@ class dynamicMotionSolverListFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        dynamicMotionSolverListFvMesh(const dynamicMotionSolverListFvMesh&);
+        motionSolverList(const motionSolverList&);
 
         //- Disallow default bitwise assignment
-        void operator=(const dynamicMotionSolverListFvMesh&);
+        void operator=(const motionSolverList&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("dynamicMotionSolverListFvMesh");
+    TypeName("motionSolverList");
 
 
     // Constructors
 
-        //- Construct from IOobject
-        dynamicMotionSolverListFvMesh(const IOobject& io);
+        //- Construct from mesh and dictionary
+        motionSolverList(const polyMesh&, const IOdictionary&);
 
 
     //- Destructor
-    ~dynamicMotionSolverListFvMesh();
+    virtual ~motionSolverList();
 
 
     // Member Functions
 
-        //- Dummy update function which does not change the mesh
-        virtual bool update();
+        //- Provide current points for motion.  Uses current motion field
+        virtual tmp<pointField> curPoints() const;
+
+        //- Solve for motion
+        virtual void solve();
+
+        //- Update local data for geometry changes
+        virtual void movePoints(const pointField&);
+
+        //-  Update local data for topology changes
+        virtual void updateMesh(const mapPolyMesh&);
 };
 
 

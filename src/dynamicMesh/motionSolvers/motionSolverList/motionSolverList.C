@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,81 +23,93 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "dynamicMotionSolverListFvMesh.H"
+#include "motionSolverList.H"
 #include "addToRunTimeSelectionTable.H"
-#include "motionSolver.H"
-#include "pointMesh.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(dynamicMotionSolverListFvMesh, 0);
+    defineTypeNameAndDebug(motionSolverList, 0);
     addToRunTimeSelectionTable
     (
-        dynamicFvMesh,
-        dynamicMotionSolverListFvMesh,
-        IOobject
+        motionSolver,
+        motionSolverList,
+        dictionary
     );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::dynamicMotionSolverListFvMesh::dynamicMotionSolverListFvMesh
+Foam::motionSolverList::motionSolverList
 (
-    const IOobject& io
+    const polyMesh& mesh,
+    const IOdictionary& dict
 )
 :
-    dynamicFvMesh(io),
+    motionSolver(mesh, dict, typeName),
     motionSolvers_
     (
-        IOdictionary
-        (
-            IOobject
-            (
-                "dynamicMeshDict",
-                time().constant(),
-                *this,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::AUTO_WRITE
-            )
-        ).lookup("solvers"),
-        motionSolver::iNew(*this)
+        dict.lookup("solvers"),
+        motionSolver::iNew(mesh)
     )
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::dynamicMotionSolverListFvMesh::~dynamicMotionSolverListFvMesh()
+Foam::motionSolverList::~motionSolverList()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::dynamicMotionSolverListFvMesh::update()
+Foam::tmp<Foam::pointField> Foam::motionSolverList::curPoints() const
 {
     if (motionSolvers_.size())
     {
         // Accumulated displacement
-        pointField disp(motionSolvers_[0].newPoints() - fvMesh::points());
+        pointField disp(motionSolvers_[0].curPoints() - mesh().points());
 
         for (label i = 1; i < motionSolvers_.size(); i++)
         {
-            disp += motionSolvers_[i].newPoints() - fvMesh::points();
+            disp += motionSolvers_[i].curPoints() - mesh().points();
         }
 
-        fvMesh::movePoints(points() + disp);
-
-        if (foundObject<volVectorField>("U"))
-        {
-            lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
-        }
+        return mesh().points() + disp;
     }
+    else
+    {
+        return mesh().points();
+    }
+}
 
-    return true;
+
+void Foam::motionSolverList::solve()
+{
+    forAll(motionSolvers_, i)
+    {
+        motionSolvers_[i].solve();
+    }
+}
+
+
+void Foam::motionSolverList::movePoints(const pointField& points)
+{
+    forAll(motionSolvers_, i)
+    {
+        motionSolvers_[i].movePoints(points);
+    }
+}
+
+
+void Foam::motionSolverList::updateMesh(const mapPolyMesh& mpm)
+{
+    forAll(motionSolvers_, i)
+    {
+        motionSolvers_[i].updateMesh(mpm);
+    }
 }
 
 

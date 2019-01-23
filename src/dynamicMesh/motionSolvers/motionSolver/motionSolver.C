@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "motionSolver.H"
-#include "Time.H"
-#include "polyMesh.H"
-#include "dlLibraryTable.H"
+#include "motionSolverList.H"
 #include "twoDPointCorrector.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -104,43 +101,50 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
     const IOdictionary& solverDict
 )
 {
-    const word solverTypeName
-    (
-        solverDict.found("motionSolver")
-      ? solverDict.lookup("motionSolver")
-      : solverDict.lookup("solver")
-    );
-
-    Info<< "Selecting motion solver: " << solverTypeName << endl;
-
-    const_cast<Time&>(mesh.time()).libs().open
-    (
-        solverDict,
-        "motionSolverLibs",
-        dictionaryConstructorTablePtr_
-    );
-
-    if (!dictionaryConstructorTablePtr_)
+    if (solverDict.found("solvers"))
     {
-        FatalErrorInFunction
-            << "solver table is empty"
-            << exit(FatalError);
+        return autoPtr<motionSolver>(new motionSolverList(mesh, solverDict));
     }
-
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(solverTypeName);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    else
     {
-        FatalErrorInFunction
-            << "Unknown solver type "
-            << solverTypeName << nl << nl
-            << "Valid solver types are:" << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
+        const word solverTypeName
+        (
+            solverDict.found("motionSolver")
+          ? solverDict.lookup("motionSolver")
+          : solverDict.lookup("solver")
+        );
 
-    return autoPtr<motionSolver>(cstrIter()(mesh, solverDict));
+        Info<< "Selecting motion solver: " << solverTypeName << endl;
+
+        const_cast<Time&>(mesh.time()).libs().open
+        (
+            solverDict,
+            "motionSolverLibs",
+            dictionaryConstructorTablePtr_
+        );
+
+        if (!dictionaryConstructorTablePtr_)
+        {
+            FatalErrorInFunction
+                << "solver table is empty"
+                << exit(FatalError);
+        }
+
+        dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(solverTypeName);
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown solver type "
+                << solverTypeName << nl << nl
+                << "Valid solver types are:" << endl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << exit(FatalError);
+        }
+
+        return autoPtr<motionSolver>(cstrIter()(mesh, solverDict));
+    }
 }
 
 
