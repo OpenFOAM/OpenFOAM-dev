@@ -16,12 +16,12 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh dynamicMotionSolverFvMesh;
+dynamicFvMesh   dynamicMotionSolverFvMesh;
 
 motionSolverLibs ("libfvMotionSolvers.so");
 
-motionSolver displacementSBRStress;   // displacementLaplacian;
-//motionSolver velocityComponentLaplacian z;
+motionSolver    displacementSBRStress;   // displacementLaplacian;
+// motionSolver    velocityComponentLaplacian z;
 
 // diffusivity  uniform;
 // diffusivity  directional (1 200 0);
