@@ -60,7 +60,7 @@ Foam::functionObjects::Qdot::Qdot
     phaseName_(word::null)
 {
     read(dict);
-    resetLocalObjectName(type());
+    resetLocalObjectName(IOobject::groupName(type(), phaseName_));
 }
 
 

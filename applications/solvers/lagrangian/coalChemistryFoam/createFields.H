@@ -129,20 +129,6 @@ volScalarField dpdt
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
 
-volScalarField Qdot
-(
-    IOobject
-    (
-        "Qdot",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
-);
-
 #include "createMRF.H"
 #include "createClouds.H"
 #include "createRadiationModel.H"

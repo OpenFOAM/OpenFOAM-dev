@@ -49,5 +49,10 @@ adjustTimeStep  yes;
 
 maxCo           0.4;
 
+functions
+{
+    #includeFunc Qdot
+}
+
 
 // ************************************************************************* //

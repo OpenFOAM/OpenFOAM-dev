@@ -11,7 +11,6 @@ tmp<fv::convectionScheme<scalar>> mvConvection
 {
     radiation->correct();
     combustion->correct();
-    Qdot = combustion->Qdot();
     volScalarField Yt(0.0*Y[0]);
 
     forAll(Y, i)
@@ -66,7 +65,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
         )
       - fvm::laplacian(turbulence->alphaEff(), he)
      ==
-        Qdot
+        combustion->Qdot()
       + radiation->Sh(thermo, he)
       + parcels.Sh(he)
       + surfaceFilm.Sh()
