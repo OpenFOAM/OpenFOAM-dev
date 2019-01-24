@@ -51,5 +51,10 @@ maxDi           5.0;
 
 adjustTimeStep  yes;
 
+functions
+{
+    #includeFunc Qdot
+}
+
 
 // ************************************************************************* //
