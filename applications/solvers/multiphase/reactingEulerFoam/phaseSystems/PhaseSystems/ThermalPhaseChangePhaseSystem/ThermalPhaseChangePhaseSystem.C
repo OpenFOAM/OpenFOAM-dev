@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -369,17 +369,19 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
         volScalarField& iDmdt(*this->iDmdt_[pair]);
         volScalarField& Tf(*this->Tf_[pair]);
 
+        const volScalarField Tsat = saturationModel_->Tsat(phase1.thermo().p());
+
         volScalarField hf1
         (
             he1.member() == "e"
-          ? phase1.thermo().he(p, Tf) + p/phase1.rho()
-          : phase1.thermo().he(p, Tf)
+          ? phase1.thermo().he(p, Tsat) + p/phase1.rho()
+          : phase1.thermo().he(p, Tsat)
         );
         volScalarField hf2
         (
             he2.member() == "e"
-          ? phase2.thermo().he(p, Tf) + p/phase2.rho()
-          : phase2.thermo().he(p, Tf)
+          ? phase2.thermo().he(p, Tsat) + p/phase2.rho()
+          : phase2.thermo().he(p, Tsat)
         );
 
         volScalarField h1
@@ -409,9 +411,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             volScalarField H1(heatTransferModelIter().first()->K(0));
             volScalarField H2(heatTransferModelIter().second()->K(0));
 
-            Tf = saturationModel_->Tsat(phase1.thermo().p());
-
-            iDmdtNew = (H1*(Tf - T1) + H2*(Tf - T2))/L;
+            iDmdtNew = (H1*(Tsat - T1) + H2*(Tsat - T2))/L;
         }
         else
         {
