@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant/gas";
+    location    "constant";
     object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -21,15 +21,15 @@ options
     {
         type            scalarSemiImplicitSource;
 
-        timeStart       0.2;
-        duration        0.3;
+        timeStart       0;
+        duration        1;
         selectionMode   cellSet;
         cellSet         ignition;
         volumeMode      specific;
 
         injectionRateSuSp
         {
-            h          (2e7 0); // kg/m/s^3
+            e          (5e7 0); // kg/m/s^3
         }
     }
 }

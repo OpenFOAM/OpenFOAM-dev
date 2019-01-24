@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant/gas";
+    location    "constant";
     object      thermo.compressibleGas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -20,6 +20,10 @@ O2
     specie
     {
         molWeight       31.9988;
+    }
+    equationOfState
+    {
+        pRef            1e6;
     }
     thermodynamics
     {
@@ -42,6 +46,10 @@ H2O
     {
         molWeight       18.0153;
     }
+    equationOfState
+    {
+        pRef            1e6;
+    }
     thermodynamics
     {
         Tlow            200;
@@ -62,6 +70,10 @@ CH4
     specie
     {
         molWeight       16.0428;
+    }
+    equationOfState
+    {
+        pRef            1e6;
     }
     thermodynamics
     {
@@ -84,6 +96,10 @@ CO2
     {
         molWeight       44.01;
     }
+    equationOfState
+    {
+        pRef            1e6;
+    }
     thermodynamics
     {
         Tlow            200;
@@ -104,6 +120,10 @@ N2
     specie
     {
         molWeight       28.0134;
+    }
+    equationOfState
+    {
+        pRef            1e6;
     }
     thermodynamics
     {
