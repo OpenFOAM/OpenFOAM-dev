@@ -18,7 +18,7 @@
       - fvm::laplacian(turbulence->alphaEff(), he)
      ==
         rho*(U&g)
-      + Qdot
+      + combustion->Qdot()
       + coalParcels.Sh(he)
       + limestoneParcels.Sh(he)
       + radiation->Sh(thermo, he)

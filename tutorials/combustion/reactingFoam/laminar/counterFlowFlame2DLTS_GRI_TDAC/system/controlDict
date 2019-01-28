@@ -45,4 +45,10 @@ timePrecision   6;
 
 runTimeModifiable true;
 
+functions
+{
+    #includeFunc Qdot
+}
+
+
 // ************************************************************************* //

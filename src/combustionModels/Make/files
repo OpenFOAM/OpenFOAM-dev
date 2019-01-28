@@ -20,4 +20,6 @@ zoneCombustion/zoneCombustions.C
 
 noCombustion/noCombustions.C
 
+functionObjects/Qdot/Qdot.C
+
 LIB = $(FOAM_LIBBIN)/libcombustionModels

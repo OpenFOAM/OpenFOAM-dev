@@ -26,12 +26,12 @@ boundaryField
     inletFuel
     {
         type            fixedValue;
-        value           uniform (0 0.5 0);
+        value           uniform (0 0.15 0.15);
     }
     inletAir
     {
         type            fixedValue;
-        value           uniform (0 1.5 0);
+        value           uniform (0 0.15 -0.15);
     }
     outlet
     {
@@ -40,7 +40,7 @@ boundaryField
     }
     gas_to_solid
     {
-        type            noSlip;
+        type            slip;
     }
 }
 

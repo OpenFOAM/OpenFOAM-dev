@@ -17,7 +17,7 @@ FoamFile
 
 dimensions      [ 0 2 -2 0 0 0 0 ];
 
-internalField   uniform 0.1;
+internalField   uniform 0.00016875;
 
 boundaryField
 {
@@ -25,7 +25,8 @@ boundaryField
 
     "inlet.*"
     {
-        type            fixedValue;
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.05;
         value           $internalField;
     }
     outlet

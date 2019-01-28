@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::functionObjects::phaseForces::phaseForces
     (
         mesh_.lookupObject<phaseModel>
         (
-            IOobject::groupName("alpha", dict.lookup("phaseName"))
+            IOobject::groupName("alpha", dict.lookup("phase"))
         )
     ),
     fluid_(mesh_.lookupObject<phaseSystem>("phaseProperties"))
