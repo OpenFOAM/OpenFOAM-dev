@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,12 @@ Class
     Foam::diameterModels::driftModels::phaseChange
 
 Description
-    Drift induced by interfacial phaseChange.
+    Drift induced by interfacial phase change. By default phase change mass
+    flux is distributed between sizeGroups of each velocityGroup with phase
+    change based on interfacial area of each size group.
 
 SourceFiles
-    isothermal.C
+    phaseChange.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -56,15 +58,17 @@ class phaseChange
 {
     // Private data
 
-        //- Names of unordered phasePairs between which phaseChange occurs, i.e.
-        //  "(gasIAndLiquid gasIIAndLiquid)"
-        List<word> pairNames_;
+        //- PhasePairs between which phaseChange occurs, e.g.,
+        //  "((gasI and liquid) (gasII and liquid))"
+        List<phasePairKey> pairKeys_;
 
-        //- Total mass transfer rate due to phaseChange
-        volScalarField iDmdt_;
+        //- Distribute phase change mass flux between sizeGroups based on the
+        //  number concentration, rather than the interfacial area
+        Switch numberWeighted_;
 
-        //- Total number concentration
-        volScalarField N_;
+        //- Weighting with which the phase change mass flux is distributed
+        PtrList<volScalarField> W_;
+
 
 public:
 
@@ -73,6 +77,7 @@ public:
 
     // Constructor
 
+        //- Construct from a population balance model and a dictionary
         phaseChange
         (
             const populationBalanceModel& popBal,

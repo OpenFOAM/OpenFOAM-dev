@@ -28,7 +28,7 @@ solvers
         nCorr                   1;
         tolerance               1e-4;
         renormalizeOnRestart    true;
-        renormalize             false;
+        renormalize             true;
         solveOnFinalIterOnly    true;
     }
 
@@ -108,12 +108,13 @@ relaxationFactors
 {
     fields
     {
-        iDmdt           0.1;
+        iDmdt           0.2;
     }
 
     equations
     {
         ".*"            1;
+        "e\..*"         0.2;
     }
 }
 

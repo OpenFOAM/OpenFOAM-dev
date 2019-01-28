@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,57 +52,71 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
 )
 :
     driftModel(popBal, dict),
-    pairNames_(dict.lookup("pairNames")),
-    iDmdt_
-    (
-        IOobject
+    pairKeys_(dict.lookup("pairs")),
+    numberWeighted_(dict.lookupOrDefault<Switch>("numberWeighted", false)),
+    W_(pairKeys_.size())
+{
+    const phaseSystem& fluid = popBal_.fluid();
+
+    forAll(pairKeys_, i)
+    {
+        const phasePair& pair = fluid.phasePairs()[pairKeys_[i]];
+
+        W_.set
         (
-            "iDmdt",
-            popBal.time().timeName(),
-            popBal.mesh()
-        ),
-        popBal.mesh(),
-        dimensionedScalar(dimDensity/dimTime, Zero)
-    ),
-    N_
-    (
-        IOobject
-        (
-            "N",
-            popBal.mesh().time().timeName(),
-            popBal.mesh()
-        ),
-        popBal.mesh(),
-        dimensionedScalar(inv(dimVolume), Zero)
-    )
-{}
+            i,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName(type() + ":W", pair.name()),
+                    popBal_.mesh().time().timeName(),
+                    popBal_.mesh()
+                ),
+                popBal_.mesh(),
+                dimensionedScalar
+                (
+                    inv(numberWeighted_ ? dimVolume : dimLength),
+                    Zero
+                )
+            )
+        );
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-
 void Foam::diameterModels::driftModels::phaseChange::correct()
 {
-    iDmdt_ = Zero;
+    const phaseSystem& fluid = popBal_.fluid();
 
-    forAll(pairNames_, i)
+    forAll(pairKeys_, i)
     {
-        const word& pairName = pairNames_[i];
-
-        iDmdt_ +=
-            popBal_.mesh().lookupObject<volScalarField>
-            (
-                IOobject::groupName("iDmdt", pairName)
-            );
+        W_[i] = Zero;
     }
 
-    N_ = Zero;
-
-    forAll(popBal_.sizeGroups(), i)
+    forAll(pairKeys_, k)
     {
-        const sizeGroup& fi = popBal_.sizeGroups()[i];
+        if (fluid.phasePairs().found(pairKeys_[k]))
+        {
+            const phasePair& pair = fluid.phasePairs()[pairKeys_[k]];
 
-        N_ += fi*max(fi.phase(), small)/fi.x();
+            forAll(popBal_.velocityGroups(), j)
+            {
+                const velocityGroup& vgj = popBal_.velocityGroups()[j];
+                if (pair.contains(vgj.phase()))
+                {
+                    forAll(vgj.sizeGroups(), i)
+                    {
+                        const sizeGroup& fi = vgj.sizeGroups()[i];
+                        W_[k] +=
+                            fi*max(fi.phase(), small)
+                           /(numberWeighted_ ? fi.x() : fi.d());
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -113,9 +127,39 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
     const label i
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
+    const velocityGroup& vg = popBal_.sizeGroups()[i].VelocityGroup();
 
-    driftRate += iDmdt_/(N_*fi.phase().rho());
+    forAll(pairKeys_, k)
+    {
+        const phasePair& pair =
+                popBal_.fluid().phasePairs()[pairKeys_[k]];
+
+        if (pair.contains(vg.phase()))
+        {
+            const volScalarField& iDmdt =
+                popBal_.mesh().lookupObject<volScalarField>
+                (
+                    IOobject::groupName("iDmdt", pair.name())
+                );
+
+            const scalar iDmdtSign =
+                vg.phase().name() == pair.first() ? +1 : -1;
+
+            const sizeGroup& fi = popBal_.sizeGroups()[i];
+
+            tmp<volScalarField> dDriftRate
+            (
+                iDmdtSign*iDmdt/(fi.phase().rho()*W_[k])
+            );
+
+            if (!numberWeighted_)
+            {
+                dDriftRate.ref() *= fi.x()/fi.d();
+            }
+
+            driftRate += dDriftRate;
+        }
+    }
 }
 
 

@@ -99,7 +99,7 @@ populationBalanceCoeffs
         (
             phaseChange
             {
-                pairNames (gasAndLiquid);
+                pairs    ((gas and liquid));
             }
 
             densityChange{}
