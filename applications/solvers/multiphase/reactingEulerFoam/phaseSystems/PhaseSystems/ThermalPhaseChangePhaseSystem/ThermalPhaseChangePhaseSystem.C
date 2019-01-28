@@ -369,7 +369,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
         volScalarField& iDmdt(*this->iDmdt_[pair]);
         volScalarField& Tf(*this->Tf_[pair]);
 
-        const volScalarField Tsat = saturationModel_->Tsat(phase1.thermo().p());
+        const volScalarField Tsat(saturationModel_->Tsat(phase1.thermo().p()));
 
         volScalarField hf1
         (
