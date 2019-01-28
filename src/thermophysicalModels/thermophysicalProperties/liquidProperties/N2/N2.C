@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ Foam::N2::N2()
         2873563218390.8,
        -165274505604341.0
     ),
-    mu_(32.165, 496.9, 3.9069, -1.08e-21, 10.0),
+    mu_(-32.165, 496.9, 3.9069, -1.08e-21, 10.0),
     mug_(7.632e-07, 0.58823, 67.75, 0.0),
     kappa_(0.7259, -0.016728, 0.00016215, -5.7605e-07, 0.0, 0.0),
     kappag_(0.000351, 0.7652, 25.767, 0.0),
