@@ -33,7 +33,8 @@ EulerImplicitCoeffs
 odeCoeffs
 {
     solver          seulex;
-    eps             0.05;
+    absTol          1e-8;
+    relTol          1e-1;
 }
 
 
