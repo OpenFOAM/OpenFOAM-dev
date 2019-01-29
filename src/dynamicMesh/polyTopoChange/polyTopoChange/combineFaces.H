@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,6 +101,7 @@ class combineFaces
         void regioniseFaces
         (
             const scalar minCos,
+            const labelHashSet& patchIDs,
             const label celli,
             const labelList& cEdges,
             Map<label>& faceRegion
@@ -153,12 +154,22 @@ public:
         // Helper functions
 
             //- Extract lists of all (non-coupled) boundary faces on selected
-            //  cells that can be merged. Uses getFaceRegions.
+            //  patches and cells that can be merged. Uses getFaceRegions.
             labelListList getMergeSets
             (
                 const scalar featureCos,
                 const scalar minConcaveCos,
+                const labelHashSet& patchIDs,
                 const labelHashSet& boundaryCells
+            ) const;
+
+            //- Extract lists of all (non-coupled) boundary faces on selected
+            //  patches that can be merged. Uses getFaceRegions.
+            labelListList getMergeSets
+            (
+                const scalar featureCos,
+                const scalar minConcaveCos,
+                const labelHashSet& patchIDs
             ) const;
 
             //- Extract lists of all (non-coupled) boundary faces that can

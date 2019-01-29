@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,6 +113,17 @@ Foam::layerParameters::layerParameters
     (
         boundaryMesh.size(),
         readScalar(dict.lookup("minThickness"))
+    ),
+    mergeFaces_
+    (
+        boundaryMesh.size(),
+        dict.found("mergeFaces")
+      ? (
+            dict.lookupType<bool>("mergeFaces")
+          ? mergeFace::yes
+          : mergeFace::no
+        )
+      : mergeFace::ifOnMeshedPatch
     ),
     featureAngle_(readScalar(dict.lookup("featureAngle"))),
     concaveAngle_
@@ -361,6 +372,14 @@ Foam::layerParameters::layerParameters
                         "minThickness",
                         minThickness_[patchi]
                     );
+
+                    if (layerDict.found("mergeFaces"))
+                    {
+                        mergeFaces_[patchi] =
+                            layerDict.lookupType<bool>("mergeFaces")
+                          ? mergeFace::yes
+                          : mergeFace::no;
+                    }
                 }
             }
         }
