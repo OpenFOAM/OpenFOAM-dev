@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,11 +125,9 @@ void Foam::hydrostaticDisplacementFvPatchVectorField::updateCoeffs()
 void Foam::hydrostaticDisplacementFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("rhoLiquid") << rhoLiquid_ << token::END_STATEMENT << nl;
-    os.writeKeyword("liquidSurfacePressure")
-        << liquidSurfacePressure_ << token::END_STATEMENT << nl;
-    os.writeKeyword("liquidSurfacePoint")
-        << liquidSurfacePoint_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "rhoLiquid", rhoLiquid_);
+    Foam::writeEntry(os, "liquidSurfacePressure", liquidSurfacePressure_);
+    Foam::writeEntry(os, "liquidSurfacePoint", liquidSurfacePoint_);
     writeEntry("value", os);
 }
 

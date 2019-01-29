@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -767,7 +767,7 @@ Foam::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 template<class Type>
 void Foam::genericFvPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << actualTypeName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "type", actualTypeName_);
 
     forAllConstIter(dictionary, dict_, iter)
     {

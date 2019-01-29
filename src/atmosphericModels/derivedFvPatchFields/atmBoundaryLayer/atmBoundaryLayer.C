@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -255,27 +255,18 @@ Foam::tmp<Foam::scalarField> Foam::atmBoundaryLayer::epsilon
 void Foam::atmBoundaryLayer::write(Ostream& os) const
 {
     z0_.writeEntry("z0", os) ;
-    os.writeKeyword("flowDir")
-        << flowDir_ << token::END_STATEMENT << nl;
-    os.writeKeyword("zDir")
-        << zDir_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa")
-        << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Cmu")
-        << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Uref")
-        << Uref_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Zref")
-        << Zref_ << token::END_STATEMENT << nl;
+    writeEntry(os, "flowDir", flowDir_);
+    writeEntry(os, "zDir", zDir_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "Uref", Uref_);
+    writeEntry(os, "Zref", Zref_);
 
     if (offset_)
     {
-        os.writeKeyword("Ulower")
-            << Ulower_ << token::END_STATEMENT << nl;
-        os.writeKeyword("kLower")
-            << kLower_ << token::END_STATEMENT << nl;
-        os.writeKeyword("epsilonLower")
-            << epsilonLower_ << token::END_STATEMENT << nl;
+        writeEntry(os, "Ulower", Ulower_);
+        writeEntry(os, "kLower", kLower_);
+        writeEntry(os, "epsilonLower", epsilonLower_);
     }
 
     zGround_.writeEntry("zGround", os) ;

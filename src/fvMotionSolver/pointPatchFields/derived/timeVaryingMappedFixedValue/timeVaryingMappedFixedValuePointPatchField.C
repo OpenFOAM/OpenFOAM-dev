@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -596,11 +596,11 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::write
 {
     fixedValuePointPatchField<Type>::write(os);
 
-    this->writeEntryIfDifferent(os, "setAverage", Switch(false), setAverage_);
+    writeEntryIfDifferent(os, "setAverage", Switch(false), setAverage_);
 
-    this->writeEntryIfDifferent(os, "perturb", scalar(1e-5), perturb_);
+    writeEntryIfDifferent(os, "perturb", scalar(1e-5), perturb_);
 
-    this->writeEntryIfDifferent
+    writeEntryIfDifferent
     (
         os,
         "fieldTable",
@@ -608,7 +608,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::write
         fieldTableName_
     );
 
-    this->writeEntryIfDifferent
+    writeEntryIfDifferent
     (
         os,
         "mapMethod",

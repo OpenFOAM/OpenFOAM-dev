@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ void Foam::fixedShearStressFvPatchVectorField::updateCoeffs()
 void Foam::fixedShearStressFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("tau") << tau0_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "tau", tau0_);
     writeEntry("value", os);
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ void Foam::wallBoilingModels::departureDiameterModels::
 KocamustafaogullariIshii::write(Ostream& os) const
 {
     departureDiameterModel::write(os);
-    os.writeKeyword("phi") << phi_ << token::END_STATEMENT << nl;
+    writeEntry(os, "phi", phi_);
 }
 
 

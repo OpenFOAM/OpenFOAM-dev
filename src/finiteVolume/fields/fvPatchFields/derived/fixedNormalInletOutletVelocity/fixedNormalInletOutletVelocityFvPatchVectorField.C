@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,8 +181,7 @@ const
 {
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
-    os.writeKeyword("fixTangentialInflow")
-        << fixTangentialInflow_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "fixTangentialInflow", fixTangentialInflow_);
     os.writeKeyword("normalVelocity")
         << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
     normalVelocity_->write(os);

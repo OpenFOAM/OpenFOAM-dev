@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,9 +178,9 @@ void Foam::porousBafflePressureFvPatchField::write(Ostream& os) const
     fixedJumpFvPatchField<scalar>::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    os.writeKeyword("D") << D_ << token::END_STATEMENT << nl;
-    os.writeKeyword("I") << I_ << token::END_STATEMENT << nl;
-    os.writeKeyword("length") << length_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "D", D_);
+    Foam::writeEntry(os, "I", I_);
+    Foam::writeEntry(os, "length", length_);
 }
 
 

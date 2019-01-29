@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,10 +233,10 @@ void kLowReWallFunctionFvPatchScalarField::evaluate
 
 void kLowReWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
-    os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Ceps2") << Ceps2_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "Cmu", Cmu_);
+    Foam::writeEntry(os, "kappa", kappa_);
+    Foam::writeEntry(os, "E", E_);
+    Foam::writeEntry(os, "Ceps2", Ceps2_);
     fixedValueFvPatchField<scalar>::write(os);
 }
 

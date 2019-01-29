@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,10 +196,9 @@ template<class Type>
 void Foam::turbulentInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("fluctuationScale")
-        << fluctuationScale_ << token::END_STATEMENT << nl;
+    writeEntry(os, "fluctuationScale", fluctuationScale_);
     referenceField_.writeEntry("referenceField", os);
-    os.writeKeyword("alpha") << alpha_ << token::END_STATEMENT << nl;
+    writeEntry(os, "alpha", alpha_);
     this->writeEntry("value", os);
 }
 

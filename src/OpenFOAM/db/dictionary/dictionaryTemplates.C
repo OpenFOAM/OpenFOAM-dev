@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,6 +155,34 @@ template<class T>
 void Foam::dictionary::set(const keyType& k, const T& t)
 {
     set(new primitiveEntry(k, t));
+}
+
+
+template<class EntryType>
+void Foam::writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value
+)
+{
+    os.writeKeyword(entryName) << value << token::END_STATEMENT << nl;
+}
+
+
+template<class EntryType>
+void Foam::writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+)
+{
+    if (value1 != value2)
+    {
+        writeEntry(os, entryName, value2);
+    }
 }
 
 

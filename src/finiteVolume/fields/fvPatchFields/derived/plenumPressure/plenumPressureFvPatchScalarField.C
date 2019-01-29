@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -300,29 +300,24 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
 void Foam::plenumPressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("gamma") << gamma_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("R") << R_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("supplyMassFlowRate") << supplyMassFlowRate_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("supplyTotalTemperature") << supplyTotalTemperature_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("plenumVolume") << plenumVolume_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("plenumDensity") << plenumDensity_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("plenumTemperature") << plenumTemperature_
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "gamma", gamma_);
+    Foam::writeEntry(os, "R", R_);
+    Foam::writeEntry(os, "supplyMassFlowRate", supplyMassFlowRate_);
+    Foam::writeEntry(os, "supplyTotalTemperature", supplyTotalTemperature_);
+    Foam::writeEntry(os, "plenumVolume", plenumVolume_);
+    Foam::writeEntry(os, "plenumDensity", plenumDensity_);
+    Foam::writeEntry(os, "plenumTemperature", plenumTemperature_);
     if (hasRho_)
     {
-        os.writeKeyword("rho") << rho_
-            << token::END_STATEMENT << nl;
+        Foam::writeEntry(os, "rho", rho_);
     }
-    os.writeKeyword("inletAreaRatio") << inletAreaRatio_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("inletDischargeCoefficient") << inletDischargeCoefficient_
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "inletAreaRatio", inletAreaRatio_);
+    Foam::writeEntry
+    (
+        os,
+        "inletDischargeCoefficient",
+        inletDischargeCoefficient_
+    );
     writeEntryIfDifferent<scalar>(os, "timeScale", 0.0, timeScale_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);

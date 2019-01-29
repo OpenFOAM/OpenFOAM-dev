@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,16 +233,16 @@ void Foam::syringePressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
 
-    os.writeKeyword("Ap") << Ap_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Sp") << Sp_ << token::END_STATEMENT << nl;
-    os.writeKeyword("VsI") << VsI_ << token::END_STATEMENT << nl;
-    os.writeKeyword("tas") << tas_ << token::END_STATEMENT << nl;
-    os.writeKeyword("tae") << tae_ << token::END_STATEMENT << nl;
-    os.writeKeyword("tds") << tds_ << token::END_STATEMENT << nl;
-    os.writeKeyword("tde") << tde_ << token::END_STATEMENT << nl;
-    os.writeKeyword("psI") << psI_ << token::END_STATEMENT << nl;
-    os.writeKeyword("psi") << psi_ << token::END_STATEMENT << nl;
-    os.writeKeyword("ams") << ams_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "Ap", Ap_);
+    Foam::writeEntry(os, "Sp", Sp_);
+    Foam::writeEntry(os, "VsI", VsI_);
+    Foam::writeEntry(os, "tas", tas_);
+    Foam::writeEntry(os, "tae", tae_);
+    Foam::writeEntry(os, "tds", tds_);
+    Foam::writeEntry(os, "tde", tde_);
+    Foam::writeEntry(os, "psI", psI_);
+    Foam::writeEntry(os, "psi", psi_);
+    Foam::writeEntry(os, "ams", ams_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
 
     writeEntry("value", os);

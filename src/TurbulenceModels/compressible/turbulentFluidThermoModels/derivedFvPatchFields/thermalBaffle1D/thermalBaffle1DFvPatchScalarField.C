@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -436,9 +436,8 @@ void thermalBaffle1DFvPatchScalarField<solidType>::write(Ostream& os) const
     }
 
     qrPrevious_.writeEntry("qrPrevious", os);
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qrRelaxation")<< qrRelaxation_
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "qr", qrName_);
+    Foam::writeEntry(os, "qrRelaxation", qrRelaxation_);
 }
 
 

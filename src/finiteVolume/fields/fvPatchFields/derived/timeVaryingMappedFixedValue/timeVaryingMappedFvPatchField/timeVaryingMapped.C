@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,40 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvOption.H"
+#include "timeVaryingMappedFvPatchField.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-void Foam::fv::option::writeHeader(Ostream& os) const
+namespace Foam
 {
-    os  << indent << name_ << nl
-        << indent << token::BEGIN_BLOCK << incrIndent << nl;
-}
-
-
-void Foam::fv::option::writeFooter(Ostream& os) const
-{
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
-
-
-void Foam::fv::option::writeData(Ostream& os) const
-{
-    writeEntry(os, "type", type());
-    writeEntry(os, "active", active_);
-    os << nl;
-    os << indent << word(type() + "Coeffs");
-    coeffs_.write(os);
-}
-
-
-bool Foam::fv::option::read(const dictionary& dict)
-{
-    dict.readIfPresent("active", active_);
-
-    coeffs_ = dict.optionalSubDict(modelType_ + "Coeffs");
-
-    return true;
+    defineTypeNameAndDebug(timeVaryingMapped, 0);
 }
 
 

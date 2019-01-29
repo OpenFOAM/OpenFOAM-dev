@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::timeVaryingMappedFixedValueFvPatchField
+    Foam::timeVaryingMappedFvPatchField
 
 Description
-    This boundary conditions interpolates the values from a set of supplied
+    Patch field mapper which interpolates the values from a set of supplied
     points in space and time.
 
     By default the data files should be provide in
@@ -70,38 +70,23 @@ Usage
                          containing the fields | no | ""
     \endtable
 
-    \verbatim
-    <patch name>
-    {
-        type            timeVaryingMappedFixedValue;
-    }
-    \endverbatim
-
-    \verbatim
-    <patch name>
-    {
-        type            timeVaryingMappedFixedValue;
-        dataDir         "../<source case name>/postProcessing/sample";
-        points          "0/<sample name>/faceCentres";
-        sample          <sample name>;
-    }
-    \endverbatim
-
 See also
-    Foam::fixedValueFvPatchField
-    Foam::timeVaryingMappedFvPatchField
+    Foam::timeVaryingMappedFixedValueFvPatchField
     Foam::Function1Types
 
 SourceFiles
-    timeVaryingMappedFixedValueFvPatchField.C
+    timeVaryingMappedFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef timeVaryingMappedFixedValueFvPatchField_H
-#define timeVaryingMappedFixedValueFvPatchField_H
+#ifndef timeVaryingMappedFvPatchField_H
+#define timeVaryingMappedFvPatchField_H
 
-#include "fixedValueFvPatchFields.H"
-#include "timeVaryingMappedFvPatchField.H"
+#include "fvPatchField.H"
+#include "FixedList.H"
+#include "instantList.H"
+#include "pointToPointPlanarInterpolation.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -109,113 +94,142 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-          Class timeVaryingMappedFixedValueFvPatchField Declaration
+                    Class timeVaryingMapped Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class timeVaryingMappedFixedValueFvPatchField
-:
-    public fixedValueFvPatchField<Type>
+class timeVaryingMapped
 {
-    // Private data
-
-        timeVaryingMappedFvPatchField<Type> fieldMapper_;
-
-
 public:
 
     //- Runtime type information
-    TypeName("timeVaryingMappedFixedValue");
+    ClassName("timeVaryingMapped");
 
 
     // Constructors
 
-        //- Construct from patch and internal field
-        timeVaryingMappedFixedValueFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&
-        );
+        //- Construct null
+        timeVaryingMapped()
+        {}
+};
 
-        //- Construct from patch, internal field and dictionary
-        timeVaryingMappedFixedValueFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const dictionary&
-        );
 
-        //- Construct by mapping given timeVaryingMappedFixedValueFvPatchField
-        //  onto a new patch
-        timeVaryingMappedFixedValueFvPatchField
+/*---------------------------------------------------------------------------*\
+          Class timeVaryingMappedFvPatchField Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class timeVaryingMappedFvPatchField
+:
+    public timeVaryingMapped
+{
+    // Private data
+
+        //- Reference to the patch the data is mapped to
+        const fvPatch& patch_;
+
+        //- Name of the field data table, defaults to the name of the field
+        word fieldTableName_;
+
+        //- Optional name of the data directory,
+        //  defaults to "constant/boundaryData/<patch name>"
+        fileName dataDir_;
+
+        //- Optional name of the points file, defaults to "points"
+        fileName pointsName_;
+
+        //- Optional name of the sample sub-directory from which the field are
+        //  read, defaults to ""
+        fileName sampleName_;
+
+        //- If true adjust the mapped field to maintain average value
+        Switch setAverage_;
+
+        //- Fraction of perturbation (fraction of bounding box) to add
+        scalar perturb_;
+
+        //- Interpolation scheme to use
+        word mapMethod_;
+
+        //- 2D interpolation (for 'planarInterpolation' mapMethod)
+        autoPtr<pointToPointPlanarInterpolation> mapperPtr_;
+
+        //- List of boundaryData time directories
+        instantList sampleTimes_;
+
+        //- Current starting index in sampleTimes
+        label startSampleTime_;
+
+        //- Interpolated values from startSampleTime
+        Field<Type> startSampledValues_;
+
+        //- If setAverage: starting average value
+        Type startAverage_;
+
+        //- Current end index in sampleTimes
+        label endSampleTime_;
+
+        //- Interpolated values from endSampleTime
+        Field<Type> endSampledValues_;
+
+        //- If setAverage: end average value
+        Type endAverage_;
+
+        //- Time varying offset values to interpolated data
+        autoPtr<Function1<Type>> offset_;
+
+        //- Helper function to find the field files
+        fileName findFieldFile(const word& timeName) const;
+
+        //- Find boundary data in between current time and interpolate
+        void checkTable();
+
+
+public:
+
+    // Constructors
+
+        //- Construct from patch and field name
+        timeVaryingMappedFvPatchField(const fvPatch&, const word& fieldName);
+
+        //- Construct from patch, dictionary and field name
+        timeVaryingMappedFvPatchField
         (
-            const timeVaryingMappedFixedValueFvPatchField<Type>&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const dictionary&,
+            const word& fieldName
         );
 
         //- Construct as copy
-        timeVaryingMappedFixedValueFvPatchField
+        timeVaryingMappedFvPatchField
         (
-            const timeVaryingMappedFixedValueFvPatchField<Type>&
+            const timeVaryingMappedFvPatchField<Type>&
         );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new timeVaryingMappedFixedValueFvPatchField<Type>(*this)
-            );
-        }
-
-        //- Construct as copy setting internal field reference
-        timeVaryingMappedFixedValueFvPatchField
-        (
-            const timeVaryingMappedFixedValueFvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
-        );
-
-        //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type>> clone
-        (
-            const DimensionedField<Type, volMesh>& iF
-        ) const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new timeVaryingMappedFixedValueFvPatchField<Type>(*this, iF)
-            );
-        }
 
 
     // Member functions
 
+        const Time& time() const
+        {
+            return patch_.boundaryMesh().mesh().time();
+        }
+
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions
 
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
+            //- Return the current mapped patch field
+            tmp<Field<Type>> map();
 
 
         //- Write
-        virtual void write(Ostream&) const;
+        void write(Ostream&) const;
 };
 
 
@@ -226,7 +240,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "timeVaryingMappedFixedValueFvPatchField.C"
+    #include "timeVaryingMappedFvPatchField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,9 +270,9 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::write
 ) const
 {
     mixedFvPatchScalarField::write(os);
-    os.writeKeyword("Tnbr")<< TnbrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qrNbr")<< qrNbrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "Tnbr", TnbrName_);
+    Foam::writeEntry(os, "qrNbr", qrNbrName_);
+    Foam::writeEntry(os, "qr", qrName_);
     thicknessLayers_.writeEntry("thicknessLayers", os);
     kappaLayers_.writeEntry("kappaLayers", os);
 

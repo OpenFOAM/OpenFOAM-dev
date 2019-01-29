@@ -163,7 +163,7 @@ void Foam::waveInletOutletFvPatchField<Type>::write(Ostream& os) const
     fvPatchField<Type>::write(os);
     inletValueAbove_->writeData(os);
     inletValueBelow_->writeData(os);
-    this->template writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
 }
 
 

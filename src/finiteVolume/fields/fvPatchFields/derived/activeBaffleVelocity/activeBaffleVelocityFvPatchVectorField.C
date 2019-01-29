@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,16 +293,11 @@ void Foam::activeBaffleVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
-    os.writeKeyword("cyclicPatch")
-        << cyclicPatchName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("orientation")
-        << orientation_ << token::END_STATEMENT << nl;
-    os.writeKeyword("openingTime")
-        << openingTime_ << token::END_STATEMENT << nl;
-    os.writeKeyword("maxOpenFractionDelta")
-        << maxOpenFractionDelta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("openFraction")
-        << openFraction_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "cyclicPatch", cyclicPatchName_);
+    Foam::writeEntry(os, "orientation", orientation_);
+    Foam::writeEntry(os, "openingTime", openingTime_);
+    Foam::writeEntry(os, "maxOpenFractionDelta", maxOpenFractionDelta_);
+    Foam::writeEntry(os, "openFraction", openFraction_);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
     writeEntry("value", os);
 }

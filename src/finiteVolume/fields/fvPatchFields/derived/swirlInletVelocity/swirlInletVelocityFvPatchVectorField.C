@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,8 +145,8 @@ void Foam::swirlInletVelocityFvPatchVectorField::updateCoeffs()
 void Foam::swirlInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
-    os.writeKeyword("axis") << axis_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "origin", origin_);
+    Foam::writeEntry(os, "axis", axis_);
     axialVelocity_->writeData(os);
     radialVelocity_->writeData(os);
     tangentialVelocity_->writeData(os);

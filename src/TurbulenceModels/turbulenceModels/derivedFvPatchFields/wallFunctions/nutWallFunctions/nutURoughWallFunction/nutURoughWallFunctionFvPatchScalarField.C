@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -294,12 +294,9 @@ void nutURoughWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    os.writeKeyword("roughnessHeight")
-        << roughnessHeight_ << token::END_STATEMENT << nl;
-    os.writeKeyword("roughnessConstant")
-        << roughnessConstant_ << token::END_STATEMENT << nl;
-    os.writeKeyword("roughnessFactor")
-        << roughnessFactor_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "roughnessHeight", roughnessHeight_);
+    Foam::writeEntry(os, "roughnessConstant", roughnessConstant_);
+    Foam::writeEntry(os, "roughnessFactor", roughnessFactor_);
     writeEntry("value", os);
 }
 

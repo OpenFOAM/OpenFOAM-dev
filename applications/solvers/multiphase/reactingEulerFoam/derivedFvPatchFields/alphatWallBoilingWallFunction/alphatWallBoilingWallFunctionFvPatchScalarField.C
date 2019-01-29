@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -682,10 +682,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
 
-    os.writeKeyword("phaseType") << phaseTypeNames_[phaseType_]
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "phaseType", phaseTypeNames_[phaseType_]);
 
-    os.writeKeyword("relax") << relax_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "relax", relax_);
 
     switch (phaseType_)
     {
@@ -723,8 +722,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
         }
     }
 
-    os.writeKeyword("otherPhase") << otherPhaseName_ << token::END_STATEMENT
-    << nl;
+    Foam::writeEntry(os, "otherPhase", otherPhaseName_);
     dmdt_.writeEntry("dmdt", os);
     dDep_.writeEntry("dDep", os);
     qq_.writeEntry("qQuenching", os);

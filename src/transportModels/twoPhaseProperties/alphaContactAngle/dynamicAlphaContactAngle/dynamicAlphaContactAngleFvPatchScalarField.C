@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,10 +156,10 @@ Foam::dynamicAlphaContactAngleFvPatchScalarField::theta
 void Foam::dynamicAlphaContactAngleFvPatchScalarField::write(Ostream& os) const
 {
     alphaContactAngleFvPatchScalarField::write(os);
-    os.writeKeyword("theta0") << theta0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("uTheta") << uTheta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("thetaA") << thetaA_ << token::END_STATEMENT << nl;
-    os.writeKeyword("thetaR") << thetaR_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "theta0", theta0_);
+    Foam::writeEntry(os, "uTheta", uTheta_);
+    Foam::writeEntry(os, "thetaA", thetaA_);
+    Foam::writeEntry(os, "thetaR", thetaR_);
     writeEntry("value", os);
 }
 

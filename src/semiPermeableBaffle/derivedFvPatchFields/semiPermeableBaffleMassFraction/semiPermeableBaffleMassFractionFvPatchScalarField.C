@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -288,8 +288,7 @@ void Foam::semiPermeableBaffleMassFractionFvPatchScalarField::write
     fvPatchScalarField::write(os);
     mappedPatchBase::write(os);
     writeEntryIfDifferent<scalar>(os, "c", scalar(0), c_);
-    os.writeKeyword("input") << inputNames_[input_]
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "input", inputNames_[input_]);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
     writeEntry("value", os);

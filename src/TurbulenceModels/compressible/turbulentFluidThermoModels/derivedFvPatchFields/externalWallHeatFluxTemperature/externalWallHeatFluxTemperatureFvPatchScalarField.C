@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -472,16 +472,14 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::write
 {
     fvPatchScalarField::write(os);
 
-    os.writeKeyword("mode")
-        << operationModeNames[mode_] << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "mode", operationModeNames[mode_]);
     temperatureCoupledBase::write(os);
 
     switch (mode_)
     {
         case fixedPower:
         {
-            os.writeKeyword("Q")
-                << Q_ << token::END_STATEMENT << nl;
+            Foam::writeEntry(os, "Q", Q_);
 
             break;
         }
@@ -498,14 +496,12 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::write
 
             if (relaxation_ < 1)
             {
-                os.writeKeyword("relaxation")
-                    << relaxation_ << token::END_STATEMENT << nl;
+                Foam::writeEntry(os, "relaxation", relaxation_);
             }
 
             if (emissivity_ > 0)
             {
-                os.writeKeyword("emissivity")
-                    << emissivity_ << token::END_STATEMENT << nl;
+                Foam::writeEntry(os, "emissivity", emissivity_);
             }
 
             if (thicknessLayers_.size())
@@ -518,12 +514,11 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::write
         }
     }
 
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "qr", qrName_);
 
     if (qrName_ != "none")
     {
-        os.writeKeyword("qrRelaxation")
-            << qrRelaxation_ << token::END_STATEMENT << nl;
+        Foam::writeEntry(os, "qrRelaxation", qrRelaxation_);
 
         qrPrevious_.writeEntry("qrPrevious", os);
     }

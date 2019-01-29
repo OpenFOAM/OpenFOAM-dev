@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -398,14 +398,11 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::write
         "pyrolysisProperties",
         pyrolysisRegionName_
     );
-    os.writeKeyword("Tnbr")<< TnbrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("convectiveScaling") << convectiveScaling_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("filmDeltaDry") << filmDeltaDry_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("filmDeltaWet") << filmDeltaWet_
-        << token::END_STATEMENT << endl;
+    Foam::writeEntry(os, "Tnbr", TnbrName_);
+    Foam::writeEntry(os, "qr", qrName_);
+    Foam::writeEntry(os, "convectiveScaling", convectiveScaling_);
+    Foam::writeEntry(os, "filmDeltaDry", filmDeltaDry_);
+    Foam::writeEntry(os, "filmDeltaWet", filmDeltaWet_);
     temperatureCoupledBase::write(os);
 }
 

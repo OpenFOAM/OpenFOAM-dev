@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ void Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::write
 {
     fvPatchField<vector>::write(os);
     flowRate_->writeData(os);
-    os.writeKeyword("alpha") << alphaName_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "alpha", alphaName_);
     writeEntry("value", os);
 }
 

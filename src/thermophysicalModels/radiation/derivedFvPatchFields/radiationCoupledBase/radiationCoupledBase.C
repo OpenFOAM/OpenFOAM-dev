@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -229,8 +229,7 @@ void Foam::radiation::radiationCoupledBase::rmap
 
 void Foam::radiation::radiationCoupledBase::write(Ostream& os) const
 {
-    os.writeKeyword("emissivityMode") << emissivityMethodTypeNames_[method_]
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "emissivityMode", emissivityMethodTypeNames_[method_]);
     emissivity_.writeEntry("emissivity", os);
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -260,10 +260,9 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 
 void Foam::temperatureCoupledBase::write(Ostream& os) const
 {
-    os.writeKeyword("kappaMethod") << KMethodTypeNames_[method_]
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa") << kappaName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("alphaAni") << alphaAniName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "kappaMethod", KMethodTypeNames_[method_]);
+    writeEntry(os, "kappa", kappaName_);
+    writeEntry(os, "alphaAni", alphaAniName_);
 }
 
 

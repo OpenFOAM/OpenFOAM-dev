@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,8 +109,7 @@ void Foam::copiedFixedValueFvPatchScalarField::updateCoeffs()
 void Foam::copiedFixedValueFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    os.writeKeyword("sourceFieldName")
-        << sourceFieldName_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "sourceFieldName", sourceFieldName_);
     writeEntry("value", os);
 }
 

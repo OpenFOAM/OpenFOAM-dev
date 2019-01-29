@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -214,11 +214,9 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
     writeEntryIfDifferent<word>(os, "mu", "thermo:mu", muName_);
 
-    os.writeKeyword("accommodationCoeff")
-        << accommodationCoeff_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "accommodationCoeff", accommodationCoeff_);
     Twall_.writeEntry("Twall", os);
-    os.writeKeyword("gamma")
-        << gamma_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "gamma", gamma_);
     writeEntry("value", os);
 }
 

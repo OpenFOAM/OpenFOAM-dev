@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -584,6 +584,28 @@ dictionary operator+(const dictionary& dict1, const dictionary& dict2);
 //  Starting from the entries in dict1 and then including those from dict2.
 //  Do not overwrite the entries from dict1.
 dictionary operator|(const dictionary& dict1, const dictionary& dict2);
+
+
+//- Helper function to write the keyword and entry
+template<class EntryType>
+void writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value
+);
+
+
+//- Helper function to write the keyword and entry only if the
+//  values are not equal. The value is then output as value2
+template<class EntryType>
+void writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

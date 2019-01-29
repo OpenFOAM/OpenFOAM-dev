@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ void Foam::wallBoilingModels::partitioningModels::
 Lavieville::write(Ostream& os) const
 {
     partitioningModel::write(os);
-    os.writeKeyword("alphaCrit") << alphaCrit_ << token::END_STATEMENT << nl;
+    writeEntry(os, "alphaCrit", alphaCrit_);
 }
 
 

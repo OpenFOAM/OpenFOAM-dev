@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,21 +139,16 @@ void Foam::waveTransmissiveFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
 
-    this->template
-        writeEntryIfDifferent<word>(os, "phi", "phi", this->phiName_);
-    this->template
-        writeEntryIfDifferent<word>(os, "rho", "rho", this->rhoName_);
-    this->template
-        writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
+    writeEntryIfDifferent<word>(os, "phi", "phi", this->phiName_);
+    writeEntryIfDifferent<word>(os, "rho", "rho", this->rhoName_);
+    writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
 
-    os.writeKeyword("gamma") << gamma_ << token::END_STATEMENT << nl;
+    writeEntry(os, "gamma", gamma_);
 
     if (this->lInf_ > small)
     {
-        os.writeKeyword("fieldInf") << this->fieldInf_
-            << token::END_STATEMENT << nl;
-        os.writeKeyword("lInf") << this->lInf_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "fieldInf", this->fieldInf_);
+        writeEntry(os, "lInf", this->lInf_);
     }
 
     this->writeEntry("value", os);
