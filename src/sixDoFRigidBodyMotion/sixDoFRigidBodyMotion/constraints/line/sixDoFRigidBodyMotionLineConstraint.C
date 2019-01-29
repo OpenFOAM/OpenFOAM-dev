@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,10 +130,8 @@ void Foam::sixDoFRigidBodyMotionConstraints::line::write
     Ostream& os
 ) const
 {
-    os.writeKeyword("centreOfRotation")
-        << centreOfRotation_ << token::END_STATEMENT << nl;
-    os.writeKeyword("direction")
-        << direction_ << token::END_STATEMENT << nl;
+    writeEntry(os, "centreOfRotation", centreOfRotation_);
+    writeEntry(os, "direction", direction_);
 }
 
 // ************************************************************************* //

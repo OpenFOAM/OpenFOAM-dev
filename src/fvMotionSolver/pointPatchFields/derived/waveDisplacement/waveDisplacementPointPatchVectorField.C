@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,12 +121,9 @@ void Foam::waveDisplacementPointPatchVectorField::updateCoeffs()
 void Foam::waveDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
-    os.writeKeyword("amplitude")
-        << amplitude_ << token::END_STATEMENT << nl;
-    os.writeKeyword("omega")
-        << omega_ << token::END_STATEMENT << nl;
-    os.writeKeyword("waveNumber")
-        << waveNumber_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "amplitude", amplitude_);
+    Foam::writeEntry(os, "omega", omega_);
+    Foam::writeEntry(os, "waveNumber", waveNumber_);
     writeEntry("value", os);
 }
 

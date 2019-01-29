@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -269,20 +269,12 @@ void Foam::Function1Types::CSV<Type>::writeData(Ostream& os) const
     // the values themselves
     TableBase<Type>::writeEntries(os);
 
-    os.writeKeyword("nHeaderLine") << nHeaderLine_ << token::END_STATEMENT
-        << nl;
-
-    os.writeKeyword("refColumn") << refColumn_ << token::END_STATEMENT << nl;
-
+    writeEntry(os, "nHeaderLine", nHeaderLine_);
+    writeEntry(os, "refColumn", refColumn_);
     componentColumns_.writeEntry("componentColumns", os);
-
-    os.writeKeyword("separator") << string(separator_)
-        << token::END_STATEMENT << nl;
-
-    os.writeKeyword("mergeSeparators") << mergeSeparators_
-        << token::END_STATEMENT << nl;
-
-    os.writeKeyword("file") << fName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "separator", string(separator_));
+    writeEntry(os, "mergeSeparators", mergeSeparators_);
+    writeEntry(os, "file", fName_);
 
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }

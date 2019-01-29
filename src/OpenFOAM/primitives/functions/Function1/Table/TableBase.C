@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -413,13 +413,11 @@ void Foam::Function1Types::TableBase<Type>::writeEntries(Ostream& os) const
 {
     if (boundsHandling_ != CLAMP)
     {
-        os.writeKeyword("outOfBounds") << boundsHandlingToWord(boundsHandling_)
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
     }
     if (interpolationScheme_ != "linear")
     {
-        os.writeKeyword("interpolationScheme") << interpolationScheme_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "interpolationScheme", interpolationScheme_);
     }
 }
 

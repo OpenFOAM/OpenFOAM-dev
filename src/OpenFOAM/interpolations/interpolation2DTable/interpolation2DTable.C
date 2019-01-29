@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -448,10 +448,8 @@ void Foam::interpolation2DTable<Type>::checkOrder() const
 template<class Type>
 void Foam::interpolation2DTable<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("file")
-        << fileName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("outOfBounds")
-        << boundsHandlingToWord(boundsHandling_) << token::END_STATEMENT << nl;
+    writeEntry(os, "file", fileName_);
+    writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
 
     *this >> os;
 }

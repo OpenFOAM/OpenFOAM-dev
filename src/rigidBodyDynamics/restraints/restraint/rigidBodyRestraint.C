@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,10 +78,8 @@ bool Foam::RBD::restraint::read(const dictionary& dict)
 
 void Foam::RBD::restraint::write(Ostream& os) const
 {
-    os.writeKeyword("type")
-        << type() << token::END_STATEMENT << nl;
-    os.writeKeyword("body")
-        << model_.name(bodyID_) << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
+    writeEntry(os, "body", model_.name(bodyID_));
 }
 
 

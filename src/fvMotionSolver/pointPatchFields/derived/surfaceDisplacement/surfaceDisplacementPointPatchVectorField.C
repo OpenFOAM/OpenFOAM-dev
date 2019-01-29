@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -472,20 +472,14 @@ void surfaceDisplacementPointPatchVectorField::updateCoeffs()
 void surfaceDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     fixedValuePointPatchVectorField::write(os);
-    os.writeKeyword("velocity") << velocity_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("geometry") << surfacesDict_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectMode") << projectModeNames_[projectMode_]
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectDirection") << projectDir_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("wedgePlane") << wedgePlane_
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "velocity", velocity_);
+    Foam::writeEntry(os, "geometry", surfacesDict_);
+    Foam::writeEntry(os, "projectMode", projectModeNames_[projectMode_]);
+    Foam::writeEntry(os, "projectDirection", projectDir_);
+    Foam::writeEntry(os, "wedgePlane", wedgePlane_);
     if (frozenPointsZone_ != word::null)
     {
-        os.writeKeyword("frozenPointsZone") << frozenPointsZone_
-            << token::END_STATEMENT << nl;
+        Foam::writeEntry(os, "frozenPointsZone", frozenPointsZone_);
     }
 }
 

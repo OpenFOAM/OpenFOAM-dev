@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,10 +68,10 @@ int main(int argc, char *argv[])
     chemkinReader cr(species, args[1], args[3], args[2], newFormat);
 
     OFstream reactionsFile(args[4]);
-    reactionsFile.writeKeyword("elements")
-        << cr.elementNames() << token::END_STATEMENT << nl << nl;
-    reactionsFile.writeKeyword("species")
-        << cr.species() << token::END_STATEMENT << nl << nl;
+    writeEntry(reactionsFile, "elements", cr.elementNames());
+    reactionsFile << nl;
+    writeEntry(reactionsFile, "species", cr.species());
+    reactionsFile << nl;
     cr.reactions().write(reactionsFile);
 
     // Temporary hack to splice the specie composition data into the thermo file
@@ -103,12 +103,18 @@ int main(int argc, char *argv[])
 
     reactionsFile << nl;
 
-    reactionsFile.writeKeyword("Tlow")
-        << Reaction<gasHThermoPhysics>::TlowDefault
-        << token::END_STATEMENT << nl;
-    reactionsFile.writeKeyword("Thigh")
-        << Reaction<gasHThermoPhysics>::ThighDefault
-        << token::END_STATEMENT << nl << nl;
+    writeEntry
+    (
+        reactionsFile,
+        "Tlow",
+        Reaction<gasHThermoPhysics>::TlowDefault
+    );
+    writeEntry
+    (
+        reactionsFile,
+        "Thigh",
+        Reaction<gasHThermoPhysics>::ThighDefault
+    );
 
     Info<< "End\n" << endl;
 

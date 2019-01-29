@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,17 +184,13 @@ void Foam::RBD::restraints::linearAxialAngularSpring::write
 {
     restraint::write(os);
 
-    os.writeKeyword("referenceOrientation")
-        << refQ_ << token::END_STATEMENT << nl;
+    writeEntry(os, "referenceOrientation", refQ_);
 
-    os.writeKeyword("axis")
-        << axis_ << token::END_STATEMENT << nl;
+    writeEntry(os, "axis", axis_);
 
-    os.writeKeyword("stiffness")
-        << stiffness_ << token::END_STATEMENT << nl;
+    writeEntry(os, "stiffness", stiffness_);
 
-    os.writeKeyword("damping")
-        << damping_ << token::END_STATEMENT << nl;
+    writeEntry(os, "damping", damping_);
 }
 
 

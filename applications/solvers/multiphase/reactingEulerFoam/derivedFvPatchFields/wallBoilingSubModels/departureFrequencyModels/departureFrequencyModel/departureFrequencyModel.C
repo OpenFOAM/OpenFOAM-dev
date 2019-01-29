@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::wallBoilingModels::departureFrequencyModel::~departureFrequencyModel()
 
 void Foam::wallBoilingModels::departureFrequencyModel::write(Ostream& os) const
 {
-    os.writeKeyword("type") << this->type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", this->type());
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,12 +113,11 @@ const Foam::objectRegistry& Foam::pointPatchField<Type>::db() const
 template<class Type>
 void Foam::pointPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 
     if (patchType_.size())
     {
-        os.writeKeyword("patchType") << patchType_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "patchType", patchType_);
     }
 }
 
@@ -135,7 +134,7 @@ void Foam::pointPatchField<Type>::writeEntryIfDifferent
 {
     if (value1 != value2)
     {
-        os.writeKeyword(entryName) << value2 << token::END_STATEMENT << nl;
+        writeEntry(os, entryName, value2);
     }
 }
 

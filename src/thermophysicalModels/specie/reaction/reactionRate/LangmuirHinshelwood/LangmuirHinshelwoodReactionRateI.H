@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,13 +144,12 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::dcidT
 
 inline void Foam::LangmuirHinshelwoodReactionRate::write(Ostream& os) const
 {
-    os.writeKeyword("reactants")
-        << reactantNames_ << token::END_STATEMENT << nl;
-    os.writeKeyword("a") << a_ << token::END_STATEMENT << nl;
-    os.writeKeyword("A") << A_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Ta") << Ta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("beta") << beta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("m") << m_ << token::END_STATEMENT << nl;
+    writeEntry(os, "reactants", reactantNames_);
+    writeEntry(os, "a", a_);
+    writeEntry(os, "A", A_);
+    writeEntry(os, "Ta", Ta_);
+    writeEntry(os, "beta", beta_);
+    writeEntry(os, "m", m_);
 }
 
 

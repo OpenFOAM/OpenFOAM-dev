@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,8 +68,7 @@ bool Foam::RBD::masslessBody::massless() const
 
 void Foam::RBD::masslessBody::write(Ostream& os) const
 {
-    os.writeKeyword("type")
-        << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 }
 
 

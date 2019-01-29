@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -431,18 +431,13 @@ void surfaceSlipDisplacementPointPatchVectorField::evaluate
 void surfaceSlipDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchVectorField::write(os);
-    os.writeKeyword("geometry") << surfacesDict_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectMode") << projectModeNames_[projectMode_]
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectDirection") << projectDir_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("wedgePlane") << wedgePlane_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "geometry", surfacesDict_);
+    writeEntry(os, "projectMode", projectModeNames_[projectMode_]);
+    writeEntry(os, "projectDirection", projectDir_);
+    writeEntry(os, "wedgePlane", wedgePlane_);
     if (frozenPointsZone_ != word::null)
     {
-        os.writeKeyword("frozenPointsZone") << frozenPointsZone_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "frozenPointsZone", frozenPointsZone_);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,12 +44,9 @@ void Foam::RBD::rigidBodyMotion::write(Ostream& os) const
 {
     rigidBodyModel::write(os);
 
-    os.writeKeyword("accelerationRelaxation")
-        << aRelax_ << token::END_STATEMENT << nl;
-    os.writeKeyword("accelerationDamping")
-        << aDamp_ << token::END_STATEMENT << nl;
-    os.writeKeyword("report")
-        << report_ << token::END_STATEMENT << nl;
+    writeEntry(os, "accelerationRelaxation", aRelax_);
+    writeEntry(os, "accelerationDamping", aDamp_);
+    writeEntry(os, "report", report_);
 }
 
 

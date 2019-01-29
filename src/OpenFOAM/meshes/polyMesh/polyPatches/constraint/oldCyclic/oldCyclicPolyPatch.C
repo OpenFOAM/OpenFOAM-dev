@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1219,28 +1219,24 @@ bool Foam::oldCyclicPolyPatch::order
 void Foam::oldCyclicPolyPatch::write(Ostream& os) const
 {
     // Replacement of polyPatch::write to write 'cyclic' instead of type():
-    os.writeKeyword("type") << cyclicPolyPatch::typeName
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "type", cyclicPolyPatch::typeName);
     patchIdentifier::write(os);
-    os.writeKeyword("nFaces") << size() << token::END_STATEMENT << nl;
-    os.writeKeyword("startFace") << start() << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "nFaces", size());
+    Foam::writeEntry(os, "startFace", start());
 
 
-    os.writeKeyword("featureCos") << featureCos_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "featureCos", featureCos_);
     switch (transform())
     {
         case ROTATIONAL:
         {
-            os.writeKeyword("rotationAxis") << rotationAxis_
-                << token::END_STATEMENT << nl;
-            os.writeKeyword("rotationCentre") << rotationCentre_
-                << token::END_STATEMENT << nl;
+            Foam::writeEntry(os, "rotationAxis", rotationAxis_);
+            Foam::writeEntry(os, "rotationCentre", rotationCentre_);
             break;
         }
         case TRANSLATIONAL:
         {
-            os.writeKeyword("separationVector") << separationVector_
-                << token::END_STATEMENT << nl;
+            Foam::writeEntry(os, "separationVector", separationVector_);
             break;
         }
         default:

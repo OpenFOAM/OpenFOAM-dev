@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -563,10 +563,8 @@ void Foam::coupledPolyPatch::write(Ostream& os) const
     polyPatch::write(os);
     // if (matchTolerance_ != defaultMatchTol_)
     {
-        os.writeKeyword("matchTolerance") << matchTolerance_
-            << token::END_STATEMENT << nl;
-        os.writeKeyword("transform") << transformTypeNames[transform_]
-            << token::END_STATEMENT << nl;
+        Foam::writeEntry(os, "matchTolerance", matchTolerance_);
+        Foam::writeEntry(os, "transform", transformTypeNames[transform_]);
     }
 }
 

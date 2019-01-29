@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -471,9 +471,7 @@ bool Foam::cyclicACMIPolyPatch::order
 void Foam::cyclicACMIPolyPatch::write(Ostream& os) const
 {
     cyclicAMIPolyPatch::write(os);
-
-    os.writeKeyword("nonOverlapPatch") << nonOverlapPatchName_
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "nonOverlapPatch", nonOverlapPatchName_);
 }
 
 

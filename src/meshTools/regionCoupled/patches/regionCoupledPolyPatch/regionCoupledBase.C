@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -331,15 +331,12 @@ bool Foam::regionCoupledBase::order
 
 void Foam::regionCoupledBase::write(Ostream& os) const
 {
-    os.writeKeyword("neighbourPatch") << nbrPatchName_
-    << token::END_STATEMENT << nl;
-    os.writeKeyword("neighbourRegion") << nbrRegionName_
-    << token::END_STATEMENT << nl;
+    writeEntry(os, "neighbourPatch", nbrPatchName_);
+    writeEntry(os, "neighbourRegion", nbrRegionName_);
 
     if (AMIReverse_)
     {
-        os.writeKeyword("flipNormals") << AMIReverse_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "flipNormals", AMIReverse_);
     }
 
     if (!surfDict_.empty())

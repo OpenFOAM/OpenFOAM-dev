@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ void Foam::Function1Types::ramp::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("start") << start_ << token::END_STATEMENT << nl;
-    os.writeKeyword("duration") << duration_ << token::END_STATEMENT << nl;
+    writeEntry(os, "start", start_);
+    writeEntry(os, "duration", duration_);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

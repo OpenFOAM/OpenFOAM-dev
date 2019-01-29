@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,20 +50,13 @@ void Foam::sixDoFRigidBodyMotion::write(Ostream& os) const
 {
     motionState_.write(os);
 
-    os.writeKeyword("centreOfMass")
-        << initialCentreOfMass_ << token::END_STATEMENT << nl;
-    os.writeKeyword("initialOrientation")
-        << initialQ_ << token::END_STATEMENT << nl;
-    os.writeKeyword("mass")
-        << mass_ << token::END_STATEMENT << nl;
-    os.writeKeyword("momentOfInertia")
-        << momentOfInertia_ << token::END_STATEMENT << nl;
-    os.writeKeyword("accelerationRelaxation")
-        << aRelax_ << token::END_STATEMENT << nl;
-    os.writeKeyword("accelerationDamping")
-        << aDamp_ << token::END_STATEMENT << nl;
-    os.writeKeyword("report")
-        << report_ << token::END_STATEMENT << nl;
+    writeEntry(os, "centreOfMass", initialCentreOfMass_);
+    writeEntry(os, "initialOrientation", initialQ_);
+    writeEntry(os, "mass", mass_);
+    writeEntry(os, "momentOfInertia", momentOfInertia_);
+    writeEntry(os, "accelerationRelaxation", aRelax_);
+    writeEntry(os, "accelerationDamping", aDamp_);
+    writeEntry(os, "report", report_);
 
     if (!restraints_.empty())
     {
@@ -77,8 +70,7 @@ void Foam::sixDoFRigidBodyMotion::write(Ostream& os) const
             os  << indent << restraints_[rI].name() << nl
                 << indent << token::BEGIN_BLOCK << incrIndent << endl;
 
-            os.writeKeyword("sixDoFRigidBodyMotionRestraint")
-                << restraintType << token::END_STATEMENT << nl;
+            writeEntry(os, "sixDoFRigidBodyMotionRestraint", restraintType);
 
             restraints_[rI].write(os);
 
@@ -100,8 +92,7 @@ void Foam::sixDoFRigidBodyMotion::write(Ostream& os) const
             os  << indent << constraints_[rI].name() << nl
                 << indent << token::BEGIN_BLOCK << incrIndent << endl;
 
-            os.writeKeyword("sixDoFRigidBodyMotionConstraint")
-                << constraintType << token::END_STATEMENT << nl;
+            writeEntry(os, "sixDoFRigidBodyMotionConstraint", constraintType);
 
             constraints_[rI].sixDoFRigidBodyMotionConstraint::write(os);
 

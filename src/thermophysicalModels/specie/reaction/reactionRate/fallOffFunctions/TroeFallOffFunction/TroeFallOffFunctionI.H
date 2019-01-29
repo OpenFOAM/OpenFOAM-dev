@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,10 +172,10 @@ inline Foam::scalar Foam::TroeFallOffFunction::ddc
 
 inline void Foam::TroeFallOffFunction::write(Ostream& os) const
 {
-    os.writeKeyword("alpha") << alpha_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Tsss") << Tsss_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Ts") << Ts_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Tss") << Tss_ << token::END_STATEMENT << nl;
+    writeEntry(os, "alpha", alpha_);
+    writeEntry(os, "Tsss", Tsss_);
+    writeEntry(os, "Ts", Ts_);
+    writeEntry(os, "Tss", Tss_);
 }
 
 

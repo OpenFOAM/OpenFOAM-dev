@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,9 +126,7 @@ bool Foam::CloudSubModelBase<CloudType>::writeTime() const
 template<class CloudType>
 void Foam::CloudSubModelBase<CloudType>::write(Ostream& os) const
 {
-    os.writeKeyword("owner") << owner_.name() << token::END_STATEMENT
-        << nl;
-
+    writeEntry(os, "owner", owner_.name());
     subModelBase::write(os);
 }
 

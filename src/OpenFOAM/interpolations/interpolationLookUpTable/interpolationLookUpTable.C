@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -354,19 +354,16 @@ void Foam::interpolationLookUpTable<Type>::write
 
     control.writeHeader(os);
 
-    os.writeKeyword("fields")
-        << entries_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "fields", entries_);
 
-    os.writeKeyword("output")
-        << output_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "output", output_);
 
     if (this->size() == 0)
     {
         FatalErrorInFunction
             << "table is empty" << nl << exit(FatalError);
     }
-    os.writeKeyword("values")
-        << *this << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "values", *this);
 }
 
 

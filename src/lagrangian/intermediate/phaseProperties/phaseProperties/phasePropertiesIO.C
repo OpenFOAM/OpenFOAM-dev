@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,8 +112,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const phaseProperties& pp)
 
     forAll(pp.names_, cmptI)
     {
-        os.writeKeyword(pp.names_[cmptI]) << pp.Y_[cmptI]
-            << token::END_STATEMENT << nl;
+        writeEntry(os, pp.names_[cmptI], pp.Y_[cmptI]);
     }
 
     os  << decrIndent << token::END_BLOCK << nl;

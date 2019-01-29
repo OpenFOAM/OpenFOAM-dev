@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -268,8 +268,7 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
         // Make sure to construct the patchfield with up-to-date value
 
         OStringStream os;
-        os.writeKeyword("type") << name_ << token::END_STATEMENT
-            << nl;
+        writeEntry(os, "type", name_);
         static_cast<const Field<Type>&>(*this).writeEntry("value", os);
         IStringStream is(os.str());
         dictionary dict(is);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,8 +81,8 @@ void Foam::Function1Types::Square<Type>::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("t0") << t0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("markSpace") << markSpace_ << token::END_STATEMENT << nl;
+    writeEntry(os, "t0", t0_);
+    writeEntry(os, "markSpace", markSpace_);
     amplitude_->writeData(os);
     frequency_->writeData(os);
     scale_->writeData(os);

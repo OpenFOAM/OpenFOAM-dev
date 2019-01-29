@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -488,9 +488,7 @@ Foam::cyclicRepeatAMIPolyPatch::neighbWeightsSum() const
 void Foam::cyclicRepeatAMIPolyPatch::write(Ostream& os) const
 {
     cyclicAMIPolyPatch::write(os);
-
-    os.writeKeyword("transformPatch") << transformPatchName_
-        << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "transformPatch", transformPatchName_);
 }
 
 

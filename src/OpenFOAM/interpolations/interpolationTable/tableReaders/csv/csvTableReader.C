@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,10 +176,8 @@ void Foam::csvTableReader<Type>::write(Ostream& os) const
 {
     tableReader<Type>::write(os);
 
-    os.writeKeyword("hasHeaderLine")
-        << headerLine_ << token::END_STATEMENT << nl;
-    os.writeKeyword("timeColumn")
-        << timeColumn_ << token::END_STATEMENT << nl;
+    writeEntry(os, "hasHeaderLine", headerLine_);
+    writeEntry(os, "timeColumn", timeColumn_);
 
     // Force writing labelList in ascii
     os.writeKeyword("valueColumns");
@@ -191,8 +189,7 @@ void Foam::csvTableReader<Type>::write(Ostream& os) const
     }
     os  << token::END_STATEMENT << nl;
 
-    os.writeKeyword("separator")
-        << string(separator_) << token::END_STATEMENT << nl;
+    writeEntry(os, "separator", string(separator_));
 }
 
 

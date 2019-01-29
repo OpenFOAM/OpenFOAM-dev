@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ inline void Foam::thirdBodyEfficiencies::write(Ostream& os) const
         coeffs[i].second() = operator[](i);
     }
 
-    os.writeKeyword("coeffs") << coeffs << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "coeffs", coeffs);
 }
 
 

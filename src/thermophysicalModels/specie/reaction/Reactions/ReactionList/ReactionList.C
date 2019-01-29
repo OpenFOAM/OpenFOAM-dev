@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ void Foam::ReactionList<ThermoType>::write(Ostream& os) const
         const Reaction<ThermoType>& r = iter();
         os  << indent << r.name() << nl
             << indent << token::BEGIN_BLOCK << incrIndent << nl;
-        os.writeKeyword("type") << r.type() << token::END_STATEMENT << nl;
+        writeEntry(os, "type", r.type());
         r.write(os);
         os  << decrIndent << indent << token::END_BLOCK << nl;
     }

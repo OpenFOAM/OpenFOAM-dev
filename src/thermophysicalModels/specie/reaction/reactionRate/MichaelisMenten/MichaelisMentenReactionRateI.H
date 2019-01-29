@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,9 +96,9 @@ inline Foam::scalar Foam::MichaelisMentenReactionRate::dcidT
 
 inline void Foam::MichaelisMentenReactionRate::write(Ostream& os) const
 {
-    os.writeKeyword("Vmax") << Vmax_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Km") << Km_ << token::END_STATEMENT << nl;
-    os.writeKeyword("S") << species_[s_] << token::END_STATEMENT << nl;
+    writeEntry(os, "Vmax", Vmax_);
+    writeEntry(os, "Km", Km_);
+    writeEntry(os, "S", species_[s_]);
 }
 
 

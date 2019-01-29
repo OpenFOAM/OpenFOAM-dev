@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,11 +166,11 @@ void Foam::waveModels::Airy::write(Ostream& os) const
 {
     waveModel::write(os);
 
-    os.writeKeyword("length") << length_ << token::END_STATEMENT << nl;
-    os.writeKeyword("phase") << phase_ << token::END_STATEMENT << nl;
+    writeEntry(os, "length", length_);
+    writeEntry(os, "phase", phase_);
     if (!deep())
     {
-        os.writeKeyword("depth") << depth_ << token::END_STATEMENT << nl;
+        writeEntry(os, "depth", depth_);
     }
 }
 

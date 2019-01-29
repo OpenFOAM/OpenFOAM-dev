@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1390,17 +1390,14 @@ Foam::pointIndexHit Foam::mappedPatchBase::facePoint
 
 void Foam::mappedPatchBase::write(Ostream& os) const
 {
-    os.writeKeyword("sampleMode") << sampleModeNames_[mode_]
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "sampleMode", sampleModeNames_[mode_]);
     if (!sampleRegion_.empty())
     {
-        os.writeKeyword("sampleRegion") << sampleRegion_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "sampleRegion", sampleRegion_);
     }
     if (!samplePatch_.empty())
     {
-        os.writeKeyword("samplePatch") << samplePatch_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "samplePatch", samplePatch_);
     }
     coupleGroup_.write(os);
 
@@ -1415,15 +1412,13 @@ void Foam::mappedPatchBase::write(Ostream& os) const
     }
     else
     {
-        os.writeKeyword("offsetMode") << offsetModeNames_[offsetMode_]
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "offsetMode", offsetModeNames_[offsetMode_]);
 
         switch (offsetMode_)
         {
             case UNIFORM:
             {
-                os.writeKeyword("offset") << offset_ << token::END_STATEMENT
-                    << nl;
+                writeEntry(os, "offset", offset_);
                 break;
             }
             case NONUNIFORM:
@@ -1433,8 +1428,7 @@ void Foam::mappedPatchBase::write(Ostream& os) const
             }
             case NORMAL:
             {
-                os.writeKeyword("distance") << distance_ << token::END_STATEMENT
-                    << nl;
+                writeEntry(os, "distance", distance_);
                 break;
             }
         }
@@ -1443,8 +1437,7 @@ void Foam::mappedPatchBase::write(Ostream& os) const
         {
             if (AMIReverse_)
             {
-                os.writeKeyword("flipNormals") << AMIReverse_
-                    << token::END_STATEMENT << nl;
+                writeEntry(os, "flipNormals", AMIReverse_);
             }
 
             if (!surfDict_.empty())

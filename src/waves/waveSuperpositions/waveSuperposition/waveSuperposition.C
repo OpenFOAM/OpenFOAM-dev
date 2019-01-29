@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -348,8 +348,8 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pGas
 
 void Foam::waveSuperposition::write(Ostream& os) const
 {
-    os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
-    os.writeKeyword("direction") << direction_ << token::END_STATEMENT << nl;
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "direction", direction_);
     os.writeKeyword("waves") << nl << token::BEGIN_LIST << nl << incrIndent;
     forAll(waveModels_, wavei)
     {
@@ -371,8 +371,7 @@ void Foam::waveSuperposition::write(Ostream& os) const
     }
     if (heightAboveWave_)
     {
-        os.writeKeyword("heightAboveWave") << heightAboveWave_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "heightAboveWave", heightAboveWave_);
     }
 }
 
