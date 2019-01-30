@@ -27,7 +27,7 @@ gas
     diameterModel   constant;
     d               1e-3;
     residualAlpha   1e-6;
-    Sc              0.7;
+    Sct             0.7;
 }
 
 liquid
