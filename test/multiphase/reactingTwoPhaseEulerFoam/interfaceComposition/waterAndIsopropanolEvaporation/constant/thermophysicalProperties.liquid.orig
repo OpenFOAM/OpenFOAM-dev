@@ -60,12 +60,10 @@ C3H8O
 {
     specie
     {
-        molWeight       60;
+        molWeight       60.09661;
     }
     equationOfState
     {
-        R               3000;
-        rho0            786;
         rho             786;
     }
     thermodynamics
