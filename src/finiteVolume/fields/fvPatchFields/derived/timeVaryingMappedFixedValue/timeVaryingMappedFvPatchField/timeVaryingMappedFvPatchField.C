@@ -402,13 +402,10 @@ void Foam::timeVaryingMappedFvPatchField<Type>::autoMap
 template<class Type>
 void Foam::timeVaryingMappedFvPatchField<Type>::rmap
 (
-    const fvPatchField<Type>& ptf,
+    const timeVaryingMappedFvPatchField<Type>& tiptf,
     const labelList& addr
 )
 {
-    const timeVaryingMappedFvPatchField<Type>& tiptf =
-        refCast<const timeVaryingMappedFvPatchField<Type>>(ptf);
-
     startSampledValues_.rmap(tiptf.startSampledValues_, addr);
     endSampledValues_.rmap(tiptf.endSampledValues_, addr);
 

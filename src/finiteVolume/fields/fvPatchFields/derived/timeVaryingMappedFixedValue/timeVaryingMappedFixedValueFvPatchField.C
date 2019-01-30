@@ -129,7 +129,14 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::rmap
 )
 {
     fixedValueFvPatchField<Type>::rmap(ptf, addr);
-    fieldMapper_.rmap(ptf, addr);
+    fieldMapper_.rmap
+    (
+        refCast
+        <
+            const timeVaryingMappedFixedValueFvPatchField<Type>
+        >(ptf).fieldMapper_,
+        addr
+    );
 }
 
 

@@ -218,8 +218,13 @@ public:
             //- Map (and resize as needed) from self given a mapping object
             void autoMap(const fvPatchFieldMapper&);
 
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            void rmap(const fvPatchField<Type>&, const labelList&);
+            //- Reverse map the given timeVaryingMappedFvPatchField
+            //  onto this timeVaryingMappedFvPatchField
+            void rmap
+            (
+                const timeVaryingMappedFvPatchField<Type>&,
+                const labelList&
+            );
 
 
         // Evaluation functions
