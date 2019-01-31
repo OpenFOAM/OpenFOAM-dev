@@ -91,7 +91,6 @@ meshQualityControls
 
 writeFlags
 (
-    noRefinement
     // scalarLevels
     // layerSets
     // layerFields
