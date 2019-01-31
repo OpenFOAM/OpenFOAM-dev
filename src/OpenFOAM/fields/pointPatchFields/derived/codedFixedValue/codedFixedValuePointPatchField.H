@@ -105,6 +105,12 @@ class codedFixedValuePointPatchField
     public fixedValuePointPatchField<Type>,
     public codedBase
 {
+    // Private static data
+
+        //- The keywords associated with source code
+        static const wordList codeKeys_;
+
+
     // Private data
 
         //- Dictionary contents for the boundary condition
@@ -128,14 +134,17 @@ class codedFixedValuePointPatchField
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        // Return a description (type + name) for the output
+        //- Return a description (type + name) for the output
         virtual string description() const;
 
-        // Clear the ptr to the redirected object
+        //- Clear the ptr to the redirected object
         virtual void clearRedirect() const;
 
-        // Get the dictionary to initialize the codeContext
+        //- Get the dictionary to initialize the codeContext
         virtual const dictionary& codeDict() const;
+
+        //- Get the keywords associated with source code
+        virtual const wordList& codeKeys() const;
 
 
 public:

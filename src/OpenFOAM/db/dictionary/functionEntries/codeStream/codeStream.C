@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,8 @@ namespace functionEntries
 }
 
 
-const Foam::word Foam::functionEntries::codeStream::codeTemplateC
-    = "codeStreamTemplate.C";
+const Foam::word Foam::functionEntries::codeStream::codeTemplateC =
+    "codeStreamTemplate.C";
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -123,8 +123,8 @@ Foam::functionEntries::codeStream::getFunction
     const dictionary& codeDict
 )
 {
-    // get code, codeInclude, codeOptions
-    dynamicCodeContext context(codeDict);
+    // get code, codeInclude, ...
+    dynamicCodeContext context(codeDict, {"code", "codeInclude", "localCode"});
 
     // codeName: codeStream + _<sha1>
     // codeDir : _<sha1>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,6 +103,12 @@ class codedFixedValueFvPatchField
     public fixedValueFvPatchField<Type>,
     public codedBase
 {
+    // Private static data
+
+        //- The keywords associated with source code
+        static const wordList codeKeys_;
+
+
     // Private data
 
         //- Dictionary contents for the boundary condition
@@ -126,14 +132,17 @@ class codedFixedValueFvPatchField
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        // Return a description (type + name) for the output
+        //- Return a description (type + name) for the output
         virtual string description() const;
 
-        // Clear the ptr to the redirected object
+        //- Clear the ptr to the redirected object
         virtual void clearRedirect() const;
 
-        // Get the dictionary to initialize the codeContext
+        //- Get the dictionary to initialize the codeContext
         virtual const dictionary& codeDict() const;
+
+        //- Get the keywords associated with source code
+        virtual const wordList& codeKeys() const;
 
 
 public:

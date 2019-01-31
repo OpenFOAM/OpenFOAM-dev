@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -258,9 +258,6 @@ public:
 
         //- Add a file to create with its contents. Will not be filtered
         void addCreateFile(const fileName& name, const string& contents);
-
-        //- Define filter variables for code, codeInclude, SHA1sum
-        void setFilterContext(const dynamicCodeContext&);
 
         //- Define a filter variable
         void setFilterVariable(const word& key, const std::string& value);
