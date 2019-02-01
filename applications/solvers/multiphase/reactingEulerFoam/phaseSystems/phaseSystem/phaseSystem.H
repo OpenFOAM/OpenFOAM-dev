@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -357,9 +357,21 @@ public:
 
         // Sub-model lookup
 
+            //- Check availability of a sub model for a given phase pair
+            template<class modelType>
+            bool foundSubModel(const phasePair& key) const;
+
             //- Return a sub model between a phase pair
             template<class modelType>
             const modelType& lookupSubModel(const phasePair& key) const;
+
+            //- Check availability of a sub model between two phases
+            template<class modelType>
+            bool foundSubModel
+            (
+                const phaseModel& dispersed,
+                const phaseModel& continuous
+            ) const;
 
             //- Return a sub model between two phases
             template<class modelType>

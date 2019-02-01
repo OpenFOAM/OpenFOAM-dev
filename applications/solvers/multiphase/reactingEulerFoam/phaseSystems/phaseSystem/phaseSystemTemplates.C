@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -371,6 +371,44 @@ void Foam::phaseSystem::fillFields
 
 
 template<class modelType>
+bool Foam::phaseSystem::foundSubModel(const phasePair& key) const
+{
+    const word name(IOobject::groupName(modelType::typeName, key.name()));
+
+    if (key.ordered())
+    {
+        if (mesh().foundObject<modelType>(name))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        if
+        (
+            mesh().foundObject<modelType>(name)
+         ||
+            mesh().foundObject<modelType>
+            (
+                IOobject::groupName(modelType::typeName, key.otherName())
+            )
+        )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+
+template<class modelType>
 const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const
 {
     const word name(IOobject::groupName(modelType::typeName, key.name()));
@@ -387,6 +425,17 @@ const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const
                 IOobject::groupName(modelType::typeName, key.otherName())
             );
     }
+}
+
+
+template<class modelType>
+bool Foam::phaseSystem::foundSubModel
+(
+    const phaseModel& dispersed,
+    const phaseModel& continuous
+) const
+{
+    return foundSubModel<modelType>(orderedPhasePair(dispersed, continuous));
 }
 
 
