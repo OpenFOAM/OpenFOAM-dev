@@ -15,6 +15,22 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-radiationModel  none;
+radiation       on;
+
+radiationModel  opaqueSolid;
+
+absorptionEmissionModel constantAbsorptionEmission;
+
+constantAbsorptionEmissionCoeffs
+{
+    absorptivity    0; // opaque
+    emissivity      0.1;
+    E               0;
+}
+
+scatterModel    none;
+
+sootModel       none;
+
 
 // ************************************************************************* //
