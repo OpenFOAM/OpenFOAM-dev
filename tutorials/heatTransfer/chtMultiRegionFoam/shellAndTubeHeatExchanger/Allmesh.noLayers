@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Create the initial block mesh and decompose
+runApplication blockMesh
+runApplication decomposePar -copyZero
+
+# Run snappy
+runParallel snappyHexMesh -overwrite
+
+# Split the mesh into regions
+runParallel splitMeshRegions -cellZones -defaultRegionName solid -overwrite

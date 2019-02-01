@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0/shell";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [ 0 0 0 1 0 0 0 ];
+
+internalField   uniform 600;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    lower
+    {
+        type            inletOutlet;
+        value           $internalField;
+        inletValue      $internalField;
+    }
+    upper
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    walls
+    {
+        type            zeroGradient;
+    }
+    shell_to_solid
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        value           $internalField;
+        Tnbr            T;
+        kappaMethod     fluidThermo;
+    }
+}
+
+// ************************************************************************* //
