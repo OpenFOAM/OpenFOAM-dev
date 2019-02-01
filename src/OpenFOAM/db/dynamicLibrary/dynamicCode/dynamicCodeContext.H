@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define dynamicCodeContext_H
 
 #include "dictionary.H"
+#include "HashTable.H"
 #include "SHA1Digest.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,31 +55,42 @@ class dynamicCodeContext
         //- The parent dictionary context
         const dictionary& dict_;
 
-        //- Optional "code" entry
-        string code_;
-
-        //- Optional "localCode" entry
-        string localCode_;
-
-        //- Optional "codeInclude" entry
-        string include_;
+        //- Code entries
+        HashTable<string> code_;
 
         //- Optional "codeOptions" entry
         string options_;
 
-        //- Optional "codeLib" entry
+        //- Optional "codeLibs" entry
         string libs_;
 
         //- Calculated SHA1Digest
         SHA1Digest sha1_;
 
 
+    // Private member functions
+
+        //- Add a \#line directive to the start of the given source string that
+        //  compilation messages are meaningful
+        static void addLineDirective
+        (
+            string&,
+            const label lineNum,
+            const fileName& name
+        );
+
+
 public:
 
     // Constructors
 
-        //- Construct from a dictionary
-        dynamicCodeContext(const dictionary&);
+        //- Construct from a dictionary and lists of which entries correspond
+        //  to code
+        dynamicCodeContext
+        (
+            const dictionary& dict,
+            const wordList& codeKeys
+        );
 
 
     // Member functions
@@ -89,10 +101,10 @@ public:
             return dict_;
         }
 
-        //- Return the code-includes
-        const string& include() const
+        //- Return the code table
+        const HashTable<string>& code() const
         {
-            return include_;
+            return code_;
         }
 
         //- Return the code-options
@@ -107,31 +119,11 @@ public:
             return libs_;
         }
 
-        //- Return the code
-        const string& code() const
-        {
-            return code_;
-        }
-
-        //- Return the local (file-scope) code
-        const string& localCode() const
-        {
-            return localCode_;
-        }
-
         //- Return SHA1 digest calculated from include, options, code
         const SHA1Digest& sha1() const
         {
             return sha1_;
         }
-
-        //- Helper: add \#line directive
-        static void addLineDirective
-        (
-            string&,
-            const label lineNum,
-            const fileName& name
-        );
 };
 
 

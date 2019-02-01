@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,35 +248,13 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 (
     const scalar minCos,
     const scalar concaveCos,
-    const labelList& patchIDs,
+    const labelHashSet& patchIDs,
     const dictionary& motionDict,
     const labelList& preserveFaces
 )
 {
     // Patch face merging engine
     combineFaces faceCombiner(mesh_, true);
-
-    // Pick up all candidate cells on boundary
-    labelHashSet boundaryCells(mesh_.nFaces()-mesh_.nInternalFaces());
-
-    {
-        const polyBoundaryMesh& patches = mesh_.boundaryMesh();
-
-        forAll(patchIDs, i)
-        {
-            label patchi = patchIDs[i];
-
-            const polyPatch& patch = patches[patchi];
-
-            if (!patch.coupled())
-            {
-                forAll(patch, i)
-                {
-                    boundaryCells.insert(mesh_.faceOwner()[patch.start()+i]);
-                }
-            }
-        }
-    }
 
     // Get all sets of faces that can be merged. Since only faces on the same
     // patch get merged there is no risk of e.g. patchID faces getting merged
@@ -285,12 +263,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
     // angle. Would be pretty weird starting mesh though.
     labelListList allFaceSets
     (
-        faceCombiner.getMergeSets
-        (
-            minCos,
-            concaveCos,
-            boundaryCells
-        )
+        faceCombiner.getMergeSets(minCos, concaveCos, patchIDs)
     );
 
     // Filter out any set that contains any preserveFace

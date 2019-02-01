@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,22 @@ License
 #include "dynamicCodeContext.H"
 #include "stringOps.H"
 
+// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
+
+template<class Type>
+const Foam::wordList Foam::codedMixedFvPatchField<Type>::codeKeys_ =
+    {"code", "codeInclude", "localCode"};
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class Type>
-const Foam::word Foam::codedMixedFvPatchField<Type>::codeTemplateC
-    = "mixedFvPatchFieldTemplate.C";
+const Foam::word Foam::codedMixedFvPatchField<Type>::codeTemplateC =
+    "mixedFvPatchFieldTemplate.C";
 
 template<class Type>
-const Foam::word Foam::codedMixedFvPatchField<Type>::codeTemplateH
-    = "mixedFvPatchFieldTemplate.H";
+const Foam::word Foam::codedMixedFvPatchField<Type>::codeTemplateH =
+    "mixedFvPatchFieldTemplate.H";
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -150,6 +157,13 @@ const
       ? dict_
       : this->dict().subDict(name_)
     );
+}
+
+
+template<class Type>
+const Foam::wordList& Foam::codedMixedFvPatchField<Type>::codeKeys() const
+{
+    return codeKeys_;
 }
 
 

@@ -80,15 +80,6 @@ Description
             #{
                 Pout<< "**codeSetValue**" << endl;
             #};
-
-            // Dummy entry. Make dependent on above to trigger recompilation
-            code
-            #{
-                $codeInclude
-                $codeCorrect
-                $codeAddSup
-                $codeSetValue
-            #};
         }
 
         sourceTimeCoeffs

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,16 @@ public:
             TOTAL_AND_EXPANSION
         };
 
+        //- Enumeration defining whether to merge faces on a given patch. Read
+        //  as a boolean (no/yes). Defaults to merging only on patches which
+        //  were meshed/snapped to (ifOnMeshedPatch).
+        enum class mergeFace
+        {
+            no,
+            ifOnMeshedPatch,
+            yes
+        };
+
 
 private:
 
@@ -111,6 +121,9 @@ private:
 
             //- Minimum total thickness
             scalarField minThickness_;
+
+            //- Whether to merge boundary faces of the same layer cell
+            List<mergeFace> mergeFaces_;
 
 
         scalar featureAngle_;
@@ -223,6 +236,12 @@ public:
             const scalarField& minThickness() const
             {
                 return minThickness_;
+            }
+
+            //- Whether to merge boundary faces of the same layer cell
+            const List<mergeFace>& mergeFaces() const
+            {
+                return mergeFaces_;
             }
 
 

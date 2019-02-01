@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,20 @@ License
 #include "stringOps.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * Protected Static Data Members * * * * * * * * * * * //
+
+const Foam::wordList Foam::codedFunctionObject::codeKeys_ =
+    {
+        "codeData",
+        "codeEnd",
+        "codeExecute",
+        "codeInclude",
+        "codeRead",
+        "codeWrite",
+        "localCode"
+    };
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -47,6 +61,7 @@ namespace Foam
     );
 }
 
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::codedFunctionObject::prepare
@@ -55,13 +70,7 @@ void Foam::codedFunctionObject::prepare
     const dynamicCodeContext& context
 ) const
 {
-    // Set additional rewrite rules
     dynCode.setFilterVariable("typeName", name_);
-    dynCode.setFilterVariable("codeData", codeData_);
-    dynCode.setFilterVariable("codeRead", codeRead_);
-    dynCode.setFilterVariable("codeExecute", codeExecute_);
-    dynCode.setFilterVariable("codeWrite", codeWrite_);
-    dynCode.setFilterVariable("codeEnd", codeEnd_);
 
     // Compile filtered C template
     dynCode.addCompileFile("functionObjectTemplate.C");
@@ -114,6 +123,12 @@ const Foam::dictionary& Foam::codedFunctionObject::codeDict() const
 }
 
 
+const Foam::wordList& Foam::codedFunctionObject::codeKeys() const
+{
+    return codeKeys_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::codedFunctionObject::codedFunctionObject
@@ -129,9 +144,6 @@ Foam::codedFunctionObject::codedFunctionObject
     dict_(dict)
 {
     read(dict_);
-
-    updateLibrary(name_);
-    redirectFunctionObject();
 }
 
 
@@ -184,114 +196,15 @@ bool Foam::codedFunctionObject::end()
 
 bool Foam::codedFunctionObject::read(const dictionary& dict)
 {
-    // Backward compatibility
-    if (dict.found("redirectType"))
+    // The name keyword is "name". "redirectType" is also maintained here
+    // for backwards compatibility, but "name" is taken in preference and
+    // is printed in the error message if neither keyword is present.
+    name_ = word::null;
+    name_ = dict.lookupOrDefault("redirectType", name_);
+    name_ = dict.lookupOrDefault("name", name_);
+    if (name_ == word::null)
     {
-        dict.lookup("redirectType") >> name_;
-    }
-    else
-    {
-        dict.lookup("name") >> name_;
-    }
-
-    const entry* dataPtr = dict.lookupEntryPtr
-    (
-        "codeData",
-        false,
-        false
-    );
-    if (dataPtr)
-    {
-        codeData_ = stringOps::trim(dataPtr->stream());
-        stringOps::inplaceExpand(codeData_, dict);
-        dynamicCodeContext::addLineDirective
-        (
-            codeData_,
-            dataPtr->startLineNumber(),
-            dict.name()
-        );
-    }
-
-    const entry* readPtr = dict.lookupEntryPtr
-    (
-        "codeRead",
-        false,
-        false
-    );
-    if (readPtr)
-    {
-        codeRead_ = stringOps::trim(readPtr->stream());
-        stringOps::inplaceExpand(codeRead_, dict);
-        dynamicCodeContext::addLineDirective
-        (
-            codeRead_,
-            readPtr->startLineNumber(),
-            dict.name()
-        );
-    }
-
-    const entry* execPtr = dict.lookupEntryPtr
-    (
-        "codeExecute",
-        false,
-        false
-    );
-    if (execPtr)
-    {
-        codeExecute_ = stringOps::trim(execPtr->stream());
-        stringOps::inplaceExpand(codeExecute_, dict);
-        dynamicCodeContext::addLineDirective
-        (
-            codeExecute_,
-            execPtr->startLineNumber(),
-            dict.name()
-        );
-    }
-
-    const entry* writePtr = dict.lookupEntryPtr
-    (
-        "codeWrite",
-        false,
-        false
-    );
-    if (writePtr)
-    {
-        codeWrite_ = stringOps::trim(writePtr->stream());
-        stringOps::inplaceExpand(codeWrite_, dict);
-        dynamicCodeContext::addLineDirective
-        (
-            codeWrite_,
-            writePtr->startLineNumber(),
-            dict.name()
-        );
-    }
-
-    const entry* endPtr = dict.lookupEntryPtr
-    (
-        "codeEnd",
-        false,
-        false
-    );
-    if (endPtr)
-    {
-        codeEnd_ = stringOps::trim(endPtr->stream());
-        stringOps::inplaceExpand(codeEnd_, dict);
-        dynamicCodeContext::addLineDirective
-        (
-            codeEnd_,
-            endPtr->startLineNumber(),
-            dict.name()
-        );
-    }
-
-    if(!dataPtr && !readPtr && !execPtr && !writePtr && !endPtr)
-    {
-        IOWarningInFunction
-        (
-            dict
-        )   << "No critical \"code\" prefixed keywords were found."
-            << " Please check the code documentation for more details."
-            << nl << endl;
+        dict.lookup("name"); // <-- generate error message with "name" in it
     }
 
     updateLibrary(name_);

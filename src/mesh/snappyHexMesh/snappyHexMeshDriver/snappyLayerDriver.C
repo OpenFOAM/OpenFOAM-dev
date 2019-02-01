@@ -2832,11 +2832,25 @@ void Foam::snappyLayerDriver::mergePatchFacesUndo
         duplicateFace[cpl[1]] = cpl[0];
     }
 
+    // Get a set of which patches are to have faces merged
+    labelHashSet patchIDs(meshRefiner_.meshedPatches());
+    forAll(mesh.boundaryMesh(), patchi)
+    {
+        if (layerParams.mergeFaces()[patchi] == layerParameters::mergeFace::no)
+        {
+            patchIDs.unset(patchi);
+        }
+        if (layerParams.mergeFaces()[patchi] == layerParameters::mergeFace::yes)
+        {
+            patchIDs.set(patchi);
+        }
+    }
+
     label nChanged = meshRefiner_.mergePatchFacesUndo
     (
         minCos,
         concaveCos,
-        meshRefiner_.meshedPatches(),
+        patchIDs,
         motionDict,
         duplicateFace
     );

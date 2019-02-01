@@ -31,15 +31,22 @@ License
 #include "dynamicCodeContext.H"
 #include "stringOps.H"
 
+// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
+
+template<class Type>
+const Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeKeys_ =
+    {"code", "codeInclude", "localCode"};
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class Type>
-const Foam::word Foam::codedFixedValuePointPatchField<Type>::codeTemplateC
-    = "fixedValuePointPatchFieldTemplate.C";
+const Foam::word Foam::codedFixedValuePointPatchField<Type>::codeTemplateC =
+    "fixedValuePointPatchFieldTemplate.C";
 
 template<class Type>
-const Foam::word Foam::codedFixedValuePointPatchField<Type>::codeTemplateH
-    = "fixedValuePointPatchFieldTemplate.H";
+const Foam::word Foam::codedFixedValuePointPatchField<Type>::codeTemplateH =
+    "fixedValuePointPatchFieldTemplate.H";
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -141,8 +148,8 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
 
 
 template<class Type>
-const Foam::dictionary& Foam::codedFixedValuePointPatchField<Type>::codeDict()
-const
+const Foam::dictionary&
+Foam::codedFixedValuePointPatchField<Type>::codeDict() const
 {
     // Use system/codeDict or in-line
     return
@@ -151,6 +158,14 @@ const
       ? dict_
       : this->dict().subDict(name_)
     );
+}
+
+
+template<class Type>
+const Foam::wordList&
+Foam::codedFixedValuePointPatchField<Type>::codeKeys() const
+{
+    return codeKeys_;
 }
 
 

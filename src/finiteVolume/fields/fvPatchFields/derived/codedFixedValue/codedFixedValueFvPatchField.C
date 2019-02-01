@@ -31,15 +31,22 @@ License
 #include "dynamicCodeContext.H"
 #include "stringOps.H"
 
+// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
+
+template<class Type>
+const Foam::wordList Foam::codedFixedValueFvPatchField<Type>::codeKeys_ =
+    {"code", "codeInclude", "localCode"};
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class Type>
-const Foam::word Foam::codedFixedValueFvPatchField<Type>::codeTemplateC
-    = "fixedValueFvPatchFieldTemplate.C";
+const Foam::word Foam::codedFixedValueFvPatchField<Type>::codeTemplateC =
+    "fixedValueFvPatchFieldTemplate.C";
 
 template<class Type>
-const Foam::word Foam::codedFixedValueFvPatchField<Type>::codeTemplateH
-    = "fixedValueFvPatchFieldTemplate.H";
+const Foam::word Foam::codedFixedValueFvPatchField<Type>::codeTemplateH =
+    "fixedValueFvPatchFieldTemplate.H";
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -150,6 +157,13 @@ const
       ? dict_
       : this->dict().subDict(name_)
     );
+}
+
+
+template<class Type>
+const Foam::wordList& Foam::codedFixedValueFvPatchField<Type>::codeKeys() const
+{
+    return codeKeys_;
 }
 
 

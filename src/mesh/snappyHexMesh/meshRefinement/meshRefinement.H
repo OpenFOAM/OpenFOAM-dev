@@ -997,7 +997,7 @@ public:
                 (
                     const scalar minCos,
                     const scalar concaveCos,
-                    const labelList& patchIDs,
+                    const labelHashSet& patchIDs,
                     const dictionary& motionDict,
                     const labelList& preserveFaces
                 );
