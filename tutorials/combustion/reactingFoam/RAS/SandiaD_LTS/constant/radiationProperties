@@ -20,11 +20,6 @@ radiation on;
 
 radiationModel  P1;
 
-P1Coeffs
-{
-    C               C [0 0 0 0 0 0 0] 0;
-}
-
 // Number of flow iterations per radiation iteration
 solverFreq 1;
 
