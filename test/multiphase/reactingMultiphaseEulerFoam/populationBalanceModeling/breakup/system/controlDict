@@ -64,7 +64,7 @@ functions
 
         functionType        numberDensity;
         abszissaType        volume;
-        regionType          all;
+        selectionMode       all;
         populationBalance   bubbles;
     }
 }

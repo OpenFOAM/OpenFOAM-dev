@@ -64,7 +64,7 @@ functions
 
         functionType        numberDensity;
         abszissaType        volume;
-        regionType          all;
+        selectionMode       all;
         populationBalance   bubbles;
     }
 
@@ -80,7 +80,7 @@ functions
         functionType        moments;
         momentOrder         2;
         abszissaType        volume;
-        regionType          all;
+        selectionMode       all;
         populationBalance   bubbles;
     }
 }

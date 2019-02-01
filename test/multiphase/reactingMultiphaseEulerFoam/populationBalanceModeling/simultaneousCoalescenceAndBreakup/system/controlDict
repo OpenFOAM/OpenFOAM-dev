@@ -64,7 +64,7 @@ functions
 
         functionType        numberDensity;
         abszissaType        diameter;
-        regionType          all;
+        selectionMode       all;
         populationBalance   bubbles;
         normalize           true;
     }
@@ -80,7 +80,7 @@ functions
 
         functionType        volumeDensity;
         abszissaType        diameter;
-        regionType          all;
+        selectionMode       all;
         populationBalance   bubbles;
         normalize           true;
     }

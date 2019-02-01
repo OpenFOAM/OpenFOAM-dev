@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ template<>
 const char*
 Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::regionTypes,
+    Foam::functionObjects::sizeDistribution::selectionModeTypes,
     2
 >::names[] = {"cellZone", "all"};
 
@@ -70,9 +70,9 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::regionTypes,
+    Foam::functionObjects::sizeDistribution::selectionModeTypes,
     2
-> Foam::functionObjects::sizeDistribution::regionTypeNames_;
+> Foam::functionObjects::sizeDistribution::selectionModeTypeNames_;
 
 const Foam::NamedEnum
 <
@@ -118,9 +118,9 @@ void Foam::functionObjects::sizeDistribution::initialise
 
         default:
         {
-            FatalErrorInFunction
-               << "Unknown function type. Valid function types are:"
-                << functionTypeNames_ << nl << exit(FatalError);
+            FatalIOErrorInFunction(dict)
+               << "Unknown functionType. Valid types are:"
+                << functionTypeNames_ << nl << exit(FatalIOError);
         }
     }
 
@@ -138,9 +138,9 @@ void Foam::functionObjects::sizeDistribution::initialise
 
         default:
         {
-            FatalErrorInFunction
-               << "Unknown abszissa type. Valid abszissa types are:"
-                << abszissaTypeNames_ << nl << exit(FatalError);
+            FatalIOErrorInFunction(dict)
+                << "Unknown abszissaType. Valid types are:"
+                << abszissaTypeNames_ << nl << exit(FatalIOError);
         }
     }
 
@@ -148,16 +148,18 @@ void Foam::functionObjects::sizeDistribution::initialise
 
     if (nCells_ == 0)
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
-            << "    Region has no cells" << exit(FatalError);
+            << selectionModeTypeNames_[selectionModeType_]
+            << "(" << selectionModeTypeName_ << "):" << nl
+            << "    Selection has no cells" << exit(FatalIOError);
     }
 
     volume_ = volume();
 
     Info<< type() << " " << name() << ":"
-        << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
+        << selectionModeTypeNames_[selectionModeType_]
+        << "(" << selectionModeTypeName_ << "):" << nl
         << "    total cells  = " << nCells_ << nl
         << "    total volume = " << volume_
         << nl << endl;
@@ -166,20 +168,22 @@ void Foam::functionObjects::sizeDistribution::initialise
 
 void Foam::functionObjects::sizeDistribution::setCellZoneCells()
 {
-    switch (regionType_)
+    switch (selectionModeType_)
     {
         case rtCellZone:
         {
-            dict().lookup("name") >> regionName_;
+            dict().lookup("cellZone") >> selectionModeTypeName_;
 
-            label zoneId = mesh().cellZones().findZoneID(regionName_);
+            label zoneId =
+                mesh().cellZones().findZoneID(selectionModeTypeName_);
 
             if (zoneId < 0)
             {
-                FatalErrorInFunction
-                    << "Unknown cell zone name: " << regionName_
-                    << ". Valid cell zones are: " << mesh().cellZones().names()
-                    << nl << exit(FatalError);
+                FatalIOErrorInFunction(dict_)
+                    << "Unknown cellZone name: " << selectionModeTypeName_
+                    << ". Valid cellZone names are: "
+                    << mesh().cellZones().names()
+                    << nl << exit(FatalIOError);
             }
 
             cellId_ = mesh().cellZones()[zoneId];
@@ -196,9 +200,9 @@ void Foam::functionObjects::sizeDistribution::setCellZoneCells()
 
         default:
         {
-            FatalErrorInFunction
-               << "Unknown region type. Valid region types are:"
-                << regionTypeNames_ << nl << exit(FatalError);
+            FatalIOErrorInFunction(dict_)
+               << "Unknown selectionMode type. Valid selectionMode types are:"
+                << selectionModeTypeNames_ << nl << exit(FatalIOError);
         }
     }
 }
@@ -345,8 +349,11 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     dict_(dict),
-    regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
-    regionName_(word::null),
+    selectionModeType_
+    (
+        selectionModeTypeNames_.read(dict.lookup("selectionMode"))
+    ),
+    selectionModeTypeName_(word::null),
     functionType_(functionTypeNames_.read(dict.lookup("functionType"))),
     abszissaType_(abszissaTypeNames_.read(dict.lookup("abszissaType"))),
     nCells_(0),

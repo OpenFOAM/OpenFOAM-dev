@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Description
         ...
         functionType        numberDensity;
         abszissaType        volume;
-        regionType          all;
+        selectionMode       all;
         populationBalanceModel   bubbles;
         normalize           true;
     }
@@ -57,8 +57,8 @@ Usage
                           moments | yes |
         abszissaType    | volume, diameter | yes |
         momentOrder     | Write moment up to given order | no | 0
-        regionType      | Evaluate for cellZone or entire mesh | yes |
-        cellZoneName    | Required if regionType is cellZone |   |
+        selectionMode | Evaluate for cellZone or entire mesh | yes |
+        cellZone      | Required if selectionMode is cellZone |   |
         populationBalanceModel    | Respective populationBalanceModel | yes |
         normalize | Normalization | no |
     \endtable
@@ -106,15 +106,15 @@ public:
 
     // Public data types
 
-        //- Region type enumeration
-        enum regionTypes
+        //- Selection mode type enumeration
+        enum selectionModeTypes
         {
             rtCellZone,
             rtAll
         };
 
-        //- Region type names
-        static const NamedEnum<regionTypes, 2> regionTypeNames_;
+        //- Selection mode type names
+        static const NamedEnum<selectionModeTypes, 2> selectionModeTypeNames_;
 
 
         //- Function type enumeration
@@ -148,11 +148,11 @@ protected:
         //- Construction dictionary
         dictionary dict_;
 
-        //- Region type
-        regionTypes regionType_;
+        //- Selection mode type
+        selectionModeTypes selectionModeType_;
 
-        //- Name of region
-        word regionName_;
+        //- Name of selection
+        word selectionModeTypeName_;
 
         //- Function type
         functionTypes functionType_;
@@ -166,7 +166,7 @@ protected:
         //- Local list of cell IDs
         labelList cellId_;
 
-        //- Total volume of the evaluated region
+        //- Total volume of the evaluated selection
         scalar volume_;
 
         //- Optionally write the volume of the sizeDistribution

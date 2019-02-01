@@ -101,8 +101,8 @@ functions
 
         functionType        numberDensity;
         abszissaType        diameter;
-        regionType          cellZone;
-        name                zone;
+        selectionMode       cellZone;
+        cellZone            zone;
         populationBalance   bubbles;
     }
 }
