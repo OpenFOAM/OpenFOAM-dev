@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -632,7 +632,7 @@ void Foam::multiphaseSystem::solve()
                 fv::localEulerDdt::localRSubDeltaT(mesh_, nAlphaSubCycles);
         }
 
-        PtrList<volScalarField> alpha0s(phases().size());
+        List<volScalarField*> alphaPtrs(phases().size());
         PtrList<surfaceScalarField> alphaPhiSums(phases().size());
 
         forAll(phases(), phasei)
@@ -640,11 +640,7 @@ void Foam::multiphaseSystem::solve()
             phaseModel& phase = phases()[phasei];
             volScalarField& alpha = phase;
 
-            alpha0s.set
-            (
-                phasei,
-                new volScalarField(alpha.oldTime())
-            );
+            alphaPtrs[phasei] = &alpha;
 
             alphaPhiSums.set
             (
@@ -665,9 +661,9 @@ void Foam::multiphaseSystem::solve()
 
         for
         (
-            subCycleTime alphaSubCycle
+            subCycle<volScalarField, subCycleFields> alphaSubCycle
             (
-                const_cast<Time&>(runTime),
+                alphaPtrs,
                 nAlphaSubCycles
             );
             !(++alphaSubCycle).end();
@@ -686,17 +682,7 @@ void Foam::multiphaseSystem::solve()
             phaseModel& phase = phases()[phasei];
             if (phase.stationary()) continue;
 
-            volScalarField& alpha = phase;
-
             phase.alphaPhiRef() = alphaPhiSums[phasei]/nAlphaSubCycles;
-
-            // Correct the time index of the field
-            // to correspond to the global time
-            alpha.timeIndex() = runTime.timeIndex();
-
-            // Reset the old-time field value
-            alpha.oldTime() = alpha0s[phasei];
-            alpha.oldTime().timeIndex() = runTime.timeIndex();
         }
     }
     else
