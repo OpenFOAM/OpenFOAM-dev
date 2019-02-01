@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,13 +34,13 @@ License
 #include "fvmDdt.H"
 #include "fvcDdt.H"
 #include "fvmSup.H"
+#include "fvcSup.H"
 #include "fvcDiv.H"
 #include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-void
-Foam::diameterModels::populationBalanceModel::registerVelocityAndSizeGroups()
+void Foam::diameterModels::populationBalanceModel::registerVelocityGroups()
 {
     forAll(fluid_.phases(), phasei)
     {
@@ -61,7 +61,7 @@ Foam::diameterModels::populationBalanceModel::registerVelocityAndSizeGroups()
 
                 forAll(velGroup.sizeGroups(), i)
                 {
-                    this->add
+                    this->registerSizeGroups
                     (
                         const_cast<sizeGroup&>(velGroup.sizeGroups()[i])
                     );
@@ -72,8 +72,10 @@ Foam::diameterModels::populationBalanceModel::registerVelocityAndSizeGroups()
 }
 
 
-void
-Foam::diameterModels::populationBalanceModel::add(sizeGroup& group)
+void Foam::diameterModels::populationBalanceModel::registerSizeGroups
+(
+    sizeGroup& group
+)
 {
     if
     (
@@ -291,8 +293,6 @@ birthByCoalescence
 
         Su_[i] += Sui_;
 
-        dimensionedScalar ratio = fj.x()/fi.x();
-
         const phasePairKey pairij
         (
             fi.phase().name(),
@@ -306,7 +306,7 @@ birthByCoalescence
                 Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
             );
 
-            pDmdt_[pairij]->ref() += dmdtSign*ratio*Sui_*fi.phase().rho();
+            pDmdt_[pairij]->ref() += dmdtSign*fj.x()/v*Sui_*fi.phase().rho();
         }
 
         const phasePairKey pairik
@@ -322,7 +322,7 @@ birthByCoalescence
                 Pair<word>::compare(pDmdt_.find(pairik).key(), pairik)
             );
 
-            pDmdt_[pairik]->ref() += dmdtSign*(1 - ratio)*Sui_*fi.phase().rho();
+            pDmdt_[pairik]->ref() += dmdtSign*fk.x()/v*Sui_*fi.phase().rho();
         }
     }
 }
@@ -518,7 +518,7 @@ deathByBinaryBreakup
 
 void Foam::diameterModels::populationBalanceModel::drift(const label i)
 {
-    const sizeGroup& fi = sizeGroups_[i];
+    const sizeGroup& fp = sizeGroups_[i];
 
     if (i == 0)
     {
@@ -536,36 +536,34 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
     }
 
     SuSp_[i] +=
-        (neg(1 - rx_()) + neg(1 - rx_()/(1 - rx_())))*driftRate_()
-       *fi.phase()/((rx_() - 1)*sizeGroups_[i].x());
+        (neg(1 - rx_()) + neg(rx_() - rx_()/(1 - rx_())))*driftRate_()
+       *fp.phase()/((rx_() - 1)*fp.x());
 
     rx_() = Zero;
     rdx_() = Zero;
 
-    if (i < sizeGroups_.size() - 2)
+    if (i == sizeGroups_.size() - 2)
     {
-        rx_() += pos(driftRate_())*sizeGroups_[i+2].x()/sizeGroups_[i+1].x();
+        rx_() = pos(driftRate_())*sizeGroups_[i+1].x()/sizeGroups_[i].x();
 
-        rdx_() +=
-            pos(driftRate_())
-           *(sizeGroups_[i+2].x() - sizeGroups_[i+1].x())
-           /(sizeGroups_[i+1].x() - sizeGroups_[i].x());
-    }
-    else if (i == sizeGroups_.size() - 2)
-    {
-        rx_() += pos(driftRate_())*sizeGroups_[i+1].x()/sizeGroups_[i].x();
-
-        rdx_() +=
+        rdx_() =
             pos(driftRate_())
            *(sizeGroups_[i+1].x() - sizeGroups_[i].x())
            /(sizeGroups_[i].x() - sizeGroups_[i-1].x());
     }
+    else if (i < sizeGroups_.size() - 2)
+    {
+        rx_() = pos(driftRate_())*sizeGroups_[i+2].x()/sizeGroups_[i+1].x();
+
+        rdx_() =
+            pos(driftRate_())
+           *(sizeGroups_[i+2].x() - sizeGroups_[i+1].x())
+           /(sizeGroups_[i+1].x() - sizeGroups_[i].x());
+    }
 
     if (i == 1)
     {
-        rx_() +=
-            neg(driftRate_())*sizeGroups_[i-1].x()
-           /sizeGroups_[i].x();
+        rx_() += neg(driftRate_())*sizeGroups_[i-1].x()/sizeGroups_[i].x();
 
         rdx_() +=
             neg(driftRate_())
@@ -584,20 +582,20 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
 
     if (i != sizeGroups_.size() - 1)
     {
-        const sizeGroup& fj = sizeGroups_[i+1];
-        volScalarField& Suj = Sui_;
+        const sizeGroup& fe = sizeGroups_[i+1];
+        volScalarField& Sue = Sui_;
 
-        Suj =
+        Sue =
             pos(driftRate_())*driftRate_()*rdx_()
-           *fi*fi.phase()/fi.x()
+           *fp*fp.phase()/fp.x()
            /(rx_() - 1);
 
-        Su_[i+1] += Suj;
+        Su_[i+1] += Sue;
 
         const phasePairKey pairij
         (
-            fi.phase().name(),
-            fj.phase().name()
+            fp.phase().name(),
+            fe.phase().name()
         );
 
         if (pDmdt_.found(pairij))
@@ -607,26 +605,26 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
                 Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
             );
 
-            pDmdt_[pairij]->ref() -= dmdtSign*Suj*fi.phase().rho();
+            pDmdt_[pairij]->ref() -= dmdtSign*Sue*fp.phase().rho();
         }
     }
 
     if (i != 0)
     {
-        const sizeGroup& fh = sizeGroups_[i-1];
-        volScalarField& Suh = Sui_;
+        const sizeGroup& fw = sizeGroups_[i-1];
+        volScalarField& Suw = Sui_;
 
-        Suh =
+        Suw =
             neg(driftRate_())*driftRate_()*rdx_()
-           *fi*fi.phase()/fi.x()
+           *fp*fp.phase()/fp.x()
            /(rx_() - 1);
 
-        Su_[i-1] += Suh;
+        Su_[i-1] += Suw;
 
         const phasePairKey pairih
         (
-            fi.phase().name(),
-            fh.phase().name()
+            fp.phase().name(),
+            fw.phase().name()
         );
 
         if (pDmdt_.found(pairih))
@@ -636,7 +634,7 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
                 Pair<word>::compare(pDmdt_.find(pairih).key(), pairih)
             );
 
-            pDmdt_[pairih]->ref() -= dmdtSign*Suh*fi.phase().rho();
+            pDmdt_[pairih]->ref() -= dmdtSign*Suw*fp.phase().rho();
         }
     }
 }
@@ -715,7 +713,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
         {
             label j = 0;
 
-            while (delta_[j][i].value() != 0.0)
+            while (delta_[j][i].value() != 0)
             {
                 binaryBreakupRate_() = Zero;
 
@@ -770,7 +768,7 @@ void Foam::diameterModels::populationBalanceModel::dmdt()
     {
         velocityGroup& velGroup = velocityGroups_[v];
 
-        velGroup.dmdt() = Zero;
+        velGroup.dmdtRef() = Zero;
 
         forAll(sizeGroups_, i)
         {
@@ -778,7 +776,7 @@ void Foam::diameterModels::populationBalanceModel::dmdt()
             {
                 sizeGroup& fi = sizeGroups_[i];
 
-                velGroup.dmdt() += fi.phase().rho()*(Su_[i] - SuSp_[i]*fi);
+                velGroup.dmdtRef() += fi.phase().rho()*(Su_[i] - SuSp_[i]*fi);
             }
         }
     }
@@ -937,7 +935,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         (mesh_.time().timeIndex()*nCorr())%sourceUpdateInterval()
     )
 {
-    this->registerVelocityAndSizeGroups();
+    this->registerVelocityGroups();
 
     this->createPhasePairs();
 
@@ -1187,7 +1185,7 @@ Foam::diameterModels::populationBalanceModel::gamma
 
     if (v < lowerBoundary || v > upperBoundary)
     {
-        return 0.0;
+        return 0;
     }
     else if (v.value() <= xi.value())
     {
@@ -1289,7 +1287,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
                         fi
                     )
                   ==
-                    Su_[i]*rho
+                    fvc::Su(Su_[i]*rho, fi)
                   - fvm::SuSp(SuSp_[i]*rho, fi)
                   + fvc::ddt(residualAlpha*rho, fi)
                   - fvm::ddt(residualAlpha*rho, fi)

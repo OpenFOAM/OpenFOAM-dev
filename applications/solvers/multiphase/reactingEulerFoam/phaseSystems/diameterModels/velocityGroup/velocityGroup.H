@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,11 +173,11 @@ public:
         //- Return const-reference to multivariate convectionScheme
         inline const tmp<fv::convectionScheme<scalar>>& mvConvection() const;
 
-        //- Return const-reference to mass transfer rate
+        //- Return const-reference to the mass transfer rate
         inline const volScalarField& dmdt() const;
 
-        //- Return reference to mass transfer rate
-        inline volScalarField& dmdt();
+        //- Return reference to the mass transfer rate
+        inline volScalarField& dmdtRef();
 
         //- Corrections before populationBalanceModel::solve()
         void preSolve();

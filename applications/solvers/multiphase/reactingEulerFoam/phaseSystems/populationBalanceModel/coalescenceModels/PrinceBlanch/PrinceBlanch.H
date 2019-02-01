@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ Description
         g                 |  Gravitational constant [m/s2]
     \endvartable
 
-    References:
+    Reference:
     \verbatim
         Prince, M. J., & Blanch, H. W. (1990).
         Bubble coalescence and break‐up in air‐sparged bubble columns.

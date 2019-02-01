@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,8 +100,8 @@ Foam::diameterModels::velocityGroup::fSum() const
 
 void Foam::diameterModels::velocityGroup::renormalize()
 {
-        Info<< phase_.name()
-            << " renormalizing sizeGroups"
+        Info<< "Renormalizing sizeGroups for velocityGroup "
+            << phase_.name()
             << endl;
 
         // Set negative values to zero

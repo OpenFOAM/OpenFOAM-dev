@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
     model choice. For models which state a total breakup rate and a separate
     daughter size distribution function, the formulation of Kumar and Ramkrishna
     (1996) is applied which is applicable for binary and multiple breakup
-    events. The second formulation is given by Liao et al. (2017). It is useful
+    events. The second formulation is given by Liao et al. (2018). It is useful
     for binary breakup models which give the breakup rate between a sizeGroup
     pair directly, without an explicit expression for the daughter size
     distribution. The drift term is implemented using a finite difference upwind
@@ -283,9 +283,9 @@ class populationBalanceModel
 
     // Private member functions
 
-        void registerVelocityAndSizeGroups();
+        void registerVelocityGroups();
 
-        void add(sizeGroup& group);
+        void registerSizeGroups(sizeGroup& group);
 
         void createPhasePairs();
 
