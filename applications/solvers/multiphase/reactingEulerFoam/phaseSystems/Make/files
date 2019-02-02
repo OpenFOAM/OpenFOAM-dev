@@ -25,6 +25,7 @@ populationBalanceModel/coalescenceModels/hydrodynamic/hydrodynamic.C
 populationBalanceModel/coalescenceModels/PrinceBlanch/PrinceBlanch.C
 
 populationBalanceModel/binaryBreakupModels/binaryBreakupModel/binaryBreakupModel.C
+populationBalanceModel/binaryBreakupModels/LuoSvendsen/LuoSvendsen.C
 populationBalanceModel/binaryBreakupModels/powerLawUniformBinary/powerLawUniformBinary.C
 
 populationBalanceModel/breakupModels/breakupModel/breakupModel.C
