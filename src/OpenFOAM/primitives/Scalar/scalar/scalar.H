@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,6 +125,18 @@ namespace Foam
 
     //- Inverse normalized incomplete gamma function
     scalar invIncGamma(const scalar a, const scalar P);
+
+    //- Normalized upper incomplete gamma function
+    scalar incGammaRatio_Q(const scalar a, const scalar x);
+
+    //- Normalized lower incomplete gamma function
+    scalar incGammaRatio_P(const scalar a, const scalar x);
+
+    //- Upper incomplete gamma function
+    scalar incGamma_Q(const scalar a, const scalar x);
+
+    //- Lower incomplete gamma function
+    scalar incGamma_P(const scalar a, const scalar x);
 }
 
 
