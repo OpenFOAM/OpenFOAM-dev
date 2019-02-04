@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -298,10 +298,10 @@ scalar currentCommonT = 0;
 gasHThermoPhysics::coeffArray highCpCoeffs(scalarList(7));
 gasHThermoPhysics::coeffArray lowCpCoeffs(scalarList(7));
 
-gasHReaction::specieCoeffs currentSpecieCoeff;
+specieCoeffs currentSpecieCoeff;
 
-DynamicList<gasHReaction::specieCoeffs> lhs;
-DynamicList<gasHReaction::specieCoeffs> rhs;
+DynamicList<specieCoeffs> lhs;
+DynamicList<specieCoeffs> rhs;
 
 scalarList ArrheniusCoeffs(3);
 DynamicList<scalar> reactionCoeffs;
@@ -311,7 +311,7 @@ label currentThirdBodyIndex = -1;
 word reactionCoeffsName = word::null;
 HashTable<scalarList> reactionCoeffsTable;
 
-DynamicList<gasHReaction::specieCoeffs> *lrhsPtr = &lhs;
+DynamicList<specieCoeffs> *lrhsPtr = &lhs;
 
 reactionType rType = unknownReactionType;
 reactionRateType rrType = Arrhenius;
@@ -1449,7 +1449,7 @@ bool finishReaction = false;
 
 <readReactionOrder>{reactionCoeff}{endReactionCoeffs} {
 
-        DynamicList<gasHReaction::specieCoeffs>& lrhs = *lrhsPtr;
+        DynamicList<specieCoeffs>& lrhs = *lrhsPtr;
 
         bool found = false;
 

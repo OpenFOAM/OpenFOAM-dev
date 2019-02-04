@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,8 +169,8 @@ template<class ReactionRateType>
 void Foam::chemkinReader::addReactionType
 (
     const reactionType rType,
-    DynamicList<gasHReaction::specieCoeffs>& lhs,
-    DynamicList<gasHReaction::specieCoeffs>& rhs,
+    DynamicList<specieCoeffs>& lhs,
+    DynamicList<specieCoeffs>& rhs,
     const ReactionRateType& rr
 )
 {
@@ -241,8 +241,8 @@ void Foam::chemkinReader::addPressureDependentReaction
 (
     const reactionType rType,
     const fallOffFunctionType fofType,
-    DynamicList<gasHReaction::specieCoeffs>& lhs,
-    DynamicList<gasHReaction::specieCoeffs>& rhs,
+    DynamicList<specieCoeffs>& lhs,
+    DynamicList<specieCoeffs>& rhs,
     const scalarList& efficiencies,
     const scalarList& k0Coeffs,
     const scalarList& kInfCoeffs,
@@ -411,8 +411,8 @@ void Foam::chemkinReader::addPressureDependentReaction
 
 void Foam::chemkinReader::addReaction
 (
-    DynamicList<gasHReaction::specieCoeffs>& lhs,
-    DynamicList<gasHReaction::specieCoeffs>& rhs,
+    DynamicList<specieCoeffs>& lhs,
+    DynamicList<specieCoeffs>& rhs,
     const scalarList& efficiencies,
     const reactionType rType,
     const reactionRateType rrType,

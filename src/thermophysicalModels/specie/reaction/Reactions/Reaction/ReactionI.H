@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,16 +54,14 @@ inline scalar Reaction<ReactionThermo>::Thigh() const
 
 
 template<class ReactionThermo>
-inline const List<typename Reaction<ReactionThermo>::specieCoeffs>&
-Reaction<ReactionThermo>::lhs() const
+inline const List<specieCoeffs>& Reaction<ReactionThermo>::lhs() const
 {
     return lhs_;
 }
 
 
 template<class ReactionThermo>
-inline const List<typename Reaction<ReactionThermo>::specieCoeffs>&
-Reaction<ReactionThermo>::rhs() const
+inline const List<specieCoeffs>& Reaction<ReactionThermo>::rhs() const
 {
     return rhs_;
 }

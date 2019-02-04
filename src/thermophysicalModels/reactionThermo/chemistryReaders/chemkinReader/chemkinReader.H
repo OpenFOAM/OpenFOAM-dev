@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,8 +239,8 @@ private:
         void addReactionType
         (
             const reactionType rType,
-            DynamicList<gasHReaction::specieCoeffs>& lhs,
-            DynamicList<gasHReaction::specieCoeffs>& rhs,
+            DynamicList<specieCoeffs>& lhs,
+            DynamicList<specieCoeffs>& rhs,
             const ReactionRateType& rr
         );
 
@@ -249,8 +249,8 @@ private:
         (
             const reactionType rType,
             const fallOffFunctionType fofType,
-            DynamicList<gasHReaction::specieCoeffs>& lhs,
-            DynamicList<gasHReaction::specieCoeffs>& rhs,
+            DynamicList<specieCoeffs>& lhs,
+            DynamicList<specieCoeffs>& rhs,
             const scalarList& thirdBodyEfficiencies,
             const scalarList& k0Coeffs,
             const scalarList& kInfCoeffs,
@@ -262,8 +262,8 @@ private:
 
         void addReaction
         (
-            DynamicList<gasHReaction::specieCoeffs>& lhs,
-            DynamicList<gasHReaction::specieCoeffs>& rhs,
+            DynamicList<specieCoeffs>& lhs,
+            DynamicList<specieCoeffs>& rhs,
             const scalarList& thirdBodyEfficiencies,
             const reactionType rType,
             const reactionRateType rrType,

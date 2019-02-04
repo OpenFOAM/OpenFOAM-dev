@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Reaction.H"
-#include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
 
@@ -37,57 +36,6 @@ Foam::scalar Foam::Reaction<ReactionThermo>::TlowDefault(0);
 template<class ReactionThermo>
 Foam::scalar Foam::Reaction<ReactionThermo>::ThighDefault(great);
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::reactionStrLeft
-(
-    OStringStream& reaction
-) const
-{
-    for (label i = 0; i < lhs_.size(); ++i)
-    {
-        if (i > 0)
-        {
-            reaction << " + ";
-        }
-        if (mag(lhs_[i].stoichCoeff - 1) > small)
-        {
-            reaction << lhs_[i].stoichCoeff;
-        }
-        reaction << species_[lhs_[i].index];
-        if (mag(lhs_[i].exponent - lhs_[i].stoichCoeff) > small)
-        {
-            reaction << "^" << lhs_[i].exponent;
-        }
-    }
-}
-
-
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::reactionStrRight
-(
-    OStringStream& reaction
-) const
-{
-    for (label i = 0; i < rhs_.size(); ++i)
-    {
-        if (i > 0)
-        {
-            reaction << " + ";
-        }
-        if (mag(rhs_[i].stoichCoeff - 1) > small)
-        {
-            reaction << rhs_[i].stoichCoeff;
-        }
-        reaction << species_[rhs_[i].index];
-        if (mag(rhs_[i].exponent - rhs_[i].stoichCoeff) > small)
-        {
-            reaction << "^" << rhs_[i].exponent;
-        }
-    }
-}
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -95,19 +43,6 @@ template<class ReactionThermo>
 Foam::label Foam::Reaction<ReactionThermo>::getNewReactionID()
 {
     return nUnNamedReactions++;
-}
-
-
-template<class ReactionThermo>
-Foam::string Foam::Reaction<ReactionThermo>::reactionStr
-(
-    OStringStream& reaction
-) const
-{
-    reactionStrLeft(reaction);
-    reaction << " = ";
-    reactionStrRight(reaction);
-    return reaction.str();
 }
 
 
@@ -153,7 +88,6 @@ void Foam::Reaction<ReactionThermo>::setThermo
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-
 template<class ReactionThermo>
 Foam::Reaction<ReactionThermo>::Reaction
 (
@@ -193,144 +127,6 @@ Foam::Reaction<ReactionThermo>::Reaction
 
 
 template<class ReactionThermo>
-Foam::Reaction<ReactionThermo>::specieCoeffs::specieCoeffs
-(
-    const speciesTable& species,
-    Istream& is
-)
-{
-    token t(is);
-    if (t.isNumber())
-    {
-        stoichCoeff = t.number();
-        is >> t;
-    }
-    else
-    {
-        stoichCoeff = 1;
-    }
-
-    exponent = stoichCoeff;
-
-    if (t.isWord())
-    {
-        word specieName = t.wordToken();
-
-        size_t i = specieName.find('^');
-
-        if (i != word::npos)
-        {
-            string exponentStr = specieName
-            (
-                i + 1,
-                specieName.size() - i - 1
-            );
-            exponent = atof(exponentStr.c_str());
-            specieName = specieName(0, i);
-        }
-
-        if (species.contains(specieName))
-        {
-            index = species[specieName];
-        }
-        else
-        {
-            index = -1;
-        }
-    }
-    else
-    {
-        FatalIOErrorInFunction(is)
-            << "Expected a word but found " << t.info()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::setLRhs
-(
-    Istream& is,
-    const speciesTable& species,
-    List<specieCoeffs>& lhs,
-    List<specieCoeffs>& rhs
-)
-{
-    DynamicList<specieCoeffs> dlrhs;
-
-    while (is.good())
-    {
-        dlrhs.append(specieCoeffs(species, is));
-
-        if (dlrhs.last().index != -1)
-        {
-            token t(is);
-            if (t.isPunctuation())
-            {
-                if (t == token::ADD)
-                {
-                }
-                else if (t == token::ASSIGN)
-                {
-                    lhs = dlrhs.shrink();
-                    dlrhs.clear();
-                }
-                else
-                {
-                    rhs = dlrhs.shrink();
-                    is.putBack(t);
-                    return;
-                }
-            }
-            else
-            {
-                rhs = dlrhs.shrink();
-                is.putBack(t);
-                return;
-            }
-        }
-        else
-        {
-            dlrhs.remove();
-            if (is.good())
-            {
-                token t(is);
-                if (t.isPunctuation())
-                {
-                    if (t == token::ADD)
-                    {
-                    }
-                    else if (t == token::ASSIGN)
-                    {
-                        lhs = dlrhs.shrink();
-                        dlrhs.clear();
-                    }
-                    else
-                    {
-                        rhs = dlrhs.shrink();
-                        is.putBack(t);
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                if (!dlrhs.empty())
-                {
-                    rhs = dlrhs.shrink();
-                }
-                return;
-            }
-        }
-    }
-
-    FatalIOErrorInFunction(is)
-        << "Cannot continue reading reaction data from stream"
-        << exit(FatalIOError);
-}
-
-
-template<class ReactionThermo>
 Foam::Reaction<ReactionThermo>::Reaction
 (
     const speciesTable& species,
@@ -344,7 +140,7 @@ Foam::Reaction<ReactionThermo>::Reaction
     Tlow_(dict.lookupOrDefault<scalar>("Tlow", TlowDefault)),
     Thigh_(dict.lookupOrDefault<scalar>("Thigh", ThighDefault))
 {
-    setLRhs
+    specieCoeffs::setLRhs
     (
         IStringStream(dict.lookup("reaction"))(),
         species_,
@@ -394,7 +190,12 @@ template<class ReactionThermo>
 void Foam::Reaction<ReactionThermo>::write(Ostream& os) const
 {
     OStringStream reaction;
-    writeEntry(os, "reaction", reactionStr(reaction));
+    writeEntry
+    (
+        os,
+        "reaction",
+        specieCoeffs::reactionStr(reaction, species_, lhs_, rhs_)
+    );
 }
 
 

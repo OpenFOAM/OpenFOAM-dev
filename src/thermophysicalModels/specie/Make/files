@@ -1,5 +1,6 @@
 atomicWeights/atomicWeights.C
 specie/specie.C
+reaction/specieCoeffs/specieCoeffs.C
 reaction/reactions/makeReactions.C
 reaction/reactions/makeLangmuirHinshelwoodReactions.C
 reaction/reactions/makeMichaelisMentenReactions.C
