@@ -102,6 +102,23 @@ Foam::dynamicCodeContext::dynamicCodeContext
             );
         }
     }
+
+    // Options
+    const entry* optionsPtr = dict.lookupEntryPtr("codeOptions", false, false);
+    if (optionsPtr)
+    {
+        options_ =
+            stringOps::expand(stringOps::trim(optionsPtr->stream()), dict);
+    }
+
+    // Libs
+    const entry* libsPtr = dict.lookupEntryPtr("codeLibs", false, false);
+    if (libsPtr)
+    {
+        libs_ =
+            stringOps::expand(stringOps::trim(libsPtr->stream()), dict);
+    }
+
 }
 
 

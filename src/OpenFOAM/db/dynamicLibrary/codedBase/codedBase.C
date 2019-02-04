@@ -332,7 +332,11 @@ void Foam::codedBase::updateLibrary
     {
         createLibrary(dynCode, context);
 
-        loadLibrary(libPath, dynCode.codeName(), context.dict());
+        if (!loadLibrary(libPath, dynCode.codeName(), context.dict()))
+        {
+            FatalIOErrorInFunction(context.dict())
+                << "Failed to load " << libPath << exit(FatalIOError);
+        }
     }
 
     // retain for future reference
