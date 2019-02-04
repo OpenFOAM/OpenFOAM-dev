@@ -131,13 +131,39 @@ void Foam::freestreamPressureFvPatchScalarField::updateCoeffs()
             UName_
         );
 
+    const Field<scalar> magUp = mag(Up);
+
+    const Field<vector>& nf = patch().nf();
+
+    Field<scalar>& vf = valueFraction();
+
     if (supersonic_)
     {
-        valueFraction() = 0.5 - 0.5*(Up & patch().nf())/mag(Up);
+        forAll(vf, i)
+        {
+            if (magUp[i] > vSmall)
+            {
+                vf[i] = 0.5 - 0.5*(Up[i] & nf[i])/magUp[i];
+            }
+            else
+            {
+                vf[i] = 0.5;
+            }
+        }
     }
     else
     {
-        valueFraction() = 0.5 + 0.5*(Up & patch().nf())/mag(Up);
+        forAll(vf, i)
+        {
+            if (magUp[i] > vSmall)
+            {
+                vf[i] = 0.5 + 0.5*(Up[i] & nf[i])/magUp[i];
+            }
+            else
+            {
+                vf[i] = 0.5;
+            }
+        }
     }
 
     mixedFvPatchField<scalar>::updateCoeffs();
