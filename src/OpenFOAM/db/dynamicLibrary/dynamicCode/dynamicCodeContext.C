@@ -79,12 +79,29 @@ Foam::dynamicCodeContext::dynamicCodeContext
         }
     }
 
+    // Options
+    const entry* optionsPtr = dict.lookupEntryPtr("codeOptions", false, false);
+    if (optionsPtr)
+    {
+        options_ =
+            stringOps::expand(stringOps::trim(optionsPtr->stream()), dict);
+    }
+
+    // Libs
+    const entry* libsPtr = dict.lookupEntryPtr("codeLibs", false, false);
+    if (libsPtr)
+    {
+        libs_ =
+            stringOps::expand(stringOps::trim(libsPtr->stream()), dict);
+    }
+
     // Calculate SHA1 digest from all entries
     OSHA1stream os;
     forAllConstIter(HashTable<string>, code_, iter)
     {
         os << iter();
     }
+    os << options_ << libs_;
     sha1_ = os.digest();
 
     // Add line directive after calculating SHA1 since this includes
@@ -102,23 +119,6 @@ Foam::dynamicCodeContext::dynamicCodeContext
             );
         }
     }
-
-    // Options
-    const entry* optionsPtr = dict.lookupEntryPtr("codeOptions", false, false);
-    if (optionsPtr)
-    {
-        options_ =
-            stringOps::expand(stringOps::trim(optionsPtr->stream()), dict);
-    }
-
-    // Libs
-    const entry* libsPtr = dict.lookupEntryPtr("codeLibs", false, false);
-    if (libsPtr)
-    {
-        libs_ =
-            stringOps::expand(stringOps::trim(libsPtr->stream()), dict);
-    }
-
 }
 
 
