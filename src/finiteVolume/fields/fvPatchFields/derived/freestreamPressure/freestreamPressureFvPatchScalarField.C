@@ -131,7 +131,7 @@ void Foam::freestreamPressureFvPatchScalarField::updateCoeffs()
             UName_
         );
 
-    const Field<scalar> magUp = mag(Up);
+    const Field<scalar> magUp(mag(Up));
 
     const Field<vector>& nf = patch().nf();
 

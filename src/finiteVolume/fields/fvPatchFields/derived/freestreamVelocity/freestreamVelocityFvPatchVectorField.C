@@ -107,7 +107,7 @@ void Foam::freestreamVelocityFvPatchVectorField::updateCoeffs()
     }
 
     const Field<vector>& Up = *this;
-    const Field<scalar> magUp = mag(Up);
+    const Field<scalar> magUp(mag(Up));
 
     const Field<vector>& nf = patch().nf();
 
