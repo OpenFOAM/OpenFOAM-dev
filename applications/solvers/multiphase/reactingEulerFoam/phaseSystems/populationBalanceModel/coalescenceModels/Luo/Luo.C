@@ -96,9 +96,9 @@ addToCoalescenceRate
                 popBal_.continuousPhase()
             );
 
-        dimensionedScalar xi = fi.d()/fj.d();
+        const dimensionedScalar xi = fi.d()/fj.d();
 
-        volScalarField uij
+        const volScalarField uij
         (
             sqrt(beta_)
            *cbrt(popBal_.continuousTurbulence().epsilon()*fi.d())

@@ -110,6 +110,7 @@ void Foam::diameterModels::driftModels::phaseChange::correct()
                     forAll(vgj.sizeGroups(), i)
                     {
                         const sizeGroup& fi = vgj.sizeGroups()[i];
+
                         W_[k] +=
                             fi*max(fi.phase(), small)
                            /(numberWeighted_ ? fi.x() : fi.d());

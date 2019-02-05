@@ -59,9 +59,12 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
     gammaUpperReg2by11_(),
     gammaUpperReg5by11_(),
     gammaUpperReg8by11_(),
-    C4_(dict.lookupOrDefault("C4", 0.923)),
-    beta_(dict.lookupOrDefault("beta", 2.05)),
-    minEddyRatio_(dict.lookupOrDefault("minEddyRatio", 11.4)),
+    C4_(dimensionedScalar::lookupOrDefault("C4", dict, dimless, 0.923)),
+    beta_(dimensionedScalar::lookupOrDefault("beta", dict, dimless, 2.05)),
+    minEddyRatio_
+    (
+        dimensionedScalar::lookupOrDefault("minEddyRatio", dict, dimless, 11.4)
+    ),
     kolmogorovLengthScale_
     (
         IOobject
@@ -166,12 +169,12 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
-    dimensionedScalar cf
+    const dimensionedScalar cf
     (
-        pow(fi.x()/fj.x(), 2.0/3.0) + pow((1.0 - fi.x()/fj.x()), 2.0/3.0) - 1.0
+        pow(fi.x()/fj.x(), 2.0/3.0) + pow((1 - fi.x()/fj.x()), 2.0/3.0) - 1
     );
 
-    volScalarField b
+    const volScalarField b
     (
         12.0*cf*popBal_.sigmaWithContinuousPhase(fi.phase())
        /(
@@ -180,9 +183,9 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
         )
     );
 
-    volScalarField xiMin(minEddyRatio_*kolmogorovLengthScale_/fj.d());
+    const volScalarField xiMin(minEddyRatio_*kolmogorovLengthScale_/fj.d());
 
-    volScalarField tMin(b/pow(xiMin, 11.0/3.0));
+    const volScalarField tMin(b/pow(xiMin, 11.0/3.0));
 
     volScalarField integral(3.0/(11.0*pow(b, 8.0/11.0)));
 
@@ -197,7 +200,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
     }
 
     binaryBreakupRate +=
-        C4_*(1.0 - popBal_.alphas())/fj.x()
+        C4_*(1 - popBal_.alphas())/fj.x()
        *cbrt
         (
             popBal_.continuousTurbulence().epsilon()

@@ -84,7 +84,7 @@ addToCoalescenceRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
-    volScalarField uChar
+    const volScalarField uChar
     (
         max
         (
