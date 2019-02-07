@@ -1,7 +1,7 @@
 // Initialise solid field pointer lists
 PtrList<coordinateSystem> coordinates(solidRegions.size());
 PtrList<solidThermo> thermos(solidRegions.size());
-PtrList<radiation::radiationModel> radiations(solidRegions.size());
+PtrList<radiationModel> radiations(solidRegions.size());
 PtrList<fv::options> solidHeatSources(solidRegions.size());
 PtrList<volScalarField> betavSolid(solidRegions.size());
 PtrList<volSymmTensorField> aniAlphas(solidRegions.size());
@@ -16,7 +16,7 @@ forAll(solidRegions, i)
     thermos.set(i, solidThermo::New(solidRegions[i]));
 
     Info<< "    Adding to radiations\n" << endl;
-    radiations.set(i, radiation::radiationModel::New(thermos[i].T()));
+    radiations.set(i, radiationModel::New(thermos[i].T()));
 
     Info<< "    Adding fvOptions\n" << endl;
     solidHeatSources.set

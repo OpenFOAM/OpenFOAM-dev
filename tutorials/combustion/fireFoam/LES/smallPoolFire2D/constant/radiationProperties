@@ -30,16 +30,16 @@ fvDOMCoeffs
 // Number of flow iterations per radiation iteration
 solverFreq 10;
 
-absorptionEmissionModel greyMeanAbsorptionEmission;
+absorptionEmissionModel greyMeanCombustion;
 
-constantAbsorptionEmissionCoeffs
+constantCoeffs
 {
     absorptivity    0.01;
     emissivity      0.01;
     E               0;
 }
 
-greyMeanAbsorptionEmissionCoeffs
+greyMeanCombustionCoeffs
 {
     lookUpTableFileName     none;
 
@@ -185,12 +185,13 @@ greyMeanAbsorptionEmissionCoeffs
 
 scatterModel    none;
 
-sootModel mixtureFractionSoot<gasHThermoPhysics>;
+sootModel mixtureFraction<gasHThermoPhysics>;
 
-mixtureFractionSootCoeffs
+mixtureFractionCoeffs
 {
     // CH4 + 2O2 + 7.5N2 = CO2 + 2H2O + 7.5N2 + nuSoot soot
     nuSoot              0.055;
     Wsoot               12;
 }
+
 // ************************************************************************* //

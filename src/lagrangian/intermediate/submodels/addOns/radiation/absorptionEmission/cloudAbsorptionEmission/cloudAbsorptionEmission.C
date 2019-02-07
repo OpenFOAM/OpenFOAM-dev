@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,23 +31,26 @@ License
 
 namespace Foam
 {
-    namespace radiation
-    {
-        defineTypeNameAndDebug(cloudAbsorptionEmission, 0);
+namespace radiationModels
+{
+namespace absorptionEmissionModels
+{
+    defineTypeNameAndDebug(cloud, 0);
 
-        addToRunTimeSelectionTable
-        (
-            absorptionEmissionModel,
-            cloudAbsorptionEmission,
-            dictionary
-        );
-    }
+    addToRunTimeSelectionTable
+    (
+        absorptionEmissionModel,
+        cloud,
+        dictionary
+    );
+}
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::radiation::cloudAbsorptionEmission::cloudAbsorptionEmission
+Foam::radiationModels::absorptionEmissionModels::cloud::cloud
 (
     const dictionary& dict,
     const fvMesh& mesh
@@ -61,14 +64,14 @@ Foam::radiation::cloudAbsorptionEmission::cloudAbsorptionEmission
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::radiation::cloudAbsorptionEmission::~cloudAbsorptionEmission()
+Foam::radiationModels::absorptionEmissionModels::cloud::~cloud()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::radiation::cloudAbsorptionEmission::aDisp(const label) const
+Foam::radiationModels::absorptionEmissionModels::cloud::aDisp(const label) const
 {
     tmp<volScalarField> ta
     (
@@ -95,7 +98,10 @@ Foam::radiation::cloudAbsorptionEmission::aDisp(const label) const
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::radiation::cloudAbsorptionEmission::eDisp(const label bandI) const
+Foam::radiationModels::absorptionEmissionModels::cloud::eDisp
+(
+    const label bandI
+) const
 {
     tmp<volScalarField> te
     (
@@ -112,7 +118,10 @@ Foam::radiation::cloudAbsorptionEmission::eDisp(const label bandI) const
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::radiation::cloudAbsorptionEmission::EDisp(const label bandI) const
+Foam::radiationModels::absorptionEmissionModels::cloud::EDisp
+(
+    const label bandI
+) const
 {
     tmp<volScalarField> tE
     (

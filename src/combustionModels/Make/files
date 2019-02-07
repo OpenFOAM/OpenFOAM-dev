@@ -22,4 +22,7 @@ noCombustion/noCombustions.C
 
 functionObjects/Qdot/Qdot.C
 
+radiationModels/absorptionEmissionModels/greyMeanCombustion/greyMeanCombustion.C
+radiationModels/absorptionEmissionModels/wideBandCombustion/wideBandCombustion.C
+
 LIB = $(FOAM_LIBBIN)/libcombustionModels

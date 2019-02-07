@@ -31,16 +31,16 @@ fvDOMCoeffs
 // Number of flow iterations per radiation iteration
 solverFreq 10;
 
-absorptionEmissionModel greyMeanAbsorptionEmission;
+absorptionEmissionModel greyMeanCombustion;
 
-constantAbsorptionEmissionCoeffs
+constantCoeffs
 {
     absorptivity    0.01;
     emissivity      0.01;
     E               0;
 }
 
-greyMeanAbsorptionEmissionCoeffs
+greyMeanCombustionCoeffs
 {
     lookUpTableFileName      none;
 

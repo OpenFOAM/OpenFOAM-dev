@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -385,7 +385,7 @@ reactingOneDim::reactingOneDim
     pyrolysisModel(modelType, mesh, regionType),
     solidThermo_(solidReactionThermo::New(regionMesh())),
     solidChemistry_(basicSolidChemistryModel::New(solidThermo_())),
-    radiation_(radiation::radiationModel::New(solidThermo_->T())),
+    radiation_(radiationModel::New(solidThermo_->T())),
     rho_
     (
         IOobject
@@ -485,7 +485,7 @@ reactingOneDim::reactingOneDim
     pyrolysisModel(modelType, mesh, dict, regionType),
     solidThermo_(solidReactionThermo::New(regionMesh())),
     solidChemistry_(basicSolidChemistryModel::New(solidThermo_())),
-    radiation_(radiation::radiationModel::New(solidThermo_->T())),
+    radiation_(radiationModel::New(solidThermo_->T())),
     rho_
     (
         IOobject

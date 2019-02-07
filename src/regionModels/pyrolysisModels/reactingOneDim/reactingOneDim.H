@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ protected:
         autoPtr<basicSolidChemistryModel> solidChemistry_;
 
         //- Pointer to radiation model
-        autoPtr<radiation::radiationModel> radiation_;
+        autoPtr<radiationModel> radiation_;
 
 
         // Reference to solid thermo properties

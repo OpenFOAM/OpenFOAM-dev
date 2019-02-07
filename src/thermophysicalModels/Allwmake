@@ -15,10 +15,7 @@ wmake $targetType chemistryModel
 wmake $targetType barotropicCompressibilityModel
 wmake $targetType SLGThermo
 
-
 wmake $targetType solidThermo
 wmake $targetType solidChemistryModel
-
-wmake $targetType radiation
 
 #------------------------------------------------------------------------------

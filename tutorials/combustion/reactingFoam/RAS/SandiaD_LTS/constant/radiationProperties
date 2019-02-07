@@ -23,9 +23,9 @@ radiationModel  P1;
 // Number of flow iterations per radiation iteration
 solverFreq 1;
 
-absorptionEmissionModel greyMeanAbsorptionEmission;
+absorptionEmissionModel greyMeanCombustion;
 
-greyMeanAbsorptionEmissionCoeffs
+greyMeanCombustionCoeffs
 {
     lookUpTableFileName      none;
 

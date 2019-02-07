@@ -19,9 +19,9 @@ radiation       on;
 
 radiationModel  opaqueSolid;
 
-absorptionEmissionModel constantAbsorptionEmission;
+absorptionEmissionModel constant;
 
-constantAbsorptionEmissionCoeffs
+constantCoeffs
 {
     absorptivity    0; // opaque
     emissivity      0.1;

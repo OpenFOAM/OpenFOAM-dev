@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ void noPyrolysis::constructThermoChemistry()
     );
 
     solidThermo_.reset(&solidChemistry_->solidThermo());
-    radiation_.reset(radiation::radiationModel::New(solidThermo_->T()).ptr());
+    radiation_.reset(radiationModel::New(solidThermo_->T()).ptr());
 }
 
 

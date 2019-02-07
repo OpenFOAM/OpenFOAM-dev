@@ -20,9 +20,9 @@ radiation       on;
 
 radiationModel  opaqueSolid;
 
-absorptionEmissionModel greyMeanSolidAbsorptionEmission;
+absorptionEmissionModel greyMeanSolid;
 
-greyMeanSolidAbsorptionEmissionCoeffs
+greyMeanSolidCoeffs
 {
     wood
     {
