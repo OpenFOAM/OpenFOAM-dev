@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,44 +56,61 @@ void Foam::sampledSets::lineFace::calcSamples
     DynamicList<scalar>& samplingCurveDist
 )
 {
-    // Look for a starting location within the mesh
-    vector startPt = start;
-    label startFaceI = -1, startCellI = searchEngine.findCell(start);
+    // Create lists of initial positions from which to track, the faces and
+    // cells associated with those positions, and whether the track  propagates
+    // forward (true) or backward (false) along the line from start to end
+    DynamicList<point> initialPts;
+    DynamicList<label> initialFaces, initialCells;
+    DynamicList<bool> initialDirections;
 
-    // Get all the hits of the line with the boundaries
-    const List<pointIndexHit> bHits =
-        searchEngine.intersections(start, end);
-
-    // Loop over the hits, starting new segments each time
-    label bHitI = startCellI == -1 ? 0 : -1;
-    label sampleSegmentI = 0;
-    for (; bHitI < bHits.size(); ++ bHitI)
+    // Add boundary hits
+    const List<pointIndexHit> bHits = searchEngine.intersections(start, end);
+    forAll(bHits, bHiti)
     {
-        // If a boundary start point, then initialise to the current hit
-        if (bHitI >= 0)
-        {
-            startPt = bHits[bHitI].hitPoint();
-            startFaceI = bHits[bHitI].index();
-            startCellI = mesh.faceOwner()[startFaceI];
-        }
+        initialPts.append(bHits[bHiti].hitPoint());
+        const label facei = bHits[bHiti].index();
+        initialFaces.append(facei);
+        initialCells.append(mesh.faceOwner()[facei]);
+        initialDirections.append((mesh.faceAreas()[facei] & (end - start)) < 0);
+    }
 
-        // If the hit points outward, move on to the next one
-        if (startFaceI != -1)
-        {
-            const vector bNormal = normalised(mesh.faceAreas()[startFaceI]);
-            const scalar bDot = bNormal & (end - start);
-            if (bDot > 0)
-            {
-                continue;
-            }
-        }
+    // Add the start and end points if they can be found within the mesh
+    const label startCelli = searchEngine.findCell(start);
+    if (startCelli != -1)
+    {
+        initialPts.append(start);
+        initialFaces.append(-1);
+        initialCells.append(startCelli);
+        initialDirections.append(true);
+    }
+    const label endCelli = searchEngine.findCell(end);
+    if (endCelli != -1)
+    {
+        initialPts.append(end);
+        initialFaces.append(-1);
+        initialCells.append(endCelli);
+        initialDirections.append(false);
+    }
 
-        // Create a particle. If we are starting on a boundary face, track
-        // backwards into it so that the particle has the correct topology.
-        passiveParticle sampleParticle(mesh, startPt, startCellI);
-        if (startFaceI != -1)
+    // Loop over the initial points, starting new segments each time
+    label sampleSegmenti = 0;
+    DynamicList<Pair<point>> lines;
+    forAll(initialPts, initiali)
+    {
+        // Get the sign
+        const scalar sign = initialDirections[initiali] ? +1 : -1;
+
+        // Create a particle. Track backwards into the boundary face so that
+        // the particle has the correct topology.
+        passiveParticle sampleParticle
+        (
+            mesh,
+            initialPts[initiali],
+            initialCells[initiali]
+        );
+        if (initialFaces[initiali] != -1)
         {
-            sampleParticle.track(start - end, 0);
+            sampleParticle.track(sign*(start - end), 0);
             if (!sampleParticle.onBoundaryFace())
             {
                 FatalErrorInFunction
@@ -102,26 +119,26 @@ void Foam::sampledSets::lineFace::calcSamples
             }
         }
 
-        // Track until a boundary is hit, appending the face intersections to
-        // the lists of samples
+        // Track until a boundary is hit, appending the face intersections
+        // to the lists of samples, and storing the line
+        DynamicList<point> segmentPts;
+        DynamicList<label> segmentCells, segmentFaces;
+        Pair<point> line(sampleParticle.position(), sampleParticle.position());
         while (true)
         {
             const point pt = sampleParticle.position();
-            const scalar dist = mag(pt - start);
-            const bool first =
-                samplingSegments.size() == 0
-             || samplingSegments.last() != sampleSegmentI;
+            const scalar dist = mag(pt - (sign > 0 ? start : end));
+            const bool first = segmentPts.size() == 0;
 
             if (sampleParticle.onFace())
             {
-                samplingPts.append(pt);
-                samplingCells.append(sampleParticle.cell());
-                samplingFaces.append(sampleParticle.face());
-                samplingSegments.append(sampleSegmentI);
-                samplingCurveDist.append(dist);
+                segmentPts.append(pt);
+                segmentCells.append(sampleParticle.cell());
+                segmentFaces.append(sampleParticle.face());
             }
 
-            const vector s = (1 - dist/mag(end - start))*(end - start);
+            const vector s =
+                sign*(end - start)*(1 - dist/mag(end - start));
 
             if
             (
@@ -132,8 +149,68 @@ void Foam::sampledSets::lineFace::calcSamples
                 break;
             }
         }
+        line[1] = sampleParticle.position();
 
-        ++ sampleSegmentI;
+        // Reverse if going backwards
+        if (sign < 0)
+        {
+            inplaceReverseList(segmentPts);
+            inplaceReverseList(segmentCells);
+            inplaceReverseList(segmentFaces);
+            line = reverse(line);
+        }
+
+        // Mark point as not to be kept if they fall within the bounds of
+        // previous lines
+        boolList segmentKeep(segmentPts.size(), true);
+        forAll(segmentPts, segmentPti)
+        {
+            forAll(lines, linei)
+            {
+                const Pair<point>& l = lines[linei];
+                const vector dlHat = normalised(l[1] - l[0]);
+                if (magSqr(dlHat) == 0)
+                {
+                    continue;
+                }
+                const scalar dot0 = (segmentPts[segmentPti] - l[0]) & dlHat;
+                const scalar dot1 = (l[1] - segmentPts[segmentPti]) & dlHat;
+                if (dot0 > 0 && dot1 > 0)
+                {
+                    segmentKeep[segmentPti] = false;
+                    break;
+                }
+            }
+        }
+
+        // Store the line
+        lines.append(line);
+
+        // Add new segments to the lists, breaking the segment anywhere that
+        // points are not kept
+        bool newSampleSegment = false;
+        forAll(segmentPts, segmentPti)
+        {
+            if (segmentKeep[segmentPti])
+            {
+                samplingPts.append(segmentPts[segmentPti]);
+                samplingCells.append(segmentCells[segmentPti]);
+                samplingFaces.append(segmentFaces[segmentPti]);
+                samplingSegments.append(sampleSegmenti);
+                samplingCurveDist.append(mag(segmentPts[segmentPti] - start));
+                newSampleSegment = true;
+            }
+            else if (newSampleSegment)
+            {
+                ++ sampleSegmenti;
+                newSampleSegment = false;
+            }
+        }
+        if (newSampleSegment)
+        {
+            ++ sampleSegmenti;
+            newSampleSegment = false;
+        }
     }
 }
 
