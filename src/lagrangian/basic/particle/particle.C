@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -439,7 +439,8 @@ void Foam::particle::locate
     // through each tet from the cell centre. If a tet contains the position
     // then the track will end with a single trackToTri.
     const class cell& c = mesh_.cells()[celli_];
-    label minF = 1, minTetFacei = -1, minTetPti = -1;
+    scalar minF = vGreat;
+    label minTetFacei = -1, minTetPti = -1;
     forAll(c, cellTetFacei)
     {
         const class face& f = mesh_.faces()[c[cellTetFacei]];
@@ -746,7 +747,7 @@ Foam::scalar Foam::particle::trackToStationaryTri
     scalar muH = std::isnormal(detA) && detA <= 0 ? vGreat : 1/detA;
     for (label i = 0; i < 4; ++ i)
     {
-        if (std::isnormal(Tx1[i]) && Tx1[i] < 0)
+        if (Tx1[i] < - detA*small)
         {
             scalar mu = - y0[i]/Tx1[i];
 
@@ -896,7 +897,11 @@ Foam::scalar Foam::particle::trackToMovingTri
 
         for (label j = 0; j < 3; ++ j)
         {
-            if (mu.type(j) == rootType::real && hitEqn[i].derivative(mu[j]) < 0)
+            if
+            (
+                mu.type(j) == rootType::real
+             && hitEqn[i].derivative(mu[j]) < - detA[0]*small
+            )
             {
                 if (debug)
                 {
