@@ -44,11 +44,11 @@ volScalarField DT
 );
 
 
+// Cache "C" for use in thermal BCs
+autoPtr<volScalarField> CPtr;
+
 if (thermalStress)
 {
-
-    autoPtr<volScalarField> CPtr;
-
     IOobject CIO
     (
         "C",
