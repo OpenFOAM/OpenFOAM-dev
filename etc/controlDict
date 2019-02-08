@@ -345,6 +345,7 @@ DebugSwitches
     blended             0;
     blobsSheetAtomization   0;
     blobsSwirlInjector  0;
+    blockMesh           0;
     booleanSurface      0;
     boundaryCutter      0;
     boundaryMesh        0;
