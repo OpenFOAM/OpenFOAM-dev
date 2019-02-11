@@ -22,8 +22,6 @@ if (correctPhi)
 }
 else
 {
-    nonOrthogonalSolutionControl pcorrControl(mesh, pimple.algorithmName());
-
     CorrectPhi
     (
         U,
@@ -31,7 +29,7 @@ else
         p_rgh,
         dimensionedScalar("rAUf", dimTime/rho.dimensions(), 1),
         geometricZeroField(),
-        pcorrControl
+        pimple
     );
 
     #include "continuityErrs.H"

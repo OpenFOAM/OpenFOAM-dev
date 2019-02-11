@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ namespace Foam
 
 Foam::pimpleControl::pimpleControl(fvMesh& mesh, const word& algorithmName)
 :
-    pimpleNoLoopControl(mesh, algorithmName),
+    pimpleNoLoopControl(mesh, algorithmName, *this),
     pimpleLoop(static_cast<solutionControl&>(*this))
 {
     read();
@@ -91,17 +91,14 @@ bool Foam::pimpleControl::loop()
 
     if (!pimpleLoop::loop(*this))
     {
-        mesh().data::remove("finalIteration");
+        updateFinal();
 
         return false;
     }
 
     storePrevIterFields();
 
-    if (finalIter())
-    {
-        mesh().data::add("finalIteration", true);
-    }
+    updateFinal();
 
     return true;
 }

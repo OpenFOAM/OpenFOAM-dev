@@ -1233,7 +1233,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
     bool solveOnFinalIterOnly =
         solutionControls.lookupOrDefault<bool>("solveOnFinalIterOnly", false);
 
-    if (!solveOnFinalIterOnly || pimple_.finalIter())
+    if (!solveOnFinalIterOnly || pimple_.finalPimpleIter())
     {
         const label nCorr = this->nCorr();
         const scalar tolerance =

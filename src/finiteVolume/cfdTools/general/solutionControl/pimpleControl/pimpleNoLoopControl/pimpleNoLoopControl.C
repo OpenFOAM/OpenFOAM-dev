@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,8 @@ namespace Foam
 Foam::pimpleNoLoopControl::pimpleNoLoopControl
 (
     fvMesh& mesh,
-    const word& algorithmName
+    const word& algorithmName,
+    const pimpleLoop& loop
 )
 :
     pisoControl(mesh, algorithmName),
@@ -51,6 +52,7 @@ Foam::pimpleNoLoopControl::pimpleNoLoopControl
         static_cast<singleRegionSolutionControl&>(*this),
         "outerCorrector"
     ),
+    loop_(loop),
     simpleRho_(false),
     turbOnFinalIterOnly_(true)
 {
@@ -87,6 +89,14 @@ bool Foam::pimpleNoLoopControl::read()
         dict().lookupOrDefault<bool>("turbOnFinalIterOnly", true);
 
     return true;
+}
+
+
+bool Foam::pimpleNoLoopControl::isFinal() const
+{
+    return
+        (!anyPisoIter() && loop_.finalPimpleIter())
+     || pisoControl::isFinal();
 }
 
 

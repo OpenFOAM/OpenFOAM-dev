@@ -7,7 +7,7 @@ volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 
-if (pimple.nCorrPISO() <= 1)
+if (pimple.nCorrPiso() <= 1)
 {
     tUEqn.clear();
 }

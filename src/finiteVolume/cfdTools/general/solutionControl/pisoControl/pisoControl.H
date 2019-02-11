@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::pisoControl
 
 Description
-    PISO control class. Provides time-loop and PISO-loop control methods. No
+    Piso control class. Provides time-loop and piso-loop control methods. No
     convergence checking is done.
 
 SourceFiles
@@ -58,11 +58,11 @@ protected:
 
     // Protected data
 
-        //- Maximum number of PISO correctors
-        label nCorrPISO_;
+        //- Maximum number of piso correctors
+        label nCorrPiso_;
 
-        //- Current PISO corrector
-        label corrPISO_;
+        //- Current piso corrector
+        label corrPiso_;
 
 
 public:
@@ -93,26 +93,29 @@ public:
 
         // Access
 
-            //- Maximum number of PISO correctors
-            inline label nCorrPISO() const;
+            //- Maximum number of piso correctors
+            inline label nCorrPiso() const;
 
-            //- Flag to indicate the first PISO iteration
-            inline bool firstPISOIter() const;
+            //- Flat to indicate any piso iteration
+            inline bool anyPisoIter() const;
 
-            //- Flag to indicate the last PISO iteration
-            inline bool finalPISOIter() const;
+            //- Flag to indicate the first piso iteration
+            inline bool firstPisoIter() const;
 
-            //- Flag to indicate the last inner iteration (last PISO and last
+            //- Flag to indicate the last piso iteration
+            inline bool finalPisoIter() const;
+
+            //- Flag to indicate the last inner iteration (last piso and last
             //  non-orthogonal)
             inline bool finalInnerIter() const;
 
-            //- Return true as the non-orthogonality loop is subsidiary
-            virtual bool nonOrthSubLoop() const;
+            //- Flag to indicate whether in final state
+            virtual bool isFinal() const;
 
 
         // Evolution
 
-            //- PISO loop
+            //- Piso loop
             bool correct();
 
             //- Time run loop

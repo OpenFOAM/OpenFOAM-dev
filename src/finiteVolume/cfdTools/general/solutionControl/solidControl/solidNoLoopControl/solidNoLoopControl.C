@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,8 @@ namespace Foam
 Foam::solidNoLoopControl::solidNoLoopControl
 (
     fvMesh& mesh,
-    const word& algorithmName
+    const word& algorithmName,
+    const pimpleLoop& loop
 )
 :
     nonOrthogonalSolutionControl(mesh, algorithmName),
@@ -50,7 +51,8 @@ Foam::solidNoLoopControl::solidNoLoopControl
     (
         static_cast<singleRegionSolutionControl&>(*this),
         "outerCorrector"
-    )
+    ),
+    loop_(loop)
 {
     read();
 }
@@ -70,6 +72,12 @@ bool Foam::solidNoLoopControl::read()
         nonOrthogonalSolutionControl::read()
      && readResidualControls()
      && readCorrResidualControls();
+}
+
+
+bool Foam::solidNoLoopControl::isFinal() const
+{
+    return loop_.finalPimpleIter() && finalNonOrthogonalIter();
 }
 
 

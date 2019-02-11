@@ -1,5 +1,3 @@
-nonOrthogonalSolutionControl pcorrControl(mesh, pimple.algorithmName());
-
 CorrectPhi
 (
     U,
@@ -7,7 +5,7 @@ CorrectPhi
     p_rgh,
     surfaceScalarField("rAUf", fvc::interpolate(rAU())),
     divU,
-    pcorrControl
+    pimple
 );
 
 #include "continuityErrs.H"

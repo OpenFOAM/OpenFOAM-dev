@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
     {
         pimpleControls_.append
         (
-            new pimpleNoLoopControl(pimpleMeshes[i], algorithmName)
+            new pimpleNoLoopControl(pimpleMeshes[i], algorithmName, *this)
         );
 
         allSteady = allSteady && pimpleMeshes[i].steady();
@@ -95,7 +95,7 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
     {
         solidControls_.append
         (
-            new solidNoLoopControl(solidMeshes[i], algorithmName)
+            new solidNoLoopControl(solidMeshes[i], algorithmName, *this)
         );
 
         allSteady = allSteady && solidMeshes[i].steady();
@@ -278,11 +278,11 @@ bool Foam::pimpleMultiRegionControl::loop()
     {
         forAll(pimpleControls_, i)
         {
-            pimpleControls_[i].mesh().data::remove("finalIteration");
+            pimpleControls_[i].updateFinal();
         }
         forAll(solidControls_, i)
         {
-            solidControls_[i].mesh().data::remove("finalIteration");
+            solidControls_[i].updateFinal();
         }
 
         return false;
@@ -297,16 +297,13 @@ bool Foam::pimpleMultiRegionControl::loop()
         solidControls_[i].storePrevIterFields();
     }
 
-    if (finalIter())
+    forAll(pimpleControls_, i)
     {
-        forAll(pimpleControls_, i)
-        {
-            pimpleControls_[i].mesh().data::add("finalIteration", true);
-        }
-        forAll(solidControls_, i)
-        {
-            solidControls_[i].mesh().data::add("finalIteration", true);
-        }
+        pimpleControls_[i].updateFinal();
+    }
+    forAll(solidControls_, i)
+    {
+        solidControls_[i].updateFinal();
     }
 
     return true;
