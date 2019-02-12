@@ -160,11 +160,6 @@ addLayersControls
     minThickness        1e-3;
 }
 
-writeFlags
-(
-    refinement
-);
-
 mergeTolerance 1e-6;
 
 // ************************************************************************* //
