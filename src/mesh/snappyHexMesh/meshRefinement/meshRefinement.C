@@ -94,11 +94,12 @@ namespace Foam
     >::names[] =
     {
         "mesh",
-        "refinement",
+        "noRefinement",
         "scalarLevels",
         "layerSets",
         "layerFields"
     };
+
 }
 
 const Foam::NamedEnum<Foam::meshRefinement::IOdebugType, 5>
@@ -2892,7 +2893,7 @@ void Foam::meshRefinement::write
         write();
     }
 
-    if (writeFlags & WRITEREFINEMENT)
+    if (writeFlags && !(writeFlags & NOWRITEREFINEMENT))
     {
         meshCutter_.write();
         surfaceIndex_.write();

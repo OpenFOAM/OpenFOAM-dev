@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ public:
         enum IOwriteType
         {
             IOWRITEMESH,
-            IOWRITEREFINEMENT,
+            IONOWRITEREFINEMENT,
             IOWRITELEVELS,
             IOWRITELAYERSETS,
             IOWRITELAYERFIELDS
@@ -131,7 +131,7 @@ public:
         enum writeType
         {
             WRITEMESH = 1<<IOWRITEMESH,
-            WRITEREFINEMENT = 1<<IOWRITEREFINEMENT,
+            NOWRITEREFINEMENT = 1<<IONOWRITEREFINEMENT,
             WRITELEVELS = 1<<IOWRITELEVELS,
             WRITELAYERSETS = 1<<IOWRITELAYERSETS,
             WRITELAYERFIELDS = 1<<IOWRITELAYERFIELDS

@@ -301,7 +301,6 @@ writeFlags
     scalarLevels    // write volScalarField with cellLevel for postprocessing
     layerSets       // write cellSets, faceSets of faces in layer
     layerFields     // write volScalarField for layer coverage
-    refinement
 );
 
 
