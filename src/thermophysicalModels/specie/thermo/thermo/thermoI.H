@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermo.H"
+#include "IOmanip.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -40,13 +41,14 @@ inline Foam::species::thermo<Thermo, Type>::thermo
 template<class Thermo, template<class> class Type>
 inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
 (
-    scalar f,
-    scalar p,
-    scalar T0,
+    const scalar f,
+    const scalar p,
+    const scalar T0,
     scalar (thermo<Thermo, Type>::*F)(const scalar, const scalar) const,
     scalar (thermo<Thermo, Type>::*dFdT)(const scalar, const scalar)
         const,
-    scalar (thermo<Thermo, Type>::*limit)(const scalar) const
+    scalar (thermo<Thermo, Type>::*limit)(const scalar) const,
+    const bool diagnostics
 ) const
 {
     if (T0 < 0)
@@ -61,6 +63,20 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
     scalar Ttol = T0*tol_;
     int    iter = 0;
 
+    if (diagnostics)
+    {
+        const unsigned int width = IOstream::defaultPrecision() + 8;
+
+        InfoInFunction
+            << "Energy -> temperature conversion failed to converge:" << endl;
+        Pout<< setw(width) << "iter"
+            << setw(width) << "Test"
+            << setw(width) << "e/h"
+            << setw(width) << "Cv/p"
+            << setw(width) << "Tnew"
+            << endl;
+    }
+
     do
     {
         Test = Tnew;
@@ -68,8 +84,25 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
             (this->*limit)
             (Test - ((this->*F)(p, Test) - f)/(this->*dFdT)(p, Test));
 
+        if (diagnostics)
+        {
+            const unsigned int width = IOstream::defaultPrecision() + 8;
+
+            Pout<< setw(width) << iter
+                << setw(width) << Test
+                << setw(width) << ((this->*F)(p, Test))
+                << setw(width) << ((this->*dFdT)(p, Test))
+                << setw(width) << Tnew
+                << endl;
+        }
+
         if (iter++ > maxIter_)
         {
+            if (!diagnostics)
+            {
+                T(f, p, T0, F, dFdT, limit, true);
+            }
+
             FatalErrorInFunction
                 << "Maximum number of iterations exceeded: " << maxIter_
                 << abort(FatalError);

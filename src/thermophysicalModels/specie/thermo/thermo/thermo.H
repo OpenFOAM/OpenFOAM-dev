@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,12 +107,13 @@ class thermo
         //  and dF(p, T)/dT
         inline scalar T
         (
-            scalar f,
-            scalar p,
-            scalar T0,
+            const scalar f,
+            const scalar p,
+            const scalar T0,
             scalar (thermo::*F)(const scalar, const scalar) const,
             scalar (thermo::*dFdT)(const scalar, const scalar) const,
-            scalar (thermo::*limit)(const scalar) const
+            scalar (thermo::*limit)(const scalar) const,
+            const bool diagnostics = false
         ) const;
 
 
