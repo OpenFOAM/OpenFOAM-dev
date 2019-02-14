@@ -167,16 +167,12 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
         writeDDt(0);
     }
 
-    // Construct a non-orthogonal solution control
-    nonOrthogonalSolutionControl control
-    (
-        const_cast<fvMesh&>(mesh_),
+    // Lookup the non-orthogonal solution control
+    nonOrthogonalSolutionControl& control =
         mesh_.lookupObjectRef<nonOrthogonalSolutionControl>
         (
             solutionControl::typeName
-        )
-       .algorithmName()
-    );
+        );
 
     // Solve for the potential and correct alphaPhi with the resulting flux
     if (phi.dimensions() == dimVolume/dimTime)
