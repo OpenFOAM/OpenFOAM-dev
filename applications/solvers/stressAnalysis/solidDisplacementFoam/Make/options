@@ -1,6 +1,7 @@
 EXE_INC = \
     -I. \
     -IderivedFvPatchFields/tractionDisplacement \
+    -IderivedFvPatchFields/hydrostaticDisplacement \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
