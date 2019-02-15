@@ -93,6 +93,11 @@ constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
 
     p = p_rgh + rho*gh;
 
+    if (pressureControl.limit(p))
+    {
+        p.correctBoundaryConditions();
+    }
+
     // Thermodynamic density update
     if (!mesh.steady())
     {
@@ -117,8 +122,6 @@ else
     #include "incompressible/continuityErrs.H"
 }
 
-// Pressure limiting
-const bool pLimited = pressureControl.limit(p);
 
 // For closed-volume compressible cases adjust the pressure level
 // to obey overall mass continuity
@@ -127,15 +130,11 @@ if (adjustMass)
     p += (initialMass - fvc::domainIntegrate(thermo.rho()))
         /fvc::domainIntegrate(psi);
     p_rgh = p - rho*gh;
-}
-
-if (adjustMass || pLimited)
-{
     p.correctBoundaryConditions();
 }
 
 // Density updates
-if (adjustMass || pLimited || mesh.steady() || pimple.simpleRho())
+if (adjustMass || mesh.steady() || pimple.simpleRho())
 {
     rho = thermo.rho();
 }
