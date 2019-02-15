@@ -85,6 +85,11 @@ else
     }
 }
 
+if (pressureControl.limit(p))
+{
+    p.correctBoundaryConditions();
+}
+
 // Thermodynamic density update
 thermo.correctRho(psi*p - psip0);
 
@@ -99,12 +104,7 @@ U.correctBoundaryConditions();
 fvOptions.correct(U);
 K = 0.5*magSqr(U);
 
-if (pressureControl.limit(p))
-{
-    p.correctBoundaryConditions();
-    rho = thermo.rho();
-}
-else if (pimple.simpleRho())
+if (pimple.simpleRho())
 {
     rho = thermo.rho();
 }
