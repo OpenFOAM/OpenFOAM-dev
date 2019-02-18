@@ -66,7 +66,6 @@ p = p_rgh + rho*gh;
 
 if (pressureControl.limit(p))
 {
-    p.correctBoundaryConditions();
     p_rgh = p - rho*gh;
 }
 

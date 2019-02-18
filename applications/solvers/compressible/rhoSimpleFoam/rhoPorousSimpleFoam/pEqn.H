@@ -87,6 +87,7 @@
     {
         p += (initialMass - fvc::domainIntegrate(psi*p))
             /fvc::domainIntegrate(psi);
+        p.correctBoundaryConditions();
     }
 
     rho = thermo.rho();

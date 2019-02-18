@@ -99,13 +99,15 @@ else
     }
 }
 
-if (pressureControl.limit(p))
-{
-    p.correctBoundaryConditions();
-}
+bool limitedp = pressureControl.limit(p);
 
 // Thermodynamic density update
 thermo.correctRho(psi*p - psip0);
+
+if (limitedp)
+{
+    rho = thermo.rho();
+}
 
 #include "rhoEqn.H"
 #include "compressibleContinuityErrs.H"

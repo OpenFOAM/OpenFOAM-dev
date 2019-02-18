@@ -93,10 +93,7 @@ constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
 
     p = p_rgh + rho*gh;
 
-    if (pressureControl.limit(p))
-    {
-        p.correctBoundaryConditions();
-    }
+    pressureControl.limit(p);
 
     // Thermodynamic density update
     if (!mesh.steady())
