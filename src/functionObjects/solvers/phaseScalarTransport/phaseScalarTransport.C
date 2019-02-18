@@ -313,21 +313,7 @@ Foam::functionObjects::phaseScalarTransport::phaseScalarTransport
         ),
         mesh_
     ),
-    alphaS_
-    (
-        IOobject
-        (
-            "alpha"
-          + word(toupper(fieldName_[0]))
-          + fieldName_(1, fieldName_.size() - 1),
-            mesh_.time().timeName(),
-            mesh_,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh_,
-        dimensionedScalar(s_.dimensions(), Zero)
-    ),
+    alphaSPtr_(nullptr),
     PhiPtr_(nullptr)
 {
     if (phaseName_ == word::null)
@@ -383,6 +369,7 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
 
     dict.readIfPresent("nCorr", nCorr_);
     dict.readIfPresent("residualAlpha", residualAlpha_);
+    writeAlphaField_ = dict.lookupOrDefault<bool>("writeAlphaField", true);
 
     if (dict.found("fvOptions"))
     {
@@ -479,7 +466,39 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
     }
 
     // Update
-    alphaS_ = alpha*s_;
+    if (writeAlphaField_)
+    {
+        if (!alphaSPtr_.valid())
+        {
+            alphaSPtr_.set
+            (
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        "alpha"
+                      + word(toupper(fieldName_[0]))
+                      + fieldName_(1, fieldName_.size() - 1),
+                        mesh_.time().timeName(),
+                        mesh_,
+                        IOobject::NO_READ,
+                        IOobject::AUTO_WRITE
+                    ),
+                    mesh_,
+                    dimensionedScalar(s_.dimensions(), Zero)
+                )
+            );
+        }
+
+        alphaSPtr_() = alpha*s_;
+    }
+    else
+    {
+        if (alphaSPtr_.valid())
+        {
+            alphaSPtr_().clear();
+        }
+    }
 
     Info<< endl;
 

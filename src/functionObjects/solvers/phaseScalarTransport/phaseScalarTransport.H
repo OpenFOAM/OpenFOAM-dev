@@ -48,14 +48,16 @@ Description
 
 Usage
     \table
-        Property      | Description                       | Req'd? | Default
-        alpha         | Name of the volume-fraction field | no \\
-                      | alpha.<phase-name>
-        alphaPhi      | Name of the phase-flux field      | no \\
-                      | alphaPhi.<phase-name>
-        p             | Name of the pressure field        | no     | p
-        residualAlpha | Small volume fraction used to stabilise the solution \\
-                      | no | rootSmall
+        Property        | Description                        | Req'd? | Default
+        alpha           | Name of the volume-fraction field  | no\\
+                        | alpha.<phase-name>
+        alphaPhi        | Name of the phase-flux field       | no\\
+                        | alphaPhi.<phase-name>
+        p               | Name of the pressure field         | no     | p
+        residualAlpha   | Small volume fraction used to stabilise the solution\\
+                        | no | rootSmall
+        writeAlphaField | Also write out alpha multiplied by the field\\
+                        | no | true
     \endtable
 
     Example specification for interFoam:
@@ -158,6 +160,10 @@ class phaseScalarTransport
         //- Name of field whose schemes are used (optional)
         word schemesField_;
 
+        //- Flag to indicate whether to write the field multiplied by the phase
+        //  fraction
+        bool writeAlphaField_;
+
         //- Run-time selectable finite volume options, e.g. sources, constraints
         fv::optionList fvOptions_;
 
@@ -165,7 +171,7 @@ class phaseScalarTransport
         volScalarField s_;
 
         //- The field multiplied by the phase fraction
-        volScalarField alphaS_;
+        autoPtr<volScalarField> alphaSPtr_;
 
         //- Potential field used to generate the phase flux
         autoPtr<volScalarField> PhiPtr_;
