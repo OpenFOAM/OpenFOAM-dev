@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ SourceFiles
 #ifndef pimpleNoLoopControl_H
 #define pimpleNoLoopControl_H
 
+#include "pimpleLoop.H"
 #include "pisoControl.H"
 #include "singleRegionConvergenceControl.H"
 #include "singleRegionCorrectorConvergenceControl.H"
@@ -64,6 +65,9 @@ protected:
 
     // Protected data
 
+        //- The pimple loop
+        const pimpleLoop& loop_;
+
         //- Flag to indicate whether to update the density in SIMPLE mode rather
         //  than PISO mode
         bool simpleRho_;
@@ -83,8 +87,14 @@ public:
 
     // Constructors
 
-        //- Construct from a mesh and the name of the algorithm
-        pimpleNoLoopControl(fvMesh& mesh, const word& algorithmName);
+        //- Construct from a mesh, the name of the algorithm, and a reference
+        //  to the pimple loop
+        pimpleNoLoopControl
+        (
+            fvMesh& mesh,
+            const word& algorithmName,
+            const pimpleLoop& loop
+        );
 
 
     //- Destructor
@@ -99,6 +109,9 @@ public:
             virtual bool read();
 
         // Access
+
+            //- Flag to indicate whether in final state
+            virtual bool isFinal() const;
 
             //- Flag to indicate whether to update the density in simple mode
             inline bool simpleRho() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,12 +90,6 @@ public:
 
             //- Read controls
             virtual bool read();
-
-
-        // Access
-
-            //- Return true as the non-orthogonality loop is subsidiary
-            virtual bool nonOrthSubLoop() const;
 
 
         // Evolution

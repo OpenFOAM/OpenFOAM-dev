@@ -24,7 +24,7 @@ else
         turbulence.correct();
     }
 
-    if (!mesh.steady() && pimples.finalIter())
+    if (!mesh.steady() && pimples.finalPimpleIter())
     {
         rho = thermo.rho();
     }

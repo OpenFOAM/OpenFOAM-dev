@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,8 @@ namespace Foam
 Foam::pisoControl::pisoControl(fvMesh& mesh, const word& algorithmName)
 :
     fluidSolutionControl(mesh, algorithmName),
-    nCorrPISO_(-1),
-    corrPISO_(0)
+    nCorrPiso_(-1),
+    corrPiso_(0)
 {
     read();
 }
@@ -62,57 +62,37 @@ bool Foam::pisoControl::read()
 
     const dictionary& solutionDict = dict();
 
-    nCorrPISO_ = solutionDict.lookupOrDefault<label>("nCorrectors", 1);
+    nCorrPiso_ = solutionDict.lookupOrDefault<label>("nCorrectors", 1);
 
     return true;
 }
 
 
-bool Foam::pisoControl::nonOrthSubLoop() const
+bool Foam::pisoControl::isFinal() const
 {
-    return true;
+    return
+        (!anyNonOrthogonalIter() && finalPisoIter())
+     || (finalNonOrthogonalIter() && finalPisoIter())
+     || (finalNonOrthogonalIter() && !anyPisoIter());
 }
 
 
 bool Foam::pisoControl::correct()
 {
-    static bool finalIteration = false;
-
     read();
 
-    if (corrPISO_ == 0)
+    if (finalPisoIter())
     {
-        finalIteration =
-            mesh().data::lookupOrDefault<bool>("finalIteration", false);
+        corrPiso_ = 0;
 
-        if (finalIteration)
-        {
-            mesh().data::remove("finalIteration");
-        }
-    }
-
-    if (finalPISOIter())
-    {
-        corrPISO_ = 0;
-
-        if
-        (
-           !finalIteration
-         && mesh().data::lookupOrDefault<bool>("finalIteration", false)
-        )
-        {
-            mesh().data::remove("finalIteration");
-        }
+        updateFinal();
 
         return false;
     }
 
-    corrPISO_++;
+    ++ corrPiso_;
 
-    if (finalPISOIter())
-    {
-        mesh().data::add("finalIteration", true);
-    }
+    updateFinal();
 
     return true;
 }

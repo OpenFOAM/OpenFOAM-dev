@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,8 @@ Foam::nonOrthogonalSolutionControl::nonOrthogonalSolutionControl
 )
 :
     singleRegionSolutionControl(mesh, algorithmName),
-    nNonOrthCorr_(-1),
-    nonOrthCorr_(0)
+    nCorrNonOrth_(-1),
+    corrNonOrth_(0)
 {
     read();
 }
@@ -66,58 +66,29 @@ bool Foam::nonOrthogonalSolutionControl::read()
 
     const dictionary& solutionDict = dict();
 
-    nNonOrthCorr_ =
+    nCorrNonOrth_ =
         solutionDict.lookupOrDefault<label>("nNonOrthogonalCorrectors", 0);
 
     return true;
 }
 
 
-bool Foam::nonOrthogonalSolutionControl::nonOrthSubLoop() const
-{
-    return false;
-}
-
-
 bool Foam::nonOrthogonalSolutionControl::correctNonOrthogonal()
 {
-    static bool finalIteration = false;
-
     read();
-
-    if (nonOrthCorr_ == 0)
-    {
-        finalIteration =
-            mesh().data::lookupOrDefault<bool>("finalIteration", false);
-
-        if (finalIteration)
-        {
-            mesh().data::remove("finalIteration");
-        }
-    }
 
     if (finalNonOrthogonalIter())
     {
-        nonOrthCorr_ = 0;
+        corrNonOrth_ = 0;
 
-        if
-        (
-           !finalIteration
-         && mesh().data::lookupOrDefault<bool>("finalIteration", false)
-        )
-        {
-            mesh().data::remove("finalIteration");
-        }
+        updateFinal();
 
         return false;
     }
 
-    nonOrthCorr_++;
+    ++ corrNonOrth_;
 
-    if (finalNonOrthogonalIter() && (finalIteration || !nonOrthSubLoop()))
-    {
-        mesh().data::add("finalIteration", true);
-    }
+    updateFinal();
 
     return true;
 }
