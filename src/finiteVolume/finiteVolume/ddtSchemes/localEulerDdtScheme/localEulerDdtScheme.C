@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -347,6 +347,8 @@ localEulerDdtScheme<Type>::fvmDdt
 }
 
 
+/*
+// Courant number limited formulation
 template<class Type>
 tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
 (
@@ -355,6 +357,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
     const fluxFieldType& phiCorr
 )
 {
+    // Courant number limited formulation
     tmp<surfaceScalarField> tddtCouplingCoeff = scalar(1)
       - min
         (
@@ -391,6 +394,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
 
     return tddtCouplingCoeff;
 }
+*/
 
 
 template<class Type>
