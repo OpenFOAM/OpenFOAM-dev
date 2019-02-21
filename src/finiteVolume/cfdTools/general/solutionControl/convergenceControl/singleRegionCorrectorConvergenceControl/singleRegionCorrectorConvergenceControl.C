@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,6 @@ bool Foam::singleRegionCorrectorConvergenceControl::readCorrResidualControls()
             rd.name = fName.c_str();
             rd.absTol = readScalar(fieldDict.lookup("tolerance"));
             rd.relTol = readScalar(fieldDict.lookup("relTol"));
-            rd.solveIndex = 0;
             data.append(rd);
         }
         else
@@ -177,11 +176,11 @@ corrCriteriaSatisfied() const
     const dictionary& solverDict = mesh_.solverPerformanceDict();
     forAllConstIter(dictionary, solverDict, iter)
     {
-        const word& variableName = iter().keyword();
+        const word& fieldName = iter().keyword();
         const label fieldi =
             convergenceControl::residualControlIndex
             (
-                variableName,
+                fieldName,
                 corrResidualControl_
             );
         if (fieldi != -1)
@@ -190,8 +189,8 @@ corrCriteriaSatisfied() const
             convergenceControl::getInitialResiduals
             (
                 mesh_,
-                variableName,
-                corrResidualControl_[fieldi].solveIndex,
+                fieldName,
+                solveIndex_.found(fieldName) ? solveIndex_[fieldName] : 0,
                 iter().stream(),
                 firstResidual,
                 residual
@@ -209,7 +208,7 @@ corrCriteriaSatisfied() const
 
             if (control_.debug)
             {
-                Info<< control_.algorithmSpace() << "  " << variableName
+                Info<< control_.algorithmSpace() << "  " << fieldName
                     << ": tolerance " << residual << " ("
                     << corrResidualControl_[fieldi].absTol << ")"
                     << ", relTol " << relativeResidual << " ("
@@ -225,10 +224,7 @@ corrCriteriaSatisfied() const
 
 void Foam::singleRegionCorrectorConvergenceControl::resetCorrSolveIndex()
 {
-    forAll(corrResidualControl_, i)
-    {
-        corrResidualControl_[i].solveIndex = 0;
-    }
+    solveIndex_.clear();
 }
 
 
@@ -237,23 +233,14 @@ void Foam::singleRegionCorrectorConvergenceControl::updateCorrSolveIndex()
     const dictionary& solverDict = mesh_.solverPerformanceDict();
     forAllConstIter(dictionary, solverDict, iter)
     {
-        const word& variableName = iter().keyword();
-        const label fieldi =
-            convergenceControl::residualControlIndex
-            (
-                variableName,
-                corrResidualControl_
-            );
-        if (fieldi != -1)
-        {
-            getNSolves
-            (
-                mesh_,
-                variableName,
-                iter().stream(),
-                corrResidualControl_[fieldi].solveIndex
-            );
-        }
+        const word& fieldName = iter().keyword();
+        getNSolves
+        (
+            mesh_,
+            fieldName,
+            iter().stream(),
+            solveIndex_(fieldName)
+        );
     }
 }
 

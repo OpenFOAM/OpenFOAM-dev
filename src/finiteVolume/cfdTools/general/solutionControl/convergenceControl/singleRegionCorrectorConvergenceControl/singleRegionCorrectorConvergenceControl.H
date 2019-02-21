@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,11 @@ protected:
 
         //- List of residual data per field
         List<corrResidualData> corrResidualControl_;
+
+        //- The index of the solution at the start of the corrector loop, for
+        //  each field. If the field name is not in the table then the index is
+        //  assumed to be zero; i.e, the first solution.
+        HashTable<label> solveIndex_;
 
 
 public:
