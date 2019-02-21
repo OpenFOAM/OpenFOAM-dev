@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,10 +122,39 @@ Usage
 #include "IFstream.H"
 #include "OFstream.H"
 #include "includeEntry.H"
+#include "dictionaryEntry.H"
 
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//- Read dictionary from file and return
+//  Sets steam to binary mode if specified in the optional header
+dictionary readDict(const fileName& dictFileName)
+{
+    IFstream dictFile(dictFileName);
+    if (!dictFile().good())
+    {
+        FatalErrorInFunction
+            << "Cannot open file " << dictFileName
+            << exit(FatalError, 1);
+    }
+
+    dictionary dict;
+    dictionaryEntry headerDict(dict, dictFile());
+
+    if (headerDict.keyword() == "FoamFile")
+    {
+        dictFile().format(headerDict.lookup("format"));
+    }
+
+    dict.add(headerDict);
+
+    dict.read(dictFile(), true);
+
+    return dict;
+}
+
 
 //- Converts old scope syntax to new syntax
 word scope(const fileName& entryName)
@@ -323,20 +352,8 @@ int main(int argc, char *argv[])
     }
 
 
-    fileName dictFileName(args[1]);
-
-    autoPtr<IFstream> dictFile(new IFstream(dictFileName));
-    if (!dictFile().good())
-    {
-        FatalErrorInFunction
-            << "Cannot open file " << dictFileName
-            << exit(FatalError, 1);
-    }
-
-    // Read but preserve headers
-    dictionary dict;
-    dict.read(dictFile(), true);
-
+    const fileName dictFileName(args[1]);
+    dictionary dict(readDict(dictFileName));
 
     bool changed = false;
 
@@ -356,21 +373,13 @@ int main(int argc, char *argv[])
 
 
     // Second dictionary for -diff
-    dictionary diffDict;
     fileName diffFileName;
-    if (args.optionReadIfPresent("diff", diffFileName))
-    {
-        autoPtr<IFstream> diffFile(new IFstream(diffFileName));
-        if (!diffFile().good())
-        {
-            FatalErrorInFunction
-                << "Cannot open file " << diffFileName
-                << exit(FatalError, 1);
-        }
-
-        // Read but preserve headers
-        diffDict.read(diffFile(), true);
-    }
+    const dictionary diffDict
+    (
+        args.optionReadIfPresent("diff", diffFileName)
+      ? readDict(diffFileName)
+      : dictionary::null
+    );
 
 
     word entryName;
@@ -397,15 +406,7 @@ int main(int argc, char *argv[])
             if (args.optionFound("dict"))
             {
                 const fileName fromDictFileName(newValue);
-                autoPtr<IFstream> fromDictFile(new IFstream(fromDictFileName));
-                if (!fromDictFile().good())
-                {
-                    FatalErrorInFunction
-                        << "Cannot open file " << fromDictFileName
-                        << exit(FatalError, 1);
-                }
-
-                dictionary fromDict(fromDictFile());
+                const dictionary fromDict(readDict(fromDictFileName));
 
                 const entry* fePtr
                 (
@@ -544,7 +545,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                FatalIOErrorInFunction(dictFile)
+                FatalIOErrorInFunction(dict)
                     << "Cannot find entry " << entryName
                     << exit(FatalIOError, 2);
             }
@@ -569,7 +570,6 @@ int main(int argc, char *argv[])
 
     if (changed)
     {
-        dictFile.clear();
         OFstream os(dictFileName);
         IOobject::writeBanner(os);
         dict.write(os, false);
