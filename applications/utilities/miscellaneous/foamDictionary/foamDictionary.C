@@ -118,11 +118,11 @@ Usage
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "Time.H"
+#include "IOobject.H"
+#include "Pair.H"
 #include "IFstream.H"
 #include "OFstream.H"
 #include "includeEntry.H"
-#include "dictionaryEntry.H"
 
 using namespace Foam;
 
@@ -130,8 +130,10 @@ using namespace Foam;
 
 //- Read dictionary from file and return
 //  Sets steam to binary mode if specified in the optional header
-dictionary readDict(const fileName& dictFileName)
+IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
 {
+    IOstream::streamFormat dictFormat = IOstream::ASCII;
+
     IFstream dictFile(dictFileName);
     if (!dictFile().good())
     {
@@ -140,19 +142,25 @@ dictionary readDict(const fileName& dictFileName)
             << exit(FatalError, 1);
     }
 
-    dictionary dict;
-    dictionaryEntry headerDict(dict, dictFile());
+    // Read the first entry from the dictionary
+    autoPtr<entry> firstEntry(entry::New(dictFile()));
 
-    if (headerDict.keyword() == "FoamFile")
+    // If the first entry is the "FoamFile" header dictionary
+    // read and set the stream format
+    if (firstEntry->isDict() && firstEntry->keyword() == "FoamFile")
     {
-        dictFile().format(headerDict.lookup("format"));
+        dictFormat = IOstream::formatEnum(firstEntry->dict().lookup("format"));
+        dictFile().format(dictFormat);
     }
 
-    dict.add(headerDict);
+    // Add the first entry to the dictionary
+    dict.add(firstEntry);
 
+    // Read and add the rest of the dictionary entries
+    // preserving the "FoamFile" header dictionary if present
     dict.read(dictFile(), true);
 
-    return dict;
+    return dictFormat;
 }
 
 
@@ -353,7 +361,8 @@ int main(int argc, char *argv[])
 
 
     const fileName dictFileName(args[1]);
-    dictionary dict(readDict(dictFileName));
+    dictionary dict;
+    IOstream::streamFormat dictFormat = readDict(dict, dictFileName);
 
     bool changed = false;
 
@@ -374,12 +383,12 @@ int main(int argc, char *argv[])
 
     // Second dictionary for -diff
     fileName diffFileName;
-    const dictionary diffDict
-    (
-        args.optionReadIfPresent("diff", diffFileName)
-      ? readDict(diffFileName)
-      : dictionary::null
-    );
+    dictionary diffDict;
+
+    if (args.optionReadIfPresent("diff", diffFileName))
+    {
+        readDict(diffDict, diffFileName);
+    }
 
 
     word entryName;
@@ -406,7 +415,8 @@ int main(int argc, char *argv[])
             if (args.optionFound("dict"))
             {
                 const fileName fromDictFileName(newValue);
-                const dictionary fromDict(readDict(fromDictFileName));
+                dictionary fromDict;
+                readDict(fromDict, fromDictFileName);
 
                 const entry* fePtr
                 (
@@ -570,7 +580,7 @@ int main(int argc, char *argv[])
 
     if (changed)
     {
-        OFstream os(dictFileName);
+        OFstream os(dictFileName, dictFormat);
         IOobject::writeBanner(os);
         dict.write(os, false);
         IOobject::writeEndDivider(os);
