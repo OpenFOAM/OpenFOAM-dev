@@ -344,6 +344,10 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 
     const scalarField& Tp(*this);
 
+    // Store current valueFraction and refValue for relaxation
+    const scalarField valueFraction0(valueFraction());
+    const scalarField refValue0(refValue());
+
     scalarField qr(Tp.size(), 0);
     if (qrName_ != "none")
     {
@@ -443,8 +447,11 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         }
     }
 
-    valueFraction() = relaxation_*valueFraction() + (1 - relaxation_);
-    refValue() = relaxation_*refValue() + (1 - relaxation_)*Tp;
+    valueFraction() =
+        relaxation_*valueFraction()
+      + (1 - relaxation_)*valueFraction0;
+
+    refValue() = relaxation_*refValue() + (1 - relaxation_)*refValue0;
 
     mixedFvPatchScalarField::updateCoeffs();
 
