@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,6 +154,38 @@ class blockMesh
         void calcMergeInfoFast();
 
         faceList createPatchFaces(const polyPatch& patchTopologyFaces) const;
+
+        Pair<scalar> xCellSizes
+        (
+            const block& b,
+            const pointField& blockPoints,
+            const label j,
+            const label k
+        ) const;
+
+        Pair<scalar> yCellSizes
+        (
+            const block& b,
+            const pointField& blockPoints,
+            const label i,
+            const label k
+        ) const;
+
+        Pair<scalar> zCellSizes
+        (
+            const block& b,
+            const pointField& blockPoints,
+            const label i,
+            const label j
+        ) const;
+
+        void printCellSizeRange(const Pair<scalar>& cellSizes) const;
+
+        void printCellSizeRanges
+        (
+            const direction d,
+            const FixedList<Pair<scalar>, 4>& cellSizes
+        ) const;
 
         void createPoints() const;
         void createCells() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,137 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+Foam::Pair<Foam::scalar> Foam::blockMesh::xCellSizes
+(
+    const block& b,
+    const pointField& blockPoints,
+    const label j,
+    const label k
+) const
+{
+    return Pair<scalar>
+    (
+        mag
+        (
+            blockPoints[b.pointLabel(1, j, k)]
+          - blockPoints[b.pointLabel(0, j, k)]
+        ),
+
+        mag
+        (
+            blockPoints[b.pointLabel(b.density().x() - 1, j, k)]
+          - blockPoints[b.pointLabel(b.density().x(), j, k)]
+        )
+    );
+}
+
+
+Foam::Pair<Foam::scalar> Foam::blockMesh::yCellSizes
+(
+    const block& b,
+    const pointField& blockPoints,
+    const label i,
+    const label k
+) const
+{
+    return Pair<scalar>
+    (
+        mag
+        (
+            blockPoints[b.pointLabel(i, 0, k)]
+          - blockPoints[b.pointLabel(i, 1, k)]
+        ),
+
+        mag
+        (
+            blockPoints[b.pointLabel(i, b.density().y() - 1, k)]
+          - blockPoints[b.pointLabel(i, b.density().y(), k)]
+        )
+    );
+}
+
+
+Foam::Pair<Foam::scalar> Foam::blockMesh::zCellSizes
+(
+    const block& b,
+    const pointField& blockPoints,
+    const label i,
+    const label j
+) const
+{
+    return Pair<scalar>
+    (
+        mag
+        (
+            blockPoints[b.pointLabel(i, j, 0)]
+          - blockPoints[b.pointLabel(i, j, 1)]
+        ),
+
+        mag
+        (
+            blockPoints[b.pointLabel(i, j, b.density().z() - 1)]
+          - blockPoints[b.pointLabel(i, j, b.density().z())]
+        )
+    );
+}
+
+
+void Foam::blockMesh::printCellSizeRange
+(
+    const Pair<scalar>& cellSizes
+) const
+{
+    if (cellSizes.first() != cellSizes.second())
+    {
+        Info<< scaleFactor_*cellSizes.first() << " .. "
+            << scaleFactor_*cellSizes.second();
+    }
+    else
+    {
+        Info<< scaleFactor_*cellSizes.first();
+    }
+}
+
+
+void Foam::blockMesh::printCellSizeRanges
+(
+    const direction d,
+    const FixedList<Pair<scalar>, 4>& cellSizes
+) const
+{
+    static const char dNames[3] = {'i', 'j', 'k'};
+
+    const scalar d0 = max
+    (
+        max(cellSizes[0].first(), cellSizes[0].second()),
+        small
+    );
+
+    bool uniform = true;
+    forAll(cellSizes, i)
+    {
+        uniform = uniform
+           && mag(cellSizes[i].first() - cellSizes[0].first())/d0 < 1e-5
+           && mag(cellSizes[i].second() - cellSizes[0].second())/d0 < 1e-5;
+    }
+
+    Info<< "        " << dNames[d] << " : ";
+    if (uniform)
+    {
+        printCellSizeRange(cellSizes[0]);
+    }
+    else
+    {
+        forAll(cellSizes, i)
+        {
+            printCellSizeRange(cellSizes[i]);
+            Info<< " ";
+        }
+    }
+    Info<< endl;
+}
+
+
 void Foam::blockMesh::createPoints() const
 {
     const blockList& blocks = *this;
@@ -45,36 +176,40 @@ void Foam::blockMesh::createPoints() const
 
         if (verboseOutput)
         {
-            const Vector<label>& density = blocks[blocki].density();
+            Info<< "    Block " << blocki << " cell size :" << nl;
 
-            label v0 = blocks[blocki].pointLabel(0, 0, 0);
-            label vi1 = blocks[blocki].pointLabel(1, 0, 0);
-            scalar diStart = mag(blockPoints[vi1] - blockPoints[v0]);
+            printCellSizeRanges
+            (
+                0,
+                {
+                    xCellSizes(blocks[blocki], blockPoints, 0, 0),
+                    xCellSizes(blocks[blocki], blockPoints, 1, 0),
+                    xCellSizes(blocks[blocki], blockPoints, 0, 1),
+                    xCellSizes(blocks[blocki], blockPoints, 1, 1)
+                }
+            );
 
-            label vinM1 = blocks[blocki].pointLabel(density.x()-1, 0, 0);
-            label vin = blocks[blocki].pointLabel(density.x(), 0, 0);
-            scalar diFinal = mag(blockPoints[vin] - blockPoints[vinM1]);
+            printCellSizeRanges
+            (
+                1,
+                {
+                    yCellSizes(blocks[blocki], blockPoints, 0, 0),
+                    yCellSizes(blocks[blocki], blockPoints, 1, 0),
+                    yCellSizes(blocks[blocki], blockPoints, 0, 1),
+                    yCellSizes(blocks[blocki], blockPoints, 1, 1)
+                }
+            );
 
-            label vj1 = blocks[blocki].pointLabel(0, 1, 0);
-            scalar djStart = mag(blockPoints[vj1] - blockPoints[v0]);
-            label vjnM1 = blocks[blocki].pointLabel(0, density.y()-1, 0);
-            label vjn = blocks[blocki].pointLabel(0, density.y(), 0);
-            scalar djFinal = mag(blockPoints[vjn] - blockPoints[vjnM1]);
-
-            label vk1 = blocks[blocki].pointLabel(0, 0, 1);
-            scalar dkStart = mag(blockPoints[vk1] - blockPoints[v0]);
-            label vknM1 = blocks[blocki].pointLabel(0, 0, density.z()-1);
-            label vkn = blocks[blocki].pointLabel(0, 0, density.z());
-            scalar dkFinal = mag(blockPoints[vkn] - blockPoints[vknM1]);
-
-            Info<< "    Block " << blocki << " cell size :" << nl
-                << "        i : " << scaleFactor_*diStart << " .. "
-                << scaleFactor_*diFinal << nl
-                << "        j : " << scaleFactor_*djStart << " .. "
-                << scaleFactor_*djFinal << nl
-                << "        k : " << scaleFactor_*dkStart << " .. "
-                << scaleFactor_*dkFinal << nl
-                << endl;
+            printCellSizeRanges
+            (
+                2,
+                {
+                    zCellSizes(blocks[blocki], blockPoints, 0, 0),
+                    zCellSizes(blocks[blocki], blockPoints, 1, 0),
+                    zCellSizes(blocks[blocki], blockPoints, 0, 1),
+                    zCellSizes(blocks[blocki], blockPoints, 1, 1)
+                }
+            );
         }
 
         forAll(blockPoints, blockPointi)
