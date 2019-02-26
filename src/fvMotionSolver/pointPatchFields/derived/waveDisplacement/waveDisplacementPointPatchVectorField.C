@@ -28,6 +28,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "polyMesh.H"
+#include "OneConstant.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -56,7 +57,34 @@ waveDisplacementPointPatchVectorField
     fixedValuePointPatchField<vector>(p, iF, dict),
     amplitude_(dict.lookup("amplitude")),
     omega_(readScalar(dict.lookup("omega"))),
-    waveNumber_(dict.lookupOrDefault<vector>("waveNumber", Zero))
+    waveNumber_(dict.lookupOrDefault<vector>("waveNumber", Zero)),
+    startRamp_
+    (
+        dict.found("startRamp")
+      ? Function1<scalar>::New("startRamp", dict)
+      : autoPtr<Function1<scalar>>
+        (
+            new Function1Types::OneConstant<scalar>("startRamp")
+        )
+    ),
+    endRamp_
+    (
+        dict.found("endRamp")
+      ? Function1<scalar>::New("endRamp", dict)
+      : autoPtr<Function1<scalar>>
+        (
+            new Function1Types::OneConstant<scalar>("endRamp")
+        )
+    ),
+    timeRamp_
+    (
+        dict.found("timeRamp")
+      ? Function1<scalar>::New("timeRamp", dict)
+      : autoPtr<Function1<scalar>>
+        (
+            new Function1Types::OneConstant<scalar>("timeRamp")
+        )
+    )
 {
     if (!dict.found("value"))
     {
@@ -107,11 +135,20 @@ void Foam::waveDisplacementPointPatchVectorField::updateCoeffs()
     const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
 
-    const scalarField points( waveNumber_ & patch().localPoints());
+    const scalarField points(waveNumber_ & patch().localPoints());
+
+    const scalar timeRamp = timeRamp_->value(t.value());
+
+    const scalarField startRamp(startRamp_->value(points));
+
+    const scalarField endRamp
+    (
+        endRamp_->value(points[points.size() - 1] - points)
+    );
 
     Field<vector>::operator=
     (
-        amplitude_*cos(omega_*t.value() - points)
+        timeRamp*startRamp*endRamp*amplitude_*cos(omega_*t.value() - points)
     );
 
     fixedValuePointPatchField<vector>::updateCoeffs();
@@ -124,6 +161,22 @@ void Foam::waveDisplacementPointPatchVectorField::write(Ostream& os) const
     Foam::writeEntry(os, "amplitude", amplitude_);
     Foam::writeEntry(os, "omega", omega_);
     Foam::writeEntry(os, "waveNumber", waveNumber_);
+
+    if (!isType<Function1Types::OneConstant<scalar>>(startRamp_()))
+    {
+        startRamp_->writeData(os);
+    }
+
+    if (!isType<Function1Types::OneConstant<scalar>>(endRamp_()))
+    {
+        endRamp_->writeData(os);
+    }
+
+    if (!isType<Function1Types::OneConstant<scalar>>(timeRamp_()))
+    {
+        timeRamp_->writeData(os);
+    }
+
     writeEntry("value", os);
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,51 @@ Class
     Foam::waveDisplacementPointPatchVectorField
 
 Description
-    Foam::waveDisplacementPointPatchVectorField
+    Specified surface wave moving boundary.
+
+    The motion is a cosine wave with specified amplitude, frequency, wave number
+    and optional leading and trailing spacial ramps and temporal ramp
+    to allow the motion to be applied to an initially flat surface.
+
+Usage
+    \table
+        Property   | Description                    | Required | Default value
+        amplitude  | Amplitude of the cosine wave   | yes      |
+        omega      | Frequency of the cosine wave   | yes      |
+        waveNumber | Wave number of the cosine wave | no       | (0 0 0)
+        startRamp  | Leading ramp                   | no       | 1
+        endRamp    | Trailing ramp                  | no       | 1
+        timeRamp   | Temporal ramp                  | no       | 1
+    \endtable
+
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            waveDisplacement;
+        value           uniform (0 0 0);
+        amplitude       (0 0.05 0);
+        omega           2;
+        waveNumber      (5 0 0);
+        startRamp
+        {
+            type            linearRamp;
+            duration        1;
+            start           4;
+        }
+        endRamp
+        {
+            type            linearRamp;
+            duration        1;
+            start           4;
+        }
+        timeRamp
+        {
+            type            linearRamp;
+            duration        1;
+        }
+    }
+    \endverbatim
 
 SourceFiles
     waveDisplacementPointPatchVectorField.C
@@ -36,6 +80,7 @@ SourceFiles
 #define waveDisplacementPointPatchVectorField_H
 
 #include "fixedValuePointPatchField.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,6 +100,15 @@ class waveDisplacementPointPatchVectorField
         vector amplitude_;
         scalar omega_;
         vector waveNumber_;
+
+        //- Optional leading ramp for the wave
+        autoPtr<Function1<scalar>> startRamp_;
+
+        //- Optional trailing ramp for the wave
+        autoPtr<Function1<scalar>> endRamp_;
+
+        //- Optional temporal ramp for the wave
+        autoPtr<Function1<scalar>> timeRamp_;
 
 
 public:
