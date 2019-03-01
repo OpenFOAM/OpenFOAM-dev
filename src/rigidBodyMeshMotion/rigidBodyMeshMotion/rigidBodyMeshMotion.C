@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 )
 :
     displacementMotionSolver(mesh, dict, typeName),
-    RBD::rigidBodyMotion
+    model_
     (
         coeffDict(),
         IOobject
@@ -141,7 +141,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 
         if (bodyDict.found("patches"))
         {
-            const label bodyID = this->bodyID(iter().keyword());
+            const label bodyID = model_.bodyID(iter().keyword());
 
             if (bodyID == -1)
             {
@@ -239,7 +239,7 @@ void Foam::rigidBodyMeshMotion::solve()
     // Store the motion state at the beginning of the time-step
     if (curTimeIndex_ != this->db().time().timeIndex())
     {
-        newTime();
+        model_.newTime();
         curTimeIndex_ = this->db().time().timeIndex();
     }
 
@@ -247,7 +247,7 @@ void Foam::rigidBodyMeshMotion::solve()
 
     if (db().foundObject<uniformDimensionedVectorField>("g"))
     {
-        g() =
+        model_.g() =
             ramp*db().lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
@@ -257,18 +257,18 @@ void Foam::rigidBodyMeshMotion::solve()
 
         for (label i=0; i<nIter; i++)
         {
-            RBD::rigidBodyMotion::solve
+            model_.solve
             (
                 t.value(),
                 t.deltaTValue(),
-                scalarField(nDoF(), Zero),
-                Field<spatialVector>(nBodies(), Zero)
+                scalarField(model_.nDoF(), Zero),
+                Field<spatialVector>(model_.nBodies(), Zero)
             );
         }
     }
     else
     {
-        Field<spatialVector> fx(nBodies(), Zero);
+        Field<spatialVector> fx(model_.nBodies(), Zero);
 
         forAll(bodyMeshes_, bi)
         {
@@ -287,27 +287,27 @@ void Foam::rigidBodyMeshMotion::solve()
             fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
         }
 
-        RBD::rigidBodyMotion::solve
+        model_.solve
         (
             t.value(),
             t.deltaTValue(),
-            scalarField(nDoF(), Zero),
+            scalarField(model_.nDoF(), Zero),
             fx
         );
     }
 
-    if (Pstream::master() && report())
+    if (Pstream::master() && model_.report())
     {
         forAll(bodyMeshes_, bi)
         {
-            status(bodyMeshes_[bi].bodyID_);
+            model_.status(bodyMeshes_[bi].bodyID_);
         }
     }
 
     // Update the displacements
     if (bodyMeshes_.size() == 1)
     {
-        pointDisplacement_.primitiveFieldRef() = transformPoints
+        pointDisplacement_.primitiveFieldRef() = model_.transformPoints
         (
             bodyMeshes_[0].bodyID_,
             bodyMeshes_[0].weight_,
@@ -325,7 +325,7 @@ void Foam::rigidBodyMeshMotion::solve()
         }
 
         pointDisplacement_.primitiveFieldRef() =
-            transformPoints(bodyIDs, weights, points0()) - points0();
+            model_.transformPoints(bodyIDs, weights, points0()) - points0();
     }
 
     // Displacement has changed. Update boundary conditions
@@ -358,7 +358,7 @@ bool Foam::rigidBodyMeshMotion::writeObject
         )
     );
 
-    state().write(dict);
+    model_.state().write(dict);
     return dict.regIOobject::write();
 }
 
@@ -367,7 +367,7 @@ bool Foam::rigidBodyMeshMotion::read()
 {
     if (displacementMotionSolver::read())
     {
-        RBD::rigidBodyMotion::read(coeffDict());
+        model_.read(coeffDict());
 
         return true;
     }
