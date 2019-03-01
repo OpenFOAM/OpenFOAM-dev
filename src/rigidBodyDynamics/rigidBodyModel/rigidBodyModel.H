@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -251,6 +251,9 @@ public:
 
         //- Return the name of body with the given ID
         inline const word& name(const label bodyID) const;
+
+        //- Return the names of the moving bodies
+        wordList movingBodyNames() const;
 
         //- Return the inertia of body i
         inline const rigidBodyInertia& I(const label i) const;

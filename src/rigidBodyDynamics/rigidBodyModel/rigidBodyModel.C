@@ -384,6 +384,25 @@ Foam::spatialTransform Foam::RBD::rigidBodyModel::X0
 }
 
 
+Foam::wordList Foam::RBD::rigidBodyModel::movingBodyNames() const
+{
+    wordList names(nBodies());
+
+    label j = 0;
+    for (label i=1; i<nBodies(); i++)
+    {
+        if (!isType<jointBody>(bodies_[i]))
+        {
+            names[j++] = bodies_[i].name();
+        }
+    }
+
+    names.setSize(j);
+
+    return names;
+}
+
+
 void Foam::RBD::rigidBodyModel::write(Ostream& os) const
 {
     os  << indent << "bodies" << nl
