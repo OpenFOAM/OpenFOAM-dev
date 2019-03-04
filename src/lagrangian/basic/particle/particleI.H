@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,13 +68,8 @@ inline void Foam::particle::movingTetGeometry
     const triFace triIs(currentTetIndices().faceTriIs(mesh_));
     const pointField& ptsOld = mesh_.oldPoints();
     const pointField& ptsNew = mesh_.points();
-
-    // !!! <-- We would be better off using mesh_.cellCentres() here. However,
-    // we need to put a mesh_.oldCellCentres() method in for this to work. The
-    // values obtained from the mesh and those obtained from the cell do not
-    // necessarily match. See mantis #1993.
-    const vector ccOld = mesh_.cells()[celli_].centre(ptsOld, mesh_.faces());
-    const vector ccNew = mesh_.cells()[celli_].centre(ptsNew, mesh_.faces());
+    const vector ccOld = mesh_.oldCellCentres()[celli_];
+    const vector ccNew = mesh_.cellCentres()[celli_];
 
     // Old and new points and cell centres are not sub-cycled. If we are sub-
     // cycling, then we have to account for the timestep change here by

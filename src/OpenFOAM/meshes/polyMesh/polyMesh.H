@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,6 +185,12 @@ private:
 
             //- Old points (for the last mesh motion)
             mutable autoPtr<pointField> oldPointsPtr_;
+
+            //- Old cell centres (for the last mesh motion)
+            mutable autoPtr<pointField> oldCellCentresPtr_;
+
+            //- Whether or not to store the old cell centres
+            mutable bool storeOldCellCentres_;
 
 
     // Private Member Functions
@@ -420,6 +426,9 @@ public:
 
             //- Return old points for mesh motion
             virtual const pointField& oldPoints() const;
+
+            //- Return old points for mesh motion
+            virtual const pointField& oldCellCentres() const;
 
             //- Return IO object for points0
             static IOobject points0IO(const polyMesh& mesh);
