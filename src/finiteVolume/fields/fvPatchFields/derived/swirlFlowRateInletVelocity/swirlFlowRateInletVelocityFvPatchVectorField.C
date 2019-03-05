@@ -65,7 +65,7 @@ swirlFlowRateInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "origin",
-            patch().size()
+            returnReduce(patch().size(), sumOp<label>())
           ? gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
           : Zero
         )
@@ -75,7 +75,7 @@ swirlFlowRateInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "axis",
-            patch().size()
+            returnReduce(patch().size(), sumOp<label>())
           ? -gSum(patch().Sf())/gSum(patch().magSf())
           : Zero
         )
