@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "CompactIOList.H"
-#include "labelList.H"
+#include "IOList.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -35,7 +35,7 @@ void Foam::CompactIOList<T, BaseType>::readFromStream()
 
     if (headerClassName() == IOList<T>::typeName)
     {
-        is >> static_cast<List<T>&>(*this);
+        is >> static_cast<ListCompactIO<T, BaseType>&>(*this);
         close();
     }
     else if (headerClassName() == typeName)
@@ -54,23 +54,6 @@ void Foam::CompactIOList<T, BaseType>::readFromStream()
             << "    while reading object " << name()
             << exit(FatalIOError);
     }
-}
-
-
-template<class T, class BaseType>
-bool Foam::CompactIOList<T, BaseType>::overflows() const
-{
-    label size = 0;
-    forAll(*this, i)
-    {
-        label oldSize = size;
-        size += this->operator[](i).size();
-        if (size < oldSize)
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 
@@ -111,7 +94,7 @@ Foam::CompactIOList<T, BaseType>::CompactIOList
     }
     else
     {
-        List<T>::setSize(size);
+        this->setSize(size);
     }
 }
 
@@ -135,7 +118,7 @@ Foam::CompactIOList<T, BaseType>::CompactIOList
     }
     else
     {
-        List<T>::operator=(list);
+        ListCompactIO<T, BaseType>::operator=(list);
     }
 }
 
@@ -149,7 +132,7 @@ Foam::CompactIOList<T, BaseType>::CompactIOList
 :
     regIOobject(io)
 {
-    List<T>::transfer(list());
+    this->transfer(list());
 
     if
     (
@@ -195,7 +178,7 @@ bool Foam::CompactIOList<T, BaseType>::writeObject
 
         return good;
     }
-    else if (overflows())
+    else if (this->overflows())
     {
         WarningInFunction
             << "Overall number of elements of CompactIOList of size "
@@ -236,100 +219,7 @@ void Foam::CompactIOList<T, BaseType>::operator=
     const CompactIOList<T, BaseType>& rhs
 )
 {
-    List<T>::operator=(rhs);
-}
-
-
-template<class T, class BaseType>
-void Foam::CompactIOList<T, BaseType>::operator=(const List<T>& rhs)
-{
-    List<T>::operator=(rhs);
-}
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
-
-template<class T, class BaseType>
-Foam::Istream& Foam::operator>>
-(
-    Foam::Istream& is,
-    Foam::CompactIOList<T, BaseType>& L
-)
-{
-    // Read compact
-    const labelList start(is);
-    const List<BaseType> elems(is);
-
-    // Convert
-    L.setSize(start.size()-1);
-
-    forAll(L, i)
-    {
-        T& subList = L[i];
-
-        label index = start[i];
-        subList.setSize(start[i+1] - index);
-
-        forAll(subList, j)
-        {
-            subList[j] = elems[index++];
-        }
-    }
-
-    return is;
-}
-
-
-template<class T, class BaseType>
-Foam::Ostream& Foam::operator<<
-(
-    Foam::Ostream& os,
-    const Foam::CompactIOList<T, BaseType>& L
-)
-{
-    // Keep ascii writing same.
-    if (os.format() == IOstream::ASCII)
-    {
-        os << static_cast<const List<T>&>(L);
-    }
-    else
-    {
-        // Convert to compact format
-        labelList start(L.size()+1);
-
-        start[0] = 0;
-        for (label i = 1; i < start.size(); i++)
-        {
-            label prev = start[i-1];
-            start[i] = prev+L[i-1].size();
-
-            if (start[i] < prev)
-            {
-                FatalIOErrorInFunction(os)
-                    << "Overall number of elements " << start[i]
-                    << " of CompactIOList of size "
-                    << L.size() << " overflows the representation of a label"
-                    << endl << "Please recompile with a larger representation"
-                    << " for label" << exit(FatalIOError);
-            }
-        }
-
-        List<BaseType> elems(start[start.size()-1]);
-
-        label elemI = 0;
-        forAll(L, i)
-        {
-            const T& subList = L[i];
-
-            forAll(subList, j)
-            {
-                elems[elemI++] = subList[j];
-            }
-        }
-        os << start << elems;
-    }
-
-    return os;
+    ListCompactIO<T, BaseType>::operator=(rhs);
 }
 
 

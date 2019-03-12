@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,30 +39,13 @@ SourceFiles
 #ifndef CompactIOList_H
 #define CompactIOList_H
 
-#include "IOList.H"
+#include "ListCompactIO.H"
 #include "regIOobject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class Istream;
-class Ostream;
-
-// Forward declaration of friend functions and operators
-template<class T, class BaseType> class CompactIOList;
-
-template<class T, class BaseType> Istream& operator>>
-(
-    Istream&,
-    CompactIOList<T, BaseType>&
-);
-template<class T, class BaseType> Ostream& operator<<
-(
-    Ostream&,
-    const CompactIOList<T, BaseType>&
-);
 
 /*---------------------------------------------------------------------------*\
                            Class CompactIOList Declaration
@@ -72,15 +55,12 @@ template<class T, class BaseType>
 class CompactIOList
 :
     public regIOobject,
-    public List<T>
+    public ListCompactIO<T, BaseType>
 {
     // Private Member Functions
 
         //- Read according to header type
         void readFromStream();
-
-        //- Has too many elements in it?
-        bool overflows() const;
 
 public:
 
@@ -124,25 +104,6 @@ public:
     // Member operators
 
         void operator=(const CompactIOList<T, BaseType>&);
-
-        void operator=(const List<T>&);
-
-
-    // IOstream operators
-
-        //- Read List from Istream, discarding contents of existing List.
-        friend Istream& operator>> <T, BaseType>
-        (
-            Istream&,
-            CompactIOList<T, BaseType>&
-        );
-
-        // Write List to Ostream.
-        friend Ostream& operator<< <T, BaseType>
-        (
-            Ostream&,
-            const CompactIOList<T, BaseType>&
-        );
 };
 
 
