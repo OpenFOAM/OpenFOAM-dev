@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,6 +152,21 @@ public:
             //  ascending or descending order. Reordering has to be unique.
             //  (is shuffle)
             void reorder(const labelUList&);
+
+
+        // Write
+
+            //- Write the UPtrList as a dictionary entry
+            void writeEntry(Ostream&) const;
+
+            //- Write the UPtrList as a dictionary entry with keyword
+            void writeEntry(const word& keyword, Ostream&) const;
+
+            //- Write the UPtrList as a dictionary entry
+            void writeEntryList(Ostream&) const;
+
+            //- Write the UPtrList as a dictionary entry with keyword
+            void writeEntryList(const word& keyword, Ostream&) const;
 
 
     // Member operators

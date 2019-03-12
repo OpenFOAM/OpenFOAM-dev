@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,63 @@ License
 
 #include "UPtrList.H"
 #include "Ostream.H"
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class T>
+void Foam::UPtrList<T>::writeEntry(Ostream& os) const
+{
+    if
+    (
+        size()
+     && token::compound::isCompound
+        (
+            "List<" + word(pTraits<T>::typeName) + '>'
+        )
+    )
+    {
+        os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
+    }
+
+    os << *this;
+}
+
+
+template<class T>
+void Foam::UPtrList<T>::writeEntry(const word& keyword, Ostream& os) const
+{
+    os.writeKeyword(keyword);
+    writeEntry(os);
+    os << token::END_STATEMENT << endl;
+}
+
+
+template<class T>
+void Foam::UPtrList<T>::writeEntryList(Ostream& os) const
+{
+    // Write size and start delimiter
+    os << nl << size() << nl << token::BEGIN_LIST;
+
+    // Write contents
+    forAll(*this, i)
+    {
+        this->operator[](i).writeEntry(os);
+        os << nl;
+    }
+
+    // Write end delimiter
+    os << nl << token::END_LIST << nl;
+}
+
+
+template<class T>
+void Foam::UPtrList<T>::writeEntryList(const word& keyword, Ostream& os) const
+{
+    os.writeKeyword(keyword);
+    writeEntryList(os);
+    os << token::END_STATEMENT << endl;
+}
+
 
 // * * * * * * * * * * * * * * * Ostream Operators * * * * * * * * * * * * * //
 
