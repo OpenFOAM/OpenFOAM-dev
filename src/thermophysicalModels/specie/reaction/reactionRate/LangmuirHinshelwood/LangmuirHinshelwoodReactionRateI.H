@@ -34,7 +34,6 @@ inline Foam::LangmuirHinshelwoodReactionRate::LangmuirHinshelwoodReactionRate
     const dictionary& dict
 )
 :
-    species_(st),
     reactantNames_(dict.lookup("reactants")),
     a_(dict.lookupOrDefault<scalar>("a", 1)),
     A_(dict.lookup("A")),
