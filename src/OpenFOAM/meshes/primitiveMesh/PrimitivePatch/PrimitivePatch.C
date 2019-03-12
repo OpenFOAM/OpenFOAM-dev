@@ -144,6 +144,35 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
 {}
 
 
+template<class FaceList, class PointField>
+Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
+(
+    Istream& is,
+    const Field<PointType>& points
+)
+:
+    FaceList(is),
+    points_(points),
+    edgesPtr_(nullptr),
+    nInternalEdges_(-1),
+    boundaryPointsPtr_(nullptr),
+    faceFacesPtr_(nullptr),
+    edgeFacesPtr_(nullptr),
+    faceEdgesPtr_(nullptr),
+    pointEdgesPtr_(nullptr),
+    pointFacesPtr_(nullptr),
+    localFacesPtr_(nullptr),
+    meshPointsPtr_(nullptr),
+    meshPointMapPtr_(nullptr),
+    edgeLoopsPtr_(nullptr),
+    localPointsPtr_(nullptr),
+    localPointOrderPtr_(nullptr),
+    faceCentresPtr_(nullptr),
+    faceNormalsPtr_(nullptr),
+    pointNormalsPtr_(nullptr)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class FaceList, class PointField>

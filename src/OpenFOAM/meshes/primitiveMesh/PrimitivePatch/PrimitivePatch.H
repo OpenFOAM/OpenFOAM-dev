@@ -264,33 +264,62 @@ public:
             const PrimitivePatch<FaceList, PointField>&
         );
 
+        //- Construct and return a clone
+        virtual autoPtr<PrimitivePatch<FaceList, PointField>> clone() const
+        {
+            return autoPtr<PrimitivePatch<FaceList, PointField>>
+            (
+                new PrimitivePatch<FaceList, PointField>(*this)
+            );
+        }
+
+        //- Construct from Istream
+        PrimitivePatch
+        (
+            Istream&,
+            const Field<PointType>& points
+        );
+
+        class iNew
+        {
+            const Field<PointType>& points_;
+
+        public:
+
+            iNew(const Field<PointType>& points)
+            :
+                points_(points)
+            {}
+
+            autoPtr<PrimitivePatch<FaceList, PointField>> operator()
+            (
+                Istream& is
+            ) const
+            {
+                return autoPtr<PrimitivePatch<FaceList, PointField>>
+                (
+                    new PrimitivePatch<FaceList, PointField>(is, points_)
+                );
+            }
+        };
+
 
     //- Destructor
     virtual ~PrimitivePatch();
 
-        void clearOut();
-
-        void clearGeom();
-
-        void clearTopology();
-
-        void clearPatchMeshAddr();
-
 
     // Member Functions
 
-    // Access
+        // Access
 
-        //- Return reference to global points
-        const Field<PointType>& points() const
-        {
-            return points_;
-        }
+            //- Return reference to global points
+            const Field<PointType>& points() const
+            {
+                return points_;
+            }
 
 
-    // Access functions for demand driven data
-
-        // Topological data; no mesh required.
+        // Access functions for Topological data; no mesh required.
 
             //- Return number of points supporting patch faces
             label nPoints() const
@@ -423,41 +452,49 @@ public:
             const labelListList& edgeLoops() const;
 
 
-    // Check
+        // Check
 
-        //- Calculate surface type formed by patch.
-        //  Types:
-        //  - all edges have two neighbours (manifold)
-        //  - some edges have more than two neighbours (illegal)
-        //  - other (open)
-        surfaceTopo surfaceType() const;
+            //- Calculate surface type formed by patch.
+            //  Types:
+            //  - all edges have two neighbours (manifold)
+            //  - some edges have more than two neighbours (illegal)
+            //  - other (open)
+            surfaceTopo surfaceType() const;
 
-        //- Check surface formed by patch for manifoldness (see above).
-        //  Return true if any incorrect edges are found.
-        //  Insert vertices of incorrect edges into set.
-        bool checkTopology
-        (
-            const bool report = false,
-            labelHashSet* setPtr = nullptr
-        ) const;
+            //- Check surface formed by patch for manifoldness (see above).
+            //  Return true if any incorrect edges are found.
+            //  Insert vertices of incorrect edges into set.
+            bool checkTopology
+            (
+                const bool report = false,
+                labelHashSet* setPtr = nullptr
+            ) const;
 
-        //- Checks primitivePatch for faces sharing point but not edge.
-        //  This denotes a surface that is pinched at a single point
-        //  (test for pinched at single edge is already in PrimitivePatch)
-        //  Returns true if this situation found and puts conflicting
-        //  (mesh)point in set. Based on all the checking routines in
-        //  primitiveMesh.
-        bool checkPointManifold
-        (
-            const bool report = false,
-            labelHashSet* setPtr = nullptr
-        ) const;
+            //- Checks primitivePatch for faces sharing point but not edge.
+            //  This denotes a surface that is pinched at a single point
+            //  (test for pinched at single edge is already in PrimitivePatch)
+            //  Returns true if this situation found and puts conflicting
+            //  (mesh)point in set. Based on all the checking routines in
+            //  primitiveMesh.
+            bool checkPointManifold
+            (
+                const bool report = false,
+                labelHashSet* setPtr = nullptr
+            ) const;
 
 
-    // Edit
+        // Edit
 
-        //- Correct patch after moving points
-        virtual void movePoints(const Field<PointType>&);
+            void clearOut();
+
+            void clearGeom();
+
+            void clearTopology();
+
+            void clearPatchMeshAddr();
+
+            //- Correct patch after moving points
+            virtual void movePoints(const Field<PointType>&);
 
 
     // Member operators
