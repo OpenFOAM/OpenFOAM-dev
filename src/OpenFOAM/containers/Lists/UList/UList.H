@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,6 @@ public:
 
     // Member Functions
 
-
         // Access
 
             //- Return the forward circular index, i.e. the next index
@@ -213,17 +212,28 @@ public:
             inline void checkIndex(const label i) const;
 
 
-        //- Copy the pointer held by the given UList
-        inline void shallowCopy(const UList<T>&);
+        // Edit
 
-        //- Copy elements of the given UList
-        void deepCopy(const UList<T>&);
+            //- Copy the pointer held by the given UList
+            inline void shallowCopy(const UList<T>&);
 
-        //- Write the UList as a dictionary entry
-        void writeEntry(Ostream&) const;
+            //- Copy elements of the given UList
+            void deepCopy(const UList<T>&);
 
-        //- Write the UList as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream&) const;
+
+        // Write
+
+            //- Write the UList as a dictionary entry
+            void writeEntry(Ostream&) const;
+
+            //- Write the UList as a dictionary entry with keyword
+            void writeEntry(const word& keyword, Ostream&) const;
+
+            //- Write the UList as a dictionary entry
+            void writeEntryList(Ostream&) const;
+
+            //- Write the UList as a dictionary entry with keyword
+            void writeEntryList(const word& keyword, Ostream&) const;
 
 
     // Member operators
