@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -26,10 +26,8 @@
 #     pre-receive-hook
 #
 # Description
-#     pre-receive hook for git.
-#     Copy or link this file as ".git/hooks/pre-receive"
-#
-#     Eg,
+#     pre-receive hook for git. Copy or link this file to
+#     ".git/hooks/pre-receive"; e.g.,
 #     (
 #         cd $WM_PROJECT_DIR/.git/hooks &&
 #         ln -sf ../../bin/tools/pre-receive-hook pre-receive
@@ -37,54 +35,48 @@
 #
 #     Hook receives: <old-sha1> <new-sha1> <ref-name>
 #
-#     Checks for
-#     - illegal code, e.g. <TAB>
-#     - columns greater than 80 for *.[CH] files
+#     Checks for:
+#     - tabs
+#     - trailing whitespace and non-standard line endings
+#     - lines longer that than 80 characters
+#     - non-standard code patterns, > > and NULL
+#     - mismatched header #ifndef/#define names
+#     - incorrect copyright statements
 #
 #------------------------------------------------------------------------------
 
 . bin/tools/HookFunctions || exit 1
 
-hookName="pre-receive"
-
-
-#------------------------------------------------------------------------------
-# Main code. Do all checks.
-#
-
-while read oldSHA1 newSHA1 refName
+while read -r oldSHA1 newSHA1 refName
 do
-    unset fileList rawFileList
+    unset rawFiles files
 
+    # Get the list of changed files
     if [ "$newSHA1" = 0 ]
     then
-        # Ref to be deleted
         continue
     elif [ "$oldSHA1" = 0 ]
     then
-        # Ref to be created
-        rawFileList=$(git diff-tree --root $newSHA1)
+        readarray -t rawFiles < <(git diff-tree --root "$newSHA1")
     else
-        # Normal changes
-        rawFileList=$(git diff --name-only $oldSHA1..$newSHA1)
+        readarray -t rawFiles < <(git diff --name-only "$oldSHA1".."$newSHA1")
     fi
 
-    # No files have changed, so the checks are not necessary
-    [ -n "$rawFileList" ] || continue
+    # If no files have changed then the checks are not necessary
+    [ "${#rawFiles[@]}" -gt 0 ] || continue
 
-    fileList=$(
-    for f in $rawFileList
+    # Filter the file list
+    files=()
+    for file in "${rawFiles[@]}"
     do
-        git cat-file -e $newSHA1:$f > /dev/null 2>&1 && echo "$f"
+        if git cat-file -e "$newSHA1":"$file" > /dev/null 2>&1
+        then
+            files+=("$file")
+        fi
     done
-    )
 
-    # check for illegal code, e.g. <TAB>, etc
-    checkIllegalCode $newSHA1
-
-    # ensure code conforms to 80 columns max
-    checkLineLengthNonDirective $newSHA1
-
+    # Do the checks
+    checkAllNoCopyright "$newSHA1" false "${files[@]}" || exit 1
 done
 
 exit 0
