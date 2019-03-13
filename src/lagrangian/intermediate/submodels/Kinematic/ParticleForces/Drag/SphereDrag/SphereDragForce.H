@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,15 @@ Class
     Foam::SphereDragForce
 
 Description
-    Drag model based on assumption of solid spheres
+    Drag model for spheres.
+
+    Reference:
+    \verbatim
+        Amsden, A. A., Butler, T. D., & O'Rourke, P. J. (1987).
+        The KIVA-II computer program for transient multidimensional chemically
+        reactive flows with sprays
+        SAE Technical Paper.
+    \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
@@ -38,6 +46,7 @@ Description
 
 namespace Foam
 {
+
 /*---------------------------------------------------------------------------*\
                        Class SphereDragForce Declaration
 \*---------------------------------------------------------------------------*/
@@ -47,13 +56,13 @@ class SphereDragForce
 :
     public ParticleForce<CloudType>
 {
-    // Private Member Functions
+public:
+
+    // Static Member Functions
 
         //- Drag coefficient multiplied by Reynolds number
-        scalar CdRe(const scalar Re) const;
+        static scalar CdRe(const scalar Re);
 
-
-public:
 
     //- Runtime type information
     TypeName("sphereDrag");
@@ -101,7 +110,6 @@ public:
                 const scalar muc
             ) const;
 };
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

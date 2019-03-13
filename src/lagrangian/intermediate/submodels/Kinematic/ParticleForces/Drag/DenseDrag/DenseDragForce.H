@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::WenYuDragForce
-
-Description
-    Wen-Yu drag model for spheres.
-
-    Reference:
-    \verbatim
-        Gidaspow, D. (1994).
-        Multiphase flow and fluidization: continuum and kinetic theory
-        descriptions.
-        Academic press.
-    \endverbatim
+    Foam::DenseDragForce
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef WenYuDragForce_H
-#define WenYuDragForce_H
+#ifndef DenseDragForce_H
+#define DenseDragForce_H
 
-#include "DenseDragForce.H"
+#include "ParticleForce.H"
+#include "interpolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,32 +38,34 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class WenYuDragForce Declaration
+                       Class DenseDragForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>
-class WenYuDragForce
+class DenseDragForce
 :
-    public DenseDragForce<CloudType>
+    public ParticleForce<CloudType>
 {
+protected:
+
+    // Protected Data
+
+        //- Name of the carrier volume fraction field
+        const word alphacName_;
+
+        //- The carrier volume fraction field
+        autoPtr<volScalarField> alphacPtr_;
+
+        //- Interpolation for the carrier volume fraction field
+        autoPtr<interpolation<scalar>> alphacInterpPtr_;
+
+
 public:
-
-    //- Runtime type information
-    TypeName("WenYuDrag");
-
 
     // Constructors
 
         //- Construct from mesh
-        WenYuDragForce
-        (
-            CloudType& owner,
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
-
-        //- Construct from mesh
-        WenYuDragForce
+        DenseDragForce
         (
             CloudType& owner,
             const fvMesh& mesh,
@@ -82,36 +74,24 @@ public:
         );
 
         //- Construct copy
-        WenYuDragForce(const WenYuDragForce<CloudType>& df);
-
-        //- Construct and return a clone
-        virtual autoPtr<ParticleForce<CloudType>> clone() const
-        {
-            return autoPtr<ParticleForce<CloudType>>
-            (
-                new WenYuDragForce<CloudType>(*this)
-            );
-        }
+        DenseDragForce(const DenseDragForce<CloudType>& df);
 
 
     //- Destructor
-    virtual ~WenYuDragForce();
+    virtual ~DenseDragForce();
 
 
     // Member Functions
 
+        // Access
+
+            //- Return the volume fraction interpolation
+            const interpolation<scalar>& alphacInterp() const;
+
         // Evaluation
 
-            //- Calculate the coupled force
-            virtual forceSuSp calcCoupled
-            (
-                const typename CloudType::parcelType& p,
-                const typename CloudType::parcelType::trackingData& td,
-                const scalar dt,
-                const scalar mass,
-                const scalar Re,
-                const scalar muc
-            ) const;
+            //- Cache fields
+            virtual void cacheFields(const bool store);
 };
 
 
@@ -122,7 +102,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "WenYuDragForce.C"
+    #include "DenseDragForce.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

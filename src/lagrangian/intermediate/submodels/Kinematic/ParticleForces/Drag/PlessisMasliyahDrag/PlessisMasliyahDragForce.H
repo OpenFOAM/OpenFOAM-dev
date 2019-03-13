@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,22 @@ Class
     Foam::PlessisMasliyahDragForce
 
 Description
-    PlessisMasliyahDragForce drag model for solid spheres.
+    Plessis-Masliyah drag model for spheres.
+
+    Reference:
+    \verbatim
+        Du Plessis, J. P., & Masliyah, J. H. (1988).
+        Mathematical modelling of flow through consolidated isotropic porous
+        media.
+        Transport in Porous Media, 3(2), 145-161.
+    \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef PlessisMasliyahDragForce_H
 #define PlessisMasliyahDragForce_H
 
-#include "ParticleForce.H"
-#include "volFieldsFwd.H"
+#include "DenseDragForce.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,20 +54,8 @@ namespace Foam
 template<class CloudType>
 class PlessisMasliyahDragForce
 :
-    public ParticleForce<CloudType>
+    public DenseDragForce<CloudType>
 {
-    // Private Data
-
-        //- Reference to the carrier volume fraction field
-        const volScalarField& alphac_;
-
-
-    // Private Member Functions
-
-        //- Drag coefficient multiplied by Reynolds number
-        scalar CdRe(const scalar Re) const;
-
-
 public:
 
     //- Runtime type information

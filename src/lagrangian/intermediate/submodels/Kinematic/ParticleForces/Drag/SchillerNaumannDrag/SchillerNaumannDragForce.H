@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::WenYuDragForce
+    Foam::SchillerNaumannDragForce
 
 Description
-    Wen-Yu drag model for spheres.
+    Schiller-Naumann drag model for spheres.
 
     Reference:
     \verbatim
-        Gidaspow, D. (1994).
-        Multiphase flow and fluidization: continuum and kinetic theory
-        descriptions.
-        Academic press.
+        Naumann, Z., & Schiller, L. (1935).
+        A drag coefficient correlation.
+        Z Ver Deutsch Ing, 77, 318-323.
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef WenYuDragForce_H
-#define WenYuDragForce_H
+#ifndef SchillerNaumannDragForce_H
+#define SchillerNaumannDragForce_H
 
-#include "DenseDragForce.H"
+#include "ParticleForce.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,54 +47,51 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class WenYuDragForce Declaration
+                       Class SchillerNaumannDragForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>
-class WenYuDragForce
+class SchillerNaumannDragForce
 :
-    public DenseDragForce<CloudType>
+    public ParticleForce<CloudType>
 {
 public:
 
+    // Static Member Functions
+
+        //- Drag coefficient multiplied by Reynolds number
+        static scalar CdRe(const scalar Re);
+
+
     //- Runtime type information
-    TypeName("WenYuDrag");
+    TypeName("SchillerNaumannDrag");
 
 
     // Constructors
 
         //- Construct from mesh
-        WenYuDragForce
+        SchillerNaumannDragForce
         (
             CloudType& owner,
             const fvMesh& mesh,
             const dictionary& dict
         );
 
-        //- Construct from mesh
-        WenYuDragForce
-        (
-            CloudType& owner,
-            const fvMesh& mesh,
-            const dictionary& dict,
-            const word& typeName
-        );
-
         //- Construct copy
-        WenYuDragForce(const WenYuDragForce<CloudType>& df);
+        SchillerNaumannDragForce(const SchillerNaumannDragForce<CloudType>& df);
 
         //- Construct and return a clone
         virtual autoPtr<ParticleForce<CloudType>> clone() const
         {
             return autoPtr<ParticleForce<CloudType>>
             (
-                new WenYuDragForce<CloudType>(*this)
+                new SchillerNaumannDragForce<CloudType>(*this)
             );
         }
 
 
     //- Destructor
-    virtual ~WenYuDragForce();
+    virtual ~SchillerNaumannDragForce();
 
 
     // Member Functions
@@ -114,7 +110,6 @@ public:
             ) const;
 };
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
@@ -122,7 +117,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "WenYuDragForce.C"
+    #include "SchillerNaumannDragForce.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

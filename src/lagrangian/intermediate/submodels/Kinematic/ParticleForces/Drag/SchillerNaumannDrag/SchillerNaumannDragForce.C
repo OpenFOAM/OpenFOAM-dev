@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "SphereDragForce.H"
+#include "SchillerNaumannDragForce.H"
 
 // * * * * * * * * * * * * *  Static Member Functions  * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::scalar Foam::SphereDragForce<CloudType>::CdRe(const scalar Re)
+Foam::scalar Foam::SchillerNaumannDragForce<CloudType>::CdRe(const scalar Re)
 {
     if (Re > 1000.0)
     {
-        return 0.424*Re;
+        return 0.44*Re;
     }
     else
     {
-        return 24.0*(1.0 + 1.0/6.0*pow(Re, 2.0/3.0));
+        return 24.0*(1.0 + 0.15*pow(Re, 0.687));
     }
 }
 
@@ -44,7 +44,7 @@ Foam::scalar Foam::SphereDragForce<CloudType>::CdRe(const scalar Re)
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::SphereDragForce<CloudType>::SphereDragForce
+Foam::SchillerNaumannDragForce<CloudType>::SchillerNaumannDragForce
 (
     CloudType& owner,
     const fvMesh& mesh,
@@ -56,9 +56,9 @@ Foam::SphereDragForce<CloudType>::SphereDragForce
 
 
 template<class CloudType>
-Foam::SphereDragForce<CloudType>::SphereDragForce
+Foam::SchillerNaumannDragForce<CloudType>::SchillerNaumannDragForce
 (
-    const SphereDragForce<CloudType>& df
+    const SchillerNaumannDragForce<CloudType>& df
 )
 :
     ParticleForce<CloudType>(df)
@@ -68,14 +68,14 @@ Foam::SphereDragForce<CloudType>::SphereDragForce
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::SphereDragForce<CloudType>::~SphereDragForce()
+Foam::SchillerNaumannDragForce<CloudType>::~SchillerNaumannDragForce()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::forceSuSp Foam::SphereDragForce<CloudType>::calcCoupled
+Foam::forceSuSp Foam::SchillerNaumannDragForce<CloudType>::calcCoupled
 (
     const typename CloudType::parcelType& p,
     const typename CloudType::parcelType::trackingData& td,

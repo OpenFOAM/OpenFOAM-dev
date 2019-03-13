@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,25 +26,6 @@ License
 #include "PlessisMasliyahDragForce.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::scalar Foam::PlessisMasliyahDragForce<CloudType>::CdRe
-(
-    const scalar Re
-) const
-{
-    if (Re > 1000.0)
-    {
-        return 0.44*Re;
-    }
-    else
-    {
-        return 24.0*(1.0 + 0.15*pow(Re, 0.687));
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
@@ -55,14 +36,7 @@ Foam::PlessisMasliyahDragForce<CloudType>::PlessisMasliyahDragForce
     const dictionary& dict
 )
 :
-    ParticleForce<CloudType>(owner, mesh, dict, typeName, true),
-    alphac_
-    (
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->coeffs().lookup("alphac")
-        )
-    )
+    DenseDragForce<CloudType>(owner, mesh, dict, typeName)
 {}
 
 
@@ -72,14 +46,7 @@ Foam::PlessisMasliyahDragForce<CloudType>::PlessisMasliyahDragForce
     const PlessisMasliyahDragForce<CloudType>& df
 )
 :
-    ParticleForce<CloudType>(df),
-    alphac_
-    (
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->coeffs().lookup("alphac")
-        )
-    )
+    DenseDragForce<CloudType>(df)
 {}
 
 
@@ -103,28 +70,33 @@ Foam::forceSuSp Foam::PlessisMasliyahDragForce<CloudType>::calcCoupled
     const scalar muc
 ) const
 {
-    scalar alphac(alphac_[p.cell()]);
+    const scalar alphac =
+        this->alphacInterp().interpolate
+        (
+            p.coordinates(),
+            p.currentTetIndices()
+        );
 
-    scalar cbrtAlphap(pow(1.0 - alphac, 1.0/3.0));
+    const scalar cbrtAlphap = pow(1 - alphac, 1.0/3.0);
 
-    scalar A =
+    const scalar A =
         26.8*pow3(alphac)
        /(
             sqr(cbrtAlphap)
-           *(1.0 - cbrtAlphap)
-           *sqr(1.0 - sqr(cbrtAlphap))
+           *(1 - cbrtAlphap)
+           *sqr(1 - sqr(cbrtAlphap))
           + small
         );
 
-    scalar B =
+    const scalar B =
         sqr(alphac)
-       /sqr(1.0 - sqr(cbrtAlphap));
+       /sqr(1 - sqr(cbrtAlphap));
 
     return forceSuSp
     (
         Zero,
         (mass/p.rho())
-       *(A*(1.0 - alphac)/alphac + B*Re)*muc/(alphac*sqr(p.d()))
+       *(A*(1 - alphac)/alphac + B*Re)*muc/(alphac*sqr(p.d()))
     );
 }
 
