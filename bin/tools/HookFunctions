@@ -426,6 +426,54 @@ checkBanner() # scope, files...
 }
 
 
+checkMode() # scope, fix, files...
+{
+    reportStart "Check for executables"
+
+    local scope scopeGrep fix gitLs failMessage errorCount=0 errorMessages=()
+
+    scope="$1"
+    scopeGrep=$(scopeGitGrep "$scope")
+    shift
+    fix=$1
+    shift
+
+    if [ "$scope" == "--cached" ]
+    then
+        gitLs="git ls-files --stage"
+    else
+        gitLs="git ls-tree"
+    fi
+
+    for file in "$@"
+    do
+        if git grep -qe "\(^#\!.*/bin/.*\)" $scopeGrep"$file"
+        then
+            if [[ ! $($gitLs "$scope" "$file") =~ ^100(755|775|777) ]]
+            then
+                ((++errorCount))
+                errorMessages+=("$file")
+                if $fix
+                then
+                    chmod a+x "$file"
+                fi
+            fi
+        fi
+    done
+
+    if $fix
+    then
+        failMessage="The following files have been made executable automatically. Check and
+re-add them before pushing:"
+    else
+        failMessage="Make the following files executable:"
+    fi
+
+    reportEnd "$failMessage" $errorCount "${errorMessages[@]}"
+    return $errorCount
+}
+
+
 checkCopyright() # scope, fix, files...
 {
     reportStart "Check copyright"
@@ -520,6 +568,9 @@ checkAllNoCopyright() # scope, fix, files...
 
     # Check banner
     checkBanner "$scope" "$@" || returnCode=1
+
+    # Check mode
+    checkMode "$scope" "$fix" "$@" || returnCode=1
 
     return $returnCode
 }
