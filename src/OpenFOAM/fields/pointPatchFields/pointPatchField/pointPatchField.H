@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -435,17 +435,6 @@ public:
 
             //- Write
             virtual void write(Ostream&) const;
-
-            //- Helper function to write the keyword and entry only if the
-            //  values are not equal. The value is then output as value2
-            template<class EntryType>
-            void writeEntryIfDifferent
-            (
-                Ostream& os,
-                const word& entryName,
-                const EntryType& value1,
-                const EntryType& value2
-            ) const;
 
 
     // Member operators

@@ -52,16 +52,21 @@ class Ostream;
 // Forward declaration of friend functions and operators
 template<class T, class BaseType> class ListCompactIO;
 
+template<class T, class BaseType>
+void writeEntry(Ostream& os, const ListCompactIO<T, BaseType>& l);
+
 template<class T, class BaseType> Istream& operator>>
 (
     Istream&,
     ListCompactIO<T, BaseType>&
 );
+
 template<class T, class BaseType> Ostream& operator<<
 (
     Ostream&,
     const ListCompactIO<T, BaseType>&
 );
+
 
 /*---------------------------------------------------------------------------*\
                            Class ListCompactIO Declaration
@@ -106,21 +111,20 @@ public:
         ListCompactIO(Istream&);
 
 
-    // Member functions
-
-        //- Write the list in compact form as a dictionary entry to Ostream
-        void writeEntry(Ostream& os) const;
-
-        //- Write the list in compact form as a dictionary entry with keyword
-        //  to Ostream
-        void writeEntry(const word& keyword, Ostream& os) const;
-
-
     // Member operators
 
         void operator=(const ListCompactIO<T, BaseType>&);
 
         void operator=(const List<T>&);
+
+
+    // IOstream functions
+
+        friend void writeEntry <T, BaseType>
+        (
+            Ostream& os,
+            const ListCompactIO<T, BaseType>& l
+        );
 
 
     // IOstream operators

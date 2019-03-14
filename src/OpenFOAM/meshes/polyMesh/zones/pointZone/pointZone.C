@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,7 +191,7 @@ void Foam::pointZone::writeDict(Ostream& os) const
     os  << nl << name_ << nl << token::BEGIN_BLOCK << nl
         << "    type " << type() << token::END_STATEMENT << nl;
 
-    writeEntry(this->labelsName, os);
+    writeEntry(os, this->labelsName, *this);
 
     os  << token::END_BLOCK << endl;
 }

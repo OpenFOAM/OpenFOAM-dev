@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,8 +117,8 @@ void Foam::translatingWallVelocityFvPatchVectorField::updateCoeffs()
 void Foam::translatingWallVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    U_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, U_());
+    writeEntry(os, "value", *this);
 }
 
 

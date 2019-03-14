@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,8 +179,8 @@ void nutkAtmRoughWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    z0_.writeEntry("z0", os);
-    writeEntry("value", os);
+    writeEntry(os, "z0", z0_);
+    writeEntry(os, "value", *this);
 }
 
 

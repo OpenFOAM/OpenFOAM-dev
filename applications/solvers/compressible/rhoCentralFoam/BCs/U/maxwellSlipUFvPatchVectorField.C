@@ -206,15 +206,15 @@ void Foam::maxwellSlipUFvPatchVectorField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "mu", "thermo:mu", muName_);
     writeEntryIfDifferent<word>(os, "tauMC", "tauMC", tauMCName_);
 
-    Foam::writeEntry(os, "accommodationCoeff", accommodationCoeff_);
-    Uwall_.writeEntry("Uwall", os);
-    Foam::writeEntry(os, "thermalCreep", thermalCreep_);
-    Foam::writeEntry(os, "curvature", curvature_);
+    writeEntry(os, "accommodationCoeff", accommodationCoeff_);
+    writeEntry(os, "Uwall", Uwall_);
+    writeEntry(os, "thermalCreep", thermalCreep_);
+    writeEntry(os, "curvature", curvature_);
 
-    refValue().writeEntry("refValue", os);
-    valueFraction().writeEntry("valueFraction", os);
+    writeEntry(os, "refValue", refValue());
+    writeEntry(os, "valueFraction", valueFraction());
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

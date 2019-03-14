@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,8 +158,8 @@ void Foam::alphaFixedPressureFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    p_.writeEntry("p", os);
-    writeEntry("value", os);
+    writeEntry(os, "p", p_);
+    writeEntry(os, "value", *this);
 }
 
 

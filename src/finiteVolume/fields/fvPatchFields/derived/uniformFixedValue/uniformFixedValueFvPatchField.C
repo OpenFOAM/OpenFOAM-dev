@@ -134,8 +134,8 @@ template<class Type>
 void Foam::uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    uniformValue_->writeData(os);
-    this->writeEntry("value", os);
+    writeEntry(os, uniformValue_());
+    writeEntry(os, "value", *this);
 }
 
 

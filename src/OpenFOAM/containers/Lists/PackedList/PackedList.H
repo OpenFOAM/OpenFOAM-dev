@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,11 @@ class Ostream;
 template<unsigned nBits> class PackedList;
 
 template<unsigned nBits>
+void writeEntry(Ostream& os, const PackedList<nBits>&);
+
+template<unsigned nBits>
 Istream& operator>>(Istream&, PackedList<nBits>&);
+
 template<unsigned nBits>
 Ostream& operator<<(Ostream&, const PackedList<nBits>&);
 
@@ -375,13 +379,6 @@ public:
                 Ostream&,
                 const bool indexedOutput=false
             ) const;
-
-
-            //- Write as a dictionary entry
-            void writeEntry(Ostream&) const;
-
-            //- Write as a dictionary entry with keyword
-            void writeEntry(const word& keyword, Ostream&) const;
 
 
     // Member operators

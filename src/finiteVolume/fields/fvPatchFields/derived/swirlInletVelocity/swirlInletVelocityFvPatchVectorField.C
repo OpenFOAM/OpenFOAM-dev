@@ -145,12 +145,12 @@ void Foam::swirlInletVelocityFvPatchVectorField::updateCoeffs()
 void Foam::swirlInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    Foam::writeEntry(os, "origin", origin_);
-    Foam::writeEntry(os, "axis", axis_);
-    axialVelocity_->writeData(os);
-    radialVelocity_->writeData(os);
-    tangentialVelocity_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "axis", axis_);
+    writeEntry(os, axialVelocity_());
+    writeEntry(os, radialVelocity_());
+    writeEntry(os, tangentialVelocity_());
+    writeEntry(os, "value", *this);
 }
 
 

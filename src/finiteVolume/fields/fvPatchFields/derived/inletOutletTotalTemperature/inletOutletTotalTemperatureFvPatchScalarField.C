@@ -190,9 +190,9 @@ const
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", this->phiName_);
     writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
-    Foam::writeEntry(os, "gamma", gamma_);
-    T0_.writeEntry("T0", os);
-    writeEntry("value", os);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "T0", T0_);
+    writeEntry(os, "value", *this);
 }
 
 

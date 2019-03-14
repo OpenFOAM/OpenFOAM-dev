@@ -354,16 +354,16 @@ void Foam::interpolationLookUpTable<Type>::write
 
     control.writeHeader(os);
 
-    Foam::writeEntry(os, "fields", entries_);
+    writeEntry(os, "fields", entries_);
 
-    Foam::writeEntry(os, "output", output_);
+    writeEntry(os, "output", output_);
 
     if (this->size() == 0)
     {
         FatalErrorInFunction
             << "table is empty" << nl << exit(FatalError);
     }
-    Foam::writeEntry(os, "values", *this);
+    writeEntry(os, "values", *this);
 }
 
 

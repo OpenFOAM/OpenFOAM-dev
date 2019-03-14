@@ -1201,7 +1201,7 @@ void Foam::cyclicAMIPolyPatch::write(Ostream& os) const
     coupledPolyPatch::write(os);
     if (!nbrPatchName_.empty())
     {
-        Foam::writeEntry(os, "neighbourPatch", nbrPatchName_);
+        writeEntry(os, "neighbourPatch", nbrPatchName_);
     }
     coupleGroup_.write(os);
 
@@ -1209,19 +1209,19 @@ void Foam::cyclicAMIPolyPatch::write(Ostream& os) const
     {
         case ROTATIONAL:
         {
-            Foam::writeEntry(os, "rotationAxis", rotationAxis_);
-            Foam::writeEntry(os, "rotationCentre", rotationCentre_);
+            writeEntry(os, "rotationAxis", rotationAxis_);
+            writeEntry(os, "rotationCentre", rotationCentre_);
 
             if (rotationAngleDefined_)
             {
-                Foam::writeEntry(os, "rotationAngle", radToDeg(rotationAngle_));
+                writeEntry(os, "rotationAngle", radToDeg(rotationAngle_));
             }
 
             break;
         }
         case TRANSLATIONAL:
         {
-            Foam::writeEntry(os, "separationVector", separationVector_);
+            writeEntry(os, "separationVector", separationVector_);
             break;
         }
         case NOORDERING:
@@ -1236,15 +1236,15 @@ void Foam::cyclicAMIPolyPatch::write(Ostream& os) const
 
     if (AMIReverse_)
     {
-        Foam::writeEntry(os, "flipNormals", AMIReverse_);
+        writeEntry(os, "flipNormals", AMIReverse_);
     }
 
     if (AMILowWeightCorrection_ > 0)
     {
-        Foam::writeEntry(os, "lowWeightCorrection", AMILowWeightCorrection_);
+        writeEntry(os, "lowWeightCorrection", AMILowWeightCorrection_);
     }
 
-    Foam::writeEntry
+    writeEntry
     (
         os,
         "method",

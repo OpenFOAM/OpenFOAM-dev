@@ -168,9 +168,9 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::write
 {
     fvPatchField<vector>::write(os);
 
-    UnMean_->writeData(os);
-    Foam::writeEntry(os, "alpha", alphaName_);
-    writeEntry("value", os);
+    writeEntry(os, UnMean_());
+    writeEntry(os, "alpha", alphaName_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -240,14 +240,14 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
 void Foam::flowRateInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    flowRate_->writeData(os);
+    writeEntry(os, flowRate_());
     if (!volumetric_)
     {
         writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
         writeEntryIfDifferent<scalar>(os, "rhoInlet", -vGreat, rhoInlet_);
     }
-    Foam::writeEntry(os, "extrapolateProfile", extrapolateProfile_);
-    writeEntry("value", os);
+    writeEntry(os, "extrapolateProfile", extrapolateProfile_);
+    writeEntry(os, "value", *this);
 }
 
 

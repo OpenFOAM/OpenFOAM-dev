@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,9 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 template<class T, unsigned Size> class FixedList;
+
+template<class T, unsigned Size>
+void writeEntry(Ostream& os, const FixedList<T, Size>&);
 
 template<class T, unsigned Size>
 Istream& operator>>(Istream&, FixedList<T, Size>&);
@@ -206,12 +209,6 @@ public:
             //- Copy (not transfer) the argument contents
             //  needed to make FixedList consistent with List
             void transfer(const FixedList<T, Size>&);
-
-        //- Write the FixedList as a dictionary entry
-        void writeEntry(Ostream&) const;
-
-        //- Write the FixedList as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream&) const;
 
 
     // Member operators

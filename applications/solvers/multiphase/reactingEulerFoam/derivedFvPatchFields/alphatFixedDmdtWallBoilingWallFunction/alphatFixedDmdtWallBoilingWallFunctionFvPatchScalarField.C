@@ -191,12 +191,12 @@ void alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::write
 ) const
 {
     fvPatchField<scalar>::write(os);
-    Foam::writeEntry(os, "vaporPhase", vaporPhaseName_);
-    Foam::writeEntry(os, "relax", relax_);
-    Foam::writeEntry(os, "fixedDmdt", fixedDmdt_);
-    Foam::writeEntry(os, "L", L_);
-    dmdt_.writeEntry("dmdt", os);
-    writeEntry("value", os);
+    writeEntry(os, "vaporPhase", vaporPhaseName_);
+    writeEntry(os, "relax", relax_);
+    writeEntry(os, "fixedDmdt", fixedDmdt_);
+    writeEntry(os, "L", L_);
+    writeEntry(os, "dmdt", dmdt_);
+    writeEntry(os, "value", *this);
 }
 
 

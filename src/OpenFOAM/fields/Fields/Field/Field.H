@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,6 +60,9 @@ class Field;
 //- Pre-declare related SubField type
 template<class Type>
 class SubField;
+
+template<class Type>
+void writeEntry(Ostream& os, const Field<Type>&);
 
 template<class Type>
 Ostream& operator<<(Ostream&, const Field<Type>&);
@@ -348,9 +351,6 @@ public:
 
         //- Return the field transpose (only defined for second rank tensors)
         tmp<Field<Type>> T() const;
-
-        //- Write the field as a dictionary entry
-        void writeEntry(const word& keyword, Ostream& os) const;
 
 
     // Member operators

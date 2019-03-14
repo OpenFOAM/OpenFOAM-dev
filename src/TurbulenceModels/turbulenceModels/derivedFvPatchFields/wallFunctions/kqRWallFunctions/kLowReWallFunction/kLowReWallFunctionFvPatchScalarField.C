@@ -233,10 +233,10 @@ void kLowReWallFunctionFvPatchScalarField::evaluate
 
 void kLowReWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
-    Foam::writeEntry(os, "Cmu", Cmu_);
-    Foam::writeEntry(os, "kappa", kappa_);
-    Foam::writeEntry(os, "E", E_);
-    Foam::writeEntry(os, "Ceps2", Ceps2_);
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "E", E_);
+    writeEntry(os, "Ceps2", Ceps2_);
     fixedValueFvPatchField<scalar>::write(os);
 }
 

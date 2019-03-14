@@ -57,9 +57,9 @@ void Foam::epsilonWallFunctionFvPatchScalarField::writeLocalEntries
     Ostream& os
 ) const
 {
-    Foam::writeEntry(os, "Cmu", Cmu_);
-    Foam::writeEntry(os, "kappa", kappa_);
-    Foam::writeEntry(os, "E", E_);
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "E", E_);
 }
 
 

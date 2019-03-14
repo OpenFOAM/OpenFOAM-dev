@@ -1446,20 +1446,20 @@ void Foam::cyclicPolyPatch::write(Ostream& os) const
     coupledPolyPatch::write(os);
     if (!neighbPatchName_.empty())
     {
-        Foam::writeEntry(os, "neighbourPatch", neighbPatchName_);
+        writeEntry(os, "neighbourPatch", neighbPatchName_);
     }
     coupleGroup_.write(os);
     switch (transform())
     {
         case ROTATIONAL:
         {
-            Foam::writeEntry(os, "rotationAxis", rotationAxis_);
-            Foam::writeEntry(os, "rotationCentre", rotationCentre_);
+            writeEntry(os, "rotationAxis", rotationAxis_);
+            writeEntry(os, "rotationCentre", rotationCentre_);
             break;
         }
         case TRANSLATIONAL:
         {
-            Foam::writeEntry(os, "separationVector", separationVector_);
+            writeEntry(os, "separationVector", separationVector_);
             break;
         }
         case NOORDERING:

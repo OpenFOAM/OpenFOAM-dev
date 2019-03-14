@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,7 +179,7 @@ template<class Type>
 void Foam::valuePointPatchField<Type>::write(Ostream& os) const
 {
     pointPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", static_cast<const Field<Type>&>(*this));
 }
 
 

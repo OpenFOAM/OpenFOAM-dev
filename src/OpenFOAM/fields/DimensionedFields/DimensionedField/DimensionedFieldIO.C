@@ -110,7 +110,7 @@ bool Foam::DimensionedField<Type, GeoMesh>::writeData
     writeEntry(os, "dimensions", dimensions());
     os << nl;
 
-    Field<Type>::writeEntry(fieldDictEntry, os);
+    writeEntry(os, fieldDictEntry, static_cast<const Field<Type>&>(*this));
 
     // Check state of Ostream
     os.check

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,15 @@ Foam::word Foam::name
     buf << ')';
 
     return buf.str();
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class Form, class Cmpt, Foam::direction Ncmpts>
+void Foam::writeEntry(Ostream& os, const VectorSpace<Form, Cmpt, Ncmpts>& value)
+{
+    os << value;
 }
 
 

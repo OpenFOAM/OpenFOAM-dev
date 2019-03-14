@@ -360,14 +360,14 @@ void Foam::waveSuperposition::write(Ostream& os) const
             << nl << decrIndent << indent << token::END_BLOCK << nl;
     }
     os  << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
-    UMean_->writeData(os);
+    writeEntry(os, UMean_());
     if (scale_.valid())
     {
-        scale_->writeData(os);
+        writeEntry(os, scale_());
     }
     if (crossScale_.valid())
     {
-        crossScale_->writeData(os);
+        writeEntry(os, crossScale_());
     }
     if (heightAboveWave_)
     {

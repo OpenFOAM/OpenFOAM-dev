@@ -285,7 +285,7 @@ Foam::codedFixedValuePointPatchField<Type>::redirectPatchField() const
 
         OStringStream os;
         writeEntry(os, "type", name_);
-        static_cast<const Field<Type>&>(*this).writeEntry("value", os);
+        writeEntry(os, "value", static_cast<const Field<Type>&>(*this));
         IStringStream is(os.str());
         dictionary dict(is);
 

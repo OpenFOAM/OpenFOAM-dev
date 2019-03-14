@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,11 @@ static const label labelMax = INT_SIZE(INT, _MAX);
 inline label readLabel(Istream& is)
 {
     return INT_SIZE(readInt,) (is);
+}
+
+inline void writeEntry(Ostream& os, const label value)
+{
+    os << value;
 }
 
 

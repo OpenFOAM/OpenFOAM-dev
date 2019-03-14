@@ -199,10 +199,10 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::
 write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    Foam::writeEntry(os, "phi", phiName_);
-    Foam::writeEntry(os, "rho", rhoName_);
-    Foam::writeEntry(os, "massFluxFraction", massFluxFraction_);
-    this->writeEntry("value", os);
+    writeEntry(os, "phi", phiName_);
+    writeEntry(os, "rho", rhoName_);
+    writeEntry(os, "massFluxFraction", massFluxFraction_);
+    writeEntry(os, "value", *this);
 }
 
 

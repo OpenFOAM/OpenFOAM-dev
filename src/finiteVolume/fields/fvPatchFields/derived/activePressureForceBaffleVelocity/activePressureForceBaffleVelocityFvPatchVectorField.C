@@ -355,14 +355,14 @@ write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
-    Foam::writeEntry(os, "cyclicPatch", cyclicPatchName_);
-    Foam::writeEntry(os, "orientation", orientation_);
-    Foam::writeEntry(os, "openingTime", openingTime_);
-    Foam::writeEntry(os, "maxOpenFractionDelta", maxOpenFractionDelta_);
-    Foam::writeEntry(os, "openFraction", openFraction_);
-    Foam::writeEntry(os, "minThresholdValue", minThresholdValue_);
-    Foam::writeEntry(os, "forceBased", fBased_);
-    writeEntry("value", os);
+    writeEntry(os, "cyclicPatch", cyclicPatchName_);
+    writeEntry(os, "orientation", orientation_);
+    writeEntry(os, "openingTime", openingTime_);
+    writeEntry(os, "maxOpenFractionDelta", maxOpenFractionDelta_);
+    writeEntry(os, "openFraction", openFraction_);
+    writeEntry(os, "minThresholdValue", minThresholdValue_);
+    writeEntry(os, "forceBased", fBased_);
+    writeEntry(os, "value", *this);
 }
 
 

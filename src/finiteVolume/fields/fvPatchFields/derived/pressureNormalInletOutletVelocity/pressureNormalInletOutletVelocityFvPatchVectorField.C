@@ -159,9 +159,9 @@ void Foam::pressureNormalInletOutletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
-    Foam::writeEntry(os, "phi", phiName_);
-    Foam::writeEntry(os, "rho", rhoName_);
-    writeEntry("value", os);
+    writeEntry(os, "phi", phiName_);
+    writeEntry(os, "rho", rhoName_);
+    writeEntry(os, "value", *this);
 }
 
 

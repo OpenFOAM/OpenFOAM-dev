@@ -173,10 +173,10 @@ void Foam::fixedJumpAMIFvPatchField<Type>::write(Ostream& os) const
 
     if (this->cyclicAMIPatch().owner())
     {
-        jump_.writeEntry("jump", os);
+        writeEntry(os, "jump", jump_);
     }
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

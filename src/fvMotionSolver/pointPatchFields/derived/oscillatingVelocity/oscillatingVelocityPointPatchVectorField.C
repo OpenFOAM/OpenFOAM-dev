@@ -160,10 +160,10 @@ void oscillatingVelocityPointPatchVectorField::updateCoeffs()
 void oscillatingVelocityPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
-    Foam::writeEntry(os, "amplitude", amplitude_);
-    Foam::writeEntry(os, "omega", omega_);
-    p0_.writeEntry("p0", os);
-    writeEntry("value", os);
+    writeEntry(os, "amplitude", amplitude_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "p0", p0_);
+    writeEntry(os, "value", *this);
 }
 
 

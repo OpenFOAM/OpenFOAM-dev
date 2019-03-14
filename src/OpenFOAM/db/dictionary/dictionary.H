@@ -59,6 +59,8 @@ SourceFiles
 #include "wordList.H"
 #include "className.H"
 
+#include "VectorSpace.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -586,15 +588,14 @@ dictionary operator+(const dictionary& dict1, const dictionary& dict2);
 dictionary operator|(const dictionary& dict1, const dictionary& dict2);
 
 
+// Global Functions
+
+//- Write a dictionary entry
+void writeEntry(Ostream& os, const dictionary& dict);
+
 //- Helper function to write the keyword and entry
 template<class EntryType>
-void writeEntry
-(
-    Ostream& os,
-    const word& entryName,
-    const EntryType& value
-);
-
+void writeEntry(Ostream& os, const word& entryName, const EntryType& value);
 
 //- Helper function to write the keyword and entry only if the
 //  values are not equal. The value is then output as value2

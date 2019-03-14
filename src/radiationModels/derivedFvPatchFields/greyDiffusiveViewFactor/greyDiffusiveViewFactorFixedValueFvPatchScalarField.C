@@ -187,7 +187,7 @@ void Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::write
 {
     fixedValueFvPatchScalarField::write(os);
     radiationCoupledBase::write(os);
-    qro_.writeEntry("qro", os);
+    writeEntry(os, "qro", qro_);
 }
 
 

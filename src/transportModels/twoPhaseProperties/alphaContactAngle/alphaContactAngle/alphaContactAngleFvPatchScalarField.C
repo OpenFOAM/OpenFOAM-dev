@@ -166,7 +166,7 @@ void Foam::alphaContactAngleFvPatchScalarField::write
 ) const
 {
     fixedGradientFvPatchScalarField::write(os);
-    Foam::writeEntry(os, "limit", limitControlNames_[limit_]);
+    writeEntry(os, "limit", limitControlNames_[limit_]);
 }
 
 

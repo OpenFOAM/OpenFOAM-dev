@@ -179,13 +179,13 @@ void angularOscillatingDisplacementPointPatchVectorField::write
 ) const
 {
     pointPatchField<vector>::write(os);
-    Foam::writeEntry(os, "axis", axis_);
-    Foam::writeEntry(os, "origin", origin_);
-    Foam::writeEntry(os, "angle0", angle0_);
-    Foam::writeEntry(os, "amplitude", amplitude_);
-    Foam::writeEntry(os, "omega", omega_);
-    p0_.writeEntry("p0", os);
-    writeEntry("value", os);
+    writeEntry(os, "axis", axis_);
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "angle0", angle0_);
+    writeEntry(os, "amplitude", amplitude_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "p0", p0_);
+    writeEntry(os, "value", *this);
 }
 
 

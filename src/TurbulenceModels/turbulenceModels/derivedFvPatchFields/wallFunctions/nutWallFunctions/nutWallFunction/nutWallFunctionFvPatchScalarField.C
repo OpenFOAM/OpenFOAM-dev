@@ -57,9 +57,9 @@ void Foam::nutWallFunctionFvPatchScalarField::writeLocalEntries
     Ostream& os
 ) const
 {
-    Foam::writeEntry(os, "Cmu", Cmu_);
-    Foam::writeEntry(os, "kappa", kappa_);
-    Foam::writeEntry(os, "E", E_);
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "E", E_);
 }
 
 
@@ -189,7 +189,7 @@ void Foam::nutWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

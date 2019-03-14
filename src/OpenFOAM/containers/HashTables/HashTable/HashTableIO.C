@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,15 @@ Foam::HashTable<T, Key, Hash>::printInfo(Ostream& os) const
         << "/" << maxChain << endl;
 
     return os;
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class T, class Key, class Hash>
+void Foam::writeEntry(Ostream& os, const HashTable<T, Key, Hash>& ht)
+{
+    os << ht;
 }
 
 

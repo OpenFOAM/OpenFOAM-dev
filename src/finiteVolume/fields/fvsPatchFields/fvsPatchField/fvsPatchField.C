@@ -173,7 +173,7 @@ template<class Type>
 void Foam::fvsPatchField<Type>::write(Ostream& os) const
 {
     writeEntry(os, "type", type());
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

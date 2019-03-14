@@ -174,9 +174,9 @@ void Foam::freestreamPressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
-    freestreamValue().writeEntry("freestreamValue", os);
-    Foam::writeEntry(os, "supersonic", supersonic_);
-    writeEntry("value", os);
+    writeEntry(os, "freestreamValue", freestreamValue());
+    writeEntry(os, "supersonic", supersonic_);
+    writeEntry(os, "value", *this);
 }
 
 

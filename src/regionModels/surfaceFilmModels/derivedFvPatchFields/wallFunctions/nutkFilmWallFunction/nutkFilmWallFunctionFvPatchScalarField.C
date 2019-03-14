@@ -241,9 +241,9 @@ void nutkFilmWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    Foam::writeEntry(os, "B", B_);
-    Foam::writeEntry(os, "yPlusCrit", yPlusCrit_);
-    writeEntry("value", os);
+    writeEntry(os, "B", B_);
+    writeEntry(os, "yPlusCrit", yPlusCrit_);
+    writeEntry(os, "value", *this);
 }
 
 

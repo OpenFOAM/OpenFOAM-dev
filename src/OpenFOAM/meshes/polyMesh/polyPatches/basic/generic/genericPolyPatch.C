@@ -120,10 +120,10 @@ Foam::genericPolyPatch::~genericPolyPatch()
 
 void Foam::genericPolyPatch::write(Ostream& os) const
 {
-    Foam::writeEntry(os, "type", actualTypeName_);
+    writeEntry(os, "type", actualTypeName_);
     patchIdentifier::write(os);
-    Foam::writeEntry(os, "nFaces", size());
-    Foam::writeEntry(os, "startFace", start());
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 
     forAllConstIter(dictionary, dict_, iter)
     {

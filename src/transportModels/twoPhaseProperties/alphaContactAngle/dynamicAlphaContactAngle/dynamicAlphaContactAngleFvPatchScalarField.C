@@ -156,11 +156,11 @@ Foam::dynamicAlphaContactAngleFvPatchScalarField::theta
 void Foam::dynamicAlphaContactAngleFvPatchScalarField::write(Ostream& os) const
 {
     alphaContactAngleFvPatchScalarField::write(os);
-    Foam::writeEntry(os, "theta0", theta0_);
-    Foam::writeEntry(os, "uTheta", uTheta_);
-    Foam::writeEntry(os, "thetaA", thetaA_);
-    Foam::writeEntry(os, "thetaR", thetaR_);
-    writeEntry("value", os);
+    writeEntry(os, "theta0", theta0_);
+    writeEntry(os, "uTheta", uTheta_);
+    writeEntry(os, "thetaA", thetaA_);
+    writeEntry(os, "thetaR", thetaR_);
+    writeEntry(os, "value", *this);
 }
 
 

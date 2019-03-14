@@ -155,10 +155,10 @@ void turbulentMixingLengthFrequencyInletFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    Foam::writeEntry(os, "mixingLength", mixingLength_);
-    Foam::writeEntry(os, "phi", this->phiName_);
-    Foam::writeEntry(os, "k", kName_);
-    writeEntry("value", os);
+    writeEntry(os, "mixingLength", mixingLength_);
+    writeEntry(os, "phi", this->phiName_);
+    writeEntry(os, "k", kName_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -204,8 +204,8 @@ tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::yPlus() const
 void nutUTabulatedWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    Foam::writeEntry(os, "uPlusTable", uPlusTableName_);
-    writeEntry("value", os);
+    writeEntry(os, "uPlusTable", uPlusTableName_);
+    writeEntry(os, "value", *this);
 }
 
 

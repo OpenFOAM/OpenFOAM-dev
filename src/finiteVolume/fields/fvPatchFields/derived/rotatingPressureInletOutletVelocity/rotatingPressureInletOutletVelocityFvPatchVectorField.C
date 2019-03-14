@@ -127,9 +127,9 @@ void Foam::rotatingPressureInletOutletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
-    Foam::writeEntry(os, "phi", phiName());
-    omega_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, "phi", phiName());
+    writeEntry(os, omega_());
+    writeEntry(os, "value", *this);
 }
 
 

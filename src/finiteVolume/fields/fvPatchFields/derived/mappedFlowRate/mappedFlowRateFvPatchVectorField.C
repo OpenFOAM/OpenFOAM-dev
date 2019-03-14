@@ -188,8 +188,8 @@ void Foam::mappedFlowRateFvPatchVectorField::write
     fvPatchField<vector>::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    Foam::writeEntry(os, "nbrPhi", nbrPhiName_);
-    writeEntry("value", os);
+    writeEntry(os, "nbrPhi", nbrPhiName_);
+    writeEntry(os, "value", *this);
 }
 
 

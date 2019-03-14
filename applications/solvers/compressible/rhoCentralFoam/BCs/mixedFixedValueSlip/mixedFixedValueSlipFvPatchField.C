@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,8 +188,8 @@ template<class Type>
 void Foam::mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    valueFraction_.writeEntry("valueFraction", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "valueFraction", valueFraction_);
 }
 
 

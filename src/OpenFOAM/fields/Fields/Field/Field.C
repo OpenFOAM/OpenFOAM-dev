@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -720,42 +720,6 @@ Foam::tmp<Foam::Field<Type>> Foam::Field<Type>::T() const
 }
 
 
-template<class Type>
-void Foam::Field<Type>::writeEntry(const word& keyword, Ostream& os) const
-{
-    os.writeKeyword(keyword);
-
-    bool uniform = false;
-
-    if (this->size() && contiguous<Type>())
-    {
-        uniform = true;
-
-        forAll(*this, i)
-        {
-            if (this->operator[](i) != this->operator[](0))
-            {
-                uniform = false;
-                break;
-            }
-        }
-    }
-
-    if (uniform)
-    {
-        os << "uniform " << this->operator[](0) << token::END_STATEMENT;
-    }
-    else
-    {
-        os << "nonuniform ";
-        List<Type>::writeEntry(os);
-        os << token::END_STATEMENT;
-    }
-
-    os << endl;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
@@ -849,6 +813,39 @@ COMPUTED_ASSIGNMENT(scalar, *=)
 COMPUTED_ASSIGNMENT(scalar, /=)
 
 #undef COMPUTED_ASSIGNMENT
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::writeEntry(Ostream& os, const Field<Type>& f)
+{
+    bool uniform = false;
+
+    if (f.size() && contiguous<Type>())
+    {
+        uniform = true;
+
+        forAll(f, i)
+        {
+            if (f[i] != f[0])
+            {
+                uniform = false;
+                break;
+            }
+        }
+    }
+
+    if (uniform)
+    {
+        os << "uniform " << f[0];
+    }
+    else
+    {
+        os << "nonuniform ";
+        writeEntry(os, static_cast<const List<Type>&>(f));
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //

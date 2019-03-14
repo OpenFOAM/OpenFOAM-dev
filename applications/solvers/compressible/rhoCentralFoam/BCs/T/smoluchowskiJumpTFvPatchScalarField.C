@@ -204,7 +204,6 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::updateCoeffs()
 }
 
 
-// Write
 void Foam::smoluchowskiJumpTFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
@@ -214,10 +213,10 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
     writeEntryIfDifferent<word>(os, "mu", "thermo:mu", muName_);
 
-    Foam::writeEntry(os, "accommodationCoeff", accommodationCoeff_);
-    Twall_.writeEntry("Twall", os);
-    Foam::writeEntry(os, "gamma", gamma_);
-    writeEntry("value", os);
+    writeEntry(os, "accommodationCoeff", accommodationCoeff_);
+    writeEntry(os, "Twall", Twall_);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "value", *this);
 }
 
 

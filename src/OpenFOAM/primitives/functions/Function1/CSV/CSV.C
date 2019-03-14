@@ -271,7 +271,7 @@ void Foam::Function1Types::CSV<Type>::writeData(Ostream& os) const
 
     writeEntry(os, "nHeaderLine", nHeaderLine_);
     writeEntry(os, "refColumn", refColumn_);
-    componentColumns_.writeEntry("componentColumns", os);
+    writeEntry(os, componentColumns_);
     writeEntry(os, "separator", string(separator_));
     writeEntry(os, "mergeSeparators", mergeSeparators_);
     writeEntry(os, "file", fName_);

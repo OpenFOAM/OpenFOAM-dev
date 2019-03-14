@@ -398,11 +398,11 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::write
         "pyrolysisProperties",
         pyrolysisRegionName_
     );
-    Foam::writeEntry(os, "Tnbr", TnbrName_);
-    Foam::writeEntry(os, "qr", qrName_);
-    Foam::writeEntry(os, "convectiveScaling", convectiveScaling_);
-    Foam::writeEntry(os, "filmDeltaDry", filmDeltaDry_);
-    Foam::writeEntry(os, "filmDeltaWet", filmDeltaWet_);
+    writeEntry(os, "Tnbr", TnbrName_);
+    writeEntry(os, "qr", qrName_);
+    writeEntry(os, "convectiveScaling", convectiveScaling_);
+    writeEntry(os, "filmDeltaDry", filmDeltaDry_);
+    writeEntry(os, "filmDeltaWet", filmDeltaWet_);
     temperatureCoupledBase::write(os);
 }
 

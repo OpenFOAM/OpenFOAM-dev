@@ -227,10 +227,10 @@ template<class Type>
 void Foam::mixedFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    refGrad_.writeEntry("refGradient", os);
-    valueFraction_.writeEntry("valueFraction", os);
-    this->writeEntry("value", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "refGradient", refGrad_);
+    writeEntry(os, "valueFraction", valueFraction_);
+    writeEntry(os, "value", *this);
 }
 
 

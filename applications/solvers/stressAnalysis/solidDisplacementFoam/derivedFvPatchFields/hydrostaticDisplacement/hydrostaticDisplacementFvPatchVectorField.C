@@ -125,10 +125,10 @@ void Foam::hydrostaticDisplacementFvPatchVectorField::updateCoeffs()
 void Foam::hydrostaticDisplacementFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    Foam::writeEntry(os, "rhoLiquid", rhoLiquid_);
-    Foam::writeEntry(os, "liquidSurfacePressure", liquidSurfacePressure_);
-    Foam::writeEntry(os, "liquidSurfacePoint", liquidSurfacePoint_);
-    writeEntry("value", os);
+    writeEntry(os, "rhoLiquid", rhoLiquid_);
+    writeEntry(os, "liquidSurfacePressure", liquidSurfacePressure_);
+    writeEntry(os, "liquidSurfacePoint", liquidSurfacePoint_);
+    writeEntry(os, "value", *this);
 }
 
 

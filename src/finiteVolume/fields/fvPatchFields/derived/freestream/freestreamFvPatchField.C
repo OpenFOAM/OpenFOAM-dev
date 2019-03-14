@@ -110,8 +110,8 @@ void Foam::freestreamFvPatchField<Type>::write(Ostream& os) const
     {
         writeEntry(os, "phi", this->phiName_);
     }
-    freestreamValue().writeEntry("freestreamValue", os);
-    this->writeEntry("value", os);
+    writeEntry(os, "freestreamValue", freestreamValue());
+    writeEntry(os, "value", *this);
 }
 
 

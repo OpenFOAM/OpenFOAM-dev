@@ -147,12 +147,12 @@ void Foam::cylindricalInletVelocityFvPatchVectorField::updateCoeffs()
 void Foam::cylindricalInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    Foam::writeEntry(os, "origin", origin_);
-    Foam::writeEntry(os, "axis", axis_);
-    axialVelocity_->writeData(os);
-    radialVelocity_->writeData(os);
-    rpm_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "axis", axis_);
+    writeEntry(os, axialVelocity_());
+    writeEntry(os, radialVelocity_());
+    writeEntry(os, rpm_());
+    writeEntry(os, "value", *this);
 }
 
 

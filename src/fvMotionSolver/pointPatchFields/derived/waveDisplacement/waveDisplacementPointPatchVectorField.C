@@ -158,26 +158,26 @@ void Foam::waveDisplacementPointPatchVectorField::updateCoeffs()
 void Foam::waveDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
-    Foam::writeEntry(os, "amplitude", amplitude_);
-    Foam::writeEntry(os, "omega", omega_);
-    Foam::writeEntry(os, "waveNumber", waveNumber_);
+    writeEntry(os, "amplitude", amplitude_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "waveNumber", waveNumber_);
 
     if (!isType<Function1Types::OneConstant<scalar>>(startRamp_()))
     {
-        startRamp_->writeData(os);
+        writeEntry(os, startRamp_());
     }
 
     if (!isType<Function1Types::OneConstant<scalar>>(endRamp_()))
     {
-        endRamp_->writeData(os);
+        writeEntry(os, endRamp_());
     }
 
     if (!isType<Function1Types::OneConstant<scalar>>(timeRamp_()))
     {
-        timeRamp_->writeData(os);
+        writeEntry(os, timeRamp_());
     }
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

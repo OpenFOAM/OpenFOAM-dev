@@ -254,7 +254,7 @@ Foam::tmp<Foam::scalarField> Foam::atmBoundaryLayer::epsilon
 
 void Foam::atmBoundaryLayer::write(Ostream& os) const
 {
-    z0_.writeEntry("z0", os) ;
+    writeEntry(os, "z0", z0_) ;
     writeEntry(os, "flowDir", flowDir_);
     writeEntry(os, "zDir", zDir_);
     writeEntry(os, "kappa", kappa_);
@@ -269,7 +269,7 @@ void Foam::atmBoundaryLayer::write(Ostream& os) const
         writeEntry(os, "epsilonLower", epsilonLower_);
     }
 
-    zGround_.writeEntry("zGround", os) ;
+    writeEntry(os, "zGround", zGround_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,6 +222,10 @@ public:
         friend Istream& operator>>(Istream&, string&);
         friend Ostream& operator<<(Ostream&, const string&);
 };
+
+
+void writeEntry(Ostream& os, const char* value);
+void writeEntry(Ostream& os, const string& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

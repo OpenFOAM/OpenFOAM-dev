@@ -171,7 +171,7 @@ void Foam::fanPressureFvPatchScalarField::write(Ostream& os) const
 {
     totalPressureFvPatchScalarField::write(os);
     fanCurve_.write(os);
-    Foam::writeEntry(os, "direction", fanFlowDirectionNames_[direction_]);
+    writeEntry(os, "direction", fanFlowDirectionNames_[direction_]);
 }
 
 

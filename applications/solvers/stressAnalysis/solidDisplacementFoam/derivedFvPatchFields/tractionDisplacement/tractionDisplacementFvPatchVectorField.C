@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,9 +200,9 @@ void Foam::tractionDisplacementFvPatchVectorField::updateCoeffs()
 void Foam::tractionDisplacementFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    traction_.writeEntry("traction", os);
-    pressure_.writeEntry("pressure", os);
-    writeEntry("value", os);
+    writeEntry(os, "traction", traction_);
+    writeEntry(os, "pressure", pressure_);
+    writeEntry(os, "value", *this);
 }
 
 

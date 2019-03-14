@@ -783,28 +783,48 @@ void Foam::genericFvPatchField<Type>::write(Ostream& os) const
             {
                 if (scalarFields_.found(iter().keyword()))
                 {
-                    scalarFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *scalarFields_.find(iter().keyword())()
+                    );
                 }
                 else if (vectorFields_.found(iter().keyword()))
                 {
-                    vectorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *vectorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (sphericalTensorFields_.found(iter().keyword()))
                 {
-                    sphericalTensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *sphericalTensorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (symmTensorFields_.found(iter().keyword()))
                 {
-                    symmTensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *symmTensorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (tensorFields_.found(iter().keyword()))
                 {
-                    tensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *tensorFields_.find(iter().keyword())()
+                    );
                 }
             }
             else
@@ -814,7 +834,7 @@ void Foam::genericFvPatchField<Type>::write(Ostream& os) const
         }
     }
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -268,11 +268,11 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
 void alphatJayatillekeWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    Foam::writeEntry(os, "Prt", Prt_);
-    Foam::writeEntry(os, "Cmu", Cmu_);
-    Foam::writeEntry(os, "kappa", kappa_);
-    Foam::writeEntry(os, "E", E_);
-    writeEntry("value", os);
+    writeEntry(os, "Prt", Prt_);
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "E", E_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,10 +203,10 @@ template<class Type>
 void Foam::directionMixedFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    refGrad_.writeEntry("refGradient", os);
-    valueFraction_.writeEntry("valueFraction", os);
-    this->writeEntry("value", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "refGradient", refGrad_);
+    writeEntry(os, "valueFraction", valueFraction_);
+    writeEntry(os, "value", *this);
 }
 
 

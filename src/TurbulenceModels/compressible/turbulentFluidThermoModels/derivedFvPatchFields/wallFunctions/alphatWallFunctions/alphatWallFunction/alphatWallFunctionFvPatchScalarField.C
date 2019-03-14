@@ -129,8 +129,8 @@ void alphatWallFunctionFvPatchScalarField::updateCoeffs()
 void alphatWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    Foam::writeEntry(os, "Prt", Prt_);
-    writeEntry("value", os);
+    writeEntry(os, "Prt", Prt_);
+    writeEntry(os, "value", *this);
 }
 
 

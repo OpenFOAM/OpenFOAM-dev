@@ -197,7 +197,7 @@ void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::write
 {
     mixedFvPatchScalarField::write(os);
     radiationCoupledBase::write(os);
-    Trad_.writeEntry("Trad", os);
+    writeEntry(os, "Trad", Trad_);
 }
 
 

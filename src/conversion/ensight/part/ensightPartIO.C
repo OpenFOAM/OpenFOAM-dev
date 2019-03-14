@@ -155,7 +155,7 @@ bool Foam::ensightPart::writeData(Ostream& os) const
         word key(elementTypes()[typeI]);
         if (elemLists_[typeI].size())
         {
-            elemLists_[typeI].writeEntry(key, os);
+            writeEntry(os, key, elemLists_[typeI]);
         }
     }
 

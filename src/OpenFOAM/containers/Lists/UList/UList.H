@@ -59,10 +59,12 @@ template<class T> class SubList;
 
 // Forward declaration of friend functions and operators
 template<class T> class UList;
+template<class T> void writeEntry(Ostream& os, const UList<T>&);
 template<class T> Ostream& operator<<(Ostream&, const UList<T>&);
 template<class T> Istream& operator>>(Istream&, UList<T>&);
 
 typedef UList<label> labelUList;
+
 
 /*---------------------------------------------------------------------------*\
                            Class UList Declaration
@@ -219,21 +221,6 @@ public:
 
             //- Copy elements of the given UList
             void deepCopy(const UList<T>&);
-
-
-        // Write
-
-            //- Write the UList as a dictionary entry
-            void writeEntry(Ostream&) const;
-
-            //- Write the UList as a dictionary entry with keyword
-            void writeEntry(const word& keyword, Ostream&) const;
-
-            //- Write the UList as a dictionary entry
-            void writeEntryList(Ostream&) const;
-
-            //- Write the UList as a dictionary entry with keyword
-            void writeEntryList(const word& keyword, Ostream&) const;
 
 
     // Member operators
@@ -415,6 +402,15 @@ inline void reverse(UList<T>&, const label n);
 // Reverse all the elements of the list
 template<class T>
 inline void reverse(UList<T>&);
+
+template<class ListType>
+void writeListEntry(Ostream& os, const ListType& l);
+
+template<class ListType>
+void writeListEntries(Ostream& os, const ListType& l);
+
+template<class ListType>
+void writeListEntries(Ostream& os, const word& keyword, const ListType& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

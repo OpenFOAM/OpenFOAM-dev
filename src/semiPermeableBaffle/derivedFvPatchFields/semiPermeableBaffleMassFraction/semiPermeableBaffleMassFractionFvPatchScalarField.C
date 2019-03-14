@@ -288,10 +288,10 @@ void Foam::semiPermeableBaffleMassFractionFvPatchScalarField::write
     fvPatchScalarField::write(os);
     mappedPatchBase::write(os);
     writeEntryIfDifferent<scalar>(os, "c", scalar(0), c_);
-    Foam::writeEntry(os, "input", inputNames_[input_]);
+    writeEntry(os, "input", inputNames_[input_]);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

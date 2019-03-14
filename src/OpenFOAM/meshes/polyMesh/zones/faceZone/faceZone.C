@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -532,8 +532,8 @@ void Foam::faceZone::writeDict(Ostream& os) const
     os  << nl << name() << nl << token::BEGIN_BLOCK << nl
         << "    type " << type() << token::END_STATEMENT << nl;
 
-    writeEntry(this->labelsName, os);
-    flipMap().writeEntry("flipMap", os);
+    writeEntry(os, this->labelsName, *this);
+    writeEntry(os, "flipMap", flipMap());
 
     os  << token::END_BLOCK << endl;
 }

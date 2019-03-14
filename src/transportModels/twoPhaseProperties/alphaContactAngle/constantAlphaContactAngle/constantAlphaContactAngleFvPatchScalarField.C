@@ -113,8 +113,8 @@ void Foam::constantAlphaContactAngleFvPatchScalarField::write
 ) const
 {
     alphaContactAngleFvPatchScalarField::write(os);
-    Foam::writeEntry(os, "theta0", theta0_);
-    writeEntry("value", os);
+    writeEntry(os, "theta0", theta0_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -233,19 +233,19 @@ void Foam::syringePressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
 
-    Foam::writeEntry(os, "Ap", Ap_);
-    Foam::writeEntry(os, "Sp", Sp_);
-    Foam::writeEntry(os, "VsI", VsI_);
-    Foam::writeEntry(os, "tas", tas_);
-    Foam::writeEntry(os, "tae", tae_);
-    Foam::writeEntry(os, "tds", tds_);
-    Foam::writeEntry(os, "tde", tde_);
-    Foam::writeEntry(os, "psI", psI_);
-    Foam::writeEntry(os, "psi", psi_);
-    Foam::writeEntry(os, "ams", ams_);
+    writeEntry(os, "Ap", Ap_);
+    writeEntry(os, "Sp", Sp_);
+    writeEntry(os, "VsI", VsI_);
+    writeEntry(os, "tas", tas_);
+    writeEntry(os, "tae", tae_);
+    writeEntry(os, "tds", tds_);
+    writeEntry(os, "tde", tde_);
+    writeEntry(os, "psI", psI_);
+    writeEntry(os, "psi", psi_);
+    writeEntry(os, "ams", ams_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

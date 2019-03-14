@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ word name(const Scalar val)
 }
 
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
 Scalar readScalar(Istream& is)
 {
@@ -72,6 +72,14 @@ Scalar readScalar(Istream& is)
     return rs;
 }
 
+
+void writeEntry(Ostream& os, const Scalar value)
+{
+    os << value;
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 Istream& operator>>(Istream& is, Scalar& s)
 {

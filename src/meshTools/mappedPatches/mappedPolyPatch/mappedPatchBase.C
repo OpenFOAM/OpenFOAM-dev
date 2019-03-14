@@ -1423,7 +1423,7 @@ void Foam::mappedPatchBase::write(Ostream& os) const
             }
             case NONUNIFORM:
             {
-                offsets_.writeEntry("offsets", os);
+                writeEntry(os, "offsets", offsets_);
                 break;
             }
             case NORMAL:

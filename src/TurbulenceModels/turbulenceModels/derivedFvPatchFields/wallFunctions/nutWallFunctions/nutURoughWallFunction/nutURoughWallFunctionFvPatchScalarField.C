@@ -294,10 +294,10 @@ void nutURoughWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    Foam::writeEntry(os, "roughnessHeight", roughnessHeight_);
-    Foam::writeEntry(os, "roughnessConstant", roughnessConstant_);
-    Foam::writeEntry(os, "roughnessFactor", roughnessFactor_);
-    writeEntry("value", os);
+    writeEntry(os, "roughnessHeight", roughnessHeight_);
+    writeEntry(os, "roughnessConstant", roughnessConstant_);
+    writeEntry(os, "roughnessFactor", roughnessFactor_);
+    writeEntry(os, "value", *this);
 }
 
 

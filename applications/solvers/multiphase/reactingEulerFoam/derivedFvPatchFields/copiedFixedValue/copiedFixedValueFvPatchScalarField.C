@@ -109,8 +109,8 @@ void Foam::copiedFixedValueFvPatchScalarField::updateCoeffs()
 void Foam::copiedFixedValueFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    Foam::writeEntry(os, "sourceFieldName", sourceFieldName_);
-    writeEntry("value", os);
+    writeEntry(os, "sourceFieldName", sourceFieldName_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -479,61 +479,61 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::write
 {
     fvPatchScalarField::write(os);
 
-    Foam::writeEntry(os, "mode", operationModeNames[mode_]);
+    writeEntry(os, "mode", operationModeNames[mode_]);
     temperatureCoupledBase::write(os);
 
     switch (mode_)
     {
         case fixedPower:
         {
-            Foam::writeEntry(os, "Q", Q_);
+            writeEntry(os, "Q", Q_);
 
             break;
         }
         case fixedHeatFlux:
         {
-            q_.writeEntry("q", os);
+            writeEntry(os, "q", q_);
 
             break;
         }
         case fixedHeatTransferCoeff:
         {
-            h_.writeEntry("h", os);
-            Ta_->writeData(os);
+            writeEntry(os, "h", h_);
+            writeEntry(os, Ta_());
 
             if (relaxation_ < 1)
             {
-                Foam::writeEntry(os, "relaxation", relaxation_);
+                writeEntry(os, "relaxation", relaxation_);
             }
 
             if (emissivity_ > 0)
             {
-                Foam::writeEntry(os, "emissivity", emissivity_);
+                writeEntry(os, "emissivity", emissivity_);
             }
 
             if (thicknessLayers_.size())
             {
-                thicknessLayers_.writeEntry("thicknessLayers", os);
-                kappaLayers_.writeEntry("kappaLayers", os);
+                writeEntry(os, "thicknessLayers", thicknessLayers_);
+                writeEntry(os, "kappaLayers", kappaLayers_);
             }
 
             break;
         }
     }
 
-    Foam::writeEntry(os, "qr", qrName_);
+    writeEntry(os, "qr", qrName_);
 
     if (qrName_ != "none")
     {
-        Foam::writeEntry(os, "qrRelaxation", qrRelaxation_);
+        writeEntry(os, "qrRelaxation", qrRelaxation_);
 
-        qrPrevious_.writeEntry("qrPrevious", os);
+        writeEntry(os, "qrPrevious", qrPrevious_);
     }
 
-    refValue().writeEntry("refValue", os);
-    refGrad().writeEntry("refGradient", os);
-    valueFraction().writeEntry("valueFraction", os);
-    writeEntry("value", os);
+    writeEntry(os, "refValue", refValue());
+    writeEntry(os, "refGradient", refGrad());
+    writeEntry(os, "valueFraction", valueFraction());
+    writeEntry(os, "value", *this);
 }
 
 

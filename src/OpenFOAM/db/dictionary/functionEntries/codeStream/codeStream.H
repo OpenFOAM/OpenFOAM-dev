@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Description
             const IOdictionary& d = static_cast<const IOdictionary&>(dict);
             const fvMesh& mesh = refCast<const fvMesh>(d.db());
             scalarField fld(mesh.nCells(), 12.34);
-            fld.writeEntry("", os);
+            writeEntry(os, "", fld);
         #};
 
         //- Optional:

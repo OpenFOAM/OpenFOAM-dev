@@ -132,8 +132,8 @@ void Foam::freestreamVelocityFvPatchVectorField::updateCoeffs()
 void Foam::freestreamVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    freestreamValue().writeEntry("freestreamValue", os);
-    writeEntry("value", os);
+    writeEntry(os, "freestreamValue", freestreamValue());
+    writeEntry(os, "value", *this);
 }
 
 

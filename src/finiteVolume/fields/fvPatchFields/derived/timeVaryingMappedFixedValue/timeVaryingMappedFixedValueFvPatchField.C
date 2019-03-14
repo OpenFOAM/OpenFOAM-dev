@@ -162,7 +162,7 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::write
 {
     fvPatchField<Type>::write(os);
     fieldMapper_.write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

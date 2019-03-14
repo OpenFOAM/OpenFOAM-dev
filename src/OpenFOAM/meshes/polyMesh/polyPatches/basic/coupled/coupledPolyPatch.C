@@ -563,8 +563,8 @@ void Foam::coupledPolyPatch::write(Ostream& os) const
     polyPatch::write(os);
     // if (matchTolerance_ != defaultMatchTol_)
     {
-        Foam::writeEntry(os, "matchTolerance", matchTolerance_);
-        Foam::writeEntry(os, "transform", transformTypeNames[transform_]);
+        writeEntry(os, "matchTolerance", matchTolerance_);
+        writeEntry(os, "transform", transformTypeNames[transform_]);
     }
 }
 

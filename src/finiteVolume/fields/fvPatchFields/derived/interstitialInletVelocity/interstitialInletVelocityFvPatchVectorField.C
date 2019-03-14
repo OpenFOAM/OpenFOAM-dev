@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,8 +144,8 @@ void Foam::interstitialInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
     writeEntryIfDifferent<word>(os, "alpha", "alpha", alphaName_);
-    inletVelocity_.writeEntry("inletVelocity", os);
-    writeEntry("value", os);
+    writeEntry(os, "inletVelocity", inletVelocity_);
+    writeEntry(os, "value", *this);
 }
 
 

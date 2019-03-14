@@ -158,6 +158,8 @@ void Foam::dictionary::set(const keyType& k, const T& t)
 }
 
 
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
 template<class EntryType>
 void Foam::writeEntry
 (
@@ -166,7 +168,9 @@ void Foam::writeEntry
     const EntryType& value
 )
 {
-    os.writeKeyword(entryName) << value << token::END_STATEMENT << nl;
+    os.writeKeyword(entryName);
+    writeEntry(os, value);
+    os << token::END_STATEMENT << endl;
 }
 
 

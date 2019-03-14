@@ -682,9 +682,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
 
-    Foam::writeEntry(os, "phaseType", phaseTypeNames_[phaseType_]);
+    writeEntry(os, "phaseType", phaseTypeNames_[phaseType_]);
 
-    Foam::writeEntry(os, "relax", relax_);
+    writeEntry(os, "relax", relax_);
 
     switch (phaseType_)
     {
@@ -722,12 +722,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
         }
     }
 
-    Foam::writeEntry(os, "otherPhase", otherPhaseName_);
-    dmdt_.writeEntry("dmdt", os);
-    dDep_.writeEntry("dDep", os);
-    qq_.writeEntry("qQuenching", os);
-    alphatConv_.writeEntry("alphatConv", os);
-    writeEntry("value", os);
+    writeEntry(os, "otherPhase", otherPhaseName_);
+    writeEntry(os, "dmdt", dmdt_);
+    writeEntry(os, "dDep", dDep_);
+    writeEntry(os, "qQuenching", qq_);
+    writeEntry(os, "alphatConv", alphatConv_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -140,8 +140,8 @@ void Foam::outletInletFvPatchField<Type>::write(Ostream& os) const
     {
         writeEntry(os, "phi", phiName_);
     }
-    this->refValue().writeEntry("outletValue", os);
-    this->writeEntry("value", os);
+    writeEntry(os, "outletValue", this->refValue());
+    writeEntry(os, "value", *this);
 }
 
 

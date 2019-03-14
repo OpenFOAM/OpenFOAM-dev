@@ -356,10 +356,10 @@ void Foam::polyPatch::clearAddressing()
 
 void Foam::polyPatch::write(Ostream& os) const
 {
-    Foam::writeEntry(os, "type", type());
+    writeEntry(os, "type", type());
     patchIdentifier::write(os);
-    Foam::writeEntry(os, "nFaces", size());
-    Foam::writeEntry(os, "startFace", start());
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 }
 
 

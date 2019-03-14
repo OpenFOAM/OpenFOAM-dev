@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,7 +301,7 @@ Foam::fvMesh::fvMesh(const IOobject& io)
                 *this,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
-                false
+                true
             ),
             *this
         );
@@ -739,7 +739,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
                 *this,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                true
             ),
             *this,
             dimVolume/dimTime
@@ -837,7 +837,7 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
 
 
     // Clear mesh motion flux (note: could instead save & map like volumes)
-    deleteDemandDrivenData(phiPtr_);
+    // deleteDemandDrivenData(phiPtr_);
 
     // Clear the sliced fields
     clearGeomNotOldVol();

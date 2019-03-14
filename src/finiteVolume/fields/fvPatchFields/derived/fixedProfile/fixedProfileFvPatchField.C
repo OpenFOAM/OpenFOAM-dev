@@ -157,10 +157,10 @@ template<class Type>
 void Foam::fixedProfileFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    profile_->writeData(os);
+    writeEntry(os, profile_());
     writeEntry(os, "direction", dir_);
     writeEntry(os, "origin", origin_);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

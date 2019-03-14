@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -167,6 +167,10 @@ public:
             //- Write in dictionary format
             virtual void writeData(Ostream& os) const;
 };
+
+
+template<class Type>
+void writeEntry(Ostream& os, const Function1<Type>& f1);
 
 
 /*---------------------------------------------------------------------------*\

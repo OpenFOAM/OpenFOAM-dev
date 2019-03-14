@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ void Foam::fixedRhoFvPatchScalarField::write(Ostream& os) const
 
     writeEntryIfDifferent<word>(os, "p", "p", this->pName_);
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

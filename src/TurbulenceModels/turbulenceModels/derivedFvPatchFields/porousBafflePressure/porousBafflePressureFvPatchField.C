@@ -178,9 +178,9 @@ void Foam::porousBafflePressureFvPatchField::write(Ostream& os) const
     fixedJumpFvPatchField<scalar>::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    Foam::writeEntry(os, "D", D_);
-    Foam::writeEntry(os, "I", I_);
-    Foam::writeEntry(os, "length", length_);
+    writeEntry(os, "D", D_);
+    writeEntry(os, "I", I_);
+    writeEntry(os, "length", length_);
 }
 
 

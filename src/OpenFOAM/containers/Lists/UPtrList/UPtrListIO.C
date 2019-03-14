@@ -26,60 +26,12 @@ License
 #include "UPtrList.H"
 #include "Ostream.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
 template<class T>
-void Foam::UPtrList<T>::writeEntry(Ostream& os) const
+void Foam::writeEntry(Ostream& os, const UPtrList<T>& l)
 {
-    if
-    (
-        size()
-     && token::compound::isCompound
-        (
-            "List<" + word(pTraits<T>::typeName) + '>'
-        )
-    )
-    {
-        os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
-    }
-
-    os << *this;
-}
-
-
-template<class T>
-void Foam::UPtrList<T>::writeEntry(const word& keyword, Ostream& os) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os << token::END_STATEMENT << endl;
-}
-
-
-template<class T>
-void Foam::UPtrList<T>::writeEntryList(Ostream& os) const
-{
-    // Write size and start delimiter
-    os << nl << size() << nl << token::BEGIN_LIST;
-
-    // Write contents
-    forAll(*this, i)
-    {
-        this->operator[](i).writeEntry(os);
-        os << nl;
-    }
-
-    // Write end delimiter
-    os << nl << token::END_LIST << nl;
-}
-
-
-template<class T>
-void Foam::UPtrList<T>::writeEntryList(const word& keyword, Ostream& os) const
-{
-    os.writeKeyword(keyword);
-    writeEntryList(os);
-    os << token::END_STATEMENT << endl;
+    writeListEntry(os, l);
 }
 
 

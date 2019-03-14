@@ -1219,24 +1219,24 @@ bool Foam::oldCyclicPolyPatch::order
 void Foam::oldCyclicPolyPatch::write(Ostream& os) const
 {
     // Replacement of polyPatch::write to write 'cyclic' instead of type():
-    Foam::writeEntry(os, "type", cyclicPolyPatch::typeName);
+    writeEntry(os, "type", cyclicPolyPatch::typeName);
     patchIdentifier::write(os);
-    Foam::writeEntry(os, "nFaces", size());
-    Foam::writeEntry(os, "startFace", start());
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 
 
-    Foam::writeEntry(os, "featureCos", featureCos_);
+    writeEntry(os, "featureCos", featureCos_);
     switch (transform())
     {
         case ROTATIONAL:
         {
-            Foam::writeEntry(os, "rotationAxis", rotationAxis_);
-            Foam::writeEntry(os, "rotationCentre", rotationCentre_);
+            writeEntry(os, "rotationAxis", rotationAxis_);
+            writeEntry(os, "rotationCentre", rotationCentre_);
             break;
         }
         case TRANSLATIONAL:
         {
-            Foam::writeEntry(os, "separationVector", separationVector_);
+            writeEntry(os, "separationVector", separationVector_);
             break;
         }
         default:

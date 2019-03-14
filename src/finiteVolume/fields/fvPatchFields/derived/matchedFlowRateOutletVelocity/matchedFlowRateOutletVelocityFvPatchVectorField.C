@@ -244,13 +244,13 @@ void Foam::matchedFlowRateOutletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchField<vector>::write(os);
-    Foam::writeEntry(os, "inletPatch", inletPatchName_);
+    writeEntry(os, "inletPatch", inletPatchName_);
     if (!volumetric_)
     {
-        Foam::writeEntry(os, "volumetric", volumetric_);
+        writeEntry(os, "volumetric", volumetric_);
         writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
     }
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

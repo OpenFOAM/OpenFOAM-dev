@@ -471,7 +471,7 @@ bool Foam::cyclicACMIPolyPatch::order
 void Foam::cyclicACMIPolyPatch::write(Ostream& os) const
 {
     cyclicAMIPolyPatch::write(os);
-    Foam::writeEntry(os, "nonOverlapPatch", nonOverlapPatchName_);
+    writeEntry(os, "nonOverlapPatch", nonOverlapPatchName_);
 }
 
 

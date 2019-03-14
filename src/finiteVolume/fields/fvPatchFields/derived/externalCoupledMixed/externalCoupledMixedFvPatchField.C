@@ -816,7 +816,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::write(Ostream& os) const
     writeEntry(os, "initByExternal", initByExternal_);
     writeEntry(os, "log", log_);
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

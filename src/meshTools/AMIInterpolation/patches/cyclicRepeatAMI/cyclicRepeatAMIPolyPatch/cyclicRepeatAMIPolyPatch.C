@@ -488,7 +488,7 @@ Foam::cyclicRepeatAMIPolyPatch::neighbWeightsSum() const
 void Foam::cyclicRepeatAMIPolyPatch::write(Ostream& os) const
 {
     cyclicAMIPolyPatch::write(os);
-    Foam::writeEntry(os, "transformPatch", transformPatchName_);
+    writeEntry(os, "transformPatch", transformPatchName_);
 }
 
 

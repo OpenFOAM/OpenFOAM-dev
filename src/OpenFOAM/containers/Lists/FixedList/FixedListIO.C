@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,15 @@ License
 #include "Ostream.H"
 #include "token.H"
 #include "contiguous.H"
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class T, unsigned Size>
+void Foam::writeEntry(Ostream& os, const FixedList<T, Size>& l)
+{
+    writeListEntry(os, l);
+}
+
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
@@ -132,34 +141,6 @@ Foam::Istream& Foam::operator>>(Foam::Istream& is, FixedList<T, Size>& L)
 
 
 // * * * * * * * * * * * * * * * Ostream Operator *  * * * * * * * * * * * * //
-
-template<class T, unsigned Size>
-void Foam::FixedList<T, Size>::writeEntry(Ostream& os) const
-{
-    if
-    (
-        token::compound::isCompound("List<" + word(pTraits<T>::typeName) + '>')
-    )
-    {
-        os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
-    }
-
-    os << *this;
-}
-
-
-template<class T, unsigned Size>
-void Foam::FixedList<T, Size>::writeEntry
-(
-    const word& keyword,
-    Ostream& os
-) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os << token::END_STATEMENT << endl;
-}
-
 
 template<class T, unsigned Size>
 Foam::Ostream& Foam::operator<<(Ostream& os, const FixedList<T, Size>& L)

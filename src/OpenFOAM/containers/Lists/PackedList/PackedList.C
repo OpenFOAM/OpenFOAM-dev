@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 #if (UINT_MAX == 0xFFFFFFFF)
 // 32-bit counting, Hamming weight method
-    #define COUNT_PACKEDBITS(sum, x)                                            \
+#define COUNT_PACKEDBITS(sum, x)                                               \
 {                                                                              \
     x -= (x >> 1) & 0x55555555;                                                \
     x = (x & 0x33333333) + ((x >> 2) & 0x33333333);                            \
@@ -39,7 +39,7 @@ License
 }
 #elif (UINT_MAX == 0xFFFFFFFFFFFFFFFF)
 // 64-bit counting, Hamming weight method
-    #define COUNT_PACKEDBITS(sum, x)                                            \
+#define COUNT_PACKEDBITS(sum, x)                                               \
 {                                                                              \
     x -= (x >> 1) & 0x5555555555555555;                                        \
     x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);            \
@@ -490,26 +490,6 @@ Foam::Ostream& Foam::PackedList<nBits>::write
 }
 
 
-template<unsigned nBits>
-void Foam::PackedList<nBits>::writeEntry(Ostream& os) const
-{
-    os  << *this;
-}
-
-
-template<unsigned nBits>
-void Foam::PackedList<nBits>::writeEntry
-(
-    const word& keyword,
-    Ostream& os
-) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os  << token::END_STATEMENT << endl;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<unsigned nBits>
@@ -543,6 +523,15 @@ void Foam::PackedList<nBits>::operator=(const UIndirectList<label>& lst)
     {
         set(i, lst[i]);
     }
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<unsigned nBits>
+void Foam::writeEntry(Ostream& os, const PackedList<nBits>& l)
+{
+    os << l;
 }
 
 

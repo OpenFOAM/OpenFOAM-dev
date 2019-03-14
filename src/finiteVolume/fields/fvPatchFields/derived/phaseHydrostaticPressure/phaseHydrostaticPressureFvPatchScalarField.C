@@ -163,12 +163,12 @@ void Foam::phaseHydrostaticPressureFvPatchScalarField::write(Ostream& os) const
     fvPatchScalarField::write(os);
     if (phaseFraction_ != "alpha")
     {
-        Foam::writeEntry(os, "phaseFraction", phaseFraction_);
+        writeEntry(os, "phaseFraction", phaseFraction_);
     }
-    Foam::writeEntry(os, "rho", rho_);
-    Foam::writeEntry(os, "pRefValue", pRefValue_);
-    Foam::writeEntry(os, "pRefPoint", pRefPoint_);
-    writeEntry("value", os);
+    writeEntry(os, "rho", rho_);
+    writeEntry(os, "pRefValue", pRefValue_);
+    writeEntry(os, "pRefPoint", pRefPoint_);
+    writeEntry(os, "value", *this);
 }
 
 

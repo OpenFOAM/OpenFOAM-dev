@@ -300,19 +300,19 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
 void Foam::plenumPressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
-    Foam::writeEntry(os, "gamma", gamma_);
-    Foam::writeEntry(os, "R", R_);
-    Foam::writeEntry(os, "supplyMassFlowRate", supplyMassFlowRate_);
-    Foam::writeEntry(os, "supplyTotalTemperature", supplyTotalTemperature_);
-    Foam::writeEntry(os, "plenumVolume", plenumVolume_);
-    Foam::writeEntry(os, "plenumDensity", plenumDensity_);
-    Foam::writeEntry(os, "plenumTemperature", plenumTemperature_);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "R", R_);
+    writeEntry(os, "supplyMassFlowRate", supplyMassFlowRate_);
+    writeEntry(os, "supplyTotalTemperature", supplyTotalTemperature_);
+    writeEntry(os, "plenumVolume", plenumVolume_);
+    writeEntry(os, "plenumDensity", plenumDensity_);
+    writeEntry(os, "plenumTemperature", plenumTemperature_);
     if (hasRho_)
     {
-        Foam::writeEntry(os, "rho", rho_);
+        writeEntry(os, "rho", rho_);
     }
-    Foam::writeEntry(os, "inletAreaRatio", inletAreaRatio_);
-    Foam::writeEntry
+    writeEntry(os, "inletAreaRatio", inletAreaRatio_);
+    writeEntry
     (
         os,
         "inletDischargeCoefficient",
@@ -321,7 +321,7 @@ void Foam::plenumPressureFvPatchScalarField::write(Ostream& os) const
     writeEntryIfDifferent<scalar>(os, "timeScale", 0.0, timeScale_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

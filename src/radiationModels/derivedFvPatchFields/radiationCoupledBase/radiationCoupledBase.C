@@ -224,7 +224,7 @@ void Foam::radiationCoupledBase::rmap
 void Foam::radiationCoupledBase::write(Ostream& os) const
 {
     writeEntry(os, "emissivityMode", emissivityMethodTypeNames_[method_]);
-    emissivity_.writeEntry("emissivity", os);
+    writeEntry(os, "emissivity", emissivity_);
 }
 
 

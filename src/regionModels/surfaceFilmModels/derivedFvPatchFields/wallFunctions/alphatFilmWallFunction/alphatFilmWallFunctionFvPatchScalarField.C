@@ -230,12 +230,12 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
 void alphatFilmWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    Foam::writeEntry(os, "B", B_);
-    Foam::writeEntry(os, "yPlusCrit", yPlusCrit_);
-    Foam::writeEntry(os, "Cmu", Cmu_);
-    Foam::writeEntry(os, "kappa", kappa_);
-    Foam::writeEntry(os, "Prt", Prt_);
-    writeEntry("value", os);
+    writeEntry(os, "B", B_);
+    writeEntry(os, "yPlusCrit", yPlusCrit_);
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "Prt", Prt_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -298,11 +298,11 @@ void Foam::supersonicFreestreamFvPatchVectorField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "T", "T", TName_);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
-    Foam::writeEntry(os, "UInf", UInf_);
-    Foam::writeEntry(os, "pInf", pInf_);
-    Foam::writeEntry(os, "TInf", TInf_);
-    Foam::writeEntry(os, "gamma", gamma_);
-    writeEntry("value", os);
+    writeEntry(os, "UInf", UInf_);
+    writeEntry(os, "pInf", pInf_);
+    writeEntry(os, "TInf", TInf_);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "value", *this);
 }
 
 

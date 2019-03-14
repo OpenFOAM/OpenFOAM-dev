@@ -27,6 +27,11 @@ cyclicSlip
     type  cyclicSlip;
 }
 
+conformalCoupled
+{
+    type  conformalCoupled;
+}
+
 empty
 {
     type  empty;

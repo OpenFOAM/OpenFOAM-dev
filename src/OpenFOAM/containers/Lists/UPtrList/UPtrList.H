@@ -53,12 +53,9 @@ template<class T> class PtrList;
 
 // Forward declaration of friend functions and operators
 template<class T> class UPtrList;
-
-template<class T>
-Istream& operator>>(Istream&, UPtrList<T>&);
-
-template<class T>
-Ostream& operator<<(Ostream&, const UPtrList<T>&);
+template<class T> void writeEntry(Ostream& os, const UPtrList<T>&);
+template<class T> Istream& operator>>(Istream&, UPtrList<T>&);
+template<class T> Ostream& operator<<(Ostream&, const UPtrList<T>&);
 
 
 /*---------------------------------------------------------------------------*\
@@ -152,21 +149,6 @@ public:
             //  ascending or descending order. Reordering has to be unique.
             //  (is shuffle)
             void reorder(const labelUList&);
-
-
-        // Write
-
-            //- Write the UPtrList as a dictionary entry
-            void writeEntry(Ostream&) const;
-
-            //- Write the UPtrList as a dictionary entry with keyword
-            void writeEntry(const word& keyword, Ostream&) const;
-
-            //- Write the UPtrList as a dictionary entry
-            void writeEntryList(Ostream&) const;
-
-            //- Write the UPtrList as a dictionary entry with keyword
-            void writeEntryList(const word& keyword, Ostream&) const;
 
 
     // Member operators

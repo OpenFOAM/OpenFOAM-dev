@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,10 +188,10 @@ void Foam::inclinedFilmNusseltHeightFvPatchScalarField::write
 ) const
 {
     fixedValueFvPatchScalarField::write(os);
-    GammaMean_->writeData(os);
-    a_->writeData(os);
-    omega_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, GammaMean_());
+    writeEntry(os, a_());
+    writeEntry(os, omega_());
+    writeEntry(os, "value", *this);
 }
 
 
