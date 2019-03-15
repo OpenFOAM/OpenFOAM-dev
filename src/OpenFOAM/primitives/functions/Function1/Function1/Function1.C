@@ -67,7 +67,9 @@ void Foam::Function1<Type>::convertTimeBase(const Time&)
 template<class Type>
 Type Foam::Function1<Type>::value(const scalar x) const
 {
-    NotImplemented;
+    FatalErrorInFunction
+        << "Evaluation is not defined for " << type() << " functions"
+        << exit(FatalError);
 
     return Zero;
 }
@@ -76,7 +78,9 @@ Type Foam::Function1<Type>::value(const scalar x) const
 template<class Type>
 Type Foam::Function1<Type>::integrate(const scalar x1, const scalar x2) const
 {
-    NotImplemented;
+    FatalErrorInFunction
+        << "Integration is not defined for " << type() << " functions"
+        << exit(FatalError);
 
     return Zero;
 }
