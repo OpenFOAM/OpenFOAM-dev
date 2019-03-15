@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 #include "makeParcelCloudFunctionObjects.H"
 
 // Kinematic
-#include "makeThermoParcelForces.H" // thermo variant
+#include "makeParcelForces.H"
 #include "makeThermoParcelTurbulenceForces.H" // add turbulence variant
 #include "makeParcelDispersionModels.H"
 #include "makeParcelTurbulenceDispersionModels.H" // add turbulence variant
@@ -54,7 +54,7 @@ License
 makeParcelCloudFunctionObjects(basicSprayCloud);
 
 // Kinematic sub-models
-makeThermoParcelForces(basicSprayCloud);
+makeParcelForces(basicSprayCloud);
 makeThermoParcelTurbulenceForces(basicSprayCloud);
 makeParcelDispersionModels(basicSprayCloud);
 makeParcelTurbulenceDispersionModels(basicSprayCloud);

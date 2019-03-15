@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,13 +27,20 @@ Class
 Description
     Ergun-Wen-Yu drag model for solid spheres.
 
+    Reference:
+    \verbatim
+        Gidaspow, D. (1994).
+        Multiphase flow and fluidization: continuum and kinetic theory
+        descriptions.
+        Academic press.
+    \endverbatim
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef ErgunWenYuDragForce_H
 #define ErgunWenYuDragForce_H
 
-#include "ParticleForce.H"
-#include "volFieldsFwd.H"
+#include "WenYuDragForce.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,20 +54,8 @@ namespace Foam
 template<class CloudType>
 class ErgunWenYuDragForce
 :
-    public ParticleForce<CloudType>
+    public WenYuDragForce<CloudType>
 {
-    // Private Data
-
-        //- Reference to the carrier volume fraction field
-        const volScalarField& alphac_;
-
-
-    // Private Member Functions
-
-        //- Drag coefficient multiplied by Reynolds number
-        scalar CdRe(const scalar Re) const;
-
-
 public:
 
     //- Runtime type information

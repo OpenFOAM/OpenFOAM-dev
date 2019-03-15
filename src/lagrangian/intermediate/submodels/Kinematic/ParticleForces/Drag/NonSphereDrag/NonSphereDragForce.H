@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,33 +27,23 @@ Class
 Description
     Drag model for non-spherical particles.
 
-    Takes the form of
+    The drag coefficient is given by:
+    \f[
+        Cd = \frac{24}{Re} (1 + a Re^{b}) + Re \frac{c}{Re + d}
+    \f]
 
-        24.0/Re*(1.0 + a_*pow(Re, b_)) + Re*c_/(Re + d_);
-
-    Where a(phi), b(phi), c(phi) and d(phi) are model coefficients, with phi
-    defined as:
-
-              area of sphere with same volume as particle
-        phi = -------------------------------------------
-                       actual particle area
-
-    Equation used is Eqn (11) of reference below - good to within 2 to 4 % of
-    RMS values from experiment.
-
-    H and L also give a simplified model with greater error compared to
-    results from experiment - Eqn 12 - but since phi is presumed
-    constant, it offers little benefit.
+    Where \f$a\f$, \f$b\f$, \f$c\f$, and \f$d\f$ are coefficients, calculated
+    as functions of \f$phi\f$. \f$phi\f$ is the ratio of the surface area of a
+    sphere with the same volume as the particle to the actual surface area of
+    the particle, and must be between 0 and 1.
 
     Reference:
     \verbatim
-        "Drag coefficient and terminal velocity of spherical and nonspherical
-        particles"
-        A. Haider and O. Levenspiel,
-        Powder Technology
-        Volume 58, Issue 1, May 1989, Pages 63-70
+        Haider, A., & Levenspiel, O. (1989).
+        Drag coefficient and terminal velocity of spherical and nonspherical
+        particles.
+        Powder technology, 58(1), 63-70.
     \endverbatim
-
 
 \*---------------------------------------------------------------------------*/
 
@@ -66,6 +56,7 @@ Description
 
 namespace Foam
 {
+
 /*---------------------------------------------------------------------------*\
                     Class NonSphereDragForce Declaration
 \*---------------------------------------------------------------------------*/
@@ -79,26 +70,22 @@ protected:
 
     // Protected Data
 
-        //- Ratio of surface of sphere having same volume as particle to
-        //  actual surface area of particle (0 < phi <= 1)
-        scalar phi_;
+        //- The ratio of the surface area of a sphere with the same volume as
+        //  the particle to the actual surface area of the particle. Between 0
+        //  and 1.
+        const scalar phi_;
 
+        //- Coefficient
+        const scalar a_;
 
-        // Model coefficients
+        //- Coefficient
+        const scalar b_;
 
-            scalar a_;
+        //- Coefficient
+        const scalar c_;
 
-            scalar b_;
-
-            scalar c_;
-
-            scalar d_;
-
-
-    // Private Member Functions
-
-        //- Drag coefficient multiplied by Reynolds number
-        scalar CdRe(const scalar Re) const;
+        //- Coefficient
+        const scalar d_;
 
 
 public:
@@ -149,7 +136,6 @@ public:
                 const scalar muc
             ) const;
 };
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

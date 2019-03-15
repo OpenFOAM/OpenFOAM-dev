@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,23 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "WenYuDragForce.H"
-#include "volFields.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::scalar Foam::WenYuDragForce<CloudType>::CdRe(const scalar Re) const
-{
-    if (Re > 1000.0)
-    {
-        return 0.44*Re;
-    }
-    else
-    {
-        return 24.0*(1.0 + 0.15*pow(Re, 0.687));
-    }
-}
-
+#include "SchillerNaumannDragForce.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -52,14 +36,20 @@ Foam::WenYuDragForce<CloudType>::WenYuDragForce
     const dictionary& dict
 )
 :
-    ParticleForce<CloudType>(owner, mesh, dict, typeName, true),
-    alphac_
-    (
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->coeffs().lookup("alphac")
-        )
-    )
+    DenseDragForce<CloudType>(owner, mesh, dict, typeName)
+{}
+
+
+template<class CloudType>
+Foam::WenYuDragForce<CloudType>::WenYuDragForce
+(
+    CloudType& owner,
+    const fvMesh& mesh,
+    const dictionary& dict,
+    const word& typeName
+)
+:
+    DenseDragForce<CloudType>(owner, mesh, dict, typeName)
 {}
 
 
@@ -69,14 +59,7 @@ Foam::WenYuDragForce<CloudType>::WenYuDragForce
     const WenYuDragForce<CloudType>& df
 )
 :
-    ParticleForce<CloudType>(df),
-    alphac_
-    (
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->coeffs().lookup("alphac")
-        )
-    )
+    DenseDragForce<CloudType>(df)
 {}
 
 
@@ -100,13 +83,18 @@ Foam::forceSuSp Foam::WenYuDragForce<CloudType>::calcCoupled
     const scalar muc
 ) const
 {
-    scalar alphac(alphac_[p.cell()]);
+    const scalar alphac =
+        this->alphacInterp().interpolate
+        (
+            p.coordinates(),
+            p.currentTetIndices()
+        );
+    const scalar CdRe = SchillerNaumannDragForce<CloudType>::CdRe(alphac*Re);
 
     return forceSuSp
     (
         Zero,
-        (mass/p.rho())
-       *0.75*CdRe(alphac*Re)*muc*pow(alphac, -2.65)/(alphac*sqr(p.d()))
+        0.75*(mass/p.rho())*CdRe*muc*pow(alphac, -2.65)/(alphac*sqr(p.d()))
     );
 }
 
