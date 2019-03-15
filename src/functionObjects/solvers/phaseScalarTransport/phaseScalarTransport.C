@@ -450,7 +450,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                     laplacianScheme
                 )
              ==
-                fvOptions_(rho, s_)
+                fvOptions_(alpha, rho, s_)
               - fvm::ddt(residualAlpha_*rho, s_)
               + fvc::ddt(residualAlpha_*rho, s_)
             );
