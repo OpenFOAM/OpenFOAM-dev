@@ -1,4 +1,4 @@
-solid gasInlet
+solid oilInlet
  facet normal 0 0 1
   outer loop
    vertex 0.0984808 0.0173648 0
@@ -251,4 +251,4 @@ solid gasInlet
    vertex 0.0984808 -0.0173648 0
   endloop
  endfacet
-endsolid gasInlet
+endsolid oilInlet

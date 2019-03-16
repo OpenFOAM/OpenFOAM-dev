@@ -35,16 +35,16 @@ geometry
         }
     }
 
-    gasInlet
+    oilInlet
     {
         type triSurfaceMesh;
-        file "gasInlet.stl";
+        file "oilInlet.stl";
 
         regions
         {
-            gasInlet
+            oilInlet
             {
-                name gasInlet;
+                name oilInlet;
             }
         }
     }
@@ -216,7 +216,7 @@ castellatedMeshControls
            levels ((1 1));
         }
         {
-           file "gasInlet.eMesh";
+           file "oilInlet.eMesh";
            levels ((1 1));
         }
         {
@@ -251,7 +251,7 @@ castellatedMeshControls
             }
         }
 
-        gasInlet
+        oilInlet
         {
             level (0 1);
             patchInfo
