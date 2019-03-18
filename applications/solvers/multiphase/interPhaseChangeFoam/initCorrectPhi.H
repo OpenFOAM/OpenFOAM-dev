@@ -18,7 +18,18 @@ if (correctPhi)
 
     volScalarField divU("divU0", fvc::div(fvc::absolute(phi, U)));
 
-    #include "correctPhi.H"
+    CorrectPhi
+    (
+        U,
+        phi,
+        p_rgh,
+        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+        divU,
+        pimple,
+        false
+    );
+
+    #include "continuityErrs.H"
 }
 else
 {
@@ -29,7 +40,8 @@ else
         p_rgh,
         dimensionedScalar("rAUf", dimTime/rho.dimensions(), 1),
         geometricZeroField(),
-        pimple
+        pimple,
+        false
     );
 
     #include "continuityErrs.H"
