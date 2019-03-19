@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,9 +178,22 @@ void Foam::surfaceInterpolation::makeWeights() const
         // 90 deg and the dot-product will be positive.  For invalid
         // meshes (d & s <= 0), this will stabilise the calculation
         // but the result will be poor.
-        scalar SfdOwn = mag(Sf[facei] & (Cf[facei] - C[owner[facei]]));
-        scalar SfdNei = mag(Sf[facei] & (C[neighbour[facei]] - Cf[facei]));
-        w[facei] = SfdNei/(SfdOwn + SfdNei);
+        const scalar SfdOwn = mag(Sf[facei]&(Cf[facei] - C[owner[facei]]));
+        const scalar SfdNei = mag(Sf[facei]&(C[neighbour[facei]] - Cf[facei]));
+        const scalar SfdOwnNei = SfdOwn + SfdNei;
+
+        if (SfdNei/vGreat < SfdOwnNei)
+        {
+            w[facei] = SfdNei/SfdOwnNei;
+        }
+        else
+        {
+            const scalar dOwn = mag(Cf[facei] - C[owner[facei]]);
+            const scalar dNei = mag(C[neighbour[facei]] - Cf[facei]);
+            const scalar dOwnNei = dOwn + dNei;
+
+            w[facei] = dNei/dOwnNei;
+        }
     }
 
     surfaceScalarField::Boundary& wBf =
