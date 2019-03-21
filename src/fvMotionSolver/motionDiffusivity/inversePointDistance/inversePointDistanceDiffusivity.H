@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef inversePointDistanceDiffusivity_H
 #define inversePointDistanceDiffusivity_H
 
-#include "uniformDiffusivity.H"
+#include "motionDiffusivity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,7 +48,7 @@ namespace Foam
 
 class inversePointDistanceDiffusivity
 :
-    public uniformDiffusivity
+    public motionDiffusivity
 {
     // Private data
 
@@ -81,10 +81,10 @@ public:
     virtual ~inversePointDistanceDiffusivity();
 
 
-    // Member Functions
+    // Member Operators
 
-        //- Correct the motion diffusivity
-        virtual void correct();
+        //- Return diffusivity field
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

@@ -77,7 +77,7 @@ public:
     // Constructors
 
         //- Construct from mesh and dictionary
-        motionSolverList(const polyMesh&, const IOdictionary&);
+        motionSolverList(const polyMesh&, const dictionary&);
 
 
     //- Destructor

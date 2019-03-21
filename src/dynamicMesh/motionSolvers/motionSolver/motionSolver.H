@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,7 @@ SourceFiles
 #ifndef motionSolver_H
 #define motionSolver_H
 
-#include "IOdictionary.H"
 #include "pointField.H"
-
 #include "Time.H"
 #include "polyMesh.H"
 #include "dictionaryEntry.H"
@@ -56,8 +54,6 @@ class mapPolyMesh;
 \*---------------------------------------------------------------------------*/
 
 class motionSolver
-:
-    public IOdictionary
 {
     // Private data
 
@@ -66,12 +62,6 @@ class motionSolver
 
         //- Model coefficients dictionary
         dictionary coeffDict_;
-
-
-    // Private Member Functions
-
-        //- De-register object if registered and assign to current
-        static IOobject stealRegistration(const IOdictionary& dict);
 
 
 public:
@@ -87,19 +77,15 @@ public:
             autoPtr,
             motionSolver,
             dictionary,
-            (const polyMesh& mesh, const IOdictionary& dict),
+            (const polyMesh& mesh, const dictionary& dict),
             (mesh, dict)
         );
 
 
     // Selectors
 
-        //- Select constructed from polyMesh
-        static autoPtr<motionSolver> New(const polyMesh&);
-
-        //- Select constructed from polyMesh and dictionary. If dictionary
-        //  was registered this will 'steal' that registration.
-        static autoPtr<motionSolver> New(const polyMesh&, const IOdictionary&);
+        //- Select constructed from polyMesh and dictionary
+        static autoPtr<motionSolver> New(const polyMesh&, const dictionary&);
 
         //- Class used for the construction of PtrLists of motionSolvers
         class iNew
@@ -114,17 +100,13 @@ public:
         };
 
 
-
     // Constructors
-
-        //- Construct from polyMesh
-        motionSolver(const polyMesh& mesh);
 
         //- Construct from polyMesh and dictionary and type.
         motionSolver
         (
             const polyMesh& mesh,
-            const IOdictionary&,
+            const dictionary&,
             const word& type
         );
 
@@ -166,18 +148,6 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&) = 0;
-
-        //- Write state using given format, version and compression
-        virtual bool writeObject
-        (
-            IOstream::streamFormat fmt,
-            IOstream::versionNumber ver,
-            IOstream::compressionType cmp,
-            const bool valid
-        ) const;
-
-        //- Read dynamicMeshDict dictionary
-        virtual bool read();
 };
 
 

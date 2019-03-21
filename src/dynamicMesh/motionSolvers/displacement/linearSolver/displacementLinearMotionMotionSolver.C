@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::displacementLinearMotionMotionSolver::
 displacementLinearMotionMotionSolver
 (
     const polyMesh& mesh,
-    const IOdictionary& dict
+    const dictionary& dict
 )
 :
     points0MotionSolver(mesh, dict, typeName),
@@ -73,7 +73,7 @@ Foam::displacementLinearMotionMotionSolver::curPoints() const
     tmp<pointField> tcurPoints(new pointField(points0()));
     pointField& curPoints = tcurPoints.ref();
 
-    const scalar t = time().value();
+    const scalar t = mesh().time().value();
 
     const scalar displacement = displacement_->value(t);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "directionalDiffusivity.H"
+#include "surfaceFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,11 +50,9 @@ Foam::directionalDiffusivity::directionalDiffusivity
     Istream& mdData
 )
 :
-    uniformDiffusivity(mesh, mdData),
+    motionDiffusivity(mesh),
     diffusivityVector_(mdData)
-{
-    correct();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -62,12 +61,18 @@ Foam::directionalDiffusivity::~directionalDiffusivity()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::directionalDiffusivity::correct()
+Foam::tmp<Foam::surfaceScalarField>
+Foam::directionalDiffusivity::operator()() const
 {
     const surfaceVectorField n(mesh().Sf()/mesh().magSf());
-    faceDiffusivity_ == (n & cmptMultiply(diffusivityVector_, n));
+
+    return surfaceScalarField::New
+    (
+        "faceDiffusivity",
+        n & cmptMultiply(diffusivityVector_, n)
+    );
 }
 
 

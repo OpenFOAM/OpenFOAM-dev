@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "inverseVolumeDiffusivity.H"
-#include "addToRunTimeSelectionTable.H"
 #include "patchWave.H"
 #include "HashSet.H"
 #include "surfaceInterpolate.H"
 #include "zeroGradientFvPatchFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -53,10 +53,8 @@ Foam::inverseVolumeDiffusivity::inverseVolumeDiffusivity
     Istream& mdData
 )
 :
-    uniformDiffusivity(mesh, mdData)
-{
-    correct();
-}
+    motionDiffusivity(mesh)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -67,7 +65,8 @@ Foam::inverseVolumeDiffusivity::~inverseVolumeDiffusivity()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::inverseVolumeDiffusivity::correct()
+Foam::tmp<Foam::surfaceScalarField>
+Foam::inverseVolumeDiffusivity::operator()() const
 {
     volScalarField V
     (
@@ -88,7 +87,11 @@ void Foam::inverseVolumeDiffusivity::correct()
     V.primitiveFieldRef() = mesh().V();
     V.correctBoundaryConditions();
 
-    faceDiffusivity_ = 1.0/fvc::interpolate(V);
+    return surfaceScalarField::New
+    (
+        "faceDiffusivity",
+        1.0/fvc::interpolate(V)
+    );
 }
 
 

@@ -34,53 +34,16 @@ namespace Foam
     defineRunTimeSelectionTable(motionSolver, dictionary);
 }
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
-Foam::IOobject Foam::motionSolver::stealRegistration
-(
-    const IOdictionary& dict
-)
-{
-    IOobject io(dict);
-    if (dict.registerObject())
-    {
-        // De-register if necessary
-        const_cast<IOdictionary&>(dict).checkOut();
-
-        io.registerObject() = true;
-    }
-
-    return io;
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::motionSolver::motionSolver(const polyMesh& mesh)
-:
-    IOdictionary
-    (
-        IOobject
-        (
-            "dynamicMeshDict",
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::AUTO_WRITE
-        )
-    ),
-    mesh_(mesh)
-{}
-
 
 Foam::motionSolver::motionSolver
 (
     const polyMesh& mesh,
-    const IOdictionary& dict,
+    const dictionary& dict,
     const word& type
 )
 :
-    IOdictionary(stealRegistration(dict), dict),
     mesh_(mesh),
     coeffDict_(dict.optionalSubDict(type + "Coeffs"))
 {}
@@ -98,7 +61,7 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::clone() const
 Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
 (
     const polyMesh& mesh,
-    const IOdictionary& solverDict
+    const dictionary& solverDict
 )
 {
     if (solverDict.found("solvers"))
@@ -148,24 +111,6 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
 }
 
 
-Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New(const polyMesh& mesh)
-{
-    IOdictionary solverDict
-    (
-        IOobject
-        (
-            "dynamicMeshDict",
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::AUTO_WRITE
-        )
-    );
-
-    return New(mesh, solverDict);
-}
-
-
 Foam::motionSolver::iNew::iNew(const polyMesh& mesh)
 :
     mesh_(mesh)
@@ -179,20 +124,7 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::iNew::operator()
 {
     dictionaryEntry dict(dictionary::null, is);
 
-    return motionSolver::New
-    (
-        mesh_,
-        IOdictionary
-        (
-            IOobject
-            (
-                dict.name() + ":meshSolver",
-                mesh_.time().constant(),
-                mesh_
-            ),
-            dict
-        )
-    );
+    return motionSolver::New(mesh_, dict);
 }
 
 
@@ -219,33 +151,6 @@ void Foam::motionSolver::twoDCorrectPoints(pointField& p) const
 
 void Foam::motionSolver::updateMesh(const mapPolyMesh& mpm)
 {}
-
-
-bool Foam::motionSolver::writeObject
-(
-    IOstream::streamFormat fmt,
-    IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool valid
-) const
-{
-    return true;
-}
-
-
-bool Foam::motionSolver::read()
-{
-    if (regIOobject::read())
-    {
-        coeffDict_ = optionalSubDict(type() + "Coeffs");
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
 
 
 // ************************************************************************* //

@@ -45,7 +45,7 @@ namespace Foam
 Foam::motionSolverList::motionSolverList
 (
     const polyMesh& mesh,
-    const IOdictionary& dict
+    const dictionary& dict
 )
 :
     motionSolver(mesh, dict, typeName),

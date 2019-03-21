@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,16 @@ class dynamicFvMesh
 :
     public fvMesh
 {
+    // Private data
+
+        //- The dynamicMeshDict
+        dictionary dynamicMeshDict_;
+
+
     // Private Member Functions
+
+        //- Return the dynamicMeshDict IOobject
+        static IOobject dynamicMeshDictIOobject(const IOobject& io);
 
         //- Disallow default bitwise copy construct
         dynamicFvMesh(const dynamicFvMesh&);
@@ -121,6 +130,12 @@ public:
 
     // Member Functions
 
+        //- Return the dynamicMeshDict
+        const dictionary& dynamicMeshDict() const
+        {
+            return dynamicMeshDict_;
+        }
+
         //- Is mesh dynamic
         virtual bool dynamic() const
         {
@@ -130,6 +145,7 @@ public:
         //- Update the mesh for both mesh motion and topology change
         virtual bool update() = 0;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

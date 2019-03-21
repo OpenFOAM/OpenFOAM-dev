@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,11 +33,33 @@ namespace Foam
     defineRunTimeSelectionTable(dynamicFvMesh, IOobject);
 }
 
+
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+Foam::IOobject Foam::dynamicFvMesh::dynamicMeshDictIOobject(const IOobject& io)
+{
+    // defaultRegion (region0) gets loaded from constant, other ones get loaded
+    // from constant/<regionname>. Normally we'd use polyMesh::dbDir() but we
+    // haven't got a polyMesh yet ...
+    return IOobject
+    (
+        "dynamicMeshDict",
+        io.time().constant(),
+        (io.name() == polyMesh::defaultRegion ? "" : io.name()),
+        io.db(),
+        IOobject::READ_IF_PRESENT,
+        IOobject::NO_WRITE,
+        false
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::dynamicFvMesh::dynamicFvMesh(const IOobject& io)
 :
-    fvMesh(io)
+    fvMesh(io),
+    dynamicMeshDict_(IOdictionary(dynamicMeshDictIOobject(io)))
 {}
 
 
@@ -59,7 +81,8 @@ Foam::dynamicFvMesh::dynamicFvMesh
         allOwner,
         allNeighbour,
         syncPar
-    )
+    ),
+    dynamicMeshDict_(IOdictionary(dynamicMeshDictIOobject(io)))
 {}
 
 
@@ -79,7 +102,8 @@ Foam::dynamicFvMesh::dynamicFvMesh
         faces,
         cells,
         syncPar
-    )
+    ),
+    dynamicMeshDict_(IOdictionary(dynamicMeshDictIOobject(io)))
 {}
 
 

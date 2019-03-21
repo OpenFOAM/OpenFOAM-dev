@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ SourceFiles
 #define uniformDiffusivity_H
 
 #include "motionDiffusivity.H"
-#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,16 +50,6 @@ class uniformDiffusivity
 :
     public motionDiffusivity
 {
-
-protected:
-
-    // Protected data
-
-        surfaceScalarField faceDiffusivity_;
-
-
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -86,17 +75,10 @@ public:
     virtual ~uniformDiffusivity();
 
 
-    // Member Functions
+    // Member Operators
 
         //- Return diffusivity field
-        virtual tmp<surfaceScalarField> operator()() const
-        {
-            return faceDiffusivity_;
-        }
-
-        //- Do not correct the motion diffusivity
-        virtual void correct()
-        {}
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

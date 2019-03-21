@@ -132,11 +132,11 @@ public:
 
     // Constructors
 
-        //- Construct from polyMesh and IOdictionary
+        //- Construct from polyMesh and dictionary
         rigidBodyMeshMotionSolver
         (
             const polyMesh&,
-            const IOdictionary& dict
+            const dictionary& dict
         );
 
 
@@ -151,18 +151,6 @@ public:
 
         //- Solve for motion
         virtual void solve();
-
-        //- Write state using given format, version and compression
-        virtual bool writeObject
-        (
-            IOstream::streamFormat fmt,
-            IOstream::versionNumber ver,
-            IOstream::compressionType cmp,
-            const bool valid
-        ) const;
-
-        //- Read dynamicMeshDict dictionary
-        virtual bool read();
 
         //- Update local data for geometry changes
         virtual void movePoints(const pointField&);

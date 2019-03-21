@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "inversePointDistanceDiffusivity.H"
-#include "addToRunTimeSelectionTable.H"
+#include "surfaceFields.H"
 #include "HashSet.H"
 #include "pointEdgePoint.H"
 #include "PointEdgeWave.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -52,11 +53,9 @@ Foam::inversePointDistanceDiffusivity::inversePointDistanceDiffusivity
     Istream& mdData
 )
 :
-    uniformDiffusivity(mesh, mdData),
+    motionDiffusivity(mesh),
     patchNames_(mdData)
-{
-    correct();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -67,11 +66,31 @@ Foam::inversePointDistanceDiffusivity::~inversePointDistanceDiffusivity()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::inversePointDistanceDiffusivity::correct()
+Foam::tmp<Foam::surfaceScalarField>
+Foam::inversePointDistanceDiffusivity::operator()() const
 {
+    tmp<surfaceScalarField> tfaceDiffusivity
+    (
+        new surfaceScalarField
+        (
+            IOobject
+            (
+                "faceDiffusivity",
+                mesh().time().timeName(),
+                mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh(),
+            dimensionedScalar(dimless, 1.0)
+        )
+    );
+
+    surfaceScalarField& faceDiffusivity = tfaceDiffusivity.ref();
+
     const polyBoundaryMesh& bdry = mesh().boundaryMesh();
 
-    labelHashSet patchSet(bdry.patchSet(patchNames_));
+    const labelHashSet patchSet(bdry.patchSet(patchNames_));
 
     label nPatchEdges = 0;
 
@@ -102,7 +121,7 @@ void Foam::inversePointDistanceDiffusivity::correct()
 
             forAll(meshPoints, i)
             {
-                label pointi = meshPoints[i];
+                const label pointi = meshPoints[i];
 
                 if (!pointWallDist[pointi].valid(dummyTrackData))
                 {
@@ -149,12 +168,12 @@ void Foam::inversePointDistanceDiffusivity::correct()
         }
         dist /= f.size();
 
-        faceDiffusivity_[facei] = 1.0/dist;
+        faceDiffusivity[facei] = 1.0/dist;
     }
 
 
     surfaceScalarField::Boundary& faceDiffusivityBf =
-        faceDiffusivity_.boundaryFieldRef();
+        faceDiffusivity.boundaryFieldRef();
 
     forAll(faceDiffusivityBf, patchi)
     {
@@ -209,6 +228,8 @@ void Foam::inversePointDistanceDiffusivity::correct()
             }
         }
     }
+
+    return tfaceDiffusivity;
 }
 
 

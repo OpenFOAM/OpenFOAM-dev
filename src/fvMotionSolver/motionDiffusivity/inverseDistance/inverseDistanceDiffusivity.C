@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,11 +53,9 @@ Foam::inverseDistanceDiffusivity::inverseDistanceDiffusivity
     Istream& mdData
 )
 :
-    uniformDiffusivity(mesh, mdData),
+    motionDiffusivity(mesh),
     patchNames_(mdData)
-{
-    correct();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -70,7 +68,7 @@ Foam::inverseDistanceDiffusivity::~inverseDistanceDiffusivity()
 
 Foam::tmp<Foam::scalarField> Foam::inverseDistanceDiffusivity::y() const
 {
-    labelHashSet patchSet(mesh().boundaryMesh().patchSet(patchNames_));
+    const labelHashSet patchSet(mesh().boundaryMesh().patchSet(patchNames_));
 
     if (patchSet.size())
     {
@@ -86,7 +84,10 @@ Foam::tmp<Foam::scalarField> Foam::inverseDistanceDiffusivity::y() const
 }
 
 
-void Foam::inverseDistanceDiffusivity::correct()
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::surfaceScalarField>
+Foam::inverseDistanceDiffusivity::operator()() const
 {
     volScalarField y_
     (
@@ -103,7 +104,11 @@ void Foam::inverseDistanceDiffusivity::correct()
     y_.primitiveFieldRef() = y();
     y_.correctBoundaryConditions();
 
-    faceDiffusivity_ = 1.0/fvc::interpolate(y_);
+    return surfaceScalarField::New
+    (
+        "faceDiffusivity",
+        1.0/fvc::interpolate(y_)
+    );
 }
 
 

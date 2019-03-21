@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,21 +47,7 @@ namespace Foam
 Foam::dynamicInterpolatedFvMesh::dynamicInterpolatedFvMesh(const IOobject& io)
 :
     dynamicFvMesh(io),
-    dynamicMeshCoeffs_
-    (
-        IOdictionary
-        (
-            IOobject
-            (
-                "dynamicMeshDict",
-                io.time().constant(),
-                *this,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-        ).optionalSubDict(typeName + "Coeffs")
-    ),
+    dynamicMeshCoeffs_(dynamicMeshDict().optionalSubDict(typeName + "Coeffs")),
     pointInterpolator_(*this, dynamicMeshCoeffs_),
     displacement_(dynamicMeshCoeffs_.lookup("displacement")),
     points0_

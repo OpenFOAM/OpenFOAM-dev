@@ -84,7 +84,7 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
 Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 (
     const polyMesh& mesh,
-    const IOdictionary& dict
+    const dictionary& dict
 )
 :
     displacementMotionSolver(mesh, dict, typeName),
@@ -237,18 +237,18 @@ void Foam::rigidBodyMeshMotion::solve()
     }
 
     // Store the motion state at the beginning of the time-step
-    if (curTimeIndex_ != this->db().time().timeIndex())
+    if (curTimeIndex_ != t.timeIndex())
     {
         newTime();
-        curTimeIndex_ = this->db().time().timeIndex();
+        curTimeIndex_ = t.timeIndex();
     }
 
     const scalar ramp = ramp_->value(t.value());
 
-    if (db().foundObject<uniformDimensionedVectorField>("g"))
+    if (t.foundObject<uniformDimensionedVectorField>("g"))
     {
         g() =
-            ramp*db().lookupObject<uniformDimensionedVectorField>("g").value();
+            ramp*t.lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
     if (test_)
@@ -281,7 +281,7 @@ void Foam::rigidBodyMeshMotion::solve()
             forcesDict.add("rho", rhoName_);
             forcesDict.add("CofR", vector::zero);
 
-            functionObjects::forces f("forces", db(), forcesDict);
+            functionObjects::forces f("forces", t, forcesDict);
             f.calcForcesMoment();
 
             fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
@@ -333,48 +333,6 @@ void Foam::rigidBodyMeshMotion::solve()
     (
         pointDisplacement_.mesh()
     ).constrainDisplacement(pointDisplacement_);
-}
-
-
-bool Foam::rigidBodyMeshMotion::writeObject
-(
-    IOstream::streamFormat fmt,
-    IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool valid
-) const
-{
-    IOdictionary dict
-    (
-        IOobject
-        (
-            "rigidBodyMotionState",
-            mesh().time().timeName(),
-            "uniform",
-            mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        )
-    );
-
-    state().write(dict);
-    return dict.regIOobject::write();
-}
-
-
-bool Foam::rigidBodyMeshMotion::read()
-{
-    if (displacementMotionSolver::read())
-    {
-        RBD::rigidBodyMotion::read(coeffDict());
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 

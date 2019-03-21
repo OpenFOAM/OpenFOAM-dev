@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -280,21 +280,7 @@ Foam::mixerFvMesh::mixerFvMesh
 )
 :
     topoChangerFvMesh(io),
-    motionDict_
-    (
-        IOdictionary
-        (
-            IOobject
-            (
-                "dynamicMeshDict",
-                time().constant(),
-                *this,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-        ).optionalSubDict(typeName + "Coeffs")
-    ),
+    motionDict_(dynamicMeshDict().optionalSubDict(typeName + "Coeffs")),
     csPtr_
     (
         coordinateSystem::New
