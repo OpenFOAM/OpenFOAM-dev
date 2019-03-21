@@ -55,7 +55,8 @@ Foam::dynamicInterpolatedFvMesh::dynamicInterpolatedFvMesh(const IOobject& io)
         displacement_
       ? new pointIOField(points0IO(*this))
       : nullptr
-    )
+    ),
+    velocityMotionCorrection_(*this, dynamicMeshDict())
 {}
 
 
@@ -78,7 +79,7 @@ bool Foam::dynamicInterpolatedFvMesh::update()
         fvMesh::movePoints(pointInterpolator_.curPointField());
     }
 
-    lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
+    velocityMotionCorrection_.update();
 
     return true;
 }

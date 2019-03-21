@@ -57,13 +57,15 @@ Foam::dynamicInkJetFvMesh::dynamicInkJetFvMesh(const IOobject& io)
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         )
-    )
+    ),
+    velocityMotionCorrection_(*this, dynamicMeshDict())
 {
     Info<< "Performing a dynamic mesh calculation: " << endl
         << "amplitude: " << amplitude_
         << " frequency: " << frequency_
         << " refPlaneX: " << refPlaneX_ << endl;
 }
+
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
@@ -103,7 +105,7 @@ bool Foam::dynamicInkJetFvMesh::update()
 
     fvMesh::movePoints(newPoints);
 
-    lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
+    velocityMotionCorrection_.update();
 
     return true;
 }

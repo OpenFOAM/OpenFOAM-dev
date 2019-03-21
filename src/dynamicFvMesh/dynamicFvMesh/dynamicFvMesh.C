@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dynamicFvMesh.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -107,10 +108,37 @@ Foam::dynamicFvMesh::dynamicFvMesh
 {}
 
 
+Foam::dynamicFvMesh::velocityMotionCorrection::velocityMotionCorrection
+(
+    const dynamicFvMesh& mesh,
+    const dictionary& dict
+)
+:
+    mesh_(mesh),
+    velocityFields_(dict.lookupOrDefault("velocityFields", wordList()))
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::dynamicFvMesh::~dynamicFvMesh()
 {}
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::dynamicFvMesh::velocityMotionCorrection::update() const
+{
+    forAll(velocityFields_, i)
+    {
+        if (mesh_.foundObject<volVectorField>(velocityFields_[i]))
+        {
+            mesh_.lookupObjectRef<volVectorField>
+            (
+                velocityFields_[i]
+            ).correctBoundaryConditions();
+        }
+    }
+}
 
 // ************************************************************************* //

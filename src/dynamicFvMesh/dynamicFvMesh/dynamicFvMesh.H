@@ -87,6 +87,33 @@ public:
         );
 
 
+    //- Helper class to update the velocity boundary conditions
+    //  following mesh motion
+    class velocityMotionCorrection
+    {
+        // Private data
+
+            const dynamicFvMesh& mesh_;
+
+            wordList velocityFields_;
+
+    public:
+
+        // Constructors
+
+            velocityMotionCorrection
+            (
+                const dynamicFvMesh& mesh,
+                const dictionary& dict
+            );
+
+
+        // Member Functions
+
+            void update() const;
+    };
+
+
     // Constructors
 
         //- Construct from objectRegistry, and read/write options

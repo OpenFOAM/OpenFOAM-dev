@@ -44,23 +44,8 @@ namespace Foam
 
 class motionSolver;
 
-class velocityMotionCorrection
-{
-    // Private data
-
-        wordList velocityFields_;
-
-public:
-
-    velocityMotionCorrection(const dictionary& dict)
-    :
-        velocityFields_(dict.lookup("velocityFields"))
-    {}
-};
-
-
 /*---------------------------------------------------------------------------*\
-                           Class dynamicMotionSolverFvMesh Declaration
+                  Class dynamicMotionSolverFvMesh Declaration
 \*---------------------------------------------------------------------------*/
 
 class dynamicMotionSolverFvMesh
@@ -70,6 +55,11 @@ class dynamicMotionSolverFvMesh
     // Private data
 
         autoPtr<motionSolver> motionPtr_;
+
+        //- Optional list of vectorFields to update for mesh motion
+        //  For modern solvers using Uf and correctPhi to update the flux
+        //  after motion it is not necessary to specify a "velocityFields" list
+        velocityMotionCorrection velocityMotionCorrection_;
 
 
     // Private Member Functions

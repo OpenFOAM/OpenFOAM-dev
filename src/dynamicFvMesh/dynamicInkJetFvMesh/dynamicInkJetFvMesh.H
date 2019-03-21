@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,6 +66,11 @@ class dynamicInkJetFvMesh
         scalar refPlaneX_;
 
         pointIOField stationaryPoints_;
+
+        //- Optional list of vectorFields to update for mesh motion
+        //  For modern solvers using Uf and correctPhi to update the flux
+        //  after motion it is not necessary to specify a "velocityFields" list
+        velocityMotionCorrection velocityMotionCorrection_;
 
 
     // Private Member Functions

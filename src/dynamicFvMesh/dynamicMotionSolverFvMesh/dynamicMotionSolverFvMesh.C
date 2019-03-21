@@ -26,7 +26,6 @@ License
 #include "dynamicMotionSolverFvMesh.H"
 #include "addToRunTimeSelectionTable.H"
 #include "motionSolver.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -47,7 +46,8 @@ namespace Foam
 Foam::dynamicMotionSolverFvMesh::dynamicMotionSolverFvMesh(const IOobject& io)
 :
     dynamicFvMesh(io),
-    motionPtr_(motionSolver::New(*this, dynamicMeshDict()))
+    motionPtr_(motionSolver::New(*this, dynamicMeshDict())),
+    velocityMotionCorrection_(*this, dynamicMeshDict())
 {}
 
 
@@ -68,11 +68,7 @@ const Foam::motionSolver& Foam::dynamicMotionSolverFvMesh::motion() const
 bool Foam::dynamicMotionSolverFvMesh::update()
 {
     fvMesh::movePoints(motionPtr_->newPoints());
-
-    if (foundObject<volVectorField>("U"))
-    {
-        lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
-    }
+    velocityMotionCorrection_.update();
 
     return true;
 }
