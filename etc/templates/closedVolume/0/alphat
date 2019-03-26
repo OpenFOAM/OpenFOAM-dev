@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -1 0 0 0 0];
+dimensions      [1 -1 -1 0 0 0 0];
 
 internalField   uniform 0;
 
@@ -22,7 +22,7 @@ boundaryField
 {
     wall
     {
-        type            alphatJayatillekeWallFunction;
+        type            compressible::alphatJayatillekeWallFunction;
         Prt             0.85;
         value           $internalField;
     }

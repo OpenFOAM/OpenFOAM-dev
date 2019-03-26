@@ -10,82 +10,57 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 solvers
 {
-    p_rgh
+    "rho.*"
     {
-        solver          GAMG;
-        smoother        GaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
+        solver          diagonal;
     }
 
-    "(U|e|k|omega|epsilon)"
+    p_rgh
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-8;
+        relTol          0.01;
     }
 
     p_rghFinal
     {
-        $p;
-        relTol         0;
+        $p_rgh;
+        relTol          0;
     }
 
-    "(U|e|k|omega|epsilon)Final"
+    "(U|e|k|epsilon)"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-6;
+        relTol          0.1;
+    }
+
+    "(U|e|k|epsilon)Final"
     {
         $U;
         relTol          0;
     }
 }
 
-"(PIMPLE|PISO)"
+PIMPLE
 {
+    momentumPredictor yes;
     nOuterCorrectors 1;
     nCorrectors     2;
-    nNonOrthogonalCorrectors 1;
-    pRefCell        0;
-    pRefValue       0;
-}
-
-SIMPLE
-{
-    residualControl
-    {
-        p               1e-4;
-        U               1e-4;
-        e               1e-4;
-        "(k|omega|epsilon)" 1e-4;
-    }
     nNonOrthogonalCorrectors 0;
+
     pRefCell        0;
     pRefValue       0;
-
 }
 
-potentialFlow
-{
-    nNonOrthogonalCorrectors 10;
-}
-
-relaxationFactors
-{
-    fields
-    {
-        p_rgh           0.7;
-    }
-    equations
-    {
-        U               0.3;
-        e               0.5;
-        "(k|omega|epsilon)" 0.7;
-    }
-}
 
 // ************************************************************************* //

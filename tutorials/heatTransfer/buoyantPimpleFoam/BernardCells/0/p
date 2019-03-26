@@ -22,10 +22,11 @@ boundaryField
 {
     wall
     {
-        type            fixedFluxPressure;
-        rho             rhok;
+        type            calculated;
         value           $internalField;
     }
+
+    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 // ************************************************************************* //

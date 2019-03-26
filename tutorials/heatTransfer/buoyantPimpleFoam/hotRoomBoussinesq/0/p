@@ -20,10 +20,21 @@ internalField   uniform 0;
 
 boundaryField
 {
-    wall
+    floor
     {
-        type            fixedFluxPressure;
-        rho             rhok;
+        type            calculated;
+        value           $internalField;
+    }
+
+    ceiling
+    {
+        type            calculated;
+        value           $internalField;
+    }
+
+    fixedWalls
+    {
+        type            calculated;
         value           $internalField;
     }
 }

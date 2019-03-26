@@ -1,7 +1,7 @@
 Overview
 =======
 + This is a template case for a closed volume
-+ Setup to run buoyantBoussinesqSimpleFoam
++ Setup to run buoyantSimpleFoam
 + The case is designed to be meshed with snappyHexMesh
 + snappyHexMesh is setup to use a single trisurface file named CAD.obj
 + Copy the CAD.obj file to the constant/triSurface directory

@@ -10,44 +10,36 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 ddtSchemes
 {
-    // For transient, replace steadyState, e.g. with Euler
-    default         steadyState;
+    default         Euler;
 }
 
 gradSchemes
 {
     default         Gauss linear;
-
-    limited         cellLimited Gauss linear 1;
-    grad(U)         $limited;
-    grad(k)         $limited;
-    grad(omega)     $limited;
 }
 
 divSchemes
 {
     default         none;
 
-    // For transient, remove "bounded"
-    div(phi,U)      bounded Gauss linearUpwind limited;
+    div(phi,U)      Gauss linearUpwind grad(U);
+    div(phi,e)      Gauss limitedLinear 1;
 
-    // For transient, remove "bounded"
-    turbulence      bounded Gauss limitedLinear 1;
+    turbulence      Gauss limitedLinear 1;
     div(phi,k)      $turbulence;
-    div(phi,omega)  $turbulence;
     div(phi,epsilon) $turbulence;
 
-    div(phi,e)      $turbulence;
+    div(phiv,p)     Gauss linear;
+    div(phi,K)      Gauss linear;
 
-    div(phi,Ekp)    bounded Gauss linear;
-
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
@@ -65,9 +57,5 @@ snGradSchemes
     default         corrected;
 }
 
-wallDist
-{
-    method meshWave;
-}
 
 // ************************************************************************* //

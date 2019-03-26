@@ -20,10 +20,12 @@ internalField   uniform 0;
 
 boundaryField
 {
+    //- Set patchGroups for constraint patches
+    #includeEtc "caseDicts/setConstraintTypes"
+
     wall
     {
-        type            fixedFluxPressure;
-        rho             rhok;
+        type            calculated;
         value           $internalField;
     }
 }
