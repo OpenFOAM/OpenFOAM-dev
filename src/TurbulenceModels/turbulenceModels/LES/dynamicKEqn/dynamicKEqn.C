@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,17 @@ namespace LESModels
 {
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+Foam::tmp<Foam::volScalarField> dynamicKEqn<BasicTurbulenceModel>::KK() const
+{
+    return max
+    (
+        0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_))),
+        dimensionedScalar(sqr(dimVelocity), small)
+    );
+}
+
 
 template<class BasicTurbulenceModel>
 volScalarField dynamicKEqn<BasicTurbulenceModel>::Ck
@@ -88,14 +99,7 @@ template<class BasicTurbulenceModel>
 volScalarField dynamicKEqn<BasicTurbulenceModel>::Ce() const
 {
     const volSymmTensorField D(dev(symm(fvc::grad(this->U_))));
-
-    volScalarField KK
-    (
-        0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_)))
-    );
-    KK.max(dimensionedScalar(KK.dimensions(), small));
-
-    return Ce(D, KK);
+    return Ce(D, KK());
 }
 
 
@@ -117,12 +121,7 @@ void dynamicKEqn<BasicTurbulenceModel>::correctNut
 template<class BasicTurbulenceModel>
 void dynamicKEqn<BasicTurbulenceModel>::correctNut()
 {
-    const volScalarField KK
-    (
-        0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_)))
-    );
-
-    correctNut(symm(fvc::grad(this->U_)), KK);
+    correctNut(symm(fvc::grad(this->U_)), KK());
 }
 
 
@@ -248,8 +247,7 @@ void dynamicKEqn<BasicTurbulenceModel>::correct()
     const volScalarField G(this->GName(), 2.0*nut*(tgradU() && D));
     tgradU.clear();
 
-    volScalarField KK(0.5*(filter_(magSqr(U)) - magSqr(filter_(U))));
-    KK.max(dimensionedScalar(KK.dimensions(), small));
+    const volScalarField KK(this->KK());
 
     tmp<fvScalarMatrix> kEqn
     (

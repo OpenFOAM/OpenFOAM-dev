@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,6 +99,9 @@ protected:
 
 
     // Protected Member Functions
+
+        //- Return the KK field obtained by filtering the velocity field U
+        tmp<volScalarField> KK() const;
 
         //- Calculate Ck by filtering the velocity field U
         volScalarField Ck
