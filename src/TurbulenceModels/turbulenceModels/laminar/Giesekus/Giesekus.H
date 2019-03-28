@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,36 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::laminarModels::Maxwell
+    Foam::laminarModels::Giesekus
 
 Description
-    Maxwell model for viscoelasticity using the upper-convected time
-    derivative of the stress tensor.
-    See http://en.wikipedia.org/wiki/Upper-convected_Maxwell_model
-
-    The model includes an additional viscosity (nu) from the transport
-    model from which it is instantiated, which makes it equivalent to
-    the Oldroyd-B model for the case of an incompressible transport
-    model (where nu is non-zero).
-    See https://en.wikipedia.org/wiki/Oldroyd-B_model
+    Giesekus model for viscoelasticity.
 
     Reference:
     \verbatim
-        Amoreira, L. J., & Oliveira, P. J. (2010).
-        Comparison of different formulations for the numerical calculation
-        of unsteady incompressible viscoelastic fluid flow.
-        Adv. Appl. Math. Mech, 4, 483-502.
+        Giesekus, H., 1982.
+        A simple constitutive equation for polymer fluids based on the
+        concept of deformation-dependent tensional mobility.
+        J. Non-Newton. Fluid. 11, 69–109.
     \endverbatim
 
+See also
+    Foam::laminarModels::Maxwell
+
 SourceFiles
-    Maxwell.C
+    Giesekus.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Maxwell_H
-#define Maxwell_H
+#ifndef Giesekus_H
+#define Giesekus_H
 
-#include "laminarModel.H"
+#include "Maxwell.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,14 +56,20 @@ namespace laminarModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Maxwell Declaration
+                           Class Giesekus Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicTurbulenceModel>
-class Maxwell
+class Giesekus
 :
-    public laminarModel<BasicTurbulenceModel>
+    public Maxwell<BasicTurbulenceModel>
 {
+    // Private Member Functions
+
+        // Disallow default bitwise copy construct and assignment
+        Giesekus(const Giesekus&);
+        void operator=(const Giesekus&);
+
 
 protected:
 
@@ -76,22 +77,9 @@ protected:
 
         // Model coefficients
 
-            dimensionedScalar nuM_;
-            dimensionedScalar lambda_;
-
-
-        // Fields
-
-            volSymmTensorField sigma_;
-
+            dimensionedScalar alphaG_;
 
     // Protected Member Functions
-
-        //- Return the turbulence viscosity
-        tmp<volScalarField> nu0() const
-        {
-            return this->nu() + nuM_;
-        }
 
         virtual tmp<fvSymmTensorMatrix> sigmaSource() const;
 
@@ -104,13 +92,13 @@ public:
 
 
     //- Runtime type information
-    TypeName("Maxwell");
+    TypeName("Giesekus");
 
 
     // Constructors
 
         //- Construct from components
-        Maxwell
+        Giesekus
         (
             const alphaField& alpha,
             const rhoField& rho,
@@ -124,34 +112,14 @@ public:
 
 
     //- Destructor
-    virtual ~Maxwell()
+    virtual ~Giesekus()
     {}
 
 
     // Member Functions
 
-        //- Read model coefficients if they have changed
+        //- Re-read model coefficients if they have changed
         virtual bool read();
-
-        //- Return the Reynolds stress tensor
-        virtual tmp<volSymmTensorField> R() const;
-
-        //- Return the effective stress tensor
-        virtual tmp<volSymmTensorField> devRhoReff() const;
-
-        //- Return the source term for the momentum equation
-        virtual tmp<fvVectorMatrix> divDevRhoReff(volVectorField& U) const;
-
-        //- Return the source term for the momentum equation
-        virtual tmp<fvVectorMatrix> divDevRhoReff
-        (
-            const volScalarField& rho,
-            volVectorField& U
-        ) const;
-
-        //- Solve the turbulence equations and correct eddy-Viscosity and
-        //  related properties
-        virtual void correct();
 };
 
 
@@ -163,7 +131,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "Maxwell.C"
+    #include "Giesekus.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -18,12 +18,19 @@ simulationType laminar;
 
 laminar
 {
-    laminarModel        Maxwell;
+    laminarModel        Maxwell; // Giesekus;
 
     MaxwellCoeffs
     {
         nuM             0.002;
         lambda          0.03;
+    }
+
+    GiesekusCoeffs
+    {
+        nuM             0.002;
+        lambda          0.03;
+        alphaG          0.1;
     }
 
     printCoeffs         on;

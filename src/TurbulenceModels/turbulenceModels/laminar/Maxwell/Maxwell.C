@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,22 @@ namespace Foam
 {
 namespace laminarModels
 {
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+tmp<fvSymmTensorMatrix> Maxwell<BasicTurbulenceModel>::sigmaSource() const
+{
+    return tmp<fvSymmTensorMatrix>
+    (
+        new fvSymmTensorMatrix
+        (
+            sigma_,
+            dimVolume*this->rho_.dimensions()*sigma_.dimensions()/dimTime
+        )
+    );
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -223,6 +239,7 @@ void Maxwell<BasicTurbulenceModel>::correct()
       + fvm::Sp(alpha*rho*rLambda, sigma)
      ==
         alpha*rho*P
+      + sigmaSource()
       + fvOptions(alpha, rho, sigma)
     );
 
