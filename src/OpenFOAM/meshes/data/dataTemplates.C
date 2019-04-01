@@ -38,7 +38,8 @@ void Foam::data::setSolverPerformance
 {
     dictionary& dict = const_cast<dictionary&>(solverPerformanceDict());
 
-    List<SolverPerformance<Type>> perfs;
+    // Use a DynamicList to improve performance of the append
+    DynamicList<SolverPerformance<Type>> perfs;
 
     const label timeIndex =
         this->time().subCycling()
@@ -57,7 +58,7 @@ void Foam::data::setSolverPerformance
     }
 
     // Append to list
-    perfs.setSize(perfs.size()+1, sp);
+    perfs.append(sp);
 
     dict.set(name, perfs);
 }
