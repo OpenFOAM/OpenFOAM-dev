@@ -72,6 +72,16 @@ Foam::specieCoeffs::specieCoeffs
         }
         else
         {
+            // In order to support the convoluted way in which
+            // the solidChemistry currently handles gaseous species
+            // an error cannot be generated here.
+            // We will re-introduce this check after solidChemistry is
+            // re-written in a rational manner.
+            // FatalIOErrorInFunction(is)
+            //     << "Specie " << specieName
+            //     << " not found in table " << species
+            //     << exit(FatalIOError);
+
             index = -1;
         }
     }
