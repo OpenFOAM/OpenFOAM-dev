@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,10 @@ Class
     Foam::surfaceNormalFixedValueFvPatchVectorField
 
 Description
-    This boundary condition provides a surface-normal vector boundary condition
-    by its magnitude.
+    Surface-normal fixed value vector boundary condition
+
+    in which the vector field is obtained by scaling the patch normals
+    by the scalar field provided.
 
 Usage
     \table

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,10 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::uniformFixedValueFvPatchField
+    Foam::surfaceNormalUniformFixedValueFvPatchVectorField
 
 Description
-    This boundary condition provides a uniform fixed value condition.
+    Surface-normal fixed value vector boundary condition
+
+    in which the vector field is obtained by scaling the patch normals
+    by the evaluated scalar Function1 provided.
 
 Usage
     \table
@@ -37,27 +40,25 @@ Usage
     \verbatim
     <patchName>
     {
-        type            uniformFixedValue;
-        uniformValue    constant 0.2;
+        type            surfaceNormalUniformFixedValue;
+        uniformValue    constant -0.2;         // 0.2 INTO the domain
     }
     \endverbatim
 
 Note
-    The uniformValue entry is a Function1 type, able to describe time
-    varying functions.  The example above gives the usage for supplying a
-    constant value.
+    Sign conventions:
+    - the value is positive for outward-pointing vectors
 
 See also
-    Foam::Function1Types
     Foam::fixedValueFvPatchField
 
 SourceFiles
-    uniformFixedValueFvPatchField.C
+    surfaceNormalUniformFixedValueFvPatchVectorField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformFixedValueFvPatchField_H
-#define uniformFixedValueFvPatchField_H
+#ifndef surfaceNormalUniformFixedValueFvPatchVectorField_H
+#define surfaceNormalUniformFixedValueFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
 #include "Function1.H"
@@ -68,99 +69,98 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class uniformFixedValueFvPatchField Declaration
+          Class surfaceNormalUniformFixedValueFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class uniformFixedValueFvPatchField
+class surfaceNormalUniformFixedValueFvPatchVectorField
 :
-    public fixedValueFvPatchField<Type>
+    public fixedValueFvPatchVectorField
 {
     // Private data
 
-        autoPtr<Function1<Type>> uniformValue_;
+        autoPtr<Function1<scalar>> uniformValue_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("uniformFixedValue");
+    TypeName("surfaceNormalUniformFixedValue");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        uniformFixedValueFvPatchField
+        surfaceNormalUniformFixedValueFvPatchVectorField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
-        );
-
-        //- Construct from patch and internal field and patch field
-        uniformFixedValueFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const Field<Type>& fld
+            const DimensionedField<vector, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        uniformFixedValueFvPatchField
+        surfaceNormalUniformFixedValueFvPatchVectorField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<vector, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given uniformFixedValueFvPatchField
+        //- Construct by mapping given
+        //  surfaceNormalUniformFixedValueFvPatchVectorField
         //  onto a new patch
-        uniformFixedValueFvPatchField
+        surfaceNormalUniformFixedValueFvPatchVectorField
         (
-            const uniformFixedValueFvPatchField<Type>&,
+            const surfaceNormalUniformFixedValueFvPatchVectorField&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy
-        uniformFixedValueFvPatchField
+        surfaceNormalUniformFixedValueFvPatchVectorField
         (
-            const uniformFixedValueFvPatchField<Type>&
+            const surfaceNormalUniformFixedValueFvPatchVectorField&
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
+        virtual tmp<fvPatchVectorField> clone() const
         {
-            return tmp<fvPatchField<Type>>
+            return tmp<fvPatchVectorField>
             (
-                new uniformFixedValueFvPatchField<Type>(*this)
+                new surfaceNormalUniformFixedValueFvPatchVectorField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        uniformFixedValueFvPatchField
+        surfaceNormalUniformFixedValueFvPatchVectorField
         (
-            const uniformFixedValueFvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const surfaceNormalUniformFixedValueFvPatchVectorField&,
+            const DimensionedField<vector, volMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type>> clone
+        virtual tmp<fvPatchVectorField> clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<vector, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type>>
+            return tmp<fvPatchVectorField>
             (
-                new uniformFixedValueFvPatchField<Type>(*this, iF)
+                new surfaceNormalUniformFixedValueFvPatchVectorField
+                (
+                    *this,
+                    iF
+                )
             );
         }
 
 
     // Member functions
 
-        //- Update the coefficients associated with the patch field
-        virtual void updateCoeffs();
+        // Evaluation functions
+
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
+
 
         //- Write
         virtual void write(Ostream&) const;
@@ -170,12 +170,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "uniformFixedValueFvPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
