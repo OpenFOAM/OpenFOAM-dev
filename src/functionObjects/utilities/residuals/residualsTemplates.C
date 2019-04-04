@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "residuals.H"
 #include "volFields.H"
+#include "Residuals.H"
 #include "ListOps.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -63,13 +64,11 @@ void Foam::functionObjects::residuals::writeResidual(const word& fieldName)
 
     if (obr_.foundObject<fieldType>(fieldName))
     {
-        const Foam::dictionary& solverDict = mesh_.solverPerformanceDict();
-
-        if (solverDict.found(fieldName))
+        if (Residuals<Type>::found(mesh_, fieldName))
         {
-            const List<SolverPerformance<Type>> sp
+            const DynamicList<SolverPerformance<Type>>& sp
             (
-                solverDict.lookup(fieldName)
+                Residuals<Type>::field(mesh_, fieldName)
             );
 
             const Type& residual = sp.first().initialResidual();

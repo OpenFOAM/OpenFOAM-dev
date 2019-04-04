@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvScalarMatrix.H"
+#include "Residuals.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -127,7 +128,7 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::fvSolver::solve
 
     psi.correctBoundaryConditions();
 
-    psi.mesh().setSolverPerformance(psi.name(), solverPerf);
+    Residuals<scalar>::append(psi.mesh(), solverPerf);
 
     return solverPerf;
 }
@@ -177,7 +178,7 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::solveSegregated
 
     psi.correctBoundaryConditions();
 
-    psi.mesh().setSolverPerformance(psi.name(), solverPerf);
+    Residuals<scalar>::append(psi.mesh(), solverPerf);
 
     return solverPerf;
 }

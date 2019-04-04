@@ -709,5 +709,6 @@ $(writers)/xmgrGraph/xmgrGraph.C
 $(writers)/jplotGraph/jplotGraph.C
 
 meshes/data/data.C
+meshes/Residuals/residuals.C
 
 LIB = $(FOAM_LIBBIN)/libOpenFOAM

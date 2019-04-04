@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "LduMatrix.H"
 #include "diagTensorField.H"
+#include "Residuals.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -209,7 +210,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
 
     psi.correctBoundaryConditions();
 
-    psi.mesh().setSolverPerformance(psi.name(), solverPerfVec);
+    Residuals<Type>::append(psi.mesh(), solverPerfVec);
 
     return solverPerfVec;
 }
@@ -269,7 +270,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
 
     psi.correctBoundaryConditions();
 
-    psi.mesh().setSolverPerformance(psi.name(), solverPerf);
+    Residuals<Type>::append(psi.mesh(), solverPerf);
 
     return solverPerf;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,23 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::data
+    Foam::Residuals
 
 Description
-    Database for solution and other reduced data.
-
-    fvMesh is derived from data so that all fields have access to the data from
-    the mesh reference they hold.
+    MeshObject to store the solver performance residuals of all the fields
+    of the type it is instantiated on.
 
 SourceFiles
-    data.C
+    Residuals.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef data_H
-#define data_H
+#ifndef Residuals_H
+#define Residuals_H
 
-#include "IOdictionary.H"
+#include "MeshObject.H"
+#include "polyMesh.H"
+#include "solverPerformance.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,38 +46,78 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class data Declaration
+                         Class Residuals Declaration
 \*---------------------------------------------------------------------------*/
 
-class data
+template<class Type>
+class Residuals
 :
-    public IOdictionary
+    public MeshObject<polyMesh, GeometricMeshObject, Residuals<Type>>,
+    public HashTable<DynamicList<SolverPerformance<Type>>>
 {
+    // Private data
+
+        //- Previously used time-index, used for reset between iterations
+        mutable label prevTimeIndex_;
+
+
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        data(const data&);
+        Residuals(const Residuals<Type>&);
 
         //- Disallow default bitwise assignment
-        void operator=(const data&);
+        void operator=(const Residuals<Type>&);
 
 
 public:
 
-    //- Debug switch
-    static int debug;
+    //- Runtime type information
+    TypeName("residuals");
 
 
     // Constructors
 
-        //- Construct for objectRegistry
-        data(const objectRegistry& obr);
+        //- Construct for given mesh
+        Residuals(const polyMesh& mesh);
+
+
+    // Member Functions
+
+        //- Return the list of field names of the particular type
+        //  for which residuals are stored
+        static List<word> fieldNames(const polyMesh& mesh);
+
+        //- Return true if residuals for the given field are stored
+        static bool found(const polyMesh& mesh, const word& fieldName);
+
+        //- Return the list of solver performance residuals for the given field
+        static const DynamicList<SolverPerformance<Type>>& field
+        (
+            const polyMesh& mesh,
+            const word& fieldName
+        );
+
+        //- Append the given solver performance residuals
+        //  in the corresponding list
+        static void append
+        (
+            const polyMesh& mesh,
+            const SolverPerformance<Type>&
+        );
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "Residuals.C"
+#endif
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

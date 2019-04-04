@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,55 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "data.H"
-#include "Time.H"
-#include "solverPerformance.H"
+#include "Residuals.H"
+#include "fieldTypes.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::data::setSolverPerformance
-(
-    const word& name,
-    const SolverPerformance<Type>& sp
-) const
+#define makeResiduals(Type)                                                    \
+    defineTemplateTypeNameAndDebug(Residuals<Type>, 0);
+
+namespace Foam
 {
-    dictionary& dict = const_cast<dictionary&>(solverPerformanceDict());
-
-    // Use a DynamicList to improve performance of the append
-    DynamicList<SolverPerformance<Type>> perfs;
-
-    const label timeIndex =
-        this->time().subCycling()
-      ? this->time().prevTimeState().timeIndex()
-      : this->time().timeIndex();
-
-    if (prevTimeIndex_ != timeIndex)
-    {
-        // Reset solver performance between iterations
-        prevTimeIndex_ = timeIndex;
-        dict.clear();
-    }
-    else
-    {
-        dict.readIfPresent(name, perfs);
-    }
-
-    // Append to list
-    perfs.append(sp);
-
-    dict.set(name, perfs);
+    makeResiduals(scalar);
+    makeResiduals(vector);
+    makeResiduals(sphericalTensor);
+    makeResiduals(symmTensor);
+    makeResiduals(tensor);
 }
-
-
-template<class Type>
-void Foam::data::setSolverPerformance
-(
-    const SolverPerformance<Type>& sp
-) const
-{
-    setSolverPerformance(sp.fieldName(), sp);
-}
-
 
 // ************************************************************************* //

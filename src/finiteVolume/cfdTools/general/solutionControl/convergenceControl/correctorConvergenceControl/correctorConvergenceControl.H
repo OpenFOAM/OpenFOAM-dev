@@ -93,7 +93,6 @@ protected:
         (
             const fvMesh& mesh,
             const word& fieldName,
-            ITstream& data,
             label& n
         );
 
@@ -107,7 +106,6 @@ protected:
         (
             const fvMesh& mesh,
             const word& fieldName,
-            ITstream& data,
             label& n
         );
 

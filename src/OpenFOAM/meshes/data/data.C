@@ -44,19 +44,8 @@ Foam::data::data(const objectRegistry& obr)
             IOobject::NO_READ,
             IOobject::NO_WRITE
         )
-    ),
-    prevTimeIndex_(-1)
-{
-    set("solverPerformance", dictionary());
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::dictionary& Foam::data::solverPerformanceDict() const
-{
-    return subDict("solverPerformance");
-}
+    )
+{}
 
 
 // ************************************************************************* //

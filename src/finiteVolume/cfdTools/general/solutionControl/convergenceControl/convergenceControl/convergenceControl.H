@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,10 @@ public:
 
     // Static Functions
 
+        //- Get the list of names of the fields
+        //  for which residual data is available
+        static DynamicList<word> getFieldNames(const fvMesh& mesh);
+
         //- Get the initial residuals for the first and the i-th solves in this
         //  time-step
         static void getInitialResiduals
@@ -72,7 +76,6 @@ public:
             const fvMesh& mesh,
             const word& fieldName,
             const label solvei,
-            ITstream& data,
             scalar& r0,
             scalar& r
         );
@@ -90,6 +93,14 @@ public:
             const bool useRegEx=true
         );
 
+        //- Append the of names of the fields of this Type to the given list
+        template<class Type>
+        static void getFieldTypeNames
+        (
+            const fvMesh& mesh,
+            DynamicList<word>& fieldNames
+        );
+
         //- Get the initial residuals for the first and the i-th solves in this
         //  time-step
         template<class Type>
@@ -98,7 +109,6 @@ public:
             const fvMesh& mesh,
             const word& fieldName,
             const label solvei,
-            ITstream& data,
             scalar& r0,
             scalar& r
         );
