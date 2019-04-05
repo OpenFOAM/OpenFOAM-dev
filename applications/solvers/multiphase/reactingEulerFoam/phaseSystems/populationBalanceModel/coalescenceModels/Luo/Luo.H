@@ -28,7 +28,7 @@ Description
     Model of Luo (1993). The coalescence rate is calculated by
 
     \f[
-       &\frac{\pi}{4} (d_i + d_j)^2 u_{ij}
+        \frac{\pi}{4} (d_i + d_j)^2 u_{ij}
         \mathrm{exp}
         \left[
           - C_1
