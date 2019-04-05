@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,17 +174,11 @@ Foam::fvFieldDecomposer::decomposeField
             procMesh_.nInternalFaces()
         )
     );
+    // Ignore any flipping
     forAll(mapAddr, i)
     {
-        mapAddr[i] -= 1;
+        mapAddr[i] = mag(mapAddr[i])-1;
     }
-
-    // Create and map the internal field values
-    Field<Type> internalField
-    (
-        field.primitiveField(),
-        mapAddr
-    );
 
     // Problem with addressing when a processor patch picks up both internal
     // faces and faces from cyclic boundaries. This is a bit of a hack, but
