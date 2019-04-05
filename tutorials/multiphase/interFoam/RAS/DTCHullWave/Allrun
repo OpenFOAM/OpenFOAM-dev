@@ -23,11 +23,11 @@ done
 
 runApplication snappyHexMesh -overwrite
 
+runApplication renumberMesh -overwrite
+
 runApplication setWaves
 
 runApplication decomposePar
-
-runParallel renumberMesh -overwrite
 
 runParallel $(getApplication)
 
