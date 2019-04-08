@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,7 +224,7 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    globalObject_(false),
+    global_(false),
     objState_(GOOD)
 {
     if (objectRegistry::debug)
@@ -246,7 +246,7 @@ Foam::IOobject::IOobject
     readOption ro,
     writeOption wo,
     bool registerObject,
-    bool globalObject
+    bool global
 )
 :
     name_(name),
@@ -258,7 +258,7 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    globalObject_(globalObject),
+    global_(global),
     objState_(GOOD)
 {
     if (objectRegistry::debug)
@@ -278,7 +278,7 @@ Foam::IOobject::IOobject
     readOption ro,
     writeOption wo,
     bool registerObject,
-    bool globalObject
+    bool global
 )
 :
     name_(),
@@ -290,7 +290,7 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    globalObject_(globalObject),
+    global_(global),
     objState_(GOOD)
 {
     if (!fileNameComponents(path, instance_, local_, name_))
@@ -325,7 +325,7 @@ Foam::IOobject::IOobject
     rOpt_(io.rOpt_),
     wOpt_(io.wOpt_),
     registerObject_(io.registerObject_),
-    globalObject_(io.globalObject_),
+    global_(io.global_),
     objState_(io.objState_)
 {}
 
@@ -345,7 +345,7 @@ Foam::IOobject::IOobject
     rOpt_(io.rOpt_),
     wOpt_(io.wOpt_),
     registerObject_(io.registerObject_),
-    globalObject_(io.globalObject_),
+    global_(io.global_),
     objState_(io.objState_)
 {}
 
@@ -460,7 +460,7 @@ void Foam::IOobject::operator=(const IOobject& io)
     local_ = io.local_;
     rOpt_ = io.rOpt_;
     wOpt_ = io.wOpt_;
-    globalObject_ = io.globalObject_;
+    global_ = io.global_;
     objState_ = io.objState_;
 }
 

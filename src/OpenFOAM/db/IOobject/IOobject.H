@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,7 +163,7 @@ private:
         bool registerObject_;
 
         //- Is object same for all processors
-        bool globalObject_;
+        bool global_;
 
         //- IOobject state
         objectState objState_;
@@ -238,7 +238,7 @@ public:
             readOption r=NO_READ,
             writeOption w=NO_WRITE,
             bool registerObject=true,
-            bool globalObject = false
+            bool global = false
         );
 
         //- Construct from path, registry, io options
@@ -250,7 +250,7 @@ public:
             readOption r=NO_READ,
             writeOption w=NO_WRITE,
             bool registerObject=true,
-            bool globalObject = false
+            bool global = false
         );
 
         //- Construct from copy resetting registry
@@ -343,15 +343,17 @@ public:
             }
 
             //- Is object same for all processors
-            bool& globalObject()
+            bool global(const bool gbl)
             {
-                return globalObject_;
+                const bool global0 = global_;
+                global_ = gbl;
+                return global0;
             }
 
             //- Is object same for all processors
-            bool globalObject() const
+            virtual bool global() const
             {
-                return globalObject_;
+                return global_;
             }
 
 

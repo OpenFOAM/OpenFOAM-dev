@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -294,15 +294,6 @@ public:
 
             //- Write using setting from DB
             virtual bool write(const bool valid = true) const;
-
-
-        // Other
-
-            //- Is object global
-            virtual bool global() const
-            {
-                return false;
-            }
 
 
     // Member operators
