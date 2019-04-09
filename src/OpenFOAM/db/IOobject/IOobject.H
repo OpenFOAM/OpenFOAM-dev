@@ -162,9 +162,6 @@ private:
         //- Register object created from this IOobject with registry if true
         bool registerObject_;
 
-        //- Is object same for all processors
-        bool global_;
-
         //- IOobject state
         objectState objState_;
 
@@ -237,8 +234,7 @@ public:
             const objectRegistry& registry,
             readOption r=NO_READ,
             writeOption w=NO_WRITE,
-            bool registerObject=true,
-            bool global = false
+            bool registerObject=true
         );
 
         //- Construct from path, registry, io options
@@ -249,8 +245,7 @@ public:
             const objectRegistry& registry,
             readOption r=NO_READ,
             writeOption w=NO_WRITE,
-            bool registerObject=true,
-            bool global = false
+            bool registerObject=true
         );
 
         //- Construct from copy resetting registry
@@ -340,20 +335,6 @@ public:
             bool registerObject() const
             {
                 return registerObject_;
-            }
-
-            //- Is object same for all processors
-            bool global(const bool gbl)
-            {
-                const bool global0 = global_;
-                global_ = gbl;
-                return global0;
-            }
-
-            //- Is object same for all processors
-            virtual bool global() const
-            {
-                return global_;
             }
 
 

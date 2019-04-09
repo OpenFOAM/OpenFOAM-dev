@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,15 +40,13 @@ float Foam::regIOobject::fileModificationSkew
 (
     Foam::debug::floatOptimisationSwitch("fileModificationSkew", 30)
 );
+
 registerOptSwitch
 (
     "fileModificationSkew",
     float,
     Foam::regIOobject::fileModificationSkew
 );
-
-
-bool Foam::regIOobject::masterOnlyReading = false;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -448,6 +446,12 @@ bool Foam::regIOobject::headerOk()
     }
 
     return ok;
+}
+
+
+bool Foam::regIOobject::global() const
+{
+    return false;
 }
 
 

@@ -624,21 +624,9 @@ bool Foam::fileOperations::uncollatedFileOperation::read
                 << " from file " << endl;
         }
 
-        // Set flag for e.g. codeStream
-        const bool oldGlobal = io.global(masterOnly);
-
-        // If codeStream originates from dictionary which is
-        // not IOdictionary we have a problem so use global
-        const bool oldFlag = regIOobject::masterOnlyReading;
-        regIOobject::masterOnlyReading = masterOnly;
-
         // Read file
         ok = io.readData(io.readStream(typeName));
         io.close();
-
-        // Restore flags
-        io.global(oldGlobal);
-        regIOobject::masterOnlyReading = oldFlag;
 
         if (debug)
         {

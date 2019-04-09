@@ -39,7 +39,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<IOobject>& ip)
         << "local:" << token::SPACE << io.local() << token::SPACE
         << "readOpt:" << token::SPACE << io.readOpt() << token::SPACE
         << "writeOpt:" << token::SPACE << io.writeOpt() << token::SPACE
-        << "global:" << token::SPACE << io.global() << token::SPACE
         << io.path() << endl;
 
     return os;

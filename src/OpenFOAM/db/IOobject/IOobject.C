@@ -224,7 +224,6 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    global_(false),
     objState_(GOOD)
 {
     if (objectRegistry::debug)
@@ -245,8 +244,7 @@ Foam::IOobject::IOobject
     const objectRegistry& registry,
     readOption ro,
     writeOption wo,
-    bool registerObject,
-    bool global
+    bool registerObject
 )
 :
     name_(name),
@@ -258,7 +256,6 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    global_(global),
     objState_(GOOD)
 {
     if (objectRegistry::debug)
@@ -277,8 +274,7 @@ Foam::IOobject::IOobject
     const objectRegistry& registry,
     readOption ro,
     writeOption wo,
-    bool registerObject,
-    bool global
+    bool registerObject
 )
 :
     name_(),
@@ -290,7 +286,6 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    global_(global),
     objState_(GOOD)
 {
     if (!fileNameComponents(path, instance_, local_, name_))
@@ -325,7 +320,6 @@ Foam::IOobject::IOobject
     rOpt_(io.rOpt_),
     wOpt_(io.wOpt_),
     registerObject_(io.registerObject_),
-    global_(io.global_),
     objState_(io.objState_)
 {}
 
@@ -345,7 +339,6 @@ Foam::IOobject::IOobject
     rOpt_(io.rOpt_),
     wOpt_(io.wOpt_),
     registerObject_(io.registerObject_),
-    global_(io.global_),
     objState_(io.objState_)
 {}
 
@@ -460,7 +453,6 @@ void Foam::IOobject::operator=(const IOobject& io)
     local_ = io.local_;
     rOpt_ = io.rOpt_;
     wOpt_ = io.wOpt_;
-    global_ = io.global_;
     objState_ = io.objState_;
 }
 

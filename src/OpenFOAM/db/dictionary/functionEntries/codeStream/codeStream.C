@@ -106,12 +106,12 @@ bool Foam::functionEntries::codeStream::doingMasterOnlyReading
         if (debug)
         {
             Pout<< "codeStream : not a baseIOdictionary:" << dict.name()
-                << " master-only-reading:" << regIOobject::masterOnlyReading
+                << " master-only-reading:" << false
                 << endl;
         }
 
-        // Fall back to regIOobject::masterOnlyReading
-        return regIOobject::masterOnlyReading;
+        // Fall back to false
+        return false;
     }
 }
 
