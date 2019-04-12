@@ -46,6 +46,7 @@ Description
 #include "ReadFields.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "pointFields.H"
 #include "fvMeshMapper.H"
 #include "faceSelection.H"
 
@@ -504,7 +505,7 @@ int main(int argc, char *argv[])
 
     #include "readVolFields.H"
     #include "readSurfaceFields.H"
-    // #include "readPointFields.H"
+    #include "readPointFields.H"
 
 
     // Creating (if necessary) faceZones

@@ -148,7 +148,12 @@ public:
             //- Reorders elements. Ordering does not have to be done in
             //  ascending or descending order. Reordering has to be unique.
             //  (is shuffle)
-            void reorder(const labelUList&);
+            void reorder(const labelUList& oldToNew);
+
+            //- Reorders elements. Ordering does not have to be done in
+            //  ascending or descending order. Reordering has to be unique.
+            //  Note: can create unset elements
+            void shuffle(const labelUList& newToOld);
 
 
     // Member operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,11 +102,21 @@ public:
         //- Find patch indices given a name
         labelList findIndices(const keyType&, const bool useGroups) const;
 
-        //- Correct polyBoundaryMesh after moving points
+        //- Correct pointBoundaryMesh after moving points
         void movePoints(const pointField&);
 
-        //- Correct polyBoundaryMesh after topology update
+        //- Correct pointBoundaryMesh after topology update
         void updateMesh();
+
+        //- Create pointBoundaryMesh from polyBoundaryMesh
+        void reset(const polyBoundaryMesh&);
+
+        //- Reorders patches. Ordering does not have to be done in
+        //  ascending or descending order. Reordering has to be unique.
+        //  (is shuffle). If validBoundary calls updateMesh()
+        //  after reordering to recalculate data (so call needs to be parallel
+        //  sync in that case)
+        void shuffle(const labelUList& newToOld, const bool validBoundary);
 };
 
 

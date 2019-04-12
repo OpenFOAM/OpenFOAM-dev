@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,6 +237,25 @@ void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
             FatalErrorInFunction
                 << "Element " << i << " not set after reordering with type "
                 << typeid(T).name() << nl << abort(FatalError);
+        }
+    }
+
+    this->ptrs_.transfer(newPtrs_);
+}
+
+
+template<class T>
+void Foam::PtrList<T>::shuffle(const labelUList& newToOld)
+{
+    List<T*> newPtrs_(newToOld.size(), reinterpret_cast<T*>(0));
+
+    forAll(newToOld, newI)
+    {
+        label oldI = newToOld[newI];
+
+        if (oldI >= 0 && oldI < this->size())
+        {
+            newPtrs_[newI] = this->ptrs_[oldI];
         }
     }
 

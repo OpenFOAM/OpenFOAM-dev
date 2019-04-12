@@ -1006,6 +1006,127 @@ void Foam::polyMesh::addZones
 }
 
 
+void Foam::polyMesh::reorderPatches
+(
+    const labelUList& newToOld,
+    const bool validBoundary
+)
+{
+    // Clear local fields and e.g. polyMesh parallelInfo. Do not clearGeom
+    // so we keep PatchMeshObjects intact.
+    boundary_.clearGeom();
+    clearAddressing(true);
+    // Clear all but PatchMeshObjects
+    meshObject::clearUpto
+    <
+        polyMesh,
+        TopologicalMeshObject,
+        PatchMeshObject
+    >
+    (
+        *this
+    );
+    meshObject::clearUpto
+    <
+        pointMesh,
+        TopologicalMeshObject,
+        PatchMeshObject
+    >
+    (
+        *this
+    );
+
+    boundary_.shuffle(newToOld, validBoundary);
+
+    // Warn mesh objects
+    meshObject::reorderPatches<polyMesh>(*this, newToOld, validBoundary);
+    meshObject::reorderPatches<pointMesh>(*this, newToOld, validBoundary);
+}
+
+
+void Foam::polyMesh::addPatch
+(
+    const label insertPatchi,
+    const polyPatch& patch,
+    const dictionary& patchFieldDict,
+    const word& defaultPatchFieldType,
+    const bool validBoundary
+)
+{
+    const label sz = boundary_.size();
+
+    label startFacei = nFaces();
+    if (insertPatchi < sz)
+    {
+        startFacei = boundary_[insertPatchi].start();
+    }
+
+    // Create reordering list
+    // patches before insert position stay as is
+    // patches after insert position move one up
+    labelList newToOld(boundary_.size()+1);
+    for (label i = 0; i < insertPatchi; i++)
+    {
+        newToOld[i] = i;
+    }
+    for (label i = insertPatchi; i < sz; i++)
+    {
+        newToOld[i+1] = i;
+    }
+    newToOld[insertPatchi] = -1;
+
+    reorderPatches(newToOld, false);
+
+    // Clear local fields and e.g. polyMesh parallelInfo.
+    //clearGeom();  // would clear out pointMesh as well
+    boundary_.clearGeom();
+    clearAddressing(true);
+
+    // Clear all but PatchMeshObjects
+    meshObject::clearUpto
+    <
+        polyMesh,
+        TopologicalMeshObject,
+        PatchMeshObject
+    >
+    (
+        *this
+    );
+    meshObject::clearUpto
+    <
+        pointMesh,
+        TopologicalMeshObject,
+        PatchMeshObject
+    >
+    (
+        *this
+    );
+
+
+    // Insert polyPatch
+    boundary_.set
+    (
+        insertPatchi,
+        patch.clone
+        (
+            boundary_,
+            insertPatchi,   // index
+            0,              // size
+            startFacei      // start
+        )
+    );
+
+    if (validBoundary)
+    {
+        boundary_.updateMesh();
+    }
+
+    // Warn mesh objects
+    meshObject::addPatch<polyMesh>(*this, insertPatchi);
+    meshObject::addPatch<pointMesh>(*this, insertPatchi);
+}
+
+
 const Foam::pointField& Foam::polyMesh::points() const
 {
     if (clearedPrimitives_)

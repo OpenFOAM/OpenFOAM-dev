@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,7 +197,10 @@ void Foam::polyBoundaryMesh::clearGeom()
 {
     forAll(*this, patchi)
     {
-        operator[](patchi).clearGeom();
+        if (this->set(patchi))
+        {
+            operator[](patchi).clearGeom();
+        }
     }
 }
 
@@ -210,7 +213,10 @@ void Foam::polyBoundaryMesh::clearAddressing()
 
     forAll(*this, patchi)
     {
-        operator[](patchi).clearAddressing();
+        if (this->set(patchi))
+        {
+            operator[](patchi).clearAddressing();
+        }
     }
 }
 
@@ -1100,21 +1106,24 @@ void Foam::polyBoundaryMesh::updateMesh()
 }
 
 
-void Foam::polyBoundaryMesh::reorder
+void Foam::polyBoundaryMesh::shuffle
 (
-    const labelUList& oldToNew,
+    const labelUList& newToOld,
     const bool validBoundary
 )
 {
     // Change order of patches
-    polyPatchList::reorder(oldToNew);
+    polyPatchList::shuffle(newToOld);
 
     // Adapt indices
     polyPatchList& patches = *this;
 
     forAll(patches, patchi)
     {
-        patches[patchi].index() = patchi;
+        if (patches.set(patchi))
+        {
+            patches[patchi].index() = patchi;
+        }
     }
 
     if (validBoundary)

@@ -1008,25 +1008,24 @@ void Foam::snappyLayerDriver::determineSidePatches
 
         for (label patchi = nOldPatches; patchi < nPatches; patchi++)
         {
-            label nbrProci = patchToNbrProc[patchi];
-            word name
+            const label nbrProci = patchToNbrProc[patchi];
+            const label procPatchi = mesh.boundaryMesh().size();
+            const processorPolyPatch pp
             (
-                processorPolyPatch::newName(Pstream::myProcNo(), nbrProci)
+                0,          // size
+                0,          // start
+                procPatchi, // index
+                mesh.boundaryMesh(),
+                Pstream::myProcNo(),
+                nbrProci
             );
-
-            dictionary patchDict;
-            patchDict.add("type", processorPolyPatch::typeName);
-            patchDict.add("myProcNo", Pstream::myProcNo());
-            patchDict.add("neighbProcNo", nbrProci);
-            patchDict.add("nFaces", 0);
-            patchDict.add("startFace", mesh.nFaces());
-
-            label procPatchi = meshRefiner_.appendPatch
+            mesh.addPatch
             (
-                mesh,
-                mesh.boundaryMesh().size(), // new patch index
-                name,
-                patchDict
+                procPatchi, // new patch index
+                pp,
+                dictionary(),   // patchField dict
+                fvPatchField<scalar>::calculatedType(),
+                false
             );
             wantedToAddedPatch.insert(patchi, procPatchi);
         }

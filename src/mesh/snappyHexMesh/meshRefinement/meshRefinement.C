@@ -1970,221 +1970,62 @@ void Foam::meshRefinement::calculateEdgeWeights
 }
 
 
-Foam::label Foam::meshRefinement::appendPatch
-(
-    fvMesh& mesh,
-    const label insertPatchi,
-    const word& patchName,
-    const dictionary& patchDict
-)
-{
-    // Clear local fields and e.g. polyMesh parallelInfo.
-    mesh.clearOut();
-
-    polyBoundaryMesh& polyPatches =
-        const_cast<polyBoundaryMesh&>(mesh.boundaryMesh());
-    fvBoundaryMesh& fvPatches = const_cast<fvBoundaryMesh&>(mesh.boundary());
-
-    label patchi = polyPatches.size();
-
-    // Add polyPatch at the end
-    polyPatches.setSize(patchi+1);
-    polyPatches.set
-    (
-        patchi,
-        polyPatch::New
-        (
-            patchName,
-            patchDict,
-            insertPatchi,
-            polyPatches
-        )
-    );
-    fvPatches.setSize(patchi+1);
-    fvPatches.set
-    (
-        patchi,
-        fvPatch::New
-        (
-            polyPatches[patchi],  // point to newly added polyPatch
-            mesh.boundary()
-        )
-    );
-
-    addPatchFields<volScalarField>
-    (
-        mesh,
-        calculatedFvPatchField<scalar>::typeName
-    );
-    addPatchFields<volVectorField>
-    (
-        mesh,
-        calculatedFvPatchField<vector>::typeName
-    );
-    addPatchFields<volSphericalTensorField>
-    (
-        mesh,
-        calculatedFvPatchField<sphericalTensor>::typeName
-    );
-    addPatchFields<volSymmTensorField>
-    (
-        mesh,
-        calculatedFvPatchField<symmTensor>::typeName
-    );
-    addPatchFields<volTensorField>
-    (
-        mesh,
-        calculatedFvPatchField<tensor>::typeName
-    );
-
-    // Surface fields
-
-    addPatchFields<surfaceScalarField>
-    (
-        mesh,
-        calculatedFvPatchField<scalar>::typeName
-    );
-    addPatchFields<surfaceVectorField>
-    (
-        mesh,
-        calculatedFvPatchField<vector>::typeName
-    );
-    addPatchFields<surfaceSphericalTensorField>
-    (
-        mesh,
-        calculatedFvPatchField<sphericalTensor>::typeName
-    );
-    addPatchFields<surfaceSymmTensorField>
-    (
-        mesh,
-        calculatedFvPatchField<symmTensor>::typeName
-    );
-    addPatchFields<surfaceTensorField>
-    (
-        mesh,
-        calculatedFvPatchField<tensor>::typeName
-    );
-    return patchi;
-}
-
-
-Foam::label Foam::meshRefinement::addPatch
-(
-    fvMesh& mesh,
-    const word& patchName,
-    const dictionary& patchInfo
-)
-{
-    polyBoundaryMesh& polyPatches =
-        const_cast<polyBoundaryMesh&>(mesh.boundaryMesh());
-    fvBoundaryMesh& fvPatches = const_cast<fvBoundaryMesh&>(mesh.boundary());
-
-    const label patchi = polyPatches.findPatchID(patchName);
-    if (patchi != -1)
-    {
-        // Already there
-        return patchi;
-    }
-
-
-    label insertPatchi = polyPatches.size();
-    label startFacei = mesh.nFaces();
-
-    forAll(polyPatches, patchi)
-    {
-        const polyPatch& pp = polyPatches[patchi];
-
-        if (isA<processorPolyPatch>(pp))
-        {
-            insertPatchi = patchi;
-            startFacei = pp.start();
-            break;
-        }
-    }
-
-    dictionary patchDict(patchInfo);
-    patchDict.set("nFaces", 0);
-    patchDict.set("startFace", startFacei);
-
-    // Below is all quite a hack. Feel free to change once there is a better
-    // mechanism to insert and reorder patches.
-
-    label addedPatchi = appendPatch(mesh, insertPatchi, patchName, patchDict);
-
-
-    // Create reordering list
-    // patches before insert position stay as is
-    labelList oldToNew(addedPatchi+1);
-    for (label i = 0; i < insertPatchi; i++)
-    {
-        oldToNew[i] = i;
-    }
-    // patches after insert position move one up
-    for (label i = insertPatchi; i < addedPatchi; i++)
-    {
-        oldToNew[i] = i+1;
-    }
-    // appended patch gets moved to insert position
-    oldToNew[addedPatchi] = insertPatchi;
-
-    // Shuffle into place
-    polyPatches.reorder(oldToNew, true);
-    fvPatches.reorder(oldToNew);
-
-    reorderPatchFields<volScalarField>(mesh, oldToNew);
-    reorderPatchFields<volVectorField>(mesh, oldToNew);
-    reorderPatchFields<volSphericalTensorField>(mesh, oldToNew);
-    reorderPatchFields<volSymmTensorField>(mesh, oldToNew);
-    reorderPatchFields<volTensorField>(mesh, oldToNew);
-    reorderPatchFields<surfaceScalarField>(mesh, oldToNew);
-    reorderPatchFields<surfaceVectorField>(mesh, oldToNew);
-    reorderPatchFields<surfaceSphericalTensorField>(mesh, oldToNew);
-    reorderPatchFields<surfaceSymmTensorField>(mesh, oldToNew);
-    reorderPatchFields<surfaceTensorField>(mesh, oldToNew);
-
-    return insertPatchi;
-}
-
-
 Foam::label Foam::meshRefinement::addMeshedPatch
 (
     const word& name,
     const dictionary& patchInfo
 )
 {
+    const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
+
     label meshedI = findIndex(meshedPatches_, name);
 
     if (meshedI != -1)
     {
         // Already there. Get corresponding polypatch
-        return mesh_.boundaryMesh().findPatchID(name);
+        return pbm.findPatchID(name);
     }
     else
     {
         // Add patch
-        label patchi = addPatch(mesh_, name, patchInfo);
 
-//        dictionary patchDict(patchInfo);
-//        patchDict.set("nFaces", 0);
-//        patchDict.set("startFace", 0);
-//        autoPtr<polyPatch> ppPtr
-//        (
-//            polyPatch::New
-//            (
-//                name,
-//                patchDict,
-//                0,
-//                mesh_.boundaryMesh()
-//            )
-//        );
-//        label patchi = fvMeshTools::addPatch
-//        (
-//            mesh_,
-//            ppPtr(),
-//            dictionary(),       // optional field values
-//            calculatedFvPatchField<scalar>::typeName,
-//            true
-//        );
+        label patchi = pbm.findPatchID(name);
+        if (patchi == -1)
+        {
+            patchi = pbm.size();
+            forAll(pbm, i)
+            {
+                const polyPatch& pp = pbm[i];
+
+                if (isA<processorPolyPatch>(pp))
+                {
+                    patchi = i;
+                    break;
+                }
+            }
+
+            dictionary patchDict(patchInfo);
+            patchDict.set("nFaces", 0);
+            patchDict.set("startFace", 0);
+            autoPtr<polyPatch> ppPtr
+            (
+                polyPatch::New
+                (
+                    name,
+                    patchDict,
+                    0,
+                    pbm
+                )
+            );
+            mesh_.addPatch
+            (
+                patchi,
+                ppPtr(),
+                dictionary(),       // optional field values
+                fvPatchField<scalar>::calculatedType(),
+                true                // validBoundary
+            );
+        }
 
         // Store
         meshedPatches_.append(name);

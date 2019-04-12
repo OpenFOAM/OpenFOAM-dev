@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,19 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::fvMeshAdder::add
     const bool validBoundary
 )
 {
-    mesh0.clearOut();
+    // Store old mesh0 point maps
+    labelListList oldMeshPoints0;
+    const bool havePointMesh =
+        mesh0.foundObject<pointMesh>(pointMesh::typeName);
+    if (havePointMesh)
+    {
+        const polyBoundaryMesh& pbm0 = mesh0.boundaryMesh();
+        oldMeshPoints0.setSize(pbm0.size());
+        forAll(pbm0, patchi)
+        {
+            oldMeshPoints0[patchi] = pbm0[patchi].meshPoints();
+        }
+    }
 
     // Resulting merged mesh (polyMesh only!)
     autoPtr<mapAddedPolyMesh> mapPtr
@@ -101,23 +113,41 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::fvMeshAdder::add
 
     // Do the mapping of the stored fields
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    fvMeshAdder::MapVolFields<scalar>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapVolFields<vector>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapVolFields<sphericalTensor>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapVolFields<symmTensor>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapVolFields<tensor>(mapPtr, mesh0, mesh1);
+    MapVolFields<scalar>(mapPtr, mesh0, mesh1);
+    MapVolFields<vector>(mapPtr, mesh0, mesh1);
+    MapVolFields<sphericalTensor>(mapPtr, mesh0, mesh1);
+    MapVolFields<symmTensor>(mapPtr, mesh0, mesh1);
+    MapVolFields<tensor>(mapPtr, mesh0, mesh1);
 
-    fvMeshAdder::MapSurfaceFields<scalar>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapSurfaceFields<vector>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapSurfaceFields<sphericalTensor>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapSurfaceFields<symmTensor>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapSurfaceFields<tensor>(mapPtr, mesh0, mesh1);
+    MapSurfaceFields<scalar>(mapPtr, mesh0, mesh1);
+    MapSurfaceFields<vector>(mapPtr, mesh0, mesh1);
+    MapSurfaceFields<sphericalTensor>(mapPtr, mesh0, mesh1);
+    MapSurfaceFields<symmTensor>(mapPtr, mesh0, mesh1);
+    MapSurfaceFields<tensor>(mapPtr, mesh0, mesh1);
 
-    fvMeshAdder::MapDimFields<scalar>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapDimFields<vector>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapDimFields<sphericalTensor>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapDimFields<symmTensor>(mapPtr, mesh0, mesh1);
-    fvMeshAdder::MapDimFields<tensor>(mapPtr, mesh0, mesh1);
+    if (havePointMesh)
+    {
+        // Recreate point mesh
+        const pointMesh& pointMesh0 = pointMesh::New(mesh0);
+
+        MapPointFields<scalar>(mapPtr, pointMesh0, oldMeshPoints0, mesh1);
+        MapPointFields<vector>(mapPtr, pointMesh0, oldMeshPoints0, mesh1);
+        MapPointFields<sphericalTensor>
+        (
+            mapPtr,
+            pointMesh0,
+            oldMeshPoints0,
+            mesh1
+        );
+        MapPointFields<symmTensor>(mapPtr, pointMesh0, oldMeshPoints0, mesh1);
+        MapPointFields<tensor>(mapPtr, pointMesh0, oldMeshPoints0, mesh1);
+    }
+
+    MapDimFields<scalar>(mapPtr, mesh0, mesh1);
+    MapDimFields<vector>(mapPtr, mesh0, mesh1);
+    MapDimFields<sphericalTensor>(mapPtr, mesh0, mesh1);
+    MapDimFields<symmTensor>(mapPtr, mesh0, mesh1);
+    MapDimFields<tensor>(mapPtr, mesh0, mesh1);
 
     return mapPtr;
 }

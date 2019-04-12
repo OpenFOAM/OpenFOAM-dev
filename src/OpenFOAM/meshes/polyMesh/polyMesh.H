@@ -587,6 +587,25 @@ public:
                 const List<cellZone*>& cz
             );
 
+            //- Add/insert single patch. If validBoundary the new situation
+            //  is consistent across processors.
+            virtual void addPatch
+            (
+                const label insertPatchi,
+                const polyPatch& patch,
+                const dictionary& patchFieldDict,
+                const word& defaultPatchFieldType,
+                const bool validBoundary
+            );
+
+            //- Reorder and trim existing patches. If validBoundary the new
+            //  situation is consistent across processors
+            virtual void reorderPatches
+            (
+                const labelUList& newToOld,
+                const bool validBoundary
+            );
+
             //- Update the mesh based on the mesh files saved in
             //  time directories
             virtual readUpdateState readUpdate();

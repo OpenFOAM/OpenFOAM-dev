@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,7 @@ Description
     - MoveableMeshObject: mesh object to be updated in movePoints
     - UpdateableMeshObject: mesh object to be updated in updateMesh or
         movePoints
+    - PatchMeshObject: mesh object to be additionally updated patch changes
 
 Note
     movePoints must be provided for MeshObjects of type MoveableMeshObject
@@ -184,6 +185,16 @@ public:
         template<class Mesh>
         static void updateMesh(objectRegistry&, const mapPolyMesh&);
 
+        template<class Mesh>
+        static void addPatch(objectRegistry&, const label patchi);
+        template<class Mesh>
+        static void reorderPatches
+        (
+            objectRegistry&,
+            const labelUList& newToOld,
+            const bool validBoundary
+        );
+
         template<class Mesh, template<class> class MeshObjectType>
         static void clear(objectRegistry&);
 
@@ -272,6 +283,35 @@ public:
     {}
 
     virtual void updateMesh(const mapPolyMesh& mpm) = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                    Class PatchMeshObject Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Mesh>
+class PatchMeshObject
+:
+    public UpdateableMeshObject<Mesh>
+{
+public:
+
+    PatchMeshObject(const word& typeName, const objectRegistry& obr)
+    :
+        UpdateableMeshObject<Mesh>(typeName, obr)
+    {}
+
+    //- Reordered/removed trailing patches. If validBoundary call is parallel
+    //  synced and all add the same patch with same settings
+    virtual void reorderPatches
+    (
+        const labelUList& newToOld,
+        const bool validBoundary
+    ) = 0;
+
+    //- Inserted patch at patchi
+    virtual void addPatch(const label patchi) = 0;
 };
 
 

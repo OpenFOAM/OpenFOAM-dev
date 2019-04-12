@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -344,6 +344,25 @@ public:
 
             //- Map all fields in time using given map.
             virtual void mapFields(const mapPolyMesh& mpm);
+
+            //- Add/insert single patch. If validBoundary the new situation
+            //  is consistent across processors.
+            virtual void addPatch
+            (
+                const label insertPatchi,
+                const polyPatch& patch,
+                const dictionary& patchFieldDict,
+                const word& defaultPatchFieldType,
+                const bool validBoundary
+            );
+
+            //- Reorder and trim existing patches. If validBoundary the new
+            //  situation is consistent across processors
+            virtual void reorderPatches
+            (
+                const labelUList& newToOld,
+                const bool validBoundary
+            );
 
             //- Remove boundary patches. Warning: fvPatchFields hold ref to
             //  these fvPatches.
