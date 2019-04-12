@@ -2108,6 +2108,13 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 << " Reading global object " << io.name() << endl;
         }
 
+        // Now that we have an IOobject path use it to detect & cache
+        // processor directory naming
+        (void)lookupProcessorsPath(io.objectPath());
+
+        // Trigger caching of times
+        (void)findTimes(io.time().path(), io.time().constant());
+
         bool ok = false;
         if (Pstream::master())  // comm_))
         {

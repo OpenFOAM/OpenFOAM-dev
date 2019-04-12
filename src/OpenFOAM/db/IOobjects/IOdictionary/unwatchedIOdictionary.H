@@ -75,12 +75,10 @@ public:
 
     // Member functions
 
-        //- Is object global
-        //  Should be true but the global reading structures are not complete
-        //  at the point of reading the controlDict
+        //- This object is global
         virtual bool global() const
         {
-            return false;
+            return true;
         }
 
         //- Return complete path + object name if the file exists
