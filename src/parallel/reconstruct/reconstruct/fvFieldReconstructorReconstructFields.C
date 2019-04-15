@@ -379,12 +379,12 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
             // take care of the face direction offset trick.
             labelList curAddr(procInternalField.size());
 
-            forAll(procInternalField, addrI)
+            forAll(procInternalField, i)
             {
-                curAddr[addrI] = mag(faceMap[addrI]) - 1;
-                if (faceMap[addrI] < 0)
+                curAddr[i] = mag(faceMap[i]) - 1;
+                if (faceMap[i] < 0)
                 {
-                    procInternalField[addrI] = -procInternalField[addrI];
+                    procInternalField[i] = -procInternalField[i];
                 }
             }
 

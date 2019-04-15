@@ -166,7 +166,7 @@ Foam::fvFieldDecomposer::decomposeField
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field
 ) const
 {
-    labelList mapAddr
+    labelField mapAddr
     (
         labelList::subList
         (
@@ -174,11 +174,33 @@ Foam::fvFieldDecomposer::decomposeField
             procMesh_.nInternalFaces()
         )
     );
-    // Ignore any flipping
-    forAll(mapAddr, i)
+
+    Field<Type> internalField(procMesh_.nInternalFaces());
+
+    if (pTraits<Type>::nComponents == 1)
     {
-        mapAddr[i] = mag(mapAddr[i])-1;
+        // Assume all scalar surfaceFields are oriented flux fields
+        // and flip the sign of the flux if necessary
+
+        forAll(mapAddr, i)
+        {
+            if (mapAddr[i] < 0)
+            {
+                internalField[i] = -field[mag(mapAddr[i]) - 1];
+            }
+            else
+            {
+                internalField[i] = field[mapAddr[i] - 1];
+            }
+        }
     }
+    else
+    {
+        // Ignore face flipping
+        internalField.map(field.primitiveField(), mag(mapAddr) - 1);
+    }
+
+    // internalField.map(field.primitiveField(), mag(mapAddr) - 1);
 
     // Problem with addressing when a processor patch picks up both internal
     // faces and faces from cyclic boundaries. This is a bit of a hack, but
@@ -236,7 +258,7 @@ Foam::fvFieldDecomposer::decomposeField
             ),
             procMesh_,
             field.dimensions(),
-            Field<Type>(field.primitiveField(), mapAddr),
+            internalField,
             patchFields
         )
     );
