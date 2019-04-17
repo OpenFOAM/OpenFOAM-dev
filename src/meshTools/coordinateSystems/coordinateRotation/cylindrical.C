@@ -51,6 +51,23 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
+Foam::tensor Foam::cylindrical::R(const vector& dir) const
+{
+    const vector e3 = e3_/mag(e3_);
+    const vector r = dir - (dir & e3)*e3;
+
+    if (mag(r) < small)
+    {
+        // If the cell centre is on the axis choose any radial direction
+        return axesRotation(e3, perpendicular(e3)).R();
+    }
+    else
+    {
+        return axesRotation(e3, dir).R();
+    }
+}
+
+
 void Foam::cylindrical::init
 (
     const objectRegistry& obr,
@@ -58,34 +75,28 @@ void Foam::cylindrical::init
 )
 {
     const polyMesh& mesh = refCast<const polyMesh>(obr);
+
+    Rptr_.reset(new tensorField(cells.size()));
+
+    updateCells(mesh, cells);
+}
+
+
+void Foam::cylindrical::init(const objectRegistry& obr)
+{
+    const polyMesh& mesh = refCast<const polyMesh>(obr);
+
+    Rptr_.reset(new tensorField(mesh.nCells()));
+
     const vectorField& cc = mesh.cellCentres();
 
-    if (cells.size())
+    tensorField& R = Rptr_();
+    forAll(cc, celli)
     {
-        Rptr_.reset(new tensorField(cells.size()));
+        vector dir = cc[celli] - origin_;
+        dir /= mag(dir) + vSmall;
 
-        tensorField& R = Rptr_();
-        forAll(cells, i)
-        {
-            label celli = cells[i];
-            vector dir = cc[celli] - origin_;
-            dir /= mag(dir) + vSmall;
-
-            R[i] = axesRotation(e3_, dir).R();
-        }
-    }
-    else
-    {
-        Rptr_.reset(new tensorField(mesh.nCells()));
-
-        tensorField& R = Rptr_();
-        forAll(cc, celli)
-        {
-            vector dir = cc[celli] - origin_;
-            dir /= mag(dir) + vSmall;
-
-            R[celli] = axesRotation(e3_, dir).R();
-        }
+        R[celli] = this->R(dir);
     }
 }
 
@@ -198,7 +209,7 @@ void Foam::cylindrical::updateCells
         vector dir = cc[celli] - origin_;
         dir /= mag(dir) + vSmall;
 
-        R[celli] = axesRotation(e3_, dir).R();
+        R[celli] = this->R(dir);
     }
 }
 
