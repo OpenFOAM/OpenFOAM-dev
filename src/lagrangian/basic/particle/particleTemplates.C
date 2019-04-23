@@ -369,38 +369,9 @@ void Foam::particle::hitCyclicAMIPatch
     // register as incomplete
     facei_ = tetFacei_;
 
-    // Get the receive patch data
-    vector receiveNormal, receiveDisplacement;
-    if (onBoundaryFace())
-    {
-        patchData(receiveNormal, receiveDisplacement);
-    }
-    else
-    {
-        receiveNormal = receiveCpp.faceNormals()[receiveFacei];
-    }
-
-    // If the displacement points into the receiving face then issue a warning
-    // and remove the particle
-    if
-    (
-        onBoundaryFace()
-     && ((displacement - fraction*receiveDisplacement) & receiveNormal) > 0
-    )
-    {
-        td.keepParticle = false;
-        WarningInFunction
-            << "Particle transfer from " << cyclicAMIPolyPatch::typeName
-            << " patches " << cpp.name() << " to " << receiveCpp.name()
-            << " failed at position " << pos << " and with displacement "
-            << (displacement - fraction*receiveDisplacement) << nl
-            << "    The displacement points into both the source and receiving "
-            << "faces, so the tracking cannot proceed" << nl
-            << "    The particle has been removed" << nl << endl;
-        return;
-    }
-
     // Transform the properties
+    vector displacementT = displacement;
+
     const vectorTensorTransform AMITransform =
         receiveCpp.owner()
       ? receiveCpp.AMITransforms()[receiveAMIi]
@@ -408,6 +379,7 @@ void Foam::particle::hitCyclicAMIPatch
     if (AMITransform.hasR())
     {
         transformProperties(AMITransform.R());
+        displacementT = transform(AMITransform.R(), displacementT);
     }
     else if (AMITransform.t() != vector::zero)
     {
@@ -423,6 +395,7 @@ void Foam::particle::hitCyclicAMIPatch
           : receiveCpp.forwardT()[facei_]
         );
         transformProperties(T);
+        displacementT = transform(T, displacementT);
     }
     else if (receiveCpp.separated())
     {
@@ -433,6 +406,28 @@ void Foam::particle::hitCyclicAMIPatch
           : receiveCpp.separation()[facei_]
         );
         transformProperties(-s);
+    }
+
+    // If on a boundary and the displacement points into the receiving face
+    // then issue a warning and remove the particle
+    if (onBoundaryFace())
+    {
+        vector receiveNormal, receiveDisplacement;
+        patchData(receiveNormal, receiveDisplacement);
+
+        if (((displacementT - fraction*receiveDisplacement)&receiveNormal) > 0)
+        {
+            td.keepParticle = false;
+            WarningInFunction
+                << "Particle transfer from " << cyclicAMIPolyPatch::typeName
+                << " patches " << cpp.name() << " to " << receiveCpp.name()
+                << " failed at position " << pos << " and with displacement "
+                << (displacementT - fraction*receiveDisplacement) << nl
+                << "    The displacement points into both the source and "
+                << "receiving faces, so the tracking cannot proceed" << nl
+                << "    The particle has been removed" << nl << endl;
+            return;
+        }
     }
 }
 
