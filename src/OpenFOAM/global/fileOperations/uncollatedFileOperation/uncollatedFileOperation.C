@@ -170,7 +170,7 @@ Foam::fileOperations::uncollatedFileOperation::uncollatedFileOperation
 {
     if (verbose)
     {
-        Info<< "I/O    : " << typeName << endl;
+        InfoHeader << "I/O    : " << typeName << endl;
     }
 }
 

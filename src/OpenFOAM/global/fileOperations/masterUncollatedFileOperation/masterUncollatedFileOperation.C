@@ -729,7 +729,8 @@ masterUncollatedFileOperation
 {
     if (verbose)
     {
-        Info<< "I/O    : " << typeName
+        InfoHeader
+            << "I/O    : " << typeName
             << " (maxMasterFileBufferSize " << maxMasterFileBufferSize << ')'
             << endl;
     }
@@ -772,7 +773,8 @@ masterUncollatedFileOperation
 {
     if (verbose)
     {
-        Info<< "I/O    : " << typeName
+        InfoHeader
+            << "I/O    : " << typeName
             << " (maxMasterFileBufferSize " << maxMasterFileBufferSize << ')'
             << endl;
     }
