@@ -318,8 +318,7 @@ Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
     tensorField& t = tt.ref();
     forAll(cellMap, i)
     {
-        const label celli = cellMap[i];
-        t[i] = R[celli] & tf[i] & Rtr[celli];
+        t[i] = R[i] & tf[i] & Rtr[i];
     }
 
     return tt;
