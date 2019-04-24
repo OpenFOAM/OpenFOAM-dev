@@ -298,8 +298,7 @@ Foam::fvMesh::fvMesh(const IOobject& io)
         V00();
     }
 
-    // Check the existence of the mesh fluxes, read if present and set the
-    // mesh to be moving
+    // Check the existence of the mesh fluxes and read if present
     if (fileHandler().isFile(time().timePath()/"meshPhi"))
     {
         phiPtr_ = new surfaceScalarField
@@ -315,28 +314,6 @@ Foam::fvMesh::fvMesh(const IOobject& io)
             ),
             *this
         );
-
-        // The mesh is now considered moving so the old-time cell volumes
-        // will be required for the time derivatives so if they haven't been
-        // read initialise to the current cell volumes
-        if (!V0Ptr_)
-        {
-            V0Ptr_ = new DimensionedField<scalar, volMesh>
-            (
-                IOobject
-                (
-                    "V0",
-                    time().timeName(),
-                    *this,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                V()
-            );
-        }
-
-        moving(true);
     }
 }
 

@@ -357,6 +357,7 @@ void Foam::Cloud<ParticleType>::autoMap(const mapPolyMesh& mapper)
     // them, otherwise, if some processors have no particles then
     // there is a comms mismatch.
     polyMesh_.tetBasePtIs();
+    polyMesh_.oldCellCentres();
 
     const vectorField& positions = globalPositionsPtr_();
 
