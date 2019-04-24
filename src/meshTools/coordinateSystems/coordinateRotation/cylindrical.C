@@ -209,7 +209,7 @@ void Foam::cylindrical::updateCells
         vector dir = cc[celli] - origin_;
         dir /= mag(dir) + vSmall;
 
-        R[celli] = this->R(dir);
+        R[i] = this->R(dir);
     }
 }
 
