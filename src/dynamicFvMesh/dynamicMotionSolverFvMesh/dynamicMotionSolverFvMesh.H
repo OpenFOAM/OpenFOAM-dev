@@ -94,6 +94,18 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+        // Write
+
+            //- Write the underlying polyMesh and other data
+            virtual bool writeObject
+            (
+                IOstream::streamFormat fmt,
+                IOstream::versionNumber ver,
+                IOstream::compressionType cmp,
+                const bool valid
+            ) const;
 };
 
 

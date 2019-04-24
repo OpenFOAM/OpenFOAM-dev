@@ -153,4 +153,10 @@ void Foam::motionSolver::updateMesh(const mapPolyMesh& mpm)
 {}
 
 
+bool Foam::motionSolver::write() const
+{
+    return true;
+}
+
+
 // ************************************************************************* //

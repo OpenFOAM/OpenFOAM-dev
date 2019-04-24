@@ -161,6 +161,9 @@ public:
 
         //- Solve for motion
         virtual void solve();
+
+        //- Write motion state information for restart
+        virtual bool write() const;
 };
 
 

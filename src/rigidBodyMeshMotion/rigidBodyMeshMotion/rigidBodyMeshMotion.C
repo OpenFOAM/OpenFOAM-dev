@@ -336,4 +336,26 @@ void Foam::rigidBodyMeshMotion::solve()
 }
 
 
+bool Foam::rigidBodyMeshMotion::write() const
+{
+    IOdictionary dict
+    (
+        IOobject
+        (
+            "rigidBodyMotionState",
+            mesh().time().timeName(),
+            "uniform",
+            mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    state().write(dict);
+
+    return dict.regIOobject::write() && displacementMotionSolver::write();
+}
+
+
 // ************************************************************************* //

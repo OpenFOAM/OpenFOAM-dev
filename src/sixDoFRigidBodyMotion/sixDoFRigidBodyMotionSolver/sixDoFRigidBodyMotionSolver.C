@@ -259,4 +259,31 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 }
 
 
+bool Foam::sixDoFRigidBodyMotionSolver::writeObject
+(
+    IOstream::streamFormat fmt,
+    IOstream::versionNumber ver,
+    IOstream::compressionType cmp,
+    const bool valid
+) const
+{
+    IOdictionary dict
+    (
+        IOobject
+        (
+            "sixDoFRigidBodyMotionState",
+            mesh().time().timeName(),
+            "uniform",
+            mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    motion_.state().write(dict);
+    return dict.regIOobject::write() && displacementMotionSolver::write();
+}
+
+
 // ************************************************************************* //

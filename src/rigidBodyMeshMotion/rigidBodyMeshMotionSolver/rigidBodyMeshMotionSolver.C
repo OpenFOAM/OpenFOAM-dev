@@ -292,4 +292,26 @@ void Foam::rigidBodyMeshMotionSolver::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::rigidBodyMeshMotionSolver::write() const
+{
+    IOdictionary dict
+    (
+        IOobject
+        (
+            "rigidBodyMotionState",
+            mesh().time().timeName(),
+            "uniform",
+            mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    state().write(dict);
+
+    return dict.regIOobject::write() && motionSolver::write();
+}
+
+
 // ************************************************************************* //

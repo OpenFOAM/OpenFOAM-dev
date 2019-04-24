@@ -132,6 +132,15 @@ public:
 
         //- Solve for motion
         virtual void solve();
+
+        //- Write state using given format, version and compression
+        virtual bool writeObject
+        (
+            IOstream::streamFormat fmt,
+            IOstream::versionNumber ver,
+            IOstream::compressionType cmp,
+            const bool valid
+        ) const;
 };
 
 
