@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,6 +106,9 @@ private:
         //- Calculate and return the flux field
         tmp<surfaceScalarField> phi(const volVectorField& U) const;
 
+        //- Correct the continuity errors
+        void correctContinuityErrors();
+
 
 public:
 
@@ -130,6 +133,9 @@ public:
 
         //- Correct the kinematics
         virtual void correctKinematics();
+
+        //- Correct the thermodynamics
+        virtual void correctThermo();
 
         //- Correct the turbulence
         virtual void correctTurbulence();
