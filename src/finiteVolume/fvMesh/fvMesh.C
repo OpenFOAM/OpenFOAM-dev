@@ -1014,6 +1014,12 @@ bool Foam::fvMesh::writeObject
         ok = phiPtr_->write(valid);
     }
 
+    // Write V0 only if V00 exists
+    if (V00Ptr_)
+    {
+        ok = ok && V0Ptr_->write(valid);
+    }
+
     return ok && polyMesh::writeObject(fmt, ver, cmp, valid);
 }
 

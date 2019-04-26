@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -262,9 +262,6 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
             ),
             V0()
         );
-
-        // If V00 is used then V0 should be stored for restart
-        V0Ptr_->writeOpt() = IOobject::AUTO_WRITE;
     }
 
     return *V00Ptr_;
