@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -5743,17 +5743,16 @@ void Foam::hexRef8::setUnrefinement
 }
 
 
-// Write refinement to polyMesh directory.
-bool Foam::hexRef8::write(const bool valid) const
+bool Foam::hexRef8::write(const bool write) const
 {
     bool writeOk =
-        cellLevel_.write(valid)
-     && pointLevel_.write(valid)
-     && level0Edge_.write(valid);
+        cellLevel_.write(write)
+     && pointLevel_.write(write)
+     && level0Edge_.write(write);
 
     if (history_.active())
     {
-        writeOk = writeOk && history_.write(valid);
+        writeOk = writeOk && history_.write(write);
     }
 
     return writeOk;

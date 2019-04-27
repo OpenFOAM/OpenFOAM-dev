@@ -95,7 +95,7 @@ public:
             IOstream::streamFormat,
             IOstream::versionNumber,
             IOstream::compressionType,
-            const bool valid
+            const bool write
         ) const;
 
         virtual bool writeData(Ostream&) const;

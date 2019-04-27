@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ bool Foam::regIOobject::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     if (!good())
@@ -141,7 +141,7 @@ bool Foam::regIOobject::writeObject
         //
         //    osGood = os.good();
         //}
-        osGood = fileHandler().writeObject(*this, fmt, ver, cmp, valid);
+        osGood = fileHandler().writeObject(*this, fmt, ver, cmp, write);
     }
     else
     {
@@ -165,14 +165,14 @@ bool Foam::regIOobject::writeObject
 }
 
 
-bool Foam::regIOobject::write(const bool valid) const
+bool Foam::regIOobject::write(const bool write) const
 {
     return writeObject
     (
         time().writeFormat(),
         IOstream::currentVersion,
         time().writeCompression(),
-        valid
+        write
     );
 }
 

@@ -1161,11 +1161,12 @@ bool Foam::polyBoundaryMesh::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
-    return regIOobject::writeObject(fmt, ver, IOstream::UNCOMPRESSED, valid);
+    return regIOobject::writeObject(fmt, ver, IOstream::UNCOMPRESSED, write);
 }
+
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 

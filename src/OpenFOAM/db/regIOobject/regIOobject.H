@@ -91,7 +91,7 @@ private:
     // Private Member Functions
 
         //- Return Istream
-        Istream& readStream(const bool valid = true);
+        Istream& readStream(const bool read = true);
 
         //- Dissallow assignment
         void operator=(const regIOobject&);
@@ -226,7 +226,7 @@ public:
             bool headerOk();
 
             //- Return Istream and check object type against that given
-            Istream& readStream(const word&, const bool valid = true);
+            Istream& readStream(const word&, const bool read = true);
 
             //- Close Istream
             void close();
@@ -273,11 +273,11 @@ public:
                 IOstream::streamFormat,
                 IOstream::versionNumber,
                 IOstream::compressionType,
-                const bool valid
+                const bool write
             ) const;
 
             //- Write using setting from DB
-            virtual bool write(const bool valid = true) const;
+            virtual bool write(const bool write = true) const;
 
 
     // Member operators

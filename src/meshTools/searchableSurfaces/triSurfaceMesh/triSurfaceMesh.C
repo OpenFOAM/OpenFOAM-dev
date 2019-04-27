@@ -876,7 +876,7 @@ bool Foam::triSurfaceMesh::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     fileName fullPath;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ public:
         using regIOobject::write;
 
         //- Sample and write
-        virtual bool write(const bool valid = true);
+        virtual bool write(const bool write = true);
 
         //- Update for changes of mesh
         virtual void updateMesh(const mapPolyMesh& mpm);

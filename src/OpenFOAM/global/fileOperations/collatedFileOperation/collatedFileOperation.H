@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,7 +150,7 @@ public:
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
                 IOstream::compressionType compression=IOstream::UNCOMPRESSED,
-                const bool valid = true
+                const bool write = true
             ) const;
 
         // Other

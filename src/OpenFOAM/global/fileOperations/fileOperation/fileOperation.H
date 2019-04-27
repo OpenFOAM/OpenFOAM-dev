@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -363,7 +363,7 @@ public:
                 regIOobject&,
                 const fileName&,
                 const word& typeName,
-                const bool valid = true
+                const bool read = true
             ) const = 0;
 
             //- Top-level read
@@ -377,7 +377,7 @@ public:
 
             //- Writes a regIOobject (so header, contents and divider).
             //  Returns success state. Default action is to write to
-            //  the objectPath using writeData. If !valid the
+            //  the objectPath using writeData. If !write the
             //  file does not need to be written (this is used e.g. to
             //  suppress empty local lagrangian data)
             virtual bool writeObject
@@ -386,7 +386,7 @@ public:
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
                 IOstream::compressionType compression=IOstream::UNCOMPRESSED,
-                const bool valid = true
+                const bool write = true
             ) const;
 
 
@@ -406,7 +406,7 @@ public:
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
                 IOstream::compressionType compression=IOstream::UNCOMPRESSED,
-                const bool valid = true
+                const bool write = true
             ) const = 0;
 
 

@@ -383,11 +383,11 @@ public:
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp,
-                const bool valid
+                const bool write = true
             ) const;
 
             //- Write mesh using IO settings from time
-            virtual bool write(const bool valid = true) const;
+            virtual bool write(const bool write = true) const;
 
 
     // Member Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::IOField<Type>::IOField(const IOobject& io)
 
 
 template<class Type>
-Foam::IOField<Type>::IOField(const IOobject& io, const bool valid)
+Foam::IOField<Type>::IOField(const IOobject& io, const bool read)
 :
     regIOobject(io)
 {
@@ -64,9 +64,9 @@ Foam::IOField<Type>::IOField(const IOobject& io, const bool valid)
      || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
     )
     {
-        Istream& is = readStream(typeName, valid);
+        Istream& is = readStream(typeName, read);
 
-        if (valid)
+        if (read)
         {
             is >> *this;
         }
@@ -76,9 +76,9 @@ Foam::IOField<Type>::IOField(const IOobject& io, const bool valid)
     {
         bool haveFile = headerOk();
 
-        Istream& is = readStream(typeName, haveFile && valid);
+        Istream& is = readStream(typeName, haveFile && read);
 
-        if (valid && haveFile)
+        if (read && haveFile)
         {
             is >> *this;
         }

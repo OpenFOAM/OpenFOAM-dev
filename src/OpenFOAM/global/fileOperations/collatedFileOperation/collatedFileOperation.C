@@ -453,7 +453,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     const Time& tm = io.time();
@@ -479,7 +479,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
             ver,
             cmp,
             false,
-            valid
+            write
         );
 
         // If any of these fail, return (leave error handling to Ostream class)
@@ -525,7 +525,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
                 ver,
                 cmp,
                 false,
-                valid
+                write
             );
 
             // If any of these fail, return (leave error handling to Ostream

@@ -522,12 +522,12 @@ Foam::fileOperations::uncollatedFileOperation::readStream
     regIOobject& io,
     const fileName& fName,
     const word& typeName,
-    const bool valid
+    const bool read
 ) const
 {
     autoPtr<ISstream> isPtr;
 
-    if (!valid)
+    if (!read)
     {
         isPtr = autoPtr<ISstream>(new dummyISstream());
         return isPtr;
@@ -704,7 +704,7 @@ Foam::fileOperations::uncollatedFileOperation::NewOFstream
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     return autoPtr<Ostream>(new OFstream(pathName, fmt, ver, cmp));

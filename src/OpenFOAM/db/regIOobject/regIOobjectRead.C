@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ bool Foam::regIOobject::readHeaderOk
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::Istream& Foam::regIOobject::readStream(const bool valid)
+Foam::Istream& Foam::regIOobject::readStream(const bool read)
 {
     if (IFstream::debug)
     {
@@ -127,7 +127,7 @@ Foam::Istream& Foam::regIOobject::readStream(const bool valid)
             }
         }
 
-        isPtr_ = fileHandler().readStream(*this, objPath, type(), valid);
+        isPtr_ = fileHandler().readStream(*this, objPath, type(), read);
     }
 
     return isPtr_();
@@ -137,7 +137,7 @@ Foam::Istream& Foam::regIOobject::readStream(const bool valid)
 Foam::Istream& Foam::regIOobject::readStream
 (
     const word& expectName,
-    const bool valid
+    const bool read
 )
 {
     if (IFstream::debug)
@@ -150,14 +150,14 @@ Foam::Istream& Foam::regIOobject::readStream
     // Construct IFstream if not already constructed
     if (!isPtr_.valid())
     {
-        readStream(valid);
+        readStream(read);
 
         // Check the className of the regIOobject
         // dictionary is an allowable name in case the actual class
         // instantiated is a dictionary
         if
         (
-            valid
+            read
          && expectName.size()
          && headerClassName() != expectName
          && headerClassName() != "dictionary"

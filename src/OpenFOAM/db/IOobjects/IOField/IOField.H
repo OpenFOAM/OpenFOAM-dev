@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ public:
         IOField(const IOobject&);
 
         //- Construct from IOobject; does local processor require reading?
-        IOField(const IOobject&, const bool valid);
+        IOField(const IOobject&, const bool read);
 
         //- Construct from IOobject and size (does not set values)
         IOField(const IOobject&, const label size);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,14 +75,14 @@ Foam::masterOFstream::masterOFstream
     versionNumber version,
     compressionType compression,
     const bool append,
-    const bool valid
+    const bool write
 )
 :
     OStringStream(format, version),
     pathName_(pathName),
     compression_(compression),
     append_(append),
-    valid_(valid)
+    write_(write)
 {}
 
 
@@ -106,15 +106,15 @@ Foam::masterOFstream::~masterOFstream()
 
         if (uniform)
         {
-            if (Pstream::master() && valid_)
+            if (Pstream::master() && write_)
             {
                 checkWrite(pathName_, str());
             }
             return;
         }
-        boolList valid(Pstream::nProcs());
-        valid[Pstream::myProcNo()] = valid_;
-        Pstream::gatherList(valid);
+        boolList write(Pstream::nProcs());
+        write[Pstream::myProcNo()] = write_;
+        Pstream::gatherList(write);
 
 
         // Different files
@@ -135,7 +135,7 @@ Foam::masterOFstream::~masterOFstream()
         {
             // Write my own data
             {
-                if (valid[Pstream::myProcNo()])
+                if (write[Pstream::myProcNo()])
                 {
                     checkWrite(filePaths[Pstream::myProcNo()], str());
                 }
@@ -148,7 +148,7 @@ Foam::masterOFstream::~masterOFstream()
 
                 is.read(buf.begin(), buf.size());
 
-                if (valid[proci])
+                if (write[proci])
                 {
                     checkWrite
                     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,7 +249,7 @@ public:
                 regIOobject&,
                 const fileName&,
                 const word& typeName,
-                const bool procValid = true
+                const bool read = true
             ) const;
 
             //- Top-level read
@@ -271,7 +271,7 @@ public:
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
                 IOstream::compressionType compression=IOstream::UNCOMPRESSED,
-                const bool valid = true
+                const bool write = true
             ) const;
 };
 

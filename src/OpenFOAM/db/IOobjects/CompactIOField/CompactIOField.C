@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,11 +29,11 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class T, class BaseType>
-void Foam::CompactIOField<T, BaseType>::readFromStream(const bool valid)
+void Foam::CompactIOField<T, BaseType>::readFromStream(const bool read)
 {
-    Istream& is = readStream(word::null, valid);
+    Istream& is = readStream(word::null, read);
 
-    if (valid)
+    if (read)
     {
         if (headerClassName() == IOField<T>::typeName)
         {
@@ -82,19 +82,19 @@ template<class T, class BaseType>
 Foam::CompactIOField<T, BaseType>::CompactIOField
 (
     const IOobject& io,
-    const bool valid
+    const bool read
 )
 :
     regIOobject(io)
 {
     if (io.readOpt() == IOobject::MUST_READ)
     {
-        readFromStream(valid);
+        readFromStream(read);
     }
     else if (io.readOpt() == IOobject::READ_IF_PRESENT)
     {
         bool haveFile = headerOk();
-        readFromStream(valid && haveFile);
+        readFromStream(read && haveFile);
     }
 }
 
@@ -185,7 +185,7 @@ bool Foam::CompactIOField<T, BaseType>::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     if (fmt == IOstream::ASCII)
@@ -195,7 +195,7 @@ bool Foam::CompactIOField<T, BaseType>::writeObject
 
         const_cast<word&>(typeName) = IOField<T>::typeName;
 
-        bool good = regIOobject::writeObject(fmt, ver, cmp, valid);
+        bool good = regIOobject::writeObject(fmt, ver, cmp, write);
 
         // Change type back
         const_cast<word&>(typeName) = oldTypeName;
@@ -204,7 +204,7 @@ bool Foam::CompactIOField<T, BaseType>::writeObject
     }
     else
     {
-        return regIOobject::writeObject(fmt, ver, cmp, valid);
+        return regIOobject::writeObject(fmt, ver, cmp, write);
     }
 }
 

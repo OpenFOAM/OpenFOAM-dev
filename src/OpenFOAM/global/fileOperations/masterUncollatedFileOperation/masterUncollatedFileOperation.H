@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -478,7 +478,7 @@ protected:
             const label comm,
             const bool uniform,             // on comms master only
             const fileNameList& filePaths,  // on comms master only
-            const boolList& procValid       // on comms master only
+            const boolList& read            // on comms master only
         );
 
         //- Helper: check IO for local existence. Like filePathInfo but
@@ -683,7 +683,7 @@ public:
                 regIOobject&,
                 const fileName&,
                 const word& typeName,
-                const bool valid = true
+                const bool read = true
             ) const;
 
             //- Top-level read
@@ -703,7 +703,7 @@ public:
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
                 IOstream::compressionType compression=IOstream::UNCOMPRESSED,
-                const bool valid = true
+                const bool write = true
             ) const;
 
             //- Generate an ISstream that reads a file
@@ -716,7 +716,7 @@ public:
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
                 IOstream::compressionType compression=IOstream::UNCOMPRESSED,
-                const bool valid = true
+                const bool write = true
             ) const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,86 +113,86 @@ void Foam::SprayParcel<ParcelType>::readFields
     const CompositionType& compModel
 )
 {
-    bool valid = c.size();
+    bool write = c.size();
 
     ParcelType::readFields(c, compModel);
 
-    IOField<scalar> d0(c.fieldIOobject("d0", IOobject::MUST_READ), valid);
+    IOField<scalar> d0(c.fieldIOobject("d0", IOobject::MUST_READ), write);
     c.checkFieldIOobject(c, d0);
 
     IOField<vector> position0
     (
         c.fieldIOobject("position0", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, position0);
 
-    IOField<scalar> sigma(c.fieldIOobject("sigma", IOobject::MUST_READ), valid);
+    IOField<scalar> sigma(c.fieldIOobject("sigma", IOobject::MUST_READ), write);
     c.checkFieldIOobject(c, sigma);
 
-    IOField<scalar> mu(c.fieldIOobject("mu", IOobject::MUST_READ), valid);
+    IOField<scalar> mu(c.fieldIOobject("mu", IOobject::MUST_READ), write);
     c.checkFieldIOobject(c, mu);
 
     IOField<scalar> liquidCore
     (
         c.fieldIOobject("liquidCore", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, liquidCore);
 
     IOField<scalar> KHindex
     (
         c.fieldIOobject("KHindex", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, KHindex);
 
     IOField<scalar> y
     (
         c.fieldIOobject("y", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, y);
 
     IOField<scalar> yDot
     (
         c.fieldIOobject("yDot", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, yDot);
 
     IOField<scalar> tc
     (
         c.fieldIOobject("tc", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, tc);
 
     IOField<scalar> ms
     (
         c.fieldIOobject("ms", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, ms);
 
     IOField<scalar> injector
     (
         c.fieldIOobject("injector", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, injector);
 
     IOField<scalar> tMom
     (
         c.fieldIOobject("tMom", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, tMom);
 
     IOField<scalar> user
     (
         c.fieldIOobject("user", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, user);
 
@@ -284,21 +284,21 @@ void Foam::SprayParcel<ParcelType>::writeFields
         i++;
     }
 
-    const bool valid = np > 0;
+    const bool write = np > 0;
 
-    d0.write(valid);
-    position0.write(valid);
-    sigma.write(valid);
-    mu.write(valid);
-    liquidCore.write(valid);
-    KHindex.write(valid);
-    y.write(valid);
-    yDot.write(valid);
-    tc.write(valid);
-    ms.write(valid);
-    injector.write(valid);
-    tMom.write(valid);
-    user.write(valid);
+    d0.write(write);
+    position0.write(write);
+    sigma.write(write);
+    mu.write(write);
+    liquidCore.write(write);
+    KHindex.write(write);
+    y.write(write);
+    yDot.write(write);
+    tc.write(write);
+    ms.write(write);
+    injector.write(write);
+    tMom.write(write);
+    user.write(write);
 }
 
 

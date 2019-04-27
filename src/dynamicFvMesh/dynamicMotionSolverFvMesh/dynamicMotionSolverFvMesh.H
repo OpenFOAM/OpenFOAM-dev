@@ -104,7 +104,7 @@ public:
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp,
-                const bool valid
+                const bool write = true
             ) const;
 };
 
