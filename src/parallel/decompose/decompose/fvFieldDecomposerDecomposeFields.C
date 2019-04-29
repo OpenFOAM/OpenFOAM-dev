@@ -33,6 +33,40 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::fvFieldDecomposer::mapField
+(
+    const Field<Type>& field,
+    const labelUList& mapAndSign,
+    const bool applyFlip
+)
+{
+    tmp<Field<Type>> tfld(new Field<Type>(mapAndSign.size()));
+    Field<Type>& fld = tfld.ref();
+
+    if (applyFlip)
+    {
+        forAll(mapAndSign, i)
+        {
+            if (mapAndSign[i] < 0)
+            {
+                fld[i] = -field[-mapAndSign[i] - 1];
+            }
+            else
+            {
+                fld[i] = field[mapAndSign[i] - 1];
+            }
+        }
+    }
+    else
+    {
+        // Ignore face flipping
+        fld.map(field, mag(mapAndSign) - 1);
+    }
+    return tfld;
+}
+
+
+template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvFieldDecomposer::decomposeField
 (
@@ -87,6 +121,8 @@ Foam::fvFieldDecomposer::decomposeField
 
     forAll(bf, patchi)
     {
+        const fvPatch& procPatch = procMesh_.boundary()[patchi];
+
         if (patchFieldDecomposerPtrs_[patchi])
         {
             bf.set
@@ -95,20 +131,20 @@ Foam::fvFieldDecomposer::decomposeField
                 fvPatchField<Type>::New
                 (
                     field.boundaryField()[boundaryAddressing_[patchi]],
-                    procMesh_.boundary()[patchi],
+                    procPatch,
                     resF(),
                     *patchFieldDecomposerPtrs_[patchi]
                 )
             );
         }
-        else if (isA<processorCyclicFvPatch>(procMesh_.boundary()[patchi]))
+        else if (isA<processorCyclicFvPatch>(procPatch))
         {
             bf.set
             (
                 patchi,
                 new processorCyclicFvPatchField<Type>
                 (
-                    procMesh_.boundary()[patchi],
+                    procPatch,
                     resF(),
                     Field<Type>
                     (
@@ -118,14 +154,14 @@ Foam::fvFieldDecomposer::decomposeField
                 )
             );
         }
-        else if (isA<processorFvPatch>(procMesh_.boundary()[patchi]))
+        else if (isA<processorFvPatch>(procPatch))
         {
             bf.set
             (
                 patchi,
                 new processorFvPatchField<Type>
                 (
-                    procMesh_.boundary()[patchi],
+                    procPatch,
                     resF(),
                     Field<Type>
                     (
@@ -142,7 +178,7 @@ Foam::fvFieldDecomposer::decomposeField
                 patchi,
                 new emptyFvPatchField<Type>
                 (
-                    procMesh_.boundary()[patchi],
+                    procPatch,
                     resF()
                 )
             );
@@ -166,41 +202,9 @@ Foam::fvFieldDecomposer::decomposeField
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field
 ) const
 {
-    labelField mapAddr
-    (
-        labelList::subList
-        (
-            faceAddressing_,
-            procMesh_.nInternalFaces()
-        )
-    );
+    // Apply flipping to surfaceScalarFields only
+    const bool doFlip = (pTraits<Type>::nComponents == 1);
 
-    Field<Type> internalField(procMesh_.nInternalFaces());
-
-    if (pTraits<Type>::nComponents == 1)
-    {
-        // Assume all scalar surfaceFields are oriented flux fields
-        // and flip the sign of the flux if necessary
-
-        forAll(mapAddr, i)
-        {
-            if (mapAddr[i] < 0)
-            {
-                internalField[i] = -field[mag(mapAddr[i]) - 1];
-            }
-            else
-            {
-                internalField[i] = field[mapAddr[i] - 1];
-            }
-        }
-    }
-    else
-    {
-        // Ignore face flipping
-        internalField.map(field.primitiveField(), mag(mapAddr) - 1);
-    }
-
-    // internalField.map(field.primitiveField(), mag(mapAddr) - 1);
 
     // Problem with addressing when a processor patch picks up both internal
     // faces and faces from cyclic boundaries. This is a bit of a hack, but
@@ -258,7 +262,16 @@ Foam::fvFieldDecomposer::decomposeField
             ),
             procMesh_,
             field.dimensions(),
-            internalField,
+            mapField
+            (
+                field,
+                labelList::subList
+                (
+                    faceAddressing_,
+                    procMesh_.nInternalFaces()
+                ),
+                doFlip
+            ),
             patchFields
         )
     );
@@ -273,6 +286,8 @@ Foam::fvFieldDecomposer::decomposeField
 
     forAll(boundaryAddressing_, patchi)
     {
+        const fvPatch& procPatch = procMesh_.boundary()[patchi];
+
         if (patchFieldDecomposerPtrs_[patchi])
         {
             bf.set
@@ -281,50 +296,63 @@ Foam::fvFieldDecomposer::decomposeField
                 fvsPatchField<Type>::New
                 (
                     field.boundaryField()[boundaryAddressing_[patchi]],
-                    procMesh_.boundary()[patchi],
+                    procPatch,
                     resF(),
                     *patchFieldDecomposerPtrs_[patchi]
                 )
             );
         }
-        else if (isA<processorCyclicFvPatch>(procMesh_.boundary()[patchi]))
-        {
-            bf.set
-            (
-                patchi,
-                new processorCyclicFvsPatchField<Type>
-                (
-                    procMesh_.boundary()[patchi],
-                    resF(),
-                    Field<Type>
-                    (
-                        allFaceField,
-                        *processorSurfacePatchFieldDecomposerPtrs_[patchi]
-                    )
-                )
-            );
-        }
-        else if (isA<processorFvPatch>(procMesh_.boundary()[patchi]))
-        {
-            bf.set
-            (
-                patchi,
-                new processorFvsPatchField<Type>
-                (
-                    procMesh_.boundary()[patchi],
-                    resF(),
-                    Field<Type>
-                    (
-                        allFaceField,
-                        *processorSurfacePatchFieldDecomposerPtrs_[patchi]
-                    )
-                )
-            );
-        }
         else
         {
-            FatalErrorInFunction
-                << "Unknown type." << abort(FatalError);
+            // Do our own mapping - avoids a lot of mapping complexity
+
+            if (isA<processorCyclicFvPatch>(procPatch))
+            {
+                bf.set
+                (
+                    patchi,
+                    new processorCyclicFvsPatchField<Type>
+                    (
+                        procPatch,
+                        resF(),
+                        mapField
+                        (
+                            allFaceField,
+                            procPatch.patchSlice
+                            (
+                                faceAddressing_
+                            ),
+                            doFlip
+                        )
+                    )
+                );
+            }
+            else if (isA<processorFvPatch>(procPatch))
+            {
+                bf.set
+                (
+                    patchi,
+                    new processorFvsPatchField<Type>
+                    (
+                        procPatch,
+                        resF(),
+                        mapField
+                        (
+                            allFaceField,
+                            procPatch.patchSlice
+                            (
+                                faceAddressing_
+                            ),
+                            doFlip
+                        )
+                    )
+                );
+            }
+            else
+            {
+                FatalErrorInFunction
+                    << "Unknown type." << abort(FatalError);
+            }
         }
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,26 +92,6 @@ processorVolPatchFieldDecomposer
 }
 
 
-Foam::fvFieldDecomposer::processorSurfacePatchFieldDecomposer::
-processorSurfacePatchFieldDecomposer
-(
-    const labelUList& addressingSlice
-)
-:
-    addressing_(addressingSlice.size()),
-    weights_(addressingSlice.size())
-{
-    forAll(addressing_, i)
-    {
-        addressing_[i].setSize(1);
-        weights_[i].setSize(1);
-
-        addressing_[i][0] = mag(addressingSlice[i]) - 1;
-        weights_[i][0] = sign(addressingSlice[i]);
-    }
-}
-
-
 Foam::fvFieldDecomposer::fvFieldDecomposer
 (
     const fvMesh& completeMesh,
@@ -135,11 +115,6 @@ Foam::fvFieldDecomposer::fvFieldDecomposer
     (
         procMesh_.boundary().size(),
         static_cast<processorVolPatchFieldDecomposer*>(nullptr)
-    ),
-    processorSurfacePatchFieldDecomposerPtrs_
-    (
-        procMesh_.boundary().size(),
-        static_cast<processorSurfacePatchFieldDecomposer*>(nullptr)
     )
 {
     forAll(boundaryAddressing_, patchi)
@@ -167,18 +142,6 @@ Foam::fvFieldDecomposer::fvFieldDecomposer
                     completeMesh_,
                     procMesh_.boundary()[patchi].patchSlice(faceAddressing_)
                 );
-
-            processorSurfacePatchFieldDecomposerPtrs_[patchi] =
-                new processorSurfacePatchFieldDecomposer
-                (
-                    static_cast<const labelUList&>
-                    (
-                        procMesh_.boundary()[patchi].patchSlice
-                        (
-                            faceAddressing_
-                        )
-                    )
-                );
         }
     }
 }
@@ -201,14 +164,6 @@ Foam::fvFieldDecomposer::~fvFieldDecomposer()
         if (processorVolPatchFieldDecomposerPtrs_[patchi])
         {
             delete processorVolPatchFieldDecomposerPtrs_[patchi];
-        }
-    }
-
-    forAll(processorSurfacePatchFieldDecomposerPtrs_, patchi)
-    {
-        if (processorSurfacePatchFieldDecomposerPtrs_[patchi])
-        {
-            delete processorSurfacePatchFieldDecomposerPtrs_[patchi];
         }
     }
 }
