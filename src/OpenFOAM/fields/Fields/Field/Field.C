@@ -124,13 +124,12 @@ template<class Type>
 Foam::Field<Type>::Field
 (
     const UList<Type>& mapF,
-    const FieldMapper& mapper,
-    const bool applyFlip
+    const FieldMapper& mapper
 )
 :
     List<Type>(mapper.size())
 {
-    map(mapF, mapper, applyFlip);
+    map(mapF, mapper);
 }
 
 
@@ -139,13 +138,12 @@ Foam::Field<Type>::Field
 (
     const UList<Type>& mapF,
     const FieldMapper& mapper,
-    const Type& defaultValue,
-    const bool applyFlip
+    const Type& defaultValue
 )
 :
     List<Type>(mapper.size(), defaultValue)
 {
-    map(mapF, mapper, applyFlip);
+    map(mapF, mapper);
 }
 
 
@@ -154,13 +152,12 @@ Foam::Field<Type>::Field
 (
     const UList<Type>& mapF,
     const FieldMapper& mapper,
-    const UList<Type>& defaultValues,
-    const bool applyFlip
+    const UList<Type>& defaultValues
 )
 :
     List<Type>(defaultValues)
 {
-    map(mapF, mapper, applyFlip);
+    map(mapF, mapper);
 }
 
 
@@ -168,13 +165,12 @@ template<class Type>
 Foam::Field<Type>::Field
 (
     const tmp<Field<Type>>& tmapF,
-    const FieldMapper& mapper,
-    const bool applyFlip
+    const FieldMapper& mapper
 )
 :
     List<Type>(mapper.size())
 {
-    map(tmapF, mapper, applyFlip);
+    map(tmapF, mapper);
 }
 
 
@@ -183,13 +179,12 @@ Foam::Field<Type>::Field
 (
     const tmp<Field<Type>>& tmapF,
     const FieldMapper& mapper,
-    const Type& defaultValue,
-    const bool applyFlip
+    const Type& defaultValue
 )
 :
     List<Type>(mapper.size(), defaultValue)
 {
-    map(tmapF, mapper, applyFlip);
+    map(tmapF, mapper);
 }
 
 
@@ -198,13 +193,12 @@ Foam::Field<Type>::Field
 (
     const tmp<Field<Type>>& tmapF,
     const FieldMapper& mapper,
-    const UList<Type>& defaultValues,
-    const bool applyFlip
+    const UList<Type>& defaultValues
 )
 :
     List<Type>(defaultValues)
 {
-    map(tmapF, mapper, applyFlip);
+    map(tmapF, mapper);
 }
 
 
@@ -446,8 +440,7 @@ template<class Type>
 void Foam::Field<Type>::map
 (
     const UList<Type>& mapF,
-    const FieldMapper& mapper,
-    const bool applyFlip
+    const FieldMapper& mapper
 )
 {
     if (mapper.distributed())
@@ -456,11 +449,12 @@ void Foam::Field<Type>::map
         const mapDistributeBase& distMap = mapper.distributeMap();
         Field<Type> newMapF(mapF);
 
-        if (applyFlip)
-        {
-            distMap.distribute(newMapF);
-        }
-        else
+        // Moved flux "flip" functionality to higher level
+        // if (applyFlip)
+        // {
+        //     distMap.distribute(newMapF);
+        // }
+        // else
         {
             distMap.distribute(newMapF, noOp());
         }
@@ -505,11 +499,10 @@ template<class Type>
 void Foam::Field<Type>::map
 (
     const tmp<Field<Type>>& tmapF,
-    const FieldMapper& mapper,
-    const bool applyFlip
+    const FieldMapper& mapper
 )
 {
-    map(tmapF(), mapper, applyFlip);
+    map(tmapF(), mapper);
     tmapF.clear();
 }
 
@@ -517,8 +510,7 @@ void Foam::Field<Type>::map
 template<class Type>
 void Foam::Field<Type>::autoMap
 (
-    const FieldMapper& mapper,
-    const bool applyFlip
+    const FieldMapper& mapper
 )
 {
     if (mapper.distributed())
@@ -527,11 +519,12 @@ void Foam::Field<Type>::autoMap
         const mapDistributeBase& distMap = mapper.distributeMap();
         Field<Type> fCpy(*this);
 
-        if (applyFlip)
-        {
-            distMap.distribute(fCpy);
-        }
-        else
+        // Moved flux "flip" functionality to higher level
+        // if (applyFlip)
+        // {
+        //     distMap.distribute(fCpy);
+        // }
+        // else
         {
             distMap.distribute(fCpy, noOp());
         }
