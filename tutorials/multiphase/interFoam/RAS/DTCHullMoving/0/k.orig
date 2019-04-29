@@ -11,46 +11,51 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      omega;
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 -1 0 0 0 0];
+dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 2;
+internalField   uniform 0.00015;
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    inlet
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
-
-    outlet
-    {
-       type            inletOutlet;
-       inletValue      $internalField;
-       value           $internalField;
-    }
-
     atmosphere
     {
         type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        inletValue      uniform 0.00015;
+        value           uniform 0.00015;
     }
-
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 0.00015;
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 0.00015;
+        value           uniform 0.00015;
+    }
+    bottom
+    {
+        type            symmetryPlane;
+    }
+    side
+    {
+        type            symmetryPlane;
+    }
+    midPlane
+    {
+        type            symmetryPlane;
+    }
     hull
     {
-        type            omegaWallFunction;
-        value           $internalField;
+        type            kqRWallFunction;
+        value           uniform 0.00015;
     }
 }
-
 
 
 // ************************************************************************* //

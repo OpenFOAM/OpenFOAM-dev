@@ -9,46 +9,50 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
+    class       pointVectorField;
     location    "0";
-    object      k;
+    object      pointDisplacement;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [0 1 0 0 0 0 0];
 
-internalField   uniform 0.00015;
+internalField   uniform (0 0 0);
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
-
+    atmosphere
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
     inlet
     {
         type            fixedValue;
-        value           $internalField;
+        value           uniform (0 0 0);
     }
-
     outlet
     {
-       type            inletOutlet;
-       inletValue      $internalField;
-       value           $internalField;
+        type            fixedValue;
+        value           uniform (0 0 0);
     }
-
-    atmosphere
+    bottom
     {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        type            symmetryPlane;
     }
-
+    side
+    {
+        type            symmetryPlane;
+    }
+    midPlane
+    {
+        type            symmetryPlane;
+    }
     hull
     {
-        type            kqRWallFunction;
-        value           $internalField;
+        type            calculated;
     }
 }
+
 
 // ************************************************************************* //
