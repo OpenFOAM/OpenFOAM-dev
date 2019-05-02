@@ -131,7 +131,7 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    scalarField::autoMap(m);
+    m(*this, *this);
 }
 
 

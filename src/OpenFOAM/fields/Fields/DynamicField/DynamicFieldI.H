@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,19 +90,6 @@ inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 )
 :
     Field<T>(mapF, mapAddressing, weights),
-    capacity_(Field<T>::size())
-{}
-
-
-//- Construct by mapping from the given field
-template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
-(
-    const UList<T>& mapF,
-    const FieldMapper& map
-)
-:
-    Field<T>(mapF, map),
     capacity_(Field<T>::size())
 {}
 

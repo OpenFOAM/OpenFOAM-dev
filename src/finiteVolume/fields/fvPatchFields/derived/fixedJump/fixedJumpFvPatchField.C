@@ -132,7 +132,7 @@ void Foam::fixedJumpFvPatchField<Type>::autoMap
 )
 {
     jumpCyclicFvPatchField<Type>::autoMap(m);
-    jump_.autoMap(m);
+    m(jump_, jump_);
 }
 
 

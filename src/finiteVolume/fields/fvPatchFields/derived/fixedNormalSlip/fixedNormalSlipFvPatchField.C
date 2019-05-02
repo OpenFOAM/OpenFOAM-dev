@@ -102,7 +102,7 @@ void Foam::fixedNormalSlipFvPatchField<Type>::autoMap
 )
 {
     transformFvPatchField<Type>::autoMap(m);
-    fixedValue_.autoMap(m);
+    m(fixedValue_, fixedValue_);
 }
 
 

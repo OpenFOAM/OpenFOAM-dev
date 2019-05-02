@@ -278,13 +278,13 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::autoMap
         }
         case fixedHeatFlux:
         {
-            q_.autoMap(m);
+            m(q_, q_);
 
             break;
         }
         case fixedHeatTransferCoeff:
         {
-            h_.autoMap(m);
+            m(h_, h_);
 
             break;
         }
@@ -292,7 +292,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::autoMap
 
     if (qrName_ != "none")
     {
-        qrPrevious_.autoMap(m);
+        m(qrPrevious_, qrPrevious_);
     }
 }
 

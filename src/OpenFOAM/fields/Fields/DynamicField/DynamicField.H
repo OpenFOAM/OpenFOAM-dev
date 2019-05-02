@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,13 +127,6 @@ public:
             const UList<T>& mapF,
             const labelListList& mapAddressing,
             const scalarListList& weights
-        );
-
-        //- Construct by mapping from the given field
-        inline DynamicField
-        (
-            const UList<T>& mapF,
-            const FieldMapper& map
         );
 
         //- Construct copy

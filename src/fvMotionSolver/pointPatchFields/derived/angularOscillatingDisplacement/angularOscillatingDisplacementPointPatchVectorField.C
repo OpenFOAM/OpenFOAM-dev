@@ -129,7 +129,7 @@ void angularOscillatingDisplacementPointPatchVectorField::autoMap
 {
     fixedValuePointPatchField<vector>::autoMap(m);
 
-    p0_.autoMap(m);
+    m(p0_, p0_);
 }
 
 

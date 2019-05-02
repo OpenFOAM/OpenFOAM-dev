@@ -90,7 +90,7 @@ void Foam::SRFWallVelocityFvPatchVectorField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    vectorField::autoMap(m);
+    m(*this, *this);
 }
 
 

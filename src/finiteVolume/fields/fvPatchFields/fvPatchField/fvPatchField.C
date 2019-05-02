@@ -223,7 +223,7 @@ void Foam::fvPatchField<Type>::autoMap
     else
     {
         // Map all faces provided with mapping data
-        Field<Type>::autoMap(mapper);
+        mapper(*this, *this);
 
         // For unmapped faces set to internal field value (zero-gradient)
         if (mapper.hasUnmapped())

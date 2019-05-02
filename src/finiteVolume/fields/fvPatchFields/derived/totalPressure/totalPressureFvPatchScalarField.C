@@ -134,7 +134,7 @@ void Foam::totalPressureFvPatchScalarField::autoMap
 )
 {
     fixedValueFvPatchScalarField::autoMap(m);
-    p0_.autoMap(m);
+    m(p0_, p0_);
 }
 
 

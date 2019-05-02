@@ -138,7 +138,7 @@ void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::autoMap
 {
     mixedFvPatchScalarField::autoMap(m);
     radiationCoupledBase::autoMap(m);
-    Trad_.autoMap(m);
+    m(Trad_, Trad_);
 }
 
 

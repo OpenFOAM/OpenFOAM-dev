@@ -420,7 +420,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -430,7 +430,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -440,7 +440,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -450,7 +450,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -460,7 +460,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 }
 

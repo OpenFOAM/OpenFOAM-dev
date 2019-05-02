@@ -111,7 +111,7 @@ void Foam::fixedGradientFvPatchField<Type>::autoMap
 )
 {
     fvPatchField<Type>::autoMap(m);
-    gradient_.autoMap(m);
+    m(gradient_, gradient_);
 }
 
 

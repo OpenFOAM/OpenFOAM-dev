@@ -204,7 +204,7 @@ Foam::scalarField Foam::radiationCoupledBase::emissivity() const
 
 void Foam::radiationCoupledBase::autoMap(const fvPatchFieldMapper& m)
 {
-    emissivity_.autoMap(m);
+    m(emissivity_, emissivity_);
 }
 
 

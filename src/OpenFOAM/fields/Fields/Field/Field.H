@@ -30,7 +30,6 @@ Description
 SourceFiles
     FieldFunctions.H
     FieldFunctionsM.H
-    FieldMapper.H
     FieldM.H
     Field.C
     FieldFunctions.C
@@ -70,7 +69,6 @@ Ostream& operator<<(Ostream&, const Field<Type>&);
 template<class Type>
 Ostream& operator<<(Ostream&, const tmp<Field<Type>>&);
 
-class FieldMapper;
 class dictionary;
 
 /*---------------------------------------------------------------------------*\
@@ -232,9 +230,6 @@ public:
             const labelListList& mapAddressing,
             const scalarListList& weights
         );
-
-        //- Map from self
-        void autoMap(const FieldMapper& map);
 
         //- 1 to 1 reverse-map from the given field
         void rmap

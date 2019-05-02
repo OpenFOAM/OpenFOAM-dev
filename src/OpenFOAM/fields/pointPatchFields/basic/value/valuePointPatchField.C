@@ -124,7 +124,7 @@ void Foam::valuePointPatchField<Type>::autoMap
     const pointPatchFieldMapper& m
 )
 {
-    Field<Type>::autoMap(m);
+    m(*this, *this);
 }
 
 

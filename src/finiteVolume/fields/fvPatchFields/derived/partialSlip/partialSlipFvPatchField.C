@@ -101,7 +101,7 @@ void Foam::partialSlipFvPatchField<Type>::autoMap
 )
 {
     transformFvPatchField<Type>::autoMap(m);
-    valueFraction_.autoMap(m);
+    m(valueFraction_, valueFraction_);
 }
 
 

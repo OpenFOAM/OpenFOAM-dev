@@ -108,9 +108,9 @@ void Foam::directionMixedFvPatchField<Type>::autoMap
 )
 {
     transformFvPatchField<Type>::autoMap(m);
-    refValue_.autoMap(m);
-    refGrad_.autoMap(m);
-    valueFraction_.autoMap(m);
+    m(refValue_, refValue_);
+    m(refGrad_, refGrad_);
+    m(valueFraction_, valueFraction_);
 }
 
 

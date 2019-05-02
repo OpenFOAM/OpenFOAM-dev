@@ -113,8 +113,8 @@ void Foam::alphaFixedPressureFvPatchScalarField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    scalarField::autoMap(m);
-    p_.autoMap(m);
+    m(*this, *this);
+    m(p_, p_);
 }
 
 

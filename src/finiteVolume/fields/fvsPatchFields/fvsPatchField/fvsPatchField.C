@@ -154,7 +154,7 @@ void Foam::fvsPatchField<Type>::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    Field<Type>::autoMap(m);
+    m(*this, *this);
 }
 
 

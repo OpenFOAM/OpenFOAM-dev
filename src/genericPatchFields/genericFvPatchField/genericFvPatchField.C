@@ -548,7 +548,7 @@ void Foam::genericFvPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -558,7 +558,7 @@ void Foam::genericFvPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -568,7 +568,7 @@ void Foam::genericFvPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -578,7 +578,7 @@ void Foam::genericFvPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -588,7 +588,7 @@ void Foam::genericFvPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 }
 

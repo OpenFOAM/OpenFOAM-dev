@@ -197,8 +197,8 @@ void nutkRoughWallFunctionFvPatchScalarField::autoMap
 )
 {
     nutkWallFunctionFvPatchScalarField::autoMap(m);
-    Ks_.autoMap(m);
-    Cs_.autoMap(m);
+    m(Ks_, Ks_);
+    m(Cs_, Cs_);
 }
 
 

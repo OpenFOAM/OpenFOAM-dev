@@ -32,6 +32,7 @@ Description
 #ifndef FieldMapper_H
 #define FieldMapper_H
 
+#include "Field.H"
 #include "mapDistributeBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -140,7 +140,7 @@ void Foam::pressureInletOutletVelocityFvPatchVectorField::autoMap
     directionMixedFvPatchVectorField::autoMap(m);
     if (tangentialVelocity_.size())
     {
-        tangentialVelocity_.autoMap(m);
+        m(tangentialVelocity_, tangentialVelocity_);
     }
 }
 

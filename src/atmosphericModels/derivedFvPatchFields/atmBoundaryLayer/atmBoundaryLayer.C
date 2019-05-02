@@ -172,9 +172,9 @@ Foam::atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
 
 void Foam::atmBoundaryLayer::autoMap(const fvPatchFieldMapper& m)
 {
-    z0_.autoMap(m);
-    zGround_.autoMap(m);
-    Ustar_.autoMap(m);
+    m(z0_, z0_);
+    m(zGround_, zGround_);
+    m(Ustar_, Ustar_);
 }
 
 

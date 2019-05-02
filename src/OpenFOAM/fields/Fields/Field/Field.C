@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FieldMapper.H"
+#include "Field.H"
 #include "FieldM.H"
 #include "dictionary.H"
 #include "contiguous.H"
@@ -371,69 +371,6 @@ void Foam::Field<Type>::map
 {
     map(tmapF(), mapAddressing, mapWeights);
     tmapF.clear();
-}
-
-
-template<class Type>
-void Foam::Field<Type>::autoMap
-(
-    const FieldMapper& mapper
-)
-{
-    if (mapper.distributed())
-    {
-        // Fetch remote parts of *this
-        const mapDistributeBase& distMap = mapper.distributeMap();
-        Field<Type> fCpy(*this);
-
-        // Moved flux "flip" functionality to higher level
-        // if (applyFlip)
-        // {
-        //     distMap.distribute(fCpy);
-        // }
-        // else
-        {
-            distMap.distribute(fCpy, noOp());
-        }
-
-        if
-        (
-            (mapper.direct()
-         && notNull(mapper.directAddressing()))
-         || !mapper.direct()
-        )
-        {
-            mapper(*this, fCpy);
-        }
-        else if (mapper.direct() && isNull(mapper.directAddressing()))
-        {
-            // Special case, no local mapper. Assume ordering already correct
-            // from distribution. Note: this behaviour is different compared
-            // to local mapper.
-            this->transfer(fCpy);
-            this->setSize(mapper.size());
-        }
-    }
-    else
-    {
-        if
-        (
-            (
-                mapper.direct()
-             && notNull(mapper.directAddressing())
-             && mapper.directAddressing().size()
-            )
-         || (!mapper.direct() && mapper.addressing().size())
-        )
-        {
-            Field<Type> fCpy(*this);
-            mapper(*this, fCpy);
-        }
-        else
-        {
-            this->setSize(mapper.size());
-        }
-    }
 }
 
 

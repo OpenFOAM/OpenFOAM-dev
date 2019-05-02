@@ -389,8 +389,8 @@ void Foam::timeVaryingMappedFvPatchField<Type>::autoMap
 {
     if (startSampledValues_.size())
     {
-        startSampledValues_.autoMap(m);
-        endSampledValues_.autoMap(m);
+        m(startSampledValues_, startSampledValues_);
+        m(endSampledValues_, endSampledValues_);
     }
     // Clear interpolator
     mapperPtr_.clear();

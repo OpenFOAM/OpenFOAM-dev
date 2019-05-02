@@ -130,7 +130,7 @@ void Foam::turbulentInletFvPatchField<Type>::autoMap
 )
 {
     fixedValueFvPatchField<Type>::autoMap(m);
-    referenceField_.autoMap(m);
+    m(referenceField_, referenceField_);
 }
 
 

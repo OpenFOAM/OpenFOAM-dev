@@ -128,7 +128,7 @@ void Foam::totalTemperatureFvPatchScalarField::autoMap
 )
 {
     fixedValueFvPatchScalarField::autoMap(m);
-    T0_.autoMap(m);
+    m(T0_, T0_);
 }
 
 

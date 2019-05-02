@@ -109,7 +109,7 @@ void Foam::surfaceNormalFixedValueFvPatchVectorField::autoMap
 )
 {
     fixedValueFvPatchVectorField::autoMap(m);
-    refValue_.autoMap(m);
+    m(refValue_, refValue_);
 }
 
 

@@ -120,7 +120,7 @@ void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::autoMap
 )
 {
     mixedFvPatchVectorField::autoMap(m);
-    inletDir_.autoMap(m);
+    m(inletDir_, inletDir_);
 }
 
 

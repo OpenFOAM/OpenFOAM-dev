@@ -100,8 +100,8 @@ void Foam::SRFVelocityFvPatchVectorField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    vectorField::autoMap(m);
-    inletValue_.autoMap(m);
+    m(*this, *this);
+    m(inletValue_, inletValue_);
 }
 
 

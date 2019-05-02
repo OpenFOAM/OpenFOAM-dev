@@ -156,7 +156,7 @@ void nutkAtmRoughWallFunctionFvPatchScalarField::autoMap
 )
 {
     nutkWallFunctionFvPatchScalarField::autoMap(m);
-    z0_.autoMap(m);
+    m(z0_, z0_);
 }
 
 

@@ -119,9 +119,9 @@ void Foam::wallHeatTransferFvPatchScalarField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    scalarField::autoMap(m);
-    Tinf_.autoMap(m);
-    alphaWall_.autoMap(m);
+    m(*this, *this);
+    m(Tinf_, Tinf_);
+    m(alphaWall_, alphaWall_);
 }
 
 

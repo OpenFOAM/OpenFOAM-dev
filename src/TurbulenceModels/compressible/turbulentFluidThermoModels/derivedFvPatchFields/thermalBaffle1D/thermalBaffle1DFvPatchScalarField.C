@@ -303,8 +303,8 @@ void thermalBaffle1DFvPatchScalarField<solidType>::autoMap
 
     if (this->owner())
     {
-        thickness_.autoMap(m);
-        Qs_.autoMap(m);
+        m(thickness_, thickness_);
+        m(Qs_, Qs_);
     }
 }
 
