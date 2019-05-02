@@ -61,7 +61,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
         ptf.emissivity_,
         mapper
     ),
-    qro_(ptf.qro_, mapper)
+    qro_(mapper(ptf.qro_))
 {}
 
 

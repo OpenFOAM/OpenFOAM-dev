@@ -325,7 +325,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         scalarFields_.insert
         (
             iter.key(),
-            new scalarField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 
@@ -339,7 +339,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         vectorFields_.insert
         (
             iter.key(),
-            new vectorField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 
@@ -353,7 +353,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         sphericalTensorFields_.insert
         (
             iter.key(),
-            new sphericalTensorField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 
@@ -367,7 +367,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         symmTensorFields_.insert
         (
             iter.key(),
-            new symmTensorField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 
@@ -381,7 +381,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         tensorFields_.insert
         (
             iter.key(),
-            new tensorField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 }

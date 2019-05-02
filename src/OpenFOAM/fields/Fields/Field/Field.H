@@ -83,6 +83,15 @@ class Field
     public tmp<Field<Type>>::refCount,
     public List<Type>
 {
+    // Private member functions
+
+        void doMap
+        (
+            const UList<Type>& mapF,
+            const labelListList& mapAddressing,
+            const scalarListList& mapWeights
+        );
+
 
 public:
 
@@ -162,54 +171,6 @@ public:
             const scalarListList& weights
         );
 
-        //- Construct by mapping from the given field
-        Field
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map
-        );
-
-        //- Construct by mapping from the given field
-        Field
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map,
-            const Type& defaultValue
-        );
-
-        //- Construct by mapping from the given field
-        Field
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map,
-            const UList<Type>& defaultValues
-        );
-
-        //- Construct by mapping from the given tmp field
-        Field
-        (
-            const tmp<Field<Type>>& tmapF,
-            const FieldMapper& map
-        );
-
-        //- Construct by mapping from the given tmp field. Supplied uniform
-        //  value for unmapped items
-        Field
-        (
-            const tmp<Field<Type>>& tmapF,
-            const FieldMapper& map,
-            const Type& defaultValue
-        );
-
-        //- Construct by mapping from the given tmp field. Supplied values
-        //  for unmapped items
-        Field
-        (
-            const tmp<Field<Type>>& tmapF,
-            const FieldMapper& map,
-            const UList<Type>& defaultValues
-        );
-
         //- Construct as copy
         Field(const Field<Type>&);
 
@@ -270,20 +231,6 @@ public:
             const tmp<Field<Type>>& tmapF,
             const labelListList& mapAddressing,
             const scalarListList& weights
-        );
-
-        //- Map from the given field
-        void map
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map
-        );
-
-        //- Map from the given tmp field
-        void map
-        (
-            const tmp<Field<Type>>& tmapF,
-            const FieldMapper& map
         );
 
         //- Map from self

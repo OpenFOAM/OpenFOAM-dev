@@ -125,7 +125,7 @@ Foam::fvPatchField<Type>::fvPatchField
         {
             fvPatchField<Type>::operator=(this->patchInternalField());
         }
-        this->map(ptf, mapper);
+        mapper(*this, ptf);
     }
 }
 

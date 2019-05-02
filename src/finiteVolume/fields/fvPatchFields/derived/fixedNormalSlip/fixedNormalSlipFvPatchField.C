@@ -51,7 +51,7 @@ Foam::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
-    fixedValue_(ptf.fixedValue_, mapper)
+    fixedValue_(mapper(ptf.fixedValue_))
 {}
 
 

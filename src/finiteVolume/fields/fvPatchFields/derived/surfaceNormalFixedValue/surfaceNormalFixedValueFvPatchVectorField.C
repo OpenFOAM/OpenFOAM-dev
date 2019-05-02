@@ -67,17 +67,13 @@ surfaceNormalFixedValueFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    refValue_(ptf.refValue_, mapper)
+    refValue_(mapper(ptf.refValue_))
 {
     // Note: calculate product only on ptf to avoid multiplication on
     // unset values in reconstructPar.
     fvPatchVectorField::operator=
     (
-        vectorField
-        (
-            ptf.refValue_*ptf.patch().nf(),
-            mapper
-        )
+        mapper(ptf.refValue_*ptf.patch().nf())
     );
 }
 

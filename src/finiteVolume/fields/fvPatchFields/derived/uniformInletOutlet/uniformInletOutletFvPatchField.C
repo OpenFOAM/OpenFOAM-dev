@@ -100,7 +100,7 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     // Initialize the patch value to the refValue
     fvPatchField<Type>::operator=(this->refValue());
 
-    this->map(ptf, mapper);
+    mapper(*this, ptf);
 }
 
 

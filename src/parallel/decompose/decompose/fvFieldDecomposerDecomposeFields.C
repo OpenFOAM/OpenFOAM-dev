@@ -146,10 +146,9 @@ Foam::fvFieldDecomposer::decomposeField
                 (
                     procPatch,
                     resF(),
-                    Field<Type>
+                    (*processorVolPatchFieldDecomposerPtrs_[patchi])
                     (
-                        field.primitiveField(),
-                        *processorVolPatchFieldDecomposerPtrs_[patchi]
+                        field.primitiveField()
                     )
                 )
             );
@@ -163,10 +162,9 @@ Foam::fvFieldDecomposer::decomposeField
                 (
                     procPatch,
                     resF(),
-                    Field<Type>
+                    (*processorVolPatchFieldDecomposerPtrs_[patchi])
                     (
-                        field.primitiveField(),
-                        *processorVolPatchFieldDecomposerPtrs_[patchi]
+                        field.primitiveField()
                     )
                 )
             );

@@ -66,7 +66,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
         ptf.emissivity_,
         mapper
     ),
-    Trad_(ptf.Trad_, mapper)
+    Trad_(mapper(ptf.Trad_))
 {}
 
 

@@ -75,7 +75,7 @@ Foam::pressureFvPatchScalarField::pressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    p_(ptf.p_, mapper)
+    p_(mapper(ptf.p_))
 {}
 
 

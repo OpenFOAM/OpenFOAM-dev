@@ -31,6 +31,7 @@ Description
 #include "IOstreams.H"
 #include "PackedBoolList.H"
 #include "IStringStream.H"
+#include "dictionary.H"
 
 using namespace Foam;
 

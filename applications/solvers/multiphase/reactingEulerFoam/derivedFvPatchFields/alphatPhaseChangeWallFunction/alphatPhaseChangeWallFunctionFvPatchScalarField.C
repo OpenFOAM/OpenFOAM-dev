@@ -88,8 +88,8 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    dmdt_(ptf.dmdt_, mapper),
-    mDotL_(ptf.mDotL_, mapper)
+    dmdt_(mapper(ptf.dmdt_)),
+    mDotL_(mapper(ptf.mDotL_))
 {}
 
 

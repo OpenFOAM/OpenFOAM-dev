@@ -84,7 +84,7 @@ Foam::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
     ranGen_(label(0)),
     fluctuationScale_(ptf.fluctuationScale_),
-    referenceField_(ptf.referenceField_, mapper),
+    referenceField_(mapper(ptf.referenceField_)),
     alpha_(ptf.alpha_),
     curTimeIndex_(-1)
 {}

@@ -73,7 +73,7 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(psf, p, iF, mapper),
-    q_(psf.q_, mapper),
+    q_(mapper(psf.q_)),
     relax_(psf.relax_),
     Tmin_(psf.Tmin_)
 {}

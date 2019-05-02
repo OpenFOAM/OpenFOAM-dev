@@ -59,7 +59,7 @@ Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
     phiName_(ptf.phiName_),
     psiName_(ptf.psiName_),
     gamma_(ptf.gamma_),
-    T0_(ptf.T0_, mapper)
+    T0_(mapper(ptf.T0_))
 {}
 
 

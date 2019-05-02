@@ -73,11 +73,11 @@ thermalBaffle1DFvPatchScalarField
     mixedFvPatchScalarField(ptf, p, iF, mapper),
     TName_(ptf.TName_),
     baffleActivated_(ptf.baffleActivated_),
-    thickness_(ptf.thickness_, mapper),
-    Qs_(ptf.Qs_, mapper),
+    thickness_(mapper(ptf.thickness_)),
+    Qs_(mapper(ptf.Qs_)),
     solidDict_(ptf.solidDict_),
     solidPtr_(ptf.solidPtr_),
-    qrPrevious_(ptf.qrPrevious_, mapper),
+    qrPrevious_(mapper(ptf.qrPrevious_)),
     qrRelaxation_(ptf.qrRelaxation_),
     qrName_(ptf.qrName_)
 {}

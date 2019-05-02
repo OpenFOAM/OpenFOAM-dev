@@ -58,7 +58,7 @@ pressureDirectedInletVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
-    inletDir_(ptf.inletDir_, mapper)
+    inletDir_(mapper(ptf.inletDir_))
 {}
 
 

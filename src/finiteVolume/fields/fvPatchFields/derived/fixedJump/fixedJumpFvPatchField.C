@@ -49,7 +49,7 @@ Foam::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
 )
 :
     jumpCyclicFvPatchField<Type>(ptf, p, iF, mapper),
-    jump_(ptf.jump_, mapper)
+    jump_(mapper(ptf.jump_))
 {}
 
 

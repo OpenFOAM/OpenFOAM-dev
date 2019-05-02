@@ -91,7 +91,7 @@ Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
     rhoName_(ptf.rhoName_),
     psiName_(ptf.psiName_),
     gamma_(ptf.gamma_),
-    p0_(ptf.p0_, mapper)
+    p0_(mapper(ptf.p0_))
 {}
 
 

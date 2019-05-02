@@ -69,9 +69,9 @@ Foam::mixedFvPatchField<Type>::mixedFvPatchField
 )
 :
     fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired),
-    refValue_(ptf.refValue_, mapper),
-    refGrad_(ptf.refGrad_, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
+    refValue_(mapper(ptf.refValue_)),
+    refGrad_(mapper(ptf.refGrad_)),
+    valueFraction_(mapper(ptf.valueFraction_))
 {
     if (mappingRequired && notNull(iF) && mapper.hasUnmapped())
     {

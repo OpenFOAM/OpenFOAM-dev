@@ -148,8 +148,8 @@ nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
 )
 :
     nutkWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
-    Ks_(ptf.Ks_, mapper),
-    Cs_(ptf.Cs_, mapper)
+    Ks_(mapper(ptf.Ks_)),
+    Cs_(mapper(ptf.Cs_))
 {}
 
 

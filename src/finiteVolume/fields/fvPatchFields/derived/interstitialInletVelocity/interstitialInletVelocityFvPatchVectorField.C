@@ -54,7 +54,7 @@ interstitialInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
-    inletVelocity_(ptf.inletVelocity_, mapper),
+    inletVelocity_(mapper(ptf.inletVelocity_)),
     alphaName_(ptf.alphaName_)
 {}
 

@@ -81,7 +81,7 @@ Foam::radiationCoupledBase::radiationCoupledBase
 :
     patch_(patch),
     method_(emissivityMethodTypeNames_[calculationType]),
-    emissivity_(emissivity, mapper)
+    emissivity_(mapper(emissivity))
 {}
 
 

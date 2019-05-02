@@ -55,8 +55,8 @@ Foam::wallHeatTransferFvPatchScalarField::wallHeatTransferFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
-    Tinf_(ptf.Tinf_, mapper),
-    alphaWall_(ptf.alphaWall_, mapper)
+    Tinf_(mapper(ptf.Tinf_)),
+    alphaWall_(mapper(ptf.alphaWall_))
 {}
 
 

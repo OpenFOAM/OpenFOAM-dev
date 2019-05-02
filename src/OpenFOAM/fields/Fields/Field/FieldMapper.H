@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,14 @@ namespace Foam
 
 class FieldMapper
 {
+    // Private member functions
+
+        template<class Type>
+        void map(Field<Type>& f, const Field<Type>& mapF) const;
+
+        template<class Type>
+        tmp<Field<Type>> map(const Field<Type>& f) const;
+
 
 public:
 
@@ -71,59 +79,94 @@ public:
             return false;
         }
 
-        virtual const mapDistributeBase& distributeMap() const
-        {
-            FatalErrorInFunction
-                << "attempt to access null distributeMap"
-                << abort(FatalError);
-            return *(new mapDistributeBase());
-        }
+        virtual const mapDistributeBase& distributeMap() const;
 
         //- Are there unmapped values? I.e. do all size() elements get
         //  get value
         virtual bool hasUnmapped() const = 0;
 
-        virtual const labelUList& directAddressing() const
-        {
-            FatalErrorInFunction
-                << "attempt to access null direct addressing"
-                << abort(FatalError);
+        virtual const labelUList& directAddressing() const;
 
-            return labelUList::null();
-        }
+        virtual const labelListList& addressing() const;
 
-        virtual const labelListList& addressing() const
-        {
-            FatalErrorInFunction
-                << "attempt to access null interpolation addressing"
-                << abort(FatalError);
-
-            return labelListList::null();
-        }
-
-        virtual const scalarListList& weights() const
-        {
-            FatalErrorInFunction
-                << "attempt to access null interpolation weights"
-                << abort(FatalError);
-
-            return scalarListList::null();
-        }
+        virtual const scalarListList& weights() const;
 
 
     // Member Operators
 
+        virtual void operator()
+        (
+            Field<scalar>& f,
+            const Field<scalar>& mapF
+        ) const;
+
+        virtual void operator()
+        (
+            Field<vector>& f,
+            const Field<vector>& mapF
+        ) const;
+
+        virtual void operator()
+        (
+            Field<sphericalTensor>& f,
+            const Field<sphericalTensor>& mapF
+        ) const;
+
+        virtual void operator()
+        (
+            Field<symmTensor>& f,
+            const Field<symmTensor>& mapF
+        ) const;
+
+        virtual void operator()
+        (
+            Field<tensor>& f,
+            const Field<tensor>& mapF
+        ) const;
+
         template<class Type>
-        tmp<Field<Type>> operator()(const Field<Type>& f) const
-        {
-            return tmp<Field<Type>>(new Field<Type>(f, *this));
-        }
+        void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;
+
+
+        virtual tmp<Field<scalar>> operator()
+        (
+            const Field<scalar>& mapF
+        ) const;
+
+        virtual tmp<Field<vector>> operator()
+        (
+            const Field<vector>& mapF
+        ) const;
+
+        virtual tmp<Field<sphericalTensor>> operator()
+        (
+            const Field<sphericalTensor>& mapF
+        ) const;
+
+        virtual tmp<Field<symmTensor>> operator()
+        (
+            const Field<symmTensor>& mapF
+        ) const;
+
+        virtual tmp<Field<tensor>> operator()
+        (
+            const Field<tensor>& mapF
+        ) const;
+
+        template<class Type>
+        tmp<Field<Type>> operator()(const tmp<Field<Type>>& tmapF) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "FieldMapperTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -50,7 +50,7 @@ Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
+    valueFraction_(mapper(ptf.valueFraction_))
 {}
 
 

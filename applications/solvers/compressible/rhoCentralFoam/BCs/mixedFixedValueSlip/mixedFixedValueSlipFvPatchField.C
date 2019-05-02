@@ -65,8 +65,8 @@ Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
-    refValue_(ptf.refValue_, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
+    refValue_(mapper(ptf.refValue_)),
+    valueFraction_(mapper(ptf.valueFraction_))
 {}
 
 

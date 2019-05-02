@@ -60,8 +60,8 @@ tractionDisplacementCorrectionFvPatchVectorField
 )
 :
     fixedGradientFvPatchVectorField(tdpvf, p, iF, mapper),
-    traction_(tdpvf.traction_, mapper),
-    pressure_(tdpvf.pressure_, mapper)
+    traction_(mapper(tdpvf.traction_)),
+    pressure_(mapper(tdpvf.pressure_))
 {}
 
 
