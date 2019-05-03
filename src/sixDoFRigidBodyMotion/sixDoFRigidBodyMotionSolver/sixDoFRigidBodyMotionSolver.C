@@ -196,9 +196,9 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 
     dimensionedVector g("g", dimAcceleration, Zero);
 
-    if (t.foundObject<uniformDimensionedVectorField>("g"))
+    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
     {
-        g = t.lookupObject<uniformDimensionedVectorField>("g");
+        g = mesh().lookupObject<uniformDimensionedVectorField>("g");
     }
     else if (coeffDict().found("g"))
     {
