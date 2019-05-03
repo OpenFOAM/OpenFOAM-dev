@@ -33,7 +33,7 @@ Description
 #define fvPatchFieldMapper_H
 
 #include "primitiveFields.H"
-#include "FieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,7 +46,7 @@ namespace Foam
 
 class fvPatchFieldMapper
 :
-    public FieldMapper
+    public fieldMapper
 {
 
 public:

@@ -115,8 +115,8 @@ void tractionDisplacementCorrectionFvPatchVectorField::autoMap
 )
 {
     fixedGradientFvPatchVectorField::autoMap(m);
-    traction_.autoMap(m);
-    pressure_.autoMap(m);
+    m(traction_, traction_);
+    m(pressure_, pressure_);
 }
 
 

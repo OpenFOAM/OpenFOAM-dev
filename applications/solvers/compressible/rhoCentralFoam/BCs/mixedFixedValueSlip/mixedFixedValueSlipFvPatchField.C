@@ -103,9 +103,9 @@ void Foam::mixedFixedValueSlipFvPatchField<Type>::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    Field<Type>::autoMap(m);
-    refValue_.autoMap(m);
-    valueFraction_.autoMap(m);
+    m(*this, *this);
+    m(refValue_, refValue_);
+    m(valueFraction_, valueFraction_);
 }
 
 

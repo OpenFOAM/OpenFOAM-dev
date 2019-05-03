@@ -32,7 +32,7 @@ Description
 #ifndef morphFieldMapper_H
 #define morphFieldMapper_H
 
-#include "FieldMapper.H"
+#include "fieldMapper.H"
 #include "Map.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,7 +46,7 @@ namespace Foam
 
 class morphFieldMapper
 :
-    public FieldMapper
+    public fieldMapper
 {
 
 public:
@@ -73,7 +73,6 @@ public:
 
         //- Return list of inserted objects
         virtual const labelList& insertedObjectLabels() const = 0;
-
 };
 
 

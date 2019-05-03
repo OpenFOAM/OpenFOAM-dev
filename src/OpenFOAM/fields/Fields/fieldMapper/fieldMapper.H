@@ -22,15 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::FieldMapper
+    Foam::fieldMapper
 
 Description
     Abstract base class to hold the Field mapping addressing and weights.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef FieldMapper_H
-#define FieldMapper_H
+#ifndef fieldMapper_H
+#define fieldMapper_H
 
 #include "Field.H"
 #include "mapDistributeBase.H"
@@ -41,10 +41,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class FieldMapper Declaration
+                           Class fieldMapper Declaration
 \*---------------------------------------------------------------------------*/
 
-class FieldMapper
+class fieldMapper
 {
     // Private member functions
 
@@ -60,12 +60,12 @@ public:
     // Constructors
 
         //- Null constructor
-        FieldMapper()
+        fieldMapper()
         {}
 
 
     //- Destructor
-    virtual ~FieldMapper()
+    virtual ~fieldMapper()
     {}
 
 
@@ -166,7 +166,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "FieldMapperTemplates.C"
+    #include "fieldMapperTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

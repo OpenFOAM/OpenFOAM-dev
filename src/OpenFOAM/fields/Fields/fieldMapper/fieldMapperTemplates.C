@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::FieldMapper::map(Field<Type>& f, const Field<Type>& mapF) const
+void Foam::fieldMapper::map(Field<Type>& f, const Field<Type>& mapF) const
 {
     if (distributed())
     {
@@ -87,7 +87,7 @@ void Foam::FieldMapper::map(Field<Type>& f, const Field<Type>& mapF) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::FieldMapper::map
+Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::map
 (
     const Field<Type>& mapF
 ) const
@@ -99,7 +99,7 @@ Foam::tmp<Foam::Field<Type>> Foam::FieldMapper::map
 
 
 template<class Type>
-void Foam::FieldMapper::operator()
+void Foam::fieldMapper::operator()
 (
     Field<Type>& f,
     const tmp<Field<Type>>& tmapF
@@ -111,7 +111,7 @@ void Foam::FieldMapper::operator()
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::FieldMapper::operator()
+Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::operator()
 (
     const tmp<Field<Type>>& tmapF
 ) const

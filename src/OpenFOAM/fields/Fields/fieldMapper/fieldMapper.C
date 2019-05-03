@@ -23,11 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::mapDistributeBase& Foam::FieldMapper::distributeMap() const
+const Foam::mapDistributeBase& Foam::fieldMapper::distributeMap() const
 {
     FatalErrorInFunction
         << "attempt to access null distributeMap"
@@ -36,7 +36,7 @@ const Foam::mapDistributeBase& Foam::FieldMapper::distributeMap() const
 }
 
 
-const Foam::labelUList& Foam::FieldMapper::directAddressing() const
+const Foam::labelUList& Foam::fieldMapper::directAddressing() const
 {
     FatalErrorInFunction
         << "attempt to access null direct addressing"
@@ -46,7 +46,7 @@ const Foam::labelUList& Foam::FieldMapper::directAddressing() const
 }
 
 
-const Foam::labelListList& Foam::FieldMapper::addressing() const
+const Foam::labelListList& Foam::fieldMapper::addressing() const
 {
     FatalErrorInFunction
         << "attempt to access null interpolation addressing"
@@ -56,7 +56,7 @@ const Foam::labelListList& Foam::FieldMapper::addressing() const
 }
 
 
-const Foam::scalarListList& Foam::FieldMapper::weights() const
+const Foam::scalarListList& Foam::fieldMapper::weights() const
 {
     FatalErrorInFunction
         << "attempt to access null interpolation weights"
@@ -68,7 +68,7 @@ const Foam::scalarListList& Foam::FieldMapper::weights() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::Field<Foam::scalar>> Foam::FieldMapper::operator()
+Foam::tmp<Foam::Field<Foam::scalar>> Foam::fieldMapper::operator()
 (
     const Field<scalar>& mapF
 ) const
@@ -77,7 +77,7 @@ Foam::tmp<Foam::Field<Foam::scalar>> Foam::FieldMapper::operator()
 }
 
 
-Foam::tmp<Foam::Field<Foam::vector>> Foam::FieldMapper::operator()
+Foam::tmp<Foam::Field<Foam::vector>> Foam::fieldMapper::operator()
 (
     const Field<vector>& mapF
 ) const
@@ -86,7 +86,7 @@ Foam::tmp<Foam::Field<Foam::vector>> Foam::FieldMapper::operator()
 }
 
 
-Foam::tmp<Foam::Field<Foam::sphericalTensor>> Foam::FieldMapper::operator()
+Foam::tmp<Foam::Field<Foam::sphericalTensor>> Foam::fieldMapper::operator()
 (
     const Field<sphericalTensor>& mapF
 ) const
@@ -95,7 +95,7 @@ Foam::tmp<Foam::Field<Foam::sphericalTensor>> Foam::FieldMapper::operator()
 }
 
 
-Foam::tmp<Foam::Field<Foam::symmTensor>> Foam::FieldMapper::operator()
+Foam::tmp<Foam::Field<Foam::symmTensor>> Foam::fieldMapper::operator()
 (
     const Field<symmTensor>& mapF
 ) const
@@ -104,7 +104,7 @@ Foam::tmp<Foam::Field<Foam::symmTensor>> Foam::FieldMapper::operator()
 }
 
 
-Foam::tmp<Foam::Field<Foam::tensor>> Foam::FieldMapper::operator()
+Foam::tmp<Foam::Field<Foam::tensor>> Foam::fieldMapper::operator()
 (
     const Field<tensor>& mapF
 ) const
@@ -113,7 +113,7 @@ Foam::tmp<Foam::Field<Foam::tensor>> Foam::FieldMapper::operator()
 }
 
 
-void Foam::FieldMapper::operator()
+void Foam::fieldMapper::operator()
 (
     Field<scalar>& f,
     const Field<scalar>& mapF
@@ -123,7 +123,7 @@ void Foam::FieldMapper::operator()
 }
 
 
-void Foam::FieldMapper::operator()
+void Foam::fieldMapper::operator()
 (
     Field<vector>& f,
     const Field<vector>& mapF
@@ -133,7 +133,7 @@ void Foam::FieldMapper::operator()
 }
 
 
-void Foam::FieldMapper::operator()
+void Foam::fieldMapper::operator()
 (
     Field<sphericalTensor>& f,
     const Field<sphericalTensor>& mapF
@@ -143,7 +143,7 @@ void Foam::FieldMapper::operator()
 }
 
 
-void Foam::FieldMapper::operator()
+void Foam::fieldMapper::operator()
 (
     Field<symmTensor>& f,
     const Field<symmTensor>& mapF
@@ -153,7 +153,7 @@ void Foam::FieldMapper::operator()
 }
 
 
-void Foam::FieldMapper::operator()
+void Foam::fieldMapper::operator()
 (
     Field<tensor>& f,
     const Field<tensor>& mapF
