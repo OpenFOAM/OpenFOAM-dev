@@ -72,8 +72,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef CONSTRUCT_H
-#define CONSTRUCT_H
+#ifndef BC_H
+#define BC_H
 
 #include "BASEFvPatchFields.H"
 #include "Function1.H"
@@ -201,17 +201,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const FVPATCHF&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const FVPATCHF&, const labelList&);
 
 
         // Evaluation functions
