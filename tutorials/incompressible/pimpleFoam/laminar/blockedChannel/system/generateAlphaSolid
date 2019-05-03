@@ -1,0 +1,49 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+type            coded;
+libs            ("libutilityFunctionObjects.so");
+
+name            generateAlphaSolid;
+
+codeWrite
+#{
+    const dimensionedVector dx(dimless/dimLength, vector(1, 0, 0));
+    const dimensionedVector dy(dimless/dimLength, vector(0, 1, 0));
+
+    const volScalarField x(mesh().C() & dx), y(mesh().C() & dy);
+
+    const scalar x0 = 0.032, x1 = 0.064, x2 = 0.128, x3 = 0.224;
+    const scalar y0 = -0.088, y1 = -0.056;
+
+    volScalarField alpha
+    (
+        IOobject
+        (
+            IOobject::groupName("alpha", "solid"),
+            mesh().time().constant(),
+            mesh()
+        ),
+        mesh(),
+        dimless,
+        zeroGradientFvPatchScalarField::typeName
+    );
+
+    alpha =
+        0.5
+       *(
+            pos(x - x0)*pos(x1 - x)*(x - x0)/(x1 - x0)
+          + pos(x - x1)*pos(x2 - x)
+          + pos(x - x2)*pos(x3 - x)*(x3 - x)/(x3 - x2)
+        )
+       *pos(y - y0)*pos(y1 - y);
+
+    alpha.write();
+#};
+
+// ************************************************************************* //
