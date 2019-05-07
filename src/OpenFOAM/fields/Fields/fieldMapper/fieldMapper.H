@@ -75,13 +75,6 @@ public:
 
         virtual bool direct() const = 0;
 
-        virtual bool distributed() const
-        {
-            return false;
-        }
-
-        virtual const mapDistributeBase& distributeMap() const;
-
         //- Are there unmapped values? I.e. do all size() elements get
         //  get value
         virtual bool hasUnmapped() const = 0;

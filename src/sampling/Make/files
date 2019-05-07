@@ -53,6 +53,7 @@ graphField/makeGraph.C
 
 meshToMesh/meshToMesh.C
 meshToMesh/meshToMeshParallelOps.C
+meshToMesh/distributedWeightedFvPatchFieldMapper.C
 meshToMeshMethods = meshToMesh/calcMethod
 $(meshToMeshMethods)/meshToMeshMethod/meshToMeshMethod.C
 $(meshToMeshMethods)/meshToMeshMethod/meshToMeshMethodNew.C

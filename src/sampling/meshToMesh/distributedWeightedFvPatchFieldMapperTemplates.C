@@ -23,35 +23,44 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fieldMapper.H"
+#include "distributedWeightedFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fieldMapper::map(Field<Type>& f, const Field<Type>& mapF) const
+void Foam::distributedWeightedFvPatchFieldMapper::map
+(
+    Field<Type>& f,
+    const Field<Type>& mapF
+) const
 {
-    if
-    (
-        direct()
-     && notNull(directAddressing())
-     && directAddressing().size()
-    )
+    if (singlePatchProc_ == -1)
     {
-        f.map(mapF, directAddressing());
-    }
-    else if (!direct() && addressing().size())
-    {
-        f.map(mapF, addressing(), weights());
+        // Fetch remote parts of mapF
+        const mapDistributeBase& distMap = *distMapPtr_;
+        Field<Type> newMapF(mapF);
+
+        // Moved flux "flip" functionality to higher level
+        // if (applyFlip)
+        // {
+        //     distMap.distribute(newMapF);
+        // }
+        // else
+        {
+            distMap.distribute(newMapF, noOp());
+        }
+
+        f.map(newMapF, addressing(), weights());
     }
     else
     {
-        f.setSize(size());
+        f.map(mapF, addressing(), weights());
     }
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::map
+Foam::tmp<Foam::Field<Type>> Foam::distributedWeightedFvPatchFieldMapper::map
 (
     const Field<Type>& mapF
 ) const
@@ -63,7 +72,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::map
 
 
 template<class Type>
-void Foam::fieldMapper::operator()
+void Foam::distributedWeightedFvPatchFieldMapper::operator()
 (
     Field<Type>& f,
     const tmp<Field<Type>>& tmapF
@@ -75,7 +84,8 @@ void Foam::fieldMapper::operator()
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::operator()
+Foam::tmp<Foam::Field<Type>>
+Foam::distributedWeightedFvPatchFieldMapper::operator()
 (
     const tmp<Field<Type>>& tmapF
 ) const

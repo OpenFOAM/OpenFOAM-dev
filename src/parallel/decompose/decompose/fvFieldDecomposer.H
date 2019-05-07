@@ -53,6 +53,7 @@ class IOobjectList;
 
 class fvFieldDecomposer
 {
+
 public:
 
         //- Patch field decomposer class
@@ -143,54 +144,6 @@ public:
                 const labelUList& directAddressing() const
                 {
                     return directAddressing_;
-                }
-        };
-
-
-        //- Processor patch field decomposer class. Surface field is assumed
-        //  to have direction (so manipulates sign when mapping)
-        class processorSurfacePatchFieldDecomposer
-        :
-            public fvPatchFieldMapper
-        {
-            labelListList addressing_;
-            scalarListList weights_;
-
-        public:
-
-            //- Construct given addressing
-            processorSurfacePatchFieldDecomposer
-            (
-                const labelUList& addressingSlice
-            );
-
-
-            // Member functions
-
-                label size() const
-                {
-                    return addressing_.size();
-                }
-
-                bool direct() const
-                {
-                    return false;
-                }
-
-                //- Are there unmapped values
-                bool hasUnmapped() const
-                {
-                    return false;
-                }
-
-                const labelListList& addressing() const
-                {
-                    return addressing_;
-                }
-
-                const scalarListList& weights() const
-                {
-                    return weights_;
                 }
         };
 
