@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::distributedWeightedFvPatchFieldMapper
+    Foam::generalFieldMapper
 
 Description
-    FieldMapper with weighted mapping from (optionally remote) quantities.
+    General field mapper supporting both direct and weighted mapping.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef distributedWeightedFvPatchFieldMapper_H
-#define distributedWeightedFvPatchFieldMapper_H
+#ifndef generalFieldMapper_H
+#define generalFieldMapper_H
 
-#include "fvPatchFieldMapper.H"
-#include "mapDistributeBase.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,39 +40,14 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-           Class distributedWeightedFvPatchFieldMapper Declaration
+                           Class generalFieldMapper Declaration
 \*---------------------------------------------------------------------------*/
 
-class distributedWeightedFvPatchFieldMapper
+class generalFieldMapper
 :
-    public fvPatchFieldMapper
+    virtual public fieldMapper
 {
-    // Private data
-
-        const label singlePatchProc_;
-
-        const mapDistributeBase* distMapPtr_;
-
-        const labelListList& addressing_;
-
-        const scalarListList& weights_;
-
-        bool hasUnmapped_;
-
-
     // Private member functions
-
-        label size() const
-        {
-            if (singlePatchProc_ == -1)
-            {
-                return distMapPtr_->constructSize();
-            }
-            else
-            {
-                return addressing().size();
-            }
-        }
 
         template<class Type>
         void map(Field<Type>& f, const Field<Type>& mapF) const;
@@ -86,55 +60,25 @@ public:
 
     // Constructors
 
-        //- Construct given addressing
-        distributedWeightedFvPatchFieldMapper
-        (
-            const label singlePatchProc,
-            const mapDistributeBase* distMapPtr,
-            const labelListList& addressing,
-            const scalarListList& weights
-        )
-        :
-            singlePatchProc_(singlePatchProc),
-            distMapPtr_(distMapPtr),
-            addressing_(addressing),
-            weights_(weights),
-            hasUnmapped_(false)
-        {
-            forAll(addressing_, i)
-            {
-                if (addressing_[i].size() == 0)
-                {
-                    hasUnmapped_ = true;
-                }
-            }
-
-            if ((singlePatchProc_ == -1) != (distMapPtr_ != nullptr))
-            {
-                FatalErrorIn
-                (
-                    "distributedWeightedFvPatchFieldMapper::"
-                    "distributedWeightedFvPatchFieldMapper(..)"
-                )   << "Supply a mapDistributeBase if and only if "
-                    << "singlePatchProc is -1"
-                    << " singlePatchProc_:" << singlePatchProc_
-                    << " distMapPtr_:" << (distMapPtr_ != nullptr)
-                    << exit(FatalError);
-            }
-        }
+        //- Null constructor
+        generalFieldMapper()
+        {}
 
 
     //- Destructor
-    virtual ~distributedWeightedFvPatchFieldMapper()
+    virtual ~generalFieldMapper()
     {}
 
 
     // Member Functions
 
-        virtual bool hasUnmapped() const
-        {
-            return hasUnmapped_;
-        }
+        virtual bool direct() const = 0;
+
+        //- Are there unmapped values? I.e. do all size() elements get
+        //  get value
+        virtual bool hasUnmapped() const = 0;
+
+        virtual const labelUList& directAddressing() const;
 
         virtual const labelListList& addressing() const;
 
@@ -173,9 +117,6 @@ public:
             const Field<tensor>& mapF
         ) const;
 
-        template<class Type>
-        void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;
-
 
         virtual tmp<Field<scalar>> operator()
         (
@@ -201,9 +142,6 @@ public:
         (
             const Field<tensor>& mapF
         ) const;
-
-        template<class Type>
-        tmp<Field<Type>> operator()(const tmp<Field<Type>>& tmapF) const;
 };
 
 
@@ -214,7 +152,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "distributedWeightedFvPatchFieldMapperTemplates.C"
+    #include "generalFieldMapperTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

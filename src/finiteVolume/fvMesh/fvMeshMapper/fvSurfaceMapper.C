@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,11 @@ void Foam::fvSurfaceMapper::calcAddressing() const
         directAddrPtr_ =
             new labelList
             (
-                labelList::subList(faceMap_.directAddressing(), size())
+                labelList::subList
+                (
+                    faceMap_.directAddressing(),
+                    mesh_.nInternalFaces()
+                )
             );
         labelList& addr = *directAddrPtr_;
 
@@ -78,14 +82,22 @@ void Foam::fvSurfaceMapper::calcAddressing() const
         interpolationAddrPtr_ =
             new labelListList
             (
-                labelListList::subList(faceMap_.addressing(), size())
+                labelListList::subList
+                (
+                    faceMap_.addressing(),
+                    mesh_.nInternalFaces()
+                )
             );
         labelListList& addr = *interpolationAddrPtr_;
 
         weightsPtr_ =
             new scalarListList
             (
-                scalarListList::subList(faceMap_.weights(), size())
+                scalarListList::subList
+                (
+                    faceMap_.weights(),
+                    mesh_.nInternalFaces()
+                )
             );
         scalarListList& w = *weightsPtr_;
 
@@ -115,7 +127,7 @@ void Foam::fvSurfaceMapper::calcAddressing() const
         forAll(insFaces, facei)
         {
             // If the face is internal, keep it here
-            if (insFaces[facei] < size())
+            if (insFaces[facei] < mesh_.nInternalFaces())
             {
                 ins[nIns] = insFaces[facei];
                 nIns++;

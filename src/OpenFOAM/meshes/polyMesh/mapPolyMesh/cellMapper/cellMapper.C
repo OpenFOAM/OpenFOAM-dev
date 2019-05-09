@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,7 +185,7 @@ void Foam::cellMapper::calcAddressing() const
                     << "cellVolumes size " << V.size()
                     << " is not the old number of cells " << sizeBeforeMapping()
                     << ". Are your cellVolumes already mapped?"
-                    << " (new number of cells " << size() << ")"
+                    << " (new number of cells " << mpm_.cellMap().size() << ")"
                     << abort(FatalError);
             }
 
@@ -372,12 +372,6 @@ Foam::cellMapper::~cellMapper()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::label Foam::cellMapper::size() const
-{
-    return mpm_.cellMap().size();
-}
-
 
 Foam::label Foam::cellMapper::sizeBeforeMapping() const
 {

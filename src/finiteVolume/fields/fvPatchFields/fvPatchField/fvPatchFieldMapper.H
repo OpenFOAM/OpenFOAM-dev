@@ -32,8 +32,7 @@ Description
 #ifndef fvPatchFieldMapper_H
 #define fvPatchFieldMapper_H
 
-#include "primitiveFields.H"
-#include "fieldMapper.H"
+#include "generalFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,7 +45,7 @@ namespace Foam
 
 class fvPatchFieldMapper
 :
-    public fieldMapper
+    virtual public fieldMapper
 {
 
 public:
@@ -55,6 +54,26 @@ public:
 
         //- Null constructor
         fvPatchFieldMapper()
+        {}
+};
+
+
+/*---------------------------------------------------------------------------*\
+                 Class generalFvPatchFieldMapper Declaration
+\*---------------------------------------------------------------------------*/
+
+class generalFvPatchFieldMapper
+:
+    public fvPatchFieldMapper,
+    public generalFieldMapper
+{
+
+public:
+
+    // Constructors
+
+        //- Null constructor
+        generalFvPatchFieldMapper()
         {}
 };
 

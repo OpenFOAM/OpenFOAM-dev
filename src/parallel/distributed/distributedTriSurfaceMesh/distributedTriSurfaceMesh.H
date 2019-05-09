@@ -88,9 +88,10 @@ public:
 
         static const NamedEnum<distributionType, 3> distributionTypeNames_;
 
+
 private:
 
-    // Private member data
+    // Private data
 
         //- Merging distance
         scalar mergeDist_;

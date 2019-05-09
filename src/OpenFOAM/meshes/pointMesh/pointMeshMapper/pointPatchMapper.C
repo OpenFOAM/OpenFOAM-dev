@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ void Foam::pointPatchMapper::calcAddressing() const
         // patch points. Problem is we don't know what points were in the patch
         // for points that were merged.
 
-        interpolationAddrPtr_ = new labelListList(size());
+        interpolationAddrPtr_ = new labelListList(patch_.size());
         labelListList& addr = *interpolationAddrPtr_;
 
         weightsPtr_ = new scalarListList(addr.size());
@@ -116,7 +116,7 @@ Foam::pointPatchMapper::pointPatchMapper
     const mapPolyMesh& mpm
 )
 :
-    pointPatchFieldMapper(),
+    generalPointPatchFieldMapper(),
     patch_(patch),
     pointMapper_(pointMap),
     mpm_(mpm),

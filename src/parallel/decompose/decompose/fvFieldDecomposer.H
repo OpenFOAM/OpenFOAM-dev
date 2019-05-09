@@ -37,7 +37,7 @@ SourceFiles
 #define fvFieldDecomposer_H
 
 #include "fvMesh.H"
-#include "fvPatchFieldMapper.H"
+#include "directFvPatchFieldMapper.H"
 #include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -59,11 +59,17 @@ public:
         //- Patch field decomposer class
         class patchFieldDecomposer
         :
-            public fvPatchFieldMapper
+            public labelList,
+            public directFvPatchFieldMapper
         {
-            // Private data
+            // Private member functions
 
-                labelList directAddressing_;
+                labelList alignAddressing
+                (
+                    const labelUList& addressingSlice,
+                    const label addressingOffset
+                ) const;
+
 
         public:
 
@@ -75,30 +81,6 @@ public:
                     const labelUList& addressingSlice,
                     const label addressingOffset
                 );
-
-
-            // Member functions
-
-                label size() const
-                {
-                    return directAddressing_.size();
-                }
-
-                bool direct() const
-                {
-                    return true;
-                }
-
-                //- Are there unmapped values
-                bool hasUnmapped() const
-                {
-                    return false;
-                }
-
-                const labelUList& directAddressing() const
-                {
-                    return directAddressing_;
-                }
         };
 
 
@@ -107,11 +89,17 @@ public:
         //  holds neighbour data)
         class processorVolPatchFieldDecomposer
         :
-            public fvPatchFieldMapper
+            public labelList,
+            public directFvPatchFieldMapper
         {
-            // Private data
+            // Private member functions
 
-                labelList directAddressing_;
+                labelList alignAddressing
+                (
+                    const fvMesh& mesh,
+                    const labelUList& addressingSlice
+                ) const;
+
 
         public:
 
@@ -121,30 +109,6 @@ public:
                 const fvMesh& mesh,
                 const labelUList& addressingSlice
             );
-
-
-            // Member functions
-
-                label size() const
-                {
-                    return directAddressing_.size();
-                }
-
-                bool direct() const
-                {
-                    return true;
-                }
-
-                //- Are there unmapped values
-                bool hasUnmapped() const
-                {
-                    return false;
-                }
-
-                const labelUList& directAddressing() const
-                {
-                    return directAddressing_;
-                }
         };
 
 

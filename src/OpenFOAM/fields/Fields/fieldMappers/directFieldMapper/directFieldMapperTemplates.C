@@ -23,65 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fieldMapper.H"
+#include "directFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fieldMapper::map(Field<Type>& f, const Field<Type>& mapF) const
+void Foam::directFieldMapper::map
+(
+    Field<Type>& f,
+    const Field<Type>& mapF
+) const
 {
-    if
-    (
-        direct()
-     && notNull(directAddressing())
-     && directAddressing().size()
-    )
+    if (notNull(addressing()) && addressing().size())
     {
-        f.map(mapF, directAddressing());
-    }
-    else if (!direct() && addressing().size())
-    {
-        f.map(mapF, addressing(), weights());
+        f.map(mapF, addressing());
     }
     else
     {
-        f.setSize(size());
+        f.setSize(0);
     }
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::map
+Foam::tmp<Foam::Field<Type>> Foam::directFieldMapper::map
 (
     const Field<Type>& mapF
 ) const
 {
-    tmp<Field<Type>> tf(new Field<Type>(size()));
+    tmp<Field<Type>> tf(new Field<Type>(addressing().size()));
     map(tf.ref(), mapF);
-    return tf;
-}
-
-
-template<class Type>
-void Foam::fieldMapper::operator()
-(
-    Field<Type>& f,
-    const tmp<Field<Type>>& tmapF
-) const
-{
-    map(f, tmapF());
-    tmapF.clear();
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::operator()
-(
-    const tmp<Field<Type>>& tmapF
-) const
-{
-    tmp<Foam::Field<Type>> tf(map(tmapF()));
-    tmapF.clear();
     return tf;
 }
 

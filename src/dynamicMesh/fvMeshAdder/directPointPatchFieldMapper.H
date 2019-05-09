@@ -45,7 +45,7 @@ namespace Foam
 
 class directPointPatchFieldMapper
 :
-    public pointPatchFieldMapper
+    public generalPointPatchFieldMapper
 {
 
     //- Addressing from new back to old

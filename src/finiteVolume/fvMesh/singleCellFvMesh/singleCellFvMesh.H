@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,13 +90,14 @@ public:
         //- Patch field mapper class for agglomerated meshes
         class agglomPatchFieldMapper
         :
-            public fvPatchFieldMapper
+            public generalFvPatchFieldMapper
         {
             // Private data
 
                 const labelListList& addressing_;
                 const scalarListList& weights_;
                 bool hasUnmapped_;
+
 
         public:
 

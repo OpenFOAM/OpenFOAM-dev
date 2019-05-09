@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class mapPolyMesh;
 
 class pointPatchMapper
 :
-    public pointPatchFieldMapper
+    public generalPointPatchFieldMapper
 {
     // Private data
 
@@ -107,8 +107,6 @@ class pointPatchMapper
 
 public:
 
-    // Static data members
-
     // Constructors
 
         //- Construct from mappers
@@ -125,12 +123,6 @@ public:
 
 
     // Member Functions
-
-        //- Return size
-        virtual label size() const
-        {
-            return patch_.size();
-        }
 
         virtual bool hasUnmapped() const
         {
@@ -157,7 +149,6 @@ public:
 
         //- Return interpolaion weights
         virtual const scalarListList& weights() const;
-
 };
 
 

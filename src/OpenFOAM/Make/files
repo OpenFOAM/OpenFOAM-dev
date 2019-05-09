@@ -611,7 +611,9 @@ fields/cloud/cloud.C
 
 Fields = fields/Fields
 
-$(Fields)/fieldMapper/fieldMapper.C
+$(Fields)/fieldMappers/directFieldMapper/directFieldMapper.C
+$(Fields)/fieldMappers/generalFieldMapper/generalFieldMapper.C
+$(Fields)/fieldMappers/setSizeFieldMapper/setSizeFieldMapper.C
 $(Fields)/labelField/labelField.C
 $(Fields)/scalarField/scalarField.C
 $(Fields)/vectorField/vectorField.C

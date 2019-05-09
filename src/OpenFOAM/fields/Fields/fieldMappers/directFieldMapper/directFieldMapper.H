@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fieldMapper
+    Foam::directFieldMapper
 
 Description
-    Abstract base class to hold the Field mapping addressing and weights.
+    Direct field mapper
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fieldMapper_H
-#define fieldMapper_H
+#ifndef directFieldMapper_H
+#define directFieldMapper_H
 
-#include "Field.H"
-#include "mapDistributeBase.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,10 +40,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class fieldMapper Declaration
+                           Class directFieldMapper Declaration
 \*---------------------------------------------------------------------------*/
 
-class fieldMapper
+class directFieldMapper
+:
+    virtual public fieldMapper
 {
     // Private member functions
 
@@ -60,30 +61,23 @@ public:
     // Constructors
 
         //- Null constructor
-        fieldMapper()
+        directFieldMapper()
         {}
 
 
     //- Destructor
-    virtual ~fieldMapper()
+    virtual ~directFieldMapper()
     {}
 
 
     // Member Functions
 
-        virtual label size() const = 0;
-
-        virtual bool direct() const = 0;
-
         //- Are there unmapped values? I.e. do all size() elements get
         //  get value
         virtual bool hasUnmapped() const = 0;
 
-        virtual const labelUList& directAddressing() const;
-
-        virtual const labelListList& addressing() const;
-
-        virtual const scalarListList& weights() const;
+        //- Access to the direct map addressing
+        virtual const labelUList& addressing() const = 0;
 
 
     // Member Operators
@@ -118,9 +112,6 @@ public:
             const Field<tensor>& mapF
         ) const;
 
-        template<class Type>
-        void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;
-
 
         virtual tmp<Field<scalar>> operator()
         (
@@ -146,9 +137,6 @@ public:
         (
             const Field<tensor>& mapF
         ) const;
-
-        template<class Type>
-        tmp<Field<Type>> operator()(const tmp<Field<Type>>& tmapF) const;
 };
 
 
@@ -159,7 +147,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "fieldMapperTemplates.C"
+    #include "directFieldMapperTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

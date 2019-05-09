@@ -23,134 +23,103 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fieldMapper.H"
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::labelUList& Foam::fieldMapper::directAddressing() const
-{
-    FatalErrorInFunction
-        << "attempt to access null direct addressing"
-        << abort(FatalError);
-
-    return labelUList::null();
-}
-
-
-const Foam::labelListList& Foam::fieldMapper::addressing() const
-{
-    FatalErrorInFunction
-        << "attempt to access null interpolation addressing"
-        << abort(FatalError);
-
-    return labelListList::null();
-}
-
-
-const Foam::scalarListList& Foam::fieldMapper::weights() const
-{
-    FatalErrorInFunction
-        << "attempt to access null interpolation weights"
-        << abort(FatalError);
-
-    return scalarListList::null();
-}
-
+#include "directFieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::Field<Foam::scalar>> Foam::fieldMapper::operator()
-(
-    const Field<scalar>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::vector>> Foam::fieldMapper::operator()
-(
-    const Field<vector>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::sphericalTensor>> Foam::fieldMapper::operator()
-(
-    const Field<sphericalTensor>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::symmTensor>> Foam::fieldMapper::operator()
-(
-    const Field<symmTensor>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::tensor>> Foam::fieldMapper::operator()
-(
-    const Field<tensor>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-void Foam::fieldMapper::operator()
+void Foam::directFieldMapper::operator()
 (
     Field<scalar>& f,
     const Field<scalar>& mapF
 ) const
 {
-    return map(f, mapF);
+    map(f, mapF);
 }
 
 
-void Foam::fieldMapper::operator()
+void Foam::directFieldMapper::operator()
 (
     Field<vector>& f,
     const Field<vector>& mapF
 ) const
 {
-    return map(f, mapF);
+    map(f, mapF);
 }
 
 
-void Foam::fieldMapper::operator()
+void Foam::directFieldMapper::operator()
 (
     Field<sphericalTensor>& f,
     const Field<sphericalTensor>& mapF
 ) const
 {
-    return map(f, mapF);
+    map(f, mapF);
 }
 
 
-void Foam::fieldMapper::operator()
+void Foam::directFieldMapper::operator()
 (
     Field<symmTensor>& f,
     const Field<symmTensor>& mapF
 ) const
 {
-    return map(f, mapF);
+    map(f, mapF);
 }
 
 
-void Foam::fieldMapper::operator()
+void Foam::directFieldMapper::operator()
 (
     Field<tensor>& f,
     const Field<tensor>& mapF
 ) const
 {
-    return map(f, mapF);
+    map(f, mapF);
+}
+
+
+Foam::tmp<Foam::Field<Foam::scalar>> Foam::directFieldMapper::operator()
+(
+    const Field<scalar>& mapF
+) const
+{
+    return map(mapF);
+}
+
+
+Foam::tmp<Foam::Field<Foam::vector>> Foam::directFieldMapper::operator()
+(
+    const Field<vector>& mapF
+) const
+{
+    return map(mapF);
+}
+
+
+Foam::tmp<Foam::Field<Foam::sphericalTensor>>
+Foam::directFieldMapper::operator()
+(
+    const Field<sphericalTensor>& mapF
+) const
+{
+    return map(mapF);
+}
+
+
+Foam::tmp<Foam::Field<Foam::symmTensor>> Foam::directFieldMapper::operator()
+(
+    const Field<symmTensor>& mapF
+) const
+{
+    return map(mapF);
+}
+
+
+Foam::tmp<Foam::Field<Foam::tensor>> Foam::directFieldMapper::operator()
+(
+    const Field<tensor>& mapF
+) const
+{
+    return map(mapF);
 }
 
 

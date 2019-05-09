@@ -32,7 +32,7 @@ Description
 #ifndef morphFieldMapper_H
 #define morphFieldMapper_H
 
-#include "fieldMapper.H"
+#include "generalFieldMapper.H"
 #include "Map.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,7 +46,7 @@ namespace Foam
 
 class morphFieldMapper
 :
-    public fieldMapper
+    public generalFieldMapper
 {
 
 public:

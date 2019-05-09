@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 #include "fvMesh.H"
 #include "IOobjectList.H"
 #include "fvPatchFieldMapper.H"
+#include "setSizeFieldMapper.H"
 #include "labelIOList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -89,10 +90,9 @@ public:
         //- Mapper for sizing only - does not do any actual mapping.
         class fvPatchFieldReconstructor
         :
-            public fvPatchFieldMapper
+            public fvPatchFieldMapper,
+            public setSizeFieldMapper
         {
-            label size_;
-
         public:
 
             // Constructors
@@ -100,31 +100,8 @@ public:
                 //- Construct given size
                 fvPatchFieldReconstructor(const label size)
                 :
-                    size_(size)
+                    setSizeFieldMapper(size)
                 {}
-
-
-            // Member functions
-
-                label size() const
-                {
-                    return size_;
-                }
-
-                bool direct() const
-                {
-                    return true;
-                }
-
-                bool hasUnmapped() const
-                {
-                    return false;
-                }
-
-                const labelUList& directAddressing() const
-                {
-                    return labelUList::null();
-                }
         };
 
 

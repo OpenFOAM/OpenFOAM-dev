@@ -33,7 +33,7 @@ Description
 #define pointPatchFieldMapper_H
 
 #include "primitiveFields.H"
-#include "fieldMapper.H"
+#include "generalFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,7 +46,7 @@ namespace Foam
 
 class pointPatchFieldMapper
 :
-    public fieldMapper
+    virtual public fieldMapper
 {
 
 public:
@@ -55,6 +55,26 @@ public:
 
         //- Null constructor
         pointPatchFieldMapper()
+        {}
+};
+
+
+/*---------------------------------------------------------------------------*\
+                  Class generalPointPatchFieldMapper Declaration
+\*---------------------------------------------------------------------------*/
+
+class generalPointPatchFieldMapper
+:
+    public pointPatchFieldMapper,
+    public generalFieldMapper
+{
+
+public:
+
+    // Constructors
+
+        //- Null constructor
+        generalPointPatchFieldMapper()
         {}
 };
 
