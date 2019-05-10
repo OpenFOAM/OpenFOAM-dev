@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,6 +111,9 @@ public:
 
 
     // Member Functions
+
+        //- Return true if this patch field is coupled
+        virtual bool coupled() const;
 
         //- Return the constraint type this pointPatch implements.
         virtual const word& constraintType() const

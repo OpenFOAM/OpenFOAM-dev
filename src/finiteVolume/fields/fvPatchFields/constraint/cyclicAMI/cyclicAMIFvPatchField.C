@@ -63,9 +63,16 @@ Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
             << exit(FatalIOError);
     }
 
-    if (!dict.found("value") && this->coupled())
+    if (!dict.found("value"))
     {
-        this->evaluate(Pstream::commsTypes::blocking);
+        if (this->coupled())
+        {
+            this->evaluate(Pstream::commsTypes::blocking);
+        }
+        else
+        {
+            fvPatchField<Type>::operator=(this->patchInternalField());
+        }
     }
 }
 
