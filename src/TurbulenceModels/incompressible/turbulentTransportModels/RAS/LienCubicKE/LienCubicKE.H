@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
 
     Implemented according to the specification in:
     <a href=
-    "http://personalpages.manchester.ac.uk/staff/david.d.apsley/specturb.pdf"
+    "https://personalpages.manchester.ac.uk/staff/david.d.apsley/turbmod.pdf"
     >Apsley: Turbulence Models 2002</a>
 
     In addition to the low-Reynolds number damping functions support for
