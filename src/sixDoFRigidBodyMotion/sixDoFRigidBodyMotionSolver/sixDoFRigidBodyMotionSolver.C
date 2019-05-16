@@ -259,13 +259,7 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 }
 
 
-bool Foam::sixDoFRigidBodyMotionSolver::writeObject
-(
-    IOstream::streamFormat fmt,
-    IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
-) const
+bool Foam::sixDoFRigidBodyMotionSolver::write() const
 {
     IOdictionary dict
     (
