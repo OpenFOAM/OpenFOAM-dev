@@ -111,8 +111,11 @@ void Foam::blockMesh::calcMergeInfo()
         // Collated points detected by initially taking a constant factor of
         // the size of the block.
 
-        boundBox bb(blockCells[blockPlabel].points(blockFaces, blockPoints));
-        const scalar mergeSqrDist = magSqr(20*small*bb.span());
+        const boundBox bb
+        (
+            blockCells[blockPlabel].points(blockFaces, blockPoints)
+        );
+        const scalar mergeSqrDist = magSqr(50*small*bb.span());
 
         // This is an N^2 algorithm
 
