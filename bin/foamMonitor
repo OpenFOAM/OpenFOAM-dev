@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -67,6 +67,7 @@ plotFileHeader() {
 set term $gpterminal $size
 $logscale
 $yrange
+set ytics format "$yticFormat"
 set title "$title"
 set xlabel "$xlabel"
 plot \\
@@ -92,6 +93,7 @@ idle=60
 refresh=10
 logscale=""
 yrange=""
+yticFormat="%g"
 title="Data Monitoring"
 size=""
 gpterminal='x11 1 font "helvetica,17" linewidth 1.5 persist noraise'
@@ -112,6 +114,7 @@ do
         ;;
     -l | -logscale)
         logscale="set logscale y"
+        yticFormat="%1.e"
         shift 1
         ;;
     -t | -title)
