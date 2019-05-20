@@ -1,4 +1,11 @@
-    fileName path(UMean.rootPath()/UMean.caseName()/"graphs"/UMean.instance());
+    fileName path
+    (
+        UMean.rootPath()
+       /UMean.caseName()
+       /functionObjects::writeFile::outputPrefix
+       /"graphs"
+       /UMean.instance()
+    );
     mkDir(path);
 
     scalarField UMeanXvalues

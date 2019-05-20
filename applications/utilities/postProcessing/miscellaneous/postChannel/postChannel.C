@@ -39,6 +39,7 @@ Description
 #include "volFields.H"
 #include "channelIndex.H"
 #include "makeGraph.H"
+#include "writeFile.H"
 
 using namespace Foam;
 
