@@ -183,35 +183,7 @@ void Foam::distributedTriSurfaceMesh::distributeSegment
     List<DynamicList<label>>& sendMap
 ) const
 {
-    // 1. Fully local already handled outside. Note: retest is cheap.
-    if (isLocal(procBb_[Pstream::myProcNo()], start, end))
-    {
-        return;
-    }
-
-
-    // 2. If fully inside one other processor, then only need to send
-    // to that one processor even if it intersects another. Rare occurrence
-    // but cheap to test.
-    forAll(procBb_, proci)
-    {
-        if (proci != Pstream::myProcNo())
-        {
-            const List<treeBoundBox>& bbs = procBb_[proci];
-
-            if (isLocal(bbs, start, end))
-            {
-                sendMap[proci].append(allSegments.size());
-                allSegmentMap.append(segmentI);
-                allSegments.append(segment(start, end));
-                return;
-            }
-        }
-    }
-
-
-    // 3. If not contained in single processor send to all intersecting
-    // processors.
+	//- Send to all intersecting processors.
     forAll(procBb_, proci)
     {
         const List<treeBoundBox>& bbs = procBb_[proci];
@@ -390,142 +362,103 @@ void Foam::distributedTriSurfaceMesh::findLine
         // Important:force synchronised construction of indexing
         const globalIndex& triIndexer = globalTris();
 
+        // Construct queries (segments)
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        // Do any local queries
-        // ~~~~~~~~~~~~~~~~~~~~
+        // Segments to test
+        List<segment> allSegments(start.size());
+        // Original index of segment
+        labelList allSegmentMap(start.size());
 
-        label nLocal = 0;
+        const autoPtr<mapDistribute> mapPtr
+        (
+            distributeSegments
+            (
+                start,
+                end,
+                allSegments,
+                allSegmentMap
+            )
+        );
+        const mapDistribute& map = mapPtr();
 
-        forAll(start, i)
+        label nOldAllSegments = allSegments.size();
+
+
+        // Exchange the segments
+        // ~~~~~~~~~~~~~~~~~~~~~
+
+        map.distribute(allSegments);
+
+
+        // Do tests I need to do
+        // ~~~~~~~~~~~~~~~~~~~~~
+
+        // Intersections
+        List<pointIndexHit> intersections(allSegments.size());
+
+        forAll(allSegments, i)
         {
-            if (isLocal(procBb_[Pstream::myProcNo()], start[i], end[i]))
+            if (nearestIntersection)
             {
-                if (nearestIntersection)
-                {
-                    info[i] = octree.findLine(start[i], end[i]);
-                }
-                else
-                {
-                    info[i] = octree.findLineAny(start[i], end[i]);
-                }
+                intersections[i] = octree.findLine
+                (
+                    allSegments[i].first(),
+                    allSegments[i].second()
+                );
+            }
+            else
+            {
+                intersections[i] = octree.findLineAny
+                (
+                    allSegments[i].first(),
+                    allSegments[i].second()
+                );
+            }
 
-                if (info[i].hit())
-                {
-                    info[i].setIndex(triIndexer.toGlobal(info[i].index()));
-                }
-                nLocal++;
+            // Convert triangle index to global numbering
+            if (intersections[i].hit())
+            {
+                intersections[i].setIndex
+                (
+                    triIndexer.toGlobal(intersections[i].index())
+                );
             }
         }
 
 
-        if
-        (
-            returnReduce(nLocal, sumOp<label>())
-          < returnReduce(start.size(), sumOp<label>())
-        )
+        // Exchange the intersections (opposite to segments)
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        map.reverseDistribute(nOldAllSegments, intersections);
+
+
+        // Extract the hits
+        // ~~~~~~~~~~~~~~~~
+
+        forAll(intersections, i)
         {
-            // Not all can be resolved locally. Build segments and map,
-            // send over segments, do intersections, send back and merge.
+            const pointIndexHit& allInfo = intersections[i];
+            label segmentI = allSegmentMap[i];
+            pointIndexHit& hitInfo = info[segmentI];
 
-
-            // Construct queries (segments)
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-            // Segments to test
-            List<segment> allSegments(start.size());
-            // Original index of segment
-            labelList allSegmentMap(start.size());
-
-            const autoPtr<mapDistribute> mapPtr
-            (
-                distributeSegments
-                (
-                    start,
-                    end,
-                    allSegments,
-                    allSegmentMap
-                )
-            );
-            const mapDistribute& map = mapPtr();
-
-            label nOldAllSegments = allSegments.size();
-
-
-            // Exchange the segments
-            // ~~~~~~~~~~~~~~~~~~~~~
-
-            map.distribute(allSegments);
-
-
-            // Do tests I need to do
-            // ~~~~~~~~~~~~~~~~~~~~~
-
-            // Intersections
-            List<pointIndexHit> intersections(allSegments.size());
-
-            forAll(allSegments, i)
+            if (allInfo.hit())
             {
-                if (nearestIntersection)
+                if (!hitInfo.hit())
                 {
-                    intersections[i] = octree.findLine
-                    (
-                        allSegments[i].first(),
-                        allSegments[i].second()
-                    );
+                    // No intersection yet so take this one
+                    hitInfo = allInfo;
                 }
-                else
+                else if (nearestIntersection)
                 {
-                    intersections[i] = octree.findLineAny
+                    // Nearest intersection
+                    if
                     (
-                        allSegments[i].first(),
-                        allSegments[i].second()
-                    );
-                }
-
-                // Convert triangle index to global numbering
-                if (intersections[i].hit())
-                {
-                    intersections[i].setIndex
-                    (
-                        triIndexer.toGlobal(intersections[i].index())
-                    );
-                }
-            }
-
-
-            // Exchange the intersections (opposite to segments)
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-            map.reverseDistribute(nOldAllSegments, intersections);
-
-
-            // Extract the hits
-            // ~~~~~~~~~~~~~~~~
-
-            forAll(intersections, i)
-            {
-                const pointIndexHit& allInfo = intersections[i];
-                label segmentI = allSegmentMap[i];
-                pointIndexHit& hitInfo = info[segmentI];
-
-                if (allInfo.hit())
-                {
-                    if (!hitInfo.hit())
+                        magSqr(allInfo.hitPoint()-start[segmentI])
+                      < magSqr(hitInfo.hitPoint()-start[segmentI])
+                    )
                     {
-                        // No intersection yet so take this one
                         hitInfo = allInfo;
-                    }
-                    else if (nearestIntersection)
-                    {
-                        // Nearest intersection
-                        if
-                        (
-                            magSqr(allInfo.hitPoint()-start[segmentI])
-                          < magSqr(hitInfo.hitPoint()-start[segmentI])
-                        )
-                        {
-                            hitInfo = allInfo;
-                        }
                     }
                 }
             }
