@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -472,7 +472,6 @@ public:
             cellList& cells
         );
 
-
         //- Reset this primitiveMesh given the primitive array sizes and cells
         void reset
         (
@@ -480,7 +479,7 @@ public:
             const label nInternalFaces,
             const label nFaces,
             const label nCells,
-            const Xfer<cellList>& cells
+            cellList&& cells
         );
 
 

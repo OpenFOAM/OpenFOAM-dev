@@ -250,6 +250,9 @@ public:
         //- Construct as copy
         explicit extendedEdgeMesh(const extendedEdgeMesh&);
 
+        //- Move constructor
+        explicit extendedEdgeMesh(extendedEdgeMesh&&);
+
         //- Construct from file name (uses extension to determine type)
         extendedEdgeMesh(const fileName&);
 
@@ -262,8 +265,8 @@ public:
         //- Construct by transferring components (points, edges)
         extendedEdgeMesh
         (
-            const Xfer<pointField>&,
-            const Xfer<edgeList>&
+            pointField&&,
+            edgeList&&
         );
 
         //- Construct given a surface with selected edges,points
@@ -494,9 +497,6 @@ public:
             //- Transfer the contents of the argument and annul the argument
             void transfer(extendedEdgeMesh&);
 
-            //- Transfer contents to the Xfer container
-            Xfer<extendedEdgeMesh > xfer();
-
             //- Clear all storage
             virtual void clear();
 
@@ -543,7 +543,7 @@ public:
         );
 
 
-        // Ostream Operator
+        // IOstream operators
 
             friend Ostream& operator<<(Ostream&, const extendedEdgeMesh&);
             friend Istream& operator>>(Istream&, extendedEdgeMesh&);

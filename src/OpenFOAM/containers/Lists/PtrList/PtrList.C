@@ -68,9 +68,9 @@ Foam::PtrList<T>::PtrList(const PtrList<T>& a, const CloneArg& cloneArg)
 
 
 template<class T>
-Foam::PtrList<T>::PtrList(const Xfer<PtrList<T>>& lst)
+Foam::PtrList<T>::PtrList(PtrList<T>&& lst)
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -300,6 +300,19 @@ void Foam::PtrList<T>::operator=(const PtrList<T>& a)
     }
 }
 
+
+template<class T>
+void Foam::PtrList<T>::operator=(PtrList<T>&& a)
+{
+    if (this == &a)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self for type " << typeid(T).name()
+            << abort(FatalError);
+    }
+
+    transfer(a);
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

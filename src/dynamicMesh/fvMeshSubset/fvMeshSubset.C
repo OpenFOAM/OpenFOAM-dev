@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -814,9 +814,9 @@ void Foam::fvMeshSubset::setCellSubset
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            xferMove(newPoints),
-            xferMove(newFaces),
-            xferMove(newCells)
+            move(newPoints),
+            move(newFaces),
+            move(newCells)
         )
     );
 
@@ -1312,9 +1312,9 @@ void Foam::fvMeshSubset::setLargeCellSubset
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            xferMove(newPoints),
-            xferMove(newFaces),
-            xferMove(newCells),
+            move(newPoints),
+            move(newFaces),
+            move(newCells),
             syncPar           // parallel synchronisation
         )
     );

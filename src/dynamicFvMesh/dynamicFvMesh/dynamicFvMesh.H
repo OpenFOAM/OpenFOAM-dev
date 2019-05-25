@@ -124,10 +124,10 @@ public:
         dynamicFvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<labelList>& allOwner,
-            const Xfer<labelList>& allNeighbour,
+            pointField&& points,
+            faceList&& faces,
+            labelList&& allOwner,
+            labelList&& allNeighbour,
             const bool syncPar = true
         );
 
@@ -136,9 +136,9 @@ public:
         dynamicFvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<cellList>& cells,
+            pointField&& points,
+            faceList&& faces,
+            cellList&& cells,
             const bool syncPar = true
         );
 

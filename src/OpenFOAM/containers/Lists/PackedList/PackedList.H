@@ -233,8 +233,8 @@ public:
         //- Copy constructor
         inline PackedList(const PackedList<nBits>&);
 
-        //- Construct by transferring the parameter contents
-        inline PackedList(const Xfer<PackedList<nBits>>&);
+        //- Move constructor
+        inline PackedList(PackedList<nBits>&&);
 
         //- Construct from a list of labels
         explicit inline PackedList(const labelUList&);
@@ -292,7 +292,7 @@ public:
             unsigned int count() const;
 
             //- Return the values as a list of labels
-            Xfer<labelList> values() const;
+            labelList values() const;
 
             //- Print bit patterns, optionally output unused elements
             //
@@ -351,9 +351,6 @@ public:
             //  and annul the argument list.
             inline void transfer(PackedList<nBits>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<PackedList<nBits>> xfer();
-
 
         // IO
 
@@ -401,13 +398,16 @@ public:
             //- Assignment of all entries to the given value. Takes linear time.
             inline void operator=(const unsigned int val);
 
-            //- Assignment operator.
+            //- Assignment operator
             void operator=(const PackedList<nBits>&);
 
-            //- Assignment operator.
+            //- Move assignment operator
+            void operator=(PackedList<nBits>&&);
+
+            //- Assignment operator
             void operator=(const labelUList&);
 
-            //- Assignment operator.
+            //- Assignment operator
             void operator=(const UIndirectList<label>&);
 
 

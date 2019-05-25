@@ -67,20 +67,20 @@ Foam::dynamicFvMesh::dynamicFvMesh(const IOobject& io)
 Foam::dynamicFvMesh::dynamicFvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& allOwner,
-    const Xfer<labelList>& allNeighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& allOwner,
+    labelList&& allNeighbour,
     const bool syncPar
 )
 :
     fvMesh
     (
         io,
-        points,
-        faces,
-        allOwner,
-        allNeighbour,
+        move(points),
+        move(faces),
+        move(allOwner),
+        move(allNeighbour),
         syncPar
     ),
     dynamicMeshDict_(IOdictionary(dynamicMeshDictIOobject(io)))
@@ -90,18 +90,18 @@ Foam::dynamicFvMesh::dynamicFvMesh
 Foam::dynamicFvMesh::dynamicFvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<cellList>& cells,
+    pointField&& points,
+    faceList&& faces,
+    cellList&& cells,
     const bool syncPar
 )
 :
     fvMesh
     (
         io,
-        points,
-        faces,
-        cells,
+        move(points),
+        move(faces),
+        move(cells),
         syncPar
     ),
     dynamicMeshDict_(IOdictionary(dynamicMeshDictIOobject(io)))

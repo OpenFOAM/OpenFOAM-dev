@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ void Foam::mappedPatchBase::distribute(List<Type>& lst) const
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToSource(Field<Type>(lst.xfer()));
+            lst = AMI().interpolateToSource(Field<Type>(move(lst)));
             break;
         }
         default:
@@ -54,7 +54,7 @@ void Foam::mappedPatchBase::distribute
         {
             lst = AMI().interpolateToSource
                 (
-                    Field<Type>(lst.xfer()),
+                    Field<Type>(move(lst)),
                     cop
                 );
             break;
@@ -87,7 +87,7 @@ void Foam::mappedPatchBase::reverseDistribute(List<Type>& lst) const
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToTarget(Field<Type>(lst.xfer()));
+            lst = AMI().interpolateToTarget(Field<Type>(move(lst)));
             break;
         }
         default:
@@ -112,7 +112,7 @@ void Foam::mappedPatchBase::reverseDistribute
         {
             lst = AMI().interpolateToTarget
                 (
-                    Field<Type>(lst.xfer()),
+                    Field<Type>(move(lst)),
                     cop
                 );
             break;

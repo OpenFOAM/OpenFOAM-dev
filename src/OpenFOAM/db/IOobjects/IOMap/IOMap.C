@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,12 +104,11 @@ Foam::IOMap<T>::IOMap(const IOobject& io, const Map<T>& map)
 
 
 template<class T>
-Foam::IOMap<T>::IOMap(const IOobject& io, const Xfer<Map<T>>& map)
+Foam::IOMap<T>::IOMap(const IOobject& io, Map<T>&& map)
 :
-    regIOobject(io)
+    regIOobject(io),
+    Map<T>(move(map))
 {
-    Map<T>::transfer(map());
-
     if
     (
         (
@@ -126,6 +125,14 @@ Foam::IOMap<T>::IOMap(const IOobject& io, const Xfer<Map<T>>& map)
         close();
     }
 }
+
+
+template<class T>
+Foam::IOMap<T>::IOMap(IOMap<T>&& map)
+:
+    regIOobject(move(map)),
+    Map<T>(move(map))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -154,9 +161,23 @@ void Foam::IOMap<T>::operator=(const IOMap<T>& rhs)
 
 
 template<class T>
+void Foam::IOMap<T>::operator=(IOMap<T>&& rhs)
+{
+    Map<T>::operator=(move(rhs));
+}
+
+
+template<class T>
 void Foam::IOMap<T>::operator=(const Map<T>& rhs)
 {
     Map<T>::operator=(rhs);
+}
+
+
+template<class T>
+void Foam::IOMap<T>::operator=(Map<T>&& rhs)
+{
+    Map<T>::operator=(move(rhs));
 }
 
 

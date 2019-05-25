@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,30 +164,30 @@ Foam::MeshedSurface<Face>::MeshedSurface()
 template<class Face>
 Foam::MeshedSurface<Face>::MeshedSurface
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    pointField&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 :
     ParentType(List<Face>(), pointField()),
     zones_()
 {
-    reset(pointLst, faceLst, zoneLst);
+    reset(move(pointLst), move(faceLst), move(zoneLst));
 }
 
 
 template<class Face>
 Foam::MeshedSurface<Face>::MeshedSurface
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
+    pointField&& pointLst,
+    List<Face>&& faceLst,
     const labelUList& zoneSizes,
     const UList<word>& zoneNames
 )
 :
     ParentType(List<Face>(), pointField())
 {
-    reset(pointLst, faceLst, Xfer<surfZoneList>());
+    reset(move(pointLst), move(faceLst), surfZoneList());
 
     if (zoneSizes.size())
     {
@@ -245,9 +245,9 @@ Foam::MeshedSurface<Face>::MeshedSurface(const surfMesh& mesh)
     // same face type as surfMesh
     MeshedSurface<face> surf
     (
-        xferCopy(mesh.points()),
-        xferCopy(mesh.faces()),
-        xferCopy(mesh.surfZones())
+        clone(mesh.points()),
+        clone(mesh.faces()),
+        clone(mesh.surfZones())
     );
 
     this->transcribe(surf);
@@ -320,9 +320,9 @@ Foam::MeshedSurface<Face>::MeshedSurface
     // same face type as the polyBoundaryMesh
     MeshedSurface<face> surf
     (
-        xferCopy(bPoints),
-        xferCopy(bFaces),
-        xferMove(newZones)
+        pointField(bPoints),
+        faceList(bFaces),
+        move(newZones)
     );
 
     this->transcribe(surf);
@@ -377,38 +377,13 @@ Foam::MeshedSurface<Face>::MeshedSurface
     // same face type as surfMesh
     MeshedSurface<face> surf
     (
-        xferMove(mesh.storedPoints()),
-        xferMove(mesh.storedFaces()),
-        xferMove(mesh.storedZones())
+        move(mesh.storedPoints()),
+        move(mesh.storedFaces()),
+        move(mesh.storedZones())
     );
 
     this->transcribe(surf);
 }
-
-
-template<class Face>
-Foam::MeshedSurface<Face>::MeshedSurface
-(
-    const Xfer<UnsortedMeshedSurface<Face>>& surf
-)
-:
-    ParentType(List<Face>(), pointField())
-{
-    transfer(surf());
-}
-
-
-template<class Face>
-Foam::MeshedSurface<Face>::MeshedSurface
-(
-    const Xfer<MeshedSurface<Face>>& surf
-)
-:
-    ParentType(List<Face>(), pointField())
-{
-    transfer(surf());
-}
-
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -511,9 +486,9 @@ void Foam::MeshedSurface<Face>::scalePoints(const scalar scaleFactor)
 template<class Face>
 void Foam::MeshedSurface<Face>::reset
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    pointField&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 {
     ParentType::clearOut();
@@ -522,17 +497,17 @@ void Foam::MeshedSurface<Face>::reset
     // Optimized to avoid overwriting data at all
     if (notNull(pointLst))
     {
-        storedPoints().transfer(pointLst());
+        storedPoints().transfer(pointLst);
     }
 
     if (notNull(faceLst))
     {
-        storedFaces().transfer(faceLst());
+        storedFaces().transfer(faceLst);
     }
 
     if (notNull(zoneLst))
     {
-        storedZones().transfer(zoneLst());
+        storedZones().transfer(zoneLst);
     }
 }
 
@@ -540,9 +515,9 @@ void Foam::MeshedSurface<Face>::reset
 template<class Face>
 void Foam::MeshedSurface<Face>::reset
 (
-    const Xfer<List<point>>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    List<point>&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 {
     ParentType::clearOut();
@@ -551,17 +526,17 @@ void Foam::MeshedSurface<Face>::reset
     // Optimized to avoid overwriting data at all
     if (notNull(pointLst))
     {
-        storedPoints().transfer(pointLst());
+        storedPoints().transfer(pointLst);
     }
 
     if (notNull(faceLst))
     {
-        storedFaces().transfer(faceLst());
+        storedFaces().transfer(faceLst);
     }
 
     if (notNull(zoneLst))
     {
-        storedZones().transfer(zoneLst());
+        storedZones().transfer(zoneLst);
     }
 }
 
@@ -1009,9 +984,9 @@ Foam::MeshedSurface<Face> Foam::MeshedSurface<Face>::subsetMesh
     // construct a sub-surface
     return MeshedSurface
     (
-        xferMove(newPoints),
-        xferMove(newFaces),
-        xferMove(newZones)
+        move(newPoints),
+        move(newFaces),
+        move(newZones)
     );
 }
 
@@ -1036,9 +1011,9 @@ void Foam::MeshedSurface<Face>::transfer
 {
     reset
     (
-        xferMove(surf.storedPoints()),
-        xferMove(surf.storedFaces()),
-        xferMove(surf.storedZones())
+        move(surf.storedPoints()),
+        move(surf.storedFaces()),
+        move(surf.storedZones())
     );
 }
 
@@ -1058,9 +1033,9 @@ void Foam::MeshedSurface<Face>::transfer
     {
         reset
         (
-            xferMove(surf.storedPoints()),
-            xferMove(surf.storedFaces()),
-            Xfer<surfZoneList>()
+            move(surf.storedPoints()),
+            move(surf.storedFaces()),
+            surfZoneList()
         );
     }
     else
@@ -1075,21 +1050,14 @@ void Foam::MeshedSurface<Face>::transfer
 
         reset
         (
-            xferMove(surf.storedPoints()),
-            xferMove(newFaces),
-            xferMove(zoneLst)
+            move(surf.storedPoints()),
+            move(newFaces),
+            move(zoneLst)
         );
     }
 
     faceMap.clear();
     surf.clear();
-}
-
-
-template<class Face>
-Foam::Xfer<Foam::MeshedSurface<Face>> Foam::MeshedSurface<Face>::xfer()
-{
-    return xferMove(*this);
 }
 
 

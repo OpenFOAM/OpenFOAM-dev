@@ -247,15 +247,15 @@ int main(int argc, char *argv[])
         writeFaceFaces(localPoints, localFaces, faceFaces);
     }
 
-    // Test construction from Xfer
+    // Test move construction
     {
         faceList patchFaces = patch;
         pointField allPoints = patch.points();
 
         PrimitivePatch<faceList, pointField> storedPatch
         (
-            patchFaces.xfer(),
-            allPoints.xfer()
+            move(patchFaces),
+            move(allPoints)
         );
     }
 

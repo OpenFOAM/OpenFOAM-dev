@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,9 +146,9 @@ Foam::List<T>::List(const List<T2>& a)
 
 
 template<class T>
-Foam::List<T>::List(const Xfer<List<T>>& lst)
+Foam::List<T>::List(List<T>&& lst)
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -408,6 +408,20 @@ void Foam::List<T>::operator=(const List<T>& a)
     }
 
     operator=(static_cast<const UList<T>&>(a));
+}
+
+
+template<class T>
+void Foam::List<T>::operator=(List<T>&& a)
+{
+    if (this == &a)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    transfer(a);
 }
 
 

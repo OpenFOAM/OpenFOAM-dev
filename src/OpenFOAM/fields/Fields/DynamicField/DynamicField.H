@@ -111,8 +111,8 @@ public:
         //  Also constructs from DynamicField with different sizing parameters.
         explicit inline DynamicField(const UList<T>&);
 
-        //- Construct by transferring the parameter contents
-        explicit inline DynamicField(const Xfer<List<T>>&);
+        //- Move constructor transferring the list contents
+        explicit inline DynamicField(List<T>&&);
 
         //- Construct by 1 to 1 mapping from the given field
         inline DynamicField
@@ -129,14 +129,11 @@ public:
             const scalarListList& weights
         );
 
-        //- Construct copy
+        //- Copy constructor
         inline DynamicField(const DynamicField<T, SizeInc, SizeMult, SizeDiv>&);
 
-        //- Construct by transferring the Field contents
-        inline DynamicField
-        (
-            const Xfer<DynamicField<T, SizeInc, SizeMult, SizeDiv>>&
-        );
+        //- Move constructor
+        inline DynamicField(DynamicField<T, SizeInc, SizeMult, SizeDiv>&&);
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicField(Istream&);
@@ -195,9 +192,6 @@ public:
             //  Returns a reference to the DynamicField.
             inline DynamicField<T, SizeInc, SizeMult, SizeDiv>& shrink();
 
-            //- Transfer contents to the Xfer container as a plain List
-            inline Xfer<List<T>> xfer();
-
 
         // Member Operators
 
@@ -223,14 +217,23 @@ public:
             //- Assignment of all addressed entries to the given value
             inline void operator=(const T&);
 
-            //- Assignment to DynamicField
+            //- Assignment operator
             inline void operator=
             (
                 const DynamicField<T, SizeInc, SizeMult, SizeDiv>&
             );
 
+            //- Move assignment operator
+            inline void operator=
+            (
+                DynamicField<T, SizeInc, SizeMult, SizeDiv>&&
+            );
+
             //- Assignment to UList
             inline void operator=(const UList<T>&);
+
+            //- Move assignment to List
+            inline void operator=(List<T>&&);
 };
 
 

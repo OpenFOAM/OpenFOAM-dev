@@ -1507,10 +1507,10 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
                 runTime,
                 IOobject::NO_READ
             ),
-            xferMove(domainPoints),
-            xferMove(domainFaces),
-            xferMove(domainAllOwner),
-            xferMove(domainAllNeighbour),
+            move(domainPoints),
+            move(domainFaces),
+            move(domainAllOwner),
+            move(domainAllNeighbour),
             false                   // no parallel comms
         )
     );
@@ -1665,18 +1665,18 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
                 nOldPoints,
                 nOldFaces,
                 nOldCells,
-                oldPatchStarts.xfer(),
-                oldPatchNMeshPoints.xfer(),
+                move(oldPatchStarts),
+                move(oldPatchNMeshPoints),
 
-                labelListList(1, identity(mesh_.nPoints())).xfer(),
-                labelListList(1, identity(mesh_.nFaces())).xfer(),
-                labelListList(1, identity(mesh_.nCells())).xfer(),
-                labelListList(1, identity(patches.size())).xfer(),
+                labelListList(1, identity(mesh_.nPoints())),
+                labelListList(1, identity(mesh_.nFaces())),
+                labelListList(1, identity(mesh_.nCells())),
+                labelListList(1, identity(patches.size())),
 
-                labelListList(1, identity(mesh_.nPoints())).xfer(),
-                labelListList(1, identity(mesh_.nFaces())).xfer(),
-                labelListList(1, identity(mesh_.nCells())).xfer(),
-                labelListList(1, identity(patches.size())).xfer()
+                labelListList(1, identity(mesh_.nPoints())),
+                labelListList(1, identity(mesh_.nFaces())),
+                labelListList(1, identity(mesh_.nCells())),
+                labelListList(1, identity(patches.size()))
             )
         );
     }
@@ -2902,18 +2902,18 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
             nOldPoints,
             nOldFaces,
             nOldCells,
-            oldPatchStarts.xfer(),
-            oldPatchNMeshPoints.xfer(),
+            move(oldPatchStarts),
+            move(oldPatchNMeshPoints),
 
-            subPointMap.xfer(),
-            subFaceMap.xfer(),
-            subCellMap.xfer(),
-            subPatchMap.xfer(),
+            move(subPointMap),
+            move(subFaceMap),
+            move(subCellMap),
+            move(subPatchMap),
 
-            constructPointMap.xfer(),
-            constructFaceMap.xfer(),
-            constructCellMap.xfer(),
-            constructPatchMap.xfer(),
+            move(constructPointMap),
+            move(constructFaceMap),
+            move(constructCellMap),
+            move(constructPatchMap),
 
             true,           // subFaceMap has flip
             true            // constructFaceMap has flip

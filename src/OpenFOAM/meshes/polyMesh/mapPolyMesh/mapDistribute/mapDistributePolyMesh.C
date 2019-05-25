@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,20 +82,20 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
     const label nOldPoints,
     const label nOldFaces,
     const label nOldCells,
-    const Xfer<labelList>& oldPatchStarts,
-    const Xfer<labelList>& oldPatchNMeshPoints,
+    labelList&& oldPatchStarts,
+    labelList&& oldPatchNMeshPoints,
 
     // how to subset pieces of mesh to send across
-    const Xfer<labelListList>& subPointMap,
-    const Xfer<labelListList>& subFaceMap,
-    const Xfer<labelListList>& subCellMap,
-    const Xfer<labelListList>& subPatchMap,
+    labelListList&& subPointMap,
+    labelListList&& subFaceMap,
+    labelListList&& subCellMap,
+    labelListList&& subPatchMap,
 
     // how to reconstruct received mesh
-    const Xfer<labelListList>& constructPointMap,
-    const Xfer<labelListList>& constructFaceMap,
-    const Xfer<labelListList>& constructCellMap,
-    const Xfer<labelListList>& constructPatchMap,
+    labelListList&& constructPointMap,
+    labelListList&& constructFaceMap,
+    labelListList&& constructCellMap,
+    labelListList&& constructPatchMap,
 
     const bool subFaceHasFlip,
     const bool constructFaceHasFlip
@@ -104,20 +104,25 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
     nOldPoints_(nOldPoints),
     nOldFaces_(nOldFaces),
     nOldCells_(nOldCells),
-    oldPatchSizes_(oldPatchStarts().size()),
-    oldPatchStarts_(oldPatchStarts),
-    oldPatchNMeshPoints_(oldPatchNMeshPoints),
-    pointMap_(mesh.nPoints(), subPointMap, constructPointMap),
+    oldPatchSizes_(oldPatchStarts.size()),
+    oldPatchStarts_(move(oldPatchStarts)),
+    oldPatchNMeshPoints_(move(oldPatchNMeshPoints)),
+    pointMap_(mesh.nPoints(), move(subPointMap), move(constructPointMap)),
     faceMap_
     (
         mesh.nFaces(),
-        subFaceMap,
-        constructFaceMap,
-        subFaceHasFlip,
+        move(subFaceMap),
+        move(constructFaceMap),
+        move(subFaceHasFlip),
         constructFaceHasFlip
     ),
-    cellMap_(mesh.nCells(), subCellMap, constructCellMap),
-    patchMap_(mesh.boundaryMesh().size(), subPatchMap, constructPatchMap)
+    cellMap_(mesh.nCells(), move(subCellMap), move(constructCellMap)),
+    patchMap_
+    (
+        mesh.boundaryMesh().size(),
+        move(subPatchMap),
+        move(constructPatchMap)
+    )
 {
     calcPatchSizes();
 }
@@ -129,26 +134,26 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
     const label nOldPoints,
     const label nOldFaces,
     const label nOldCells,
-    const Xfer<labelList>& oldPatchStarts,
-    const Xfer<labelList>& oldPatchNMeshPoints,
+    labelList&& oldPatchStarts,
+    labelList&& oldPatchNMeshPoints,
 
     // how to transfer pieces of mesh
-    const Xfer<mapDistribute>& pointMap,
-    const Xfer<mapDistribute>& faceMap,
-    const Xfer<mapDistribute>& cellMap,
-    const Xfer<mapDistribute>& patchMap
+    mapDistribute&& pointMap,
+    mapDistribute&& faceMap,
+    mapDistribute&& cellMap,
+    mapDistribute&& patchMap
 )
 :
     nOldPoints_(nOldPoints),
     nOldFaces_(nOldFaces),
     nOldCells_(nOldCells),
-    oldPatchSizes_(oldPatchStarts().size()),
-    oldPatchStarts_(oldPatchStarts),
-    oldPatchNMeshPoints_(oldPatchNMeshPoints),
-    pointMap_(pointMap),
-    faceMap_(faceMap),
-    cellMap_(cellMap),
-    patchMap_(patchMap)
+    oldPatchSizes_(oldPatchStarts.size()),
+    oldPatchStarts_(move(oldPatchStarts)),
+    oldPatchNMeshPoints_(move(oldPatchNMeshPoints)),
+    pointMap_(move(pointMap)),
+    faceMap_(move(faceMap)),
+    cellMap_(move(cellMap)),
+    patchMap_(move(patchMap))
 {
     calcPatchSizes();
 }
@@ -156,19 +161,19 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
 
 Foam::mapDistributePolyMesh::mapDistributePolyMesh
 (
-    const Xfer<mapDistributePolyMesh>& map
+    mapDistributePolyMesh&& map
 )
 :
-    nOldPoints_(map().nOldPoints_),
-    nOldFaces_(map().nOldFaces_),
-    nOldCells_(map().nOldCells_),
-    oldPatchSizes_(map().oldPatchSizes_.xfer()),
-    oldPatchStarts_(map().oldPatchStarts_.xfer()),
-    oldPatchNMeshPoints_(map().oldPatchNMeshPoints_.xfer()),
-    pointMap_(map().pointMap_.xfer()),
-    faceMap_(map().faceMap_.xfer()),
-    cellMap_(map().cellMap_.xfer()),
-    patchMap_(map().patchMap_.xfer())
+    nOldPoints_(map.nOldPoints_),
+    nOldFaces_(map.nOldFaces_),
+    nOldCells_(map.nOldCells_),
+    oldPatchSizes_(move(map.oldPatchSizes_)),
+    oldPatchStarts_(move(map.oldPatchStarts_)),
+    oldPatchNMeshPoints_(move(map.oldPatchNMeshPoints_)),
+    pointMap_(move(map.pointMap_)),
+    faceMap_(move(map.faceMap_)),
+    cellMap_(move(map.cellMap_)),
+    patchMap_(move(map.patchMap_))
 {}
 
 
@@ -192,12 +197,6 @@ void Foam::mapDistributePolyMesh::transfer(mapDistributePolyMesh& rhs)
     faceMap_.transfer(rhs.faceMap_);
     cellMap_.transfer(rhs.cellMap_);
     patchMap_.transfer(rhs.patchMap_);
-}
-
-
-Foam::Xfer<Foam::mapDistributePolyMesh> Foam::mapDistributePolyMesh::xfer()
-{
-    return xferMove(*this);
 }
 
 
@@ -303,6 +302,21 @@ void Foam::mapDistributePolyMesh::operator=(const mapDistributePolyMesh& rhs)
     faceMap_ = rhs.faceMap_;
     cellMap_ = rhs.cellMap_;
     patchMap_ = rhs.patchMap_;
+}
+
+
+void Foam::mapDistributePolyMesh::operator=(mapDistributePolyMesh&& rhs)
+{
+    nOldPoints_ = rhs.nOldPoints_;
+    nOldFaces_ = rhs.nOldFaces_;
+    nOldCells_ = rhs.nOldCells_;
+    oldPatchSizes_ = move(rhs.oldPatchSizes_);
+    oldPatchStarts_ = move(rhs.oldPatchStarts_);
+    oldPatchNMeshPoints_ = move(rhs.oldPatchNMeshPoints_);
+    pointMap_ = move(rhs.pointMap_);
+    faceMap_ = move(rhs.faceMap_);
+    cellMap_ = move(rhs.cellMap_);
+    patchMap_ = move(rhs.patchMap_);
 }
 
 

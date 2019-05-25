@@ -133,6 +133,9 @@ class rigidBodyMeshMotion
         //- Disallow default bitwise assignment
         void operator=(const rigidBodyMeshMotion&);
 
+        //- To avoid warning from clang
+        using RBD::rigidBodyMotion::write;
+
 
 public:
 

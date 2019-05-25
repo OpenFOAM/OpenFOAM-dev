@@ -1824,7 +1824,7 @@ int main(int argc, char *argv[])
             }
         }
     }
-    const primitiveFacePatch extrudePatch(zoneFaces.xfer(), mesh.points());
+    const primitiveFacePatch extrudePatch(move(zoneFaces), mesh.points());
 
 
     Pstream::listCombineGather(isInternal, orEqOp<bool>());
@@ -2349,10 +2349,10 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE,
             false
         ),
-        xferCopy(pointField()),
-        xferCopy(faceList()),
-        xferCopy(labelList()),
-        xferCopy(labelList()),
+        pointField(),
+        faceList(),
+        labelList(),
+        labelList(),
         false
     );
 

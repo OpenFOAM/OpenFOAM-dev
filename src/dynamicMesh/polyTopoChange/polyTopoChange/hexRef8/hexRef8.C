@@ -5092,7 +5092,7 @@ const Foam::cellShapeList& Foam::hexRef8::cellShapes() const
 
                 if (haveQuads)
                 {
-                    faceList faces(quads.xfer());
+                    faceList faces(move(quads));
                     cellShapesPtr_()[celli] = degenerateMatcher::match(faces);
                     nSplitHex++;
                 }

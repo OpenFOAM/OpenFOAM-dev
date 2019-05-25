@@ -2057,7 +2057,7 @@ Foam::labelList Foam::meshRefinement::meshedPatches() const
         }
     }
 
-    return patchIDs;
+    return move(patchIDs);
 }
 
 

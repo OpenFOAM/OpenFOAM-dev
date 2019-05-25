@@ -117,7 +117,8 @@ Foam::IOField<Type>::IOField(const IOobject& io, const label size)
 template<class Type>
 Foam::IOField<Type>::IOField(const IOobject& io, const Field<Type>& f)
 :
-    regIOobject(io)
+    regIOobject(io),
+    Field<Type>(f)
 {
     // Check for MUST_READ_IF_MODIFIED
     warnNoRereading<IOField<Type>>();
@@ -134,22 +135,41 @@ Foam::IOField<Type>::IOField(const IOobject& io, const Field<Type>& f)
         readStream(typeName) >> *this;
         close();
     }
-    else
+}
+
+
+template<class Type>
+Foam::IOField<Type>::IOField(const IOobject& io, Field<Type>&& f)
+:
+    regIOobject(io),
+    Field<Type>(move(f))
+{
+    // Check for MUST_READ_IF_MODIFIED
+    warnNoRereading<IOField<Type>>();
+
+    if
+    (
+        (
+            io.readOpt() == IOobject::MUST_READ
+         || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
+        )
+     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
+    )
     {
-        Field<Type>::operator=(f);
+        readStream(typeName) >> *this;
+        close();
     }
 }
 
 
 template<class Type>
-Foam::IOField<Type>::IOField(const IOobject& io, const Xfer<Field<Type>>& f)
+Foam::IOField<Type>::IOField(const IOobject& io, const tmp<Field<Type>>& f)
 :
-    regIOobject(io)
+    regIOobject(io),
+    Field<Type>(f)
 {
     // Check for MUST_READ_IF_MODIFIED
     warnNoRereading<IOField<Type>>();
-
-    Field<Type>::transfer(f());
 
     if
     (
@@ -164,6 +184,14 @@ Foam::IOField<Type>::IOField(const IOobject& io, const Xfer<Field<Type>>& f)
         close();
     }
 }
+
+
+template<class Type>
+Foam::IOField<Type>::IOField(IOField<Type>&& f)
+:
+    regIOobject(move(f)),
+    Field<Type>(move(f))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -191,7 +219,28 @@ void Foam::IOField<Type>::operator=(const IOField<Type>& rhs)
 
 
 template<class Type>
+void Foam::IOField<Type>::operator=(IOField<Type>&& rhs)
+{
+    Field<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
 void Foam::IOField<Type>::operator=(const Field<Type>& rhs)
+{
+    Field<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+void Foam::IOField<Type>::operator=(Field<Type>&& rhs)
+{
+    Field<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
+void Foam::IOField<Type>::operator=(const tmp<Field<Type>>& rhs)
 {
     Field<Type>::operator=(rhs);
 }

@@ -180,7 +180,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         pointPatchField(const pointPatchField<Type>&);
 
         //- Construct and return a clone
@@ -435,6 +435,7 @@ public:
     // Member operators
 
         virtual void operator=(const pointPatchField<Type>&){}
+        virtual void operator=(pointPatchField<Type>&&){}
         virtual void operator+=(const pointPatchField<Type>&){}
         virtual void operator-=(const pointPatchField<Type>&){}
         virtual void operator*=(const pointPatchField<scalar>&){}

@@ -551,7 +551,7 @@ Foam::List<Foam::tetIndices> Foam::polyMeshTetDecomposition::cellTetIndices
         cellTets.append(faceTetIndices(mesh, fI, cI));
     }
 
-    return cellTets;
+    return move(cellTets);
 }
 
 

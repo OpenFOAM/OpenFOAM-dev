@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,12 +117,11 @@ Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const PtrList<T>& list)
 
 
 template<class T>
-Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const Xfer<PtrList<T>>& list)
+Foam::IOPtrList<T>::IOPtrList(const IOobject& io, PtrList<T>&& list)
 :
-    regIOobject(io)
+    regIOobject(io),
+    PtrList<T>(move(list))
 {
-    PtrList<T>::transfer(list());
-
     if
     (
         (
@@ -139,6 +138,14 @@ Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const Xfer<PtrList<T>>& list)
         close();
     }
 }
+
+
+template<class T>
+Foam::IOPtrList<T>::IOPtrList(IOPtrList<T>&& list)
+:
+    regIOobject(move(list)),
+    PtrList<T>(move(list))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -164,5 +171,13 @@ void Foam::IOPtrList<T>::operator=(const IOPtrList<T>& rhs)
 {
     PtrList<T>::operator=(rhs);
 }
+
+
+template<class T>
+void Foam::IOPtrList<T>::operator=(IOPtrList<T>&& rhs)
+{
+    PtrList<T>::operator=(move(rhs));
+}
+
 
 // ************************************************************************* //

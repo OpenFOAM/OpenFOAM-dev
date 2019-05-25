@@ -1144,9 +1144,9 @@ Foam::MeshedSurface<Foam::face> Foam::isoSurface::removeInsidePoints
     MeshedSurface<face> cpSurface;
     cpSurface.reset
     (
-        compactPoints.xfer(),
-        compactFaces.xfer(),
-        xferCopy(s.surfZones())
+        move(compactPoints),
+        move(compactFaces),
+        surfZoneList(s.surfZones())
     );
 
     return cpSurface;
@@ -1267,9 +1267,9 @@ Foam::isoSurface::isoSurface
 
     MeshedSurface<face>::reset
     (
-        allPoints.ref().xfer(),
-        allTris.xfer(),
-        allZones.xfer()
+        move(allPoints.ref()),
+        move(allTris),
+        move(allZones)
     );
 
 

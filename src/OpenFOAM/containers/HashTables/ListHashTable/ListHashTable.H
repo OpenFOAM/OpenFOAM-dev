@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,30 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::StaticHashTable
+    Foam::ListHashTable
 
 Description
-    STL conforming hash table.
+    STL conforming hash table using contiguous lists rather than linked lists.
 
 Note
-    Uses straight lists as underlying type.
     Is slower to insert than the standard HashTable, but should be more
     memory efficient and faster to access.
 
 SourceFiles
-    StaticHashTableI.H
-    StaticHashTable.C
-    StaticHashTableIO.C
+    ListHashTableI.H
+    ListHashTable.C
+    ListHashTableIO.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef StaticHashTable_H
-#define StaticHashTable_H
+#ifndef ListHashTable_H
+#define ListHashTable_H
 
 #include "label.H"
 #include "uLabel.H"
 #include "word.H"
-#include "Xfer.H"
 #include "className.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,37 +54,37 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 template<class T> class List;
-template<class T, class Key, class Hash> class StaticHashTable;
+template<class T, class Key, class Hash> class ListHashTable;
 
 template<class T, class Key, class Hash> Istream& operator>>
 (
     Istream&,
-    StaticHashTable<T, Key, Hash>&
+    ListHashTable<T, Key, Hash>&
 );
 
 template<class T, class Key, class Hash> Ostream& operator<<
 (
     Ostream&,
-    const StaticHashTable<T, Key, Hash>&
+    const ListHashTable<T, Key, Hash>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                     Class StaticHashTableCore Declaration
+                     Class ListHashTableCore Declaration
 \*---------------------------------------------------------------------------*/
 
-//- Template-invariant bits for StaticHashTable
-struct StaticHashTableCore
+//- Template-invariant bits for ListHashTable
+struct ListHashTableCore
 {
     //- Return a canonical (power-of-two) size
     static label canonicalSize(const label);
 
     //- Construct null
-    StaticHashTableCore()
+    ListHashTableCore()
     {}
 
     //- Define template name and debug
-    ClassName("StaticHashTable");
+    ClassName("ListHashTable");
 
     //- A zero-sized end iterator
     struct iteratorEnd
@@ -100,13 +98,13 @@ struct StaticHashTableCore
 
 
 /*---------------------------------------------------------------------------*\
-                       Class StaticHashTable Declaration
+                       Class ListHashTable Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T, class Key=word, class Hash=string::hash>
-class StaticHashTable
+class ListHashTable
 :
-    public StaticHashTableCore
+    public ListHashTableCore
 {
     // Private data type for table entries
 
@@ -141,13 +139,13 @@ public:
         typedef Iterator
         <
             T&,
-            StaticHashTable<T, Key, Hash>&
+            ListHashTable<T, Key, Hash>&
         > iterator;
 
         typedef Iterator
         <
             const T&,
-            const StaticHashTable<T, Key, Hash>&
+            const ListHashTable<T, Key, Hash>&
         > const_iterator;
 
 
@@ -156,33 +154,33 @@ public:
         friend class Iterator
         <
             T&,
-            StaticHashTable<T, Key, Hash>&
+            ListHashTable<T, Key, Hash>&
         >;
 
         friend class Iterator
         <
             const T&,
-            const StaticHashTable<T, Key, Hash>&
+            const ListHashTable<T, Key, Hash>&
         >;
 
 
     // Constructors
 
         //- Construct given initial table size
-        StaticHashTable(const label size = 128);
+        ListHashTable(const label size = 128);
 
         //- Construct from Istream
-        StaticHashTable(Istream&, const label size = 128);
+        ListHashTable(Istream&, const label size = 128);
 
         //- Construct as copy
-        StaticHashTable(const StaticHashTable<T, Key, Hash>&);
+        ListHashTable(const ListHashTable<T, Key, Hash>&);
 
-        //- Construct by transferring the parameter contents
-        StaticHashTable(const Xfer<StaticHashTable<T, Key, Hash>>&);
+        //- Move constructor
+        ListHashTable(ListHashTable<T, Key, Hash>&&);
 
 
     //- Destructor
-    ~StaticHashTable();
+    ~ListHashTable();
 
 
     // Member Functions
@@ -232,7 +230,7 @@ public:
 
             //- Remove entries in the given hash table from this hash table
             //  Return the number of elements removed
-            label erase(const StaticHashTable<T, Key, Hash>&);
+            label erase(const ListHashTable<T, Key, Hash>&);
 
             //- Clear all entries from table
             void clear();
@@ -243,10 +241,7 @@ public:
 
             //- Transfer the contents of the argument table into this table
             //  and annul the argument table.
-            void transfer(StaticHashTable<T, Key, Hash>&);
-
-            //- Transfer contents to the Xfer container
-            inline Xfer<StaticHashTable<T, Key, Hash>> xfer();
+            void transfer(ListHashTable<T, Key, Hash>&);
 
 
     // Member Operators
@@ -260,32 +255,35 @@ public:
         //- Find and return an hashed entry, create it null if not present.
         inline T& operator()(const Key&);
 
-        //- Assignment
-        void operator=(const StaticHashTable<T, Key, Hash>&);
+        //- Assignment operator
+        void operator=(const ListHashTable<T, Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(ListHashTable<T, Key, Hash>&&);
 
         //- Equality. Two hash tables are equal if all contents of first are
         //  also in second and vice versa.
-        bool operator==(const StaticHashTable<T, Key, Hash>&) const;
+        bool operator==(const ListHashTable<T, Key, Hash>&) const;
 
         //- The opposite of the equality operation.
-        bool operator!=(const StaticHashTable<T, Key, Hash>&) const;
+        bool operator!=(const ListHashTable<T, Key, Hash>&) const;
 
 
     // STL type definitions
 
-        //- Type of values the StaticHashTable contains.
+        //- Type of values the ListHashTable contains.
         typedef T value_type;
 
-        //- Type that can be used for storing into StaticHashTable::value_type
+        //- Type that can be used for storing into ListHashTable::value_type
         //  objects.  This type is usually List::value_type&.
         typedef T& reference;
 
         //- Type that can be used for storing into constant
-        //  StaticHashTable::value_type objects.  This type is usually const
-        //  StaticHashTable::value_type&.
+        //  ListHashTable::value_type objects.  This type is usually const
+        //  ListHashTable::value_type&.
         typedef const T& const_reference;
 
-        //- The type that can represent the size of a StaticHashTable.
+        //- The type that can represent the size of a ListHashTable.
         typedef label size_type;
 
 
@@ -295,14 +293,14 @@ public:
         template<class TRef, class TableRef>
         class Iterator
         {
-            friend class StaticHashTable;
+            friend class ListHashTable;
 
             template<class TRef2, class TableRef2>
             friend class Iterator;
 
             // Private data
 
-                //- Reference to the StaticHashTable this is an iterator for
+                //- Reference to the ListHashTable this is an iterator for
                 TableRef hashTable_;
 
                 //- Current hash index
@@ -348,22 +346,22 @@ public:
         };
 
 
-        //- Iterator set to the beginning of the StaticHashTable
+        //- Iterator set to the beginning of the ListHashTable
         inline iterator begin();
 
-        //- Iterator set to beyond the end of the StaticHashTable
+        //- Iterator set to beyond the end of the ListHashTable
         inline const iterator& end();
 
-        //- const_iterator set to the beginning of the StaticHashTable
+        //- const_iterator set to the beginning of the ListHashTable
         inline const_iterator cbegin() const;
 
-        //- const_iterator set to beyond the end of the StaticHashTable
+        //- const_iterator set to beyond the end of the ListHashTable
         inline const const_iterator& cend() const;
 
-        //- const_iterator set to the beginning of the StaticHashTable
+        //- const_iterator set to the beginning of the ListHashTable
         inline const_iterator begin() const;
 
-        //- const_iterator set to beyond the end of the StaticHashTable
+        //- const_iterator set to beyond the end of the ListHashTable
         inline const const_iterator& end() const;
 
     // IOstream Operator
@@ -371,13 +369,13 @@ public:
         friend Istream& operator>> <T, Key, Hash>
         (
             Istream&,
-            StaticHashTable<T, Key, Hash>&
+            ListHashTable<T, Key, Hash>&
         );
 
         friend Ostream& operator<< <T, Key, Hash>
         (
             Ostream&,
-            const StaticHashTable<T, Key, Hash>&
+            const ListHashTable<T, Key, Hash>&
         );
 
 
@@ -397,13 +395,13 @@ private:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "StaticHashTableI.H"
+    #include "ListHashTableI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#ifndef NoStaticHashTableC
+#ifndef NoListHashTableC
 #ifdef NoRepository
-    #include "StaticHashTable.C"
+    #include "ListHashTable.C"
 #endif
 #endif
 

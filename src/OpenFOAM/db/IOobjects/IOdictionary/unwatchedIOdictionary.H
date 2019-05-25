@@ -49,8 +49,10 @@ class unwatchedIOdictionary
 :
     public baseIOdictionary
 {
+    // Private member data
 
-    fileNameList files_;
+        fileNameList files_;
+
 
 public:
 
@@ -68,6 +70,10 @@ public:
 
         //- Construct given an IOobject and Istream
         unwatchedIOdictionary(const IOobject& io, Istream& is);
+
+        //- Move constructor
+        unwatchedIOdictionary(unwatchedIOdictionary&&);
+
 
     //- Destructor
     virtual ~unwatchedIOdictionary();
@@ -105,6 +111,11 @@ public:
             return files_;
         }
 
+
+    // Member operators
+
+        //- Move assignment
+        void operator=(unwatchedIOdictionary&&);
 };
 
 

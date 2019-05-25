@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,9 @@ Foam::SortableList<T>::SortableList(const UList<T>& values)
 
 
 template<class T>
-Foam::SortableList<T>::SortableList(const Xfer<List<T>>& values)
+Foam::SortableList<T>::SortableList(List<T>&& values)
 :
-    List<T>(values)
+    List<T>(move(values))
 {
     sort();
 }
@@ -69,6 +69,14 @@ Foam::SortableList<T>::SortableList(const SortableList<T>& lst)
 :
     List<T>(lst),
     indices_(lst.indices())
+{}
+
+
+template<class T>
+Foam::SortableList<T>::SortableList(SortableList<T>&& lst)
+:
+    List<T>(move(lst)),
+    indices_(move(lst.indices()))
 {}
 
 
@@ -130,13 +138,6 @@ void Foam::SortableList<T>::reverseSort()
 }
 
 
-template<class T>
-Foam::Xfer<Foam::List<T>> Foam::SortableList<T>::xfer()
-{
-    return xferMoveTo<List<T>>(*this);
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T>
@@ -159,6 +160,14 @@ inline void Foam::SortableList<T>::operator=(const SortableList<T>& lst)
 {
     List<T>::operator=(lst);
     indices_ = lst.indices();
+}
+
+
+template<class T>
+inline void Foam::SortableList<T>::operator=(SortableList<T>&& lst)
+{
+    List<T>::operator=(move(lst));
+    indices_ = move(lst.indices());
 }
 
 

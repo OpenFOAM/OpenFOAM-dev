@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,6 +77,12 @@ public:
         //- Construct given an IOobject and Istream
         baseIOdictionary(const IOobject&, Istream&);
 
+        //- Copy constructor
+        baseIOdictionary(const baseIOdictionary&);
+
+        //- Move constructor
+        baseIOdictionary(baseIOdictionary&&);
+
 
     //- Destructor
     virtual ~baseIOdictionary();
@@ -107,6 +113,9 @@ public:
         //- Assignment of other baseIOdictionary's entries to this
         //  baseIOdictionary
         void operator=(const baseIOdictionary&);
+
+        //- Move assignment
+        void operator=(baseIOdictionary&&);
 };
 
 

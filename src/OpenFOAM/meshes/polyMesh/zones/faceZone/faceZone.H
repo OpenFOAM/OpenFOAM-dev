@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,9 +76,6 @@ class faceZone
 
         //- Disallow default bitwise copy construct
         faceZone(const faceZone&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceZone&);
 
 
 protected:
@@ -164,12 +161,12 @@ public:
             const faceZoneMesh& zm
         );
 
-        //- Construct from components, transferring contents
+        //- Construct from components, moving contents
         faceZone
         (
             const word& name,
-            const Xfer<labelList>& addr,
-            const Xfer<boolList>& fm,
+            labelList&& addr,
+            boolList&& fm,
             const label index,
             const faceZoneMesh&
         );
@@ -199,8 +196,8 @@ public:
         faceZone
         (
             const faceZone&,
-            const Xfer<labelList>& addr,
-            const Xfer<boolList>& fm,
+            labelList&& addr,
+            boolList&& fm,
             const label index,
             const faceZoneMesh&
         );
@@ -303,6 +300,16 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Assignment to zone, clearing demand-driven data
+        void operator=(const faceZone&);
+
+        //- Move assignment to zone, clearing demand-driven data
+        void operator=(faceZone&&);
+
 
     // I-O
 

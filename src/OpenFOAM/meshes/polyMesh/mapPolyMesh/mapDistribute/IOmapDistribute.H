@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,8 +68,8 @@ public:
         //- Construct given an IOobject and mapDistribute
         IOmapDistribute(const IOobject&, const mapDistribute&);
 
-        //- Construct by transferring the mapDistribute contents
-        IOmapDistribute(const IOobject&, const Xfer<mapDistribute>&);
+        //- Move constructor transferring the mapDistribute contents
+        IOmapDistribute(const IOobject&, mapDistribute&&);
 
 
     //- Destructor

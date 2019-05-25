@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,13 +96,6 @@ inline Foam::autoPtr<T> Foam::PtrList<T>::set
 )
 {
     return set(i, const_cast<tmp<T>&>(t).ptr());
-}
-
-
-template<class T>
-inline Foam::Xfer<Foam::PtrList<T>> Foam::PtrList<T>::xfer()
-{
-    return xferMove(*this);
 }
 
 

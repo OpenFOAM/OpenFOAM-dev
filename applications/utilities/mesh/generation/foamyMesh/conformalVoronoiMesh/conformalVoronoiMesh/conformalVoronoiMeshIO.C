@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -410,9 +410,9 @@ Foam::autoPtr<Foam::fvMesh> Foam::conformalVoronoiMesh::createDummyMesh
         new fvMesh
         (
             io,
-            xferCopy(pointField()),
-            xferCopy(faceList()),
-            xferCopy(cellList())
+            pointField(),
+            faceList(),
+            cellList()
         )
     );
     fvMesh& mesh = meshPtr();
@@ -817,10 +817,10 @@ void Foam::conformalVoronoiMesh::writeMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        xferMove(points),
-        xferMove(faces),
-        xferMove(owner),
-        xferMove(neighbour)
+        Foam::move(points),
+        Foam::move(faces),
+        Foam::move(owner),
+        Foam::move(neighbour)
     );
 
     Info<< indent << "Adding patches to mesh" << endl;
@@ -1399,7 +1399,7 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::findRemainingProtrusionSet
         protrudingCells.write();
     }
 
-    return protrudingCells;
+    return Foam::move(protrudingCells);
 }
 
 

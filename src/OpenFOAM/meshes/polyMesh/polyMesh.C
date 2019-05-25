@@ -346,10 +346,10 @@ Foam::polyMesh::polyMesh(const IOobject& io)
 Foam::polyMesh::polyMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& owner,
-    const Xfer<labelList>& neighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& owner,
+    labelList&& neighbour,
     const bool syncPar
 )
 :
@@ -366,7 +366,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        points
+        move(points)
     ),
     faces_
     (
@@ -379,7 +379,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        faces
+        move(faces)
     ),
     owner_
     (
@@ -392,7 +392,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        owner
+        move(owner)
     ),
     neighbour_
     (
@@ -405,7 +405,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        neighbour
+        move(neighbour)
     ),
     clearedPrimitives_(false),
     boundary_
@@ -497,12 +497,13 @@ Foam::polyMesh::polyMesh
 }
 
 
+
 Foam::polyMesh::polyMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<cellList>& cells,
+    pointField&& points,
+    faceList&& faces,
+    cellList&& cells,
     const bool syncPar
 )
 :
@@ -519,7 +520,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        points
+        move(points)
     ),
     faces_
     (
@@ -532,7 +533,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        faces
+        move(faces)
     ),
     owner_
     (
@@ -646,7 +647,7 @@ Foam::polyMesh::polyMesh
     }
 
     // transfer in cell list
-    cellList cLst(cells);
+    cellList cLst(move(cells));
 
     // Check if cells are valid
     forAll(cLst, celli)
@@ -669,10 +670,10 @@ Foam::polyMesh::polyMesh
 
 void Foam::polyMesh::resetPrimitives
 (
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& owner,
-    const Xfer<labelList>& neighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& owner,
+    labelList&& neighbour,
     const labelList& patchSizes,
     const labelList& patchStarts,
     const bool validBoundary
@@ -685,23 +686,23 @@ void Foam::polyMesh::resetPrimitives
     // Optimized to avoid overwriting data at all
     if (notNull(points))
     {
-        points_.transfer(points());
+        points_ = move(points);
         bounds_ = boundBox(points_, validBoundary);
     }
 
     if (notNull(faces))
     {
-        faces_.transfer(faces());
+        faces_ = move(faces);
     }
 
     if (notNull(owner))
     {
-        owner_.transfer(owner());
+        owner_ = move(owner);
     }
 
     if (notNull(neighbour))
     {
-        neighbour_.transfer(neighbour());
+        neighbour_ = move(neighbour);
     }
 
 

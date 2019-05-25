@@ -623,7 +623,7 @@ void omegaWallFunctionFvPatchScalarField::manipulateMatrix
     matrix.setValues
     (
         constraintCells,
-        scalarField(constraintomega.xfer())
+        scalarField(constraintomega)
     );
 
     fvPatchField<scalar>::manipulateMatrix(matrix);

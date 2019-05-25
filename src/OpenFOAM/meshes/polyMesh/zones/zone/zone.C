@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,11 +99,11 @@ Foam::zone::zone
 Foam::zone::zone
 (
     const word& name,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index
 )
 :
-    labelList(addr),
+    labelList(move(addr)),
     name_(name),
     index_(index),
     lookupMapPtr_(nullptr)
@@ -142,11 +142,11 @@ Foam::zone::zone
 Foam::zone::zone
 (
     const zone& z,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index
 )
 :
-    labelList(addr),
+    labelList(move(addr)),
     name_(z.name()),
     index_(index),
     lookupMapPtr_(nullptr)
@@ -234,6 +234,32 @@ void Foam::zone::write(Ostream& os) const
 {
     os  << nl << name_
         << nl << static_cast<const labelList&>(*this);
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void Foam::zone::operator=(const zone& zn)
+{
+    labelList::operator=(zn);
+}
+
+
+void Foam::zone::operator=(zone&& zn)
+{
+    labelList::operator=(move(zn));
+}
+
+
+void Foam::zone::operator=(const labelUList& addr)
+{
+    labelList::operator=(addr);
+}
+
+
+void Foam::zone::operator=(labelList&& addr)
+{
+    labelList::operator=(move(addr));
 }
 
 

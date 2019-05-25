@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::pRef
     }
     else
     {
-        return std::move(tp);
+        return move(tp);
     }
 }
 
@@ -126,7 +126,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::pDyn
     }
     else
     {
-        return std::move(tp);
+        return move(tp);
     }
 }
 
@@ -154,7 +154,7 @@ Foam::functionObjects::pressure::coeff
     }
     else
     {
-        return std::move(tp);
+        return move(tp);
     }
 }
 

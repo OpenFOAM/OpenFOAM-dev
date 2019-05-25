@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -342,11 +342,11 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdt
 }
 
 
-Foam::Xfer<Foam::PtrList<Foam::volScalarField>> Foam::phaseSystem::dmdts() const
+Foam::PtrList<Foam::volScalarField> Foam::phaseSystem::dmdts() const
 {
     PtrList<volScalarField> dmdts(this->phaseModels_.size());
 
-    return dmdts.xfer();
+    return dmdts;
 }
 
 

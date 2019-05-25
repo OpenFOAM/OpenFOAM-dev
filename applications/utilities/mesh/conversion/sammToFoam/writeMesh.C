@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ void Foam::sammMesh::writeMesh()
                 runTime_.constant(),
                 runTime_
             ),
-            xferCopy(points_),           // we could probably re-use the data
+            clone(points_),           // we could probably re-use the data
             cellShapes_,
             boundary_,
             patchNames_,
@@ -75,9 +75,9 @@ void Foam::sammMesh::writeMesh()
                 runTime_.constant(),
                 runTime_
             ),
-            xferCopy(points_),           // we could probably re-use the data
-            xferCopy(meshFaces_),
-            xferCopy(cellPolys_)
+            move(points_),           // we could probably re-use the data
+            move(meshFaces_),
+            move(cellPolys_)
         );
 
         pMesh.addPatches(polyBoundaryPatches(pMesh));

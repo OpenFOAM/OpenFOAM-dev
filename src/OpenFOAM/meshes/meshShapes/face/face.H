@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,7 +159,7 @@ public:
         explicit inline face(const labelList&);
 
         //- Construct by transferring the parameter contents
-        explicit inline face(const Xfer<labelList>&);
+        explicit inline face(labelList&&);
 
         //- Copy construct from triFace
         face(const triFace&);
@@ -378,6 +378,12 @@ public:
 
         //- Return true if the faces have the same vertices
         static bool sameVertices(const face&, const face&);
+
+
+    // Member Operators
+
+        //- Move assignment labelList
+        inline void operator=(labelList&&);
 
 
     // Friend Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdt
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::volScalarField>>
+Foam::PtrList<Foam::volScalarField>
 Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
@@ -162,7 +162,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
         this->addField(pair.phase2(), "dmdt", - pDmdt, dmdts);
     }
 
-    return dmdts.xfer();
+    return dmdts;
 }
 
 

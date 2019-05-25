@@ -61,10 +61,10 @@ inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
-    const Xfer<List<T>>& lst
+    List<T>&& lst
 )
 :
-    Field<T>(lst),
+    Field<T>(move(lst)),
     capacity_(Field<T>::size())
 {}
 
@@ -101,19 +101,21 @@ inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 )
 :
     Field<T>(lst),
-    capacity_(lst.capacity())
+    capacity_(lst.capacity_)
 {}
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
-    const Xfer<DynamicField<T, SizeInc, SizeMult, SizeDiv>>& lst
+    DynamicField<T, SizeInc, SizeMult, SizeDiv>&& lst
 )
 :
-    Field<T>(lst),
-    capacity_(Field<T>::size())
-{}
+    Field<T>(move(lst)),
+    capacity_(lst.capacity_)
+{
+    lst.capacity_ = 0;
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -295,14 +297,6 @@ Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::shrink()
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline Foam::Xfer<Foam::List<T>>
-Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::xfer()
-{
-    return xferMoveTo<List<T>>(*this);
-}
-
-
-template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>&
 Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::append
 (
@@ -419,6 +413,24 @@ inline void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::operator=
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::operator=
 (
+    DynamicField<T, SizeInc, SizeMult, SizeDiv>&& lst
+)
+{
+    if (this == &lst)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self" << abort(FatalError);
+    }
+
+    Field<T>::operator=(move(lst));
+    capacity_ = lst.capacity_;
+    lst.capacity_ = 0;
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::operator=
+(
     const UList<T>& lst
 )
 {
@@ -436,6 +448,23 @@ inline void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::operator=
         Field<T>::operator=(lst);
         capacity_ = Field<T>::size();
     }
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::operator=
+(
+    List<T>&& lst
+)
+{
+    if (this == &lst)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self" << abort(FatalError);
+    }
+
+    Field<T>::operator=(move(lst));
+    capacity_ = Field<T>::size();
 }
 
 

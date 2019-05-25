@@ -99,6 +99,12 @@ public:
             name_(name)
         {}
 
+        //- Move constructor
+        dictionaryName(dictionaryName&& name)
+        :
+            name_(move(name.name_))
+        {}
+
 
     // Member functions
 
@@ -129,6 +135,19 @@ public:
             {
                 return scopedName.substr(i + 1, scopedName.npos);
             }
+        }
+
+
+    // Member operators
+
+        void operator=(const dictionaryName& name)
+        {
+            name_ = name.name_;
+        }
+
+        void operator=(dictionaryName&& name)
+        {
+            name_ = move(name.name_);
         }
 };
 
@@ -240,11 +259,12 @@ public:
         //  A null pointer is treated like an empty dictionary.
         dictionary(const dictionary*);
 
-        //- Construct by transferring parameter contents given parent dictionary
-        dictionary(const dictionary& parentDict, const Xfer<dictionary>&);
+        //- Move constructor transferring parameter contents
+        //  given parent dictionary
+        dictionary(const dictionary& parentDict, dictionary&&);
 
-        //- Construct top-level dictionary by transferring parameter contents
-        dictionary(const Xfer<dictionary>&);
+        //- Move constructor
+        dictionary(dictionary&&);
 
         //- Construct and return clone
         autoPtr<dictionary> clone() const;
@@ -526,9 +546,6 @@ public:
             //- Transfer the contents of the argument and annul the argument.
             void transfer(dictionary&);
 
-            //- Transfer contents to the Xfer container
-            Xfer<dictionary> xfer();
-
 
         // Read
 
@@ -551,6 +568,8 @@ public:
         ITstream& operator[](const word&) const;
 
         void operator=(const dictionary&);
+
+        void operator=(dictionary&&);
 
         //- Include entries from the given dictionary.
         //  Warn, but do not overwrite existing entries.

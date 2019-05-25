@@ -133,11 +133,23 @@ public:
         //- Construct as copy of a UList\<Type\>
         explicit Field(const UList<Type>&);
 
+        //- Mover constructor transferring the List contents
+        explicit Field(List<Type>&&);
+
         //- Construct as copy of a UIndirectList\<Type\>
         explicit Field(const UIndirectList<Type>&);
 
-        //- Construct by transferring the List contents
-        explicit Field(const Xfer<List<Type>>&);
+        //- Construct as copy
+        Field(const Field<Type>&);
+
+        //- Construct as copy or re-use as specified.
+        Field(Field<Type>&, bool reuse);
+
+        //- Move Constructor transferring the Field contents
+        Field(Field<Type>&&);
+
+        //- Construct as copy of tmp<Field>
+        Field(const tmp<Field<Type>>&);
 
         //- Construct by 1 to 1 mapping from the given field
         Field
@@ -168,18 +180,6 @@ public:
             const labelListList& mapAddressing,
             const scalarListList& weights
         );
-
-        //- Construct as copy
-        Field(const Field<Type>&);
-
-        //- Construct as copy or re-use as specified.
-        Field(Field<Type>&, bool reuse);
-
-        //- Construct by transferring the Field contents
-        Field(const Xfer<Field<Type>>&);
-
-        //- Construct as copy of tmp<Field>
-        Field(const tmp<Field<Type>>&);
 
         //- Construct from Istream
         Field(Istream&);
@@ -286,7 +286,9 @@ public:
     // Member operators
 
         void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
         void operator=(const UList<Type>&);
+        void operator=(List<Type>&&);
         void operator=(const SubField<Type>&);
         void operator=(const tmp<Field<Type>>&);
         void operator=(const Type&);

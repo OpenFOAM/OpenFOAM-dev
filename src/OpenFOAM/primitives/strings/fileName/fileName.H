@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,6 +105,9 @@ public:
 
         //- Construct as copy
         inline fileName(const fileName&);
+
+        //- Move constructor
+        inline fileName(fileName&&);
 
         //- Construct as copy of word
         inline fileName(const word&);
@@ -230,6 +233,7 @@ public:
         // Assignment
 
             void operator=(const fileName&);
+            void operator=(fileName&&);
             void operator=(const word&);
             void operator=(const string&);
             void operator=(const std::string&);

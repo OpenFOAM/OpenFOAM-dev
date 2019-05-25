@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,6 +301,20 @@ Foam::dictionary::dictionary
 
 Foam::dictionary::dictionary
 (
+    dictionary&& dict
+)
+:
+    dictionaryName(move(dict.name())),
+    IDLList<entry>(move(dict)),
+    hashedEntries_(move(dict.hashedEntries_)),
+    parent_(dict.parent_),
+    patternEntries_(move(dict.patternEntries_)),
+    patternRegexps_(move(dict.patternRegexps_))
+{}
+
+
+Foam::dictionary::dictionary
+(
     const dictionary* dictPtr
 )
 :
@@ -316,24 +330,17 @@ Foam::dictionary::dictionary
 Foam::dictionary::dictionary
 (
     const dictionary& parentDict,
-    const Xfer<dictionary>& dict
+    dictionary&& dict
 )
 :
-    parent_(parentDict)
+    dictionaryName(move(dict.name())),
+    IDLList<entry>(move(dict)),
+    hashedEntries_(move(dict.hashedEntries_)),
+    parent_(parentDict),
+    patternEntries_(move(dict.patternEntries_)),
+    patternRegexps_(move(dict.patternRegexps_))
 {
-    transfer(dict());
     name() = parentDict.name() + '.' + name();
-}
-
-
-Foam::dictionary::dictionary
-(
-    const Xfer<dictionary>& dict
-)
-:
-    parent_(dictionary::null)
-{
-    transfer(dict());
 }
 
 
@@ -423,7 +430,7 @@ Foam::tokenList Foam::dictionary::tokens() const
         tokens.append(t);
     }
 
-    return tokenList(tokens.xfer());
+    return tokenList(move(tokens));
 }
 
 
@@ -1154,12 +1161,6 @@ void Foam::dictionary::transfer(dictionary& dict)
 }
 
 
-Foam::Xfer<Foam::dictionary> Foam::dictionary::xfer()
-{
-    return xferMove(*this);
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 Foam::ITstream& Foam::dictionary::operator[](const word& keyword) const
@@ -1188,6 +1189,24 @@ void Foam::dictionary::operator=(const dictionary& rhs)
     {
         add(iter().clone(*this).ptr());
     }
+}
+
+
+void Foam::dictionary::operator=(dictionary&& rhs)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalIOErrorInFunction(*this)
+            << "attempted assignment to self for dictionary " << name()
+            << abort(FatalIOError);
+    }
+
+    dictionaryName::operator=(move(rhs));
+    IDLList<entry>::operator=(move(rhs));
+    hashedEntries_ = move(rhs.hashedEntries_);
+    patternEntries_ = move(rhs.patternEntries_);
+    patternRegexps_ = move(rhs.patternRegexps_);
 }
 
 

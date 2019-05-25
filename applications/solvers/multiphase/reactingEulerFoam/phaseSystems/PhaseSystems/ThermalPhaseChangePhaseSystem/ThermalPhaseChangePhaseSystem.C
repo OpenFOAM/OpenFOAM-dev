@@ -188,7 +188,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdt
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::volScalarField>>
+Foam::PtrList<Foam::volScalarField>
 Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
@@ -211,7 +211,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
         this->addField(pair.phase2(), "dmdt", - wDmdt, dmdts);
     }
 
-    return dmdts.xfer();
+    return dmdts;
 }
 
 

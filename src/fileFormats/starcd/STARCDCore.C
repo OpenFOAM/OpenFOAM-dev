@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,8 +110,8 @@ bool Foam::fileFormats::STARCDCore::readPoints
 
 
     // reuse memory if possible
-    DynamicList<point> dynPoints(points.xfer());
-    DynamicList<label> dynPointId(ids.xfer());    // STAR-CD index of points
+    DynamicList<point> dynPoints(move(points));
+    DynamicList<label> dynPointId(move(ids));    // STAR-CD index of points
 
     dynPoints.clear();
     dynPointId.clear();

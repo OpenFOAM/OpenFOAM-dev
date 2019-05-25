@@ -67,6 +67,59 @@ Foam::Field<Type>::Field(const label size, const zero)
 
 
 template<class Type>
+Foam::Field<Type>::Field(const UList<Type>& list)
+:
+    List<Type>(list)
+{}
+
+
+template<class Type>
+Foam::Field<Type>::Field(List<Type>&& f)
+:
+    List<Type>(move(f))
+{}
+
+
+template<class Type>
+Foam::Field<Type>::Field(const UIndirectList<Type>& list)
+:
+    List<Type>(list)
+{}
+
+
+template<class Type>
+Foam::Field<Type>::Field(const Field<Type>& f)
+:
+    tmp<Field<Type>>::refCount(),
+    List<Type>(f)
+{}
+
+
+template<class Type>
+Foam::Field<Type>::Field(Field<Type>& f, bool reuse)
+:
+    List<Type>(f, reuse)
+{}
+
+
+template<class Type>
+Foam::Field<Type>::Field(Field<Type>&& f)
+:
+    tmp<Field<Type>>::refCount(),
+    List<Type>(move(f))
+{}
+
+
+template<class Type>
+Foam::Field<Type>::Field(const tmp<Field<Type>>& tf)
+:
+    List<Type>(const_cast<Field<Type>&>(tf()), tf.isTmp())
+{
+    tf.clear();
+}
+
+
+template<class Type>
 Foam::Field<Type>::Field
 (
     const UList<Type>& mapF,
@@ -117,58 +170,6 @@ Foam::Field<Type>::Field
     List<Type>(mapAddressing.size())
 {
     map(tmapF, mapAddressing, mapWeights);
-}
-
-
-template<class Type>
-Foam::Field<Type>::Field(const Field<Type>& f)
-:
-    tmp<Field<Type>>::refCount(),
-    List<Type>(f)
-{}
-
-
-template<class Type>
-Foam::Field<Type>::Field(Field<Type>& f, bool reuse)
-:
-    List<Type>(f, reuse)
-{}
-
-
-template<class Type>
-Foam::Field<Type>::Field(const Xfer<List<Type>>& f)
-:
-    List<Type>(f)
-{}
-
-
-template<class Type>
-Foam::Field<Type>::Field(const Xfer<Field<Type>>& f)
-:
-    List<Type>(f)
-{}
-
-
-template<class Type>
-Foam::Field<Type>::Field(const UList<Type>& list)
-:
-    List<Type>(list)
-{}
-
-
-template<class Type>
-Foam::Field<Type>::Field(const UIndirectList<Type>& list)
-:
-    List<Type>(list)
-{}
-
-
-template<class Type>
-Foam::Field<Type>::Field(const tmp<Field<Type>>& tf)
-:
-    List<Type>(const_cast<Field<Type>&>(tf()), tf.isTmp())
-{
-    tf.clear();
 }
 
 
@@ -534,6 +535,20 @@ void Foam::Field<Type>::operator=(const Field<Type>& rhs)
 
 
 template<class Type>
+void Foam::Field<Type>::operator=(Field<Type>&& rhs)
+{
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    List<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
 void Foam::Field<Type>::operator=(const SubField<Type>& rhs)
 {
     List<Type>::operator=(rhs);
@@ -544,6 +559,13 @@ template<class Type>
 void Foam::Field<Type>::operator=(const UList<Type>& rhs)
 {
     List<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+void Foam::Field<Type>::operator=(List<Type>&& rhs)
+{
+    List<Type>::operator=(move(rhs));
 }
 
 

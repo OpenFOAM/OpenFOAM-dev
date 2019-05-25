@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,16 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
 #include "IOstreams.H"
-
-// * * * * * * * * * * * * * Private Member Classes * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class T, class Key, class Hash>
 inline Foam::label
-Foam::StaticHashTable<T, Key, Hash>::hashKeyIndex(const Key& key) const
+Foam::ListHashTable<T, Key, Hash>::hashKeyIndex(const Key& key) const
 {
     // size is power of two - this is the modulus
     return Hash()(key) & (keys_.size() - 1);
@@ -42,21 +39,21 @@ Foam::StaticHashTable<T, Key, Hash>::hashKeyIndex(const Key& key) const
 // * * * * * * * * * * * * * * * Member Functions * * * * * * * * * * * * * //
 
 template<class T, class Key, class Hash>
-inline Foam::label Foam::StaticHashTable<T, Key, Hash>::size() const
+inline Foam::label Foam::ListHashTable<T, Key, Hash>::size() const
 {
     return nElmts_;
 }
 
 
 template<class T, class Key, class Hash>
-inline bool Foam::StaticHashTable<T, Key, Hash>::empty() const
+inline bool Foam::ListHashTable<T, Key, Hash>::empty() const
 {
     return !nElmts_;
 }
 
 
 template<class T, class Key, class Hash>
-inline bool Foam::StaticHashTable<T, Key, Hash>::insert
+inline bool Foam::ListHashTable<T, Key, Hash>::insert
 (
     const Key& key,
     const T& newEntry
@@ -67,7 +64,7 @@ inline bool Foam::StaticHashTable<T, Key, Hash>::insert
 
 
 template<class T, class Key, class Hash>
-inline bool Foam::StaticHashTable<T, Key, Hash>::set
+inline bool Foam::ListHashTable<T, Key, Hash>::set
 (
     const Key& key,
     const T& newEntry
@@ -77,18 +74,10 @@ inline bool Foam::StaticHashTable<T, Key, Hash>::set
 }
 
 
-template<class T, class Key, class Hash>
-inline Foam::Xfer<Foam::StaticHashTable<T, Key, Hash>>
-Foam::StaticHashTable<T, Key, Hash>::xfer()
-{
-    return xferMove(*this);
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T, class Key, class Hash>
-inline T& Foam::StaticHashTable<T, Key, Hash>::operator[](const Key& key)
+inline T& Foam::ListHashTable<T, Key, Hash>::operator[](const Key& key)
 {
     iterator iter = find(key);
 
@@ -104,7 +93,7 @@ inline T& Foam::StaticHashTable<T, Key, Hash>::operator[](const Key& key)
 
 
 template<class T, class Key, class Hash>
-inline const T& Foam::StaticHashTable<T, Key, Hash>::operator[]
+inline const T& Foam::ListHashTable<T, Key, Hash>::operator[]
 (
     const Key& key
 ) const
@@ -123,7 +112,7 @@ inline const T& Foam::StaticHashTable<T, Key, Hash>::operator[]
 
 
 template<class T, class Key, class Hash>
-inline T& Foam::StaticHashTable<T, Key, Hash>::operator()(const Key& key)
+inline T& Foam::ListHashTable<T, Key, Hash>::operator()(const Key& key)
 {
     iterator iter = find(key);
 
@@ -143,7 +132,7 @@ inline T& Foam::StaticHashTable<T, Key, Hash>::operator()(const Key& key)
 
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
-inline Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::Iterator
+inline Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::Iterator
 (
     TableRef hashTbl,
     label hashIndex,
@@ -158,7 +147,7 @@ inline Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::Iterator
 
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
-inline Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::Iterator
+inline Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::Iterator
 (
     const iterator& iter
 )
@@ -172,7 +161,7 @@ inline Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::Iterator
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline void
-Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator=
+Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator=
 (
     const iterator& iter
 )
@@ -185,7 +174,7 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator=
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline bool
-Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator==
+Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator==
 (
     const iterator& iter
 ) const
@@ -197,7 +186,7 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator==
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline bool
-Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator==
+Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator==
 (
     const const_iterator& iter
 ) const
@@ -209,7 +198,7 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator==
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline bool
-Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator!=
+Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator!=
 (
     const iterator& iter
 ) const
@@ -221,7 +210,7 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator!=
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline bool
-Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator!=
+Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator!=
 (
     const const_iterator& iter
 ) const
@@ -233,7 +222,7 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator!=
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline TRef
-Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator*()
+Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator*()
 {
     return hashTable_.objects_[hashIndex_][elemIndex_];
 }
@@ -242,7 +231,7 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator*()
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline TRef
-Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator()()
+Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator()()
 {
     return operator*();
 }
@@ -251,12 +240,12 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::operator()()
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline
-typename Foam::StaticHashTable<T, Key, Hash>::template Iterator
+typename Foam::ListHashTable<T, Key, Hash>::template Iterator
 <
     TRef,
     TableRef
 >&
-Foam::StaticHashTable<T, Key, Hash>::Iterator
+Foam::ListHashTable<T, Key, Hash>::Iterator
 <
     TRef,
     TableRef
@@ -303,12 +292,12 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline
-typename Foam::StaticHashTable<T, Key, Hash>::template Iterator
+typename Foam::ListHashTable<T, Key, Hash>::template Iterator
 <
     TRef,
     TableRef
 >
-Foam::StaticHashTable<T, Key, Hash>::Iterator
+Foam::ListHashTable<T, Key, Hash>::Iterator
 <
     TRef,
     TableRef
@@ -326,15 +315,15 @@ Foam::StaticHashTable<T, Key, Hash>::Iterator
 template<class T, class Key, class Hash>
 template<class TRef, class TableRef>
 inline const Key&
-Foam::StaticHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::key() const
+Foam::ListHashTable<T, Key, Hash>::Iterator<TRef, TableRef>::key() const
 {
     return hashTable_.keys_[hashIndex_][elemIndex_];
 }
 
 
 template<class T, class Key, class Hash>
-inline typename Foam::StaticHashTable<T, Key, Hash>::iterator
-Foam::StaticHashTable<T, Key, Hash>::begin()
+inline typename Foam::ListHashTable<T, Key, Hash>::iterator
+Foam::ListHashTable<T, Key, Hash>::begin()
 {
     // Find first non-empty entry
     forAll(keys_, hashIdx)
@@ -348,25 +337,25 @@ Foam::StaticHashTable<T, Key, Hash>::begin()
     #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "StaticHashTable is empty\n";
+        Info<< "ListHashTable is empty\n";
     }
     #endif
 
-    return StaticHashTable<T, Key, Hash>::endIter_;
+    return ListHashTable<T, Key, Hash>::endIter_;
 }
 
 
 template<class T, class Key, class Hash>
-inline const typename Foam::StaticHashTable<T, Key, Hash>::iterator&
-Foam::StaticHashTable<T, Key, Hash>::end()
+inline const typename Foam::ListHashTable<T, Key, Hash>::iterator&
+Foam::ListHashTable<T, Key, Hash>::end()
 {
-    return StaticHashTable<T, Key, Hash>::endIter_;
+    return ListHashTable<T, Key, Hash>::endIter_;
 }
 
 
 template<class T, class Key, class Hash>
-inline typename Foam::StaticHashTable<T, Key, Hash>::const_iterator
-Foam::StaticHashTable<T, Key, Hash>::cbegin() const
+inline typename Foam::ListHashTable<T, Key, Hash>::const_iterator
+Foam::ListHashTable<T, Key, Hash>::cbegin() const
 {
     // Find first non-empty entry
     forAll(keys_, hashIdx)
@@ -380,35 +369,35 @@ Foam::StaticHashTable<T, Key, Hash>::cbegin() const
     #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "StaticHashTable is empty\n";
+        Info<< "ListHashTable is empty\n";
     }
     #endif
 
-    return StaticHashTable<T, Key, Hash>::endConstIter_;
+    return ListHashTable<T, Key, Hash>::endConstIter_;
 }
 
 
 template<class T, class Key, class Hash>
-inline const typename Foam::StaticHashTable<T, Key, Hash>::const_iterator&
-Foam::StaticHashTable<T, Key, Hash>::cend() const
+inline const typename Foam::ListHashTable<T, Key, Hash>::const_iterator&
+Foam::ListHashTable<T, Key, Hash>::cend() const
 {
-    return StaticHashTable<T, Key, Hash>::endConstIter_;
+    return ListHashTable<T, Key, Hash>::endConstIter_;
 }
 
 
 template<class T, class Key, class Hash>
-inline typename Foam::StaticHashTable<T, Key, Hash>::const_iterator
-Foam::StaticHashTable<T, Key, Hash>::begin() const
+inline typename Foam::ListHashTable<T, Key, Hash>::const_iterator
+Foam::ListHashTable<T, Key, Hash>::begin() const
 {
     return this->cbegin();
 }
 
 
 template<class T, class Key, class Hash>
-inline const typename Foam::StaticHashTable<T, Key, Hash>::const_iterator&
-Foam::StaticHashTable<T, Key, Hash>::end() const
+inline const typename Foam::ListHashTable<T, Key, Hash>::const_iterator&
+Foam::ListHashTable<T, Key, Hash>::end() const
 {
-    return StaticHashTable<T, Key, Hash>::endConstIter_;
+    return ListHashTable<T, Key, Hash>::endConstIter_;
 }
 
 

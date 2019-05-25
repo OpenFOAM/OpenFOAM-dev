@@ -42,13 +42,6 @@ Foam::UPtrList<T>::UPtrList(const label s)
 
 
 template<class T>
-Foam::UPtrList<T>::UPtrList(const Xfer<UPtrList<T>>& lst)
-{
-    transfer(lst());
-}
-
-
-template<class T>
 Foam::UPtrList<T>::UPtrList(UPtrList<T>& a, bool reuse)
 :
     ptrs_(a.ptrs_, reuse)

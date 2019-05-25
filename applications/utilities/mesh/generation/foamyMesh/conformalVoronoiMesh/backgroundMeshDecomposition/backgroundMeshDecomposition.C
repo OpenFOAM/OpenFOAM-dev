@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,7 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(backgroundMeshDecomposition, 0);
-
+    defineTypeNameAndDebug(backgroundMeshDecomposition, 0);
 }
 
 
@@ -118,8 +116,8 @@ Foam::autoPtr<Foam::mapDistribute> Foam::backgroundMeshDecomposition::buildMap
         new mapDistribute
         (
             constructSize,
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
 }
@@ -1370,7 +1368,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
         }
     }
 
-    return toProc;
+    return Foam::move(toProc);
 }
 
 

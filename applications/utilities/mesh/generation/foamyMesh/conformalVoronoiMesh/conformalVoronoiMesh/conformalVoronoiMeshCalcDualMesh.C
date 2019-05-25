@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -739,10 +739,10 @@ Foam::conformalVoronoiMesh::createPolyMeshFromPoints
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            xferCopy(pts),
-            xferMove(faces),
-            xferMove(owner),
-            xferMove(neighbour)
+            clone(pts),
+            Foam::move(faces),
+            Foam::move(owner),
+            Foam::move(neighbour)
         )
     );
 
@@ -991,7 +991,7 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::findOffsetPatchFaces
         offsetBoundaryCells.write();
     }
 
-    return offsetBoundaryCells;
+    return Foam::move(offsetBoundaryCells);
 }
 
 

@@ -306,7 +306,7 @@ Foam::List<Foam::polyPatch*> Foam::polyMeshAdder::combinePatches
 
     allPatches.shrink();
 
-    return allPatches;
+    return move(allPatches);
 }
 
 
@@ -1653,10 +1653,10 @@ Foam::autoPtr<Foam::polyMesh> Foam::polyMeshAdder::add
         new polyMesh
         (
             io,
-            xferMove(allPoints),
-            xferMove(allFaces),
-            xferMove(allOwner),
-            xferMove(allNeighbour)
+            move(allPoints),
+            move(allFaces),
+            move(allOwner),
+            move(allNeighbour)
         )
     );
     polyMesh& mesh = tmesh();
@@ -1967,10 +1967,10 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
     mesh0.resetMotion();    // delete any oldPoints.
     mesh0.resetPrimitives
     (
-        xferMove(allPoints),
-        xferMove(allFaces),
-        xferMove(allOwner),
-        xferMove(allNeighbour),
+        move(allPoints),
+        move(allFaces),
+        move(allOwner),
+        move(allNeighbour),
         patchSizes,     // size
         patchStarts,    // patchstarts
         validBoundary   // boundary valid?

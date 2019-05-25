@@ -106,6 +106,12 @@ public:
         //- Construct from std::string
         inline string(const std::string&);
 
+        //- Copy constructor
+        inline string(const string&);
+
+        //- Move constructor
+        inline string(string&&);
+
         //- Construct as copy of character array
         inline string(const char*);
 
@@ -215,6 +221,9 @@ public:
         (
             const size_type n
         ) const;
+
+        inline void operator=(const string&);
+        inline void operator=(string&&);
 
 
     // IOstream Operators

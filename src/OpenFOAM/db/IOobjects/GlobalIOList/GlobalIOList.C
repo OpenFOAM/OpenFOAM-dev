@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,18 +73,29 @@ template<class Type>
 Foam::GlobalIOList<Type>::GlobalIOList
 (
     const IOobject& io,
-    const Xfer<List<Type>>& f
+    List<Type>&& f
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    List<Type>(move(f))
+
 {
     // Check for MUST_READ_IF_MODIFIED
     warnNoRereading<GlobalIOList<Type>>();
 
-    List<Type>::transfer(f());
-
     readHeaderOk(IOstream::BINARY, typeName);
 }
+
+
+template<class Type>
+Foam::GlobalIOList<T>::GlobalIOList
+(
+    GlobalIOList<Type>&& field
+)
+:
+    regIOobject(move(field)),
+    List<T>(move(field))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -121,9 +132,23 @@ void Foam::GlobalIOList<Type>::operator=(const GlobalIOList<Type>& rhs)
 
 
 template<class Type>
+void Foam::GlobalIOList<Type>::operator=(GlobalIOList<Type>&& rhs)
+{
+    List<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
 void Foam::GlobalIOList<Type>::operator=(const List<Type>& rhs)
 {
     List<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+void Foam::GlobalIOList<Type>::operator=(List<Type>&& rhs)
+{
+    List<Type>::operator=(move(rhs));
 }
 
 

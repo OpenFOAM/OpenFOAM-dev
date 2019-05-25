@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ bool Foam::fileFormats::VTKsurfaceFormat<Face>::read
             zoneSizes[dynZones[triI]]++;
         }
 
-        this->sortFacesAndStore(dynFaces.xfer(), dynZones.xfer(), sorted);
+        this->sortFacesAndStore(move(dynFaces), move(dynZones), sorted);
 
         // add zones, culling empty ones
         this->addZones(zoneSizes, zoneNames, true);
@@ -202,7 +202,7 @@ bool Foam::fileFormats::VTKsurfaceFormat<Face>::read
             zoneSizes[zones[facei]]++;
         }
 
-        this->sortFacesAndStore(dynFaces.xfer(), zones.xfer(), sorted);
+        this->sortFacesAndStore(move(dynFaces), move(zones), sorted);
 
         // add zones, culling empty ones
         this->addZones(zoneSizes, zoneNames, true);

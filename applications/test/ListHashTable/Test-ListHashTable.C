@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "StaticHashTable.H"
+#include "ListHashTable.H"
 #include "IOstreams.H"
 #include "IStringStream.H"
 #include "OStringStream.H"
@@ -31,7 +31,7 @@ License
 using namespace Foam;
 
 // use define so we can easily test other implementations
-#define HASHTABLE_CLASS StaticHashTable
+#define HASHTABLE_CLASS ListHashTable
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //  Main program:
@@ -91,10 +91,10 @@ int main()
 
 
     HASHTABLE_CLASS<double> table2(table1);
-    HASHTABLE_CLASS<double> table3(table1.xfer());
+    HASHTABLE_CLASS<double> table3(move(table1));
 
     Info<< "\ncopy table1 -> table2" << nl
-        << "transfer table1 -> table3 via the xfer() method" << nl;
+        << "move table1 -> table3" << nl;
 
     Info<< "\ntable1" << table1 << nl
         << "\ntable2" << table2 << nl

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,8 +112,8 @@ public:
         //- Construct from keyword and a list of tokens
         primitiveEntry(const keyType&, const UList<token>&);
 
-        //- Construct from keyword and by transferring a list of tokens
-        primitiveEntry(const keyType&, const Xfer<List<token>>&);
+        //- Move construct from keyword and by transferring a list of tokens
+        primitiveEntry(const keyType&, List<token>&&);
 
         //- Construct from keyword and a T
         template<class T>

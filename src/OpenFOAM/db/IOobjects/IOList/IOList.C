@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,14 +105,13 @@ Foam::IOList<T>::IOList(const IOobject& io, const List<T>& list)
 
 
 template<class T>
-Foam::IOList<T>::IOList(const IOobject& io, const Xfer<List<T>>& list)
+Foam::IOList<T>::IOList(const IOobject& io, List<T>&& list)
 :
-    regIOobject(io)
+    regIOobject(io),
+    List<T>(move(list))
 {
     // Check for MUST_READ_IF_MODIFIED
     warnNoRereading<IOList<T>>();
-
-    List<T>::transfer(list());
 
     if
     (
@@ -127,6 +126,22 @@ Foam::IOList<T>::IOList(const IOobject& io, const Xfer<List<T>>& list)
         close();
     }
 }
+
+
+template<class T>
+Foam::IOList<T>::IOList(const IOList<T>& f)
+:
+    regIOobject(f),
+    List<T>(f)
+{}
+
+
+template<class T>
+Foam::IOList<T>::IOList(IOList<T>&& f)
+:
+    regIOobject(move(f)),
+    List<T>(move(f))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -156,9 +171,23 @@ void Foam::IOList<T>::operator=(const IOList<T>& rhs)
 
 
 template<class T>
+void Foam::IOList<T>::operator=(IOList<T>&& rhs)
+{
+    List<T>::operator=(move(rhs));
+}
+
+
+template<class T>
 void Foam::IOList<T>::operator=(const List<T>& rhs)
 {
     List<T>::operator=(rhs);
+}
+
+
+template<class T>
+void Foam::IOList<T>::operator=(List<T>&& rhs)
+{
+    List<T>::operator=(move(rhs));
 }
 
 

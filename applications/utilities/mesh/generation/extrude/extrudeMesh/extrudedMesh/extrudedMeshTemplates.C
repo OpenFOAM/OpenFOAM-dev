@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class FaceList, class PointField>
-Foam::Xfer<Foam::pointField> Foam::extrudedMesh::extrudedPoints
+Foam::pointField Foam::extrudedMesh::extrudedPoints
 (
     const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
@@ -57,13 +57,12 @@ Foam::Xfer<Foam::pointField> Foam::extrudedMesh::extrudedPoints
         }
     }
 
-    // return points for transferring
-    return xferMove(ePoints);
+    return ePoints;
 }
 
 
 template<class FaceList, class PointField>
-Foam::Xfer<Foam::faceList> Foam::extrudedMesh::extrudedFaces
+Foam::faceList Foam::extrudedMesh::extrudedFaces
 (
     const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
@@ -183,13 +182,12 @@ Foam::Xfer<Foam::faceList> Foam::extrudedMesh::extrudedFaces
             );
     }
 
-    // return points for transferring
-    return xferMove(eFaces);
+    return eFaces;
 }
 
 
 template<class FaceList, class PointField>
-Foam::Xfer<Foam::cellList> Foam::extrudedMesh::extrudedCells
+Foam::cellList Foam::extrudedMesh::extrudedCells
 (
     const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
@@ -290,8 +288,7 @@ Foam::Xfer<Foam::cellList> Foam::extrudedMesh::extrudedCells
         facei++;
     }
 
-    // return points for transferring
-    return xferMove(eCells);
+    return eCells;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ public:
         pointZone
         (
             const word& name,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index,
             const pointZoneMesh&
         );
@@ -150,7 +150,7 @@ public:
         pointZone
         (
             const pointZone&,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index,
             const pointZoneMesh&
         );
@@ -222,14 +222,17 @@ public:
 
     // Member Operators
 
-        //- Assign to zone, clearing demand-driven data
+        //- Assignment to zone, clearing demand-driven data
         void operator=(const pointZone&);
+
+        //- Move assignment to zone, clearing demand-driven data
+        void operator=(pointZone&&);
 
         //- Assign addressing, clearing demand-driven data
         void operator=(const labelUList&);
 
-        //- Assign addressing, clearing demand-driven data
-        void operator=(const Xfer<labelList>&);
+        //- Move addressing, clearing demand-driven data
+        void operator=(labelList&&);
 
 
     // I-O

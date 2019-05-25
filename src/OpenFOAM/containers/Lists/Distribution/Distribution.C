@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,9 +50,18 @@ Foam::Distribution<Type>::Distribution(const Type& binWidth)
 template<class Type>
 Foam::Distribution<Type>::Distribution(const Distribution<Type>& d)
 :
-    List<List<scalar>>(static_cast<const List<List<scalar>>& >(d)),
+    List<List<scalar>>(d),
     binWidth_(d.binWidth()),
     listStarts_(d.listStarts())
+{}
+
+
+template<class Type>
+Foam::Distribution<Type>::Distribution(Distribution<Type>&& d)
+:
+    List<List<scalar>>(move(d)),
+    binWidth_(d.binWidth()),
+    listStarts_(move(d.listStarts()))
 {}
 
 
@@ -511,6 +520,7 @@ void Foam::Distribution<Type>::write(const fileName& filePrefix) const
     {
         const List<Pair<scalar>>& rawPairs = rawDistribution[cmpt];
 
+
         const List<Pair<scalar>>& normPairs = normDistribution[cmpt];
 
         OFstream os(filePrefix + '_' + pTraits<Type>::componentNames[cmpt]);
@@ -575,6 +585,28 @@ void Foam::Distribution<Type>::operator=
     binWidth_ = rhs.binWidth();
 
     listStarts_ = rhs.listStarts();
+}
+
+
+template<class Type>
+void Foam::Distribution<Type>::operator=
+(
+    Distribution<Type>&& rhs
+)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "Attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    List<List<scalar>>::operator=(move(rhs));
+
+    binWidth_ = rhs.binWidth();
+
+    listStarts_ = move(rhs.listStarts());
 }
 
 

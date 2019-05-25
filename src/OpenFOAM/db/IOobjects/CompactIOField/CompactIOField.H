@@ -48,29 +48,29 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-template<class T, class BaseType> class CompactIOField;
+template<class Type, class BaseType> class CompactIOField;
 
-template<class T, class BaseType> Istream& operator>>
+template<class Type, class BaseType> Istream& operator>>
 (
     Istream&,
-    CompactIOField<T, BaseType>&
+    CompactIOField<Type, BaseType>&
 );
 
-template<class T, class BaseType> Ostream& operator<<
+template<class Type, class BaseType> Ostream& operator<<
 (
     Ostream&,
-    const CompactIOField<T, BaseType>&
+    const CompactIOField<Type, BaseType>&
 );
 
 /*---------------------------------------------------------------------------*\
                         Class CompactIOField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T, class BaseType>
+template<class Type, class BaseType>
 class CompactIOField
 :
     public regIOobject,
-    public Field<T>
+    public Field<Type>
 {
     // Private Member Functions
 
@@ -95,10 +95,13 @@ public:
         CompactIOField(const IOobject&, const label);
 
         //- Construct from IOobject and a Field
-        CompactIOField(const IOobject&, const Field<T>&);
+        CompactIOField(const IOobject&, const Field<Type>&);
 
-        //- Construct by transferring the Field contents
-        CompactIOField(const IOobject&, const Xfer<Field<T>>&);
+        //- Move construct by transferring the Field contents
+        CompactIOField(const IOobject&, Field<Type>&&);
+
+        //- Move constructor
+        CompactIOField(CompactIOField<Type, BaseType>&&);
 
 
     // Destructor
@@ -121,9 +124,11 @@ public:
 
     // Member operators
 
-        void operator=(const CompactIOField<T, BaseType>&);
+        void operator=(const CompactIOField<Type, BaseType>&);
+        void operator=(CompactIOField<Type, BaseType>&&);
 
-        void operator=(const Field<T>&);
+        void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
 };
 
 

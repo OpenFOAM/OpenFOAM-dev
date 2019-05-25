@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,16 +23,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef StaticHashTable_C
-#define StaticHashTable_C
+#ifndef ListHashTable_C
+#define ListHashTable_C
 
-#include "StaticHashTable.H"
+#include "ListHashTable.H"
 #include "List.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::label Foam::StaticHashTableCore::canonicalSize(const label size)
+Foam::label Foam::ListHashTableCore::canonicalSize(const label size)
 {
     if (size < 1)
     {
@@ -59,10 +59,10 @@ Foam::label Foam::StaticHashTableCore::canonicalSize(const label size)
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class T, class Key, class Hash>
-Foam::StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)
+Foam::ListHashTable<T, Key, Hash>::ListHashTable(const label size)
 :
-    StaticHashTableCore(),
-    keys_(StaticHashTableCore::canonicalSize(size)),
+    ListHashTableCore(),
+    keys_(ListHashTableCore::canonicalSize(size)),
     objects_(keys_.size()),
     nElmts_(0),
     endIter_(*this, keys_.size(), 0),
@@ -71,19 +71,19 @@ Foam::StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)
     if (size < 1)
     {
         FatalErrorInFunction
-            << "Illegal size " << size << " for StaticHashTable."
+            << "Illegal size " << size << " for ListHashTable."
             << " Minimum size is 1" << abort(FatalError);
     }
 }
 
 
 template<class T, class Key, class Hash>
-Foam::StaticHashTable<T, Key, Hash>::StaticHashTable
+Foam::ListHashTable<T, Key, Hash>::ListHashTable
 (
-    const StaticHashTable<T, Key, Hash>& ht
+    const ListHashTable<T, Key, Hash>& ht
 )
 :
-    StaticHashTableCore(),
+    ListHashTableCore(),
     keys_(ht.keys_),
     objects_(ht.objects_),
     nElmts_(ht.nElmts_),
@@ -93,33 +93,33 @@ Foam::StaticHashTable<T, Key, Hash>::StaticHashTable
 
 
 template<class T, class Key, class Hash>
-Foam::StaticHashTable<T, Key, Hash>::StaticHashTable
+Foam::ListHashTable<T, Key, Hash>::ListHashTable
 (
-    const Xfer<StaticHashTable<T, Key, Hash>>& ht
+    ListHashTable<T, Key, Hash>&& ht
 )
 :
-    StaticHashTableCore(),
+    ListHashTableCore(),
     keys_(0),
     objects_(0),
     nElmts_(0),
     endIter_(*this, 0, 0),
     endConstIter_(*this, 0, 0)
 {
-    transfer(ht());
+    transfer(ht);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class T, class Key, class Hash>
-Foam::StaticHashTable<T, Key, Hash>::~StaticHashTable()
+Foam::ListHashTable<T, Key, Hash>::~ListHashTable()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T, class Key, class Hash>
-bool Foam::StaticHashTable<T, Key, Hash>::found(const Key& key) const
+bool Foam::ListHashTable<T, Key, Hash>::found(const Key& key) const
 {
     if (nElmts_)
     {
@@ -147,8 +147,8 @@ bool Foam::StaticHashTable<T, Key, Hash>::found(const Key& key) const
 
 
 template<class T, class Key, class Hash>
-typename Foam::StaticHashTable<T, Key, Hash>::iterator
-Foam::StaticHashTable<T, Key, Hash>::find
+typename Foam::ListHashTable<T, Key, Hash>::iterator
+Foam::ListHashTable<T, Key, Hash>::find
 (
     const Key& key
 )
@@ -179,8 +179,8 @@ Foam::StaticHashTable<T, Key, Hash>::find
 
 
 template<class T, class Key, class Hash>
-typename Foam::StaticHashTable<T, Key, Hash>::const_iterator
-Foam::StaticHashTable<T, Key, Hash>::find
+typename Foam::ListHashTable<T, Key, Hash>::const_iterator
+Foam::ListHashTable<T, Key, Hash>::find
 (
     const Key& key
 ) const
@@ -211,7 +211,7 @@ Foam::StaticHashTable<T, Key, Hash>::find
 
 
 template<class T, class Key, class Hash>
-Foam::List<Key> Foam::StaticHashTable<T, Key, Hash>::toc() const
+Foam::List<Key> Foam::ListHashTable<T, Key, Hash>::toc() const
 {
     List<Key> keys(nElmts_);
     label keyI = 0;
@@ -226,7 +226,7 @@ Foam::List<Key> Foam::StaticHashTable<T, Key, Hash>::toc() const
 
 
 template<class T, class Key, class Hash>
-bool Foam::StaticHashTable<T, Key, Hash>::set
+bool Foam::ListHashTable<T, Key, Hash>::set
 (
     const Key& key,
     const T& newEntry,
@@ -284,7 +284,7 @@ bool Foam::StaticHashTable<T, Key, Hash>::set
 
 
 template<class T, class Key, class Hash>
-bool Foam::StaticHashTable<T, Key, Hash>::erase(const iterator& cit)
+bool Foam::ListHashTable<T, Key, Hash>::erase(const iterator& cit)
 {
     if (cit != end())
     {
@@ -339,7 +339,7 @@ bool Foam::StaticHashTable<T, Key, Hash>::erase(const iterator& cit)
 
 
 template<class T, class Key, class Hash>
-bool Foam::StaticHashTable<T, Key, Hash>::erase(const Key& key)
+bool Foam::ListHashTable<T, Key, Hash>::erase(const Key& key)
 {
     iterator it = find(key);
 
@@ -355,9 +355,9 @@ bool Foam::StaticHashTable<T, Key, Hash>::erase(const Key& key)
 
 
 template<class T, class Key, class Hash>
-Foam::label Foam::StaticHashTable<T, Key, Hash>::erase
+Foam::label Foam::ListHashTable<T, Key, Hash>::erase
 (
-    const StaticHashTable<T, Key, Hash>& rhs
+    const ListHashTable<T, Key, Hash>& rhs
 )
 {
     label count = 0;
@@ -377,9 +377,9 @@ Foam::label Foam::StaticHashTable<T, Key, Hash>::erase
 
 
 template<class T, class Key, class Hash>
-void Foam::StaticHashTable<T, Key, Hash>::resize(const label sz)
+void Foam::ListHashTable<T, Key, Hash>::resize(const label sz)
 {
-    label newSize = StaticHashTableCore::canonicalSize(sz);
+    label newSize = ListHashTableCore::canonicalSize(sz);
 
     if (newSize == keys_.size())
     {
@@ -396,12 +396,12 @@ void Foam::StaticHashTable<T, Key, Hash>::resize(const label sz)
     if (newSize < 1)
     {
         FatalErrorInFunction
-            << "Illegal size " << newSize << " for StaticHashTable."
+            << "Illegal size " << newSize << " for ListHashTable."
             << " Minimum size is 1" << abort(FatalError);
     }
 
 
-    StaticHashTable<T, Key, Hash> newTable(newSize);
+    ListHashTable<T, Key, Hash> newTable(newSize);
 
     for (const_iterator iter = cbegin(); iter != cend(); ++iter)
     {
@@ -417,7 +417,7 @@ void Foam::StaticHashTable<T, Key, Hash>::resize(const label sz)
 
 
 template<class T, class Key, class Hash>
-void Foam::StaticHashTable<T, Key, Hash>::clear()
+void Foam::ListHashTable<T, Key, Hash>::clear()
 {
     forAll(keys_, hashIdx)
     {
@@ -430,7 +430,7 @@ void Foam::StaticHashTable<T, Key, Hash>::clear()
 
 
 template<class T, class Key, class Hash>
-void Foam::StaticHashTable<T, Key, Hash>::clearStorage()
+void Foam::ListHashTable<T, Key, Hash>::clearStorage()
 {
     clear();
     resize(1);
@@ -438,9 +438,9 @@ void Foam::StaticHashTable<T, Key, Hash>::clearStorage()
 
 
 template<class T, class Key, class Hash>
-void Foam::StaticHashTable<T, Key, Hash>::transfer
+void Foam::ListHashTable<T, Key, Hash>::transfer
 (
-    StaticHashTable<T, Key, Hash>& ht
+    ListHashTable<T, Key, Hash>& ht
 )
 {
     // Remove existing elements
@@ -465,9 +465,9 @@ void Foam::StaticHashTable<T, Key, Hash>::transfer
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T, class Key, class Hash>
-void Foam::StaticHashTable<T, Key, Hash>::operator=
+void Foam::ListHashTable<T, Key, Hash>::operator=
 (
-    const StaticHashTable<T, Key, Hash>& rhs
+    const ListHashTable<T, Key, Hash>& rhs
 )
 {
     // Check for assignment to self
@@ -502,10 +502,29 @@ void Foam::StaticHashTable<T, Key, Hash>::operator=
     }
 }
 
+
 template<class T, class Key, class Hash>
-bool Foam::StaticHashTable<T, Key, Hash>::operator==
+void Foam::ListHashTable<T, Key, Hash>::operator=
 (
-    const StaticHashTable<T, Key, Hash>& rhs
+    ListHashTable<T, Key, Hash>&& rhs
+)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    transfer(rhs);
+}
+
+
+template<class T, class Key, class Hash>
+bool Foam::ListHashTable<T, Key, Hash>::operator==
+(
+    const ListHashTable<T, Key, Hash>& rhs
 ) const
 {
     // Sizes (number of keys) must match
@@ -525,9 +544,9 @@ bool Foam::StaticHashTable<T, Key, Hash>::operator==
 
 
 template<class T, class Key, class Hash>
-bool Foam::StaticHashTable<T, Key, Hash>::operator!=
+bool Foam::ListHashTable<T, Key, Hash>::operator!=
 (
-    const StaticHashTable<T, Key, Hash>& rhs
+    const ListHashTable<T, Key, Hash>& rhs
 ) const
 {
     return !(operator==(rhs));
@@ -536,7 +555,7 @@ bool Foam::StaticHashTable<T, Key, Hash>::operator!=
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-#include "StaticHashTableIO.C"
+#include "ListHashTableIO.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

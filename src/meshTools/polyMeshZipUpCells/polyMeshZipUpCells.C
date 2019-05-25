@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -753,10 +753,10 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
         // (patches guaranteed to be in increasing order)
         mesh.resetPrimitives
         (
-            Xfer<pointField>::null(),
-            xferMove(newFaces),
-            Xfer<labelList>::null(),
-            Xfer<labelList>::null(),
+            NullObjectMove<pointField>(),
+            move(newFaces),
+            NullObjectMove<labelList>(),
+            NullObjectMove<labelList>(),
             patchSizes,
             patchStarts,
             true                // boundary forms valid boundary mesh.

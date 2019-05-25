@@ -130,6 +130,20 @@ Foam::ListCompactIO<T, BaseType>::ListCompactIO(Istream& is)
 }
 
 
+template<class T, class BaseType>
+Foam::ListCompactIO<T, BaseType>::ListCompactIO(ListCompactIO<T, BaseType>&& l)
+:
+    List<T>(move(l))
+{}
+
+
+template<class T, class BaseType>
+Foam::ListCompactIO<T, BaseType>::ListCompactIO(List<T>&& l)
+:
+    List<T>(move(l))
+{}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T, class BaseType>
@@ -143,9 +157,26 @@ void Foam::ListCompactIO<T, BaseType>::operator=
 
 
 template<class T, class BaseType>
+void Foam::ListCompactIO<T, BaseType>::operator=
+(
+    ListCompactIO<T, BaseType>&& rhs
+)
+{
+    List<T>::operator=(move(rhs));
+}
+
+
+template<class T, class BaseType>
 void Foam::ListCompactIO<T, BaseType>::operator=(const List<T>& rhs)
 {
     List<T>::operator=(rhs);
+}
+
+
+template<class T, class BaseType>
+void Foam::ListCompactIO<T, BaseType>::operator=(List<T>&& rhs)
+{
+    List<T>::operator=(move(rhs));
 }
 
 

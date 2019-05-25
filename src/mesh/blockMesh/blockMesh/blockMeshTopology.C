@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -516,7 +516,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(vertices_),   // Copy these points, do NOT move
+            clone(vertices_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,
@@ -555,7 +555,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(vertices_),   // Copy these points, do NOT move
+            clone(vertices_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,

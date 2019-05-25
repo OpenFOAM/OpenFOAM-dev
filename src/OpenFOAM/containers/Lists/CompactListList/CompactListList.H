@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,10 +97,14 @@ public:
         //- Return a null CompactListList
         inline static const CompactListList<T, Container>& null();
 
+
     // Constructors
 
         //- Null constructor.
         inline CompactListList();
+
+        //- Move constructor
+        CompactListList(CompactListList<T, Container>&&);
 
         //- Construct by converting given List<List<T>>
         explicit CompactListList(const List<Container>&);
@@ -118,9 +122,6 @@ public:
 
         //- Construct given list of row-sizes
         CompactListList(const labelUList& rowSizes, const T&);
-
-        //- Construct by transferring the parameter contents
-        explicit CompactListList(const Xfer<CompactListList<T, Container>>&);
 
         //- Construct as copy or re-use as specified.
         CompactListList(CompactListList<T, Container>&, bool reuse);
@@ -193,8 +194,6 @@ public:
             //  into this CompactListList and annul the argument list.
             void transfer(CompactListList<T, Container>&);
 
-            //- Transfer the contents to the Xfer container
-            inline Xfer<CompactListList<T, Container>> xfer();
 
         // Other
 
@@ -224,6 +223,9 @@ public:
 
         //- Return as List<Container>
         List<Container> operator()() const;
+
+        //- Move assignment operator
+        inline void operator=(CompactListList<T, Container>&&);
 
         //- Assignment of all entries to the given value
         inline void operator=(const T&);

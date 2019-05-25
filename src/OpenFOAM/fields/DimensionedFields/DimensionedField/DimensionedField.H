@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,10 +177,10 @@ public:
             bool reuse
         );
 
-        //- Construct by transferring the DimensionedField
+        //- Move constructor
         DimensionedField
         (
-            const Xfer<DimensionedField<Type, GeoMesh>>&
+            DimensionedField<Type, GeoMesh>&&
         );
 
         //- Construct as copy of tmp<DimensionedField> deleting argument
@@ -217,13 +217,6 @@ public:
             const word& newName,
             DimensionedField<Type, GeoMesh>&,
             bool reuse
-        );
-
-        //- Construct by transferring the DimensionedField with a new name
-        DimensionedField
-        (
-            const word& newName,
-            const Xfer<DimensionedField<Type, GeoMesh>>&
         );
 
         //- Construct as copy resetting name
@@ -343,6 +336,7 @@ public:
     // Member Operators
 
         void operator=(const DimensionedField<Type, GeoMesh>&);
+        void operator=(DimensionedField<Type, GeoMesh>&&);
         void operator=(const tmp<DimensionedField<Type, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
         void operator=(const zero&);

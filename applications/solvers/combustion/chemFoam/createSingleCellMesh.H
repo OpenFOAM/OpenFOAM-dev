@@ -25,10 +25,10 @@ fvMesh mesh
         runTime,
         IOobject::READ_IF_PRESENT
     ),
-    xferMove<Field<vector>>(points),
-    faces.xfer(),
-    owner.xfer(),
-    neighbour.xfer()
+    move(points),
+    move(faces),
+    move(owner),
+    move(neighbour)
 );
 
 List<polyPatch*> patches(1);

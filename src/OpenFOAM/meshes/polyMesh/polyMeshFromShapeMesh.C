@@ -383,15 +383,13 @@ void Foam::polyMesh::setTopology
 
     // Reset the size of the face list
     faces_.setSize(nFaces);
-
-    return ;
 }
 
 
 Foam::polyMesh::polyMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
+    pointField&& points,
     const cellShapeList& cellsAsShapes,
     const faceListList& boundaryFaces,
     const wordList& boundaryPatchNames,
@@ -415,7 +413,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        points
+        move(points)
     ),
     faces_
     (
@@ -678,7 +676,7 @@ Foam::polyMesh::polyMesh
 Foam::polyMesh::polyMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
+    pointField&& points,
     const cellShapeList& cellsAsShapes,
     const faceListList& boundaryFaces,
     const wordList& boundaryPatchNames,
@@ -701,7 +699,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        points
+        move(points)
     ),
     faces_
     (

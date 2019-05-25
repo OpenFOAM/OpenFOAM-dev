@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(surfMesh, 0);
+    defineTypeNameAndDebug(surfMesh, 0);
 }
 
 
@@ -137,8 +137,8 @@ Foam::surfMesh::surfMesh(const IOobject& io, const word& surfName)
 Foam::surfMesh::surfMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& pointLst,
-    const Xfer<faceList>& faceLst,
+    pointField&& pointLst,
+    faceList&& faceLst,
     const word& surfName
 )
 :
@@ -154,7 +154,7 @@ Foam::surfMesh::surfMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        pointLst,
+        move(pointLst),
         IOobject
         (
             "faces",
@@ -164,7 +164,7 @@ Foam::surfMesh::surfMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        faceLst,
+        move(faceLst),
         IOobject
         (
             "surfZones",
@@ -174,7 +174,7 @@ Foam::surfMesh::surfMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        Xfer<surfZoneList>()
+        surfZoneList()
     ),
     MeshReference(this->storedIOFaces(), this->storedIOPoints())
 {}
@@ -183,7 +183,7 @@ Foam::surfMesh::surfMesh
 Foam::surfMesh::surfMesh
 (
     const IOobject& io,
-    const Xfer<MeshedSurface<face>>& surf,
+    MeshedSurface<face>&& surf,
     const word& surfName
 )
 :
@@ -234,10 +234,10 @@ Foam::surfMesh::surfMesh
         Info<<"timeName: " << instance() << endl;
     }
 
-    // We can also send Xfer<..>::null just to initialize without allocating
+    // We can also send null just to initialize without allocating
     if (notNull(surf))
     {
-        transfer(surf());
+        transfer(surf);
     }
 }
 
@@ -255,16 +255,16 @@ Foam::surfMesh::~surfMesh()
 
 void Foam::surfMesh::resetPrimitives
 (
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<surfZoneList>& zones,
+    pointField&& points,
+    faceList&& faces,
+    surfZoneList&& zones,
     const bool validate
 )
 {
     // Clear addressing.
     MeshReference::clearGeom();
 
-    Allocator::reset(points, faces, zones);
+    Allocator::reset(move(points), move(faces), move(zones));
     this->updateRefs();
 
     if (validate)
@@ -287,24 +287,6 @@ void Foam::surfMesh::transfer
     this->storedIOZones().transfer(surf.storedZones());
 
     this->updateRefs();
-}
-
-
-Foam::Xfer<Foam::MeshedSurface<Foam::face>> Foam::surfMesh::xfer()
-{
-    Xfer<MeshedSurface<face>> xf;
-
-    xf().storedPoints().transfer(this->storedPoints());
-    xf().storedFaces().transfer(this->storedFaces());
-    xf().storedZones().transfer(this->storedZones());
-
-    // is this needed?
-    this->updateRefs();
-
-    // Clear addressing.
-    MeshReference::clearGeom();
-
-    return xf;
 }
 
 

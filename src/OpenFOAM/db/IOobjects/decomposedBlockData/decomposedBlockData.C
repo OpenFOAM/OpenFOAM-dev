@@ -123,11 +123,12 @@ Foam::decomposedBlockData::decomposedBlockData
 (
     const label comm,
     const IOobject& io,
-    const Xfer<List<char>>& list,
+    List<char>&& list,
     const UPstream::commsTypes commsType
 )
 :
     regIOobject(io),
+    List<char>(move(list)),
     commsType_(commsType),
     comm_(comm)
 {
@@ -140,8 +141,6 @@ Foam::decomposedBlockData::decomposedBlockData
             " but decomposedBlockData does not support automatic rereading."
             << endl;
     }
-
-    List<char>::transfer(list());
 
     if
     (

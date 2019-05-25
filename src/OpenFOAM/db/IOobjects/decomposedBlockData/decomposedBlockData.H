@@ -110,12 +110,12 @@ public:
             const UPstream::commsTypes = UPstream::commsTypes::scheduled
         );
 
-        //- Construct by transferring the IOList contents
+        //- Move construct by transferring the IOList contents
         decomposedBlockData
         (
             const label comm,
             const IOobject&,
-            const Xfer<List<char>>&,
+            List<char>&&,
             const UPstream::commsTypes = UPstream::commsTypes::scheduled
         );
 

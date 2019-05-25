@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,13 +42,20 @@ SourceFiles
 
 #include "UList.H"
 #include "autoPtr.H"
-#include "Xfer.H"
 #include <initializer_list>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+using std::move;
+
+template<class T>
+inline T clone(const T& t)
+{
+    return move(T(t));
+}
 
 // Forward declaration of classes
 
@@ -144,8 +151,8 @@ public:
         template<class T2>
         explicit List(const List<T2>&);
 
-        //- Construct by transferring the parameter contents
-        List(const Xfer<List<T>>&);
+        //- Move constructor
+        List(List<T>&&);
 
         //- Construct as copy or re-use as specified
         List(List<T>&, bool reuse);
@@ -238,9 +245,6 @@ public:
             //  and annul the argument list
             void transfer(SortableList<T>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<List<T>> xfer();
-
             //- Return subscript-checked element of UList
             inline T& newElmt(const label);
 
@@ -256,6 +260,9 @@ public:
 
         //- Assignment operator. Takes linear time
         void operator=(const List<T>&);
+
+        //- Move assignment operator
+        void operator=(List<T>&&);
 
         //- Assignment to SLList operator. Takes linear time
         void operator=(const SLList<T>&);

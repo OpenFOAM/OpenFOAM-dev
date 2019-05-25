@@ -583,7 +583,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
     matrix.setValues
     (
         constraintCells,
-        scalarField(constraintEpsilon.xfer())
+        scalarField(constraintEpsilon)
     );
 
     fvPatchField<scalar>::manipulateMatrix(matrix);

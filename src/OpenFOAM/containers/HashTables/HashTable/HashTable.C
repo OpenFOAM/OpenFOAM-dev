@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::HashTable<T, Key, Hash>::HashTable(const HashTable<T, Key, Hash>& ht)
 template<class T, class Key, class Hash>
 Foam::HashTable<T, Key, Hash>::HashTable
 (
-    const Xfer<HashTable<T, Key, Hash>>& ht
+    HashTable<T, Key, Hash>&& ht
 )
 :
     HashTableCore(),
@@ -75,7 +75,7 @@ Foam::HashTable<T, Key, Hash>::HashTable
     tableSize_(0),
     table_(nullptr)
 {
-    transfer(ht());
+    transfer(ht);
 }
 
 
@@ -560,6 +560,24 @@ void Foam::HashTable<T, Key, Hash>::operator=
     {
         insert(iter.key(), *iter);
     }
+}
+
+
+template<class T, class Key, class Hash>
+void Foam::HashTable<T, Key, Hash>::operator=
+(
+    HashTable<T, Key, Hash>&& rhs
+)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    transfer(rhs);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,8 +98,11 @@ public:
         //  Used for temporary fields which are initialised after construction
         FieldField(const word&, const FieldField<Field, Type>&);
 
-        //- Construct as copy
+        //- Copy constructor
         FieldField(const FieldField<Field, Type>&);
+
+        //- Move constructor
+        FieldField(FieldField<Field, Type>&&);
 
         //- Construct as copy or re-use as specified.
         FieldField(FieldField<Field, Type>&, bool reuse);
@@ -146,6 +149,7 @@ public:
     // Member operators
 
         void operator=(const FieldField<Field, Type>&);
+        void operator=(FieldField<Field, Type>&&);
         void operator=(const tmp<FieldField<Field, Type>>&);
         void operator=(const Type&);
 

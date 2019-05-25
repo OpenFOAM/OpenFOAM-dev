@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,12 +146,12 @@ public:
             const polyMesh::cellDecomposition decompMode
         );
 
-        //- Construct from mesh and subset of cells, transferring contents
+        //- Move construct from mesh and subset of cells, transferring contents
         treeDataCell
         (
             const bool cacheBb,
             const polyMesh&,
-            const Xfer<labelList>&,
+            labelList&&,
             const polyMesh::cellDecomposition decompMode
         );
 

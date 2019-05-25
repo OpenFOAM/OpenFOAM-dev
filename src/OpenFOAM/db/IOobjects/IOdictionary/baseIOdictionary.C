@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,12 +32,12 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(baseIOdictionary, 0);
+    defineTypeNameAndDebug(baseIOdictionary, 0);
 
-bool baseIOdictionary::writeDictionaries
-(
-    debug::infoSwitch("writeDictionaries", 0)
-);
+    bool baseIOdictionary::writeDictionaries
+    (
+        debug::infoSwitch("writeDictionaries", 0)
+    );
 }
 
 
@@ -75,6 +75,20 @@ Foam::baseIOdictionary::baseIOdictionary
 }
 
 
+Foam::baseIOdictionary::baseIOdictionary(const baseIOdictionary& dict)
+:
+    regIOobject(dict),
+    dictionary(dict)
+{}
+
+
+Foam::baseIOdictionary::baseIOdictionary(baseIOdictionary&& dict)
+:
+    regIOobject(move(dict)),
+    dictionary(move(dict))
+{}
+
+
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
 Foam::baseIOdictionary::~baseIOdictionary()
@@ -94,6 +108,12 @@ const Foam::word& Foam::baseIOdictionary::name() const
 void Foam::baseIOdictionary::operator=(const baseIOdictionary& rhs)
 {
     dictionary::operator=(rhs);
+}
+
+
+void Foam::baseIOdictionary::operator=(baseIOdictionary&& rhs)
+{
+    dictionary::operator=(move(rhs));
 }
 
 

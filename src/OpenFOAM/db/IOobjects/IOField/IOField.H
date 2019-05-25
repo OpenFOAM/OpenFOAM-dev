@@ -73,8 +73,14 @@ public:
         //- Construct from components
         IOField(const IOobject&, const Field<Type>&);
 
-        //- Construct by transferring the Field contents
-        IOField(const IOobject&, const Xfer<Field<Type>>&);
+        //- Move construct by transferring the Field contents
+        IOField(const IOobject&, Field<Type>&&);
+
+        //- Move construct by transferring the Field contents
+        IOField(const IOobject&, const tmp<Field<Type>>&);
+
+        //- Move constructor
+        IOField(IOField<Type>&&);
 
 
     //- Destructor
@@ -89,8 +95,11 @@ public:
     // Member operators
 
         void operator=(const IOField<Type>&);
+        void operator=(IOField<Type>&&);
 
         void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
+        void operator=(const tmp<Field<Type>>&);
 };
 
 

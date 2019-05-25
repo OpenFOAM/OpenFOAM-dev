@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,7 +166,7 @@ public:
                 const Boundary&
             );
 
-            //- Construct as copy
+            //- Copy constructor
             //  Dangerous because Field may be set to a field which gets deleted
             //  Need new type of BoundaryField, one which is part of a geometric
             //  field for which snGrad etc. may be called and a free standing
@@ -174,6 +174,16 @@ public:
             Boundary
             (
                 const Boundary&
+            );
+
+            //- Move constructor
+            //  Dangerous because Field may be set to a field which gets deleted
+            //  Need new type of BoundaryField, one which is part of a geometric
+            //  field for which snGrad etc. may be called and a free standing
+            //  BoundaryField for which such operations are unavailable.
+            Boundary
+            (
+                Boundary&&
             );
 
             //- Construct from dictionary
@@ -221,8 +231,11 @@ public:
 
         // Member operators
 
-            //- Assignment to BoundaryField<Type, PatchField, BoundaryMesh>
+            //- Assignment operator
             void operator=(const Boundary&);
+
+            //- Move assignment operator
+            void operator=(Boundary&&);
 
             //- Assignment to FieldField<PatchField, Type>
             void operator=(const FieldField<PatchField, Type>&);
@@ -363,10 +376,16 @@ public:
             const dictionary&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         GeometricField
         (
             const GeometricField<Type, PatchField, GeoMesh>&
+        );
+
+        //- Move constructor
+        GeometricField
+        (
+            GeometricField<Type, PatchField, GeoMesh>&&
         );
 
         //- Construct as copy of tmp<GeometricField> deleting argument
@@ -637,6 +656,7 @@ public:
         inline const Internal& operator()() const;
 
         void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
+        void operator=(GeometricField<Type, PatchField, GeoMesh>&&);
         void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
         void operator=(const zero&);

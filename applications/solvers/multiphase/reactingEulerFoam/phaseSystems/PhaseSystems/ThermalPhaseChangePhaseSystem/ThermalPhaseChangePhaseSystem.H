@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ public:
         virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
-        virtual Xfer<PtrList<volScalarField>> dmdts() const;
+        virtual PtrList<volScalarField> dmdts() const;
 
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;

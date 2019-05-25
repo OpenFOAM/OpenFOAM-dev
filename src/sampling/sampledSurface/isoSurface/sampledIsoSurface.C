@@ -204,9 +204,9 @@ bool Foam::sampledSurfaces::isoSurface::updateGeometry() const
             *this
         ).MeshedSurface<face>::reset
         (
-            allPoints.xfer(),
-            allFaces.xfer(),
-            allZones.xfer()
+            move(allPoints),
+            move(allFaces),
+            move(allZones)
         );
         meshCells_.transfer(allMeshCells);
     }

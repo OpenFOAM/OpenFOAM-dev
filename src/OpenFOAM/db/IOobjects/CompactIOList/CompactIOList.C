@@ -127,13 +127,12 @@ template<class T, class BaseType>
 Foam::CompactIOList<T, BaseType>::CompactIOList
 (
     const IOobject& io,
-    const Xfer<List<T>>& list
+    List<T>&& list
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    ListCompactIO<T, BaseType>(move(list))
 {
-    this->transfer(list());
-
     if
     (
         io.readOpt() == IOobject::MUST_READ
@@ -143,6 +142,17 @@ Foam::CompactIOList<T, BaseType>::CompactIOList
         readFromStream();
     }
 }
+
+
+template<class T, class BaseType>
+Foam::CompactIOList<T, BaseType>::CompactIOList
+(
+    CompactIOList<T, BaseType>&& list
+)
+:
+    regIOobject(move(list)),
+    List<T>(move(list))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -220,6 +230,36 @@ void Foam::CompactIOList<T, BaseType>::operator=
 )
 {
     ListCompactIO<T, BaseType>::operator=(rhs);
+}
+
+
+template<class T, class BaseType>
+void Foam::CompactIOList<T, BaseType>::operator=
+(
+    CompactIOList<T, BaseType>&& rhs
+)
+{
+    ListCompactIO<T, BaseType>::operator=(move(rhs));
+}
+
+
+template<class T, class BaseType>
+void Foam::CompactIOList<T, BaseType>::operator=
+(
+    const List<T>& rhs
+)
+{
+    ListCompactIO<T, BaseType>::operator=(rhs);
+}
+
+
+template<class T, class BaseType>
+void Foam::CompactIOList<T, BaseType>::operator=
+(
+    List<T>&& rhs
+)
+{
+    ListCompactIO<T, BaseType>::operator=(move(rhs));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     Info<< "table3: " << table3 << nl
         << "toc: " << table3.toc() << endl;
 
-    Map<label> table4(table3.xfer());
+    Map<label> table4(move(table3));
 
     Info<< "table3: " << table3 << nl
         << "toc: " << table3.toc() << endl;

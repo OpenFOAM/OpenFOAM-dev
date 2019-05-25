@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -732,9 +732,9 @@ void Foam::globalPoints::remove
     // those points where the equivalence list is only me and my (face)neighbour
 
     // Save old ones.
-    Map<label> oldMeshToProcPoint(meshToProcPoint_.xfer());
+    Map<label> oldMeshToProcPoint(move(meshToProcPoint_));
     meshToProcPoint_.resize(oldMeshToProcPoint.size());
-    DynamicList<labelPairList> oldProcPoints(procPoints_.xfer());
+    DynamicList<labelPairList> oldProcPoints(move(procPoints_));
     procPoints_.setCapacity(oldProcPoints.size());
 
     // Go through all equivalences

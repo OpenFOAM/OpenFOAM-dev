@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,17 +84,17 @@ public:
         }
 
 
-        //- Construct from components, transferring the tokens
+        //- Move construct from components, transferring the tokens
         ITstream
         (
             const string& name,
-            const Xfer<List<token>>& tokens,
+            List<token>&& tokens,
             streamFormat format=ASCII,
             versionNumber version=currentVersion
         )
         :
             Istream(format, version),
-            tokenList(tokens),
+            tokenList(move(tokens)),
             name_(name),
             tokenIndex_(0)
         {

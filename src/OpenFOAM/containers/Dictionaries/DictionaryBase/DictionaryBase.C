@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,17 @@ Foam::DictionaryBase<IDLListType, T>::DictionaryBase
 {
     addEntries();
 }
+
+
+template<class IDLListType, class T>
+Foam::DictionaryBase<IDLListType, T>::DictionaryBase
+(
+    DictionaryBase&& dict
+)
+:
+    IDLListType(move(dict)),
+    hashedTs_(move(dict.hashedTs_))
+{}
 
 
 template<class IDLListType, class T>

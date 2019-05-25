@@ -138,8 +138,8 @@ protected:
         //- Sort faces by zones and store sorted faces
         void sortFacesAndStore
         (
-            const Xfer<List<Face>>& unsortedFaces,
-            const Xfer<List<label>>& zoneIds,
+            List<Face>&& unsortedFaces,
+            List<label>&& zoneIds,
             const bool sorted
         );
 
@@ -184,17 +184,17 @@ public:
         //- Construct by transferring components (points, faces, zones).
         MeshedSurface
         (
-            const Xfer<pointField>&,
-            const Xfer<List<Face>>&,
-            const Xfer<surfZoneList>&
+            pointField&&,
+            List<Face>&&,
+            surfZoneList&&
         );
 
         //- Construct by transferring components (points, faces).
         //  Use zone information if available
         MeshedSurface
         (
-            const Xfer<pointField>&,
-            const Xfer<List<Face>>&,
+            pointField&&,
+            List<Face>&&,
             const labelUList& zoneSizes = labelUList(),
             const UList<word>& zoneNames = UList<word>()
         );
@@ -216,10 +216,10 @@ public:
         MeshedSurface(const surfMesh&);
 
         //- Construct by transferring the contents from a UnsortedMeshedSurface
-        MeshedSurface(const Xfer<UnsortedMeshedSurface<Face>>&);
+        MeshedSurface(UnsortedMeshedSurface<Face>&&);
 
         //- Construct by transferring the contents from a MeshedSurface
-        MeshedSurface(const Xfer<MeshedSurface<Face>>&);
+        MeshedSurface(MeshedSurface<Face>&&);
 
         //- Construct from file name (uses extension to determine type)
         MeshedSurface(const fileName&);
@@ -343,21 +343,21 @@ public:
             virtual void scalePoints(const scalar);
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
+            //  Note, optimized to avoid overwriting data (with null)
             virtual void reset
             (
-                const Xfer<pointField >& points,
-                const Xfer<List<Face>>& faces,
-                const Xfer<surfZoneList>& zones
+                pointField&& points,
+                List<Face>&& faces,
+                surfZoneList&& zones
             );
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
+            //  Note, optimized to avoid overwriting data (with null)
             virtual void reset
             (
-                const Xfer<List<point>>& points,
-                const Xfer<List<Face>>& faces,
-                const Xfer<surfZoneList >& zones
+                List<point>&& points,
+                List<Face>&& faces,
+                surfZoneList&& zones
             );
 
             //- Remove invalid faces
@@ -403,9 +403,6 @@ public:
 
             //- Transfer the contents of the argument and annul the argument
             void transfer(UnsortedMeshedSurface<Face>&);
-
-            //- Transfer contents to the Xfer container
-            Xfer<MeshedSurface<Face>> xfer();
 
 
         // Read

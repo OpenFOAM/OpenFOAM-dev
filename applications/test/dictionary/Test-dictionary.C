@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
                 << "keys: " << dict1.keys() << nl
                 << "patterns: " << dict1.keys(true) << endl;
 
-            dictionary dict2(dict1.xfer());
+            dictionary dict2(move(dict1));
 
             Info<< "dict1.toc(): " << dict1.name() << " " << dict1.toc() << nl
                 << "dict2.toc(): " << dict2.name() << " " << dict2.toc()

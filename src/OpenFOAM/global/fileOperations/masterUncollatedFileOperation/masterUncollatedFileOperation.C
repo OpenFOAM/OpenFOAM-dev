@@ -123,7 +123,7 @@ Foam::labelList Foam::fileOperations::masterUncollatedFileOperation::subRanks
                 break;
             }
         }
-        return subRanks;
+        return move(subRanks);
     }
 }
 
@@ -2295,7 +2295,7 @@ Foam::instantList Foam::fileOperations::masterUncollatedFileOperation::findTimes
         // Note: do we also cache if no times have been found since it might
         //       indicate a directory that is being filled later on ...
 
-        instantList* tPtr = new instantList(times.xfer());
+        instantList* tPtr = new instantList(move(times));
 
         times_.insert(directory, tPtr);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,13 +144,13 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
-    const Xfer<DimensionedField<Type, GeoMesh>>& df
+    DimensionedField<Type, GeoMesh>&& df
 )
 :
-    regIOobject(df(), true),
-    Field<Type>(df),
-    mesh_(df->mesh_),
-    dimensions_(df->dimensions_)
+    regIOobject(move(df), true),
+    Field<Type>(move(df)),
+    mesh_(df.mesh_),
+    dimensions_(move(df.dimensions_))
 {}
 
 
@@ -228,20 +228,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
     Field<Type>(df, reuse),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
-{}
-
-
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
-(
-    const word& newName,
-    const Xfer<DimensionedField<Type, GeoMesh>>& df
-)
-:
-    regIOobject(newName, df, true),
-    Field<Type>(df),
-    mesh_(df->mesh_),
-    dimensions_(df->dimensions_)
 {}
 
 
@@ -540,6 +526,27 @@ void DimensionedField<Type, GeoMesh>::operator=
 
     dimensions_ = df.dimensions();
     Field<Type>::operator=(df);
+}
+
+
+template<class Type, class GeoMesh>
+void DimensionedField<Type, GeoMesh>::operator=
+(
+    DimensionedField<Type, GeoMesh>&& df
+)
+{
+    // Check for assignment to self
+    if (this == &df)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    checkField(*this, df, "=");
+
+    dimensions_ = move(df.dimensions());
+    Field<Type>::operator=(move(df));
 }
 
 

@@ -37,7 +37,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(polyBoundaryMesh, 0);
+    defineTypeNameAndDebug(polyBoundaryMesh, 0);
 }
 
 
@@ -650,7 +650,7 @@ Foam::labelList Foam::polyBoundaryMesh::findIndices
         }
     }
 
-    return indices;
+    return move(indices);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,9 @@ public:
         //- Construct given an IOobject, supply wanted typeName
         localIOdictionary(const IOobject& io, const word& wantedType);
 
+        //- Move constructor
+        localIOdictionary(localIOdictionary&&);
+
 
     //- Destructor
     virtual ~localIOdictionary();
@@ -89,6 +92,11 @@ public:
             return localFilePath(type());
         }
 
+
+    // Member operators
+
+        //- Move assignment
+        void operator=(localIOdictionary&&);
 };
 
 

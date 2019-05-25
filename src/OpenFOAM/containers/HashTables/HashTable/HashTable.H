@@ -47,7 +47,6 @@ SourceFiles
 #include "label.H"
 #include "uLabel.H"
 #include "word.H"
-#include "Xfer.H"
 #include "className.H"
 #include <initializer_list>
 
@@ -212,8 +211,8 @@ public:
         //- Construct as copy
         HashTable(const HashTable<T, Key, Hash>&);
 
-        //- Construct by transferring the parameter contents
-        HashTable(const Xfer<HashTable<T, Key, Hash>>&);
+        //- More Constructor
+        HashTable(HashTable<T, Key, Hash>&&);
 
         //- Construct from an initializer list
         HashTable(std::initializer_list<Tuple2<Key, T>>);
@@ -300,9 +299,6 @@ public:
             //  and annul the argument table.
             void transfer(HashTable<T, Key, Hash>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<HashTable<T, Key, Hash>> xfer();
-
 
     // Member Operators
 
@@ -315,8 +311,11 @@ public:
         //- Find and return a hashedEntry, create it null if not present
         inline T& operator()(const Key&);
 
-        //- Assignment
+        //- Assignment operator
         void operator=(const HashTable<T, Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(HashTable<T, Key, Hash>&&);
 
         //- Assignment to an initializer list
         void operator=(std::initializer_list<Tuple2<Key, T>>);

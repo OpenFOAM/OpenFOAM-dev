@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -451,7 +451,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransferf()
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::surfaceScalarField>>
+Foam::PtrList<Foam::surfaceScalarField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::AFfs() const
 {
     PtrList<surfaceScalarField> AFfs(this->phaseModels_.size());
@@ -485,12 +485,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::AFfs() const
         this->fillFields("AFf", dimDensity/dimTime, AFfs);
     }
 
-    return AFfs.xfer();
+    return AFfs;
 }
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::surfaceScalarField>>
+Foam::PtrList<Foam::surfaceScalarField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFs
 (
     const PtrList<volScalarField>& rAUs
@@ -626,12 +626,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFs
         this->fillFields("phiF", dimForce/dimDensity/dimVelocity, phiFs);
     }
 
-    return phiFs.xfer();
+    return phiFs;
 }
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::surfaceScalarField>>
+Foam::PtrList<Foam::surfaceScalarField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
 (
     const PtrList<surfaceScalarField>& rAUfs
@@ -789,12 +789,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
         this->fillFields("phiFf", dimForce/dimDensity/dimVelocity, phiFfs);
     }
 
-    return phiFfs.xfer();
+    return phiFfs;
 }
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::surfaceScalarField>>
+Foam::PtrList<Foam::surfaceScalarField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiKdPhis
 (
     const PtrList<volScalarField>& rAUs
@@ -831,12 +831,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiKdPhis
         );
     }
 
-    return phiKdPhis.xfer();
+    return phiKdPhis;
 }
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::surfaceScalarField>>
+Foam::PtrList<Foam::surfaceScalarField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiKdPhifs
 (
     const PtrList<surfaceScalarField>& rAUfs
@@ -873,12 +873,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiKdPhifs
         );
     }
 
-    return phiKdPhifs.xfer();
+    return phiKdPhifs;
 }
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::volVectorField>>
+Foam::PtrList<Foam::volVectorField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::KdUByAs
 (
     const PtrList<volScalarField>& rAUs
@@ -909,12 +909,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::KdUByAs
         this->fillFields("KdUByA", dimVelocity, KdUByAs);
     }
 
-    return KdUByAs.xfer();
+    return KdUByAs;
 }
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::surfaceScalarField>>
+Foam::PtrList<Foam::surfaceScalarField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
 (
     const PtrList<volScalarField>& rAUs,
@@ -1009,7 +1009,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
         }
     }
 
-    return ddtCorrByAs.xfer();
+    return ddtCorrByAs;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -433,6 +433,34 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         (
             *gf.field0Ptr_
         );
+    }
+
+    this->writeOpt() = IOobject::NO_WRITE;
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
+(
+    GeometricField<Type, PatchField, GeoMesh>&& gf
+)
+:
+    Internal(move(gf)),
+    timeIndex_(gf.timeIndex()),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_(move(gf.boundaryField_))
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing by moving" << endl << this->info() << endl;
+    }
+
+    if (gf.field0Ptr_)
+    {
+        field0Ptr_ = gf.field0Ptr_;
+        gf.field0Ptr_ = nullptr;
     }
 
     this->writeOpt() = IOobject::NO_WRITE;
@@ -1314,6 +1342,28 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     ref() = gf();
     boundaryFieldRef() = gf.boundaryField();
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
+(
+    GeometricField<Type, PatchField, GeoMesh>&& gf
+)
+{
+    if (this == &gf)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    checkField(*this, gf, "=");
+
+    // Only assign field contents not ID
+
+    ref() = move(gf());
+    boundaryFieldRef() = move(gf.boundaryField());
 }
 
 

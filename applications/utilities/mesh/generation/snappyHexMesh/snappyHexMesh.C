@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -471,7 +471,7 @@ void extractSurface
 
     // Gather all ZoneIDs
     List<labelList> gatheredZones(Pstream::nProcs());
-    gatheredZones[Pstream::myProcNo()] = compactZones.xfer();
+    gatheredZones[Pstream::myProcNo()] = move(compactZones);
     Pstream::gatherList(gatheredZones);
 
     // On master combine all points, faces, zones
@@ -510,10 +510,10 @@ void extractSurface
 
         UnsortedMeshedSurface<face> unsortedFace
         (
-            xferMove(allPoints),
-            xferMove(allFaces),
-            xferMove(allZones),
-            xferMove(surfZones)
+            move(allPoints),
+            move(allFaces),
+            move(allZones),
+            move(surfZones)
         );
 
 

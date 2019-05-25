@@ -86,9 +86,6 @@ public:
         //- Construct with size specified
         explicit UPtrList(const label);
 
-        //- Construct by transferring the parameter contents
-        UPtrList(const Xfer<UPtrList<T>>&);
-
         //- Construct as copy or re-use as specified
         UPtrList(UPtrList<T>&, bool reuse);
 
@@ -134,9 +131,6 @@ public:
             //- Transfer the contents of the argument UPtrList into this
             //  UPtrList and annul the argument list
             void transfer(UPtrList<T>&);
-
-            //- Transfer contents to the Xfer container
-            inline Xfer<UPtrList<T>> xfer();
 
             //- Is element set
             inline bool set(const label) const;

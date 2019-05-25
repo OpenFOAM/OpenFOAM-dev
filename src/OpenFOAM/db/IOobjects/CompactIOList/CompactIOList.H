@@ -79,8 +79,11 @@ public:
         //- Construct from IOobject and a List
         CompactIOList(const IOobject&, const List<T>&);
 
-        //- Construct by transferring the List contents
-        CompactIOList(const IOobject&, const Xfer<List<T>>&);
+        //- Move construct by transferring the List contents
+        CompactIOList(const IOobject&, List<T>&&);
+
+        //- Move constructor
+        CompactIOList(CompactIOList<T, BaseType>&&);
 
 
     // Destructor
@@ -104,6 +107,10 @@ public:
     // Member operators
 
         void operator=(const CompactIOList<T, BaseType>&);
+        void operator=(CompactIOList<T, BaseType>&&);
+
+        void operator=(const List<T>&);
+        void operator=(List<T>&&);
 };
 
 

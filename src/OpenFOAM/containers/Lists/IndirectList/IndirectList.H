@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,8 +75,8 @@ protected:
         //- Construct by copying the addressing array
         explicit inline IndirectListAddressing(const labelUList& addr);
 
-        //- Construct by transferring addressing array
-        explicit inline IndirectListAddressing(const Xfer<List<label>>& addr);
+        //- Move constructor which moves the addressing array
+        explicit inline IndirectListAddressing(List<label>&& addr);
 
 
     // Member Functions
@@ -86,12 +86,11 @@ protected:
             //- Return the list addressing
             inline const List<label>& addressing() const;
 
+
         // Edit
 
             //- Reset addressing
             inline void resetAddressing(const labelUList&);
-            inline void resetAddressing(const Xfer<List<label>>&);
-
 };
 
 
@@ -121,8 +120,8 @@ public:
         //- Construct given the complete list and the addressing array
         inline IndirectList(const UList<T>&, const labelUList&);
 
-        //- Construct given the complete list and by transferring addressing
-        inline IndirectList(const UList<T>&, const Xfer<List<label>>&);
+        //- Move constructor given the complete list and moves the addressing
+        inline IndirectList(const UList<T>&, List<label>&&);
 
         //- Copy constructor
         inline IndirectList(const IndirectList<T>&);
@@ -132,7 +131,6 @@ public:
 
 
     // Member Functions
-
 
         // Access
 
