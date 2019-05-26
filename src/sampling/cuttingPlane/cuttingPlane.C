@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,12 @@ void Foam::cuttingPlane::calcCutCells
     cutCells_.setSize(listSize);
     label cutcelli(0);
 
+    // fp: check if the list (cellZone) is not empty.
+    const bool isZoneEmpty
+    (
+        (returnReduce(cellIdLabels.size(), sumOp<label>()) > 0) ? false : true
+    );
+
     // Find the cut cells by detecting any cell that uses points with
     // opposing dotProducts.
     for (label listI = 0; listI < listSize; ++listI)
@@ -68,7 +74,17 @@ void Foam::cuttingPlane::calcCutCells
         {
             celli = cellIdLabels[listI];
         }
-
+        else
+        {
+            // fp: in parallel computation, if the cellZone exists globally
+            // but not locally, the postprocessing must be still be limited to
+            // the crossing plane.
+            if (!isZoneEmpty)
+            {
+                cutCells_.setSize(0);
+                return;
+            }
+        }
         const labelList& cEdges = cellEdges[celli];
 
         label nCutEdges = 0;
