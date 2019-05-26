@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ void Foam::fv::rotorDiskSource::calculate
     scalar liftEff = 0.0;
     scalar AOAmin = great;
     scalar AOAmax = -great;
+    scalar powerEff = 0.0;
 
     forAll(cells_, i)
     {
@@ -127,6 +128,7 @@ void Foam::fv::rotorDiskSource::calculate
             // Accumulate forces
             dragEff += rhoRef_*localForce.y();
             liftEff += rhoRef_*localForce.z();
+            powerEff += rhoRef_ * localForce.y() * radius * omega_;
 
             // Transform force from local coning system into rotor cylindrical
             localForce = invR_[i] & localForce;
@@ -151,6 +153,7 @@ void Foam::fv::rotorDiskSource::calculate
         Info<< type() << " output:" << nl
             << "    min/max(AOA)   = " << radToDeg(AOAmin) << ", "
             << radToDeg(AOAmax) << nl
+            << "    Effective power = " << powerEff << nl
             << "    Effective drag = " << dragEff << nl
             << "    Effective lift = " << liftEff << endl;
     }
