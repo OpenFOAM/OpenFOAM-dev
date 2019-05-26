@@ -95,7 +95,7 @@ Description
         \xi_{min}   |  Lower bound of integral [-]
         c_f         |  Increase coefficient of surface area [-]
         \sigma      |  Surface tension [N/m]
-        \rho_c      |  Density of continous phase [kg/m3]
+        \rho_c      |  Density of continuous phase [kg/m3]
         \eta        |  Kolmogorov length scale [m]
         \Gamma(a,z) |  Upper incomplete gamma function
         Q(a,z)      |  Regularized upper incomplete gamma function

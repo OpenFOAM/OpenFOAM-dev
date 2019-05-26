@@ -289,7 +289,7 @@ checkNonStandardCode() # scope, files...
     errorCount=$?
 
     reportEnd "$(cat << EOF
-The following is considerd non-standard code:
+The following is considered non-standard code:
 
     1. Spaced ending of multi-level template parameters. For example,
 
@@ -421,7 +421,7 @@ checkBanner() # scope, files...
         fi
     done
 
-    reportEnd "Correct the banner formating in the following files:" $errorCount "${errorMessages[@]}"
+    reportEnd "Correct the banner formatting in the following files:" $errorCount "${errorMessages[@]}"
     return $errorCount
 }
 
