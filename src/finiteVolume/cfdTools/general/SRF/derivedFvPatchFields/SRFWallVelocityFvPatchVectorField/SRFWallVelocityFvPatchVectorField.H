@@ -118,7 +118,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         SRFWallVelocityFvPatchVectorField
         (
             const SRFWallVelocityFvPatchVectorField&
@@ -133,7 +133,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         SRFWallVelocityFvPatchVectorField
         (
             const SRFWallVelocityFvPatchVectorField&,

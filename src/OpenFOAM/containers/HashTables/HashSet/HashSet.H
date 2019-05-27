@@ -89,7 +89,7 @@ public:
         template<unsigned Size>
         HashSet(const FixedList<Key, Size>&);
 
-        //- Construct as copy
+        //- Copy constructor
         HashSet(const HashSet<Key, Hash>& hs) = default;
 
         //- Move constructor

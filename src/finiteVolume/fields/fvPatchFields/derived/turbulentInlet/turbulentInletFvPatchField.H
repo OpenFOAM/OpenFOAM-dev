@@ -141,7 +141,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         turbulentInletFvPatchField
         (
             const turbulentInletFvPatchField<Type>&
@@ -156,7 +156,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         turbulentInletFvPatchField
         (
             const turbulentInletFvPatchField<Type>&,

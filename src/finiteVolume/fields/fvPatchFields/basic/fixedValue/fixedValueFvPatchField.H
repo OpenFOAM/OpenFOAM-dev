@@ -111,7 +111,7 @@ public:
             const bool mappingRequired=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fixedValueFvPatchField
         (
             const fixedValueFvPatchField<Type>&
@@ -126,7 +126,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fixedValueFvPatchField
         (
             const fixedValueFvPatchField<Type>&,

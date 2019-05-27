@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mixedFvPatchTemplate${FieldType}_H
-#define mixedFvPatchTemplate${FieldType}_H
+#ifndef mixedFvPatchFieldTemplate_H
+#define mixedFvPatchFieldTemplate_H
 
 #include "mixedFvPatchFields.H"
 
@@ -85,7 +85,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         ${typeName}MixedValueFvPatch${FieldType}
         (
             const ${typeName}MixedValueFvPatch${FieldType}&
@@ -100,7 +100,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         ${typeName}MixedValueFvPatch${FieldType}
         (
             const ${typeName}MixedValueFvPatch${FieldType}&,

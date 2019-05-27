@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,20 +89,20 @@ public:
         //- Construct null
         inline keyType();
 
-        //- Construct as copy
+        //- Copy constructor
         inline keyType(const keyType&);
 
-        //- Construct as copy of word. Not treated as a regular expression
+        //- Copy constructor of word. Not treated as a regular expression
         inline keyType(const word&);
 
-        //- Construct as copy of string. Treat as regular expression.
+        //- Copy constructor of string. Treat as regular expression.
         inline keyType(const string&);
 
-        //- Construct as copy of character array.
+        //- Copy constructor of character array.
         //  Not treated as a regular expression
         inline keyType(const char*);
 
-        //- Construct as copy of std::string with specified treatment
+        //- Copy constructor of std::string with specified treatment
         inline keyType(const std::string&, const bool isPattern);
 
         //- Construct from Istream

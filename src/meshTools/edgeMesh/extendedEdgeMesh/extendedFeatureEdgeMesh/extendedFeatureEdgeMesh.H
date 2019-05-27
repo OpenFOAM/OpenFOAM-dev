@@ -67,7 +67,7 @@ public:
         //- Construct (read) given an IOobject
         extendedFeatureEdgeMesh(const IOobject&);
 
-        //- Construct as copy
+        //- Copy constructor
         extendedFeatureEdgeMesh
         (
             const IOobject&,

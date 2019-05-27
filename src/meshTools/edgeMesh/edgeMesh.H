@@ -136,7 +136,7 @@ public:
             edgeList&&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         edgeMesh(const edgeMesh&);
 
         //- Move constructor

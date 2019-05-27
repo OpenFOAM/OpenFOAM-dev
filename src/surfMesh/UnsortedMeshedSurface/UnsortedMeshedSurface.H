@@ -181,7 +181,7 @@ public:
             const UList<word>& zoneNames = UList<word>()
         );
 
-        //- Construct as copy
+        //- Copy constructor
         UnsortedMeshedSurface(const UnsortedMeshedSurface<Face>&);
 
         //- Construct from a meshedSurface

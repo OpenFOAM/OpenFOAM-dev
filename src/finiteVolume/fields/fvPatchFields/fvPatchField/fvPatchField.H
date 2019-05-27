@@ -198,7 +198,7 @@ public:
             const bool mappingRequired=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fvPatchField(const fvPatchField<Type>&);
 
         //- Construct and return a clone
@@ -207,7 +207,7 @@ public:
             return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this));
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fvPatchField
         (
             const fvPatchField<Type>&,

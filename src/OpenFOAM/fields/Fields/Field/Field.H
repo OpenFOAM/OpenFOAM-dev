@@ -130,25 +130,25 @@ public:
         //- Construct given size and initialed to zero
         Field(const label, const zero);
 
-        //- Construct as copy of a UList\<Type\>
+        //- Copy constructor of a UList\<Type\>
         explicit Field(const UList<Type>&);
 
         //- Mover constructor transferring the List contents
         explicit Field(List<Type>&&);
 
-        //- Construct as copy of a UIndirectList\<Type\>
+        //- Copy constructor of a UIndirectList\<Type\>
         explicit Field(const UIndirectList<Type>&);
 
-        //- Construct as copy
+        //- Copy constructor
         Field(const Field<Type>&);
 
-        //- Construct as copy or re-use as specified.
+        //- Copy constructor or re-use as specified.
         Field(Field<Type>&, bool reuse);
 
         //- Move Constructor transferring the Field contents
         Field(Field<Type>&&);
 
-        //- Construct as copy of tmp<Field>
+        //- Copy constructor of tmp<Field>
         Field(const tmp<Field<Type>>&);
 
         //- Construct by 1 to 1 mapping from the given field

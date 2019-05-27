@@ -97,7 +97,7 @@ public:
         {}
 
 
-        //- Construct as copy
+        //- Copy constructor
         surfaceSlipDisplacementFvPatchField
         (
             const surfaceSlipDisplacementFvPatchField<Type>& ptf
@@ -115,7 +115,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         surfaceSlipDisplacementFvPatchField
         (
             const surfaceSlipDisplacementFvPatchField<Type>& ptf,

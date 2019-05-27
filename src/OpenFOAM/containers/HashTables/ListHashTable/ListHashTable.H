@@ -172,7 +172,7 @@ public:
         //- Construct from Istream
         ListHashTable(Istream&, const label size = 128);
 
-        //- Construct as copy
+        //- Copy constructor
         ListHashTable(const ListHashTable<T, Key, Hash>&);
 
         //- Move constructor

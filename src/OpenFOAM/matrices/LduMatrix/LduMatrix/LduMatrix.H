@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -469,10 +469,10 @@ public:
         //  The coefficients are initially empty for subsequent setting.
         LduMatrix(const lduMesh&);
 
-        //- Construct as copy
+        //- Copy constructor
         LduMatrix(const LduMatrix<Type, DType, LUType>&);
 
-        //- Construct as copy or re-use as specified.
+        //- Copy constructor or re-use as specified.
         LduMatrix(LduMatrix<Type, DType, LUType>&, bool reuse);
 
         //- Construct given an LDU addressed mesh and an Istream

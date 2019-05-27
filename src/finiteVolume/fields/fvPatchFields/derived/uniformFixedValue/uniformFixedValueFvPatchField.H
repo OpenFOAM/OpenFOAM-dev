@@ -122,7 +122,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         uniformFixedValueFvPatchField
         (
             const uniformFixedValueFvPatchField<Type>&
@@ -137,7 +137,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         uniformFixedValueFvPatchField
         (
             const uniformFixedValueFvPatchField<Type>&,

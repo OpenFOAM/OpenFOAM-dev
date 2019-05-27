@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -259,10 +259,10 @@ public:
             const dimensionSet&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fvMatrix(const fvMatrix<Type>&);
 
-        //- Construct as copy of tmp<fvMatrix<Type>> deleting argument
+        //- Copy constructor of tmp<fvMatrix<Type>> deleting argument
         fvMatrix(const tmp<fvMatrix<Type>>&);
 
         //- Construct from Istream given field to solve for

@@ -188,7 +188,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         totalPressureFvPatchScalarField
         (
             const totalPressureFvPatchScalarField&
@@ -203,7 +203,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         totalPressureFvPatchScalarField
         (
             const totalPressureFvPatchScalarField&,

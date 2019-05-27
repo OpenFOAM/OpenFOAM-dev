@@ -103,7 +103,7 @@ public:
         }
 
 
-        //- Construct as copy
+        //- Copy constructor
         ITstream(const ITstream& its)
         :
             Istream(ASCII, currentVersion),

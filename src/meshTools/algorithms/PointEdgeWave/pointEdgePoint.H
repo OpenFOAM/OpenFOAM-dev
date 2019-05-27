@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ public:
         //- Construct from origin, distance
         inline pointEdgePoint(const point&, const scalar);
 
-        //- Construct as copy
+        //- Copy constructor
         inline pointEdgePoint(const pointEdgePoint&);
 
 

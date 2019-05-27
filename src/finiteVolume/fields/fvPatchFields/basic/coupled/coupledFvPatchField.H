@@ -97,7 +97,7 @@ public:
             const bool mappingRequired=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         coupledFvPatchField
         (
             const coupledFvPatchField<Type>&
@@ -106,7 +106,7 @@ public:
         //- Construct and return a clone
         virtual tmp<fvPatchField<Type>> clone() const = 0;
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         coupledFvPatchField
         (
             const coupledFvPatchField<Type>&,

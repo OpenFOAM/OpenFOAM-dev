@@ -83,13 +83,13 @@ public:
         //- Construct null
         inline word();
 
-        //- Construct as copy
+        //- Copy constructor
         inline word(const word&);
 
-        //- Construct as copy of character array
+        //- Copy constructor of character array
         inline word(const char*, const bool doStripInvalid=true);
 
-        //- Construct as copy with a maximum number of characters
+        //- Copy constructor with a maximum number of characters
         inline word
         (
             const char*,
@@ -97,10 +97,10 @@ public:
             const bool doStripInvalid
         );
 
-        //- Construct as copy of string
+        //- Copy constructor of string
         inline word(const string&, const bool doStripInvalid=true);
 
-        //- Construct as copy of std::string
+        //- Copy constructor of std::string
         inline word(const std::string&, const bool doStripInvalid=true);
 
         //- Construct from Istream

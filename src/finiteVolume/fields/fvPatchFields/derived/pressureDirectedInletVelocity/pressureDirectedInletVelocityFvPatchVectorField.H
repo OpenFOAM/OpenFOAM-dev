@@ -128,7 +128,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         pressureDirectedInletVelocityFvPatchVectorField
         (
             const pressureDirectedInletVelocityFvPatchVectorField&
@@ -143,7 +143,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         pressureDirectedInletVelocityFvPatchVectorField
         (
             const pressureDirectedInletVelocityFvPatchVectorField&,

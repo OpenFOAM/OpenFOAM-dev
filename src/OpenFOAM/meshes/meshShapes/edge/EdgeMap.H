@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ public:
             HashTable<T, edge, Hash<edge>>(is)
         {}
 
-        //- Construct as copy
+        //- Copy constructor
         EdgeMap(const EdgeMap<T>& map)
         :
             HashTable<T, edge, Hash<edge>>(map)

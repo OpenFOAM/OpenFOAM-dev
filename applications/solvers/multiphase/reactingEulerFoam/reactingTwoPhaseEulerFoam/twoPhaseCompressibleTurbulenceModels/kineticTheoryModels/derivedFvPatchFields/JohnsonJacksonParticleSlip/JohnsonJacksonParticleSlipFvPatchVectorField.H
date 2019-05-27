@@ -104,7 +104,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         JohnsonJacksonParticleSlipFvPatchVectorField
         (
             const JohnsonJacksonParticleSlipFvPatchVectorField&
@@ -119,7 +119,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         JohnsonJacksonParticleSlipFvPatchVectorField
         (
             const JohnsonJacksonParticleSlipFvPatchVectorField&,

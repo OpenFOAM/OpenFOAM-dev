@@ -189,7 +189,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         codedFixedValuePointPatchField
         (
             const codedFixedValuePointPatchField<Type>&
@@ -204,7 +204,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         codedFixedValuePointPatchField
         (
             const codedFixedValuePointPatchField<Type>&,

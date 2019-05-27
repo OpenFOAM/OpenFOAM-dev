@@ -97,7 +97,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         emptyFvPatchField
         (
             const emptyFvPatchField<Type>&
@@ -112,7 +112,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         emptyFvPatchField
         (
             const emptyFvPatchField<Type>&,

@@ -129,7 +129,7 @@ public:
             const bool mappingRequired=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         mixedFvPatchField
         (
             const mixedFvPatchField<Type>&
@@ -144,7 +144,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         mixedFvPatchField
         (
             const mixedFvPatchField<Type>&,

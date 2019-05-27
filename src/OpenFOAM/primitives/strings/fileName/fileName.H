@@ -103,22 +103,22 @@ public:
         //- Construct null
         inline fileName();
 
-        //- Construct as copy
+        //- Copy constructor
         inline fileName(const fileName&);
 
         //- Move constructor
         inline fileName(fileName&&);
 
-        //- Construct as copy of word
+        //- Copy constructor of word
         inline fileName(const word&);
 
-        //- Construct as copy of string
+        //- Copy constructor of string
         inline fileName(const string&);
 
-        //- Construct as copy of std::string
+        //- Copy constructor of std::string
         inline fileName(const std::string&);
 
-        //- Construct as copy of character array
+        //- Copy constructor of character array
         inline fileName(const char*);
 
         //- Construct by concatenating elements of wordList separated by '/'

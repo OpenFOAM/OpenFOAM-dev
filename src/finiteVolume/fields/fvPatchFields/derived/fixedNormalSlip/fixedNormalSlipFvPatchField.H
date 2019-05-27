@@ -108,7 +108,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fixedNormalSlipFvPatchField
         (
             const fixedNormalSlipFvPatchField<Type>&
@@ -123,7 +123,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fixedNormalSlipFvPatchField
         (
             const fixedNormalSlipFvPatchField<Type>&,

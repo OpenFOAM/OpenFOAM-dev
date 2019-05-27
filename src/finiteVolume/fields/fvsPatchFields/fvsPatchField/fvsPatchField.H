@@ -179,7 +179,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fvsPatchField(const fvsPatchField<Type>&);
 
         //- Construct and return a clone
@@ -188,7 +188,7 @@ public:
             return tmp<fvsPatchField<Type>>(new fvsPatchField<Type>(*this));
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fvsPatchField
         (
             const fvsPatchField<Type>&,

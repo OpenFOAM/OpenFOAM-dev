@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ inline Foam::cellInfo::cellInfo(const label type)
 {}
 
 
-// Construct as copy
+// Copy constructor
 inline Foam::cellInfo::cellInfo(const cellInfo& w2)
 :
     type_(w2.type())

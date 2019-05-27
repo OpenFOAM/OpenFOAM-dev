@@ -208,7 +208,7 @@ public:
         //- Construct from Istream
         HashTable(Istream&, const label size = 128);
 
-        //- Construct as copy
+        //- Copy constructor
         HashTable(const HashTable<T, Key, Hash>&);
 
         //- More Constructor

@@ -104,7 +104,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         interstitialInletVelocityFvPatchVectorField
         (
             const interstitialInletVelocityFvPatchVectorField&
@@ -119,7 +119,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         interstitialInletVelocityFvPatchVectorField
         (
             const interstitialInletVelocityFvPatchVectorField&,

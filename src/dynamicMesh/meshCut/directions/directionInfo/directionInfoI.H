@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ inline Foam::directionInfo::directionInfo
 {}
 
 
-// Construct as copy
+// Copy constructor
 inline Foam::directionInfo::directionInfo(const directionInfo& w2)
 :
     index_(w2.index()),

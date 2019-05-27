@@ -121,7 +121,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         waveInletOutletFvPatchField
         (
             const waveInletOutletFvPatchField<Type>&
@@ -136,7 +136,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         waveInletOutletFvPatchField
         (
             const waveInletOutletFvPatchField<Type>&,

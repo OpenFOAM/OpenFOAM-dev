@@ -197,7 +197,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         codedMixedFvPatchField
         (
             const codedMixedFvPatchField<Type>&
@@ -212,7 +212,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         codedMixedFvPatchField
         (
             const codedMixedFvPatchField<Type>&,

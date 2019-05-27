@@ -118,7 +118,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         greyDiffusiveRadiationMixedFvPatchScalarField
         (
             const greyDiffusiveRadiationMixedFvPatchScalarField&
@@ -133,7 +133,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         greyDiffusiveRadiationMixedFvPatchScalarField
         (
             const greyDiffusiveRadiationMixedFvPatchScalarField&,

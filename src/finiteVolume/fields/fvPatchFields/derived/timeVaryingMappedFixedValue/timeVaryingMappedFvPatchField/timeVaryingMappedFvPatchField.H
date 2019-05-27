@@ -199,7 +199,7 @@ public:
             const word& fieldName
         );
 
-        //- Construct as copy
+        //- Copy constructor
         timeVaryingMappedFvPatchField
         (
             const timeVaryingMappedFvPatchField<Type>&

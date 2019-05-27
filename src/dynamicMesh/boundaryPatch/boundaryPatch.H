@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,10 +86,10 @@ public:
             const label index
         );
 
-        //- Construct as copy
+        //- Copy constructor
         boundaryPatch(const boundaryPatch&);
 
-        //- Construct as copy, resetting the index
+        //- Copy constructor, resetting the index
         boundaryPatch(const boundaryPatch&, const label index);
 
         //- Clone

@@ -187,7 +187,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         thermalBaffle1DFvPatchScalarField
         (
             const thermalBaffle1DFvPatchScalarField&
@@ -202,7 +202,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         thermalBaffle1DFvPatchScalarField
         (
             const thermalBaffle1DFvPatchScalarField&,

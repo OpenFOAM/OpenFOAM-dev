@@ -115,7 +115,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         surfaceNormalFixedValueFvPatchVectorField
         (
             const surfaceNormalFixedValueFvPatchVectorField&
@@ -130,7 +130,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         surfaceNormalFixedValueFvPatchVectorField
         (
             const surfaceNormalFixedValueFvPatchVectorField&,

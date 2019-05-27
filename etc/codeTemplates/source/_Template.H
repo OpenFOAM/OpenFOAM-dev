@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef CLASSNAME_H
-#define CLASSNAME_H
+#ifndef _Template_H
+#define _Template_H
 
 #include ".H"
 
@@ -95,7 +95,7 @@ public:
         //- Construct from Istream
         CLASSNAME(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         CLASSNAME(const CLASSNAME&);
 
 

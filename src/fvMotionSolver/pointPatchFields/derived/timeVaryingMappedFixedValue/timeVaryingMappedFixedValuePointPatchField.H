@@ -131,7 +131,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         timeVaryingMappedFixedValuePointPatchField
         (
             const timeVaryingMappedFixedValuePointPatchField<Type>&
@@ -146,7 +146,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         timeVaryingMappedFixedValuePointPatchField
         (
             const timeVaryingMappedFixedValuePointPatchField<Type>&,

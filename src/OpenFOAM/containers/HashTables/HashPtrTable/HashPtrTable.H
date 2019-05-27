@@ -100,7 +100,7 @@ public:
         //  class
         HashPtrTable(const dictionary&);
 
-        //- Construct as copy
+        //- Copy constructor
         HashPtrTable(const HashPtrTable<T, Key, Hash>&);
 
         //- Move constructor

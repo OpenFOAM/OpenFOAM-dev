@@ -90,7 +90,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         tractionDisplacementFvPatchVectorField
         (
             const tractionDisplacementFvPatchVectorField&
@@ -105,7 +105,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         tractionDisplacementFvPatchVectorField
         (
             const tractionDisplacementFvPatchVectorField&,

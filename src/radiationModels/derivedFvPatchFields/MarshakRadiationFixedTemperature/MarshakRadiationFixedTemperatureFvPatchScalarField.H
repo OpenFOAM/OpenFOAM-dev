@@ -116,7 +116,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         MarshakRadiationFixedTemperatureFvPatchScalarField
         (
             const MarshakRadiationFixedTemperatureFvPatchScalarField&
@@ -131,7 +131,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         MarshakRadiationFixedTemperatureFvPatchScalarField
         (
             const MarshakRadiationFixedTemperatureFvPatchScalarField&,

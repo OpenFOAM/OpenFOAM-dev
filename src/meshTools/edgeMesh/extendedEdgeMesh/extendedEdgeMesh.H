@@ -247,7 +247,7 @@ public:
         //- Construct null
         extendedEdgeMesh();
 
-        //- Construct as copy
+        //- Copy constructor
         explicit extendedEdgeMesh(const extendedEdgeMesh&);
 
         //- Move constructor

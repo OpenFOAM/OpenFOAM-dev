@@ -146,7 +146,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         mappedFieldFvPatchField
         (
             const mappedFieldFvPatchField<Type>&
@@ -164,7 +164,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         mappedFieldFvPatchField
         (
             const mappedFieldFvPatchField<Type>&,
