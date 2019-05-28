@@ -78,7 +78,7 @@ class dynamicKEqn
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        dynamicKEqn(const dynamicKEqn&);
+        dynamicKEqn(const dynamicKEqn&) = delete;
         void operator=(const dynamicKEqn&);
 
 

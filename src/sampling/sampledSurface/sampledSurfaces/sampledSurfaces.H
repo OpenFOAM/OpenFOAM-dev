@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,7 +163,7 @@ class sampledSurfaces
         template<class Type> void sampleAndWrite(const IOobjectList& objects);
 
         //- Disallow default bitwise copy construct and assignment
-        sampledSurfaces(const sampledSurfaces&);
+        sampledSurfaces(const sampledSurfaces&) = delete;
         void operator=(const sampledSurfaces&);
 
 

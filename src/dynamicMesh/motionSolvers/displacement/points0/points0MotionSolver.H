@@ -67,10 +67,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        points0MotionSolver(const points0MotionSolver&);
+        points0MotionSolver(const points0MotionSolver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const points0MotionSolver&);
+        void operator=(const points0MotionSolver&) = delete;
 
 public:
 

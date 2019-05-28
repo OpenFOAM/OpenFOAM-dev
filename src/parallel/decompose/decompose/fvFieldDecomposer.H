@@ -150,10 +150,10 @@ private:
         );
 
         //- Disallow default bitwise copy construct
-        fvFieldDecomposer(const fvFieldDecomposer&);
+        fvFieldDecomposer(const fvFieldDecomposer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fvFieldDecomposer&);
+        void operator=(const fvFieldDecomposer&) = delete;
 
 
 public:

@@ -96,7 +96,7 @@ class uniformInterpolationTable
         void checkTable() const;
 
         //- Disallow default bitwise assignment
-        void operator=(const uniformInterpolationTable&);
+        void operator=(const uniformInterpolationTable&) = delete;
 
 
 public:

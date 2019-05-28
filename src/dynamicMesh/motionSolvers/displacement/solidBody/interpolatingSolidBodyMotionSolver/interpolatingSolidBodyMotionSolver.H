@@ -85,7 +85,7 @@ class interpolatingSolidBodyMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const interpolatingSolidBodyMotionSolver&);
+        void operator=(const interpolatingSolidBodyMotionSolver&) = delete;
 
 
 public:

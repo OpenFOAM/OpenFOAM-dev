@@ -77,7 +77,7 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cellZone(const cellZone&);
+        cellZone(const cellZone&) = delete;
 
 
 public:

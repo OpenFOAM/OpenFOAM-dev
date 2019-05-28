@@ -52,7 +52,7 @@ class noDecomp
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const noDecomp&);
+        void operator=(const noDecomp&) = delete;
         noDecomp(const noDecomp&);
 
 

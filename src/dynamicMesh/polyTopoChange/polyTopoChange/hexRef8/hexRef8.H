@@ -337,10 +337,10 @@ class hexRef8
 
 
         //- Disallow default bitwise copy construct
-        hexRef8(const hexRef8&);
+        hexRef8(const hexRef8&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const hexRef8&);
+        void operator=(const hexRef8&) = delete;
 
 
 public:

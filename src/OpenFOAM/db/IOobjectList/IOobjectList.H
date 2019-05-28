@@ -55,7 +55,7 @@ class IOobjectList
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const IOobjectList&);
+        void operator=(const IOobjectList&) = delete;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,10 +72,10 @@ class SVD
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        SVD(const SVD&);
+        SVD(const SVD&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const SVD&);
+        void operator=(const SVD&) = delete;
 
         template<class T>
         inline const T sign(const T& a, const T& b);

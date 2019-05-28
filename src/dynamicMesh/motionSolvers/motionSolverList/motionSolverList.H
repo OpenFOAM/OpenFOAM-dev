@@ -62,10 +62,10 @@ class motionSolverList
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        motionSolverList(const motionSolverList&);
+        motionSolverList(const motionSolverList&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const motionSolverList&);
+        void operator=(const motionSolverList&) = delete;
 
 
 public:

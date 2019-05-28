@@ -52,10 +52,10 @@ class NullObject
     {}
 
     //- Disallow default bitwise copy construct
-    NullObject(const NullObject&);
+    NullObject(const NullObject&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const NullObject&);
+    void operator=(const NullObject&) = delete;
 
 public:
 

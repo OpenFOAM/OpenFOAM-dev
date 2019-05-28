@@ -78,7 +78,7 @@ class objectRegistry
         objectRegistry(const objectRegistry&);
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const objectRegistry&);
+        void operator=(const objectRegistry&) = delete;
 
 
 public:

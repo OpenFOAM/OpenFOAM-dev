@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ class structuredDecomp
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const structuredDecomp&);
+        void operator=(const structuredDecomp&) = delete;
         structuredDecomp(const structuredDecomp&);
 
 

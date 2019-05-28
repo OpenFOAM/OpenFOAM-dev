@@ -95,7 +95,7 @@ private:
         surfMesh(const surfMesh&);
 
         //- Disallow default bitwise assignment
-        void operator=(const surfMesh&);
+        void operator=(const surfMesh&) = delete;
 
 
 protected:

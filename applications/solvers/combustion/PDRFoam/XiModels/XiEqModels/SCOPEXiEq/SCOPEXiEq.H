@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ class SCOPEXiEq
         SCOPEXiEq(const SCOPEXiEq&);
 
         //- Disallow default bitwise assignment
-        void operator=(const SCOPEXiEq&);
+        void operator=(const SCOPEXiEq&) = delete;
 
 
 public:

@@ -95,7 +95,7 @@ class pointPatchMapper
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const pointPatchMapper&);
+        void operator=(const pointPatchMapper&) = delete;
 
 
         //- Calculate addressing for mapping with inserted cells

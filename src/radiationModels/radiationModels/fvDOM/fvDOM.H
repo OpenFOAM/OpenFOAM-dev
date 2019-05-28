@@ -140,10 +140,10 @@ class fvDOM
         void initialise();
 
         //- Disallow default bitwise copy construct
-        fvDOM(const fvDOM&);
+        fvDOM(const fvDOM&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fvDOM&);
+        void operator=(const fvDOM&) = delete;
 
         //- Update nlack body emission
         void updateBlackBodyEmission();

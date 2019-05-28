@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ class polyLineEdge
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        polyLineEdge(const polyLineEdge&);
+        polyLineEdge(const polyLineEdge&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const polyLineEdge&);
+        void operator=(const polyLineEdge&) = delete;
 
 
 public:

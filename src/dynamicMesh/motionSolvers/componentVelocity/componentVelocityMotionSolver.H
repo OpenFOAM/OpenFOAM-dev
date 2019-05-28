@@ -84,7 +84,7 @@ private:
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const componentVelocityMotionSolver&);
+        void operator=(const componentVelocityMotionSolver&) = delete;
 
 
 public:

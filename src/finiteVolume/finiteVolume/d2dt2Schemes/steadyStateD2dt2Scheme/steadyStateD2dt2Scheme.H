@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,10 +59,10 @@ class steadyStateD2dt2Scheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        steadyStateD2dt2Scheme(const steadyStateD2dt2Scheme&);
+        steadyStateD2dt2Scheme(const steadyStateD2dt2Scheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const steadyStateD2dt2Scheme&);
+        void operator=(const steadyStateD2dt2Scheme&) = delete;
 
 
 public:

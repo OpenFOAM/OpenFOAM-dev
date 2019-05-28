@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,10 +81,10 @@ class correlationFunction
         void setTimesAndSizes(const label);
 
         //- Disallow default bitwise copy construct
-        correlationFunction(const correlationFunction<Type>&);
+        correlationFunction(const correlationFunction<Type>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const correlationFunction<Type>&);
+        void operator=(const correlationFunction<Type>&) = delete;
 
 
 public:

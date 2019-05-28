@@ -123,7 +123,10 @@ private:
 
 
         //- Disallow default bitwise assignment
-        void operator=(const surfaceDisplacementPointPatchVectorField&);
+        void operator=
+        (
+            const surfaceDisplacementPointPatchVectorField&
+        ) = delete;
 
 public:
 

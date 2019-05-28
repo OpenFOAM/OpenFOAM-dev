@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ class dlLibraryTable
 
 
         //- Disallow default bitwise copy construct
-        dlLibraryTable(const dlLibraryTable&);
+        dlLibraryTable(const dlLibraryTable&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dlLibraryTable&);
+        void operator=(const dlLibraryTable&) = delete;
 
 
 public:

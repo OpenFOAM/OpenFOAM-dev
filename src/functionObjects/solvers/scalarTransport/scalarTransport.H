@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,10 +112,10 @@ class scalarTransport
         tmp<volScalarField> D(const surfaceScalarField& phi) const;
 
         //- Disallow default bitwise copy construct
-        scalarTransport(const scalarTransport&);
+        scalarTransport(const scalarTransport&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const scalarTransport&);
+        void operator=(const scalarTransport&) = delete;
 
 
 public:

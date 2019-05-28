@@ -92,10 +92,13 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        solidEqulibriumEnergySource(const solidEqulibriumEnergySource&);
+        solidEqulibriumEnergySource
+        (
+            const solidEqulibriumEnergySource&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const solidEqulibriumEnergySource&);
+        void operator=(const solidEqulibriumEnergySource&) = delete;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,10 +75,10 @@ class XiReactionRate
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        XiReactionRate(const XiReactionRate&);
+        XiReactionRate(const XiReactionRate&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const XiReactionRate&);
+        void operator=(const XiReactionRate&) = delete;
 
 
 public:

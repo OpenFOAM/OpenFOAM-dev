@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,10 +81,10 @@ class faceLimitedGrad
 
 
         //- Disallow default bitwise copy construct
-        faceLimitedGrad(const faceLimitedGrad&);
+        faceLimitedGrad(const faceLimitedGrad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const faceLimitedGrad&);
+        void operator=(const faceLimitedGrad&) = delete;
 
 
 public:

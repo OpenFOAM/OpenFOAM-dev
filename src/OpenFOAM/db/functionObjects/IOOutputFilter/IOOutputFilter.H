@@ -65,7 +65,7 @@ class IOOutputFilter
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        IOOutputFilter(const IOOutputFilter&);
+        IOOutputFilter(const IOOutputFilter&) = delete;
         void operator=(const IOOutputFilter&);
 
 

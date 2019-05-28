@@ -83,7 +83,7 @@ protected:
         void calcLookupMap() const;
 
         //- Disallow default bitwise copy construct
-        zone(const zone&);
+        zone(const zone&) = delete;
 
 
 public:

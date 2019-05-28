@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,10 +142,10 @@ class sammMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        sammMesh(const sammMesh&);
+        sammMesh(const sammMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const sammMesh&);
+        void operator=(const sammMesh&) = delete;
 
 
         //- Fill SAMM lookup tables

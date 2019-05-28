@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,10 +127,10 @@ private:
         );
 
         //- Disallow default bitwise copy construct
-        directions(const directions&);
+        directions(const directions&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const directions&);
+        void operator=(const directions&) = delete;
 
 
 public:

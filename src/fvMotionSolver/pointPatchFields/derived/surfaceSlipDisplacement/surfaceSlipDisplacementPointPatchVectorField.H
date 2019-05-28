@@ -113,7 +113,10 @@ private:
         void calcProjection(vectorField& displacement) const;
 
         //- Disallow default bitwise assignment
-        void operator=(const surfaceSlipDisplacementPointPatchVectorField&);
+        void operator=
+        (
+            const surfaceSlipDisplacementPointPatchVectorField&
+        ) = delete;
 
 
 public:

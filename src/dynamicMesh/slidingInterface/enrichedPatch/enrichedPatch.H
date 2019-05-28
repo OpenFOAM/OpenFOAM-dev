@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,10 +134,10 @@ class enrichedPatch
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        enrichedPatch(const enrichedPatch&);
+        enrichedPatch(const enrichedPatch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const enrichedPatch&);
+        void operator=(const enrichedPatch&) = delete;
 
         // Creation of demand-driven private data
 

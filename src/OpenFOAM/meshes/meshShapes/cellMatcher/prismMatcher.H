@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,10 +64,10 @@ class prismMatcher
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        prismMatcher(const prismMatcher&);
+        prismMatcher(const prismMatcher&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const prismMatcher&);
+        void operator=(const prismMatcher&) = delete;
 
 
 public:

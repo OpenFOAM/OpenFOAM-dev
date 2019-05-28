@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,10 +83,10 @@ class STARCDsurfaceFormat
         );
 
         //- Disallow default bitwise copy construct
-        STARCDsurfaceFormat(const STARCDsurfaceFormat<Face>&);
+        STARCDsurfaceFormat(const STARCDsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const STARCDsurfaceFormat<Face>&);
+        void operator=(const STARCDsurfaceFormat<Face>&) = delete;
 
 
 public:

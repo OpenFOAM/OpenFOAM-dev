@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,10 +187,10 @@ class polyMeshFilter
         ) const;
 
         //- Disallow default bitwise copy construct
-        polyMeshFilter(const polyMeshFilter&);
+        polyMeshFilter(const polyMeshFilter&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const polyMeshFilter&);
+        void operator=(const polyMeshFilter&) = delete;
 
 
 public:

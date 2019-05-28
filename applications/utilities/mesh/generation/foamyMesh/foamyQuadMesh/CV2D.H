@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,10 +200,10 @@ class CV2D
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        CV2D(const CV2D&);
+        CV2D(const CV2D&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const CV2D&);
+        void operator=(const CV2D&) = delete;
 
 
         //- Insert point and return it's index

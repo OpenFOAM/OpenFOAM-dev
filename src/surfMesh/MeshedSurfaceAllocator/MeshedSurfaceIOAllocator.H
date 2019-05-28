@@ -65,10 +65,10 @@ class MeshedSurfaceIOAllocator
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MeshedSurfaceIOAllocator(const MeshedSurfaceIOAllocator&);
+        MeshedSurfaceIOAllocator(const MeshedSurfaceIOAllocator&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MeshedSurfaceIOAllocator&);
+        void operator=(const MeshedSurfaceIOAllocator&) = delete;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,10 +66,10 @@ class ArrheniusViscosity
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        ArrheniusViscosity(const ArrheniusViscosity&);
+        ArrheniusViscosity(const ArrheniusViscosity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const ArrheniusViscosity&);
+        void operator=(const ArrheniusViscosity&) = delete;
 
 
 protected:

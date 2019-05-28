@@ -97,10 +97,10 @@ private:
         );
 
         ////- Disallow default bitwise copy construct
-        // SlicedGeometricField(const SlicedGeometricField&);
+        // SlicedGeometricField(const SlicedGeometricField&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const SlicedGeometricField&);
+        void operator=(const SlicedGeometricField&) = delete;
 
         //- Disallow standard assignment to GeometricField,
         //  == assignment is allowed.

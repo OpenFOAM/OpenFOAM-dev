@@ -82,7 +82,7 @@ class displacementLaplacianFvMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementLaplacianFvMotionSolver&);
+        void operator=(const displacementLaplacianFvMotionSolver&) = delete;
 
 
 public:

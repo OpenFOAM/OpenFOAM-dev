@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,10 +73,10 @@ private:
         void readPyrolysisControls();
 
         //- Disallow default bitwise copy construct
-        pyrolysisModel(const pyrolysisModel&);
+        pyrolysisModel(const pyrolysisModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pyrolysisModel&);
+        void operator=(const pyrolysisModel&) = delete;
 
 
 protected:

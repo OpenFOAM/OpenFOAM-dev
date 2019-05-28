@@ -69,12 +69,6 @@ class CLASSNAME
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        CLASSNAME(const CLASSNAME&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CLASSNAME&);
-
 
 public:
 
@@ -97,6 +91,9 @@ public:
 
         //- Copy constructor
         CLASSNAME(const CLASSNAME&);
+
+        //- Disallow default bitwise copy construct
+        CLASSNAME(const CLASSNAME&) = delete;
 
 
     // Selectors
@@ -123,6 +120,9 @@ public:
     // Member Operators
 
         void operator=(const CLASSNAME&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const CLASSNAME&) = delete;
 
 
     // Friend Functions

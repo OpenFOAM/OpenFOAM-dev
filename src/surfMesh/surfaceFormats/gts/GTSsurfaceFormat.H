@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,10 +60,10 @@ class GTSsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        GTSsurfaceFormat(const GTSsurfaceFormat<Face>&);
+        GTSsurfaceFormat(const GTSsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const GTSsurfaceFormat<Face>&);
+        void operator=(const GTSsurfaceFormat<Face>&) = delete;
 
 
 public:

@@ -291,10 +291,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&);
+        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const distributedTriSurfaceMesh&);
+        void operator=(const distributedTriSurfaceMesh&) = delete;
 
 
 public:

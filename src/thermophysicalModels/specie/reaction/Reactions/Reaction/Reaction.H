@@ -106,7 +106,7 @@ private:
         void setThermo(const HashPtrTable<ReactionThermo>& thermoDatabase);
 
         //- Disallow default bitwise assignment
-        void operator=(const Reaction<ReactionThermo>&);
+        void operator=(const Reaction<ReactionThermo>&) = delete;
 
         //- Return new reaction ID for un-named reactions
         label getNewReactionID();

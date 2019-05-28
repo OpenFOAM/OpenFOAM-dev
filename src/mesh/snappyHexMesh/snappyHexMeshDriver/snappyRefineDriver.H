@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,10 +148,10 @@ class snappyRefineDriver
 
 
         //- Disallow default bitwise copy construct
-        snappyRefineDriver(const snappyRefineDriver&);
+        snappyRefineDriver(const snappyRefineDriver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const snappyRefineDriver&);
+        void operator=(const snappyRefineDriver&) = delete;
 
 
 public:

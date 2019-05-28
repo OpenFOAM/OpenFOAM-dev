@@ -83,10 +83,10 @@ class codedBase
         void createLibrary(dynamicCode&, const dynamicCodeContext&) const;
 
         //- Disallow default bitwise copy construct
-        codedBase(const codedBase&);
+        codedBase(const codedBase&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const codedBase&);
+        void operator=(const codedBase&) = delete;
 
 
 protected:

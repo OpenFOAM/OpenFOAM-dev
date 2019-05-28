@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,10 +115,10 @@ class PatchToPatchInterpolation
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        PatchToPatchInterpolation(const PatchToPatchInterpolation&);
+        PatchToPatchInterpolation(const PatchToPatchInterpolation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const PatchToPatchInterpolation&);
+        void operator=(const PatchToPatchInterpolation&) = delete;
 
         //- Calculate point weights
         void calcPointAddressing() const;

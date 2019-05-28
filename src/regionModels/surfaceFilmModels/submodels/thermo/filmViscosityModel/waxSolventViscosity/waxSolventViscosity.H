@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,10 +60,10 @@ class waxSolventViscosity
         void correctMu();
 
         //- Disallow default bitwise copy construct
-        waxSolventViscosity(const waxSolventViscosity&);
+        waxSolventViscosity(const waxSolventViscosity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const waxSolventViscosity&);
+        void operator=(const waxSolventViscosity&) = delete;
 
 
 protected:

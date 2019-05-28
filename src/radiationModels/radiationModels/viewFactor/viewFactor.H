@@ -123,10 +123,10 @@ class viewFactor
         );
 
         //- Disallow default bitwise copy construct
-        viewFactor(const viewFactor&);
+        viewFactor(const viewFactor&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const viewFactor&);
+        void operator=(const viewFactor&) = delete;
 
 
 public:

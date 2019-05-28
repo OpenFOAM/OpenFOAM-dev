@@ -67,7 +67,7 @@ class Giesekus
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        Giesekus(const Giesekus&);
+        Giesekus(const Giesekus&) = delete;
         void operator=(const Giesekus&);
 
 

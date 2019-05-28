@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,10 +70,10 @@ class thermoSingleLayer
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        thermoSingleLayer(const thermoSingleLayer&);
+        thermoSingleLayer(const thermoSingleLayer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const thermoSingleLayer&);
+        void operator=(const thermoSingleLayer&) = delete;
 
         //- Return boundary types for sensible enthalpy field
         wordList hsBoundaryTypes();

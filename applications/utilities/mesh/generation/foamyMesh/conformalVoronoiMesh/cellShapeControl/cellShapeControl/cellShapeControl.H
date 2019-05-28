@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,10 +86,10 @@ class cellShapeControl
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cellShapeControl(const cellShapeControl&);
+        cellShapeControl(const cellShapeControl&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellShapeControl&);
+        void operator=(const cellShapeControl&) = delete;
 
 
 public:

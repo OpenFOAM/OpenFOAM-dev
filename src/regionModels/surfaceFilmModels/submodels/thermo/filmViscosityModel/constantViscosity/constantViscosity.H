@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ class constantViscosity
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        constantViscosity(const constantViscosity&);
+        constantViscosity(const constantViscosity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const constantViscosity&);
+        void operator=(const constantViscosity&) = delete;
 
 
 protected:

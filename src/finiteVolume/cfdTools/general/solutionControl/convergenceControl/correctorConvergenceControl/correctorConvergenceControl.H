@@ -68,10 +68,13 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        correctorConvergenceControl(const correctorConvergenceControl&);
+        correctorConvergenceControl
+        (
+            const correctorConvergenceControl&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const correctorConvergenceControl&);
+        void operator=(const correctorConvergenceControl&) = delete;
 
 
 protected:

@@ -80,10 +80,10 @@ class P1
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        P1(const P1&);
+        P1(const P1&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const P1&);
+        void operator=(const P1&) = delete;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,10 @@ class radialModel
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        radialModel(const radialModel&);
+        radialModel(const radialModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const radialModel&);
+        void operator=(const radialModel&) = delete;
 
 
 protected:

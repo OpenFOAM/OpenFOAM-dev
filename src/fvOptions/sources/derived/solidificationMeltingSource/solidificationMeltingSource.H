@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
     fraction to temperature relation is considered; e.g. given a specific
     quantity of a binary system, \c alpha1 is its melt fraction and \c alpha0 is
     its solid fraction, such that \c alpha0 = 1 - \c alpha1 therefore, assuming
-    infinite solute diffusion, the quantity of a component in solid phase is 
+    infinite solute diffusion, the quantity of a component in solid phase is
     (1 - \c alpha1) * \c CS where \c CS is the solid concentration of the
     considered component and the quantity of a component in liquid phase is \c
     alpha1 * \c CL where \c CL is the melt concentration of the considered
@@ -228,10 +228,13 @@ private:
         void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn);
 
         //- Disallow default bitwise copy construct
-        solidificationMeltingSource(const solidificationMeltingSource&);
+        solidificationMeltingSource
+        (
+            const solidificationMeltingSource&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const solidificationMeltingSource&);
+        void operator=(const solidificationMeltingSource&) = delete;
 
 
 public:

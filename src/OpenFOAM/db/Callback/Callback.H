@@ -62,7 +62,7 @@ class Callback
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const Callback<CallbackType>&);
+        void operator=(const Callback<CallbackType>&) = delete;
 
 
 public:

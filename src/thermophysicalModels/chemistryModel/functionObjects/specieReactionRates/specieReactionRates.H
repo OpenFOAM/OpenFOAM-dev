@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,10 @@ class specieReactionRates
         virtual void writeFileHeader(const label i);
 
         //- Disallow default bitwise copy construct
-        specieReactionRates(const specieReactionRates&);
+        specieReactionRates(const specieReactionRates&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const specieReactionRates&);
+        void operator=(const specieReactionRates&) = delete;
 
 
 public:

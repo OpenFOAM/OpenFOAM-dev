@@ -74,7 +74,7 @@ class displacementSBRStressFvMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementSBRStressFvMotionSolver&);
+        void operator=(const displacementSBRStressFvMotionSolver&) = delete;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,10 @@ class mixerFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        mixerFvMesh(const mixerFvMesh&);
+        mixerFvMesh(const mixerFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const mixerFvMesh&);
+        void operator=(const mixerFvMesh&) = delete;
 
 
         //- Add mixer zones and modifiers

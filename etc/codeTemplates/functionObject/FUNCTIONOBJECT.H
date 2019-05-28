@@ -89,13 +89,6 @@ class FUNCTIONOBJECT
     // Private Member Functions
 
 
-        //- Disallow default bitwise copy construct
-        FUNCTIONOBJECT(const FUNCTIONOBJECT&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const FUNCTIONOBJECT&);
-
-
 public:
 
     //- Runtime type information
@@ -111,6 +104,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        FUNCTIONOBJECT(const FUNCTIONOBJECT&) = delete;
 
 
     //- Destructor
@@ -130,6 +126,12 @@ public:
 
         //- Write the FUNCTIONOBJECT
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const FUNCTIONOBJECT&) = delete;
 };
 
 

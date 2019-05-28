@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,10 +79,10 @@ class CoEulerDdtScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        CoEulerDdtScheme(const CoEulerDdtScheme&);
+        CoEulerDdtScheme(const CoEulerDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const CoEulerDdtScheme&);
+        void operator=(const CoEulerDdtScheme&) = delete;
 
         //- Return the reciprocal of the Courant-number limited time-step
         tmp<volScalarField> CorDeltaT() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,10 +213,10 @@ protected:
 private:
 
     //- Disallow default bitwise copy construct
-    vtkPVFoamReader(const vtkPVFoamReader&);
+    vtkPVFoamReader(const vtkPVFoamReader&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const vtkPVFoamReader&);
+    void operator=(const vtkPVFoamReader&) = delete;
 
     //- Add/remove patch names to/from the view
     void updatePatchNamesView(const bool show);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,10 +112,10 @@ class cellCoBlended
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cellCoBlended(const cellCoBlended&);
+        cellCoBlended(const cellCoBlended&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellCoBlended&);
+        void operator=(const cellCoBlended&) = delete;
 
 
 public:

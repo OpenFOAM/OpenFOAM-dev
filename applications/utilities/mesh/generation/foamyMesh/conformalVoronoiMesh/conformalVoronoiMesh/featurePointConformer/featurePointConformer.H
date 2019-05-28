@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,10 +134,10 @@ class featurePointConformer
         void createFeaturePoints(DynamicList<Vb>& pts);
 
         //- Disallow default bitwise copy construct
-        featurePointConformer(const featurePointConformer&);
+        featurePointConformer(const featurePointConformer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const featurePointConformer&);
+        void operator=(const featurePointConformer&) = delete;
 
 
 public:

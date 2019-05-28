@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ class ISAT
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        ISAT(const ISAT&);
+        ISAT(const ISAT&) = delete;
 
         //- Add a chemPoint to the MRU list
         void addToMRU(chemPointISAT<CompType, ThermoType>* phi0);

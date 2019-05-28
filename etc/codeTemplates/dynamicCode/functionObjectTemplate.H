@@ -66,12 +66,6 @@ class ${typeName}FunctionObject
 
         const fvMesh& mesh() const;
 
-        //- Disallow default bitwise copy construct
-        ${typeName}FunctionObject(const ${typeName}FunctionObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ${typeName}FunctionObject&);
-
 
 public:
 
@@ -88,6 +82,9 @@ public:
             const Time& runTime,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construct
+        ${typeName}FunctionObject(const ${typeName}FunctionObject&) = delete;
 
 
     //- Destructor
@@ -107,6 +104,12 @@ public:
 
         //- Write, execute the "writeCalls"
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ${typeName}FunctionObject&) = delete;
 };
 
 

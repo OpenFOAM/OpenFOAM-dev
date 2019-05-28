@@ -158,10 +158,10 @@ class triSurfaceMesh
         ) const;
 
         //- Disallow default bitwise copy construct
-        triSurfaceMesh(const triSurfaceMesh&);
+        triSurfaceMesh(const triSurfaceMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const triSurfaceMesh&);
+        void operator=(const triSurfaceMesh&) = delete;
 
 
 public:

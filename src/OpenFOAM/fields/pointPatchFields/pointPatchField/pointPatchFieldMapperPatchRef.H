@@ -56,10 +56,13 @@ class pointPatchFieldMapperPatchRef
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pointPatchFieldMapperPatchRef(const pointPatchFieldMapperPatchRef&);
+        pointPatchFieldMapperPatchRef
+        (
+            const pointPatchFieldMapperPatchRef&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pointPatchFieldMapperPatchRef&);
+        void operator=(const pointPatchFieldMapperPatchRef&) = delete;
 
 
 public:

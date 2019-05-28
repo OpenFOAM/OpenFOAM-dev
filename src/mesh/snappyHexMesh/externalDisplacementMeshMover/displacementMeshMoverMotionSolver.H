@@ -66,7 +66,7 @@ class displacementMeshMoverMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementMeshMoverMotionSolver&);
+        void operator=(const displacementMeshMoverMotionSolver&) = delete;
 
 
 public:

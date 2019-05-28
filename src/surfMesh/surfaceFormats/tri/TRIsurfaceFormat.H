@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,10 @@ class TRIsurfaceFormat
         );
 
         //- Disallow default bitwise copy construct
-        TRIsurfaceFormat(const TRIsurfaceFormat<Face>&);
+        TRIsurfaceFormat(const TRIsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const TRIsurfaceFormat<Face>&);
+        void operator=(const TRIsurfaceFormat<Face>&) = delete;
 
 
 public:

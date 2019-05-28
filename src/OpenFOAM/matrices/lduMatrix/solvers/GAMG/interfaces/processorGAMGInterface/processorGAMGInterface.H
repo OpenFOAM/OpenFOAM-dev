@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,10 +73,10 @@ class processorGAMGInterface
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        processorGAMGInterface(const processorGAMGInterface&);
+        processorGAMGInterface(const processorGAMGInterface&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const processorGAMGInterface&);
+        void operator=(const processorGAMGInterface&) = delete;
 
 
 public:

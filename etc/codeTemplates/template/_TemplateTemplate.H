@@ -75,12 +75,6 @@ class CLASSNAME
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        CLASSNAME(const CLASSNAME<TemplateArgument>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CLASSNAME<TemplateArgument>&);
-
 
 public:
 
@@ -104,6 +98,9 @@ public:
         //- Copy constructor
         CLASSNAME(const CLASSNAME<TemplateArgument>&);
 
+        //- Disallow default bitwise copy construct
+        CLASSNAME(const CLASSNAME<TemplateArgument>&) = delete;
+
 
     // Selectors
 
@@ -120,6 +117,9 @@ public:
     // Member Operators
 
         void operator=(const CLASSNAME<TemplateArgument>&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const CLASSNAME<TemplateArgument>&) = delete;
 
 
     // Friend Functions

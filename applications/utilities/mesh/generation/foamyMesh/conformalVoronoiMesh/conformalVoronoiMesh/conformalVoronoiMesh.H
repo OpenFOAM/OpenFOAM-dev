@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -856,10 +856,10 @@ private:
         void writePointPairs(const fileName& fName) const;
 
         //- Disallow default bitwise copy construct
-        conformalVoronoiMesh(const conformalVoronoiMesh&);
+        conformalVoronoiMesh(const conformalVoronoiMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const conformalVoronoiMesh&);
+        void operator=(const conformalVoronoiMesh&) = delete;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,7 +135,7 @@ class TDACChemistryModel
         TDACChemistryModel(const TDACChemistryModel&);
 
         //- Disallow default bitwise assignment
-        void operator=(const TDACChemistryModel&);
+        void operator=(const TDACChemistryModel&) = delete;
 
         //- Solve the reaction system for the given time step
         //  of given type and return the characteristic time

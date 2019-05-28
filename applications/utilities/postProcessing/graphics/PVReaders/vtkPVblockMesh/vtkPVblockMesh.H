@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SourceFiles
 
 // do not include legacy strstream headers
 #ifndef  VTK_EXCLUDE_STRSTREAM_HEADERS
-# define VTK_EXCLUDE_STRSTREAM_HEADERS
+    #define VTK_EXCLUDE_STRSTREAM_HEADERS
 #endif
 
 #include "className.H"
@@ -294,10 +294,10 @@ class vtkPVblockMesh
 
 
         //- Disallow default bitwise copy construct
-        vtkPVblockMesh(const vtkPVblockMesh&);
+        vtkPVblockMesh(const vtkPVblockMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const vtkPVblockMesh&);
+        void operator=(const vtkPVblockMesh&) = delete;
 
 
 public:

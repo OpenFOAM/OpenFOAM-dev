@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,10 +132,10 @@ class lduAddressing
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        lduAddressing(const lduAddressing&);
+        lduAddressing(const lduAddressing&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const lduAddressing&);
+        void operator=(const lduAddressing&) = delete;
 
         //- Calculate losort
         void calcLosort() const;

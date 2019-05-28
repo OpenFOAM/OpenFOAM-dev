@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,10 +72,10 @@ class tetherPotentialList
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const tetherPotentialList&);
+        void operator=(const tetherPotentialList&) = delete;
 
         //- Disallow default bitwise copy construct
-        tetherPotentialList(const tetherPotentialList&);
+        tetherPotentialList(const tetherPotentialList&) = delete;
 
 
 public:

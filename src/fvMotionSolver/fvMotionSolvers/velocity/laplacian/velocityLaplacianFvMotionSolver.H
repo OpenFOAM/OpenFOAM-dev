@@ -74,7 +74,7 @@ class velocityLaplacianFvMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const velocityLaplacianFvMotionSolver&);
+        void operator=(const velocityLaplacianFvMotionSolver&) = delete;
 
 
 public:

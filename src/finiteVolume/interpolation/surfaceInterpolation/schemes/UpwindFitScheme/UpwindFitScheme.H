@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ class UpwindFitScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        UpwindFitScheme(const UpwindFitScheme&);
+        UpwindFitScheme(const UpwindFitScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const UpwindFitScheme&);
+        void operator=(const UpwindFitScheme&) = delete;
 
 
 public:

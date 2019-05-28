@@ -181,7 +181,7 @@ class primitiveMesh
         primitiveMesh(const primitiveMesh&);
 
         //- Disallow default bitwise assignment
-        void operator=(const primitiveMesh&);
+        void operator=(const primitiveMesh&) = delete;
 
 
         // Topological calculations

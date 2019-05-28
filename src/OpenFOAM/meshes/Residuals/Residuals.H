@@ -64,10 +64,10 @@ class Residuals
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        Residuals(const Residuals<Type>&);
+        Residuals(const Residuals<Type>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const Residuals<Type>&);
+        void operator=(const Residuals<Type>&) = delete;
 
 
 public:

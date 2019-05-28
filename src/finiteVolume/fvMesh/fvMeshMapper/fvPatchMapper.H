@@ -92,7 +92,7 @@ class fvPatchMapper
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const fvPatchMapper&);
+        void operator=(const fvPatchMapper&) = delete;
 
 
         //- Calculate addressing for mapping with inserted cells

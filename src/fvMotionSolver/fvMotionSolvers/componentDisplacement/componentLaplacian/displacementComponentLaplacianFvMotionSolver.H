@@ -79,10 +79,13 @@ class displacementComponentLaplacianFvMotionSolver
         displacementComponentLaplacianFvMotionSolver
         (
             const displacementComponentLaplacianFvMotionSolver&
-        );
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementComponentLaplacianFvMotionSolver&);
+        void operator=
+        (
+            const displacementComponentLaplacianFvMotionSolver&
+        ) = delete;
 
         //- Return the component corresponding to the given component name
         direction cmpt(const word& cmptName) const;

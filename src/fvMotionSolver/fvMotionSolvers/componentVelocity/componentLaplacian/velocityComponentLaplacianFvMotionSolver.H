@@ -71,10 +71,13 @@ class velocityComponentLaplacianFvMotionSolver
         velocityComponentLaplacianFvMotionSolver
         (
             const velocityComponentLaplacianFvMotionSolver&
-        );
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const velocityComponentLaplacianFvMotionSolver&);
+        void operator=
+        (
+            const velocityComponentLaplacianFvMotionSolver&
+        ) = delete;
 
 
 public:

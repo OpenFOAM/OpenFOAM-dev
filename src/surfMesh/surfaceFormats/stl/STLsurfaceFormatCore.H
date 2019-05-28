@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,10 @@ class STLsurfaceFormatCore
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        STLsurfaceFormatCore(const STLsurfaceFormatCore&);
+        STLsurfaceFormatCore(const STLsurfaceFormatCore&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const STLsurfaceFormatCore&);
+        void operator=(const STLsurfaceFormatCore&) = delete;
 
         //- Determine the file type
         static int detectBINARY(const fileName&);

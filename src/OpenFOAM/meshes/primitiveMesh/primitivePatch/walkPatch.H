@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,10 +95,10 @@ class walkPatch
 
 
         //- Disallow default bitwise copy construct
-        walkPatch(const walkPatch&);
+        walkPatch(const walkPatch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const walkPatch&);
+        void operator=(const walkPatch&) = delete;
 
 public:
 

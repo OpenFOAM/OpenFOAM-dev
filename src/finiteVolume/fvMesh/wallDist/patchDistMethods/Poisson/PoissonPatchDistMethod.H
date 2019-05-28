@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,10 +128,10 @@ class Poisson
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        Poisson(const Poisson&);
+        Poisson(const Poisson&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const Poisson&);
+        void operator=(const Poisson&) = delete;
 
 
 public:

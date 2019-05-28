@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,10 +102,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        singleStepReactingMixture(const singleStepReactingMixture&);
+        singleStepReactingMixture(const singleStepReactingMixture&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const singleStepReactingMixture&);
+        void operator=(const singleStepReactingMixture&) = delete;
 
 
 public:

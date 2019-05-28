@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,10 +62,10 @@ class linearUpwindV
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        linearUpwindV(const linearUpwindV&);
+        linearUpwindV(const linearUpwindV&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const linearUpwindV&);
+        void operator=(const linearUpwindV&) = delete;
 
 
 public:

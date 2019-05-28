@@ -54,7 +54,7 @@ class subModelBase
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const subModelBase&);
+        void operator=(const subModelBase&) = delete;
 
 
 protected:

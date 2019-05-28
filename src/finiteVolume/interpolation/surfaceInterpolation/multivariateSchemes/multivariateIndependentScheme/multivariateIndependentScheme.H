@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,13 @@ class multivariateIndependentScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        multivariateIndependentScheme(const multivariateIndependentScheme&);
+        multivariateIndependentScheme
+        (
+            const multivariateIndependentScheme&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const multivariateIndependentScheme&);
+        void operator=(const multivariateIndependentScheme&) = delete;
 
 
 public:

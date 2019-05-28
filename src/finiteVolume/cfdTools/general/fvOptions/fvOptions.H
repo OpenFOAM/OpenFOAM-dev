@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,10 +61,10 @@ class options
         IOobject createIOobject(const fvMesh& mesh) const;
 
         //- Disallow default bitwise copy construct
-        options(const options&);
+        options(const options&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const options&);
+        void operator=(const options&) = delete;
 
 
 public:

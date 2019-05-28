@@ -64,10 +64,10 @@ class inverseDistanceDiffusivity
         tmp<scalarField> y() const;
 
         //- Disallow default bitwise copy construct
-        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&);
+        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const inverseDistanceDiffusivity&);
+        void operator=(const inverseDistanceDiffusivity&) = delete;
 
 
 public:

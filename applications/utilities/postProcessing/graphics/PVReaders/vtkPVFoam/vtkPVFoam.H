@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ SourceFiles
 
 // do not include legacy strstream headers
 #ifndef  VTK_EXCLUDE_STRSTREAM_HEADERS
-# define VTK_EXCLUDE_STRSTREAM_HEADERS
+    #define VTK_EXCLUDE_STRSTREAM_HEADERS
 #endif
 
 #include "className.H"
@@ -667,10 +667,10 @@ class vtkPVFoam
 
 
         //- Disallow default bitwise copy construct
-        vtkPVFoam(const vtkPVFoam&);
+        vtkPVFoam(const vtkPVFoam&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const vtkPVFoam&);
+        void operator=(const vtkPVFoam&) = delete;
 
 
 public:

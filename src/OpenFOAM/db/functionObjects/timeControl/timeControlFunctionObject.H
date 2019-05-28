@@ -100,10 +100,10 @@ class timeControl
         bool active() const;
 
         //- Disallow default bitwise copy construct
-        timeControl(const timeControl&);
+        timeControl(const timeControl&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const timeControl&);
+        void operator=(const timeControl&) = delete;
 
 
 public:

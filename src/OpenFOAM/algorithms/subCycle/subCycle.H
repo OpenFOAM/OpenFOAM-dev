@@ -214,10 +214,10 @@ class subCycle
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        subCycle(const subCycle<GeometricField>&);
+        subCycle(const subCycle<GeometricField>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const subCycle<GeometricField>&);
+        void operator=(const subCycle<GeometricField>&) = delete;
 
 
 public:

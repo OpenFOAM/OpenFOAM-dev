@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,10 +82,10 @@ class crankConRod
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        crankConRod(const crankConRod&);
+        crankConRod(const crankConRod&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const crankConRod&);
+        void operator=(const crankConRod&) = delete;
 
         //- Adjust read time values
         void timeAdjustment();

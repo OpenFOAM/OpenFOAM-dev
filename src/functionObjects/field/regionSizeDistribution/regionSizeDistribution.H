@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,10 +222,10 @@ class regionSizeDistribution
         ) const;
 
         //- Disallow default bitwise copy construct
-        regionSizeDistribution(const regionSizeDistribution&);
+        regionSizeDistribution(const regionSizeDistribution&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const regionSizeDistribution&);
+        void operator=(const regionSizeDistribution&) = delete;
 
 
 public:

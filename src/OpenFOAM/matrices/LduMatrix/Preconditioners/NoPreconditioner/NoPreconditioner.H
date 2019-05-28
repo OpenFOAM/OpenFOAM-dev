@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,10 +54,10 @@ class NoPreconditioner
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        NoPreconditioner(const NoPreconditioner&);
+        NoPreconditioner(const NoPreconditioner&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const NoPreconditioner&);
+        void operator=(const NoPreconditioner&) = delete;
 
 
 public:

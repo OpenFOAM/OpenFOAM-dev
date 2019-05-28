@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,10 +87,10 @@ class potential
         );
 
         //- Disallow default bitwise copy construct
-        potential(const potential&);
+        potential(const potential&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const potential&);
+        void operator=(const potential&) = delete;
 
 
 public:

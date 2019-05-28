@@ -99,7 +99,7 @@ class sixDoFRigidBodyMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyMotionSolver&);
+        void operator=(const sixDoFRigidBodyMotionSolver&) = delete;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,10 +56,10 @@ class polyLine
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        polyLine(const polyLine&);
+        polyLine(const polyLine&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const polyLine&);
+        void operator=(const polyLine&) = delete;
 
 
 protected:

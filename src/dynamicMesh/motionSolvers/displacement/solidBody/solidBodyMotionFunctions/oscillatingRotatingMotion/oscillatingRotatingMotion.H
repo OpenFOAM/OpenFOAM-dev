@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ class oscillatingRotatingMotion
         oscillatingRotatingMotion(const oscillatingRotatingMotion&);
 
         //- Disallow default bitwise assignment
-        void operator=(const oscillatingRotatingMotion&);
+        void operator=(const oscillatingRotatingMotion&) = delete;
 
 
 public:

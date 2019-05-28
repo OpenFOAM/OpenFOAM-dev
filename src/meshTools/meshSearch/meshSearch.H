@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,10 +137,10 @@ class meshSearch
 
 
         //- Disallow default bitwise copy construct
-        meshSearch(const meshSearch&);
+        meshSearch(const meshSearch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshSearch&);
+        void operator=(const meshSearch&) = delete;
 
 
 public:

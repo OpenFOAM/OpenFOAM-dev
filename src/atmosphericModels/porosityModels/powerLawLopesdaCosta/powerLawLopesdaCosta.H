@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,10 +147,10 @@ class powerLawLopesdaCosta
         ) const;
 
         //- Disallow default bitwise copy construct
-        powerLawLopesdaCosta(const powerLawLopesdaCosta&);
+        powerLawLopesdaCosta(const powerLawLopesdaCosta&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const powerLawLopesdaCosta&);
+        void operator=(const powerLawLopesdaCosta&) = delete;
 
 
 public:

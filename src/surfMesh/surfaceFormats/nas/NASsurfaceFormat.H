@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,10 +68,10 @@ class NASsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        NASsurfaceFormat(const NASsurfaceFormat<Face>&);
+        NASsurfaceFormat(const NASsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const NASsurfaceFormat<Face>&);
+        void operator=(const NASsurfaceFormat<Face>&) = delete;
 
 
 public:

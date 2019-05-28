@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,10 +94,10 @@ private:
         void removeFile() const;
 
         //- Disallow default bitwise copy construct
-        abort(const abort&);
+        abort(const abort&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const abort&);
+        void operator=(const abort&) = delete;
 
 
 public:

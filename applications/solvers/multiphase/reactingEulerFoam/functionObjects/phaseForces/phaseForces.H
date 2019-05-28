@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,10 +91,10 @@ class phaseForces
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        phaseForces(const phaseForces&);
+        phaseForces(const phaseForces&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const phaseForces&);
+        void operator=(const phaseForces&) = delete;
 
 
 protected:

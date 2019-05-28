@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,10 @@ class diagonalSolver
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        diagonalSolver(const diagonalSolver&);
+        diagonalSolver(const diagonalSolver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const diagonalSolver&);
+        void operator=(const diagonalSolver&) = delete;
 
 
 public:

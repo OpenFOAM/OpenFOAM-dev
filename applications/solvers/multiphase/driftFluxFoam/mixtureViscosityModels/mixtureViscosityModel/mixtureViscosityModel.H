@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ protected:
         mixtureViscosityModel(const mixtureViscosityModel&);
 
         //- Disallow default bitwise assignment
-        void operator=(const mixtureViscosityModel&);
+        void operator=(const mixtureViscosityModel&) = delete;
 
 
 public:

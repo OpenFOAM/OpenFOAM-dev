@@ -74,7 +74,7 @@ private:
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const velocityMotionSolver&);
+        void operator=(const velocityMotionSolver&) = delete;
 
 public:
 

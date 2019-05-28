@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,10 +176,10 @@ class meshCutAndRemove
 
 
         //- Disallow default bitwise copy construct
-        meshCutAndRemove(const meshCutAndRemove&);
+        meshCutAndRemove(const meshCutAndRemove&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshCutAndRemove&);
+        void operator=(const meshCutAndRemove&) = delete;
 
 public:
 

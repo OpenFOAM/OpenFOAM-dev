@@ -66,10 +66,10 @@ class pointBoundaryMesh
         void calcGeometry();
 
         //- Disallow default bitwise copy construct
-        pointBoundaryMesh(const pointBoundaryMesh&);
+        pointBoundaryMesh(const pointBoundaryMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pointBoundaryMesh&);
+        void operator=(const pointBoundaryMesh&) = delete;
 
 
 public:

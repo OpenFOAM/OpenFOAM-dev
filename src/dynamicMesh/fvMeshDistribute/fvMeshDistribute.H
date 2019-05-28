@@ -329,10 +329,10 @@ class fvMeshDistribute
             );
 
             //- Disallow default bitwise copy construct
-            fvMeshDistribute(const fvMeshDistribute&);
+            fvMeshDistribute(const fvMeshDistribute&) = delete;
 
             //- Disallow default bitwise assignment
-            void operator=(const fvMeshDistribute&);
+            void operator=(const fvMeshDistribute&) = delete;
 
 public:
 

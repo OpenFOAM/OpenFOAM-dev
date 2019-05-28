@@ -282,10 +282,10 @@ private:
         );
 
         //- Disallow default bitwise copy construct
-        chemkinReader(const chemkinReader&);
+        chemkinReader(const chemkinReader&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const chemkinReader&);
+        void operator=(const chemkinReader&) = delete;
 
 
 public:

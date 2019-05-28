@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class axisRotationMotion
         axisRotationMotion(const axisRotationMotion&);
 
         //- Disallow default bitwise assignment
-        void operator=(const axisRotationMotion&);
+        void operator=(const axisRotationMotion&) = delete;
 
 
 public:

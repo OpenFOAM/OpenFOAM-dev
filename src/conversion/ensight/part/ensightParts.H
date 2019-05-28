@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ class ensightParts
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        ensightParts(const ensightParts&);
+        ensightParts(const ensightParts&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightParts&);
+        void operator=(const ensightParts&) = delete;
 
 
 public:

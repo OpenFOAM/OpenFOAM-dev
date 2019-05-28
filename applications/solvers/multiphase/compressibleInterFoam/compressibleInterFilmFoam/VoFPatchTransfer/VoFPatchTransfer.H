@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ class VoFPatchTransfer
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        VoFPatchTransfer(const VoFPatchTransfer&);
+        VoFPatchTransfer(const VoFPatchTransfer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const VoFPatchTransfer&);
+        void operator=(const VoFPatchTransfer&) = delete;
 
 
 protected:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,10 +93,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MPPICCloud(const MPPICCloud&);
+        MPPICCloud(const MPPICCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MPPICCloud&);
+        void operator=(const MPPICCloud&) = delete;
 
 
 protected:

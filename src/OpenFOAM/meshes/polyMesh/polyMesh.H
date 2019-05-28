@@ -199,7 +199,7 @@ private:
         polyMesh(const polyMesh&);
 
         //- Disallow default bitwise assignment
-        void operator=(const polyMesh&);
+        void operator=(const polyMesh&) = delete;
 
         //- Initialise the polyMesh from the primitive data
         void initMesh();

@@ -118,7 +118,7 @@ class displacementLayeredMotionMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementLayeredMotionMotionSolver&);
+        void operator=(const displacementLayeredMotionMotionSolver&) = delete;
 
 
 public:

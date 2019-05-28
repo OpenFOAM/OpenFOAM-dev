@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,10 @@ class functionEntry
         static token readLine(const word& key, Istream& is);
 
         //- Disallow default bitwise copy construct
-        functionEntry(const functionEntry&);
+        functionEntry(const functionEntry&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const functionEntry&);
+        void operator=(const functionEntry&) = delete;
 
 
 public:

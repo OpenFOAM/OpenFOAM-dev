@@ -89,7 +89,7 @@ private:
         void solidReactionStrRight(OStringStream&) const;
 
         //- Disallow default bitwise assignment
-        void operator=(const SolidReaction&);
+        void operator=(const SolidReaction&) = delete;
 
 
 public:

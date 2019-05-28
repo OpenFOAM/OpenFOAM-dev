@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,10 +128,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        wallShearStress(const wallShearStress&);
+        wallShearStress(const wallShearStress&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const wallShearStress&);
+        void operator=(const wallShearStress&) = delete;
 
 
 public:

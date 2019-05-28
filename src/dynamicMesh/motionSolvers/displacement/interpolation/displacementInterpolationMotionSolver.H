@@ -93,7 +93,7 @@ class displacementInterpolationMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementInterpolationMotionSolver&);
+        void operator=(const displacementInterpolationMotionSolver&) = delete;
 
 
 public:

@@ -128,10 +128,10 @@ private:
         void mapBaseToTopAgglom(const label fineLevelIndex);
 
         //- Disallow default bitwise copy construct
-        pairPatchAgglomeration(const pairPatchAgglomeration&);
+        pairPatchAgglomeration(const pairPatchAgglomeration&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pairPatchAgglomeration&);
+        void operator=(const pairPatchAgglomeration&) = delete;
 
 
 public:

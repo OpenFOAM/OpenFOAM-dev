@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,10 +81,10 @@ class SLTSDdtScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        SLTSDdtScheme(const SLTSDdtScheme&);
+        SLTSDdtScheme(const SLTSDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const SLTSDdtScheme&);
+        void operator=(const SLTSDdtScheme&) = delete;
 
         //- Calculate a relaxed diagonal from the given flux field
         void relaxedDiag(scalarField& rD, const surfaceScalarField& phi) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ class kOmegaSSTSAS
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        kOmegaSSTSAS(const kOmegaSSTSAS&);
+        kOmegaSSTSAS(const kOmegaSSTSAS&) = delete;
         void operator=(const kOmegaSSTSAS&);
 
 

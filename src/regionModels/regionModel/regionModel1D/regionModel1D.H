@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ class regionModel1D
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        regionModel1D(const regionModel1D&);
+        regionModel1D(const regionModel1D&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const regionModel1D&);
+        void operator=(const regionModel1D&) = delete;
 
         //- Construct region mesh and fields
         void constructMeshObjects();

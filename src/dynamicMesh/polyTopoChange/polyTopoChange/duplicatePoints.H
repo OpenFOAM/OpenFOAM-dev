@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,10 @@ class duplicatePoints
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        duplicatePoints(const duplicatePoints&);
+        duplicatePoints(const duplicatePoints&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const duplicatePoints&);
+        void operator=(const duplicatePoints&) = delete;
 
 public:
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,10 +114,10 @@ class MGridGenGAMGAgglomeration
 
 
         //- Disallow default bitwise copy construct
-        MGridGenGAMGAgglomeration(const MGridGenGAMGAgglomeration&);
+        MGridGenGAMGAgglomeration(const MGridGenGAMGAgglomeration&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MGridGenGAMGAgglomeration&);
+        void operator=(const MGridGenGAMGAgglomeration&) = delete;
 
 
 public:

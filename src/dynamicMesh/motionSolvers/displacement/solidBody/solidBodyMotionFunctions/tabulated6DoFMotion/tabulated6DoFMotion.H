@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ class tabulated6DoFMotion
         tabulated6DoFMotion(const tabulated6DoFMotion&);
 
         //- Disallow default bitwise assignment
-        void operator=(const tabulated6DoFMotion&);
+        void operator=(const tabulated6DoFMotion&) = delete;
 
 
 public:

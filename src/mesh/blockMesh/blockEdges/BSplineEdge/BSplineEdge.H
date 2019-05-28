@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ class BSplineEdge
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        BSplineEdge(const BSplineEdge&);
+        BSplineEdge(const BSplineEdge&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const BSplineEdge&);
+        void operator=(const BSplineEdge&) = delete;
 
 
 public:

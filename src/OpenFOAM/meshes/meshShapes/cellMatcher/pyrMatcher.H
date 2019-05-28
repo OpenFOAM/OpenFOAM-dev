@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,10 +64,10 @@ class pyrMatcher
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pyrMatcher(const pyrMatcher&);
+        pyrMatcher(const pyrMatcher&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pyrMatcher&);
+        void operator=(const pyrMatcher&) = delete;
 
 
 public:

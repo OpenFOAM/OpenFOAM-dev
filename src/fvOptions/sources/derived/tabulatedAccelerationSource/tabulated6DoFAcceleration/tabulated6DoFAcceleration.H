@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ class tabulated6DoFAcceleration
         tabulated6DoFAcceleration(const tabulated6DoFAcceleration&);
 
         //- Disallow default bitwise assignment
-        void operator=(const tabulated6DoFAcceleration&);
+        void operator=(const tabulated6DoFAcceleration&) = delete;
 
 
 public:

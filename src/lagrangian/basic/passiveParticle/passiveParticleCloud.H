@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,10 +54,10 @@ class passiveParticleCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        passiveParticleCloud(const passiveParticleCloud&);
+        passiveParticleCloud(const passiveParticleCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const passiveParticleCloud&);
+        void operator=(const passiveParticleCloud&) = delete;
 
 
 public:

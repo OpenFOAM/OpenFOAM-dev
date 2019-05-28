@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,10 +60,10 @@ class MRFZoneList
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MRFZoneList(const MRFZoneList&);
+        MRFZoneList(const MRFZoneList&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MRFZoneList&);
+        void operator=(const MRFZoneList&) = delete;
 
 
 protected:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,10 +91,10 @@ class removePoints
 
 
         //- Disallow default bitwise copy construct
-        removePoints(const removePoints&);
+        removePoints(const removePoints&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const removePoints&);
+        void operator=(const removePoints&) = delete;
 
 public:
 

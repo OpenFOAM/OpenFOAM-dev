@@ -62,10 +62,10 @@ class IndirectListAddressing
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        IndirectListAddressing(const IndirectListAddressing&);
+        IndirectListAddressing(const IndirectListAddressing&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const IndirectListAddressing&);
+        void operator=(const IndirectListAddressing&) = delete;
 
 
 protected:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ class NASedgeFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        NASedgeFormat(const NASedgeFormat&);
+        NASedgeFormat(const NASedgeFormat&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const NASedgeFormat&);
+        void operator=(const NASedgeFormat&) = delete;
 
 public:
 

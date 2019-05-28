@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,10 @@ class splitCell
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        splitCell(const splitCell&);
+        splitCell(const splitCell&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const splitCell&);
+        void operator=(const splitCell&) = delete;
 
 
 public:

@@ -79,10 +79,10 @@ class singleCellFvMesh
 
 
         //- Disallow default bitwise copy construct
-        singleCellFvMesh(const singleCellFvMesh&);
+        singleCellFvMesh(const singleCellFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const singleCellFvMesh&);
+        void operator=(const singleCellFvMesh&) = delete;
 
 
 public:

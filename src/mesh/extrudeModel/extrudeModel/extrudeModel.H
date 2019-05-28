@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ protected:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        extrudeModel(const extrudeModel&);
+        extrudeModel(const extrudeModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const extrudeModel&);
+        void operator=(const extrudeModel&) = delete;
 
 
 public:

@@ -90,10 +90,10 @@ class faceMapper
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        faceMapper(const faceMapper&);
+        faceMapper(const faceMapper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const faceMapper&);
+        void operator=(const faceMapper&) = delete;
 
 
         //- Calculate addressing for mapping with inserted faces

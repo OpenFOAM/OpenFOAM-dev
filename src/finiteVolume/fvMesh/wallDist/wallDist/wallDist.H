@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,10 +97,10 @@ class wallDist
         void constructn() const;
 
         //- Disallow default bitwise copy construct
-        wallDist(const wallDist&);
+        wallDist(const wallDist&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const wallDist&);
+        void operator=(const wallDist&) = delete;
 
 
 public:

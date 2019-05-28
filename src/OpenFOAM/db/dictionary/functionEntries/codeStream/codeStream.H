@@ -139,10 +139,10 @@ class codeStream
 
 
         //- Disallow default bitwise copy construct
-        codeStream(const codeStream&);
+        codeStream(const codeStream&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const codeStream&);
+        void operator=(const codeStream&) = delete;
 
 
 public:

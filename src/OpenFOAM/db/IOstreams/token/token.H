@@ -133,10 +133,10 @@ public:
         // Private Member Functions
 
             //- Disallow default bitwise copy construct
-            compound(const compound&);
+            compound(const compound&) = delete;
 
             //- Disallow default bitwise assignment
-            void operator=(const compound&);
+            void operator=(const compound&) = delete;
 
 
     public:

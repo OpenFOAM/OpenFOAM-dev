@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,10 +56,10 @@ class extendedEdgeMeshFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        extendedEdgeMeshFormat(const extendedEdgeMeshFormat&);
+        extendedEdgeMeshFormat(const extendedEdgeMeshFormat&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const extendedEdgeMeshFormat&);
+        void operator=(const extendedEdgeMeshFormat&) = delete;
 
 
 public:

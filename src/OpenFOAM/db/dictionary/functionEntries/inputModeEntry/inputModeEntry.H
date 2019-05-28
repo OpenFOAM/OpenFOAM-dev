@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,10 +86,10 @@ class inputModeEntry
         static void setMode(Istream&);
 
         //- Disallow default bitwise copy construct
-        inputModeEntry(const inputModeEntry&);
+        inputModeEntry(const inputModeEntry&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const inputModeEntry&);
+        void operator=(const inputModeEntry&) = delete;
 
 
 public:

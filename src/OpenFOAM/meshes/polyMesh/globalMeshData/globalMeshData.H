@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -305,10 +305,10 @@ class globalMeshData
 
 
         //- Disallow default bitwise copy construct
-        globalMeshData(const globalMeshData&);
+        globalMeshData(const globalMeshData&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const globalMeshData&);
+        void operator=(const globalMeshData&) = delete;
 
 
 public:

@@ -88,10 +88,10 @@ class sixDoFRigidBodyState
         const sixDoFRigidBodyMotion& motion() const;
 
         //- Disallow default bitwise copy construct
-        sixDoFRigidBodyState(const sixDoFRigidBodyState&);
+        sixDoFRigidBodyState(const sixDoFRigidBodyState&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyState&);
+        void operator=(const sixDoFRigidBodyState&) = delete;
 
 
 protected:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,10 +66,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        drippingInjection(const drippingInjection&);
+        drippingInjection(const drippingInjection&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const drippingInjection&);
+        void operator=(const drippingInjection&) = delete;
 
 
 protected:

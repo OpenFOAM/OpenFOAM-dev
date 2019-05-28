@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,10 +51,10 @@ class thermoCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        thermoCloud(const thermoCloud&);
+        thermoCloud(const thermoCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const thermoCloud&);
+        void operator=(const thermoCloud&) = delete;
 
 
 public:

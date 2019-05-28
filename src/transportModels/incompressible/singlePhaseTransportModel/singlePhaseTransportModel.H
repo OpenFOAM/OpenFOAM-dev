@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class singlePhaseTransportModel
         singlePhaseTransportModel(const singlePhaseTransportModel&);
 
         //- Disallow default bitwise assignment
-        void operator=(const singlePhaseTransportModel&);
+        void operator=(const singlePhaseTransportModel&) = delete;
 
 
 public:

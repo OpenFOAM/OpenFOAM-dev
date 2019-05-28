@@ -153,10 +153,10 @@ private:
         );
 
         //- Disallow default bitwise copy construct
-        volumeFractionSource(const volumeFractionSource&);
+        volumeFractionSource(const volumeFractionSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const volumeFractionSource&);
+        void operator=(const volumeFractionSource&) = delete;
 
 public:
 

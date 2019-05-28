@@ -72,10 +72,10 @@ class radiation
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        radiation(const radiation&);
+        radiation(const radiation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const radiation&);
+        void operator=(const radiation&) = delete;
 
 
 public:
