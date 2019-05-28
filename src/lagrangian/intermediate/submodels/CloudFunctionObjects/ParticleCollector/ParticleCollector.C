@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,20 +173,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
     {
         // Set 4 quadrants for single sector cases
         nS = 4;
-
-        vector tangent = Zero;
-        scalar magTangent = 0.0;
-
-        Random rnd(1234);
-        while (magTangent < small)
-        {
-            vector v = rnd.sample01<vector>();
-
-            tangent = v - (v & normal_[0])*normal_[0];
-            magTangent = mag(tangent);
-        }
-
-        refDir = tangent/magTangent;
+        refDir = normalised(perpendicular(normal_[0]));
     }
 
     scalar dTheta = 5.0;

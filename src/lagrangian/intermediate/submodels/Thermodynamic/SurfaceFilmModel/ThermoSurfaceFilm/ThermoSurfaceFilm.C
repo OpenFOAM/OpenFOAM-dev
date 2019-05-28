@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,26 +82,6 @@ Foam::word Foam::ThermoSurfaceFilm<CloudType>::interactionTypeStr
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::vector Foam::ThermoSurfaceFilm<CloudType>::tangentVector
-(
-    const vector& v
-) const
-{
-    vector tangent = Zero;
-    scalar magTangent = 0.0;
-
-    while (magTangent < small)
-    {
-        vector vTest = rndGen_.sample01<vector>();
-        tangent = vTest - (vTest & v)*v;
-        magTangent = mag(tangent);
-    }
-
-    return tangent/magTangent;
-}
-
 
 template<class CloudType>
 Foam::vector Foam::ThermoSurfaceFilm<CloudType>::splashDirection
@@ -358,7 +338,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
     const vector& nf = pp.faceNormals()[facei];
 
     // Determine direction vectors tangential to patch normal
-    const vector tanVec1 = tangentVector(nf);
+    const vector tanVec1 = normalised(perpendicular(nf));
     const vector tanVec2 = nf^tanVec1;
 
     // Retrieve parcel properties
