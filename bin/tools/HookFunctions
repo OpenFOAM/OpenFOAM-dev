@@ -326,12 +326,12 @@ checkHeaderIfndefNames() # scope, fix, files...
             (*.H)
                 correctDefine=$(basename "$file" | sed 's/\./_/')
 
-                if git grep -q -e "#ifndef.*_H" --and --not -e "#ifndef.*[ _]$correctDefine" $scopeGrep"$file"
+                if git grep -q -e "#ifndef.*_H$" --and --not -e "#ifndef.*[ _]$correctDefine" $scopeGrep"$file"
                 then
                     ((++errorCount))
                     errorMessages+=("$file")
 
-                    currentDefine=$(grep "#ifndef.*_H" "$file" | sed 's/#ifndef\s*//')
+                    currentDefine=$(grep "#ifndef.*_H$" "$file" | sed 's/#ifndef\s*//')
 
                     if $fix
                     then
