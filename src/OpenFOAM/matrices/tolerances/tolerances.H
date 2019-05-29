@@ -57,19 +57,15 @@ class tolerances
         dictionary solverRelativeTolerances_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        tolerances(const tolerances&) = delete;
-        void operator=(const tolerances&);
-
-
 public:
 
     // Constructors
 
         //- Construct from time
         tolerances(const Time& t, const fileName& dictName);
+
+        //- Disallow default bitwise copy construct
+        tolerances(const tolerances&) = delete;
 
 
     // Member Functions
@@ -89,6 +85,11 @@ public:
 
             //- Read the tolerances
             bool read();
+
+
+    // Member Operators
+
+        void operator=(const tolerances&) = delete;
 };
 
 

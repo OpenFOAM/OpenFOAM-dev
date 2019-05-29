@@ -155,26 +155,28 @@ protected:
         );
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        ifeqEntry(const ifeqEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ifeqEntry&) = delete;
-
-
 public:
 
     //- Runtime type information
     ClassName("ifeq");
 
+
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        ifeqEntry(const ifeqEntry&) = delete;
+
+
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
         static bool execute(dictionary& parentDict, Istream& is);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ifeqEntry&) = delete;
 };
 
 

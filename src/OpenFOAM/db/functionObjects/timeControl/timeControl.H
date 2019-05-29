@@ -92,15 +92,6 @@ private:
         label executionIndex_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        timeControl(const timeControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const timeControl&) = delete;
-
-
 public:
 
     // Constructors
@@ -112,6 +103,9 @@ public:
             const dictionary&,
             const word& prefix
         );
+
+        //- Disallow default bitwise copy construct and assignment
+        timeControl(const timeControl&) = delete;
 
 
     //- Destructor
@@ -137,6 +131,12 @@ public:
 
         //- Return the index of the previous execution
         inline label executionIndex() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const timeControl&) = delete;
 };
 
 

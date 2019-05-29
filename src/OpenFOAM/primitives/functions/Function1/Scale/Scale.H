@@ -150,9 +150,6 @@ class Scale
         //- Read the coefficients from the given dictionary
         void read(const dictionary& coeffs);
 
-        //- Disallow default bitwise assignment
-        void operator=(const Scale<Type>&) = delete;
-
 
 public:
 
@@ -184,6 +181,12 @@ public:
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Scale<Type>&) = delete;
 };
 
 

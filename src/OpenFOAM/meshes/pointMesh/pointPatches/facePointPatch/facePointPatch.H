@@ -85,17 +85,6 @@ protected:
         virtual void updateMesh(PstreamBuffers&);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        facePointPatch(const facePointPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const facePointPatch&) = delete;
-
-
 public:
 
     // Declare friendship with the coupledPointPatches to allow them to extend
@@ -128,6 +117,9 @@ public:
             const polyPatch&,
             const pointBoundaryMesh&
         );
+
+        //- Disallow default bitwise copy construct
+        facePointPatch(const facePointPatch&) = delete;
 
 
     // Selectors
@@ -196,6 +188,12 @@ public:
         {
             return polyPatch_.pointNormals();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const facePointPatch&) = delete;
 };
 
 

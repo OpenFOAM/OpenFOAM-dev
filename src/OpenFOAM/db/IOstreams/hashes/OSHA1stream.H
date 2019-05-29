@@ -136,14 +136,6 @@ class OSHA1stream
     public OSstream
 {
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        OSHA1stream(const OSHA1stream&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const OSHA1stream&) = delete;
-
 public:
 
     // Constructors
@@ -164,6 +156,9 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construct
+        OSHA1stream(const OSHA1stream&) = delete;
+
 
     //- Destructor
     ~OSHA1stream()
@@ -173,8 +168,6 @@ public:
 
 
     // Member functions
-
-    // Access
 
         //- Full access to the sha1
         Foam::SHA1& sha1()
@@ -188,14 +181,17 @@ public:
             return sha1().digest();
         }
 
-    // Edit
-
         //- Clear the SHA1 calculation
         void rewind()
         {
             sha1().clear();
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const OSHA1stream&) = delete;
 };
 
 

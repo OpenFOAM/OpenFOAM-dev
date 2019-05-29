@@ -61,21 +61,16 @@ class tetWedgeMatcher
         static const label maxVertPerFace;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        tetWedgeMatcher(const tetWedgeMatcher&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const tetWedgeMatcher&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct null
         tetWedgeMatcher();
+
+        //- Disallow default bitwise copy construct
+        tetWedgeMatcher(const tetWedgeMatcher&) = delete;
+
 
     //- Destructor
     ~tetWedgeMatcher();
@@ -121,6 +116,12 @@ public:
             const label celli,
             cellShape& shape
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tetWedgeMatcher&) = delete;
 };
 
 

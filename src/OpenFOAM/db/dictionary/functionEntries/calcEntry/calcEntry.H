@@ -57,6 +57,7 @@ SourceFiles
 
 namespace Foam
 {
+
 class dlLibraryTable;
 
 namespace functionEntries
@@ -71,19 +72,16 @@ class calcEntry
     public functionEntry
 {
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        calcEntry(const calcEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const calcEntry&) = delete;
-
-
 public:
 
     //- Runtime type information
     ClassName("calc");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        calcEntry(const calcEntry&) = delete;
 
 
     // Member Functions
@@ -99,6 +97,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const calcEntry&) = delete;
 };
 
 

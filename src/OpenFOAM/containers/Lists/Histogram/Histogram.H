@@ -66,12 +66,6 @@ class Histogram
 
         void count(const List& bins, const List& l);
 
-        //- Disallow default bitwise copy construct
-        Histogram(const Histogram&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const Histogram&) = delete;
-
 
 public:
 
@@ -89,8 +83,11 @@ public:
             const List& l
         );
 
+        //- Disallow default bitwise copy construct
+        Histogram(const Histogram&) = delete;
 
-        // Access
+
+    // Member Functions
 
             //- Return the counts per bin
             inline const labelList& counts() const
@@ -111,6 +108,12 @@ public:
             {
                 return nHigh_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Histogram&) = delete;
 };
 
 

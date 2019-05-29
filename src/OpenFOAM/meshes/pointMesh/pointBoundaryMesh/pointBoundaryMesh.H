@@ -65,12 +65,6 @@ class pointBoundaryMesh
         //- Calculate the geometry for the patches (transformation tensors etc.)
         void calcGeometry();
 
-        //- Disallow default bitwise copy construct
-        pointBoundaryMesh(const pointBoundaryMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointBoundaryMesh&) = delete;
-
 
 public:
 
@@ -86,6 +80,9 @@ public:
             const pointMesh&,
             const polyBoundaryMesh&
         );
+
+        //- Disallow default bitwise copy construct
+        pointBoundaryMesh(const pointBoundaryMesh&) = delete;
 
 
     // Member functions
@@ -117,6 +114,12 @@ public:
         //  after reordering to recalculate data (so call needs to be parallel
         //  sync in that case)
         void shuffle(const labelUList& newToOld, const bool validBoundary);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointBoundaryMesh&) = delete;
 };
 
 

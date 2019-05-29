@@ -66,14 +66,6 @@ class PBiCGStab
 :
     public lduMatrix::solver
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        PBiCGStab(const PBiCGStab&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const PBiCGStab&) = delete;
-
 
 public:
 
@@ -94,6 +86,9 @@ public:
             const dictionary& solverControls
         );
 
+        //- Disallow default bitwise copy construct
+        PBiCGStab(const PBiCGStab&) = delete;
+
 
     //- Destructor
     virtual ~PBiCGStab()
@@ -109,6 +104,12 @@ public:
             const scalarField& source,
             const direction cmpt=0
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PBiCGStab&) = delete;
 };
 
 

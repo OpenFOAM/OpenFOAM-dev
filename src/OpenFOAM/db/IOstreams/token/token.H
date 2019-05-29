@@ -130,15 +130,6 @@ public:
             bool empty_;
 
 
-        // Private Member Functions
-
-            //- Disallow default bitwise copy construct
-            compound(const compound&) = delete;
-
-            //- Disallow default bitwise assignment
-            void operator=(const compound&) = delete;
-
-
     public:
 
         //- Runtime type information
@@ -164,6 +155,9 @@ public:
                 empty_(false)
             {}
 
+            //- Disallow default bitwise copy construct
+            compound(const compound&) = delete;
+
 
         // Selectors
 
@@ -177,31 +171,28 @@ public:
 
         // Member Functions
 
-            // Access
+            //- Return true if name is a compound type
+            static bool isCompound(const word& name);
 
-                //- Return true if name is a compound type
-                static bool isCompound(const word& name);
+            bool empty() const
+            {
+                return empty_;
+            }
 
-                bool empty() const
-                {
-                    return empty_;
-                }
+            bool& empty()
+            {
+                return empty_;
+            }
 
-                bool& empty()
-                {
-                    return empty_;
-                }
+            virtual label size() const = 0;
 
-                virtual label size() const = 0;
+            virtual void write(Ostream&) const = 0;
 
 
-            // Check
+        // Member Operators
 
-            // Edit
-
-            // Write
-
-                virtual void write(Ostream&) const = 0;
+            //- Disallow default bitwise assignment
+            void operator=(const compound&) = delete;
 
 
         // IOstream Operators

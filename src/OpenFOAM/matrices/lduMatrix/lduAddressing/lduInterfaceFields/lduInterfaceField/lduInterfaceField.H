@@ -65,15 +65,6 @@ class lduInterfaceField
         bool updatedMatrix_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        lduInterfaceField(const lduInterfaceField&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduInterfaceField&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -88,6 +79,9 @@ public:
             interface_(patch),
             updatedMatrix_(false)
         {}
+
+        //- Disallow default bitwise copy construct
+        lduInterfaceField(const lduInterfaceField&) = delete;
 
 
     //- Destructor
@@ -151,6 +145,12 @@ public:
                 const direction,
                 const Pstream::commsTypes commsType
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduInterfaceField&) = delete;
 };
 
 

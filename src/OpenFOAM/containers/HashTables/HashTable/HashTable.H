@@ -143,8 +143,6 @@ class HashTable
             //- Construct from key, next pointer and object
             inline hashedEntry(const Key&, hashedEntry* next, const T&);
 
-
-        private:
             //- Disallow default bitwise copy construct
             hashedEntry(const hashedEntry&) = delete;
 

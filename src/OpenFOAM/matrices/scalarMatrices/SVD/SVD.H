@@ -71,12 +71,6 @@ class SVD
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        SVD(const SVD&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const SVD&) = delete;
-
         template<class T>
         inline const T sign(const T& a, const T& b);
 
@@ -87,6 +81,9 @@ public:
 
         //- Construct from a rectangular Matrix
         SVD(const scalarRectangularMatrix& A, const scalar minCondition = 0);
+
+        //- Disallow default bitwise copy construct
+        SVD(const SVD&) = delete;
 
 
     // Access functions
@@ -111,6 +108,12 @@ public:
 
         //- Return the matrix product V S^(-1) U^T (the pseudo inverse)
         scalarRectangularMatrix VSinvUt() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SVD&) = delete;
 };
 
 

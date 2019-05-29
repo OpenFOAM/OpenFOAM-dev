@@ -63,11 +63,6 @@ class Function1
 :
     public tmp<Function1<Type>>::refCount
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Function1<Type>&) = delete;
-
 
 protected:
 
@@ -166,6 +161,12 @@ public:
 
             //- Write in dictionary format
             virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Function1<Type>&) = delete;
 };
 
 

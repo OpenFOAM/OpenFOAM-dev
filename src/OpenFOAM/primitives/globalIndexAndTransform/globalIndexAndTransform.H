@@ -150,12 +150,6 @@ private:
             const labelPair& patchTrafo
         ) const;
 
-        //- Disallow default bitwise copy construct
-        globalIndexAndTransform(const globalIndexAndTransform&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const globalIndexAndTransform&) = delete;
-
 
 public:
 
@@ -167,6 +161,9 @@ public:
 
         //- Construct from components
         globalIndexAndTransform(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construct
+        globalIndexAndTransform(const globalIndexAndTransform&) = delete;
 
 
     // Member Functions
@@ -281,6 +278,11 @@ public:
             const point& pt
         ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const globalIndexAndTransform&) = delete;
 };
 
 

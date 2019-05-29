@@ -87,15 +87,6 @@ class procFacesGAMGProcAgglomeration
         //- Do we need to agglomerate across processors?
         bool doProcessorAgglomeration(const lduMesh&) const;
 
-        //- Disallow default bitwise copy construct
-        procFacesGAMGProcAgglomeration
-        (
-            const procFacesGAMGProcAgglomeration&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const procFacesGAMGProcAgglomeration&) = delete;
-
 
 public:
 
@@ -112,6 +103,12 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construct
+        procFacesGAMGProcAgglomeration
+        (
+            const procFacesGAMGProcAgglomeration&
+        );
+
 
     //- Destructor
     virtual ~procFacesGAMGProcAgglomeration();
@@ -122,6 +119,11 @@ public:
        //- Modify agglomeration. Return true if modified
         virtual bool agglomerate();
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const procFacesGAMGProcAgglomeration&) = delete;
 };
 
 

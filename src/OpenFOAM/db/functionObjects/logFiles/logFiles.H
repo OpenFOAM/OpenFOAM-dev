@@ -86,17 +86,6 @@ protected:
         virtual void writeFileHeader(const label i = 0) = 0;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        logFiles(const logFiles&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const logFiles&) = delete;
-
-
 public:
 
     // Constructors
@@ -107,6 +96,9 @@ public:
             const objectRegistry& obr,
             const word& prefix
         );
+
+        //- Disallow default bitwise copy construct
+        logFiles(const logFiles&) = delete;
 
 
     //- Destructor
@@ -129,6 +121,12 @@ public:
 
         //- Write function
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const logFiles&) = delete;
 };
 
 

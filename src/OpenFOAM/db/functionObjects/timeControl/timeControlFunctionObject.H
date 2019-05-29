@@ -99,12 +99,6 @@ class timeControl
         //- Returns true if within time bounds
         bool active() const;
 
-        //- Disallow default bitwise copy construct
-        timeControl(const timeControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const timeControl&) = delete;
-
 
 public:
 
@@ -121,6 +115,9 @@ public:
             const Time&,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construct
+        timeControl(const timeControl&) = delete;
 
 
     // Member Functions
@@ -169,6 +166,12 @@ public:
 
             //- Update for changes of mesh
             virtual void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const timeControl&) = delete;
 };
 
 

@@ -82,9 +82,6 @@ protected:
         //- Construct the look-up map
         void calcLookupMap() const;
 
-        //- Disallow default bitwise copy construct
-        zone(const zone&) = delete;
-
 
 public:
 
@@ -136,6 +133,9 @@ public:
             labelList&& addr,
             const label index
         );
+
+        //- Disallow default bitwise copy construct
+        zone(const zone&) = delete;
 
 
     //- Destructor

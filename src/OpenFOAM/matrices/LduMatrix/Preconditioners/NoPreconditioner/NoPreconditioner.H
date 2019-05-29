@@ -51,14 +51,6 @@ class NoPreconditioner
 :
     public LduMatrix<Type, DType, LUType>::preconditioner
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        NoPreconditioner(const NoPreconditioner&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const NoPreconditioner&) = delete;
-
 
 public:
 
@@ -74,6 +66,9 @@ public:
             const typename LduMatrix<Type, DType, LUType>::solver& sol,
             const dictionary& preconditionerDict
         );
+
+        //- Disallow default bitwise copy construct
+        NoPreconditioner(const NoPreconditioner&) = delete;
 
 
     // Destructor
@@ -105,6 +100,12 @@ public:
         {
             return(precondition(wT, rT));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const NoPreconditioner&) = delete;
 };
 
 

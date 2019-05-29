@@ -62,12 +62,6 @@ class IOOutputFilter
     public IOdictionary,
     public OutputFilter
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        IOOutputFilter(const IOOutputFilter&) = delete;
-        void operator=(const IOOutputFilter&);
-
 
 public:
 
@@ -106,6 +100,9 @@ public:
             const bool loadFromFile = false
         );
 
+        //- Disallow default bitwise copy construct
+        IOOutputFilter(const IOOutputFilter&) = delete;
+
 
     //- Destructor
     virtual ~IOOutputFilter();
@@ -133,6 +130,12 @@ public:
 
         //- Update for changes of mesh
         virtual void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IOOutputFilter&) = delete;
 };
 
 

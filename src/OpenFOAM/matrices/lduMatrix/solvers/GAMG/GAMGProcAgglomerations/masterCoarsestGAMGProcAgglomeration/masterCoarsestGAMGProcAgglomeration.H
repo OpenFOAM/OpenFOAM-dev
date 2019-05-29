@@ -57,17 +57,6 @@ class masterCoarsestGAMGProcAgglomeration
 
         DynamicList<label> comms_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        masterCoarsestGAMGProcAgglomeration
-        (
-            const masterCoarsestGAMGProcAgglomeration&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const masterCoarsestGAMGProcAgglomeration&) = delete;
-
 
 public:
 
@@ -84,6 +73,12 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construct
+        masterCoarsestGAMGProcAgglomeration
+        (
+            const masterCoarsestGAMGProcAgglomeration&
+        );
+
 
     //- Destructor
     virtual ~masterCoarsestGAMGProcAgglomeration();
@@ -94,6 +89,12 @@ public:
        //- Modify agglomeration. Return true if modified
         virtual bool agglomerate();
 
+        //- Disallow default bitwise assignment
+
+
+    // Member Operators
+
+        void operator=(const masterCoarsestGAMGProcAgglomeration&) = delete;
 };
 
 

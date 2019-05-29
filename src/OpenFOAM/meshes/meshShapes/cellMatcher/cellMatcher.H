@@ -173,15 +173,6 @@ protected:
         ) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        cellMatcher(const cellMatcher&) = delete;
-        void operator=(const cellMatcher&);
-
-
 public:
 
     // Constructors
@@ -194,6 +185,9 @@ public:
             const label maxVertPerFace,
             const word& cellModelName
         );
+
+        //- Disallow default bitwise copy construct and assignment
+        cellMatcher(const cellMatcher&) = delete;
 
 
     //- Destructor
@@ -269,6 +263,10 @@ public:
                 cellShape& shape
             ) = 0;
 
+
+    // Member Operators
+
+        void operator=(const cellMatcher&) = delete;
 };
 
 

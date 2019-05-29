@@ -79,10 +79,6 @@ class solution
         //- Read settings from the dictionary
         void read(const dictionary&);
 
-        //- Disallow default bitwise copy construct and assignment
-        solution(const solution&) = delete;
-        void operator=(const solution&);
-
 
 public:
 
@@ -103,6 +99,9 @@ public:
             const objectRegistry& obr,
             const fileName& dictName
         );
+
+        //- Disallow default bitwise copy construct
+        solution(const solution&) = delete;
 
 
     // Member Functions
@@ -145,6 +144,11 @@ public:
 
             //- Read the solution dictionary
             bool read();
+
+
+    // Member Operators
+
+        void operator=(const solution&) = delete;
 };
 
 

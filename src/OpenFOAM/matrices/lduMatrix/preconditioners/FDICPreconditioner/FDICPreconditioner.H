@@ -62,15 +62,6 @@ class FDICPreconditioner
         scalarField rDlUpper_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        FDICPreconditioner(const FDICPreconditioner&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const FDICPreconditioner&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -85,6 +76,9 @@ public:
             const lduMatrix::solver&,
             const dictionary& solverControlsUnused
         );
+
+        //- Disallow default bitwise copy construct
+        FDICPreconditioner(const FDICPreconditioner&) = delete;
 
 
     //- Destructor
@@ -101,6 +95,12 @@ public:
             const scalarField& rA,
             const direction cmpt=0
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const FDICPreconditioner&) = delete;
 };
 
 

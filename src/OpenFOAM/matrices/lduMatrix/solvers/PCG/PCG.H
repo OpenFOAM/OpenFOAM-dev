@@ -51,14 +51,6 @@ class PCG
 :
     public lduMatrix::solver
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        PCG(const PCG&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const PCG&) = delete;
-
 
 public:
 
@@ -79,6 +71,9 @@ public:
             const dictionary& solverControls
         );
 
+        //- Disallow default bitwise copy construct
+        PCG(const PCG&) = delete;
+
 
     //- Destructor
     virtual ~PCG()
@@ -94,6 +89,12 @@ public:
             const scalarField& source,
             const direction cmpt=0
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PCG&) = delete;
 };
 
 

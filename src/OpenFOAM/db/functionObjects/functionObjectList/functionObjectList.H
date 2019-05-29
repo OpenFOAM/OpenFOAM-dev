@@ -95,12 +95,6 @@ class functionObjectList
         //  configuration files, add to the given map and recurse
         static void listDir(const fileName& dir, HashSet<word>& foMap);
 
-        //- Disallow default bitwise copy construct
-        functionObjectList(const functionObjectList&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const functionObjectList&) = delete;
-
 
 public:
 
@@ -135,6 +129,9 @@ public:
             const dictionary& parentDict,
             const bool execution=true
         );
+
+        //- Disallow default bitwise copy construct
+        functionObjectList(const functionObjectList&) = delete;
 
         //- Construct and return a functionObjectList for an application.
         //  If the "dict" argument is specified the functionObjectList is
@@ -288,6 +285,12 @@ public:
 
         //- Update for changes of mesh
         void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const functionObjectList&) = delete;
 };
 
 

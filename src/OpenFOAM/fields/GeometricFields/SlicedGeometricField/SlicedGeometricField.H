@@ -96,20 +96,6 @@ private:
             const bool preserveCouples
         );
 
-        ////- Disallow default bitwise copy construct
-        // SlicedGeometricField(const SlicedGeometricField&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const SlicedGeometricField&) = delete;
-
-        //- Disallow standard assignment to GeometricField,
-        //  == assignment is allowed.
-        void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
-
-        //- Disallow standard assignment to tmp<GeometricField>,
-        //  == assignment is allowed.
-        void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
-
 
 public:
 
@@ -172,6 +158,26 @@ public:
 
         //- Correct boundary field
         void correctBoundaryConditions();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SlicedGeometricField&) = delete;
+
+        //- Disallow standard assignment to GeometricField,
+        //  == assignment is allowed.
+        void operator=
+        (
+            const GeometricField<Type, PatchField, GeoMesh>&
+        ) = delete;
+
+        //- Disallow standard assignment to tmp<GeometricField>,
+        //  == assignment is allowed.
+        void operator=
+        (
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+        ) = delete;
 };
 
 

@@ -61,21 +61,16 @@ class hexMatcher
         static const label maxVertPerFace;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        hexMatcher(const hexMatcher&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const hexMatcher&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct null
         hexMatcher();
+
+        //- Disallow default bitwise copy construct
+        hexMatcher(const hexMatcher&) = delete;
+
 
     //- Destructor
     ~hexMatcher();
@@ -121,6 +116,12 @@ public:
             const label celli,
             cellShape& shape
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hexMatcher&) = delete;
 };
 
 

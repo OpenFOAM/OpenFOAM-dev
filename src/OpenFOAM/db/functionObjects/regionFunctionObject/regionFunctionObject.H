@@ -102,17 +102,6 @@ protected:
         bool clearObject(const word& fieldName);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        regionFunctionObject(const regionFunctionObject&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionFunctionObject&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -139,6 +128,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construct
+        regionFunctionObject(const regionFunctionObject&) = delete;
+
 
     //- Destructor
     virtual ~regionFunctionObject();
@@ -148,6 +140,12 @@ public:
 
         //- Read optional controls
         virtual bool read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regionFunctionObject&) = delete;
 };
 
 

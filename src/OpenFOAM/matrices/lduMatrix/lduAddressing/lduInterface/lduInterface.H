@@ -53,14 +53,6 @@ namespace Foam
 
 class lduInterface
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        lduInterface(const lduInterface&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduInterface&) = delete;
-
 
 public:
 
@@ -73,6 +65,9 @@ public:
         //- Construct null
         lduInterface()
         {}
+
+        //- Disallow default bitwise copy construct
+        lduInterface(const lduInterface&) = delete;
 
 
     //- Destructor
@@ -110,6 +105,12 @@ public:
                 const Pstream::commsTypes commsType,
                 const labelUList& iF
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduInterface&) = delete;
 };
 
 

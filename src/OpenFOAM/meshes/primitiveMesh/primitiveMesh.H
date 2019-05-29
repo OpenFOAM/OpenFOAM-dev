@@ -175,15 +175,6 @@ class primitiveMesh
             mutable vectorField* faceAreasPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow construct as copy
-        primitiveMesh(const primitiveMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const primitiveMesh&) = delete;
-
-
         // Topological calculations
 
             //- Calculate cell shapes
@@ -445,6 +436,9 @@ public:
             const label nFaces,
             const label nCells
         );
+
+        //- Disallow construct as copy
+        primitiveMesh(const primitiveMesh&);
 
 
     //- Destructor
@@ -889,6 +883,12 @@ public:
 
             //- Clear all geometry and addressing unnecessary for CFD
             void clearOut();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const primitiveMesh&) = delete;
 };
 
 

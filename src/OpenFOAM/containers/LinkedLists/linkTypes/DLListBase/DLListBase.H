@@ -81,15 +81,6 @@ private:
        label nElmts_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        DLListBase(const DLListBase&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const DLListBase&) = delete;
-
-
 public:
 
     // Forward declaration of STL iterators
@@ -111,6 +102,9 @@ public:
 
         //- Construct given initial entry
         inline DLListBase(link*);
+
+        //- Disallow default bitwise copy construct
+        DLListBase(const DLListBase&) = delete;
 
 
     //- Destructor
@@ -175,6 +169,12 @@ public:
             //- Transfer the contents of the argument into this List
             //  and annul the argument list.
             inline void transfer(DLListBase&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DLListBase&) = delete;
 
 
     // STL iterator

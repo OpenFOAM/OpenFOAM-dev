@@ -78,18 +78,6 @@ protected:
         //- Debug: calculate global cell-cells
         static labelListList globalCellCells(const lduMesh&);
 
-private:
-
-    // Private data
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGProcAgglomeration(const GAMGProcAgglomeration&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGProcAgglomeration&) = delete;
-
 
 public:
 
@@ -125,6 +113,9 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construct
+        GAMGProcAgglomeration(const GAMGProcAgglomeration&) = delete;
+
 
     // Selectors
 
@@ -146,6 +137,11 @@ public:
         //- Modify agglomeration. Return true if modified
         virtual bool agglomerate() = 0;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGProcAgglomeration&) = delete;
 };
 
 

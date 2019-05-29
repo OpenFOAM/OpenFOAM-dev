@@ -62,17 +62,6 @@ class eagerGAMGProcAgglomeration
 
         DynamicList<label> comms_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        eagerGAMGProcAgglomeration
-        (
-            const eagerGAMGProcAgglomeration&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const eagerGAMGProcAgglomeration&) = delete;
-
 
 public:
 
@@ -89,6 +78,12 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construct
+        eagerGAMGProcAgglomeration
+        (
+            const eagerGAMGProcAgglomeration&
+        );
+
 
     //- Destructor
     virtual ~eagerGAMGProcAgglomeration();
@@ -99,6 +94,11 @@ public:
        //- Modify agglomeration. Return true if modified
         virtual bool agglomerate();
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const eagerGAMGProcAgglomeration&) = delete;
 };
 
 

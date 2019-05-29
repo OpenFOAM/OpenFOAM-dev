@@ -84,22 +84,29 @@ class ifEntry
             Istream& is
         );
 
-        //- Disallow default bitwise copy construct
-        ifEntry(const ifEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ifEntry&) = delete;
-
 
 public:
 
     //- Runtime type information
     ClassName("if");
 
+
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        ifEntry(const ifEntry&) = delete;
+
+
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
         static bool execute(dictionary& parentDict, Istream& is);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ifEntry&) = delete;
 };
 
 

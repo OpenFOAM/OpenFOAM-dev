@@ -61,15 +61,6 @@ class Residuals
         mutable label prevTimeIndex_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        Residuals(const Residuals<Type>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const Residuals<Type>&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -80,6 +71,9 @@ public:
 
         //- Construct for given mesh
         Residuals(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construct
+        Residuals(const Residuals<Type>&) = delete;
 
 
     // Member Functions
@@ -105,6 +99,12 @@ public:
             const polyMesh& mesh,
             const SolverPerformance<Type>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Residuals<Type>&) = delete;
 };
 
 

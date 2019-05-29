@@ -81,12 +81,6 @@ class includeEtcEntry
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        includeEtcEntry(const includeEtcEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const includeEtcEntry&) = delete;
-
         //- Expand include fileName and return
         static fileName includeEtcFileName
         (
@@ -107,6 +101,12 @@ public:
     ClassName("includeEtc");
 
 
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        includeEtcEntry(const includeEtcEntry&) = delete;
+
+
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
@@ -119,6 +119,12 @@ public:
             primitiveEntry&,
             Istream&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const includeEtcEntry&) = delete;
 };
 
 

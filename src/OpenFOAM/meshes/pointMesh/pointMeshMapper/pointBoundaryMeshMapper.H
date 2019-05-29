@@ -48,14 +48,6 @@ class pointBoundaryMeshMapper
 :
     public PtrList<pointPatchMapper>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointBoundaryMeshMapper(const pointBoundaryMeshMapper&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointBoundaryMeshMapper&) = delete;
-
 
 public:
 
@@ -87,6 +79,15 @@ public:
                 );
             }
         }
+
+        //- Disallow default bitwise copy construct
+        pointBoundaryMeshMapper(const pointBoundaryMeshMapper&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointBoundaryMeshMapper&) = delete;
 };
 
 

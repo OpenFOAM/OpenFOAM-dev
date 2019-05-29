@@ -62,12 +62,6 @@ class pointMesh
         //- Map all fields
         void mapFields(const mapPolyMesh&);
 
-        //- Disallow default bitwise copy construct
-        pointMesh(const pointMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointMesh&) = delete;
-
 
 public:
 
@@ -83,6 +77,9 @@ public:
 
         //- Construct from polyMesh
         explicit pointMesh(const polyMesh& pMesh);
+
+        //- Disallow default bitwise copy construct
+        pointMesh(const pointMesh&) = delete;
 
 
     //- Destructor
@@ -146,6 +143,9 @@ public:
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointMesh&) = delete;
 
         bool operator!=(const pointMesh& pm) const
         {

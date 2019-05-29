@@ -70,12 +70,6 @@ class functionEntry
         //- Read line as string token
         static token readLine(const word& key, Istream& is);
 
-        //- Disallow default bitwise copy construct
-        functionEntry(const functionEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const functionEntry&) = delete;
-
 
 public:
 
@@ -83,6 +77,9 @@ public:
 
         //- Construct from keyword, parent dictionary and Istream
         functionEntry(const word&, const dictionary&, Istream&);
+
+        //- Disallow default bitwise copy construct
+        functionEntry(const functionEntry&) = delete;
 
 
     // Member Function Selectors
@@ -133,6 +130,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const functionEntry&) = delete;
 };
 
 

@@ -110,17 +110,6 @@ protected:
         virtual wordList objectNames();
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        writeLocalObjects(const writeLocalObjects&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeLocalObjects&) = delete;
-
-
 public:
 
     // Constructors
@@ -131,6 +120,9 @@ public:
             const objectRegistry& obr,
             const Switch& logRef
         );
+
+        //- Disallow default bitwise copy construct
+        writeLocalObjects(const writeLocalObjects&) = delete;
 
 
     //- Destructor
@@ -144,6 +136,12 @@ public:
 
         //- Read the list of objects to be written
         virtual bool read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeLocalObjects&) = delete;
 };
 
 

@@ -138,13 +138,6 @@ class codeStream
         );
 
 
-        //- Disallow default bitwise copy construct
-        codeStream(const codeStream&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const codeStream&) = delete;
-
-
 public:
 
     // Static data members
@@ -162,6 +155,12 @@ public:
     ClassName("codeStream");
 
 
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        codeStream(const codeStream&) = delete;
+
+
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
@@ -175,6 +174,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const codeStream&) = delete;
 };
 
 

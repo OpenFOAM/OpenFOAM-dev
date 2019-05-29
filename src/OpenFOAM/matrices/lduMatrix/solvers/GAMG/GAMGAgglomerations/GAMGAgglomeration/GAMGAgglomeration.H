@@ -203,17 +203,6 @@ protected:
             );
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGAgglomeration(const GAMGAgglomeration&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGAgglomeration&) = delete;
-
-
 public:
 
     //- Declare friendship with GAMGProcAgglomeration
@@ -288,6 +277,9 @@ public:
             const lduMesh& mesh,
             const dictionary& controlDict
         );
+
+        //- Disallow default bitwise copy construct
+        GAMGAgglomeration(const GAMGAgglomeration&) = delete;
 
 
     // Selectors
@@ -491,6 +483,12 @@ public:
             const labelUList& restrict,
             const label nCoarse
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGAgglomeration&) = delete;
 };
 
 

@@ -90,15 +90,6 @@ private:
         std::string makeOptions_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        dynamicCode(const dynamicCode&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicCode&) = delete;
-
-
 protected:
 
     // Static data members
@@ -180,6 +171,9 @@ public:
             const word& codeName,
             const word& codeDirName = ""
         );
+
+        //- Disallow default bitwise copy construct
+        dynamicCode(const dynamicCode&) = delete;
 
 
     // Member functions
@@ -278,6 +272,11 @@ public:
         //- Compile a libso
         bool wmakeLibso() const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicCode&) = delete;
 };
 
 

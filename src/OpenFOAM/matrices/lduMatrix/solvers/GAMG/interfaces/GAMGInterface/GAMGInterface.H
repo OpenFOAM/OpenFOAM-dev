@@ -71,17 +71,6 @@ protected:
         labelList faceRestrictAddressing_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGInterface(const GAMGInterface&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGInterface&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -197,6 +186,9 @@ public:
             Istream& is
         );
 
+        //- Disallow default bitwise copy construct
+        GAMGInterface(const GAMGInterface&) = delete;
+
 
     // Member Functions
 
@@ -277,6 +269,12 @@ public:
 
             //- Write to stream
             virtual void write(Ostream&) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGInterface&) = delete;
 };
 
 

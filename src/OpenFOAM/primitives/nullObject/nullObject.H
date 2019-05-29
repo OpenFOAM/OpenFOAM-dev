@@ -51,16 +51,16 @@ class NullObject
     NullObject()
     {}
 
+public:
+
+    //- The unique null object
+    static const NullObject nullObject;
+
     //- Disallow default bitwise copy construct
     NullObject(const NullObject&) = delete;
 
     //- Disallow default bitwise assignment
     void operator=(const NullObject&) = delete;
-
-public:
-
-    //- The unique null object
-    static const NullObject nullObject;
 };
 
 

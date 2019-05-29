@@ -195,12 +195,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow construct as copy
-        polyMesh(const polyMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyMesh&) = delete;
-
         //- Initialise the polyMesh from the primitive data
         void initMesh();
 
@@ -377,6 +371,9 @@ public:
             const word& defaultBoundaryPatchType,
             const bool syncPar = true
         );
+
+        //- Disallow construct as copy
+        polyMesh(const polyMesh&);
 
 
     //- Destructor
@@ -750,6 +747,12 @@ public:
                 const point& p,
                 const cellDecomposition = CELL_TETS
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyMesh&) = delete;
 };
 
 

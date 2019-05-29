@@ -52,14 +52,6 @@ class PBiCICG
 :
     public LduMatrix<Type, DType, LUType>::solver
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        PBiCICG(const PBiCICG&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const PBiCICG&) = delete;
-
 
 public:
 
@@ -77,6 +69,9 @@ public:
             const dictionary& solverDict
         );
 
+        //- Disallow default bitwise copy construct
+        PBiCICG(const PBiCICG&) = delete;
+
 
     // Destructor
 
@@ -88,6 +83,12 @@ public:
 
         //- Solve the matrix with this solver
         virtual SolverPerformance<Type> solve(Field<Type>& psi) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PBiCICG&) = delete;
 };
 
 

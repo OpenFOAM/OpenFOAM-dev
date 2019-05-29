@@ -117,17 +117,6 @@ protected:
         virtual void writeObject(const regIOobject& obj);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        writeObjectsBase(const writeObjectsBase&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeObjectsBase&) = delete;
-
-
 public:
 
     // Constructors
@@ -138,6 +127,9 @@ public:
             const objectRegistry& obr,
             const Switch& logRef
         );
+
+        //- Disallow default bitwise copy construct
+        writeObjectsBase(const writeObjectsBase&) = delete;
 
 
     //- Destructor
@@ -154,6 +146,12 @@ public:
 
         //- Write function
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeObjectsBase&) = delete;
 };
 
 

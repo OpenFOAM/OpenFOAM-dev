@@ -53,17 +53,6 @@ class noneGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        noneGAMGProcAgglomeration
-        (
-            const noneGAMGProcAgglomeration&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const noneGAMGProcAgglomeration&) = delete;
-
 
 public:
 
@@ -80,6 +69,12 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construct
+        noneGAMGProcAgglomeration
+        (
+            const noneGAMGProcAgglomeration&
+        );
+
 
     //- Destructor
     virtual ~noneGAMGProcAgglomeration();
@@ -93,6 +88,11 @@ public:
             return false;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noneGAMGProcAgglomeration&) = delete;
 };
 
 

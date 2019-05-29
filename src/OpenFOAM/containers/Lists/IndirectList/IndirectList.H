@@ -59,15 +59,6 @@ class IndirectListAddressing
         List<label> addressing_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        IndirectListAddressing(const IndirectListAddressing&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const IndirectListAddressing&) = delete;
-
-
 protected:
 
     // Constructors
@@ -77,6 +68,9 @@ protected:
 
         //- Move constructor which moves the addressing array
         explicit inline IndirectListAddressing(List<label>&& addr);
+
+        //- Disallow default bitwise copy construct
+        IndirectListAddressing(const IndirectListAddressing&) = delete;
 
 
     // Member Functions
@@ -91,6 +85,12 @@ protected:
 
             //- Reset addressing
             inline void resetAddressing(const labelUList&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IndirectListAddressing&) = delete;
 };
 
 

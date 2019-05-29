@@ -67,17 +67,6 @@ protected:
         const word prefix_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        writeFile(const writeFile&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeFile&) = delete;
-
-
 public:
 
     //- Directory prefix
@@ -95,6 +84,9 @@ public:
             const objectRegistry& obr,
             const word& prefix
         );
+
+        //- Disallow default bitwise copy construct
+        writeFile(const writeFile&) = delete;
 
 
     //- Destructor
@@ -138,6 +130,12 @@ public:
 
         //- Return width of character stream output
         label charWidth() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeFile&) = delete;
 };
 
 

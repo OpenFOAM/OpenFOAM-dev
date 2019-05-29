@@ -75,17 +75,17 @@ class negEntry
             Istream& is
         );
 
-        //- Disallow default bitwise copy construct
-        negEntry(const negEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const negEntry&) = delete;
-
 
 public:
 
     //- Runtime type information
     ClassName("neg");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        negEntry(const negEntry&) = delete;
 
 
     // Member Functions
@@ -100,6 +100,12 @@ public:
             primitiveEntry&,
             Istream&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const negEntry&) = delete;
 };
 
 

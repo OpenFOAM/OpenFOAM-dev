@@ -58,18 +58,17 @@ class includeIfPresentEntry
 :
     public includeEntry
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        includeIfPresentEntry(const includeIfPresentEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const includeIfPresentEntry&) = delete;
 
 public:
 
     //- Runtime type information
     ClassName("includeIfPresent");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        includeIfPresentEntry(const includeIfPresentEntry&) = delete;
 
 
     // Member Functions
@@ -85,6 +84,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const includeIfPresentEntry&) = delete;
 };
 
 

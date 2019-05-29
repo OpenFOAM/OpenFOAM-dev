@@ -60,15 +60,6 @@ class DiagonalPreconditioner
         Field<DType> rD;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        DiagonalPreconditioner(const DiagonalPreconditioner&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const DiagonalPreconditioner&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -83,6 +74,9 @@ public:
             const typename LduMatrix<Type, DType, LUType>::solver& sol,
             const dictionary& preconditionerDict
         );
+
+        //- Disallow default bitwise copy construct
+        DiagonalPreconditioner(const DiagonalPreconditioner&) = delete;
 
 
     // Destructor
@@ -114,6 +108,12 @@ public:
         {
             return(precondition(wT, rT));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DiagonalPreconditioner&) = delete;
 };
 
 

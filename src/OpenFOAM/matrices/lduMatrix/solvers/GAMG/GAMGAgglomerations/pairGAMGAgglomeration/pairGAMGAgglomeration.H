@@ -71,12 +71,6 @@ protected:
             const scalarField& faceWeights
         );
 
-        //- Disallow default bitwise copy construct
-        pairGAMGAgglomeration(const pairGAMGAgglomeration&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pairGAMGAgglomeration&) = delete;
-
 
 public:
 
@@ -93,6 +87,9 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construct
+        pairGAMGAgglomeration(const pairGAMGAgglomeration&) = delete;
+
         //- Calculate and return agglomeration
         static tmp<labelField> agglomerate
         (
@@ -100,6 +97,12 @@ public:
             const lduAddressing& fineMatrixAddressing,
             const scalarField& faceWeights
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pairGAMGAgglomeration&) = delete;
 };
 
 

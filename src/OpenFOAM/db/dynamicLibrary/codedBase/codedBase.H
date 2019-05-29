@@ -82,12 +82,6 @@ class codedBase
         //- Create library based on the dynamicCodeContext
         void createLibrary(dynamicCode&, const dynamicCodeContext&) const;
 
-        //- Disallow default bitwise copy construct
-        codedBase(const codedBase&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const codedBase&) = delete;
-
 
 protected:
 
@@ -124,9 +118,18 @@ public:
         //- Construct null
         codedBase();
 
+        //- Disallow default bitwise copy construct
+        codedBase(const codedBase&) = delete;
+
 
     //- Destructor
     virtual ~codedBase();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const codedBase&) = delete;
 };
 
 

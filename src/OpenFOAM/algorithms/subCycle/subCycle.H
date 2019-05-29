@@ -211,14 +211,6 @@ class subCycle
     public SubCycleField<GeometricField>,
     public subCycleTime
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        subCycle(const subCycle<GeometricField>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const subCycle<GeometricField>&) = delete;
-
 
 public:
 
@@ -238,6 +230,9 @@ public:
             this->updateTimeIndex();
         }
 
+        //- Disallow default bitwise copy construct
+        subCycle(const subCycle<GeometricField>&) = delete;
+
 
     //- Destructor
     //  End the subCycleTime, which restores the time state
@@ -245,6 +240,12 @@ public:
     {
         endSubCycle();
     }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const subCycle<GeometricField>&) = delete;
 };
 
 

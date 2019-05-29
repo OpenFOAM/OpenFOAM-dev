@@ -72,12 +72,6 @@ class faceZone
         static const word labelsName_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        faceZone(const faceZone&) = delete;
-
-
 protected:
 
     // Protected data
@@ -201,6 +195,10 @@ public:
             const label index,
             const faceZoneMesh&
         );
+
+        //- Disallow default bitwise copy construct
+        faceZone(const faceZone&) = delete;
+
 
         //- Construct and return a clone, resetting the zone mesh
         virtual autoPtr<faceZone> clone(const faceZoneMesh& zm) const

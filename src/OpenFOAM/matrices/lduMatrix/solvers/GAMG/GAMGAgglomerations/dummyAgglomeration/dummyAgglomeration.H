@@ -56,15 +56,6 @@ class dummyAgglomeration
         label nLevels_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        dummyAgglomeration(const dummyAgglomeration&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const dummyAgglomeration&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -79,6 +70,16 @@ public:
             const lduMesh& mesh,
             const dictionary& controlDict
         );
+
+        //- Disallow default bitwise copy construct
+        dummyAgglomeration(const dummyAgglomeration&) = delete;
+
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dummyAgglomeration&) = delete;
 };
 
 
