@@ -68,7 +68,7 @@ public:
         //- Construct null
         pyrMatcher();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pyrMatcher(const pyrMatcher&) = delete;
 
 

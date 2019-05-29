@@ -66,7 +66,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         points0MotionSolver(const points0MotionSolver&) = delete;
 
         //- Disallow default bitwise assignment

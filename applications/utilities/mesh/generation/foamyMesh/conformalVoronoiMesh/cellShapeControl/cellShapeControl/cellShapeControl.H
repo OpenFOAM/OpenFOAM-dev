@@ -85,7 +85,7 @@ class cellShapeControl
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cellShapeControl(const cellShapeControl&) = delete;
 
         //- Disallow default bitwise assignment

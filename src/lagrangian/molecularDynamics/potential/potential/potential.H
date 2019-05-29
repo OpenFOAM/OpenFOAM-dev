@@ -86,7 +86,7 @@ class potential
             IOdictionary& idListDict
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         potential(const potential&) = delete;
 
         //- Disallow default bitwise assignment

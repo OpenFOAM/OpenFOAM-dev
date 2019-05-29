@@ -84,7 +84,7 @@ protected:
             const scalarField& err
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         ODESolver(const ODESolver&) = delete;
 
         //- Disallow default bitwise assignment

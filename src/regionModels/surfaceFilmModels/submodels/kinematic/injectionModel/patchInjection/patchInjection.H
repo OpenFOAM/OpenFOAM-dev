@@ -57,7 +57,7 @@ class patchInjection
 {
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         patchInjection(const patchInjection&) = delete;
 
         //- Disallow default bitwise assignment

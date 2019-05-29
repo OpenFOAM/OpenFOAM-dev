@@ -209,7 +209,7 @@ class cvControls
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cvControls(const cvControls&) = delete;
 
         //- Disallow default bitwise assignment

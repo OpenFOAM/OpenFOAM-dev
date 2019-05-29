@@ -149,7 +149,7 @@ private:
             const bool applyFlip
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fvFieldDecomposer(const fvFieldDecomposer&) = delete;
 
         //- Disallow default bitwise assignment

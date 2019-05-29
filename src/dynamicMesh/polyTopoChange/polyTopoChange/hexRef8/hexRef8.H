@@ -336,7 +336,7 @@ class hexRef8
             ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         hexRef8(const hexRef8&) = delete;
 
         //- Disallow default bitwise assignment

@@ -64,7 +64,7 @@ class PhiScheme
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         PhiScheme(const PhiScheme&) = delete;
 
         //- Disallow default bitwise assignment

@@ -55,7 +55,7 @@ class NamedEnum
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         NamedEnum(const NamedEnum&) = delete;
 
         //- Disallow default bitwise assignment

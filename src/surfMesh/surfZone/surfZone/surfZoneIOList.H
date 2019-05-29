@@ -63,7 +63,7 @@ class surfZoneIOList
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         surfZoneIOList(const surfZoneIOList&) = delete;
 
         //- Disallow default bitwise assignment

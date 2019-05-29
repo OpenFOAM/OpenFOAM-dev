@@ -82,7 +82,7 @@ class pairPotentialList
         //- Disallow default bitwise assignment
         void operator=(const pairPotentialList&) = delete;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pairPotentialList(const pairPotentialList&) = delete;
 
 

@@ -151,7 +151,7 @@ public:
             const pointZoneMesh&
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pointZone(const pointZone&) = delete;
 
 

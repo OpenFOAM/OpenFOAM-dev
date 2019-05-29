@@ -74,7 +74,7 @@ class tetherPotentialList
         //- Disallow default bitwise assignment
         void operator=(const tetherPotentialList&) = delete;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         tetherPotentialList(const tetherPotentialList&) = delete;
 
 

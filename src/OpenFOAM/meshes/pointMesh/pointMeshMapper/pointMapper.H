@@ -103,7 +103,7 @@ public:
         //- Construct from mapPolyMesh
         pointMapper(const pointMesh&, const mapPolyMesh& mpm);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pointMapper(const pointMapper&) = delete;
 
 

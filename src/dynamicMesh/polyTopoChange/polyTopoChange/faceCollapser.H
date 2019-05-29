@@ -112,7 +112,7 @@ class faceCollapser
         ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         faceCollapser(const faceCollapser&) = delete;
 
         //- Disallow default bitwise assignment

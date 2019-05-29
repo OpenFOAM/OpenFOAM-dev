@@ -138,7 +138,7 @@ public:
             interface_(GAMGCp)
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         GAMGInterfaceField(const GAMGInterfaceField&) = delete;
 
 

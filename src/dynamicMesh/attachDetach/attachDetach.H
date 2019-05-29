@@ -107,7 +107,7 @@ class attachDetach
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         attachDetach(const attachDetach&) = delete;
 
         //- Disallow default bitwise assignment

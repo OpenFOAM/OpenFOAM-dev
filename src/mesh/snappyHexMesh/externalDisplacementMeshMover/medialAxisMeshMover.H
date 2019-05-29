@@ -224,7 +224,7 @@ class medialAxisMeshMover
             labelList& checkFaces
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         medialAxisMeshMover(const medialAxisMeshMover&) = delete;
 
         //- Disallow default bitwise assignment

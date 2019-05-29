@@ -90,7 +90,7 @@ class foamChemistryReader
         //- Read the species composition
         void readSpeciesComposition();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         foamChemistryReader(const foamChemistryReader&) = delete;
 
         //- Disallow default bitwise assignment

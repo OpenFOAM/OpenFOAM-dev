@@ -91,7 +91,7 @@ class cellSplitter
             const Map<labelList>& cellToCells
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cellSplitter(const cellSplitter&) = delete;
 
         //- Disallow default bitwise assignment

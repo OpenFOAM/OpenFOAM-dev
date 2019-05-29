@@ -111,7 +111,7 @@ class scalarTransport
         //- Return the diffusivity field
         tmp<volScalarField> D(const surfaceScalarField& phi) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         scalarTransport(const scalarTransport&) = delete;
 
         //- Disallow default bitwise assignment

@@ -344,7 +344,7 @@ public:
         //- Construct from mesh, derive rest (does parallel communication!)
         globalMeshData(const polyMesh& mesh);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         globalMeshData(const globalMeshData&) = delete;
 
 

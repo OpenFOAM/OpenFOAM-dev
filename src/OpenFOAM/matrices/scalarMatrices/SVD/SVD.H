@@ -82,7 +82,7 @@ public:
         //- Construct from a rectangular Matrix
         SVD(const scalarRectangularMatrix& A, const scalar minCondition = 0);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         SVD(const SVD&) = delete;
 
 

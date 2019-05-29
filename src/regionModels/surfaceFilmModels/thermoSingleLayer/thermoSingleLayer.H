@@ -69,7 +69,7 @@ class thermoSingleLayer
 {
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         thermoSingleLayer(const thermoSingleLayer&) = delete;
 
         //- Disallow default bitwise assignment

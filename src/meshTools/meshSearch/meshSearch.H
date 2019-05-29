@@ -136,7 +136,7 @@ class meshSearch
             ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         meshSearch(const meshSearch&) = delete;
 
         //- Disallow default bitwise assignment

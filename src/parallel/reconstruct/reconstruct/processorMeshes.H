@@ -80,7 +80,7 @@ class processorMeshes
         //- Read all meshes
         void read();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         processorMeshes(const processorMeshes&) = delete;
 
         //- Disallow default bitwise assignment

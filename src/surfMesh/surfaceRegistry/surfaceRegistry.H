@@ -53,7 +53,7 @@ class surfaceRegistry
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         surfaceRegistry(const surfaceRegistry&) = delete;
 
         //- Disallow default bitwise assignment

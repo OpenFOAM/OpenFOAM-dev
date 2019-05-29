@@ -78,7 +78,7 @@ class singleCellFvMesh
         void agglomerateMesh(const fvMesh&, const labelListList&);
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         singleCellFvMesh(const singleCellFvMesh&) = delete;
 
         //- Disallow default bitwise assignment

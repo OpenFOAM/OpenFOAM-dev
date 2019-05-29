@@ -160,7 +160,7 @@ class CrankNicolsonDdtScheme
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         CrankNicolsonDdtScheme(const CrankNicolsonDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment

@@ -156,7 +156,7 @@ public:
             )
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         OSHA1stream(const OSHA1stream&) = delete;
 
 

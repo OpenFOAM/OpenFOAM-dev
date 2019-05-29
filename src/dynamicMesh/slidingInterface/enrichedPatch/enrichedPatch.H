@@ -133,7 +133,7 @@ class enrichedPatch
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         enrichedPatch(const enrichedPatch&) = delete;
 
         //- Disallow default bitwise assignment

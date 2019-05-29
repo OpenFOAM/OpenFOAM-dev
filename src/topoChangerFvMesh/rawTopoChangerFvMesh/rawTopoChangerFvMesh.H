@@ -70,7 +70,7 @@ class rawTopoChangerFvMesh
         template<class Type, template<class> class PatchField, class GeoMesh>
         void zeroUnmappedValues(const PackedBoolList&) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         rawTopoChangerFvMesh(const rawTopoChangerFvMesh&) = delete;
 
         //- Disallow default bitwise assignment

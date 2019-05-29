@@ -72,7 +72,7 @@ public:
         //- Construct for given mesh
         Residuals(const polyMesh& mesh);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         Residuals(const Residuals<Type>&) = delete;
 
 

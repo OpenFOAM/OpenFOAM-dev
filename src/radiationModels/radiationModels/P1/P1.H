@@ -79,7 +79,7 @@ class P1
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         P1(const P1&) = delete;
 
         //- Disallow default bitwise assignment

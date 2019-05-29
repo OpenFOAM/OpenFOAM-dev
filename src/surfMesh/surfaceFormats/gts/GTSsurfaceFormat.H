@@ -59,7 +59,7 @@ class GTSsurfaceFormat
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         GTSsurfaceFormat(const GTSsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment

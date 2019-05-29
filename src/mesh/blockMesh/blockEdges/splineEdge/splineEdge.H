@@ -56,7 +56,7 @@ class splineEdge
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         splineEdge(const splineEdge&) = delete;
 
         //- Disallow default bitwise assignment

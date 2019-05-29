@@ -62,7 +62,7 @@ class linearValveFvMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         linearValveFvMesh(const linearValveFvMesh&) = delete;
 
         //- Disallow default bitwise assignment

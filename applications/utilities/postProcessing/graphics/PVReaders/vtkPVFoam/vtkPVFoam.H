@@ -666,7 +666,7 @@ class vtkPVFoam
             word getPartName(const int);
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         vtkPVFoam(const vtkPVFoam&) = delete;
 
         //- Disallow default bitwise assignment

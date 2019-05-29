@@ -81,7 +81,7 @@ class crankConRod
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         crankConRod(const crankConRod&) = delete;
 
         //- Disallow default bitwise assignment

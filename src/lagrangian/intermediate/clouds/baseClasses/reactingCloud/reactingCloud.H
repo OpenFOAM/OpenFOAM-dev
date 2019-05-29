@@ -50,7 +50,7 @@ class reactingCloud
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         reactingCloud(const reactingCloud&) = delete;
 
         //- Disallow default bitwise assignment

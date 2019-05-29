@@ -67,7 +67,7 @@ public:
 
     // Constructors
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         includeIfPresentEntry(const includeIfPresentEntry&) = delete;
 
 

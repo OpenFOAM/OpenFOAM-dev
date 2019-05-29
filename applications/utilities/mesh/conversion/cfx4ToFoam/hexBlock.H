@@ -74,7 +74,7 @@ class hexBlock
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         hexBlock(const hexBlock&) = delete;
 
         //- Disallow default bitwise assignment

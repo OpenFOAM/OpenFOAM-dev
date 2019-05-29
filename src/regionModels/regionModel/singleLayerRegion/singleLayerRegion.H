@@ -54,7 +54,7 @@ class singleLayerRegion
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         singleLayerRegion(const singleLayerRegion&) = delete;
 
         //- Disallow default bitwise assignment

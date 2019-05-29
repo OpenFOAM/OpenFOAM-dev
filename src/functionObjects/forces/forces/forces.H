@@ -260,7 +260,7 @@ protected:
         //- Helper function to write bin data
         void writeBins();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         forces(const forces&) = delete;
 
         //- Disallow default bitwise assignment

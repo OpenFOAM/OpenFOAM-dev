@@ -113,7 +113,7 @@ class MGridGenGAMGAgglomeration
         );
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         MGridGenGAMGAgglomeration(const MGridGenGAMGAgglomeration&) = delete;
 
         //- Disallow default bitwise assignment

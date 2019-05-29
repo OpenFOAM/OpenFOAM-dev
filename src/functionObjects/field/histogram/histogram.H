@@ -115,7 +115,7 @@ class histogram
             const scalarField& values
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         histogram(const histogram&) = delete;
 
         //- Disallow default bitwise assignment

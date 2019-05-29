@@ -71,7 +71,7 @@ public:
         //- Construct for the given objectRegistry and named cloud instance
         cloud(const objectRegistry&, const word& cloudName = defaultName);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cloud(const cloud&) = delete;
 
 

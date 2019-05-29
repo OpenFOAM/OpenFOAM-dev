@@ -81,7 +81,7 @@ class STARCDedgeFormat
             const edgeList&
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         STARCDedgeFormat(const STARCDedgeFormat&) = delete;
 
         //- Disallow default bitwise assignment

@@ -168,7 +168,7 @@ class meshDualiser
             boolList& donePFaces            // pFaces visited
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         meshDualiser(const meshDualiser&) = delete;
 
         //- Disallow default bitwise assignment

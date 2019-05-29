@@ -52,7 +52,7 @@ class uniformDiffusivity
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         uniformDiffusivity(const uniformDiffusivity&) = delete;
 
         //- Disallow default bitwise assignment

@@ -83,7 +83,7 @@ public:
             const List& l
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         Histogram(const Histogram&) = delete;
 
 

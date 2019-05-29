@@ -68,7 +68,7 @@ public:
         //- Construct
         prismMatcher();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         prismMatcher(const prismMatcher&) = delete;
 
 

@@ -150,7 +150,7 @@ public:
             const cellZoneMesh&
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cellZone(const cellZone&) = delete;
 
 

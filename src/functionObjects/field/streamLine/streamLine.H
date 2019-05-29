@@ -224,7 +224,7 @@ private:
         //- Do all seeding and tracking
         void track();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         streamLine(const streamLine&) = delete;
 
         //- Disallow default bitwise assignment

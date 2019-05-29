@@ -68,7 +68,7 @@ public:
         //- Construct null
         tetMatcher();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         tetMatcher(const tetMatcher&) = delete;
 
 

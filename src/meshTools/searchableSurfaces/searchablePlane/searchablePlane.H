@@ -72,7 +72,7 @@ private:
         //- Return the boundBox of the plane
         boundBox calcBounds() const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         searchablePlane(const searchablePlane&) = delete;
 
         //- Disallow default bitwise assignment

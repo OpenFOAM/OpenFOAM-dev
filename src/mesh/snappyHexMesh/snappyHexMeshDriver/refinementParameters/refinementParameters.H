@@ -91,7 +91,7 @@ class refinementParameters
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         refinementParameters(const refinementParameters&) = delete;
 
         //- Disallow default bitwise assignment

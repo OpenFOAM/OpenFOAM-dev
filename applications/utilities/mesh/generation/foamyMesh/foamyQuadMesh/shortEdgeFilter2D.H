@@ -90,7 +90,7 @@ class shortEdgeFilter2D
             labelList& patchSizes
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         shortEdgeFilter2D(const shortEdgeFilter2D&) = delete;
 
         //- Disallow default bitwise assignment

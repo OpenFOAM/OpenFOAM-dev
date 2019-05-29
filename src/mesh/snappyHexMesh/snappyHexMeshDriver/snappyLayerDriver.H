@@ -546,7 +546,7 @@ private:
 
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         snappyLayerDriver(const snappyLayerDriver&) = delete;
 
         //- Disallow default bitwise assignment

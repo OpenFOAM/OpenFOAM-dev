@@ -72,7 +72,7 @@ class fixedBlended
         tmp<surfaceInterpolationScheme<Type>> tScheme2_;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fixedBlended(const fixedBlended&) = delete;
 
         //- Disallow default bitwise assignment

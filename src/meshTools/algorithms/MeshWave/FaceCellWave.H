@@ -80,7 +80,7 @@ class FaceCellWave
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         FaceCellWave(const FaceCellWave&) = delete;
 
         //- Disallow default bitwise assignment

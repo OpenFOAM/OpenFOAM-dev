@@ -54,7 +54,7 @@ class regionCoupledWallGAMGInterface
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         regionCoupledWallGAMGInterface
         (
             const regionCoupledWallGAMGInterface&

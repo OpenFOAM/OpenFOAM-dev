@@ -78,7 +78,7 @@ public:
         //- Construct from polyMesh
         explicit pointMesh(const polyMesh& pMesh);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pointMesh(const pointMesh&) = delete;
 
 

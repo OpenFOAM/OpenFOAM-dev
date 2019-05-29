@@ -129,7 +129,7 @@ private:
         //- Write the requested registered IO object
         virtual void writeObject(const regIOobject& obj);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         writeObjects(const writeObjects&) = delete;
 
         //- Disallow default bitwise assignment

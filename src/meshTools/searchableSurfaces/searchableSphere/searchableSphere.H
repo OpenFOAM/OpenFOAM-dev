@@ -89,7 +89,7 @@ private:
         ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         searchableSphere(const searchableSphere&) = delete;
 
         //- Disallow default bitwise assignment

@@ -103,7 +103,7 @@ public:
         //- Construct given initial entry
         inline DLListBase(link*);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         DLListBase(const DLListBase&) = delete;
 
 

@@ -69,7 +69,7 @@ class regExp
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         regExp(const regExp&) = delete;
 
         //- Disallow default bitwise assignment

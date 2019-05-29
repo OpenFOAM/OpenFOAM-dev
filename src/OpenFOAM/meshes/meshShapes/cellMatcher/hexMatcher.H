@@ -68,7 +68,7 @@ public:
         //- Construct null
         hexMatcher();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         hexMatcher(const hexMatcher&) = delete;
 
 

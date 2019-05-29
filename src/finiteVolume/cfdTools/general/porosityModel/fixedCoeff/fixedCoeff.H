@@ -95,7 +95,7 @@ class fixedCoeff
             const scalar rho
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fixedCoeff(const fixedCoeff&) = delete;
 
         //- Disallow default bitwise assignment

@@ -85,7 +85,7 @@ public:
         //- Construct from components
         interpolationWeights(const scalarField& samples);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         interpolationWeights(const interpolationWeights&) = delete;
 
 

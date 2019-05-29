@@ -61,7 +61,7 @@ class linearUpwindV
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         linearUpwindV(const linearUpwindV&) = delete;
 
         //- Disallow default bitwise assignment

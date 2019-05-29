@@ -76,7 +76,7 @@ class searchableSurface
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         searchableSurface(const searchableSurface&) = delete;
 
         //- Disallow default bitwise assignment

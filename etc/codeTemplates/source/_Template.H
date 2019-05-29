@@ -92,7 +92,7 @@ public:
         //- Copy constructor
         CLASSNAME(const CLASSNAME&);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         CLASSNAME(const CLASSNAME&) = delete;
 
 

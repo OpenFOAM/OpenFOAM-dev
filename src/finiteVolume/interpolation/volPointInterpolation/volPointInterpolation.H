@@ -113,7 +113,7 @@ class volPointInterpolation
             GeometricField<Type, pointPatchField, pointMesh>&
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         volPointInterpolation(const volPointInterpolation&) = delete;
 
         //- Disallow default bitwise assignment

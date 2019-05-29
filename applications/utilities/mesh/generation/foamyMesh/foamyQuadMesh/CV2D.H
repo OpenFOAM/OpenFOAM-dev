@@ -199,7 +199,7 @@ class CV2D
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         CV2D(const CV2D&) = delete;
 
         //- Disallow default bitwise assignment

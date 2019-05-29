@@ -139,7 +139,7 @@ class fvDOM
         //- Initialise
         void initialise();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fvDOM(const fvDOM&) = delete;
 
         //- Disallow default bitwise assignment

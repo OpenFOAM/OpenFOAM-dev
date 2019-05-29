@@ -134,7 +134,7 @@ private:
             const molecule::constantProperties& cP
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         moleculeCloud(const moleculeCloud&) = delete;
 
         //- Disallow default bitwise assignment

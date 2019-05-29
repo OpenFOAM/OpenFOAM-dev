@@ -253,7 +253,7 @@ private:
             ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         meshToMesh(const meshToMesh&) = delete;
 
         //- Disallow default bitwise assignment

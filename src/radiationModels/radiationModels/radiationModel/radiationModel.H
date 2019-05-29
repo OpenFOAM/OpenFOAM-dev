@@ -114,7 +114,7 @@ private:
         //- Initialise
         void initialise();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         radiationModel(const radiationModel&) = delete;
 
         //- Disallow default bitwise assignment

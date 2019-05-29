@@ -63,7 +63,7 @@ class CentredFitScheme
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         CentredFitScheme(const CentredFitScheme&) = delete;
 
         //- Disallow default bitwise assignment

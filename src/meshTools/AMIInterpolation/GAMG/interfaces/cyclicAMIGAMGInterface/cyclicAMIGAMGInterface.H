@@ -67,7 +67,7 @@ class cyclicAMIGAMGInterface
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cyclicAMIGAMGInterface(const cyclicAMIGAMGInterface&) = delete;
 
         //- Disallow default bitwise assignment

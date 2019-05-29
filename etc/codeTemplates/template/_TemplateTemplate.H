@@ -98,7 +98,7 @@ public:
         //- Copy constructor
         CLASSNAME(const CLASSNAME<TemplateArgument>&);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         CLASSNAME(const CLASSNAME<TemplateArgument>&) = delete;
 
 

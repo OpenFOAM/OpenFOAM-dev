@@ -70,7 +70,7 @@ class mixerFvMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         mixerFvMesh(const mixerFvMesh&) = delete;
 
         //- Disallow default bitwise assignment

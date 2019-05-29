@@ -60,7 +60,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         heatTransferModel(const heatTransferModel&) = delete;
 
         //- Disallow default bitwise assignment

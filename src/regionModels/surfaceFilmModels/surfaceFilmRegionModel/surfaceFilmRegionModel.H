@@ -58,7 +58,7 @@ class surfaceFilmRegionModel
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         surfaceFilmRegionModel(const surfaceFilmRegionModel&) = delete;
 
         //- Disallow default bitwise assignment

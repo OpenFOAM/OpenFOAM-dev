@@ -91,7 +91,7 @@ class fvSchemes
         //- Read settings from the dictionary
         void read(const dictionary&);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fvSchemes(const fvSchemes&) = delete;
 
         //- Disallow default bitwise assignment

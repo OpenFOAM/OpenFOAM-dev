@@ -157,7 +157,7 @@ public:
             const intersection::direction dir = intersection::direction::vector
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         PatchToPatchInterpolation(const PatchToPatchInterpolation&) = delete;
 
 

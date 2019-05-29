@@ -73,7 +73,7 @@ public:
             lduInterfaceField(patch)
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         LduInterfaceField(const LduInterfaceField&) = delete;
 
 

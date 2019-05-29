@@ -98,7 +98,7 @@ private:
         );
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         searchableSurfaceWithGaps(const searchableSurfaceWithGaps&) = delete;
 
         //- Disallow default bitwise assignment

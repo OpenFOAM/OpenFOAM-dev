@@ -221,7 +221,7 @@ class regionSizeDistribution
             const coordSet& coords              // graph data for bins
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         regionSizeDistribution(const regionSizeDistribution&) = delete;
 
         //- Disallow default bitwise assignment

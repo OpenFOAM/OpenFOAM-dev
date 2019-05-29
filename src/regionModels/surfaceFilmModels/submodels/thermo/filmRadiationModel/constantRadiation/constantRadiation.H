@@ -80,7 +80,7 @@ private:
 
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         constantRadiation(const constantRadiation&) = delete;
 
         //- Disallow default bitwise assignment

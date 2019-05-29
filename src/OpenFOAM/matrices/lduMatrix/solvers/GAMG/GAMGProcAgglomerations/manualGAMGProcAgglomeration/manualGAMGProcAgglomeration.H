@@ -102,7 +102,7 @@ public:
             const dictionary& controlDict
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         manualGAMGProcAgglomeration
         (
             const manualGAMGProcAgglomeration&

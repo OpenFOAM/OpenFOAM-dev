@@ -123,7 +123,7 @@ private:
             labelPairHashSet& receivedVertices
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         DistributedDelaunayMesh
         (
             const DistributedDelaunayMesh<Triangulation>&

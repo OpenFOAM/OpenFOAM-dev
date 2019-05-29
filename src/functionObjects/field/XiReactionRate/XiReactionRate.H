@@ -74,7 +74,7 @@ class XiReactionRate
 {
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         XiReactionRate(const XiReactionRate&) = delete;
 
         //- Disallow default bitwise assignment

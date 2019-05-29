@@ -93,7 +93,7 @@ class dynamicInterpolatedFvMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         dynamicInterpolatedFvMesh(const dynamicInterpolatedFvMesh&) = delete;
 
         //- Disallow default bitwise assignment

@@ -103,7 +103,7 @@ private:
         //- Update localState_ from any events.
         void checkFiles() const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fileMonitor(const fileMonitor&) = delete;
 
         //- Disallow default bitwise assignment

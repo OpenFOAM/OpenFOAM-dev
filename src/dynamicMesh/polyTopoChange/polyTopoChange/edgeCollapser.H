@@ -235,7 +235,7 @@ private:
             face& f
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         edgeCollapser(const edgeCollapser&) = delete;
 
         //- Disallow default bitwise assignment

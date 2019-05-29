@@ -68,7 +68,7 @@ class buoyancyEnergy
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         buoyancyEnergy(const buoyancyEnergy&) = delete;
 
         //- Disallow default bitwise assignment

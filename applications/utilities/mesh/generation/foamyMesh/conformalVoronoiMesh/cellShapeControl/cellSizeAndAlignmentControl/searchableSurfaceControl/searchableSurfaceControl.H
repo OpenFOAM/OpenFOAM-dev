@@ -88,7 +88,7 @@ class searchableSurfaceControl
 //            const vectorField& ptNormals
 //        ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         searchableSurfaceControl(const searchableSurfaceControl&) = delete;
 
         //- Disallow default bitwise assignment

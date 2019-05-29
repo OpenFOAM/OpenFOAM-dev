@@ -54,7 +54,7 @@ class viscosityModel
 {
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         viscosityModel(const viscosityModel&) = delete;
 
         //- Disallow default bitwise assignment

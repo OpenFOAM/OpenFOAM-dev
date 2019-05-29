@@ -81,7 +81,7 @@ public:
             const polyBoundaryMesh&
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pointBoundaryMesh(const pointBoundaryMesh&) = delete;
 
 

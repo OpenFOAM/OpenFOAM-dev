@@ -55,7 +55,7 @@ class engineMesh
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         engineMesh(const engineMesh&) = delete;
 
         //- Disallow default bitwise assignment

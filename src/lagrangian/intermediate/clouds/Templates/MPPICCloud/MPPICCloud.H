@@ -92,7 +92,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         MPPICCloud(const MPPICCloud&) = delete;
 
         //- Disallow default bitwise assignment

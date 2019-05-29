@@ -71,7 +71,7 @@ class contactAngleForce
         //- Initialise
         void initialise();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         contactAngleForce(const contactAngleForce&) = delete;
 
         //- Disallow default bitwise assignment

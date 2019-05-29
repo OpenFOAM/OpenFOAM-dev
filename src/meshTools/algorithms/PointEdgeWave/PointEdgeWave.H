@@ -209,7 +209,7 @@ class PointEdgeWave
             label handleCollocatedPoints();
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         PointEdgeWave(const PointEdgeWave&) = delete;
 
         //- Disallow default bitwise assignment

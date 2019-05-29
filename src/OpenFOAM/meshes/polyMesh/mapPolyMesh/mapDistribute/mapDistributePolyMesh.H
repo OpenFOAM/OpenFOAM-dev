@@ -165,7 +165,7 @@ public:
         //- Construct from Istream
         mapDistributePolyMesh(Istream&);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         mapDistributePolyMesh(const mapDistributePolyMesh&) = delete;
 
 

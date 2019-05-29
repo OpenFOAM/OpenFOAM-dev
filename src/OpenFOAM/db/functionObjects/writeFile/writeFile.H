@@ -85,7 +85,7 @@ public:
             const word& prefix
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         writeFile(const writeFile&) = delete;
 
 

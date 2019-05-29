@@ -90,7 +90,7 @@ class phaseForces
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         phaseForces(const phaseForces&) = delete;
 
         //- Disallow default bitwise assignment

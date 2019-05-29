@@ -104,7 +104,7 @@ public:
         //- Construct from mapPolyMesh
         cellMapper(const mapPolyMesh& mpm);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cellMapper(const cellMapper&) = delete;
 
 

@@ -283,7 +283,7 @@ class motionSmootherAlgo
             PackedBoolList& isAffectedPoint
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         motionSmootherAlgo(const motionSmootherAlgo&) = delete;
 
         //- Disallow default bitwise assignment

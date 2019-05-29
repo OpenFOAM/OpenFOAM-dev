@@ -102,7 +102,7 @@ private:
         //- Return the boundBox of the cylinder
         boundBox calcBounds() const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         searchableCylinder(const searchableCylinder&) = delete;
 
         //- Disallow default bitwise assignment

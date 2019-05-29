@@ -70,7 +70,7 @@ class outletStabilised
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         outletStabilised(const outletStabilised&) = delete;
 
         //- Disallow default bitwise assignment

@@ -70,7 +70,7 @@ class boundedDdtScheme
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         boundedDdtScheme(const boundedDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment

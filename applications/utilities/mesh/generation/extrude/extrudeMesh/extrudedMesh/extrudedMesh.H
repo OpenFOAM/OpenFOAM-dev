@@ -86,7 +86,7 @@ class extrudedMesh
         );
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         extrudedMesh(const extrudedMesh&) = delete;
 
         //- Disallow default bitwise assignment

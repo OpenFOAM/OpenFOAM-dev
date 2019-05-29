@@ -158,7 +158,7 @@ private:
             const List<DynamicList<label>>& patchOwners
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         DelaunayMesh(const DelaunayMesh<Triangulation>&) = delete;
 
         //- Disallow default bitwise assignment

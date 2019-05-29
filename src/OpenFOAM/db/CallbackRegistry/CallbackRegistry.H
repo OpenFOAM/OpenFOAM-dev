@@ -77,7 +77,7 @@ public:
         //- Construct null
         CallbackRegistry();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         CallbackRegistry(const CallbackRegistry&) = delete;
 
 

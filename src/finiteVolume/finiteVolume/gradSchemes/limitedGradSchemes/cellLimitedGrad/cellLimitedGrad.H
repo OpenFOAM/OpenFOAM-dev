@@ -83,7 +83,7 @@ class cellLimitedGrad
             Field<tensor>& gIf
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cellLimitedGrad(const cellLimitedGrad&) = delete;
 
         //- Disallow default bitwise assignment

@@ -81,7 +81,7 @@ class pointConstraints
         //- Make patch-patch constraints
         void makePatchPatchAddressing();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pointConstraints(const pointConstraints&) = delete;
 
         //- Disallow default bitwise assignment

@@ -155,7 +155,7 @@ public:
                 empty_(false)
             {}
 
-            //- Disallow default bitwise copy construct
+            //- Disallow default bitwise copy construction
             compound(const compound&) = delete;
 
 

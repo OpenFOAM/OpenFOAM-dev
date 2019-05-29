@@ -110,7 +110,7 @@ public:
             boundaryMesh_(bm)
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pointPatch(const pointPatch&) = delete;
 
 

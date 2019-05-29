@@ -87,7 +87,7 @@ class moleFractions
         //- Calculate the mole fraction fields
         virtual void calculateMoleFractions();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         moleFractions(const moleFractions&) = delete;
 
         //- Disallow default bitwise assignment

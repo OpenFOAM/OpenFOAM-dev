@@ -128,7 +128,7 @@ class undoableMeshCutter
         static void updateLabels(const labelList& map, Map<splitCell*>&);
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         undoableMeshCutter(const undoableMeshCutter&) = delete;
 
         //- Disallow default bitwise assignment

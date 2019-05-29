@@ -66,7 +66,7 @@ class OBJedgeFormat
             DynamicList<label>& dynVertices
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         OBJedgeFormat(const OBJedgeFormat&) = delete;
 
         //- Disallow default bitwise assignment

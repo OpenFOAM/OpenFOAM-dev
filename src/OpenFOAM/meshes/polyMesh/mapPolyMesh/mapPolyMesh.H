@@ -341,7 +341,7 @@ public:
             const bool reuse
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         mapPolyMesh(const mapPolyMesh&) = delete;
 
 

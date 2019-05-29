@@ -63,7 +63,7 @@ class VTKsurfaceFormat
         //- Write header information about number of polygon points
         static void writeHeaderPolygons(Ostream&, const UList<Face>&);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         VTKsurfaceFormat(const VTKsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment

@@ -69,7 +69,7 @@ class limiterBlended
         tmp<surfaceInterpolationScheme<Type>> tScheme2_;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         limiterBlended(const limiterBlended&) = delete;
 
         //- Disallow default bitwise assignment

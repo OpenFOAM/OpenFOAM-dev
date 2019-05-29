@@ -68,7 +68,7 @@ class splitCell
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         splitCell(const splitCell&) = delete;
 
         //- Disallow default bitwise assignment

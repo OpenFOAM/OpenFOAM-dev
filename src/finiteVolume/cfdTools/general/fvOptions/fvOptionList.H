@@ -97,7 +97,7 @@ protected:
             const dimensionSet& ds
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         optionList(const optionList&) = delete;
 
         //- Disallow default bitwise assignment

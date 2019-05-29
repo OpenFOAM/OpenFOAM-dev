@@ -80,7 +80,7 @@ class SLTSDdtScheme
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         SLTSDdtScheme(const SLTSDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment

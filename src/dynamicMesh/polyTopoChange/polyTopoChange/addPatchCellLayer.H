@@ -243,7 +243,7 @@ class addPatchCellLayer
             bool&
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         addPatchCellLayer(const addPatchCellLayer&) = delete;
 
         //- Disallow default bitwise assignment

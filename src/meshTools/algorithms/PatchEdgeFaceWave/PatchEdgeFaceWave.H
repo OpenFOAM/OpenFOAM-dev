@@ -151,7 +151,7 @@ class PatchEdgeFaceWave
         //- Update coupled edges
         void syncEdges();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         PatchEdgeFaceWave(const PatchEdgeFaceWave&) = delete;
 
         //- Disallow default bitwise assignment

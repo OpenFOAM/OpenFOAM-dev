@@ -855,7 +855,7 @@ private:
 
         void writePointPairs(const fileName& fName) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         conformalVoronoiMesh(const conformalVoronoiMesh&) = delete;
 
         //- Disallow default bitwise assignment

@@ -70,7 +70,7 @@ public:
             const dictionary& solverControls
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         diagonalSolver(const diagonalSolver&) = delete;
 
 

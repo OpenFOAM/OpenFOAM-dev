@@ -78,7 +78,7 @@ public:
             boundaryMap_(mesh, pointMap_, mpm)
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pointMeshMapper(const pointMeshMapper&) = delete;
 
 

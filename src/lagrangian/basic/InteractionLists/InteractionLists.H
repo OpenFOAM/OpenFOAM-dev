@@ -198,7 +198,7 @@ class InteractionLists
         //- Write the referred wall faces out for debug
         void writeReferredWallFaces() const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         InteractionLists(const InteractionLists&) = delete;
 
         //- Disallow default bitwise assignment

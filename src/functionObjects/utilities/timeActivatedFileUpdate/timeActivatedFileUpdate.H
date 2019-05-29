@@ -98,7 +98,7 @@ class timeActivatedFileUpdate
         //- Update file
         void updateFile();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         timeActivatedFileUpdate(const timeActivatedFileUpdate&) = delete;
 
         //- Disallow default bitwise assignment

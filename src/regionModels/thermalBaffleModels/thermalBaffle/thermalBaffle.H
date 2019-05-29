@@ -62,7 +62,7 @@ private:
 
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         thermalBaffle(const thermalBaffle&) = delete;
 
         //- Disallow default bitwise assignment

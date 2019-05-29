@@ -88,7 +88,7 @@ public:
             const int rank
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cyclicGAMGInterfaceField(const cyclicGAMGInterfaceField&) = delete;
 
 

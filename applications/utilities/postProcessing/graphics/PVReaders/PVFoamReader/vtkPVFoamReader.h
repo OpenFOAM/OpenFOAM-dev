@@ -212,7 +212,7 @@ protected:
 
 private:
 
-    //- Disallow default bitwise copy construct
+    //- Disallow default bitwise copy construction
     vtkPVFoamReader(const vtkPVFoamReader&) = delete;
 
     //- Disallow default bitwise assignment

@@ -90,7 +90,7 @@ private:
 
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         ReactingMultiphaseCloud(const ReactingMultiphaseCloud&) = delete;
 
         //- Disallow default bitwise assignment

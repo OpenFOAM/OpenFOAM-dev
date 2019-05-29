@@ -111,7 +111,7 @@ class boundaryCutter
         ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         boundaryCutter(const boundaryCutter&) = delete;
 
         //- Disallow default bitwise assignment

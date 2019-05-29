@@ -80,7 +80,7 @@ class STLsurfaceFormat
             const label zoneI
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         STLsurfaceFormat(const STLsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment

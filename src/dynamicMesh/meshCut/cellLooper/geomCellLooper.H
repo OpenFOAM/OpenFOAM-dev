@@ -112,7 +112,7 @@ class geomCellLooper
         bool edgeEndsCut(const labelList&, const label index) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         geomCellLooper(const geomCellLooper&) = delete;
 
         //- Disallow default bitwise assignment

@@ -130,7 +130,7 @@ public:
             const bool execution=true
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         functionObjectList(const functionObjectList&) = delete;
 
         //- Construct and return a functionObjectList for an application.

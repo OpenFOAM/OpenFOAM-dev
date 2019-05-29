@@ -183,7 +183,7 @@ public:
             return autoPtr<functionObject>(nullptr);
         }
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         functionObject(const functionObject&) = delete;
 
 

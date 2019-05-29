@@ -122,7 +122,7 @@ class viewFactor
             scalarSquareMatrix& matrix
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         viewFactor(const viewFactor&) = delete;
 
         //- Disallow default bitwise assignment

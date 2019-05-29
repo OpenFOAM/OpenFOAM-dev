@@ -78,7 +78,7 @@ public:
         //- Construct from keyword, parent dictionary and Istream
         functionEntry(const word&, const dictionary&, Istream&);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         functionEntry(const functionEntry&) = delete;
 
 

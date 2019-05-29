@@ -117,7 +117,7 @@ class localEulerDdtScheme
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         localEulerDdtScheme(const localEulerDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment

@@ -57,7 +57,7 @@ class nucleationSiteModel
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         nucleationSiteModel(const nucleationSiteModel&) = delete;
 
         //- Disallow default bitwise assignment

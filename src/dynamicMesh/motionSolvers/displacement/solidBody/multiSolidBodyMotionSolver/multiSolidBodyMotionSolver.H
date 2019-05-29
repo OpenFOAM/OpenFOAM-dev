@@ -66,7 +66,7 @@ class multiSolidBodyMotionSolver
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         multiSolidBodyMotionSolver(const multiSolidBodyMotionSolver&) = delete;
 
         //- Disallow default bitwise assignment

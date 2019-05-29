@@ -65,7 +65,7 @@ class nearWallDistNoSearch
         //- Do all calculations.
         void doAll();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         nearWallDistNoSearch(const nearWallDistNoSearch&) = delete;
 
         //- Disallow default bitwise assignment

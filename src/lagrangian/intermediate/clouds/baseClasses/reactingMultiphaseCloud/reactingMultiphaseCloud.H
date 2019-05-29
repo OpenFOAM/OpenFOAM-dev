@@ -50,7 +50,7 @@ class reactingMultiphaseCloud
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         reactingMultiphaseCloud(const reactingMultiphaseCloud&) = delete;
 
         //- Disallow default bitwise assignment

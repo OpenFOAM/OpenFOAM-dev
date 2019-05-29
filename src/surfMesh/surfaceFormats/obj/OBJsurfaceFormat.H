@@ -59,7 +59,7 @@ class OBJsurfaceFormat
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         OBJsurfaceFormat(const OBJsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment

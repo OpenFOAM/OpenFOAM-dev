@@ -108,7 +108,7 @@ class turbulenceIntensity
         //- File header information
         virtual void writeFileHeader(const label i);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         turbulenceIntensity(const turbulenceIntensity&) = delete;
 
         //- Disallow default bitwise assignment

@@ -113,7 +113,7 @@ public:
             boolList& visited
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         walkPatch(const walkPatch&) = delete;
 
 

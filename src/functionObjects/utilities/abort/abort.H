@@ -93,7 +93,7 @@ private:
         //- Remove abort file.
         void removeFile() const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         abort(const abort&) = delete;
 
         //- Disallow default bitwise assignment

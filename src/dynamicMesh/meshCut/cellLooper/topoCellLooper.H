@@ -144,7 +144,7 @@ class topoCellLooper
         ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         topoCellLooper(const topoCellLooper&) = delete;
 
         //- Disallow default bitwise assignment

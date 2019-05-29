@@ -162,7 +162,7 @@ public:
         //- Construct from components
         globalIndexAndTransform(const polyMesh& mesh);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         globalIndexAndTransform(const globalIndexAndTransform&) = delete;
 
 

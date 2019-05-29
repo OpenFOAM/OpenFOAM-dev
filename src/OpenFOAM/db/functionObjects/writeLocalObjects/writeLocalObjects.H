@@ -121,7 +121,7 @@ public:
             const Switch& logRef
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         writeLocalObjects(const writeLocalObjects&) = delete;
 
 

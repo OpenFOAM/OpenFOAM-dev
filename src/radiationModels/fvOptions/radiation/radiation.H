@@ -71,7 +71,7 @@ class radiation
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         radiation(const radiation&) = delete;
 
         //- Disallow default bitwise assignment

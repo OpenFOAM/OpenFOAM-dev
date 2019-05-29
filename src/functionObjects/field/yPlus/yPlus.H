@@ -100,7 +100,7 @@ class yPlus
             const turbulenceModel& turbModel
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         yPlus(const yPlus&) = delete;
 
         //- Disallow default bitwise assignment

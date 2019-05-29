@@ -105,7 +105,7 @@ public:
         //- Construct from mapPolyMesh
         faceMapper(const mapPolyMesh& mpm);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         faceMapper(const faceMapper&) = delete;
 
 

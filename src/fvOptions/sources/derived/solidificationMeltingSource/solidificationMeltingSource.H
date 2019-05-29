@@ -227,7 +227,7 @@ private:
         template<class RhoFieldType>
         void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         solidificationMeltingSource
         (
             const solidificationMeltingSource&

@@ -59,7 +59,7 @@ class EulerD2dt2Scheme
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         EulerD2dt2Scheme(const EulerD2dt2Scheme&) = delete;
 
         //- Disallow default bitwise assignment

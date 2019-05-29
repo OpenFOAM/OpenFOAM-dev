@@ -71,7 +71,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         patchDistMethod(const patchDistMethod&) = delete;
 
         //- Disallow default bitwise assignment

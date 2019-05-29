@@ -95,7 +95,7 @@ private:
             const point& end
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         searchablePlate(const searchablePlate&) = delete;
 
         //- Disallow default bitwise assignment

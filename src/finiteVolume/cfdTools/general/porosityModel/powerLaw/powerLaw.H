@@ -96,7 +96,7 @@ class powerLaw
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         powerLaw(const powerLaw&) = delete;
 
         //- Disallow default bitwise assignment

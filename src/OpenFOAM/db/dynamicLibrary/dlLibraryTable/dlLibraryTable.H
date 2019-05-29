@@ -70,7 +70,7 @@ public:
         //  the libraries to load
         dlLibraryTable(const dictionary&, const word&);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         dlLibraryTable(const dlLibraryTable&) = delete;
 
 

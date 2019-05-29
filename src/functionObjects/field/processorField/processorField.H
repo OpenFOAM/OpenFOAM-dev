@@ -74,7 +74,7 @@ class processorField
 {
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         processorField(const processorField&) = delete;
 
         //- Disallow default bitwise assignment

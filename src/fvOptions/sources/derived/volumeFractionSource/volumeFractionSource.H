@@ -152,7 +152,7 @@ private:
             const label fieldi
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         volumeFractionSource(const volumeFractionSource&) = delete;
 
         //- Disallow default bitwise assignment

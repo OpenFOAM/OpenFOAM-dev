@@ -92,7 +92,7 @@ class reducedUnits
 
         void calcRefValues();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         reducedUnits(const reducedUnits&) = delete;
 
         //- Disallow default bitwise assignment

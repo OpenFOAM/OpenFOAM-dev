@@ -127,7 +127,7 @@ class Poisson
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         Poisson(const Poisson&) = delete;
 
         //- Disallow default bitwise assignment

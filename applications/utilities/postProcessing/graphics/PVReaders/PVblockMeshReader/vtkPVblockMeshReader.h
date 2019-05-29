@@ -143,7 +143,7 @@ protected:
 
 private:
 
-    //- Disallow default bitwise copy construct
+    //- Disallow default bitwise copy construction
     vtkPVblockMeshReader(const vtkPVblockMeshReader&) = delete;
 
     //- Disallow default bitwise assignment

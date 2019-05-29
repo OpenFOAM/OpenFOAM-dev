@@ -55,7 +55,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         directAMI(const directAMI&) = delete;
 
         //- Disallow default bitwise assignment

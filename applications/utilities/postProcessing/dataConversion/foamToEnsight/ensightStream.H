@@ -56,7 +56,7 @@ class ensightStream
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         ensightStream(const ensightStream&) = delete;
 
         //- Disallow default bitwise assignment

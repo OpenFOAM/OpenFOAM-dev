@@ -62,7 +62,7 @@ class limitWith
         tmp<limitedSurfaceInterpolationScheme<Type>> tLimiter_;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         limitWith(const limitWith&) = delete;
 
         //- Disallow default bitwise assignment

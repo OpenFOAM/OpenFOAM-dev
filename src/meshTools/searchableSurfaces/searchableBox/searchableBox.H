@@ -83,7 +83,7 @@ private:
         ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         searchableBox(const searchableBox&) = delete;
 
         //- Disallow default bitwise assignment

@@ -60,7 +60,7 @@ class blended
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         blended(const blended&) = delete;
 
         //- Disallow default bitwise assignment

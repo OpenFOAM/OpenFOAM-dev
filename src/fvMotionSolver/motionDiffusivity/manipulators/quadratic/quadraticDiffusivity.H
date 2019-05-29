@@ -58,7 +58,7 @@ class quadraticDiffusivity
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         quadraticDiffusivity(const quadraticDiffusivity&) = delete;
 
         //- Disallow default bitwise assignment

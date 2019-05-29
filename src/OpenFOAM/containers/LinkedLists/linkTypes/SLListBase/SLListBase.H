@@ -98,7 +98,7 @@ public:
         //- Construct given initial entry
         inline SLListBase(link*);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         SLListBase(const SLListBase&) = delete;
 
 

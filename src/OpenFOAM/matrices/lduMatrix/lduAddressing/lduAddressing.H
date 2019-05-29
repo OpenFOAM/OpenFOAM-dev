@@ -153,7 +153,7 @@ public:
             losortStartPtr_(nullptr)
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         lduAddressing(const lduAddressing&) = delete;
 
 

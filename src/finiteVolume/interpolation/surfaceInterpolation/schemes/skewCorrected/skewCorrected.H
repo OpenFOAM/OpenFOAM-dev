@@ -62,7 +62,7 @@ class skewCorrected
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         skewCorrected(const skewCorrected&) = delete;
 
         //- Disallow default bitwise assignment

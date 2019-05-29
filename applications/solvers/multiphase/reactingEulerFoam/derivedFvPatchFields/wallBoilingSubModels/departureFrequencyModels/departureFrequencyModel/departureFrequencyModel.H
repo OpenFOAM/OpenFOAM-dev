@@ -57,7 +57,7 @@ class departureFrequencyModel
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         departureFrequencyModel(const departureFrequencyModel&) = delete;
 
         //- Disallow default bitwise assignment

@@ -138,7 +138,7 @@ class multiDirRefinement
         );
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         multiDirRefinement(const multiDirRefinement&) = delete;
 
         //- Disallow default bitwise assignment

@@ -55,7 +55,7 @@ class cubic
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cubic(const cubic&) = delete;
 
         //- Disallow default bitwise assignment

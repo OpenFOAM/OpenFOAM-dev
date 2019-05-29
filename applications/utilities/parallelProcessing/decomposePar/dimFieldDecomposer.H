@@ -71,7 +71,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         dimFieldDecomposer(const dimFieldDecomposer&) = delete;
 
         //- Disallow default bitwise assignment

@@ -105,7 +105,7 @@ public:
             const dictionary& dict
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         FUNCTIONOBJECT(const FUNCTIONOBJECT&) = delete;
 
 

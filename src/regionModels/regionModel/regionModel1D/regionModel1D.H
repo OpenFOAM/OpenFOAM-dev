@@ -56,7 +56,7 @@ class regionModel1D
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         regionModel1D(const regionModel1D&) = delete;
 
         //- Disallow default bitwise assignment

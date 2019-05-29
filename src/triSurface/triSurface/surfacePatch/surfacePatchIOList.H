@@ -66,7 +66,7 @@ class surfacePatchIOList
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         surfacePatchIOList(const surfacePatchIOList&) = delete;
 
         //- Disallow default bitwise assignment

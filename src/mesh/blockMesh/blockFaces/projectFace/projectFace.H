@@ -83,7 +83,7 @@ class projectFace
             scalarField& lambdaJ
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         projectFace(const projectFace&) = delete;
 
         //- Disallow default bitwise assignment

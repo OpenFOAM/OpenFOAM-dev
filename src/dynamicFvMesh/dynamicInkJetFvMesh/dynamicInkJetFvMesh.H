@@ -75,7 +75,7 @@ class dynamicInkJetFvMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         dynamicInkJetFvMesh(const dynamicInkJetFvMesh&) = delete;
 
         //- Disallow default bitwise assignment

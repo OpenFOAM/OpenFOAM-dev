@@ -88,7 +88,7 @@ class displacementLinearMotionMotionSolver
         autoPtr<Function1<scalar>> displacement_;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         displacementLinearMotionMotionSolver
         (
             const displacementLinearMotionMotionSolver&

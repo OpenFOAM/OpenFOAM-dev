@@ -60,7 +60,7 @@ class WRLsurfaceFormat
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         WRLsurfaceFormat(const WRLsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment

@@ -58,7 +58,7 @@ class solidification
 {
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         solidification(const solidification&) = delete;
 
         //- Disallow default bitwise assignment

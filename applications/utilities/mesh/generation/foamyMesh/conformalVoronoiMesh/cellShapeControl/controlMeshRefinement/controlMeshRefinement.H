@@ -99,7 +99,7 @@ class controlMeshRefinement
 
         pointHit findDiscontinuities(const linePointRef& l) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         controlMeshRefinement(const controlMeshRefinement&) = delete;
 
         //- Disallow default bitwise assignment

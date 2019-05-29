@@ -66,7 +66,7 @@ class UpwindFitScheme
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         UpwindFitScheme(const UpwindFitScheme&) = delete;
 
         //- Disallow default bitwise assignment

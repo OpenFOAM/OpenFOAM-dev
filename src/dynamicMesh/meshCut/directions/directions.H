@@ -126,7 +126,7 @@ private:
             const vector& defaultDir
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         directions(const directions&) = delete;
 
         //- Disallow default bitwise assignment

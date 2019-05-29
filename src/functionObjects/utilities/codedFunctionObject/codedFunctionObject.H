@@ -134,7 +134,7 @@ protected:
 
 private:
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         codedFunctionObject(const codedFunctionObject&) = delete;
 
         //- Disallow default bitwise assignment

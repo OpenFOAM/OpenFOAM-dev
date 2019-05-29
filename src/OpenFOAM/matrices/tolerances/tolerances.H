@@ -64,7 +64,7 @@ public:
         //- Construct from time
         tolerances(const Time& t, const fileName& dictName);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         tolerances(const tolerances&) = delete;
 
 

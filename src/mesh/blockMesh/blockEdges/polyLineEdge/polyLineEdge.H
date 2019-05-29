@@ -56,7 +56,7 @@ class polyLineEdge
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         polyLineEdge(const polyLineEdge&) = delete;
 
         //- Disallow default bitwise assignment

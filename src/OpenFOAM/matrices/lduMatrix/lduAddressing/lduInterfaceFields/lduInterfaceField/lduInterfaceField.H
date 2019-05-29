@@ -80,7 +80,7 @@ public:
             updatedMatrix_(false)
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         lduInterfaceField(const lduInterfaceField&) = delete;
 
 

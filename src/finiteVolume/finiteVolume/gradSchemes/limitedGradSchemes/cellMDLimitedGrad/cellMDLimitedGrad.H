@@ -71,7 +71,7 @@ class cellMDLimitedGrad
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         cellMDLimitedGrad(const cellMDLimitedGrad&) = delete;
 
         //- Disallow default bitwise assignment

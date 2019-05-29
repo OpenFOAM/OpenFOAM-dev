@@ -83,7 +83,7 @@ class fvSurfaceMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fvSurfaceMapper(const fvSurfaceMapper&) = delete;
 
         //- Disallow default bitwise assignment

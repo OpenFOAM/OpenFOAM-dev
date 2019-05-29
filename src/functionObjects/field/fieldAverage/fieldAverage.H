@@ -257,7 +257,7 @@ protected:
             void readAveragingProperties();
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fieldAverage(const fieldAverage&) = delete;
 
         //- Disallow default bitwise assignment

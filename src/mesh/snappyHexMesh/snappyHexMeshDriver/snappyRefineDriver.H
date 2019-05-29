@@ -147,7 +147,7 @@ class snappyRefineDriver
         );
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         snappyRefineDriver(const snappyRefineDriver&) = delete;
 
         //- Disallow default bitwise assignment

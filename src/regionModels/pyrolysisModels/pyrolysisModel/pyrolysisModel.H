@@ -72,7 +72,7 @@ private:
         //- Read pyrolysis controls
         void readPyrolysisControls();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pyrolysisModel(const pyrolysisModel&) = delete;
 
         //- Disallow default bitwise assignment

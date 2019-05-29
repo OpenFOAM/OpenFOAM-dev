@@ -137,7 +137,7 @@ private:
             const label currentRegion
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fvMeshSubset(const fvMeshSubset&) = delete;
 
         //- Disallow default bitwise assignment

@@ -69,7 +69,7 @@ class polyTopoChanger
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         polyTopoChanger(const polyTopoChanger&) = delete;
 
         //- Disallow default bitwise assignment

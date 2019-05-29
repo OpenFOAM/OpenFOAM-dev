@@ -116,7 +116,7 @@ class combineFaces
 
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         combineFaces(const combineFaces&) = delete;
 
         //- Disallow default bitwise assignment

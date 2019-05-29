@@ -91,7 +91,7 @@ public:
         //- Construct from PrimitivePatch
         PrimitivePatchInterpolation(const Patch& p);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         PrimitivePatchInterpolation
         (
             const PrimitivePatchInterpolation&

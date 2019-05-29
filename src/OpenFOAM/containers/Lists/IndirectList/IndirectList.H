@@ -69,7 +69,7 @@ protected:
         //- Move constructor which moves the addressing array
         explicit inline IndirectListAddressing(List<label>&& addr);
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         IndirectListAddressing(const IndirectListAddressing&) = delete;
 
 

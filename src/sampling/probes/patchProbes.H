@@ -113,7 +113,7 @@ class patchProbes
         tmp<Field<Type>> sample(const word& fieldName) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         patchProbes(const patchProbes&) = delete;
 
         //- Disallow default bitwise assignment

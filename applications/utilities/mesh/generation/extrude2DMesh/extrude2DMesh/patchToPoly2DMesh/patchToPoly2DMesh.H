@@ -85,7 +85,7 @@ class patchToPoly2DMesh
 
         void createPolyMeshComponents();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         patchToPoly2DMesh(const patchToPoly2DMesh&) = delete;
 
         //- Disallow default bitwise assignment

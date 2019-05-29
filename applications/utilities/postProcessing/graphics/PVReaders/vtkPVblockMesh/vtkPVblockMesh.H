@@ -293,7 +293,7 @@ class vtkPVblockMesh
             );
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         vtkPVblockMesh(const vtkPVblockMesh&) = delete;
 
         //- Disallow default bitwise assignment

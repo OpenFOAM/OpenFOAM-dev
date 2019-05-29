@@ -159,7 +159,7 @@ class router
             DynamicList<label>& route
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         router(const router&) = delete;
 
         //- Disallow default bitwise assignment

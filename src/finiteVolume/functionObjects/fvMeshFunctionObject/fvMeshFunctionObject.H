@@ -77,7 +77,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         fvMeshFunctionObject(const fvMeshFunctionObject&) = delete;
 
         //- Disallow default bitwise assignment

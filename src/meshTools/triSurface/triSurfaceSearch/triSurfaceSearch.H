@@ -84,7 +84,7 @@ class triSurfaceSearch
             const vector& lineVec
         ) const;
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         triSurfaceSearch(const triSurfaceSearch&) = delete;
 
         //- Disallow default bitwise assignment

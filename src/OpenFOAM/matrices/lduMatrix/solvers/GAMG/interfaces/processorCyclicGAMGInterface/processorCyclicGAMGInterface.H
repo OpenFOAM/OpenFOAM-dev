@@ -80,7 +80,7 @@ public:
             Istream& is
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         processorCyclicGAMGInterface
         (
             const processorCyclicGAMGInterface&

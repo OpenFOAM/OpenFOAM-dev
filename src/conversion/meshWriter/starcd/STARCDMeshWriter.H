@@ -64,7 +64,7 @@ class STARCD
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         STARCD(const STARCD&) = delete;
 
         //- Disallow default bitwise assignment

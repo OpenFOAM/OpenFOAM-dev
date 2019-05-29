@@ -63,7 +63,7 @@ class SMESHsurfaceFormat
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         SMESHsurfaceFormat(const SMESHsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment

@@ -66,7 +66,7 @@ public:
         lduInterface()
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         lduInterface(const lduInterface&) = delete;
 
 

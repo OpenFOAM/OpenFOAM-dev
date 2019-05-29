@@ -68,7 +68,7 @@ public:
         //- Construct null
         wedgeMatcher();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         wedgeMatcher(const wedgeMatcher&) = delete;
 
 

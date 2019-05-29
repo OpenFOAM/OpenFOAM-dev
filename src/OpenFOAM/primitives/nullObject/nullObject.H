@@ -56,7 +56,7 @@ public:
     //- The unique null object
     static const NullObject nullObject;
 
-    //- Disallow default bitwise copy construct
+    //- Disallow default bitwise copy construction
     NullObject(const NullObject&) = delete;
 
     //- Disallow default bitwise assignment

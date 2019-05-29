@@ -65,7 +65,7 @@ class arcEdge
         //- Calculate the coordinate system, angle and radius
         cylindricalCS calcAngle();
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         arcEdge(const arcEdge&) = delete;
 
         //- Disallow default bitwise assignment

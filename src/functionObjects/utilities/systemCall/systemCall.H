@@ -119,7 +119,7 @@ private:
 
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         systemCall(const systemCall&) = delete;
 
         //- Disallow default bitwise assignment

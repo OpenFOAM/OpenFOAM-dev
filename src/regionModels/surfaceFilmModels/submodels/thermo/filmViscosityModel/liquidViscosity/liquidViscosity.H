@@ -58,7 +58,7 @@ private:
 
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         liquidViscosity(const liquidViscosity&) = delete;
 
         //- Disallow default bitwise assignment

@@ -101,7 +101,7 @@ private:
 
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         singleStepReactingMixture(const singleStepReactingMixture&) = delete;
 
         //- Disallow default bitwise assignment

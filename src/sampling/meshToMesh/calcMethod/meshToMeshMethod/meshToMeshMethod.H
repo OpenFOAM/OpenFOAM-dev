@@ -107,7 +107,7 @@ private:
 
     // Private member functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         meshToMeshMethod(const meshToMeshMethod&) = delete;
 
         //- Disallow default bitwise assignment

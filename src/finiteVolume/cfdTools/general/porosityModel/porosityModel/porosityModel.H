@@ -59,7 +59,7 @@ class porosityModel
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         porosityModel(const porosityModel&) = delete;
 
         //- Disallow default bitwise assignment

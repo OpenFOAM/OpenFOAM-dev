@@ -170,7 +170,7 @@ public:
             labelListListList& boundaryFaceMap
         );
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         lduPrimitiveMesh(const lduPrimitiveMesh&) = delete;
 
 

@@ -80,7 +80,7 @@ class faceLimitedGrad
         ) const;
 
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         faceLimitedGrad(const faceLimitedGrad&) = delete;
 
         //- Disallow default bitwise assignment
