@@ -34,6 +34,7 @@ Usage
     <patchName>
     {
         type            nutUWallFunction;
+        value           uniform 0;
     }
     \endverbatim
 

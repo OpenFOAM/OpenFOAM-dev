@@ -24,17 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphatWallBoilingWallFunctionFvPatchScalarField.H"
-#include "fvPatchFieldMapper.H"
-#include "addToRunTimeSelectionTable.H"
-
 #include "phaseSystem.H"
 #include "compressibleTurbulenceModel.H"
 #include "ThermalDiffusivity.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "saturationModel.H"
-#include "wallFvPatch.H"
-#include "uniformDimensionedFields.H"
-#include "mathematicalConstants.H"
+#include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -428,9 +423,13 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     )
                 );
 
-            const tmp<scalarField> tnutw = turbModel.nut(patchi);
+            const nutWallFunctionFvPatchScalarField& nutw =
+                refCast<const nutWallFunctionFvPatchScalarField>
+                (
+                    turbModel.nut()().boundaryField()[patchi]
+                );
 
-            const scalar Cmu25(pow025(Cmu_));
+            const scalar Cmu25(pow025(nutw.Cmu()));
 
             const scalarField& y = turbModel.y()[patchi];
 
@@ -474,7 +473,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             // Thermal sublayer thickness
             const scalarField P(this->Psmooth(Prat));
 
-            const scalarField yPlusTherm(this->yPlusTherm(P, Prat));
+            const scalarField yPlusTherm(this->yPlusTherm(nutw, P, Prat));
 
             tmp<volScalarField> tCp = liquid.thermo().Cp();
             const volScalarField& Cp = tCp();
@@ -517,11 +516,24 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             {
                 // Liquid temperature at y+=250 is estimated from logarithmic
                 // thermal wall function (Koncar, Krepper & Egorov, 2005)
-                const scalarField Tplus_y250(Prt_*(log(E_*250)/kappa_ + P));
+                const scalarField Tplus_y250
+                (
+                    Prt_*(log(nutw.E()*250)/nutw.kappa() + P)
+                );
 
-                const scalarField Tplus(Prt_*(log(E_*yPlus)/kappa_ + P));
-                scalarField Tl(Tw - (Tplus_y250/Tplus)*(Tw - Tc));
-                Tl = max(Tc - 40, Tl);
+                const scalarField Tplus
+                (
+                    Prt_*(log(nutw.E()*yPlus)/nutw.kappa() + P)
+                );
+
+                const scalarField Tl
+                (
+                    max
+                    (
+                        Tc - 40,
+                        Tw - (Tplus_y250/Tplus)*(Tw - Tc)
+                    )
+                );
 
                 // Nucleation site density:
                 const scalarField N

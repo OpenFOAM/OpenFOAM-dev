@@ -68,12 +68,6 @@ class kqRWallFunctionFvPatchField
     public zeroGradientFvPatchField<Type>
 {
 
-    // Private Member Functions
-
-        //- Check the type of the patch
-        void checkType();
-
-
 public:
 
     //- Runtime type information

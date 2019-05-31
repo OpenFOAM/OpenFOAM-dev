@@ -35,6 +35,7 @@ Usage
     <patchName>
     {
         type            nutLowReWallFunction;
+        value           uniform 0;
     }
     \endverbatim
 

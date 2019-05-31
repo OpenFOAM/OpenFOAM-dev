@@ -63,6 +63,7 @@ SourceFiles
 #define compressible_alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
 
 #include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
+#include "nutWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,15 +88,6 @@ protected:
         //- Turbulent Prandtl number
         scalar Prt_;
 
-        //- Cmu coefficient
-        scalar Cmu_;
-
-        //- Von Karman constant
-        scalar kappa_;
-
-        //- E coefficient
-        scalar E_;
-
         // Solution parameters
 
             static scalar maxExp_;
@@ -105,15 +97,13 @@ protected:
 
     // Protected Member Functions
 
-        //- Check the type of the patch
-        void checkType();
-
         //- 'P' function
         tmp<scalarField> Psmooth(const scalarField& Prat) const;
 
         //- Calculate y+ at the edge of the thermal laminar sublayer
         tmp<scalarField> yPlusTherm
         (
+            const nutWallFunctionFvPatchScalarField& nutw,
             const scalarField& P,
             const scalarField& Prat
         ) const;

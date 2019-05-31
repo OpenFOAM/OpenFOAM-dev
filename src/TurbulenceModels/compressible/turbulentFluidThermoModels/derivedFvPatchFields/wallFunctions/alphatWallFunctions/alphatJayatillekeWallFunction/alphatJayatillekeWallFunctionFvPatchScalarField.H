@@ -61,6 +61,7 @@ SourceFiles
 #define alphatJayatillekeWallFunctionFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "nutWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,15 +83,6 @@ class alphatJayatillekeWallFunctionFvPatchScalarField
         //- Turbulent Prandtl number
         scalar Prt_;
 
-        //- Cmu coefficient
-        scalar Cmu_;
-
-        //- Von Karman constant
-        scalar kappa_;
-
-        //- E coefficient
-        scalar E_;
-
 
         // Solution parameters
 
@@ -101,15 +93,13 @@ class alphatJayatillekeWallFunctionFvPatchScalarField
 
     // Private Member Functions
 
-        //- Check the type of the patch
-        void checkType();
-
         //- `P' function
         scalar Psmooth(const scalar Prat) const;
 
         //- Calculate y+ at the edge of the thermal laminar sublayer
         scalar yPlusTherm
         (
+            const nutWallFunctionFvPatchScalarField& nutw,
             const scalar P,
             const scalar Prat
         ) const;

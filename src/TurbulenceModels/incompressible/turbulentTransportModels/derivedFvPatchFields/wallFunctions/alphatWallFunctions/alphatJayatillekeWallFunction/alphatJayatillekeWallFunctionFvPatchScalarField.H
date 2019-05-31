@@ -60,6 +60,7 @@ SourceFiles
 #define alphatJayatillekeWallFunctionFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "nutWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -101,15 +102,13 @@ protected:
 
     // Protected member functions
 
-        //- Check the type of the patch
-        virtual void checkType();
-
         //- `P' function
         scalar Psmooth(const scalar Prat) const;
 
         //- Calculate y+ at the edge of the thermal laminar sublayer
         scalar yPlusTherm
         (
+            const nutWallFunctionFvPatchScalarField& nutw,
             const scalar P,
             const scalar Prat
         ) const;

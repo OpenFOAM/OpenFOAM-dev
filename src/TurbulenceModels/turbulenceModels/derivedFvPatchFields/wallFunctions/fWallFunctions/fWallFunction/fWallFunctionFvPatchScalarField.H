@@ -29,16 +29,10 @@ Description
     function condition for low- and high Reynolds number, turbulent flow cases
 
     The model operates in two modes, based on the computed laminar-to-turbulent
-    switch-over y+ value derived from kappa and E.
+    switch-over y+ value derived from kappa and E specified in the corresponding
+    nutWallFunction.
 
 Usage
-    \table
-        Property     | Description             | Required    | Default value
-        Cmu          | model coefficient       | no          | 0.09
-        kappa        | Von Karman constant     | no          | 0.41
-        E            | model coefficient       | no          | 9.8
-    \endtable
-
     Example of the boundary condition specification:
     \verbatim
     <patchName>
@@ -75,34 +69,6 @@ class fWallFunctionFvPatchScalarField
 :
     public fixedValueFvPatchField<scalar>
 {
-protected:
-
-    // Protected data
-
-        //- Cmu coefficient
-        scalar Cmu_;
-
-        //- Von Karman constant
-        scalar kappa_;
-
-        //- E coefficient
-        scalar E_;
-
-        //- Y+ at the edge of the laminar sublayer
-        scalar yPlusLam_;
-
-
-    // Protected Member Functions
-
-        //- Check the type of the patch
-        virtual void checkType();
-
-        //- Write local wall function variables
-        virtual void writeLocalEntries(Ostream&) const;
-
-        //- Calculate the Y+ at the edge of the laminar sublayer
-        scalar yPlusLam(const scalar kappa, const scalar E);
-
 
 public:
 
@@ -178,15 +144,6 @@ public:
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
-
-            //- Evaluate the patchField
-            virtual void evaluate(const Pstream::commsTypes);
-
-
-        // I-O
-
-            //- Write
-            virtual void write(Ostream&) const;
 };
 
 

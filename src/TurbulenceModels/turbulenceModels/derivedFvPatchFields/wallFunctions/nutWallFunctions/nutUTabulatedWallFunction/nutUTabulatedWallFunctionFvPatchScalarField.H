@@ -42,6 +42,7 @@ Usage
     {
         type            nutTabulatedWallFunction;
         uPlusTable      myUPlusTable;
+        value           uniform 0;
     }
     \endverbatim
 

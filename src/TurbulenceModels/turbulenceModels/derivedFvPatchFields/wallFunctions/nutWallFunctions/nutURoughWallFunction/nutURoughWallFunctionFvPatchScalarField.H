@@ -44,6 +44,7 @@ Usage
         roughnessHeight 1e-5;
         roughnessConstant 0.5;
         roughnessFactor 1;
+        value           uniform 0;
     }
     \endverbatim
 

@@ -48,6 +48,7 @@ Usage
         type            nutkRoughWallFunction;
         Ks              uniform 0;
         Cs              uniform 0.5;
+        value           uniform 0;
     }
     \endverbatim
 

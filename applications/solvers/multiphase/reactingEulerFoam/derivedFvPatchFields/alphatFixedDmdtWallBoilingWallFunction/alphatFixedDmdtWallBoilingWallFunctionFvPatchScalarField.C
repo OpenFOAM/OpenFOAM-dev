@@ -48,9 +48,7 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
     relax_(1.0),
     fixedDmdt_(0.0),
     L_(0.0)
-{
-    checkType();
-}
+{}
 
 
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::

@@ -26,10 +26,7 @@ License
 #include "omegaWallFunctionFvPatchScalarField.H"
 #include "nutWallFunctionFvPatchScalarField.H"
 #include "turbulenceModel.H"
-#include "fvPatchFieldMapper.H"
 #include "fvMatrix.H"
-#include "volFields.H"
-#include "wallFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -42,30 +39,6 @@ namespace Foam
 scalar omegaWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void omegaWallFunctionFvPatchScalarField::checkType()
-{
-    if (!isA<wallFvPatch>(patch()))
-    {
-        FatalErrorInFunction
-            << "Invalid wall function specification" << nl
-            << "    Patch type for patch " << patch().name()
-            << " must be wall" << nl
-            << "    Current patch type is " << patch().type() << nl << endl
-            << abort(FatalError);
-    }
-}
-
-
-void omegaWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
-{
-    writeEntry(os, "Cmu", Cmu_);
-    writeEntry(os, "kappa", kappa_);
-    writeEntry(os, "E", E_);
-    writeEntry(os, "beta1", beta1_);
-    writeEntry(os, "blended", blended_);
-}
-
 
 void omegaWallFunctionFvPatchScalarField::setMaster()
 {
@@ -216,10 +189,13 @@ void omegaWallFunctionFvPatchScalarField::calculate
 {
     const label patchi = patch.index();
 
-    const scalarField& y = turbModel.y()[patchi];
+    const nutWallFunctionFvPatchScalarField& nutw =
+        refCast<const nutWallFunctionFvPatchScalarField>
+        (
+            turbModel.nut()().boundaryField()[patchi]
+        );
 
-    const scalar Cmu25 = pow025(Cmu_);
-    const scalar Cmu5 = sqrt(Cmu_);
+    const scalarField& y = turbModel.y()[patchi];
 
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
@@ -227,15 +203,15 @@ void omegaWallFunctionFvPatchScalarField::calculate
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    const tmp<scalarField> tnutw = turbModel.nut(patchi);
-    const scalarField& nutw = tnutw();
-
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     const FieldType& G =
         db().lookupObject<FieldType>(turbModel.GName());
+
+    const scalar Cmu25 = pow025(nutw.Cmu());
+    const scalar Cmu5 = sqrt(nutw.Cmu());
 
     // Set omega and G
     forAll(nutw, facei)
@@ -245,7 +221,7 @@ void omegaWallFunctionFvPatchScalarField::calculate
 
         const scalar Rey = y[facei]*sqrt(k[celli])/nuw[facei];
         const scalar yPlus = Cmu25*Rey;
-        const scalar uPlus = (1/kappa_)*log(E_*yPlus);
+        const scalar uPlus = (1/nutw.kappa())*log(nutw.E()*yPlus);
 
         if (blended_)
         {
@@ -258,7 +234,7 @@ void omegaWallFunctionFvPatchScalarField::calculate
             );
 
             const scalar omegaVis = 6*nuw[facei]/(beta1_*sqr(y[facei]));
-            const scalar omegaLog = uStar/(Cmu5*kappa_*y[facei]);
+            const scalar omegaLog = uStar/(Cmu5*nutw.kappa()*y[facei]);
 
             omega0[celli] += w*(lamFrac*omegaVis + turbFrac*omegaLog);
 
@@ -269,12 +245,12 @@ void omegaWallFunctionFvPatchScalarField::calculate
 
                  + turbFrac
                   *sqr(uStar*magGradUw[facei]*y[facei]/uPlus)
-                  /(nuw[facei]*kappa_*yPlus)
+                  /(nuw[facei]*nutw.kappa()*yPlus)
                );
         }
         else
         {
-            if (yPlus < yPlusLam_)
+            if (yPlus < nutw.yPlusLam())
             {
                 const scalar omegaVis = 6*nuw[facei]/(beta1_*sqr(y[facei]));
 
@@ -285,14 +261,14 @@ void omegaWallFunctionFvPatchScalarField::calculate
             else
             {
                 const scalar uStar = sqrt(Cmu5*k[celli]);
-                const scalar omegaLog = uStar/(Cmu5*kappa_*y[facei]);
+                const scalar omegaLog = uStar/(Cmu5*nutw.kappa()*y[facei]);
 
                 omega0[celli] += w*omegaLog;
 
                 G0[celli] +=
                     w*
                     sqr(uStar*magGradUw[facei]*y[facei]/uPlus)
-                   /(nuw[facei]*kappa_*yPlus);
+                   /(nuw[facei]*nutw.kappa()*yPlus);
             }
         }
     }
@@ -308,20 +284,14 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(p, iF),
-    Cmu_(0.09),
-    kappa_(0.41),
-    E_(9.8),
     beta1_(0.075),
     blended_(false),
-    yPlusLam_(nutWallFunctionFvPatchScalarField::yPlusLam(kappa_, E_)),
     G_(),
     omega_(),
     initialised_(false),
     master_(-1),
     cornerWeights_()
-{
-    checkType();
-}
+{}
 
 
 omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
@@ -332,20 +302,14 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(p, iF, dict),
-    Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
-    kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
-    E_(dict.lookupOrDefault<scalar>("E", 9.8)),
     beta1_(dict.lookupOrDefault<scalar>("beta1", 0.075)),
     blended_(dict.lookupOrDefault<Switch>("blended", false)),
-    yPlusLam_(nutWallFunctionFvPatchScalarField::yPlusLam(kappa_, E_)),
     G_(),
     omega_(),
     initialised_(false),
     master_(-1),
     cornerWeights_()
 {
-    checkType();
-
     // apply zero-gradient condition on start-up
     this->operator==(patchInternalField());
 }
@@ -360,20 +324,14 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
-    Cmu_(ptf.Cmu_),
-    kappa_(ptf.kappa_),
-    E_(ptf.E_),
     beta1_(ptf.beta1_),
     blended_(ptf.blended_),
-    yPlusLam_(ptf.yPlusLam_),
     G_(),
     omega_(),
     initialised_(false),
     master_(-1),
     cornerWeights_()
-{
-    checkType();
-}
+{}
 
 
 omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
@@ -382,20 +340,14 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(owfpsf),
-    Cmu_(owfpsf.Cmu_),
-    kappa_(owfpsf.kappa_),
-    E_(owfpsf.E_),
     beta1_(owfpsf.beta1_),
     blended_(owfpsf.blended_),
-    yPlusLam_(owfpsf.yPlusLam_),
     G_(),
     omega_(),
     initialised_(false),
     master_(-1),
     cornerWeights_()
-{
-    checkType();
-}
+{}
 
 
 omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
@@ -405,20 +357,14 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(owfpsf, iF),
-    Cmu_(owfpsf.Cmu_),
-    kappa_(owfpsf.kappa_),
-    E_(owfpsf.E_),
     beta1_(owfpsf.beta1_),
     blended_(owfpsf.blended_),
-    yPlusLam_(owfpsf.yPlusLam_),
     G_(),
     omega_(),
     initialised_(false),
     master_(-1),
     cornerWeights_()
-{
-    checkType();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -632,7 +578,8 @@ void omegaWallFunctionFvPatchScalarField::manipulateMatrix
 
 void omegaWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
-    writeLocalEntries(os);
+    writeEntry(os, "beta1", beta1_);
+    writeEntry(os, "blended", blended_);
     fixedValueFvPatchField<scalar>::write(os);
 }
 

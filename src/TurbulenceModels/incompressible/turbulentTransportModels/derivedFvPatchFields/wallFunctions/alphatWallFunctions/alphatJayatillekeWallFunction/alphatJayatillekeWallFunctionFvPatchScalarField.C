@@ -25,9 +25,6 @@ License
 
 #include "alphatJayatillekeWallFunctionFvPatchScalarField.H"
 #include "turbulenceModel.H"
-#include "fvPatchFieldMapper.H"
-#include "volFields.H"
-#include "wallFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,20 +41,6 @@ label alphatJayatillekeWallFunctionFvPatchScalarField::maxIters_ = 10;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void alphatJayatillekeWallFunctionFvPatchScalarField::checkType()
-{
-    if (!isA<wallFvPatch>(patch()))
-    {
-        FatalErrorInFunction
-            << "Invalid wall function specification" << nl
-            << "    Patch type for patch " << patch().name()
-            << " must be wall" << nl
-            << "    Current patch type is " << patch().type() << nl << endl
-            << abort(FatalError);
-    }
-}
-
-
 scalar alphatJayatillekeWallFunctionFvPatchScalarField::Psmooth
 (
     const scalar Prat
@@ -69,6 +52,7 @@ scalar alphatJayatillekeWallFunctionFvPatchScalarField::Psmooth
 
 scalar alphatJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
 (
+    const nutWallFunctionFvPatchScalarField& nutw,
     const scalar P,
     const scalar Prat
 ) const
@@ -77,8 +61,8 @@ scalar alphatJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
 
     for (int i=0; i<maxIters_; i++)
     {
-        scalar f = ypt - (log(E_*ypt)/kappa_ + P)/Prat;
-        scalar df = 1.0 - 1.0/(ypt*kappa_*Prat);
+        scalar f = ypt - (log(nutw.E()*ypt)/nutw.kappa() + P)/Prat;
+        scalar df = 1.0 - 1.0/(ypt*nutw.kappa()*Prat);
         scalar yptNew = ypt - f/df;
 
         if (yptNew < vSmall)
@@ -109,13 +93,8 @@ alphatJayatillekeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    Prt_(0.85),
-    Cmu_(0.09),
-    kappa_(0.41),
-    E_(9.8)
-{
-    checkType();
-}
+    Prt_(0.85)
+{}
 
 
 alphatJayatillekeWallFunctionFvPatchScalarField::
@@ -128,13 +107,8 @@ alphatJayatillekeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    Prt_(ptf.Prt_),
-    Cmu_(ptf.Cmu_),
-    kappa_(ptf.kappa_),
-    E_(ptf.E_)
-{
-    checkType();
-}
+    Prt_(ptf.Prt_)
+{}
 
 
 alphatJayatillekeWallFunctionFvPatchScalarField::
@@ -146,13 +120,8 @@ alphatJayatillekeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    Prt_(readScalar(dict.lookup("Prt"))), // force read to avoid ambiguity
-    Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
-    kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
-    E_(dict.lookupOrDefault<scalar>("E", 9.8))
-{
-    checkType();
-}
+    Prt_(readScalar(dict.lookup("Prt")))  // force read to avoid ambiguity
+{}
 
 
 alphatJayatillekeWallFunctionFvPatchScalarField::
@@ -162,13 +131,8 @@ alphatJayatillekeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(wfpsf),
-    Prt_(wfpsf.Prt_),
-    Cmu_(wfpsf.Cmu_),
-    kappa_(wfpsf.kappa_),
-    E_(wfpsf.E_)
-{
-    checkType();
-}
+    Prt_(wfpsf.Prt_)
+{}
 
 
 alphatJayatillekeWallFunctionFvPatchScalarField::
@@ -179,13 +143,8 @@ alphatJayatillekeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(wfpsf, iF),
-    Prt_(wfpsf.Prt_),
-    Cmu_(wfpsf.Cmu_),
-    kappa_(wfpsf.kappa_),
-    E_(wfpsf.E_)
-{
-    checkType();
-}
+    Prt_(wfpsf.Prt_)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -210,7 +169,13 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
         )
     );
 
-    const scalar Cmu25 = pow(Cmu_, 0.25);
+    const nutWallFunctionFvPatchScalarField& nutw =
+        refCast<const nutWallFunctionFvPatchScalarField>
+        (
+            turbModel.nut()().boundaryField()[patchi]
+        );
+
+    const scalar Cmu25 = pow(nutw.Cmu(), 0.25);
     const scalarField& y = turbModel.y()[patchi];
     const tmp<volScalarField> tnu = turbModel.nu();
     const volScalarField& nu = tnu();
@@ -236,23 +201,24 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     scalarField& alphatw = *this;
     forAll(alphatw, facei)
     {
-        label celli = patch().faceCells()[facei];
+        const label celli = patch().faceCells()[facei];
 
-        // y+
-        scalar yPlus = Cmu25*sqrt(k[celli])*y[facei]/nuw[facei];
+        const scalar yPlus = Cmu25*sqrt(k[celli])*y[facei]/nuw[facei];
 
         // Molecular-to-turbulent Prandtl number ratio
-        scalar Prat = Pr/Prt_;
+        const scalar Prat = Pr/Prt_;
 
         // Thermal sublayer thickness
-        scalar P = Psmooth(Prat);
-        scalar yPlusTherm = this->yPlusTherm(P, Prat);
+        const scalar P = Psmooth(Prat);
+        const scalar yPlusTherm = this->yPlusTherm(nutw, P, Prat);
 
         // Update turbulent thermal conductivity
         if (yPlus > yPlusTherm)
         {
-            scalar nu = nuw[facei];
-            scalar kt = nu*(yPlus/(Prt_*(log(E_*yPlus)/kappa_ + P)) - 1/Pr);
+            const scalar nu = nuw[facei];
+            const scalar kt =
+                nu*(yPlus/(Prt_*(log(nutw.E()*yPlus)/nutw.kappa() + P)) - 1/Pr);
+
             alphatw[facei] = max(0.0, kt);
         }
         else
@@ -269,9 +235,6 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeEntry(os, "Prt", Prt_);
-    writeEntry(os, "Cmu", Cmu_);
-    writeEntry(os, "kappa", kappa_);
-    writeEntry(os, "E", E_);
     writeEntry(os, "value", *this);
 }
 

@@ -48,6 +48,7 @@ Usage
     <patchName>
     {
         type            nutUSpaldingWallFunction;
+        value           uniform 0;
     }
     \endverbatim
 

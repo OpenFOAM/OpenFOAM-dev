@@ -42,7 +42,7 @@ Usage
     <patchName>
     {
         type            nutWallFunction;
-        value           uniform 0.0;
+        value           uniform 0;
     }
     \endverbatim
 
@@ -157,6 +157,24 @@ public:
 
 
     // Member functions
+
+        //- Return Cmu
+        scalar Cmu() const
+        {
+            return Cmu_;
+        }
+
+        //- Return kappa
+        scalar kappa() const
+        {
+            return kappa_;
+        }
+
+        //- Return E
+        scalar E() const
+        {
+            return E_;
+        }
 
         //- Calculate the Y+ at the edge of the laminar sublayer
         static scalar yPlusLam(const scalar kappa, const scalar E);

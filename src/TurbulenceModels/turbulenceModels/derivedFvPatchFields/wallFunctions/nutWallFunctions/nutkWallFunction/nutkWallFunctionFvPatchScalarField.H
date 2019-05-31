@@ -34,6 +34,7 @@ Usage
     <patchName>
     {
         type            nutkWallFunction;
+        value           uniform 0;
     }
     \endverbatim
 
