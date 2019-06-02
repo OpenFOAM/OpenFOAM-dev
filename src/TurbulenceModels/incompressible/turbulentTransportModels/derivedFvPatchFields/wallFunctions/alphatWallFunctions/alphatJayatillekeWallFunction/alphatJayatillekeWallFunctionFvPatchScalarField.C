@@ -170,10 +170,7 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     );
 
     const nutWallFunctionFvPatchScalarField& nutw =
-        refCast<const nutWallFunctionFvPatchScalarField>
-        (
-            turbModel.nut()().boundaryField()[patchi]
-        );
+        nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
 
     const scalar Cmu25 = pow(nutw.Cmu(), 0.25);
     const scalarField& y = turbModel.y()[patchi];

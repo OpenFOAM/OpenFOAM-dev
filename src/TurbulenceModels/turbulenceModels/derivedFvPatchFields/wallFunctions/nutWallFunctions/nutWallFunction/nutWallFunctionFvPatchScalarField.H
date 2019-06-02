@@ -71,6 +71,8 @@ SourceFiles
 namespace Foam
 {
 
+class turbulenceModel;
+
 /*---------------------------------------------------------------------------*\
              Class nutWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
@@ -175,6 +177,13 @@ public:
         {
             return E_;
         }
+
+        //- Return the nut patchField for the given wall patch
+        static const nutWallFunctionFvPatchScalarField& nutw
+        (
+            const turbulenceModel& turbModel,
+            const label patchi
+        );
 
         //- Calculate the Y+ at the edge of the laminar sublayer
         static scalar yPlusLam(const scalar kappa, const scalar E);

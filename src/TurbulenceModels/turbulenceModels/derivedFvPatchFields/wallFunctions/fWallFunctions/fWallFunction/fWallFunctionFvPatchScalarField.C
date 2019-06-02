@@ -112,10 +112,7 @@ void fWallFunctionFvPatchScalarField::updateCoeffs()
     const v2fBase& v2fModel = refCast<const v2fBase>(turbModel);
 
     const nutWallFunctionFvPatchScalarField& nutw =
-        refCast<const nutWallFunctionFvPatchScalarField>
-        (
-            turbModel.nut()().boundaryField()[patchi]
-        );
+        nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
 
     const scalarField& y = turbModel.y()[patchi];
 

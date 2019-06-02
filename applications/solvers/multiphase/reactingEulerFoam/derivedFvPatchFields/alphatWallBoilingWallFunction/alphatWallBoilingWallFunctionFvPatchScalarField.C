@@ -424,10 +424,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 );
 
             const nutWallFunctionFvPatchScalarField& nutw =
-                refCast<const nutWallFunctionFvPatchScalarField>
-                (
-                    turbModel.nut()().boundaryField()[patchi]
-                );
+                nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
 
             const scalar Cmu25(pow025(nutw.Cmu()));
 

@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nutWallFunctionFvPatchScalarField.H"
+#include "turbulenceModel.H"
 #include "fvPatchFieldMapper.H"
-#include "volFields.H"
 #include "wallFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -148,6 +148,21 @@ Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::nutWallFunctionFvPatchScalarField&
+Foam::nutWallFunctionFvPatchScalarField::nutw
+(
+    const turbulenceModel& turbModel,
+    const label patchi
+)
+{
+    return
+        refCast<const nutWallFunctionFvPatchScalarField>
+        (
+            turbModel.nut()().boundaryField()[patchi]
+        );
+}
+
 
 Foam::scalar Foam::nutWallFunctionFvPatchScalarField::yPlusLam
 (

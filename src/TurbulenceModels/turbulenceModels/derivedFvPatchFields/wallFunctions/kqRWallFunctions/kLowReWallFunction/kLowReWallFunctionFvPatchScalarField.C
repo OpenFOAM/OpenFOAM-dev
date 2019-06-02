@@ -113,10 +113,7 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
     );
 
     const nutWallFunctionFvPatchScalarField& nutw =
-        refCast<const nutWallFunctionFvPatchScalarField>
-        (
-            turbModel.nut()().boundaryField()[patchi]
-        );
+        nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
 
     const scalarField& y = turbModel.y()[patchi];
 
