@@ -156,37 +156,37 @@ inline Scalar component(const Scalar s, const direction)
 
 
 //- Return 1 if s is positive or 0 otherwise -1
-inline Scalar sign(const Scalar s)
+inline int sign(const Scalar s)
 {
-    return (s >= 0)? 1: -1;
+    return (s >= 0) ? 1: -1;
 }
 
 
 //- Return 1 if s is positive but not 0
-inline Scalar pos(const Scalar s)
+inline int pos(const Scalar s)
 {
-    return (s > 0)? 1: 0;
+    return (s > 0) ? 1: 0;
 }
 
 
 //- Return 1 if s is positive or 0
-inline Scalar pos0(const Scalar s)
+inline int pos0(const Scalar s)
 {
-    return (s >= 0)? 1: 0;
+    return (s >= 0) ? 1: 0;
 }
 
 
 //- Return 1 if s is negative but not 0
-inline Scalar neg(const Scalar s)
+inline int neg(const Scalar s)
 {
-    return (s < 0)? 1: 0;
+    return (s < 0) ? 1: 0;
 }
 
 
 //- Return 1 if s is negative or 0
-inline Scalar neg0(const Scalar s)
+inline int neg0(const Scalar s)
 {
-    return (s <= 0)? 1: 0;
+    return (s <= 0) ? 1: 0;
 }
 
 
