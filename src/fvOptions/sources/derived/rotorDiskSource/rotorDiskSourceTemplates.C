@@ -86,7 +86,7 @@ void Foam::fv::rotorDiskSource::calculate
             const scalar alphaGeom = thetag[i] + twist;
 
             // Effective angle of attack
-            const int rotationSign = (omega_ > 0) ? 1 : -1;
+            const int rotationSign = sign(omega_);
             const scalar alphaEff =
                 alphaGeom - atan2(-Uc.z(), rotationSign*Uc.y());
 
