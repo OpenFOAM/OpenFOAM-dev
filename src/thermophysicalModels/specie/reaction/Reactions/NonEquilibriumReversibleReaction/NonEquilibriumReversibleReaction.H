@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,16 +61,6 @@ class NonEquilibriumReversibleReaction
 
         ReactionRate fk_;
         ReactionRate rk_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=
-        (
-            const NonEquilibriumReversibleReaction
-                <ReactionType, ReactionThermo, ReactionRate>&
-        );
 
 
 public:
@@ -214,6 +204,20 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const NonEquilibriumReversibleReaction
+            <
+                ReactionType,
+                ReactionThermo,
+                ReactionRate
+            >&
+        ) = delete;
 };
 
 

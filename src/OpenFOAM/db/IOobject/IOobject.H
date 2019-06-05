@@ -262,6 +262,9 @@ public:
             const word& name
         );
 
+        //- Copy constructor
+        IOobject(const IOobject& io) = default;
+
         //- Clone
         autoPtr<IOobject> clone() const
         {

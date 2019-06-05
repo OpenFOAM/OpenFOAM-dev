@@ -93,9 +93,6 @@ public:
         //- Construct from cType
         inline cellInfo(const label);
 
-        //- Copy constructor
-        inline cellInfo(const cellInfo&);
-
 
     // Member Functions
 

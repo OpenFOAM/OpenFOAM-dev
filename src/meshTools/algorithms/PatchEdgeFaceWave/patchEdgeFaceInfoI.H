@@ -117,7 +117,6 @@ inline bool Foam::patchEdgeFaceInfo::update
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
 inline Foam::patchEdgeFaceInfo::patchEdgeFaceInfo()
 :
     origin_(point::max),
@@ -125,7 +124,6 @@ inline Foam::patchEdgeFaceInfo::patchEdgeFaceInfo()
 {}
 
 
-// Construct from origin, distance
 inline Foam::patchEdgeFaceInfo::patchEdgeFaceInfo
 (
     const point& origin,
@@ -134,14 +132,6 @@ inline Foam::patchEdgeFaceInfo::patchEdgeFaceInfo
 :
     origin_(origin),
     distSqr_(distSqr)
-{}
-
-
-// Copy constructor
-inline Foam::patchEdgeFaceInfo::patchEdgeFaceInfo(const patchEdgeFaceInfo& wpt)
-:
-    origin_(wpt.origin()),
-    distSqr_(wpt.distSqr())
 {}
 
 

@@ -86,14 +86,6 @@ Foam::surfZone::surfZone
 {}
 
 
-Foam::surfZone::surfZone(const surfZone& zone)
-:
-    surfZoneIdentifier(zone, zone.index()),
-    size_(zone.size()),
-    start_(zone.start())
-{}
-
-
 Foam::surfZone::surfZone(const surfZone& zone, const label index)
 :
     surfZoneIdentifier(zone, index),

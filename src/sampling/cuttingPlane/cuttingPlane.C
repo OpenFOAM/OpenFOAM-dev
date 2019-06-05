@@ -399,14 +399,12 @@ void Foam::cuttingPlane::remapFaces
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct without cutting
 Foam::cuttingPlane::cuttingPlane(const plane& pln)
 :
     plane(pln)
 {}
 
 
-// Construct from plane and mesh reference, restricted to a list of cells
 Foam::cuttingPlane::cuttingPlane
 (
     const plane& pln,
@@ -418,24 +416,6 @@ Foam::cuttingPlane::cuttingPlane
     plane(pln)
 {
     reCut(mesh, triangulate, cellIdLabels);
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::cuttingPlane::operator=(const cuttingPlane& rhs)
-{
-    // Check for assignment to self
-    if (this == &rhs)
-    {
-        FatalErrorInFunction
-            << "Attempted assignment to self"
-            << abort(FatalError);
-    }
-
-    static_cast<MeshStorage&>(*this) = rhs;
-    static_cast<plane&>(*this) = rhs;
-    cutCells_ = rhs.cutCells();
 }
 
 

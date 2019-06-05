@@ -87,9 +87,6 @@ public:
             label patchi
         );
 
-        //- Copy constructor
-        referredWallFace(const referredWallFace&);
-
 
     //- Destructor
     ~referredWallFace();

@@ -57,14 +57,6 @@ Foam::boundaryPatch::boundaryPatch
 {}
 
 
-Foam::boundaryPatch::boundaryPatch(const boundaryPatch& p)
-:
-    patchIdentifier(p.name(), p.index(), p.physicalType()),
-    size_(p.size()),
-    start_(p.start())
-{}
-
-
 Foam::boundaryPatch::boundaryPatch(const boundaryPatch& p, const label index)
 :
     patchIdentifier(p.name(), index, p.physicalType()),

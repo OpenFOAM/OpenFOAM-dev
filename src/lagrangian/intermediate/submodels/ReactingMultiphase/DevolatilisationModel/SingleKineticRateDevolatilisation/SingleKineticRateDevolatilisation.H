@@ -106,14 +106,6 @@ class SingleKineticRateDevolatilisation
                 E_(readScalar(is))
             {}
 
-            //- Copy constructor
-            volatileData(const volatileData& vd)
-            :
-                name_(vd.name_),
-                A1_(vd.A1_),
-                E_(vd.E_)
-            {}
-
 
         //- Destructor
         ~volatileData()
@@ -201,12 +193,6 @@ public:
         (
             const dictionary& dict,
             CloudType& owner
-        );
-
-        //- Construct copy
-        SingleKineticRateDevolatilisation
-        (
-            const SingleKineticRateDevolatilisation<CloudType>& dm
         );
 
         //- Construct and return a clone

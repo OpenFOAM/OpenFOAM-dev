@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,16 +96,6 @@ alphah(const scalar p, const scalar T) const
 }
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Thermo>
-inline void Foam::constAnIsoSolidTransport<Thermo>::operator=
-(
-    const constAnIsoSolidTransport<Thermo>& ct
-)
-{
-    kappa_ = ct.kappa_;
-}
-
 
 template<class Thermo>
 inline void Foam::constAnIsoSolidTransport<Thermo>::operator+=

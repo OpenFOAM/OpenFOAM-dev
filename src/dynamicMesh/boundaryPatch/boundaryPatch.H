@@ -86,9 +86,6 @@ public:
             const label index
         );
 
-        //- Copy constructor
-        boundaryPatch(const boundaryPatch&);
-
         //- Copy constructor, resetting the index
         boundaryPatch(const boundaryPatch&, const label index);
 

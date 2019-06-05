@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,14 +80,6 @@ Foam::surfacePatch::surfacePatch
     geometricSurfacePatch(name, dict, index),
     size_(readLabel(dict.lookup("nFaces"))),
     start_(readLabel(dict.lookup("startFace")))
-{}
-
-
-Foam::surfacePatch::surfacePatch(const Foam::surfacePatch& sp)
-:
-    geometricSurfacePatch(sp),
-    size_(sp.size()),
-    start_(sp.start())
 {}
 
 

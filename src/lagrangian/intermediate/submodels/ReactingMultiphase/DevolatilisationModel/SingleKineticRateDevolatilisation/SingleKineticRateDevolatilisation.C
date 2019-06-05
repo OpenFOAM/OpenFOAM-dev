@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,21 +67,6 @@ SingleKineticRateDevolatilisation
         }
     }
 }
-
-
-template<class CloudType>
-Foam::SingleKineticRateDevolatilisation<CloudType>::
-SingleKineticRateDevolatilisation
-(
-    const SingleKineticRateDevolatilisation<CloudType>& dm
-)
-:
-    DevolatilisationModel<CloudType>(dm),
-    volatileData_(dm.volatileData_),
-    YVolatile0_(dm.YVolatile0_),
-    volatileToGasMap_(dm.volatileToGasMap_),
-    residualCoeff_(dm.residualCoeff_)
-{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

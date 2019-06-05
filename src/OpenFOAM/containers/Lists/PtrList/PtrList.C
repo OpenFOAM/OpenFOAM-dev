@@ -256,9 +256,14 @@ void Foam::PtrList<T>::shuffle(const labelUList& newToOld)
         if (oldI >= 0 && oldI < this->size())
         {
             newPtrs_[newI] = this->ptrs_[oldI];
+            this->ptrs_[oldI] = nullptr;
         }
     }
 
+    // Delete all remaining pointers
+    clear();
+
+    // Take over new pointers
     this->ptrs_.transfer(newPtrs_);
 }
 

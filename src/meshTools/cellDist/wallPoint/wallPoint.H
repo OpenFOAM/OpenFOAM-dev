@@ -97,9 +97,6 @@ public:
         //- Construct from origin, distance
         inline wallPoint(const point& origin, const scalar distSqr);
 
-        //- Copy constructor
-        inline wallPoint(const wallPoint&);
-
 
     // Member Functions
 

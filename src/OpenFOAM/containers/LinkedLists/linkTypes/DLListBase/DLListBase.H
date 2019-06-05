@@ -207,6 +207,9 @@ public:
             //- Construct for a given DLListBase and link
             inline iterator(DLListBase&, link*);
 
+            //- Copy constructor
+            inline iterator(const iterator&) = default;
+
             // Member operators
 
                 inline void operator=(const iterator&);
@@ -245,6 +248,9 @@ public:
             //- Construct from a non-const iterator
             inline const_iterator(const iterator&);
 
+            //- Copy constructor
+            inline const_iterator(const const_iterator&) = default;
+
             // Member operators
 
                 inline void operator=(const const_iterator&);
@@ -282,6 +288,12 @@ public:
 
             //- Construct for a given DLListBase and link
             inline const_reverse_iterator(const DLListBase&, const link*);
+
+            //- Copy constructor
+            inline const_reverse_iterator
+            (
+                const const_reverse_iterator&
+            ) = default;
 
             // Member operators
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,9 +105,6 @@ public:
 
         //- Construct null, with all coefficients = 0.0
         Polynomial();
-
-        //- Copy constructor
-        Polynomial(const Polynomial&);
 
         //- Construct from C-array of coefficients
         explicit Polynomial(const scalar coeffs[PolySize]);

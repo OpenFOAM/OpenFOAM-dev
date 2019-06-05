@@ -139,9 +139,6 @@ public:
             const vector& n
         );
 
-        //- Copy constructor
-        inline directionInfo(const directionInfo&);
-
 
     // Member Functions
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,11 +192,6 @@ public:
         //  marked as having been accessed, then mark all records as
         //  not accessed ready for the next evaluation
         void update();
-
-
-        // Member Operators
-
-            void operator=(const CollisionRecordList&);
 
 
         // Friend Operators

@@ -138,9 +138,6 @@ public:
         //- Construct from SLList
         explicit inline FixedList(const SLList<T>&);
 
-        //- Copy constructor
-        inline FixedList(const FixedList<T, Size>&);
-
         //- Construct from Istream
         FixedList(Istream&);
 

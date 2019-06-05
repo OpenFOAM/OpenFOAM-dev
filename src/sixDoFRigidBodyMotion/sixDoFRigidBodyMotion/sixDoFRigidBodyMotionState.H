@@ -100,9 +100,6 @@ public:
         //- Construct from dictionary
         sixDoFRigidBodyMotionState(const dictionary& dict);
 
-        //- Copy constructor
-        sixDoFRigidBodyMotionState(const sixDoFRigidBodyMotionState&);
-
 
     //- Destructor
     ~sixDoFRigidBodyMotionState();

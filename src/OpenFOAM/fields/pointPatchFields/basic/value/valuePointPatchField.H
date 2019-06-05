@@ -109,6 +109,9 @@ public:
             const DimensionedField<Type, pointMesh>&
         );
 
+        //- Copy constructor
+        valuePointPatchField(const valuePointPatchField<Type>&) = default;
+
         //- Construct and return a clone setting internal field reference
         virtual autoPtr<pointPatchField<Type>> clone
         (

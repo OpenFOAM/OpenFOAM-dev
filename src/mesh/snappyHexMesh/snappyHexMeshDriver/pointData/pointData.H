@@ -87,9 +87,6 @@ public:
             const vector& v
         );
 
-        //- Copy constructor
-        inline pointData(const pointData&);
-
 
     // Member Functions
 

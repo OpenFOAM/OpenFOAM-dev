@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,18 +177,6 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::CpMCv
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Specie, int PolySize>
-inline void Foam::icoPolynomial<Specie, PolySize>::operator=
-(
-    const icoPolynomial<Specie, PolySize>& ip
-)
-{
-    Specie::operator=(ip);
-
-    rhoCoeffs_ = ip.rhoCoeffs_;
-}
-
 
 template<class Specie, int PolySize>
 inline void Foam::icoPolynomial<Specie, PolySize>::operator+=

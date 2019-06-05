@@ -386,6 +386,19 @@ Type Foam::interpolationTable<Type>::rateOfChange(const scalar value) const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
+void Foam::interpolationTable<Type>::operator=
+(
+    const interpolationTable& interpTable
+)
+{
+    List<Tuple2<scalar, Type>>::operator=(interpTable);
+    boundsHandling_ = interpTable.boundsHandling_;
+    fileName_ = interpTable.fileName_;
+    reader_ = interpTable.reader_;    // note: steals reader. Used in write().
+}
+
+
+template<class Type>
 const Foam::Tuple2<Foam::scalar, Type>&
 Foam::interpolationTable<Type>::operator[](const label i) const
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,16 +130,6 @@ inline Foam::externalPointEdgePoint::externalPointEdgePoint
 :
     origin_(origin),
     distSqr_(distSqr)
-{}
-
-
-inline Foam::externalPointEdgePoint::externalPointEdgePoint
-(
-    const externalPointEdgePoint& wpt
-)
-:
-    origin_(wpt.origin()),
-    distSqr_(wpt.distSqr())
 {}
 
 

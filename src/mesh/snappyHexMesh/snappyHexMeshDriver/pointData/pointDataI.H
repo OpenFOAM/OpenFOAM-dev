@@ -28,7 +28,6 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
 inline Foam::pointData::pointData()
 :
     pointEdgePoint(),
@@ -37,7 +36,6 @@ inline Foam::pointData::pointData()
 {}
 
 
-// Construct from origin, distance
 inline Foam::pointData::pointData
 (
     const point& origin,
@@ -49,15 +47,6 @@ inline Foam::pointData::pointData
     pointEdgePoint(origin, distSqr),
     s_(s),
     v_(v)
-{}
-
-
-// Copy constructor
-inline Foam::pointData::pointData(const pointData& wpt)
-:
-    pointEdgePoint(wpt),
-    s_(wpt.s()),
-    v_(wpt.v())
 {}
 
 

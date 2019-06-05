@@ -68,6 +68,7 @@ class surfacePatch
         //- Start label of this patch in the triSurface face list
         label start_;
 
+
 public:
 
     //- Runtime type information
@@ -99,9 +100,6 @@ public:
             const dictionary& dict,
             const label index
         );
-
-        //- Copy constructor
-        surfacePatch(const surfacePatch&);
 
 
     // Member Functions

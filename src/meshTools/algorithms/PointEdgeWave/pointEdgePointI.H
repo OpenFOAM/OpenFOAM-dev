@@ -117,7 +117,6 @@ inline bool Foam::pointEdgePoint::update
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
 inline Foam::pointEdgePoint::pointEdgePoint()
 :
     origin_(point::max),
@@ -125,7 +124,6 @@ inline Foam::pointEdgePoint::pointEdgePoint()
 {}
 
 
-// Construct from origin, distance
 inline Foam::pointEdgePoint::pointEdgePoint
 (
     const point& origin,
@@ -134,14 +132,6 @@ inline Foam::pointEdgePoint::pointEdgePoint
 :
     origin_(origin),
     distSqr_(distSqr)
-{}
-
-
-// Copy constructor
-inline Foam::pointEdgePoint::pointEdgePoint(const pointEdgePoint& wpt)
-:
-    origin_(wpt.origin()),
-    distSqr_(wpt.distSqr())
 {}
 
 

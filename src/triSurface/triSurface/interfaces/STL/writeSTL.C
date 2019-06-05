@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,7 +143,8 @@ void Foam::triSurface::writeSTLASCII(const bool writeSorted, Ostream& os) const
 void Foam::triSurface::writeSTLBINARY(std::ostream& os) const
 {
     // Write the STL header
-    string header("Foam binary STL", STLheaderSize);
+    string header("Foam binary STL");
+    header.resize(STLheaderSize);
     os.write(header.c_str(), STLheaderSize);
 
     label nTris = size();

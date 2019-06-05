@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,16 +190,6 @@ Foam::phaseProperties::phaseProperties()
     names_(0),
     Y_(0),
     carrierIds_(0)
-{}
-
-
-Foam::phaseProperties::phaseProperties(const phaseProperties& pp)
-:
-    phase_(pp.phase_),
-    stateLabel_(pp.stateLabel_),
-    names_(pp.names_),
-    Y_(pp.Y_),
-    carrierIds_(pp.carrierIds_)
 {}
 
 

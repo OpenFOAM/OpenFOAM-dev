@@ -190,6 +190,9 @@ public:
             //- Construct for a given SLListBase and link
             inline iterator(SLListBase&, link*);
 
+            //- Copy constructor
+            inline iterator(const iterator&) = default;
+
             // Member operators
 
                 inline void operator=(const iterator&);
@@ -228,6 +231,8 @@ public:
             //- Construct from a non-const iterator
             inline const_iterator(const iterator&);
 
+            //- Copy constructor
+            inline const_iterator(const const_iterator&) = default;
 
             // Member operators
 

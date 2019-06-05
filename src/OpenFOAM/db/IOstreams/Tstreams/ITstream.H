@@ -208,6 +208,21 @@ public:
 
             //- Print description of IOstream to Ostream
             void print(Ostream&) const;
+
+
+    // Member operators
+
+        //- Assignment operator
+        void operator=(const ITstream& its)
+        {
+            Istream::operator=(its);
+            tokenList::operator=(its);
+            name_ = its.name_;
+            tokenIndex_ = 0;
+
+            setOpened();
+            setGood();
+        }
 };
 
 
