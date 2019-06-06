@@ -310,7 +310,15 @@ bool Foam::rigidBodyMeshMotionSolver::write() const
 
     state().write(dict);
 
-    return dict.regIOobject::write() && motionSolver::write();
+    return
+        dict.regIOobject::writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            mesh().time().writeCompression(),
+            true
+        )
+     && motionSolver::write();
 }
 
 

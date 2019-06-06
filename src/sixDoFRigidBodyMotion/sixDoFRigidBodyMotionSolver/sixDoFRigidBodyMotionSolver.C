@@ -276,7 +276,16 @@ bool Foam::sixDoFRigidBodyMotionSolver::write() const
     );
 
     motion_.state().write(dict);
-    return dict.regIOobject::write() && displacementMotionSolver::write();
+
+    return
+        dict.regIOobject::writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            mesh().time().writeCompression(),
+            true
+        )
+     && displacementMotionSolver::write();
 }
 
 
