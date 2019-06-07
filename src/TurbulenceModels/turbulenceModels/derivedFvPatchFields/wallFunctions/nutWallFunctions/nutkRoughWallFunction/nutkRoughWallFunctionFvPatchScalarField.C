@@ -43,8 +43,11 @@ scalar nutkRoughWallFunctionFvPatchScalarField::fnRough
 ) const
 {
     // Return fn based on non-dimensional roughness height
-
-    if (KsPlus < 90.0)
+    if (KsPlus < 2.25)
+    {
+        return 1;
+    }
+    else if (KsPlus < 90)
     {
         return pow
         (
@@ -54,7 +57,7 @@ scalar nutkRoughWallFunctionFvPatchScalarField::fnRough
     }
     else
     {
-        return (1.0 + Cs*KsPlus);
+        return (1 + Cs*KsPlus);
     }
 }
 
@@ -84,31 +87,25 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
 
     forAll(nutw, facei)
     {
-        label celli = patch().faceCells()[facei];
+        const label celli = patch().faceCells()[facei];
 
-        scalar uStar = Cmu25*sqrt(k[celli]);
-        scalar yPlus = uStar*y[facei]/nuw[facei];
-        scalar KsPlus = uStar*Ks_[facei]/nuw[facei];
-
-        scalar Edash = E_;
-        if (KsPlus > 2.25)
-        {
-            Edash /= fnRough(KsPlus, Cs_[facei]);
-        }
-
-        scalar limitingNutw = max(nutw[facei], nuw[facei]);
+        const scalar uStar = Cmu25*sqrt(k[celli]);
+        const scalar KsPlus = uStar*Ks_[facei]/nuw[facei];
+        const scalar Edash = E_/fnRough(KsPlus, Cs_[facei]);
+        const scalar yPlusMin = constant::mathematical::e/Edash;
+        const scalar yPlus = max(uStar*y[facei]/nuw[facei], yPlusMin);
 
         // To avoid oscillations limit the change in the wall viscosity
-        // which is particularly important if it temporarily becomes zero
         nutw[facei] =
             max
             (
                 min
                 (
                     nuw[facei]
-                   *(yPlus*kappa_/log(max(Edash*yPlus, 1+1e-4)) - 1),
-                    2*limitingNutw
-                ), 0.5*limitingNutw
+                   *max(yPlus*kappa_/log(max(Edash*yPlus, 1)) - 1, 0),
+                    max(2*nutw[facei], nuw[facei])
+                ),
+                0.5*nutw[facei]
             );
 
         if (debug)
@@ -116,6 +113,8 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
             Info<< "yPlus = " << yPlus
                 << ", KsPlus = " << KsPlus
                 << ", Edash = " << Edash
+                << ", yPlusMin " << yPlusMin
+                << ", yPlusLam " << yPlusLam(kappa_, Edash)
                 << ", nutw = " << nutw[facei]
                 << endl;
         }
