@@ -1625,6 +1625,9 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::meshRefinement::balance
             }
             Pout<< endl;
         }
+
+        mesh_.clearOut();
+
         // Do actual sending/receiving of mesh
         map = distributor.distribute(distribution);
 
