@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-scalar nutkRoughWallFunctionFvPatchScalarField::fnRough
+scalar nutkRoughWallFunctionFvPatchScalarField::E
 (
     const scalar KsPlus,
     const scalar Cs
@@ -45,19 +45,21 @@ scalar nutkRoughWallFunctionFvPatchScalarField::fnRough
     // Return fn based on non-dimensional roughness height
     if (KsPlus < 2.25)
     {
-        return 1;
+        return E_;
     }
     else if (KsPlus < 90)
     {
-        return pow
-        (
-            (KsPlus - 2.25)/87.75 + Cs*KsPlus,
-            sin(0.4258*(log(KsPlus) - 0.811))
-        );
+        return
+            E_
+           /pow
+            (
+                (KsPlus - 2.25)/87.75 + Cs*KsPlus,
+                sin(0.4258*(log(KsPlus) - 0.811))
+            );
     }
     else
     {
-        return (1 + Cs*KsPlus);
+        return E_/(1 + Cs*KsPlus);
     }
 }
 
@@ -74,9 +76,12 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
             internalField().group()
         )
     );
+
     const scalarField& y = turbModel.y()[patchi];
+
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
+
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
@@ -91,8 +96,8 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
 
         const scalar uStar = Cmu25*sqrt(k[celli]);
         const scalar KsPlus = uStar*Ks_[facei]/nuw[facei];
-        const scalar Edash = E_/fnRough(KsPlus, Cs_[facei]);
-        const scalar yPlusMin = constant::mathematical::e/Edash;
+        const scalar E = this->E(KsPlus, Cs_[facei]);
+        const scalar yPlusMin = constant::mathematical::e/E;
         const scalar yPlus = max(uStar*y[facei]/nuw[facei], yPlusMin);
 
         // To avoid oscillations limit the change in the wall viscosity
@@ -102,7 +107,7 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
                 min
                 (
                     nuw[facei]
-                   *max(yPlus*kappa_/log(max(Edash*yPlus, 1)) - 1, 0),
+                   *max(yPlus*kappa_/log(max(E*yPlus, 1)) - 1, 0),
                     max(2*nutw[facei], nuw[facei])
                 ),
                 0.5*nutw[facei]
@@ -112,9 +117,9 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
         {
             Info<< "yPlus = " << yPlus
                 << ", KsPlus = " << KsPlus
-                << ", Edash = " << Edash
+                << ", E = " << E
                 << ", yPlusMin " << yPlusMin
-                << ", yPlusLam " << yPlusLam(kappa_, Edash)
+                << ", yPlusLam " << yPlusLam(kappa_, E)
                 << ", nutw = " << nutw[facei]
                 << endl;
         }
@@ -140,6 +145,19 @@ nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
 
 nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    nutkWallFunctionFvPatchScalarField(p, iF, dict),
+    Ks_("Ks", dict, p.size()),
+    Cs_("Cs", dict, p.size())
+{}
+
+
+nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
+(
     const nutkRoughWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -149,19 +167,6 @@ nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
     nutkWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
     Ks_(mapper(ptf.Ks_)),
     Cs_(mapper(ptf.Cs_))
-{}
-
-
-nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    nutkWallFunctionFvPatchScalarField(p, iF, dict),
-    Ks_("Ks", dict, p.size()),
-    Cs_("Cs", dict, p.size())
 {}
 
 
