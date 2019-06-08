@@ -26,30 +26,33 @@ Class
 
 Description
     This boundary condition provides a turbulent kinematic viscosity condition
-    when using wall functions for rough walls, based on velocity.
+    when using wall functions for rough walls, based on velocity.  The
+    condition manipulates the E parameter to account for roughness effects.
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        roughnessHeight | roughness height     | yes         |
-        roughnessConstant | roughness constanr | yes         |
-        roughnessFactor | scaling factor       | yes         |
+        Ks           | sand-grain roughness height | yes     |
+        Cs           | roughness constant      | yes         |
     \endtable
+
+    Parameter ranges
+    - roughness height (Ks) = sand-grain roughness (0 for smooth walls)
+    - roughness constant (Cs) = 0.5 - 1.0
 
     Example of the boundary condition specification:
     \verbatim
     <patchName>
     {
         type            nutURoughWallFunction;
-        roughnessHeight 1e-5;
-        roughnessConstant 0.5;
-        roughnessFactor 1;
+        Ks              uniform 1e-5;
+        Cs              uniform 0.5;
         value           uniform 0;
     }
     \endverbatim
 
 See also
-    Foam::nutWallFunctionFvPatchScalarField
+    Foam::nutUWallFunctionFvPatchScalarField
 
 SourceFiles
     nutURoughWallFunctionFvPatchScalarField.C
@@ -59,7 +62,7 @@ SourceFiles
 #ifndef nutURoughWallFunctionFvPatchScalarField_H
 #define nutURoughWallFunctionFvPatchScalarField_H
 
-#include "nutWallFunctionFvPatchScalarField.H"
+#include "nutUWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,20 +75,15 @@ namespace Foam
 
 class nutURoughWallFunctionFvPatchScalarField
 :
-    public nutWallFunctionFvPatchScalarField
+    public nutUWallFunctionFvPatchScalarField
 {
     // Private data
 
-        // Roughness model parameters
+        //- Roughness height
+        scalarField Ks_;
 
-            //- Height
-            scalar roughnessHeight_;
-
-            //- Constant
-            scalar roughnessConstant_;
-
-            //- Scale factor
-            scalar roughnessFactor_;
+        //- Roughness constant
+        scalarField Cs_;
 
 
     // Protected Member Functions
@@ -168,53 +166,45 @@ public:
 
     // Member functions
 
-        // Access
+        // Access functions
 
             //- Return the roughness height
-            scalar roughnessHeight() const
+            const scalarField& Ks() const
             {
-                return roughnessHeight_;
+                return Ks_;
             }
 
             //- Return reference to the roughness height to allow adjustment
-            scalar& roughnessHeight()
+            scalarField& Ks()
             {
-                return roughnessHeight_;
+                return Ks_;
             }
 
 
             //- Return the roughness constant scale
-            scalar roughnessConstant() const
+            const scalarField& Cs() const
             {
-                return roughnessConstant_;
+                return Cs_;
             }
 
             //- Return reference to the roughness constant to allow adjustment
-            scalar& roughnessConstant()
+            scalarField& Cs()
             {
-                return roughnessConstant_;
-            }
-
-            //- Return the roughness scale factor
-            scalar roughnessFactor() const
-            {
-                return roughnessFactor_;
-            }
-
-            //- Return reference to the roughness scale factor to allow
-            //  adjustment
-            scalar& roughnessFactor()
-            {
-                return roughnessFactor_;
+                return Cs_;
             }
 
 
-    // I-O
+        // Mapping functions
 
-        // Evaluation functions
+            //- Map (and resize as needed) from self given a mapping object
+            virtual void autoMap(const fvPatchFieldMapper&);
 
-            //- Calculate and return the yPlus at the boundary
-            virtual tmp<scalarField> yPlus() const;
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            virtual void rmap
+            (
+                const fvPatchScalarField&,
+                const labelList&
+            );
 
 
         // I-O
