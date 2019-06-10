@@ -14,7 +14,7 @@ Meshing Strategy
 + The single mesh is then split into separate meshes for each region using
   splitMeshRegions.
 + The case is designed to be meshed with snappyHexMesh
-+ The overall (comined fluid/solid) domain is described by a single a surface
++ The overall (combined fluid/solid) domain is described by a single a surface
   geometry file named (default name "CAD.obj"), that includes separate surface
   regions to describe boundary patches
 + A surface geometry file is provided for each solid; the template includes
