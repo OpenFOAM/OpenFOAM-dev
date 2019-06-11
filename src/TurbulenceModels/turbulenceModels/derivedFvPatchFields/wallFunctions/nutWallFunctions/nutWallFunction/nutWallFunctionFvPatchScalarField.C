@@ -194,7 +194,7 @@ void Foam::nutWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    operator==(calcNut());
+    operator==(nut());
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }

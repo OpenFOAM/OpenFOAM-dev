@@ -34,7 +34,7 @@ License
 namespace Foam
 {
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 scalar nutkRoughWallFunctionFvPatchScalarField::E
 (
@@ -64,7 +64,9 @@ scalar nutkRoughWallFunctionFvPatchScalarField::E
 }
 
 
-tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::nut() const
 {
     const label patchi = patch().index();
 
@@ -106,8 +108,7 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
             (
                 min
                 (
-                    nuw[facei]
-                   *max(yPlus*kappa_/log(max(E*yPlus, 1)) - 1, 0),
+                    nuw[facei]*max(yPlus*kappa_/log(E*yPlus) - 1, 0),
                     max(2*nutw[facei], nuw[facei])
                 ),
                 0.5*nutw[facei]

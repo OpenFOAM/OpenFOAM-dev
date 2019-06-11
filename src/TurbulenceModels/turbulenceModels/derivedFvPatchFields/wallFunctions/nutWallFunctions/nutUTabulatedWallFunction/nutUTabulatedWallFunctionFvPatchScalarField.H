@@ -91,7 +91,7 @@ protected:
     // Protected Member Functions
 
         //- Calculate the turbulence viscosity
-        virtual tmp<scalarField> calcNut() const;
+        virtual tmp<scalarField> nut() const;
 
         //- Calculate wall u+ from table
         virtual tmp<scalarField> calcUPlus(const scalarField& Rey) const;

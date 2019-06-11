@@ -104,7 +104,7 @@ protected:
         virtual void checkType();
 
         //- Calculate the turbulence viscosity
-        virtual tmp<scalarField> calcNut() const = 0;
+        virtual tmp<scalarField> nut() const = 0;
 
         //- Write local wall function variables
         virtual void writeLocalEntries(Ostream&) const;

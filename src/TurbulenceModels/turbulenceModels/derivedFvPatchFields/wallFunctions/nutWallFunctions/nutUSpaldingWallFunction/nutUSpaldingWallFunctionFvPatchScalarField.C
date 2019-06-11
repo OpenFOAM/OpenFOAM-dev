@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcNut() const
+tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::nut() const
 {
     const label patchi = patch().index();
 

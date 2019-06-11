@@ -69,10 +69,10 @@ protected:
     // Protected Member Functions
 
         //- Calculate yPLus
-        virtual tmp<scalarField> calcYPlus(const scalarField& magUp) const;
+        virtual tmp<scalarField> yPlus(const scalarField& magUp) const;
 
         //- Calculate the turbulence viscosity
-        virtual tmp<scalarField> calcNut() const;
+        virtual tmp<scalarField> nut() const;
 
 
 public:

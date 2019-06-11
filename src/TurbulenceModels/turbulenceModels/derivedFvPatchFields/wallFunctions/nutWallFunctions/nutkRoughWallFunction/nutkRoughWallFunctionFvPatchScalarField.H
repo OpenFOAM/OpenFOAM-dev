@@ -90,10 +90,15 @@ class nutkRoughWallFunctionFvPatchScalarField
     // Private Member Functions
 
         //- Return the roughness dependent E
-        virtual scalar E(const scalar KsPlus, const scalar Cs) const;
+        scalar E(const scalar KsPlus, const scalar Cs) const;
+
+
+protected:
+
+    // Protected Member Functions
 
         //- Calculate the turbulence viscosity
-        virtual tmp<scalarField> calcNut() const;
+        virtual tmp<scalarField> nut() const;
 
 
 public:

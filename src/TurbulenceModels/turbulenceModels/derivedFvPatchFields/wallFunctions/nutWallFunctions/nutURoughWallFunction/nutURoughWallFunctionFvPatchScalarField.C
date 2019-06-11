@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcNut() const
+tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::nut() const
 {
     const label patchi = patch().index();
 
@@ -49,14 +49,13 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcNut() const
         )
     );
     const scalarField& y = turbModel.y()[patchi];
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    // The flow velocity at the adjacent cell centre
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
 
-    tmp<scalarField> tyPlus = calcYPlus(magUp);
+    tmp<scalarField> tyPlus = yPlus(magUp);
     scalarField& yPlus = tyPlus.ref();
 
     tmp<scalarField> tnutw(new scalarField(patch().size(), 0.0));
@@ -64,10 +63,15 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcNut() const
 
     forAll(yPlus, facei)
     {
-        if (yPlus[facei] > yPlusLam_)
+        const scalar Re = magUp[facei]*y[facei]/nuw[facei];
+
+        if (sqr(yPlus[facei]) > Re)
         {
-            const scalar Re = magUp[facei]*y[facei]/nuw[facei] + rootVSmall;
             nutw[facei] = nuw[facei]*(sqr(yPlus[facei])/Re - 1);
+        }
+        else
+        {
+            nutw[facei] = 0;
         }
     }
 
@@ -75,7 +79,7 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcNut() const
 }
 
 
-tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcYPlus
+tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::yPlus
 (
     const scalarField& magUp
 ) const
@@ -97,26 +101,26 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcYPlus
     tmp<scalarField> tyPlus(new scalarField(patch().size(), 0.0));
     scalarField& yPlus = tyPlus.ref();
 
-    static const scalar c_2 = 2.25/(90 - 2.25);
-    static const scalar c_3 = 2.0*atan(1.0)/log(90/2.25);
-    static const scalar c_4 = c_3*log(2.25);
+    static const scalar c2 = 2.25/(90 - 2.25);
+    static const scalar c3 = 2.0*atan(1.0)/log(90/2.25);
+    static const scalar c4 = c3*log(2.25);
 
     // If KsPlus is based on YPlus the extra term added to the law
     // of the wall will depend on yPlus
     forAll(yPlus, facei)
     {
-        if (Ks_[facei] > 0.0)
+        if (Ks_[facei] > 0)
         {
             // Rough Walls
 
-            const scalar c_1 = 1/(90 - 2.25) + Cs_[facei];
+            const scalar c1 = 1/(90 - 2.25) + Cs_[facei];
 
             const scalar magUpara = magUp[facei];
             const scalar Re = magUpara*y[facei]/nuw[facei];
             const scalar kappaRe = kappa_*Re;
 
             scalar yp = yPlusLam_;
-            const scalar ryPlusLam = 1.0/yp;
+            const scalar ryPlusLam = 1/yp;
 
             int iter = 0;
             scalar yPlusLast = 0.0;
@@ -128,65 +132,84 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcYPlus
                 yPlusLast = yp;
 
                 // The non-dimensional roughness height
-                const scalar KsPlus = yp*dKsPlusdYPlus;
+                scalar KsPlus = yp*dKsPlusdYPlus;
 
                 // The extra term in the law-of-the-wall
-                scalar G = 0.0;
-
-                scalar yPlusGPrime = 0.0;
+                scalar yPlusGPrime = 0;
+                scalar E = E_;
 
                 if (KsPlus >= 90)
                 {
-                    const scalar t_1 = 1 + Cs_[facei]*KsPlus;
-                    G = log(t_1);
-                    yPlusGPrime = Cs_[facei]*KsPlus/t_1;
+                    const scalar t1 = 1 + Cs_[facei]*KsPlus;
+                    E = E_/t1;
+                    yPlusGPrime = Cs_[facei]*KsPlus/t1;
                 }
                 else if (KsPlus > 2.25)
                 {
-                    const scalar t_1 = c_1*KsPlus - c_2;
-                    const scalar t_2 = c_3*log(KsPlus) - c_4;
-                    const scalar sint_2 = sin(t_2);
-                    const scalar logt_1 = log(t_1);
-                    G = logt_1*sint_2;
+                    const scalar t1 = c1*KsPlus - c2;
+                    const scalar t2 = c3*log(KsPlus) - c4;
+                    const scalar sint2 = sin(t2);
+                    const scalar logt1 = log(t1);
+                    E = E_/pow(t1, sint2);
                     yPlusGPrime =
-                        (c_1*sint_2*KsPlus/t_1) + (c_3*logt_1*cos(t_2));
+                        (c1*sint2*KsPlus/t1) + (c3*logt1*cos(t2));
                 }
 
-                scalar denom = 1.0 + log(E_*yp) - G - yPlusGPrime;
-                if (mag(denom) > vSmall)
+                const scalar yPlusMin = constant::mathematical::e/E;
+
+                if (kappa_*yPlusMin > 1)
                 {
-                    yp = (kappaRe + yp*(1 - yPlusGPrime))/denom;
+                    yp = max
+                    (
+                        (kappaRe + yp*(1 - yPlusGPrime))
+                       /(1 + log(E*yp) - yPlusGPrime),
+                        sqrt(Re)
+                    );
                 }
-            } while
-            (
-                mag(ryPlusLam*(yp - yPlusLast)) > 0.0001
-             && ++iter < 10
-             && yp > vSmall
-            );
+                else
+                {
+                    if (log(E*yp) < kappa_*yp)
+                    {
+                        yp = max
+                        (
+                            (kappaRe + yp*(1 - yPlusGPrime))
+                           /(1 + log(E*yp) - yPlusGPrime),
+                            yPlusMin
+                        );
+                    }
+                    else
+                    {
+                        yp = sqrt(Re);
+                    }
+                }
+            } while(mag(ryPlusLam*(yp - yPlusLast)) > 0.0001 && ++iter < 20);
 
-            yPlus[facei] = max(0.0, yp);
+            yPlus[facei] = yp;
         }
         else
         {
             // Smooth Walls
-            const scalar magUpara = magUp[facei];
-            const scalar Re = magUpara*y[facei]/nuw[facei];
-            const scalar kappaRe = kappa_*Re;
-
-            scalar yp = yPlusLam_;
-            const scalar ryPlusLam = 1.0/yp;
+            const scalar Re = magUp[facei]*y[facei]/nuw[facei];
+            const scalar ryPlusLam = 1/yPlusLam_;
 
             int iter = 0;
-            scalar yPlusLast = 0.0;
+            scalar yp = yPlusLam_;
+            scalar yPlusLast = yp;
 
             do
             {
                 yPlusLast = yp;
-                yp = (kappaRe + yp)/(1.0 + log(E_*yp));
+                if (yp > yPlusLam_)
+                {
+                    yp = (kappa_*Re + yp)/(1 + log(E_*yp));
+                }
+                else
+                {
+                    yp = sqrt(Re);
+                }
+            } while(mag(ryPlusLam*(yp - yPlusLast)) > 0.0001 && ++iter < 20);
 
-            } while (mag(ryPlusLam*(yp - yPlusLast)) > 0.0001 && ++iter < 10);
-
-            yPlus[facei] = max(0.0, yp);
+            yPlus[facei] = yp;
         }
     }
 
