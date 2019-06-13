@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,7 +157,7 @@ inline FixedList<Type, 3> triCutTri
     result[0] = x[0];
     for (label i = 0; i < 2; ++ i)
     {
-        result[i+1] = x[0] + f[i]*(x[i+1] - x[0]);
+        result[i+1] = (1 - f[i])*x[0] + f[i]*x[i+1];
     }
     return result;
 }
@@ -175,7 +175,7 @@ inline FixedList<Type, 4> triCutQuad
     for (label i = 0; i < 2; ++ i)
     {
         result[i] = x[i+1];
-        result[3-i] = x[0] + f[i]*(x[i+1] - x[0]);
+        result[3-i] = (1 - f[i])*x[0] + f[i]*x[i+1];
     }
     return result;
 }
@@ -210,7 +210,7 @@ inline FixedList<Type, 4> tetCutTet
     result[0] = x[0];
     for (label i = 0; i < 3; ++ i)
     {
-        result[i+1] = x[0] + f[i]*(x[i+1] - x[0]);
+        result[i+1] = (1 - f[i])*x[0] + f[i]*x[i+1];
     }
     return result;
 }
@@ -227,7 +227,7 @@ inline FixedList<Type, 6> tetCutPrism0
     FixedList<Type, 6> result;
     for (label i = 0; i < 3; ++ i)
     {
-        result[i] = x[0] + f[i]*(x[i+1] - x[0]);
+        result[i] = (1 - f[i])*x[0] + f[i]*x[i+1];
         result[i+3] = x[i+1];
     }
     return result;
@@ -248,7 +248,7 @@ inline FixedList<Type, 6> tetCutPrism01
         result[3*i] = x[i];
         for (label j = 0; j < 2; ++ j)
         {
-            result[3*i+j+1] = x[i] + f[2*i+j]*(x[j+2] - x[i]);
+            result[3*i+j+1] = (1 - f[2*i+j])*x[i] + f[2*i+j]*x[j+2];
         }
     }
 
@@ -275,11 +275,11 @@ inline FixedList<Type, 6> tetCutPrism23
 //- Cut a tri from a tri and apply an operation to the result. The cut is made
 //  along the two edges connected to vertex 0, and the cut locations are given
 //  as factors along these edges. The result is the side connected to vertex 0.
-template<class Op>
+template<class Op, class Point>
 inline typename Op::result triCutTri
 (
     const Op& op,
-    const FixedList<point, 3>& p,
+    const FixedList<Point, 3>& p,
     const Pair<scalar>& f
 )
 {
@@ -288,11 +288,11 @@ inline typename Op::result triCutTri
 
 
 //- Apply an operation to a quad. Splits the quad into two tris.
-template<class Op, class OpData>
+template<class Op, class OpData, class Point>
 inline typename Op::result quadOp
 (
     const OpData& opData,
-    const FixedList<point, 4>& p
+    const FixedList<Point, 4>& p
 )
 {
     static const FixedList<FixedList<label, 3>, 2> i =
@@ -306,11 +306,11 @@ inline typename Op::result quadOp
 //- Cut a quad from a tri and apply an operation to the result. The cuts are
 //  the same as for triCutTri. The result is the side connected to vertices 1
 //  and 2.
-template<class Op>
+template<class Op, class Point>
 inline typename Op::result triCutQuad
 (
     const Op& op,
-    const FixedList<point, 3>& p,
+    const FixedList<Point, 3>& p,
     const FixedList<scalar, 2>& f
 )
 {
@@ -321,11 +321,11 @@ inline typename Op::result triCutQuad
 //- Cut a tet from a tet and apply an operation to the result. The cut is made
 //  along the three edges connected to vertex 0, and the cut locations are given
 //  as factors along these edges. The result is the side connected to vertex 0.
-template<class Op>
+template<class Op, class Point>
 inline typename Op::result tetCutTet
 (
     const Op& op,
-    const FixedList<point, 4>& p,
+    const FixedList<Point, 4>& p,
     const FixedList<scalar, 3>& f
 )
 {
@@ -334,11 +334,11 @@ inline typename Op::result tetCutTet
 
 
 //- Apply an operation to a prism. Splits the prism into three tets.
-template<class Op, class OpData>
+template<class Op, class OpData, class Point>
 inline typename Op::result prismOp
 (
     const OpData& opData,
-    const FixedList<point, 6>& p
+    const FixedList<Point, 6>& p
 )
 {
     static const FixedList<FixedList<label, 4>, 3> i =
@@ -353,11 +353,11 @@ inline typename Op::result prismOp
 //- Cut a prism from a tet and apply an operation to the result. The cuts are
 //  the same as for tetCutTet. The result is the side connected to vertices 1,
 //  2 and 3.
-template<class Op>
+template<class Op, class Point>
 inline typename Op::result tetCutPrism0
 (
     const Op& op,
-    const FixedList<point, 4>& p,
+    const FixedList<Point, 4>& p,
     const FixedList<scalar, 3>& f
 )
 {
@@ -368,11 +368,11 @@ inline typename Op::result tetCutPrism0
 //- Cut a prism from a tet and apply an operation to the result. The cut is made
 //  along four edges, not edges 01 or 23, and the cut locations are given as
 //  factors along these edges. The result is the side connected to edge 01.
-template<class Op>
+template<class Op, class Point>
 inline typename Op::result tetCutPrism01
 (
     const Op& op,
-    const FixedList<point, 4>& p,
+    const FixedList<Point, 4>& p,
     const FixedList<scalar, 4>& f
 )
 {
@@ -382,11 +382,11 @@ inline typename Op::result tetCutPrism01
 
 //- Cut a prism from a tet and apply an operation to the result. The cuts are
 //  the same as for tetCutPrism01. The result is the side connected to edge 23.
-template<class Op>
+template<class Op, class Point>
 inline typename Op::result tetCutPrism23
 (
     const Op& op,
-    const FixedList<point, 4>& p,
+    const FixedList<Point, 4>& p,
     const FixedList<scalar, 4>& f
 )
 {

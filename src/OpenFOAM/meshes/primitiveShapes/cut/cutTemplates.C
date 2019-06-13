@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,10 +27,10 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class AboveOp, class BelowOp>
+template<class Point, class AboveOp, class BelowOp>
 typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::triCut
 (
-    const FixedList<point, 3>& tri,
+    const FixedList<Point, 3>& tri,
     const FixedList<scalar, 3>& level,
     const AboveOp& aboveOp,
     const BelowOp& belowOp
@@ -73,7 +73,7 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::triCut
     }
 
     // Permute the data
-    const FixedList<point, 3> p = triReorder(tri, indices);
+    const FixedList<Point, 3> p = triReorder(tri, indices);
     const FixedList<scalar, 3> l = triReorder(level, indices);
     AboveOp a = triReorder(aboveOp, indices);
     BelowOp b = triReorder(belowOp, indices);
@@ -116,10 +116,10 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::triCut
 }
 
 
-template<class AboveOp, class BelowOp>
+template<class Point, class AboveOp, class BelowOp>
 typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::tetCut
 (
-    const FixedList<point, 4>& tet,
+    const FixedList<Point, 4>& tet,
     const FixedList<scalar, 4>& level,
     const AboveOp& aboveOp,
     const BelowOp& belowOp
@@ -188,7 +188,7 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::tetCut
     }
 
     // Permute the data
-    const FixedList<point, 4> p = tetReorder(tet, indices);
+    const FixedList<Point, 4> p = tetReorder(tet, indices);
     const FixedList<scalar, 4> l = tetReorder(level, indices);
     AboveOp a = tetReorder(aboveOp, indices);
     BelowOp b = tetReorder(belowOp, indices);

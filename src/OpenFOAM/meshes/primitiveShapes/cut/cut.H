@@ -124,8 +124,8 @@ public:
         }
 
         //- Operate on a triangle or tetrahedron
-        template<unsigned Size>
-        result operator()(const FixedList<point, Size>& p) const
+        template<class Type, unsigned Size>
+        result operator()(const FixedList<Type, Size>& p) const
         {
             return result();
         }
@@ -400,7 +400,7 @@ public:
                             Class listOp Declaration
 \*---------------------------------------------------------------------------*/
 
-template<unsigned Size>
+template<class Type, unsigned Size>
 class listOp
 :
     public uniformOp<nil>
@@ -412,16 +412,16 @@ public:
         //- Result class
         class result
         :
-            public DynamicList<FixedList<point, Size>>
+            public DynamicList<FixedList<Type, Size>>
         {
         public:
 
             // Constructors
 
                 //- Construct from a single element
-                result(const FixedList<point, Size>& x)
+                result(const FixedList<Type, Size>& x)
                 :
-                    DynamicList<FixedList<point, Size>>(1, x)
+                    DynamicList<FixedList<Type, Size>>(1, x)
                 {}
 
 
@@ -459,17 +459,17 @@ public:
         }
 
         //- Operate on a triangle or tetrahedron
-        result operator()(const FixedList<point, Size>& p) const
+        result operator()(const FixedList<Type, Size>& p) const
         {
             return result(p);
         }
 };
 
 
-typedef listOp<3> listTriOp;
+typedef listOp<point, 3> listTriOp;
 
 
-typedef listOp<4> listTetOp;
+typedef listOp<point, 4> listTetOp;
 
 
 /*---------------------------------------------------------------------------*\
@@ -513,8 +513,8 @@ public:
         }
 
         //- Operate on a triangle or tetrahedron
-        template<unsigned Size>
-        result operator()(const FixedList<point, Size>& p) const
+        template<class Type, unsigned Size>
+        result operator()(const FixedList<Type, Size>& p) const
         {
             this->data().append(p);
             return result();
@@ -569,10 +569,10 @@ public:
 //- Cut a triangle along the zero plane defined by the given levels. Templated
 //  on aboveOp and belowOp; the operations applied to the regions on either side
 //  of the cut.
-template<class AboveOp, class BelowOp>
+template<class Point, class AboveOp, class BelowOp>
 typename cut::opAddResult<AboveOp, BelowOp>::type triCut
 (
-    const FixedList<point, 3>& tri,
+    const FixedList<Point, 3>& tri,
     const FixedList<scalar, 3>& level,
     const AboveOp& aboveOp,
     const BelowOp& belowOp
@@ -589,10 +589,10 @@ typename cut::opAddResult<AboveOp, BelowOp>::type triCut
 );
 
 //- As triCut, but for a tetrahedron.
-template<class AboveOp, class BelowOp>
+template<class Point, class AboveOp, class BelowOp>
 typename cut::opAddResult<AboveOp, BelowOp>::type tetCut
 (
-    const FixedList<point, 4>& tet,
+    const FixedList<Point, 4>& tet,
     const FixedList<scalar, 4>& level,
     const AboveOp& aboveOp,
     const BelowOp& belowOp
