@@ -62,7 +62,7 @@ class bufferedAccumulator
 :
     public List<Field<Type>>
 {
-    // Private data
+    // Private Data
 
         label averagesTaken_;
 
@@ -84,7 +84,7 @@ public:
     typedef typename pTraits<Type>::cmptType cmptType;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 

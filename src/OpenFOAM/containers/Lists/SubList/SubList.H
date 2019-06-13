@@ -85,7 +85,7 @@ public:
         inline SubList(const SubList<T>& sl) = default;
 
 
-    // Member operators
+    // Member Operators
 
         //- Allow cast to a const List<T>&
         inline operator const Foam::List<T>&() const;

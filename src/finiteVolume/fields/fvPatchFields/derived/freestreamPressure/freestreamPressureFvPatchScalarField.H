@@ -79,7 +79,7 @@ class freestreamPressureFvPatchScalarField
 :
     public mixedFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of the velocity field
         word UName_;
@@ -156,7 +156,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
             const scalarField& freestreamValue() const
             {

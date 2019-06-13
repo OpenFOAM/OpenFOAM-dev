@@ -59,7 +59,7 @@ class gaussGrad
 :
     public fv::gradScheme<Type>
 {
-    // Private data
+    // Private Data
 
         tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 

@@ -110,7 +110,7 @@ class cellCuts
 :
     public edgeVertex
 {
-    // Private data
+    // Private Data
 
         // Per point/edge status
 

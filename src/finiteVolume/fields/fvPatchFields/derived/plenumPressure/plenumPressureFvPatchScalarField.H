@@ -120,7 +120,7 @@ class plenumPressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Ratio of specific heats
         scalar gamma_;
@@ -243,7 +243,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

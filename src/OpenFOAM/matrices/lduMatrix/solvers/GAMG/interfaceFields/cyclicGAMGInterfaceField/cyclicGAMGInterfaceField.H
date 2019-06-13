@@ -53,7 +53,7 @@ class cyclicGAMGInterfaceField
     public GAMGInterfaceField,
     public cyclicLduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclic interface
         const cyclicGAMGInterface& cyclicInterface_;

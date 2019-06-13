@@ -117,7 +117,7 @@ class fvMatrix
     public tmp<fvMatrix<Type>>::refCount,
     public lduMatrix
 {
-    // Private data
+    // Private Data
 
         //- Const reference to GeometricField<Type, fvPatchField, volMesh>
         //  Converted into a non-const reference at the point of solution.
@@ -235,7 +235,7 @@ public:
             {}
 
 
-        // Member functions
+        // Member Functions
 
             //- Solve returning the solution statistics.
             //  Use the given solver controls
@@ -276,7 +276,7 @@ public:
     virtual ~fvMatrix();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -431,7 +431,7 @@ public:
                 flux() const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const fvMatrix<Type>&);
         void operator=(const tmp<fvMatrix<Type>>&);

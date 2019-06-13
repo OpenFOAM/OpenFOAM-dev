@@ -50,7 +50,7 @@ namespace Foam
 
 class dynamicCodeContext
 {
-    // Private data
+    // Private Data
 
         //- The parent dictionary context
         const dictionary& dict_;
@@ -68,7 +68,7 @@ class dynamicCodeContext
         SHA1Digest sha1_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Add a \#line directive to the start of the given source string that
         //  compilation messages are meaningful
@@ -93,7 +93,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the parent dictionary context
         const dictionary& dict() const

@@ -178,14 +178,14 @@ class populationBalanceModel
 :
     public regIOobject
 {
-    // Private typedefs
+    // Private Typedefs
 
         typedef
             HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
             phasePairTable;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to the phaseSystem
         const phaseSystem& fluid_;
@@ -281,7 +281,7 @@ class populationBalanceModel
         label sourceUpdateCounter_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         void registerVelocityGroups();
 

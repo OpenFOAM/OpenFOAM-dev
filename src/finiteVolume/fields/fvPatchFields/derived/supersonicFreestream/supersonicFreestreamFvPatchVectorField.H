@@ -85,7 +85,7 @@ class supersonicFreestreamFvPatchVectorField
 :
     public mixedFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of temperature field, default = "T"
         word TName_;
@@ -177,7 +177,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

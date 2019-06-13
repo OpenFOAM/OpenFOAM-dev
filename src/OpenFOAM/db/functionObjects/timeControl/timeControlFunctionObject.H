@@ -59,7 +59,7 @@ class timeControl
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to the time database
         const Time& time_;

@@ -67,9 +67,6 @@ class fvMeshAdder
 :
     public polyMeshAdder
 {
-
-private:
-
     // Private Member Functions
 
         //- Calculate map from new patch faces to old patch faces. -1 where

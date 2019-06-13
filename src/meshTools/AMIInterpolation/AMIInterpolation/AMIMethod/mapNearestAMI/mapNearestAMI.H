@@ -50,9 +50,6 @@ class mapNearestAMI
 :
     public AMIMethod
 {
-
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construction

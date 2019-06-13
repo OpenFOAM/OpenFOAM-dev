@@ -55,7 +55,7 @@ class Residuals
     public MeshObject<polyMesh, GeometricMeshObject, Residuals<Type>>,
     public HashTable<DynamicList<SolverPerformance<Type>>>
 {
-    // Private data
+    // Private Data
 
         //- Previously used time-index, used for reset between iterations
         mutable label prevTimeIndex_;

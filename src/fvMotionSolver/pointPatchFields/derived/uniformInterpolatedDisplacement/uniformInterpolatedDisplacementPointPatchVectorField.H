@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ class uniformInterpolatedDisplacementPointPatchVectorField
 :
     public fixedValuePointPatchField<vector>
 {
-    // Private data
+    // Private Data
 
         autoPtr<dynamicMeshPointInterpolator> pointInterpolator_;
 
@@ -144,7 +144,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

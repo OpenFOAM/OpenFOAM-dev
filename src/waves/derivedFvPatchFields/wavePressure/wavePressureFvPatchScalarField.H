@@ -82,7 +82,7 @@ class wavePressureFvPatchScalarField
 :
     public mixedFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of the velocity field
         const word UName_;
@@ -163,7 +163,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

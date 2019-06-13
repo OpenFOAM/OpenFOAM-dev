@@ -77,7 +77,7 @@ class MarshakRadiationFixedTemperatureFvPatchScalarField
     public radiationCoupledBase
 {
 
-    // Private data
+    // Private Data
 
         //- Radiation temperature field
         scalarField Trad_;
@@ -155,7 +155,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

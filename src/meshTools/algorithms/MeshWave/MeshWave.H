@@ -58,7 +58,7 @@ class MeshWave
 :
     public MeshWaveName
 {
-    // Private data
+    // Private Data
 
         //- Wall information for all faces
         List<Type> allFaceInfo_;

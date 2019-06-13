@@ -51,7 +51,7 @@ class searchableSurfaceControl
 :
     public cellSizeAndAlignmentControl
 {
-    // Private data
+    // Private Data
 
         //- Name of the surface
         const word surfaceName_;

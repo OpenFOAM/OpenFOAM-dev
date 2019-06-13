@@ -95,7 +95,7 @@ class undoableMeshCutter
 :
     public meshCutter
 {
-    // Private data
+    // Private Data
 
         //- Whether or not to store actions for unplaying.
         const bool undoable_;

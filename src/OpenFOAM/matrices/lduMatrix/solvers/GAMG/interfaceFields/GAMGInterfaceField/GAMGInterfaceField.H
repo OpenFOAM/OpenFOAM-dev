@@ -53,7 +53,7 @@ class GAMGInterfaceField
 :
     public lduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the interface
         const GAMGInterface& interface_;

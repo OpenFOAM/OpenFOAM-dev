@@ -71,7 +71,7 @@ class writeCellVolumes
 :
     public fvMeshFunctionObject
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         writeCellVolumes(const writeCellVolumes&) = delete;

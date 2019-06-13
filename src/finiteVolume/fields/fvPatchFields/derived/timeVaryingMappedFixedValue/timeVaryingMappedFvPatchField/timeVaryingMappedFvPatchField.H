@@ -122,7 +122,7 @@ class timeVaryingMappedFvPatchField
 :
     public timeVaryingMapped
 {
-    // Private data
+    // Private Data
 
         //- Reference to the patch the data is mapped to
         const fvPatch& patch_;
@@ -206,7 +206,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         const Time& time() const
         {

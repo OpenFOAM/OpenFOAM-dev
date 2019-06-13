@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class ReactingParcel
 :
     public ParcelType
 {
-    // Private data
+    // Private Data
 
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
@@ -80,7 +80,7 @@ public:
     :
         public ParcelType::constantProperties
     {
-        // Private data
+        // Private Data
 
             //- Minimum pressure [Pa]
             demandDrivenEntry<scalar> pMin_;
@@ -119,7 +119,7 @@ public:
     {
     private:
 
-        // Private data
+        // Private Data
 
             // Interpolators for continuous phase fields
 
@@ -148,7 +148,7 @@ public:
             );
 
 
-        // Member functions
+        // Member Functions
 
             //- Return const access to the interpolator for continuous phase
             //  pressure field
@@ -212,7 +212,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Runtime type information
         TypeName("ReactingParcel");

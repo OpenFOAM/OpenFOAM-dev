@@ -68,7 +68,7 @@ class wallHeatTransferFvPatchScalarField
 :
     public mixedFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Temperature at the wall
         scalarField Tinf_;
@@ -145,7 +145,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

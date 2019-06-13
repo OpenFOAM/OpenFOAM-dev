@@ -55,7 +55,7 @@ class engineTime;
 
 class engineValve
 {
-    // Private data
+    // Private Data
 
         //- Name of valve
         word name_;
@@ -145,7 +145,7 @@ class engineValve
 
 public:
 
-    // Static data members
+    // Static Data Members
 
 
     // Constructors

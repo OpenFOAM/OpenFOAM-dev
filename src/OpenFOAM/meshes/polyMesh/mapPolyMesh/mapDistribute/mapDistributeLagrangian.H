@@ -50,7 +50,7 @@ class mapPolyMesh;
 
 class mapDistributeLagrangian
 {
-    // Private data
+    // Private Data
 
         //- Map to distribute particles
         const mapDistribute particleMap_;

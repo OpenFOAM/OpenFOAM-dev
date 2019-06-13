@@ -58,7 +58,7 @@ class writeDictionary
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to the database
         const objectRegistry& obr_;
@@ -83,7 +83,7 @@ class writeDictionary
 
 private:
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         writeDictionary(const writeDictionary&) = delete;

@@ -57,12 +57,6 @@ class weighted
         const surfaceScalarField& weights_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const weighted&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -122,6 +116,12 @@ public:
         {
             return weights_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const weighted&) = delete;
 };
 
 

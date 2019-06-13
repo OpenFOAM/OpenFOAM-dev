@@ -54,7 +54,7 @@ class oscillatingRotatingMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Centre of gravity
         point origin_;

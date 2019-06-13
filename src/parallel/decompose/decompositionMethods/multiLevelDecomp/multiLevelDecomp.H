@@ -48,7 +48,7 @@ class multiLevelDecomp
 :
     public decompositionMethod
 {
-    // Private data
+    // Private Data
 
         dictionary methodsDict_;
 

@@ -133,7 +133,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Return gradient at boundary
         virtual tmp<Field<Type>> snGrad() const;

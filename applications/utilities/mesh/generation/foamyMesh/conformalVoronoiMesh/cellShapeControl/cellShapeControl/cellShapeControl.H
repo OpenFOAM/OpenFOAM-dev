@@ -64,7 +64,7 @@ class cellShapeControl
 :
     public dictionary
 {
-    // Private data
+    // Private Data
 
         const Time& runTime_;
 

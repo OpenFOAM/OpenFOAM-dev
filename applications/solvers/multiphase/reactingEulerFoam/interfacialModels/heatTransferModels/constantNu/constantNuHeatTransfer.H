@@ -56,7 +56,7 @@ class constantNuHeatTransfer
 :
     public heatTransferModel
 {
-    // Private data
+    // Private Data
 
         //- Nusselt number
         dimensionedScalar Nu_;

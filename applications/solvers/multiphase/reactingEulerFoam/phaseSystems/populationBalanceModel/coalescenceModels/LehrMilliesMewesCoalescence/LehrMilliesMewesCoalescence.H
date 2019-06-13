@@ -103,7 +103,7 @@ class LehrMilliesMewesCoalescence
 :
     public coalescenceModel
 {
-    // Private data
+    // Private Data
 
         //- Critical velocity for coalescence, defaults to 0.08 m/s
         dimensionedScalar uCrit_;

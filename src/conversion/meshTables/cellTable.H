@@ -79,7 +79,7 @@ class cellTable
 :
     public Map<dictionary>
 {
-    // Private data
+    // Private Data
 
        static const char* const defaultMaterial_;
 

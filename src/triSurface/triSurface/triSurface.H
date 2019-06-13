@@ -68,7 +68,7 @@ class triSurface
 :
     public PrimitivePatch<::Foam::List<labelledTri>, pointField>
 {
-    // Private typedefs
+    // Private Typedefs
 
     //- Typedefs for convenience
         typedef labelledTri Face;
@@ -76,7 +76,7 @@ class triSurface
             ParentType;
 
 
-    // Private data
+    // Private Data
 
         //- The number of bytes in the STL header
         static const int STLheaderSize = 80;
@@ -237,7 +237,7 @@ protected:
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Placeholder only, but do not remove - it is needed for GeoMesh
         typedef bool BoundaryMesh;
@@ -428,7 +428,7 @@ public:
             void writeStats(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const triSurface&);
         void operator=(triSurface&&);

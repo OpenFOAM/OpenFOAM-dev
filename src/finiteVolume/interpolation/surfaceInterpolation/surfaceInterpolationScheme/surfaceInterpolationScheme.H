@@ -57,19 +57,10 @@ class surfaceInterpolationScheme
 :
     public tmp<surfaceInterpolationScheme<Type>>::refCount
 {
-    // Private data
+    // Private Data
 
         //- Hold reference to mesh
         const fvMesh& mesh_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        surfaceInterpolationScheme(const surfaceInterpolationScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceInterpolationScheme&) = delete;
 
 
 public:
@@ -113,6 +104,10 @@ public:
         :
             mesh_(mesh)
         {}
+
+        //- Disallow copy construct
+        surfaceInterpolationScheme(const surfaceInterpolationScheme&);
+
 
 
     // Selectors
@@ -254,6 +249,12 @@ public:
         (
             const tmp<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceInterpolationScheme&) = delete;
 };
 
 

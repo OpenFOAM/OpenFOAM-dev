@@ -59,7 +59,7 @@ class rotatingMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Origin of the axis
         const vector origin_;

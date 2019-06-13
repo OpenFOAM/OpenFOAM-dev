@@ -158,7 +158,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return Cmu
         scalar Cmu() const

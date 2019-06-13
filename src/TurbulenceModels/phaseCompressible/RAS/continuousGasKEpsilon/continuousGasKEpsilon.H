@@ -77,7 +77,7 @@ class continuousGasKEpsilon
 :
     public kEpsilon<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         mutable const turbulenceModel *liquidTurbulencePtr_;
 

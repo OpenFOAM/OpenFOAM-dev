@@ -67,7 +67,7 @@ class cylindrical
 :
     public coordinateRotation
 {
-    // Private data
+    // Private Data
 
         //- AutoPtr to transformation tensor
         autoPtr<tensorField> Rptr_;

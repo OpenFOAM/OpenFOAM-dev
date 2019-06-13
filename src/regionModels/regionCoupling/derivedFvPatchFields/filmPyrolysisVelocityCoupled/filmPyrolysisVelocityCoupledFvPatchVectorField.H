@@ -69,7 +69,7 @@ class filmPyrolysisVelocityCoupledFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of film region
         word filmRegionName_;
@@ -152,7 +152,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

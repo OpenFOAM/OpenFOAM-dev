@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,9 +49,7 @@ class patchInteractionDataList
 :
     public List<patchInteractionData>
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- List of patch IDs for each patch group
         labelListList patchGroupIDs_;
@@ -71,7 +69,7 @@ public:
         patchInteractionDataList(const polyMesh& mesh, const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return label of group containing patch id
         //  Returns -1 if patch id is not present

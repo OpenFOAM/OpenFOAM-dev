@@ -54,7 +54,7 @@ class pointConstraint;
 
 class snappySnapDriver
 {
-    // Private data
+    // Private Data
 
         //- Mesh+surface
         meshRefinement& meshRefiner_;

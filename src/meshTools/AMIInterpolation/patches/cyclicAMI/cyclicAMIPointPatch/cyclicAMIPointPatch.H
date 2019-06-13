@@ -52,7 +52,7 @@ class cyclicAMIPointPatch
 :
     public coupledFacePointPatch
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclic AMI patch
         const cyclicAMIPolyPatch& cyclicAMIPolyPatch_;

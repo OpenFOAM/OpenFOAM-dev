@@ -68,7 +68,7 @@ class filmPyrolysisTemperatureCoupledFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of film region
         const word filmRegionName_;
@@ -151,7 +151,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

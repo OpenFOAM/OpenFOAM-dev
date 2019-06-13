@@ -58,7 +58,7 @@ class nonUniformField
 
 protected:
 
-    // Private typedef
+    // Private Typedefs
 
         typedef PrimitivePatchInterpolation
         <
@@ -67,7 +67,7 @@ protected:
         primitivePatchInterpolation;
 
 
-    // Private data
+    // Private Data
 
         const triSurfaceMesh& surfaceTriMesh_;
 

@@ -84,7 +84,7 @@ Ostream& operator<<(Ostream&, const directionInfo&);
 
 class directionInfo
 {
-    // Private data
+    // Private Data
 
         // Either mesh edge or face point
         label index_;

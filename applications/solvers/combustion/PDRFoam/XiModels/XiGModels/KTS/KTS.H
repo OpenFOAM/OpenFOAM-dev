@@ -53,7 +53,7 @@ class KTS
 :
     public XiGModel
 {
-    // Private data
+    // Private Data
 
         scalar GEtaCoef_;
 

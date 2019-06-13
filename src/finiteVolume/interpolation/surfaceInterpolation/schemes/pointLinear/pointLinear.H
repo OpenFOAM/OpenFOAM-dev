@@ -54,14 +54,6 @@ class pointLinear
 :
     public linear<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        pointLinear(const pointLinear&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointLinear&) = delete;
-
 
 public:
 
@@ -100,6 +92,9 @@ public:
             linear<Type>(mesh)
         {}
 
+        //- Disallow default bitwise copy construction
+        pointLinear(const pointLinear&) = delete;
+
 
     // Member Functions
 
@@ -115,6 +110,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointLinear&) = delete;
 };
 
 

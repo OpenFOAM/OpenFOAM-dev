@@ -133,7 +133,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the contact angle
         virtual tmp<scalarField> theta

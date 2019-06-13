@@ -133,7 +133,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Name
         word name_;
@@ -473,7 +473,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const IOobject&);
 };

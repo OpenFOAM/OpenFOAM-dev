@@ -57,7 +57,7 @@ class faceMapper
 :
     public morphFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to polyMesh
         const polyMesh& mesh_;
@@ -98,7 +98,7 @@ class faceMapper
 
 public:
 
-    // Static data members
+    // Static Data Members
 
     // Constructors
 

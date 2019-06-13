@@ -57,7 +57,7 @@ class fvPatchMapper
 :
     public generalFvPatchFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const fvPatch& patch_;
@@ -104,7 +104,7 @@ class fvPatchMapper
 
 public:
 
-    // Static data members
+    // Static Data Members
 
     // Constructors
 

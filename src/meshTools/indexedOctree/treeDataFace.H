@@ -65,7 +65,7 @@ class treeDataFace
 
 
 
-    // Private data
+    // Private Data
 
         const primitiveMesh& mesh_;
 

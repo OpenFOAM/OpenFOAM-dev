@@ -116,7 +116,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the rate of phase-change
         virtual const scalarField& dmdt() const

@@ -58,7 +58,7 @@ class volPointInterpolation
 :
     public MeshObject<fvMesh, UpdateableMeshObject, volPointInterpolation>
 {
-    // Private data
+    // Private Data
 
         //- Interpolation scheme weighting factor array.
         scalarListList pointWeights_;
@@ -113,12 +113,6 @@ class volPointInterpolation
             GeometricField<Type, pointPatchField, pointMesh>&
         ) const;
 
-        //- Disallow default bitwise copy construction
-        volPointInterpolation(const volPointInterpolation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const volPointInterpolation&) = delete;
-
 
 public:
 
@@ -131,12 +125,15 @@ public:
         //- Constructor given fvMesh and pointMesh.
         explicit volPointInterpolation(const fvMesh&);
 
+        //- Disallow default bitwise copy construction
+        volPointInterpolation(const volPointInterpolation&) = delete;
+
 
     //- Destructor
     ~volPointInterpolation();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -247,6 +244,11 @@ public:
                 pointVectorField&
             ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const volPointInterpolation&) = delete;
 };
 
 

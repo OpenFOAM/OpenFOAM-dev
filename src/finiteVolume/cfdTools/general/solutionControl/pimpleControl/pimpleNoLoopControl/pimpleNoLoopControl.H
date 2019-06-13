@@ -79,7 +79,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Run-time type information
         TypeName("pimpleNoLoopControl");

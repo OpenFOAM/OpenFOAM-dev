@@ -133,7 +133,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ class hPowerThermo
 :
     public EquationOfState
 {
-    // Private data
+    // Private Data
 
         scalar c0_;
         scalar n0_;
@@ -180,7 +180,7 @@ public:
             inline scalar dCpdT(const scalar p, const scalar T) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const hPowerThermo&);
 

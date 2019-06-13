@@ -54,7 +54,7 @@ class FDICPreconditioner
 :
     public lduMatrix::preconditioner
 {
-    // Private data
+    // Private Data
 
         //- The reciprocal preconditioned diagonal
         scalarField rD_;

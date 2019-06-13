@@ -92,7 +92,7 @@ class WLFTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         //- Dynamic viscosity at the reference temperature [Pa.s]
         scalar mu0_;
@@ -133,7 +133,7 @@ public:
         inline static autoPtr<WLFTransport> New(const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -157,7 +157,7 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const WLFTransport&);
         inline void operator*=(const scalar);

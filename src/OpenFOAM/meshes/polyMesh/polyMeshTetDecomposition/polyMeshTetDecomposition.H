@@ -59,7 +59,7 @@ class polyMeshTetDecomposition
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Minimum tetrahedron quality
         static const scalar minTetQuality;

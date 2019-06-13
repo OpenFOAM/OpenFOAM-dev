@@ -52,7 +52,7 @@ class cubeRootVolDelta
 :
     public LESdelta
 {
-    // Private data
+    // Private Data
 
         scalar deltaCoeff_;
 

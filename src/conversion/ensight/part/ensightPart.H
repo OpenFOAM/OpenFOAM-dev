@@ -65,9 +65,9 @@ ensightGeoFile& operator<<(ensightGeoFile&, const ensightPart&);
 
 class ensightPart
 {
-    // Private data
+    // Private Data
 
-        // Static data members
+        // Static Data Members
         static const List<word> elemTypes_;
 
 

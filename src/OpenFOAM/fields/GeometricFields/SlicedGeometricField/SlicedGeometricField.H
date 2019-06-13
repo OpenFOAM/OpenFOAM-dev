@@ -154,7 +154,7 @@ public:
     ~SlicedGeometricField();
 
 
-    // Member functions
+    // Member Functions
 
         //- Correct boundary field
         void correctBoundaryConditions();

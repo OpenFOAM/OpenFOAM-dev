@@ -53,18 +53,9 @@ class blended
     public limitedSurfaceInterpolationScheme<Type>,
     public blendedSchemeBase<Type>
 {
-    // Private data
+    // Private Data
 
         const scalar blendingFactor_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        blended(const blended&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const blended&) = delete;
 
 
 public:
@@ -112,6 +103,9 @@ public:
             blendingFactor_(readScalar(is))
         {}
 
+        //- Disallow default bitwise copy construction
+        blended(const blended&) = delete;
+
 
     //- Destructor
     virtual ~blended()
@@ -158,6 +152,12 @@ public:
                 blendingFactor_*this->mesh().surfaceInterpolation::weights()
               + (1 - blendingFactor_)*pos0(this->faceFlux_);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const blended&) = delete;
 };
 
 

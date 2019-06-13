@@ -54,7 +54,7 @@ class nearWallDistNoSearch
 :
     public volScalarField::Boundary
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const fvMesh& mesh_;
@@ -65,12 +65,6 @@ class nearWallDistNoSearch
         //- Do all calculations.
         void doAll();
 
-        //- Disallow default bitwise copy construction
-        nearWallDistNoSearch(const nearWallDistNoSearch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const nearWallDistNoSearch&) = delete;
-
 
 public:
 
@@ -78,6 +72,9 @@ public:
 
         //- Construct from components
         nearWallDistNoSearch(const fvMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        nearWallDistNoSearch(const nearWallDistNoSearch&) = delete;
 
 
     //- Destructor
@@ -88,6 +85,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nearWallDistNoSearch&) = delete;
 };
 
 

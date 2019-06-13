@@ -99,7 +99,7 @@ class fanPressureJumpFvPatchScalarField
 :
     public fixedJumpFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Fan curve
         autoPtr<Function1<scalar>> fanCurve_;
@@ -191,7 +191,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

@@ -73,7 +73,7 @@ typedef UList<label> labelUList;
 template<class T>
 class UList
 {
-    // Private data
+    // Private Data
 
         //- Number of elements in UList
         label size_;
@@ -223,7 +223,7 @@ public:
             void deepCopy(const UList<T>&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Return element of UList
         inline T& operator[](const label);

@@ -78,7 +78,7 @@ class sixDoFRigidBodyState
     public fvMeshFunctionObject,
     public logFiles
 {
-    // Private data
+    // Private Data
 
         word angleFormat_;
 

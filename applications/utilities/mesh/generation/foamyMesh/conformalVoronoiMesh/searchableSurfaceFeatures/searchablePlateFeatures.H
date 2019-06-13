@@ -76,7 +76,7 @@ public:
     TypeName("searchablePlateFeatures");
 
 
-    // Static data members
+    // Static Data Members
 
         //- Edge to point addressing
         static const edgeList edges;

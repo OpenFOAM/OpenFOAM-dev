@@ -52,8 +52,6 @@ class searchableDisk
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         //- origin

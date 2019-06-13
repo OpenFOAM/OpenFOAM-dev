@@ -83,7 +83,7 @@ class wordRe
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- An empty wordRe
         static const wordRe null;
@@ -157,7 +157,7 @@ public:
         wordRe(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -221,7 +221,7 @@ public:
             Ostream& info(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -249,7 +249,7 @@ public:
             inline void operator=(const char*);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, wordRe&);
         friend Ostream& operator<<(Ostream&, const wordRe&);

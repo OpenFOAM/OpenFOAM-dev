@@ -62,7 +62,7 @@ class linearTsub
 :
     public diameterModel
 {
-    // Private data
+    // Private Data
 
         //- Name of the liquid phase that is used to determine subcooling
         //  temperature

@@ -67,7 +67,7 @@ class PatchToPatchInterpolation
 :
     public PatchToPatchInterpolationName
 {
-    // Private data
+    // Private Data
 
         //- Reference to the source patch
         const FromPatch& fromPatch_;

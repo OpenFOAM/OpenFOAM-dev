@@ -70,7 +70,7 @@ protected:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Is this object registered with the registry
         bool registered_;
@@ -132,7 +132,7 @@ public:
     virtual ~regIOobject();
 
 
-    // Member functions
+    // Member Functions
 
         // Registration
 
@@ -280,7 +280,7 @@ public:
             virtual bool write(const bool write = true) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const IOobject&);
 };

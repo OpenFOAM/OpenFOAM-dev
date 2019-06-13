@@ -98,7 +98,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const Map<T>& map)
         {

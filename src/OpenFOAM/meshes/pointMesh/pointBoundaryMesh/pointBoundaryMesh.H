@@ -54,7 +54,7 @@ class pointBoundaryMesh
 :
     public pointPatchList
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const pointMesh& mesh_;
@@ -85,7 +85,7 @@ public:
         pointBoundaryMesh(const pointBoundaryMesh&) = delete;
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the mesh reference
         const pointMesh& mesh() const

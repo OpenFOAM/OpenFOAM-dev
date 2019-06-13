@@ -72,7 +72,7 @@ class DSMCCloud
     public Cloud<ParcelType>,
     public DSMCBaseCloud
 {
-    // Private data
+    // Private Data
 
         //- Cloud type - used to set the name of the parcel properties
         //  dictionary by appending "Properties"

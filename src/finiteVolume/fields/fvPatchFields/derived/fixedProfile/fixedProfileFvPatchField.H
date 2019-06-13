@@ -108,7 +108,7 @@ class fixedProfileFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Profile data
         autoPtr<Function1<Type>> profile_;
@@ -196,7 +196,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

@@ -51,7 +51,7 @@ class dynamicFvMesh
 :
     public fvMesh
 {
-    // Private data
+    // Private Data
 
         //- The dynamicMeshDict
         dictionary dynamicMeshDict_;
@@ -91,7 +91,7 @@ public:
     //  following mesh motion
     class velocityMotionCorrection
     {
-        // Private data
+        // Private Data
 
             const dynamicFvMesh& mesh_;
 

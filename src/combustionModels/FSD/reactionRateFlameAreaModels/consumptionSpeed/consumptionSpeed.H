@@ -65,7 +65,7 @@ class consumptionSpeed
         scalar omegaMin_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return consumption rate
         scalar omega0Sigma(scalar sigma, scalar a) const;
@@ -93,7 +93,7 @@ public:
         virtual ~consumptionSpeed();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return speed consumption rate temp
         tmp<volScalarField> omega0Sigma(const volScalarField& sigma);

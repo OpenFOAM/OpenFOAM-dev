@@ -72,7 +72,7 @@ public:
 
 private:
 
-        // Private data
+        // Private Data
 
         const Time& runTime_;
 

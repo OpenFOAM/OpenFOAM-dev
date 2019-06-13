@@ -152,7 +152,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment operator
         void operator=(const UILList<LListBase, T>&);
@@ -197,7 +197,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 T& operator*()
                 {
@@ -252,7 +252,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 const T& operator*()
                 {
@@ -314,7 +314,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 const T& operator*()
                 {

@@ -56,11 +56,6 @@ class harmonic
 :
     public surfaceInterpolationScheme<scalar>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const harmonic&) = delete;
-
 
 public:
 
@@ -122,6 +117,12 @@ public:
         {
             return 1.0/(reverseLinear<scalar>(vf.mesh()).interpolate(1.0/vf));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const harmonic&) = delete;
 };
 
 

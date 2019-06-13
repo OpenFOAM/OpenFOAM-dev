@@ -113,7 +113,7 @@ class powerLawLopesdaCosta
     public powerLawLopesdaCostaZone,
     public porosityModel
 {
-    // Private data
+    // Private Data
 
         //- Cd coefficient
         scalar Cd_;

@@ -55,7 +55,7 @@ class axisRotationMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Origin
         point origin_;

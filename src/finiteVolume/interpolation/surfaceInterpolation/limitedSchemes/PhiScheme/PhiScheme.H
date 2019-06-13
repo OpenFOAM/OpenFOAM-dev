@@ -62,14 +62,6 @@ class PhiScheme
     public limitedSurfaceInterpolationScheme<Type>,
     public PhiLimiter
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        PhiScheme(const PhiScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const PhiScheme&) = delete;
-
 
 public:
 
@@ -116,6 +108,9 @@ public:
             PhiLimiter(is)
         {}
 
+        //- Disallow default bitwise copy construction
+        PhiScheme(const PhiScheme&) = delete;
+
 
     // Member Functions
 
@@ -124,6 +119,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PhiScheme&) = delete;
 };
 
 

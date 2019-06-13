@@ -61,8 +61,6 @@ class searchablePlate
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         const point origin_;

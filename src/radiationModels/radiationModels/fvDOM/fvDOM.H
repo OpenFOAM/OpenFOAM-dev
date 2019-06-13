@@ -85,7 +85,7 @@ class fvDOM
 :
     public radiationModel
 {
-    // Private data
+    // Private Data
 
 
         //- Incident radiation  [W/m2]
@@ -168,7 +168,7 @@ public:
     virtual ~fvDOM();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 

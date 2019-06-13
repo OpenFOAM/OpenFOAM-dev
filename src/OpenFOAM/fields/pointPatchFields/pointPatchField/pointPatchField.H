@@ -81,7 +81,7 @@ Ostream& operator<<
 template<class Type>
 class pointPatchField
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const pointPatch& patch_;
@@ -258,7 +258,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -432,7 +432,7 @@ public:
             virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const pointPatchField<Type>&){}
         virtual void operator=(pointPatchField<Type>&&){}

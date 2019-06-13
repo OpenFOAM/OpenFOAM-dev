@@ -162,7 +162,7 @@ class mapDistribute
 :
     public mapDistributeBase
 {
-    // Private data
+    // Private Data
 
         //- For every globalIndexAndTransform::transformPermutations
         //  gives the elements that need to be transformed
@@ -552,7 +552,7 @@ public:
 
         void operator=(const mapDistribute&);
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read dictionary from Istream
         friend Istream& operator>>(Istream&, mapDistribute&);

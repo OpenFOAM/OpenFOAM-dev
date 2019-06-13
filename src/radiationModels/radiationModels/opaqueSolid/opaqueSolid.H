@@ -82,7 +82,7 @@ public:
     virtual ~opaqueSolid();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 

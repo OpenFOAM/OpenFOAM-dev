@@ -52,7 +52,7 @@ class cyclicGAMGInterface
     public GAMGInterface,
     public cyclicLduInterface
 {
-    // Private data
+    // Private Data
 
         //- Neighbour patch number
         label neighbPatchID_;

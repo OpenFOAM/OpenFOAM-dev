@@ -111,7 +111,7 @@ namespace Foam
 
 class lduAddressing
 {
-    // Private data
+    // Private Data
 
         //- Number of equations
         label size_;

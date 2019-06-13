@@ -62,8 +62,6 @@ class pyrolysisModel
 :
     public regionModel1D
 {
-private:
-
     // Private Member Functions
 
         //- Construct fields

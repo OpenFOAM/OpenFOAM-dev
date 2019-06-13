@@ -120,7 +120,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -158,7 +158,7 @@ public:
             virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
 

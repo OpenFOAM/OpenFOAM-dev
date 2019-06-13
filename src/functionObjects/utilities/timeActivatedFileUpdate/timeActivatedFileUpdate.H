@@ -78,7 +78,7 @@ class timeActivatedFileUpdate
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to Time
         const Time& time_;

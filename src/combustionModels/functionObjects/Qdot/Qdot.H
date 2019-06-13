@@ -57,7 +57,7 @@ class Qdot
 {
 private:
 
-    // Private data
+    // Private Data
 
         //- The name of the phase
         word phaseName_;

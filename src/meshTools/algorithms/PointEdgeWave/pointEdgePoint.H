@@ -68,7 +68,7 @@ Ostream& operator<<(Ostream&, const pointEdgePoint&);
 
 class pointEdgePoint
 {
-    // Private data
+    // Private Data
 
         //- Position of nearest wall center
         point origin_;

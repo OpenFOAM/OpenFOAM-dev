@@ -97,7 +97,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Enumeration for handling out-of-bound values
         boundsHandling boundsHandling_;

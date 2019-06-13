@@ -84,7 +84,7 @@ public:
     virtual ~GlobalIOField();
 
 
-    // Member functions
+    // Member Functions
 
         //- Is object global
         virtual bool global() const
@@ -106,7 +106,7 @@ public:
         bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const GlobalIOField<Type>&);
         void operator=(GlobalIOField<Type>&&);

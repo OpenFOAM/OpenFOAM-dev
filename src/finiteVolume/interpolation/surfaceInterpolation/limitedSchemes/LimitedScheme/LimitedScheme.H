@@ -75,12 +75,6 @@ class LimitedScheme
             surfaceScalarField& limiterField
         ) const;
 
-        //- Disallow default bitwise copy construction
-        LimitedScheme(const LimitedScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const LimitedScheme&) = delete;
-
 
 public:
 
@@ -128,6 +122,9 @@ public:
             Limiter(is)
         {}
 
+        //- Disallow default bitwise copy construction
+        LimitedScheme(const LimitedScheme&) = delete;
+
 
     // Member Functions
 
@@ -136,6 +133,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LimitedScheme&) = delete;
 };
 
 

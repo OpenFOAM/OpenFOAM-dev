@@ -81,7 +81,7 @@ class writeVTK
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         //- Names of objects
         wordReList objectNames_;

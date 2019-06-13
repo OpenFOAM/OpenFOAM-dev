@@ -74,7 +74,7 @@ class FUNCTIONOBJECT
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         //- word
         word wordData_;

@@ -53,7 +53,7 @@ class interpolatingSolidBodyMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- The motion control function
         autoPtr<solidBodyMotionFunction> SBMFPtr_;

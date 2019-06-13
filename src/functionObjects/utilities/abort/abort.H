@@ -73,7 +73,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to the Time
         const Time& time_;

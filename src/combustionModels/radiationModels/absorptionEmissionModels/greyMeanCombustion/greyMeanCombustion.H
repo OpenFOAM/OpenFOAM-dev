@@ -61,7 +61,7 @@ class greyMeanCombustion
 {
 private:
 
-    // Private data
+    // Private Data
 
         //- Emission constant coefficient
         const scalar EhrrCoeff_;

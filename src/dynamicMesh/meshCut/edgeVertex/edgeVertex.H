@@ -52,7 +52,7 @@ class refineCell;
 
 class edgeVertex
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh. (could be primitive mesh but keeping polyMesh
         //  here saves storing reference at higher levels where we do need it)

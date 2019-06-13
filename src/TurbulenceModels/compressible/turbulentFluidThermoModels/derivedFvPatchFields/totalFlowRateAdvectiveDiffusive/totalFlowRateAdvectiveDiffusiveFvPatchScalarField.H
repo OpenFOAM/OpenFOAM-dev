@@ -53,7 +53,7 @@ class totalFlowRateAdvectiveDiffusiveFvPatchScalarField
 :
     public mixedFvPatchField<scalar>
 {
-    // Private data
+    // Private Data
 
         //- Name of the flux transporting the field
         word phiName_;
@@ -140,7 +140,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

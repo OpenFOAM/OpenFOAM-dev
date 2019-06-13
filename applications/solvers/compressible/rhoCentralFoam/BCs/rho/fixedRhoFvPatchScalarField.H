@@ -79,10 +79,7 @@ class fixedRhoFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         //- Pressure field name, default = "p"
         word pName_;
@@ -159,7 +156,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

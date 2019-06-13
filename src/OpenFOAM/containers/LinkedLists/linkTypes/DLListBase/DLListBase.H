@@ -72,7 +72,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
        //- first_ points to first element and last_ points to last element.
        link *first_, *last_;
@@ -185,7 +185,7 @@ public:
             friend class DLListBase;
             friend class const_iterator;
 
-            // Private data
+            // Private Data
 
                 //- Reference to the list this is an iterator for
                 DLListBase& curList_;
@@ -210,7 +210,7 @@ public:
             //- Copy constructor
             inline iterator(const iterator&) = default;
 
-            // Member operators
+            // Member Operators
 
                 inline void operator=(const iterator&);
 
@@ -232,7 +232,7 @@ public:
         //- An STL-conforming const_iterator
         class const_iterator
         {
-            // Private data
+            // Private Data
 
                 //- Reference to the list this is an iterator for
                 const DLListBase& curList_;
@@ -251,7 +251,7 @@ public:
             //- Copy constructor
             inline const_iterator(const const_iterator&) = default;
 
-            // Member operators
+            // Member Operators
 
                 inline void operator=(const const_iterator&);
 
@@ -276,7 +276,7 @@ public:
         //- An STL-conforming const_reverse_iterator
         class const_reverse_iterator
         {
-            // Private data
+            // Private Data
 
                 //- Reference to the list this is an reverse_iterator for
                 const DLListBase& curList_;
@@ -295,7 +295,7 @@ public:
                 const const_reverse_iterator&
             ) = default;
 
-            // Member operators
+            // Member Operators
 
                 inline void operator=(const const_reverse_iterator&);
 

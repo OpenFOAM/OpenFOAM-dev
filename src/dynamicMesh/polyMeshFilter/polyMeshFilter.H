@@ -64,7 +64,7 @@ class polyMeshFilter
 :
     private polyMeshFilterSettings
 {
-    // Private data
+    // Private Data
 
         //- Reference to the original mesh
         const fvMesh& mesh_;

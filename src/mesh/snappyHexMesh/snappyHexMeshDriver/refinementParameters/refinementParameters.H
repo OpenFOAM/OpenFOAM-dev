@@ -53,7 +53,7 @@ class polyMesh;
 
 class refinementParameters
 {
-    // Private data
+    // Private Data
 
         //- Total number of cells
         const label maxGlobalCells_;

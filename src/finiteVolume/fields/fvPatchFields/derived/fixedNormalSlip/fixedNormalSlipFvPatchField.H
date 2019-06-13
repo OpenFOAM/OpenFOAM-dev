@@ -69,7 +69,7 @@ class fixedNormalSlipFvPatchField
 :
     public transformFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Value the normal component of which the boundary is set to
         Field<Type> fixedValue_;
@@ -143,7 +143,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -198,7 +198,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
 

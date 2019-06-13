@@ -56,7 +56,7 @@ class ReactionList
 :
     public SLPtrList<Reaction<ThermoType>>
 {
-    // Private data
+    // Private Data
 
         //- Reference to the table of species
         const speciesTable& species_;

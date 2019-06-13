@@ -65,7 +65,7 @@ class block
 :
     public blockDescriptor
 {
-    // Private data
+    // Private Data
 
         //- List of points
         pointField points_;

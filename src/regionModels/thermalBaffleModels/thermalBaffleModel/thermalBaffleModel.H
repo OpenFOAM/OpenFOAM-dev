@@ -60,8 +60,6 @@ class thermalBaffleModel
 :
     public regionModel1D
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construction

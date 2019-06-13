@@ -72,7 +72,7 @@ class XiReactionRate
 :
     public fvMeshFunctionObject
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         XiReactionRate(const XiReactionRate&) = delete;

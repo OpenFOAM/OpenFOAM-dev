@@ -57,7 +57,7 @@ class transferModelList
     public PtrList<transferModel>,
     public filmSubModelBase
 {
-    // Private data
+    // Private Data
 
         //- List of mass transferred per patch
         scalarField massTransferred_;

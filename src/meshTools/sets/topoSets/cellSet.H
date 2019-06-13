@@ -138,7 +138,7 @@ public:
     virtual ~cellSet();
 
 
-    // Member functions
+    // Member Functions
 
         //- Sync cellSet across coupled patches.
         virtual void sync(const polyMesh& mesh)

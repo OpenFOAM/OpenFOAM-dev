@@ -49,7 +49,7 @@ class ensightBinaryStream
 :
     public ensightStream
 {
-    // Private data
+    // Private Data
 
         //- Description of data_
         autoPtr<std::ofstream> str_;

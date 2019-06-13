@@ -53,7 +53,7 @@ class conformalVoronoiMesh;
 
 class cvControls
 {
-    // Private data
+    // Private Data
 
         //- Reference to the foamyHexMeshDict
         const dictionary& foamyHexMeshDict_;

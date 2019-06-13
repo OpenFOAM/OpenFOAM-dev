@@ -129,7 +129,7 @@ class motionSmootherAlgo
         };
 
 
-    // Private data
+    // Private Data
 
         //- Reference to polyMesh. Non-const since we move mesh.
         polyMesh& mesh_;

@@ -58,7 +58,7 @@ class patchProbes
 :
     public probes
 {
-    // Private data
+    // Private Data
 
         //- Patch name
         word patchName_;
@@ -151,7 +151,7 @@ public:
     virtual ~patchProbes();
 
 
-    //- Public members
+    // Member Functions
 
         //- Sample and write
         virtual bool write();

@@ -66,7 +66,7 @@ Ostream& operator<<(Ostream&, const sixDoFRigidBodyMotionState&);
 
 class sixDoFRigidBodyMotionState
 {
-    // Private data
+    // Private Data
 
         //- Current position of the centre of mass of the body
         point centreOfRotation_;

@@ -88,7 +88,7 @@ public:
     ~ensightParts();
 
 
-    // Member functions
+    // Member Functions
 
         //- Clear old information and construct anew from polyMesh
         void recalculate(const polyMesh&);

@@ -63,7 +63,7 @@ class pointData
 :
     public pointEdgePoint
 {
-    // Private data
+    // Private Data
 
         //- Additional information.
         scalar s_;

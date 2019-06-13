@@ -78,7 +78,7 @@ class vectorTensorTransform
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -113,7 +113,7 @@ public:
         vectorTensorTransform(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -162,7 +162,7 @@ public:
             tmp<Field<Type>> invTransform(const Field<Type>&) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator&=(const vectorTensorTransform&);
 
@@ -174,7 +174,7 @@ public:
         inline void operator&=(const tensor&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream& is, vectorTensorTransform&);
 

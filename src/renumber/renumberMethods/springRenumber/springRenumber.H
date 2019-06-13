@@ -59,7 +59,7 @@ class springRenumber
 :
     public renumberMethod
 {
-    // Private data
+    // Private Data
 
         const dictionary& dict_;
 

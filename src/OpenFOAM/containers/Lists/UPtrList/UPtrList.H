@@ -65,7 +65,7 @@ template<class T> Ostream& operator<<(Ostream&, const UPtrList<T>&);
 template<class T>
 class UPtrList
 {
-    // Private data
+    // Private Data
 
         List<T*> ptrs_;
 
@@ -90,7 +90,7 @@ public:
         UPtrList(UPtrList<T>&, bool reuse);
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -150,7 +150,7 @@ public:
             void shuffle(const labelUList& newToOld);
 
 
-    // Member operators
+    // Member Operators
 
         //- Return element const reference
         inline const T& operator[](const label) const;
@@ -194,7 +194,7 @@ public:
             //- Construct for a given UPtrList entry
             inline iterator(T**);
 
-            // Member operators
+            // Member Operators
 
                 inline bool operator==(const iterator&) const;
                 inline bool operator!=(const iterator&) const;
@@ -249,7 +249,7 @@ public:
             inline const_iterator(const iterator&);
 
 
-            // Member operators
+            // Member Operators
 
                 inline bool operator==(const const_iterator&) const;
                 inline bool operator!=(const const_iterator&) const;

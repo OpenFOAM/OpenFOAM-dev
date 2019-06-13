@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,16 +62,32 @@ Istream& operator>>(Istream&, SHA1Digest&);
 
 class SHA1Digest
 {
-public:
-    friend class SHA1;
 
-    // Static data members
+public:
+
+    // Static Data Members
 
         //- The length of the (uncoded) digest contents
         static const unsigned length = 20;
 
         //- A null digest (ie, all zero)
         static const SHA1Digest null;
+
+
+private:
+
+    // Private Data
+
+        //- The digest contents
+        unsigned char v_[length];
+
+        //- Read hexadecimal value, ignoring leading or intermediate '_'
+        static unsigned char readHexDigit(Istream&);
+
+
+public:
+
+    friend class SHA1;
 
 
     // Constructors
@@ -138,16 +154,6 @@ public:
 
         //- Write (40-byte) text representation, unquoted and without prefix
         friend Ostream& operator<<(Ostream&, const SHA1Digest&);
-
-
-private:
-    // Private data
-
-        //- The digest contents
-        unsigned char v_[length];
-
-        //- Read hexadecimal value, ignoring leading or intermediate '_'
-        static unsigned char readHexDigit(Istream&);
 };
 
 

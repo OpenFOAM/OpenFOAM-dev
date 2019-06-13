@@ -62,13 +62,6 @@ class limitWith
         tmp<limitedSurfaceInterpolationScheme<Type>> tLimiter_;
 
 
-        //- Disallow default bitwise copy construction
-        limitWith(const limitWith&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitWith&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -116,6 +109,9 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construction
+        limitWith(const limitWith&) = delete;
+
 
     // Member Functions
 
@@ -146,6 +142,12 @@ public:
         {
             return tLimiter_().limiter(vf)*tInterp_().correction(vf);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitWith&) = delete;
 };
 
 

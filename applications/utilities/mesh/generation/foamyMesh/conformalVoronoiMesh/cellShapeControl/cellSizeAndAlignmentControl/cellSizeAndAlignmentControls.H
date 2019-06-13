@@ -48,7 +48,7 @@ namespace Foam
 
 class cellSizeAndAlignmentControls
 {
-    // Private data
+    // Private Data
 
         const dictionary& shapeControlDict_;
 

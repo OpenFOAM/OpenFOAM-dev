@@ -100,7 +100,7 @@ protected:
 
 private:
 
-    // Private member functions to be used by rigidBodyModel
+    // Private Member Functions to be used by rigidBodyModel
 
         //- Allow the rigidBodyModel to set the index for this joint
         label& index()

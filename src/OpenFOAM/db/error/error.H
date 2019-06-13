@@ -101,7 +101,7 @@ public:
     virtual ~error() throw();
 
 
-    // Member functions
+    // Member Functions
 
         string message() const;
 
@@ -198,7 +198,7 @@ class IOerror
 :
     public error
 {
-    // Private data
+    // Private Data
 
         string ioFileName_;
         label ioStartLineNumber_;
@@ -220,7 +220,7 @@ public:
     virtual ~IOerror() throw();
 
 
-    // Member functions
+    // Member Functions
 
         const string& ioFileName() const
         {

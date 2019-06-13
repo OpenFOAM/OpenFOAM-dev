@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class AnisothermalPhaseModel
 :
     public BasePhaseModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Optionally filter the pressure work term as the phase-fraction -> 0
         tmp<volScalarField> filterPressureWork

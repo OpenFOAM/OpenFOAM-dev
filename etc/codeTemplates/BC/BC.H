@@ -92,7 +92,7 @@ class CONSTRUCT
 :
     public PARENT
 {
-    // Private data
+    // Private Data
 
         //- Single valued scalar quantity, e.g. a coefficient
         scalar scalarData_;
@@ -196,7 +196,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

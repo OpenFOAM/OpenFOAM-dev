@@ -61,7 +61,7 @@ class interstitialInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Inlet velocity
         vectorField inletVelocity_;
@@ -139,7 +139,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

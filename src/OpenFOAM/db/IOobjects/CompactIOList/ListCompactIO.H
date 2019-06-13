@@ -117,7 +117,7 @@ public:
         ListCompactIO(List<T>&&);
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const ListCompactIO<T, BaseType>&);
         void operator=(ListCompactIO<T, BaseType>&&);
@@ -135,7 +135,7 @@ public:
         );
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read List from Istream, discarding contents of existing List.
         friend Istream& operator>> <T, BaseType>

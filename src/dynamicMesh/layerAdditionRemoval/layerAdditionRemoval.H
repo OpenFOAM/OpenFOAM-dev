@@ -54,7 +54,7 @@ class layerAdditionRemoval
 :
     public polyMeshModifier
 {
-    // Private data
+    // Private Data
 
         //- Master face zone ID
         faceZoneID faceZoneID_;
@@ -131,7 +131,7 @@ class layerAdditionRemoval
             static scalar readOldThickness(const dictionary&);
 
 
-    // Static data members
+    // Static Data Members
 
         //- Thickness insertion fraction for the pre-motion
         static const scalar addDelta_;

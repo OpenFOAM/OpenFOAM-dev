@@ -62,13 +62,6 @@ class localBlended
         tmp<surfaceInterpolationScheme<Type>> tScheme2_;
 
 
-        //- Disallow default bitwise copy construction
-        localBlended(const localBlended&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const localBlended&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -115,6 +108,9 @@ public:
                 surfaceInterpolationScheme<Type>::New(mesh, faceFlux, is)
             )
         {}
+
+        //- Disallow default bitwise copy construction
+        localBlended(const localBlended&) = delete;
 
 
     //- Destructor
@@ -235,6 +231,12 @@ public:
                 );
             }
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const localBlended&) = delete;
 };
 
 

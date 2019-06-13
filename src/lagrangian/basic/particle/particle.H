@@ -123,7 +123,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to the polyMesh database
         const polyMesh& mesh_;
@@ -355,7 +355,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Runtime type information
         TypeName("particle");

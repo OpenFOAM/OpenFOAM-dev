@@ -77,7 +77,7 @@ public:
         PtrListDictionary(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Set element to pointer provided and return old element
         autoPtr<T> set(const label, const word& key, T*);
@@ -89,7 +89,7 @@ public:
         autoPtr<T> set(const label, const word& key, tmp<T>&);
 
 
-    // Member operators
+    // Member Operators
 
         using PtrList<T>::operator[];
 

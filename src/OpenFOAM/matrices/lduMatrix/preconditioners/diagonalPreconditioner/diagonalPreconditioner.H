@@ -53,7 +53,7 @@ class diagonalPreconditioner
 :
     public lduMatrix::preconditioner
 {
-    // Private data
+    // Private Data
 
         //- The reciprocal diagonal
         scalarField rD;

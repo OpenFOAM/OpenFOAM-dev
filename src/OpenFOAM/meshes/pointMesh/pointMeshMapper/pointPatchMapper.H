@@ -57,7 +57,7 @@ class pointPatchMapper
 :
     public generalPointPatchFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const pointPatch& patch_;

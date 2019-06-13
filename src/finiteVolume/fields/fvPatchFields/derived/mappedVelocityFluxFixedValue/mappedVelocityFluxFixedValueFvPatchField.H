@@ -81,7 +81,7 @@ class mappedVelocityFluxFixedValueFvPatchField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of flux field
         word phiName_;
@@ -155,7 +155,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

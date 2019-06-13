@@ -48,7 +48,7 @@ class zoltanRenumber
 :
     public renumberMethod
 {
-    // Private data
+    // Private Data
 
         const dictionary coeffsDict_;
 

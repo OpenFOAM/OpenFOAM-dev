@@ -51,7 +51,7 @@ class fvMeshLduAddressing
 :
     public lduAddressing
 {
-    // Private data
+    // Private Data
 
         //- Lower as a subList of allOwner
         labelList::subList lowerAddr_;

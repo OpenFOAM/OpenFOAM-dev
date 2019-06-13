@@ -63,7 +63,7 @@ Ostream& operator<<(Ostream&, const cellInfo&);
 
 class cellInfo
 {
-    // Private data
+    // Private Data
 
         label type_;
 

@@ -53,7 +53,7 @@ class arcEdge
 :
     public blockEdge
 {
-    // Private data
+    // Private Data
 
         point p1_, p2_, p3_;
         cylindricalCS cs_;

@@ -62,7 +62,7 @@ public:
             public labelList,
             public directFvPatchFieldMapper
         {
-            // Private member functions
+            // Private Member Functions
 
                 labelList alignAddressing
                 (
@@ -92,7 +92,7 @@ public:
             public labelList,
             public directFvPatchFieldMapper
         {
-            // Private member functions
+            // Private Member Functions
 
                 labelList alignAddressing
                 (
@@ -114,7 +114,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to complete mesh
         const fvMesh& completeMesh_;

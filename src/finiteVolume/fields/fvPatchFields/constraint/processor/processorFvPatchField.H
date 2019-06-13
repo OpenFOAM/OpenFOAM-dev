@@ -63,7 +63,7 @@ class processorFvPatchField
     public processorLduInterfaceField,
     public coupledFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor patch
         const processorFvPatch& procPatch_;
@@ -164,7 +164,7 @@ public:
     ~processorFvPatchField();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

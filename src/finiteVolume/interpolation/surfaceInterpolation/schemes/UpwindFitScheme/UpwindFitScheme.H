@@ -64,15 +64,6 @@ class UpwindFitScheme
         const scalar centralWeight_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        UpwindFitScheme(const UpwindFitScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const UpwindFitScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -106,6 +97,9 @@ public:
             linearLimitFactor_(readScalar(is)),
             centralWeight_(1000)
         {}
+
+        //- Disallow default bitwise copy construction
+        UpwindFitScheme(const UpwindFitScheme&) = delete;
 
 
     // Member Functions
@@ -147,6 +141,12 @@ public:
 
             return stencil.weightedSum(faceFlux_, vf, fo, fn);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const UpwindFitScheme&) = delete;
 };
 
 

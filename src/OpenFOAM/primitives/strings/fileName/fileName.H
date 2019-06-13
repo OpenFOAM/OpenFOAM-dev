@@ -89,7 +89,7 @@ class fileName
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static int debug;
@@ -128,7 +128,7 @@ public:
         fileName(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Is this character valid for a fileName?
         inline static bool valid(char);
@@ -228,7 +228,7 @@ public:
             word component(const size_type, const char delimiter='/') const;
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -240,7 +240,7 @@ public:
             void operator=(const char*);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, fileName&);
         friend Ostream& operator<<(Ostream&, const fileName&);

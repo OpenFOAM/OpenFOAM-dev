@@ -55,7 +55,7 @@ namespace Foam
 
 class interfaceProperties
 {
-    // Private data
+    // Private Data
 
         //- Keep a reference to the transportProperties dictionary
         const dictionary& transportPropertiesDict_;

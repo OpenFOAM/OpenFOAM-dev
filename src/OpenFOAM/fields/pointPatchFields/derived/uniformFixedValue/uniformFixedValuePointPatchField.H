@@ -65,7 +65,7 @@ class uniformFixedValuePointPatchField
 :
     public fixedValuePointPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         autoPtr<Function1<Type>> uniformValue_;
 
@@ -145,7 +145,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

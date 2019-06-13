@@ -92,7 +92,7 @@ class mixtureFraction
         );
 
 
-    // Private data
+    // Private Data
 
          //- Soot mass fraction
         volScalarField soot_;

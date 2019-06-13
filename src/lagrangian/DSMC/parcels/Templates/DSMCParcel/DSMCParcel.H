@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ public:
     //- Class to hold DSMC particle constant properties
     class constantProperties
     {
-        // Private data
+        // Private Data
 
             //- Particle mass [kg] (constant)
             scalar mass_;
@@ -107,7 +107,7 @@ public:
             inline constantProperties(const dictionary& dict);
 
 
-        // Member functions
+        // Member Functions
 
             //- Return const access to the particle mass [kg]
             inline scalar mass() const;

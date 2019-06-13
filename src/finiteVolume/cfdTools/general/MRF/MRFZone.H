@@ -65,7 +65,7 @@ class fvMesh;
 
 class MRFZone
 {
-    // Private data
+    // Private Data
 
         //- Reference to the mesh database
         const fvMesh& mesh_;

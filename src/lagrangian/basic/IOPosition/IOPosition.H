@@ -52,7 +52,7 @@ class IOPosition
     public regIOobject
 {
 
-    // Private data
+    // Private Data
 
         //- Reference to the cloud
         const CloudType& cloud_;
@@ -75,7 +75,7 @@ public:
         IOPosition(const CloudType&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Inherit readData from regIOobject
         using regIOobject::readData;

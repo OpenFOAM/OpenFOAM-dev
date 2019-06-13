@@ -55,7 +55,7 @@ class ${typeName}FunctionObject
 :
     public functionObjects::regionFunctionObject
 {
-    // Private data
+    // Private Data
 
 //{{{ begin codeData
         ${codeData}

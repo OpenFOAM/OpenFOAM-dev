@@ -127,7 +127,7 @@ public:
     virtual ~cloudSolution();
 
 
-    // Member functions
+    // Member Functions
 
         //- Read properties from dictionary
         void read();

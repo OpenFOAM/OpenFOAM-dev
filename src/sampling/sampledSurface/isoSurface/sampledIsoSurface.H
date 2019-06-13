@@ -34,8 +34,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_isoSurface_H
-#define sampledSurfaces_isoSurface_H
+#ifndef sampledIsoSurface_H
+#define sampledIsoSurface_H
 
 #include "sampledSurface.H"
 #include "MeshedSurface.H"
@@ -56,7 +56,7 @@ class isoSurface
     public sampledSurface,
     public MeshedSurface<face>
 {
-    // Private data
+    // Private Data
 
         //- Field to get isoSurface of
         const word isoField_;

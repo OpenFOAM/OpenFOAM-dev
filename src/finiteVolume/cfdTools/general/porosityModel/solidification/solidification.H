@@ -102,7 +102,7 @@ class solidification
 :
     public porosityModel
 {
-    // Private data
+    // Private Data
 
         //- Name of temperature field, default = "T"
         word TName_;

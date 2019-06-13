@@ -58,7 +58,7 @@ class Constant
 :
     public Function1<Type>
 {
-    // Private data
+    // Private Data
 
         //- Constant value
         Type value_;

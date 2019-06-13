@@ -54,7 +54,7 @@ class constantViscosity
 :
     public filmViscosityModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         constantViscosity(const constantViscosity&) = delete;

@@ -61,7 +61,7 @@ class cell
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 

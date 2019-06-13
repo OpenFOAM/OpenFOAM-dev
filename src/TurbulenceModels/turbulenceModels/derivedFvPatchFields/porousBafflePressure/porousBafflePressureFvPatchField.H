@@ -97,7 +97,7 @@ class porousBafflePressureFvPatchField
 :
     public fixedJumpFvPatchField<scalar>
 {
-    // Private data
+    // Private Data
 
         //- Name of flux field (default = phi)
         const word phiName_;
@@ -183,7 +183,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
 
         // Evaluation functions

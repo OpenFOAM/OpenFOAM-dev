@@ -57,8 +57,6 @@ class porosityModelList
 :
     public PtrList<porosityModel>
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construction

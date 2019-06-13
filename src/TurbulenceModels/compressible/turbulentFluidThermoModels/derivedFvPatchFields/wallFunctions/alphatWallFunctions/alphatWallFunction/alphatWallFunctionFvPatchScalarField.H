@@ -89,7 +89,7 @@ class alphatWallFunctionFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Turbulent Prandtl number (default = 0.85)
         scalar Prt_;
@@ -164,7 +164,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

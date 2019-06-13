@@ -60,7 +60,7 @@ namespace Foam
 
 class compressibleInterPhaseTransportModel
 {
-    // Private data
+    // Private Data
 
         //- Switch to select two-phase or mixture transport modelling
         Switch twoPhaseTransport_;

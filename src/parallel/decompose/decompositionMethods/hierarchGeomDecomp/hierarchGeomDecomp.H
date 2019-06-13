@@ -68,7 +68,7 @@ class hierarchGeomDecomp
 :
     public geomDecomp
 {
-    // Private data
+    // Private Data
 
         //- Decomposition order in terms of components.
         FixedList<direction, 3> decompOrder_;

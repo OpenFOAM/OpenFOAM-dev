@@ -83,7 +83,7 @@ class mixtureKEpsilon
 :
     public eddyViscosity<RASModel<BasicTurbulenceModel>>
 {
-    // Private data
+    // Private Data
 
         mutable mixtureKEpsilon<BasicTurbulenceModel> *liquidTurbulencePtr_;
 

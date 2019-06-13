@@ -99,7 +99,7 @@ namespace Foam
 
 class router
 {
-    // Private data
+    // Private Data
 
         //- Connections
         const labelListList connections_;

@@ -52,7 +52,7 @@ class lduPrimitiveMesh
     public lduMesh,
     public lduAddressing
 {
-    // Private data
+    // Private Data
 
         //- Lower addressing
         labelList lowerAddr_;

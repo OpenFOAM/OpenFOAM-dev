@@ -149,7 +149,7 @@ class CV2D
     //- Use the Foam::point in preference to the CGAL point
     typedef Foam::point point;
 
-    // Private data
+    // Private Data
 
         //- The time registry of the application
         const Time& runTime_;

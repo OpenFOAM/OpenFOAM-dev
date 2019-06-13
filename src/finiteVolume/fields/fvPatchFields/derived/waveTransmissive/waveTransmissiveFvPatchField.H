@@ -93,7 +93,7 @@ class waveTransmissiveFvPatchField
     public advectiveFvPatchField<Type>
 {
 
-    // Private data
+    // Private Data
 
         //- Name of the compressibility field used to calculate the wave speed
         word psiName_;
@@ -170,7 +170,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

@@ -73,10 +73,7 @@ namespace Foam
 
 class fvMeshSubset
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         //- Mesh to subset from
         const fvMesh& baseMesh_;

@@ -61,7 +61,7 @@ template<class T> class List;
 
 class regExp
 {
-    // Private data
+    // Private Data
 
         //- Precompiled regular expression
         mutable regex_t* preg_;
@@ -124,7 +124,7 @@ public:
     ~regExp();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

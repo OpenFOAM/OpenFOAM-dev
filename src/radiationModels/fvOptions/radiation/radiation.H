@@ -63,7 +63,7 @@ class radiation
 :
     public option
 {
-    // Private data
+    // Private Data
 
         //- The radiation model pointer
         autoPtr<radiationModel> radiation_;

@@ -69,7 +69,7 @@ class cyclicFvPatchField
     public coupledFvPatchField<Type>,
     public cyclicLduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclic patch
         const cyclicFvPatch& cyclicPatch_;
@@ -142,7 +142,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

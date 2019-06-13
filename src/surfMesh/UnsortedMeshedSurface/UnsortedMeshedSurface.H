@@ -84,7 +84,7 @@ class UnsortedMeshedSurface
 
 private:
 
-    // Private typedefs for convenience
+    // Private Typedefs for convenience
 
         typedef MeshedSurface<Face>       ParentType;
         typedef MeshedSurface<Face>       FriendType;
@@ -132,7 +132,7 @@ protected:
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Face type used
         typedef Face FaceType;
@@ -363,7 +363,7 @@ public:
             void write(const Time&, const word& surfName="") const;
 
 
-        // Member operators
+        // Member Operators
 
             void operator=(const UnsortedMeshedSurface<Face>&);
 

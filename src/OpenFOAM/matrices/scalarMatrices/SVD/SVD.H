@@ -51,7 +51,7 @@ namespace Foam
 
 class SVD
 {
-    // Private data
+    // Private Data
 
         //- Rectangular matrix with the same dimensions as the input
         scalarRectangularMatrix U_;

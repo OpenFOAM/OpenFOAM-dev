@@ -76,7 +76,7 @@ class LaheyKEpsilon
 :
     public kEpsilon<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         mutable const PhaseCompressibleTurbulenceModel
         <

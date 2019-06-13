@@ -77,7 +77,7 @@ class outletPhaseMeanVelocityFvPatchVectorField
 :
     public mixedFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Mean velocity normal to the boundary
         autoPtr<Function1<scalar>> UnMean_;
@@ -159,7 +159,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

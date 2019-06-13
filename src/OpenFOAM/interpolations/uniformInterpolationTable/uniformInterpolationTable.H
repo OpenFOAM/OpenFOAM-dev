@@ -73,7 +73,7 @@ class uniformInterpolationTable
     public IOobject,
     public List<Type>
 {
-    // Private data
+    // Private Data
 
         // Control parameters
 

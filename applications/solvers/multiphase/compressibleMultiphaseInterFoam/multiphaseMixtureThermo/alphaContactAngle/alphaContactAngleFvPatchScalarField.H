@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ public:
             interfaceThetaProps(Istream&);
 
 
-        // Member functions
+        // Member Functions
 
             //- Return the equilibrium contact angle theta0
             scalar theta0(bool matched=true) const
@@ -124,7 +124,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         thetaPropsTable thetaProps_;
 
@@ -191,7 +191,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the contact angle properties
         const thetaPropsTable& thetaProps() const

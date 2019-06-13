@@ -74,25 +74,13 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Hold reference to mesh
         const fvMesh& mesh_;
 
         //- HashTable of pointers to the field set
         const fieldTable& fields_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        multivariateSurfaceInterpolationScheme
-        (
-            const multivariateSurfaceInterpolationScheme&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateSurfaceInterpolationScheme&) = delete;
 
 
 public:
@@ -129,6 +117,12 @@ public:
             Istream& schemeData
         );
 
+        //- Disallow default bitwise copy construction
+        multivariateSurfaceInterpolationScheme
+        (
+            const multivariateSurfaceInterpolationScheme&
+        );
+
 
     // Selectors
 
@@ -162,6 +156,9 @@ public:
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateSurfaceInterpolationScheme&) = delete;
 
         //- surfaceInterpolationScheme sub-class returned by operator(field)
         //  which is used as the interpolation scheme for the field

@@ -68,7 +68,7 @@ class simpleControl
 {
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Run-time type information
         TypeName("simpleControl");

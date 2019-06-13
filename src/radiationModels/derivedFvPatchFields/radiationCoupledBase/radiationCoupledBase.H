@@ -67,7 +67,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         static const NamedEnum<emissivityMethodType, 2>
             emissivityMethodTypeNames_;
@@ -125,7 +125,7 @@ public:
         virtual ~radiationCoupledBase();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

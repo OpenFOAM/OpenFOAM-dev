@@ -51,9 +51,7 @@ namespace Foam
 
 class ParticleStressModel
 {
-private:
-
-    //- Private member functions
+    // Private member functions
 
         //- Disallow default bitwise assignment
         void operator=(const ParticleStressModel&) = delete;

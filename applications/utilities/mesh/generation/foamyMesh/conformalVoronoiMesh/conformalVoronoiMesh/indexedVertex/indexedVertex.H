@@ -104,7 +104,7 @@ class indexedVertex
     public Foam::indexedVertexEnum,
     public Vb
 {
-    // Private data
+    // Private Data
 
         //- Type of pair-point
         vertexType type_;

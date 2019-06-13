@@ -51,7 +51,7 @@ class directionMixedFvPatchField
 :
     public transformFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Value field
         Field<Type> refValue_;
@@ -125,7 +125,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -208,7 +208,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<Type>&) {}
         virtual void operator+=(const fvPatchField<Type>&) {}

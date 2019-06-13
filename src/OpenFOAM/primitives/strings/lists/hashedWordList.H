@@ -59,7 +59,7 @@ class hashedWordList
 :
     public List<word>
 {
-    // Private data
+    // Private Data
 
         HashTable<label, word> indices_;
 

@@ -77,7 +77,7 @@ Ostream& operator<<(Ostream&, const CollisionRecordList<PairType, WallType>&);
 template<class PairType, class WallType>
 class CollisionRecordList
 {
-    // Private data
+    // Private Data
 
         //- List of active pair collisions
         DynamicList<PairCollisionRecord<PairType>> pairRecords_;

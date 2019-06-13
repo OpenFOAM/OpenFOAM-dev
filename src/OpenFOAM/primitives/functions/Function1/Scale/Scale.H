@@ -133,7 +133,7 @@ class Scale
 :
     public Function1<Type>
 {
-    // Private data
+    // Private Data
 
         //- Argument scaling function
         autoPtr<Function1<scalar>> xScale_;

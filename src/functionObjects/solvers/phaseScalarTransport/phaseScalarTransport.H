@@ -116,7 +116,7 @@ class phaseScalarTransport
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         //- Name of field to process
         const word fieldName_;

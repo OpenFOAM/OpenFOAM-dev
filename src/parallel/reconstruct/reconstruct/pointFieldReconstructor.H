@@ -52,7 +52,7 @@ namespace Foam
 
 class pointFieldReconstructor
 {
-    // Private data
+    // Private Data
 
         //- Reconstructed mesh reference
         const pointMesh& mesh_;

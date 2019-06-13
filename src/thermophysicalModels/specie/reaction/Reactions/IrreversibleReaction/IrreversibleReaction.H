@@ -56,7 +56,7 @@ class IrreversibleReaction
 :
     public ReactionType<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         ReactionRate k_;
 
@@ -219,7 +219,7 @@ public:
         virtual void write(Ostream&) const;    // Private Member Functions
 
 
-    // Member operators
+    // Member Operators
 
         //- Disallow default bitwise assignment
         void operator=

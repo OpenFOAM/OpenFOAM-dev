@@ -54,7 +54,7 @@ class SortableList
 :
     public List<T>
 {
-    // Private data
+    // Private Data
 
         //- Original indices
         labelList indices_;

@@ -52,7 +52,7 @@ class tetherPotentialList
 :
     public PtrList<tetherPotential>
 {
-    // Private data
+    // Private Data
 
         List<label> idMap_;
 

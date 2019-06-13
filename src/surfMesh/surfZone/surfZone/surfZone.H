@@ -64,7 +64,7 @@ class surfZone
 :
     public surfZoneIdentifier
 {
-    // Private data
+    // Private Data
 
         //- Size of this group in the face list
         label size_;

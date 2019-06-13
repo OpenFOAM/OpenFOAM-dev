@@ -79,7 +79,7 @@ class DynamicField
         "Avoid invalid sizing parameters"
     );
 
-    // Private data
+    // Private Data
 
         //- The capacity (allocated size) of the underlying field.
         label capacity_;

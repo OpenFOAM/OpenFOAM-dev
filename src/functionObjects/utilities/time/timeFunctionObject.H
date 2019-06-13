@@ -87,7 +87,7 @@ class time
         scalar clockTime0_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         time(const time&) = delete;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ extern const dimensionSet dimDynamicViscosity;
 
 class dimensionSets
 {
-    // Private data
+    // Private Data
 
         //- Set of dimensions
         PtrList<dimensionedScalar> units_;
@@ -104,7 +104,7 @@ public:
             const wordList& unitNames
         );
 
-    // Member functions
+    // Member Functions
 
         //- Return the units
         const PtrList<dimensionedScalar>& units() const

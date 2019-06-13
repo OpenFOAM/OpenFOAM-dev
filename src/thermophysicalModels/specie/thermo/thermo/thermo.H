@@ -91,7 +91,7 @@ class thermo
     public Thermo,
     public Type<thermo<Thermo, Type>>
 {
-    // Private data
+    // Private Data
 
         //- Convergence tolerance of energy -> temperature inversion functions
         static const scalar tol_;
@@ -334,7 +334,7 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const thermo&);
         inline void operator*=(const scalar);

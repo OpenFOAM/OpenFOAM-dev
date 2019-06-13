@@ -63,7 +63,7 @@ Ostream& operator<<(Ostream&, const LangmuirHinshelwoodReactionRate&);
 
 class LangmuirHinshelwoodReactionRate
 {
-    // Private data
+    // Private Data
 
         //- Reactant names
         FixedList<word, 2> reactantNames_;

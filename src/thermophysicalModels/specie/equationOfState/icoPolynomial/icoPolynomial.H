@@ -114,7 +114,7 @@ class icoPolynomial
 :
     public Specie
 {
-    // Private data
+    // Private Data
 
         //- Density polynomial coefficients
         Polynomial<PolySize> rhoCoeffs_;
@@ -144,7 +144,7 @@ public:
         inline static autoPtr<icoPolynomial> New(const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -195,7 +195,7 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const icoPolynomial&);
         inline void operator*=(const scalar);

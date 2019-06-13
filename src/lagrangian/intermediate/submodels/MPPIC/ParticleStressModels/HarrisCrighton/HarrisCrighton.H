@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class HarrisCrighton
 :
     public ParticleStressModel
 {
-    // Private data
+    // Private Data
 
         //- Solid pressure coefficient
         scalar pSolid_;
@@ -82,7 +82,7 @@ class HarrisCrighton
         scalar eps_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return the limited denominator of the radial distribution function
         tmp<Field<scalar>> denominator(const Field<scalar>& alpha) const;

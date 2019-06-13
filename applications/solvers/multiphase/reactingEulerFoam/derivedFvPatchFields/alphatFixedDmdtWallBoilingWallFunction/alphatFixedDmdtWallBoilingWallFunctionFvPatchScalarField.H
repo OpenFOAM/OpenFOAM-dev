@@ -58,7 +58,7 @@ class alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
 :
     public alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- name on the phase
         word vaporPhaseName_;
@@ -149,7 +149,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Is there phase change mass transfer for this phasePair
         virtual bool activePhasePair(const phasePairKey&) const;

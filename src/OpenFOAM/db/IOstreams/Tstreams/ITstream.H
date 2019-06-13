@@ -52,7 +52,7 @@ class ITstream
     public Istream,
     public tokenList
 {
-    // Private data
+    // Private Data
 
         //- Name of ITstream
         fileName name_;
@@ -121,7 +121,7 @@ public:
         {}
 
 
-    // Member functions
+    // Member Functions
 
         // Inquiry
 
@@ -210,7 +210,7 @@ public:
             void print(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment operator
         void operator=(const ITstream& its)

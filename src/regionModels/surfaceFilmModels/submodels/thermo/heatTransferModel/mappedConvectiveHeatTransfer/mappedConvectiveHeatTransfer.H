@@ -56,9 +56,7 @@ class mappedConvectiveHeatTransfer
 :
     public heatTransferModel
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Heat transfer coefficient - primary region [W/m2/K]
         volScalarField htcConvPrimary_;
@@ -69,7 +67,7 @@ private:
         volScalarField htcConvFilm_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         mappedConvectiveHeatTransfer

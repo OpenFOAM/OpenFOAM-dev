@@ -95,7 +95,7 @@ class velocityGroup
 :
     public diameterModel
 {
-    // Private data
+    // Private Data
 
         //- Name of the populationBalance this velocityGroup belongs to
         word popBalName_;
@@ -125,7 +125,7 @@ class velocityGroup
         volScalarField dmdt_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         tmp<volScalarField> dsm() const;
 

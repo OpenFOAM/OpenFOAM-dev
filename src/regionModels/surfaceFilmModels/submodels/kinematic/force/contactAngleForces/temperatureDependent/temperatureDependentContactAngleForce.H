@@ -68,7 +68,7 @@ class temperatureDependentContactAngleForce
         autoPtr<Function1<scalar>> thetaPtr_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         temperatureDependentContactAngleForce

@@ -53,7 +53,7 @@ class ISstream
 :
     public Istream
 {
-    // Private data
+    // Private Data
 
         fileName name_;
         istream& is_;
@@ -95,7 +95,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Inquiry
 

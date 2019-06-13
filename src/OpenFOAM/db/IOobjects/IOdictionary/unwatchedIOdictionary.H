@@ -79,7 +79,7 @@ public:
     virtual ~unwatchedIOdictionary();
 
 
-    // Member functions
+    // Member Functions
 
         //- This object is global
         virtual bool global() const
@@ -112,7 +112,7 @@ public:
         }
 
 
-    // Member operators
+    // Member Operators
 
         //- Move assignment
         void operator=(unwatchedIOdictionary&&);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class LUscalarMatrix
 :
     public scalarSquareMatrix
 {
-    // Private data
+    // Private Data
 
         //- Communicator to use
         const label comm_;
@@ -68,7 +68,7 @@ class LUscalarMatrix
         labelList pivotIndices_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Convert the given lduMatrix into this LUscalarMatrix
         void convert

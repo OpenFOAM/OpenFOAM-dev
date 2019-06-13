@@ -114,7 +114,7 @@ class polynomialTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         //- Dynamic viscosity polynomial coefficients
         Polynomial<PolySize> muCoeffs_;
@@ -151,7 +151,7 @@ public:
         inline static autoPtr<polynomialTransport> New(const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -175,7 +175,7 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const polynomialTransport&);
         inline void operator*=(const scalar);

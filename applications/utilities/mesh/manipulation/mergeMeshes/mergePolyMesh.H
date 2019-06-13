@@ -53,7 +53,7 @@ class mergePolyMesh
 :
     public polyMesh
 {
-    // Private data
+    // Private Data
 
         //- Topological change to accumulated all mesh changes
         polyTopoChange meshMod_;

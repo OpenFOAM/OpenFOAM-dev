@@ -53,7 +53,7 @@ class genericPointPatchField
 :
     public calculatedPointPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         word actualTypeName_;
         dictionary dict_;
@@ -133,7 +133,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

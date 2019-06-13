@@ -50,9 +50,7 @@ class faceAreaWeightAMI
 :
     public AMIMethod
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Flag to restart uncovered source faces
         const bool restartUncoveredSourceFace_;

@@ -55,9 +55,7 @@ class standardRadiation
 :
     public filmRadiationModel
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Radiative incident flux mapped from  the primary region / [kg/s3]
         volScalarField qinPrimary_;
@@ -75,7 +73,7 @@ private:
             scalar kappaBar_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         standardRadiation(const standardRadiation&) = delete;

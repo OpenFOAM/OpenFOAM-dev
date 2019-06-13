@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ class OFstreamCollator
         };
 
 
-    // Private data
+    // Private Data
 
         //- Total amount of storage to use for object stack below
         const off_t maxBufferSize_;
@@ -194,7 +194,7 @@ public:
     virtual ~OFstreamCollator();
 
 
-    // Member functions
+    // Member Functions
 
         //- Write file with contents. Blocks until writethread has space
         //  available (total file sizes < maxBufferSize)

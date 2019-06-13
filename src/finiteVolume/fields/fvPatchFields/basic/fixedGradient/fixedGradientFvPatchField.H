@@ -79,7 +79,7 @@ class fixedGradientFvPatchField
 :
     public fvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         Field<Type> gradient_;
 
@@ -152,7 +152,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Return defining fields
 

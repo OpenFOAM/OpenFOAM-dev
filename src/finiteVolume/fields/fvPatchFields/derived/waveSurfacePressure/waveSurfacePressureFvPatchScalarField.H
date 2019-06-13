@@ -106,7 +106,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Flux field name
         word phiName_;
@@ -189,7 +189,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

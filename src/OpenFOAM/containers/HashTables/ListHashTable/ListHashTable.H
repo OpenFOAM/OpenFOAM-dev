@@ -106,7 +106,7 @@ class ListHashTable
 :
     public ListHashTableCore
 {
-    // Private data type for table entries
+    // Private Data type for table entries
 
         //- The lookup keys, ordered per hash value
         List<List<Key>> keys_;
@@ -298,7 +298,7 @@ public:
             template<class TRef2, class TableRef2>
             friend class Iterator;
 
-            // Private data
+            // Private Data
 
                 //- Reference to the ListHashTable this is an iterator for
                 TableRef hashTable_;
@@ -326,7 +326,7 @@ public:
                 inline Iterator(const iterator&);
 
 
-            // Member operators
+            // Member Operators
 
                 inline void operator=(const iterator&);
 

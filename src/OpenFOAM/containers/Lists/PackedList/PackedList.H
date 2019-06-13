@@ -184,7 +184,7 @@ private:
         "nBits must be positive (non-zero) and fit within the storage"
     );
 
-    // Private data
+    // Private Data
 
         //- Number of nBits entries
         label size_;
@@ -378,7 +378,7 @@ public:
             ) const;
 
 
-    // Member operators
+    // Member Operators
 
             //- Append a value at the end of the list
             inline PackedList<nBits>& append(const unsigned int val);
@@ -576,7 +576,7 @@ public:
                 inline const_iterator(const iterator&);
 
 
-            // Member operators
+            // Member Operators
 
                 //- Compare positions (not values)
                 inline bool operator==(const iteratorBase&) const;

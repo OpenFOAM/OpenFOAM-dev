@@ -133,7 +133,7 @@ class totalPressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of the velocity field
         word UName_;
@@ -223,7 +223,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

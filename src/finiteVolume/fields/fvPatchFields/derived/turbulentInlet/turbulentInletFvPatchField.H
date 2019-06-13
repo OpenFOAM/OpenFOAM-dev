@@ -90,7 +90,7 @@ class turbulentInletFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Random number generator
         Random ranGen_;
@@ -176,7 +176,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_cuttingPlane_H
-#define sampledSurfaces_cuttingPlane_H
+#ifndef sampledCuttingPlane_H
+#define sampledCuttingPlane_H
 
 #include "sampledSurface.H"
 #include "isoSurface.H"
@@ -57,7 +57,7 @@ class cuttingPlane
 :
     public sampledSurface
 {
-    // Private data
+    // Private Data
 
         //- Plane
         const plane plane_;

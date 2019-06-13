@@ -52,9 +52,7 @@ class IOobjectList;
 
 class dimFieldDecomposer
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Reference to complete mesh
         const fvMesh& completeMesh_;

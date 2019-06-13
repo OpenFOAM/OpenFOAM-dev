@@ -131,7 +131,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Evaluate the patch field
         virtual void evaluate

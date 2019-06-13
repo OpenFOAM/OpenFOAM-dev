@@ -78,7 +78,7 @@ class string
 {
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static int debug;

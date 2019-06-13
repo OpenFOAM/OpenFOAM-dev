@@ -53,7 +53,7 @@ class hexMatcher
 :
     public cellMatcher
 {
-    // Static data members
+    // Static Data Members
 
         //- Constants for this shape
         static const label vertPerCell;

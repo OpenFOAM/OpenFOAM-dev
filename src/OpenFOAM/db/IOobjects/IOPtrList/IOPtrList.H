@@ -86,12 +86,12 @@ public:
     virtual ~IOPtrList();
 
 
-    // Member functions
+    // Member Functions
 
         bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const IOPtrList<T>&);
         void operator=(IOPtrList<T>&&);

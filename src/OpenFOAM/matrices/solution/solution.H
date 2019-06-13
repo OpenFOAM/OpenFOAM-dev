@@ -50,7 +50,7 @@ class solution
 :
     public IOdictionary
 {
-    // Private data
+    // Private Data
 
         //- Dictionary of temporary fields to cache
         dictionary cache_;

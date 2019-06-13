@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class SprayParcel
 :
     public ParcelType
 {
-    // Private data
+    // Private Data
 
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
@@ -72,7 +72,7 @@ public:
     :
         public ParcelType::constantProperties
     {
-        // Private data
+        // Private Data
 
             //- Particle initial surface tension [N/m]
             demandDrivenEntry<scalar> sigma0_;
@@ -180,7 +180,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Runtime type information
         TypeName("SprayParcel");

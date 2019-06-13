@@ -77,7 +77,7 @@ class greyDiffusiveViewFactorFixedValueFvPatchScalarField
     public fixedValueFvPatchScalarField,
     public radiationCoupledBase
 {
-    // Private data
+    // Private Data
 
         //- External radiative heat flux
         scalarField qro_;
@@ -155,7 +155,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

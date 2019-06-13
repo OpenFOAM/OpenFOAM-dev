@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ class KinematicParcel
 :
     public ParcelType
 {
-    // Private data
+    // Private Data
 
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
@@ -102,7 +102,7 @@ public:
 
     private:
 
-        // Private data
+        // Private Data
 
             //- Parcel type id - used for post-processing to flag the type
             //  of parcels issued by this cloud
@@ -132,7 +132,7 @@ public:
             constantProperties(const dictionary& parentDict);
 
 
-        // Member functions
+        // Member Functions
 
             //- Return const access to the constant properties dictionary
             inline const dictionary& dict() const;
@@ -167,7 +167,7 @@ public:
 
     private:
 
-        // Private data
+        // Private Data
 
             // Interpolators for continuous phase fields
 
@@ -214,7 +214,7 @@ public:
             );
 
 
-        // Member functions
+        // Member Functions
 
             //- Return conat access to the interpolator for continuous
             //  phase density field
@@ -314,7 +314,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Runtime type information
         TypeName("KinematicParcel");

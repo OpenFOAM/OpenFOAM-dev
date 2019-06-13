@@ -57,7 +57,7 @@ class pointMapper
 :
     public morphFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to pointMesh
         const pointMesh& pMesh_;

@@ -52,7 +52,7 @@ class fvSchemes
 :
     public IOdictionary
 {
-    // Private data
+    // Private Data
 
         dictionary ddtSchemes_;
         ITstream defaultDdtScheme_;

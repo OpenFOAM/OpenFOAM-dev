@@ -56,11 +56,15 @@ class SHA1Digest;
 
 class dynamicCode
 {
+
 public:
+
     typedef Tuple2<fileName, string> fileAndContent;
 
+
 private:
-    // Private data
+
+    // Private Data
 
         //- Root for dynamic code compilation
         fileName codeRoot_;
@@ -92,7 +96,7 @@ private:
 
 protected:
 
-    // Static data members
+    // Static Data Members
 
         //- Root of the LIB target for Make/files
         static const char* const libTargetRoot;
@@ -139,7 +143,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the code template environment variable
         //  Used to located the codeTemplateName
@@ -176,7 +180,7 @@ public:
         dynamicCode(const dynamicCode&) = delete;
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the code-name
         const word& codeName() const

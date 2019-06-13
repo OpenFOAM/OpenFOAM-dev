@@ -54,7 +54,7 @@ class IDDESDelta
 :
     public LESdelta
 {
-    // Private data
+    // Private Data
 
         maxDeltaxyz hmax_;
 

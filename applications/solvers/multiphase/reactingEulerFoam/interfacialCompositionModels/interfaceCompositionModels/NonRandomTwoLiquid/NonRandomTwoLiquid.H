@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class NonRandomTwoLiquid
 :
     public InterfaceCompositionModel<Thermo, OtherThermo>
 {
-    // Private data
+    // Private Data
 
         //- Activity coefficient for species 1
         volScalarField gamma1_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Ostream& operator<<(Ostream&, const procLduMatrix&);
 
 class procLduMatrix
 {
-    // Private data
+    // Private Data
 
         labelList upperAddr_;
         labelList lowerAddr_;
@@ -94,7 +94,7 @@ public:
         procLduMatrix(Istream& is);
 
 
-    // Member functions
+    // Member Functions
 
         label size() const
         {

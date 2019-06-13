@@ -52,7 +52,7 @@ class cyclicAMIFvsPatchField
 :
     public coupledFvsPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclic patch
         const cyclicAMIFvPatch& cyclicAMIPatch_;
@@ -124,7 +124,7 @@ public:
             );
         }
 
-    // Member functions
+    // Member Functions
 
         // Access
 

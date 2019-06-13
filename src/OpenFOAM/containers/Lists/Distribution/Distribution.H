@@ -64,7 +64,7 @@ class Distribution
 :
     public List<List<scalar>>
 {
-    // Private data
+    // Private Data
 
         //- Width of the bin for each component
         Type binWidth_;

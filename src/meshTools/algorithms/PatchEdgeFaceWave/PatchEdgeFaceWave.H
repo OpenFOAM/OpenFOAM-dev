@@ -83,7 +83,7 @@ class PatchEdgeFaceWave
         static label dummyTrackData_;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;

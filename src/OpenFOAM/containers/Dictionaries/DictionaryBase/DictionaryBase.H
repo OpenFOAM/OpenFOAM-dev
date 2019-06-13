@@ -109,7 +109,7 @@ public:
         DictionaryBase(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         // Search and lookup
 
@@ -155,7 +155,7 @@ public:
             void transfer(DictionaryBase<IDLListType, T>&);
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const DictionaryBase&);
 

@@ -57,7 +57,7 @@ class dynamicInkJetFvMesh
 :
     public dynamicFvMesh
 {
-    // Private data
+    // Private Data
 
         dictionary dynamicMeshCoeffs_;
 

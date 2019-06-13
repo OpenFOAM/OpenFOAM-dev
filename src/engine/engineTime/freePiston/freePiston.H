@@ -74,7 +74,7 @@ class freePiston
 :
     public engineTime
 {
-    // Private data
+    // Private Data
 
         autoPtr<Function1<scalar>> pistonPositionTime_;
 

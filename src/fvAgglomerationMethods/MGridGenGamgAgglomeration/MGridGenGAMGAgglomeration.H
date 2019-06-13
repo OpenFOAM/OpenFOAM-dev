@@ -60,7 +60,7 @@ class MGridGenGAMGAgglomeration
 :
     public GAMGAgglomeration
 {
-    // Private data
+    // Private Data
 
         const fvMesh& fvMesh_;
 

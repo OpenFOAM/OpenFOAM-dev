@@ -49,7 +49,7 @@ namespace Foam
 template<class T>
 class BiIndirectList
 {
-    // Private data
+    // Private Data
 
         UList<T>& posList_;
         UList<T>& negList_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ inline Ostream& operator<<
 template<class Point, class PointRef>
 class triangle
 {
-    // Private data
+    // Private Data
 
         PointRef a_, b_, c_;
 
@@ -244,7 +244,7 @@ public:
             ) const;
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>> <Point, PointRef>
         (

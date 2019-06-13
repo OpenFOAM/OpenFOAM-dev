@@ -67,7 +67,7 @@ namespace Foam
 
 class starMesh
 {
-    // Private data
+    // Private Data
 
         //- Name of the case
         fileName casePrefix_;

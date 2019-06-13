@@ -82,7 +82,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Per 'interface' surface : name of faceZone to put faces into
         word faceZoneName_;

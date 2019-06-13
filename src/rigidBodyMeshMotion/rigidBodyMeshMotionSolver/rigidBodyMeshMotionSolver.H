@@ -85,7 +85,7 @@ class rigidBodyMeshMotionSolver
     };
 
 
-    // Private data
+    // Private Data
 
         //- List of the bodyMeshes containing the patches and point motion
         //  weighting for each body

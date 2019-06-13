@@ -53,7 +53,7 @@ class engineTime;
 
 class enginePiston
 {
-    // Private data
+    // Private Data
 
         //- Reference to engine mesh
         const polyMesh& mesh_;
@@ -88,7 +88,7 @@ class enginePiston
 
 public:
 
-    // Static data members
+    // Static Data Members
 
 
     // Constructors

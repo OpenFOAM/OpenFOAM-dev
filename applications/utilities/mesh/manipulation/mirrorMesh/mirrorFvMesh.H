@@ -49,7 +49,7 @@ class mirrorFvMesh
 :
     public fvMesh
 {
-    // Private data
+    // Private Data
 
         //- Mirror dictionary
         IOdictionary mirrorMeshDict_;

@@ -161,7 +161,7 @@ public:
             void transfer(LPtrList<LListBase, T>&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment operator
         void operator=(const LPtrList<LListBase, T>&);
@@ -200,7 +200,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 T& operator*()
                 {
@@ -239,7 +239,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 const T& operator*()
                 {
@@ -253,7 +253,7 @@ public:
         };
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>> <LListBase, T>
         (

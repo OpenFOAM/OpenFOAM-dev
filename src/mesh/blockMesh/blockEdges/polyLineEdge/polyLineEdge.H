@@ -65,7 +65,7 @@ class polyLineEdge
 
 public:
 
-    // Static data members
+    // Static Data Members
     TypeName("polyLine");
 
 

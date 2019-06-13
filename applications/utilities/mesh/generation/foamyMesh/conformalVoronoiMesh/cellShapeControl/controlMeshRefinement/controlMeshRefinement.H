@@ -53,7 +53,7 @@ namespace Foam
 
 class controlMeshRefinement
 {
-    // Private data
+    // Private Data
 
         const cellShapeControl& shapeController_;
 

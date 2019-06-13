@@ -51,7 +51,7 @@ class smoluchowskiJumpTFvPatchScalarField
     public mixedFvPatchScalarField
 {
 
-    // Private data
+    // Private Data
 
         //- Velocity field name, default = "U"
         word UName_;

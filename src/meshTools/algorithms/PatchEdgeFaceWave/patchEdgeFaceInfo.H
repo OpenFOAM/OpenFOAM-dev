@@ -67,7 +67,7 @@ Ostream& operator<<(Ostream&, const patchEdgeFaceInfo&);
 
 class patchEdgeFaceInfo
 {
-    // Private data
+    // Private Data
 
         //- Position of nearest wall center
         point origin_;

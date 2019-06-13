@@ -36,8 +36,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_plane_H
-#define sampledSurfaces_plane_H
+#ifndef sampledPlane_H
+#define sampledPlane_H
 
 #include "sampledSurface.H"
 #include "cuttingPlane.H"
@@ -58,7 +58,7 @@ class plane
     public sampledSurface,
     public cuttingPlane
 {
-    // Private data
+    // Private Data
 
         //- If restricted to zones, name of this zone or a regular expression
         keyType zoneKey_;

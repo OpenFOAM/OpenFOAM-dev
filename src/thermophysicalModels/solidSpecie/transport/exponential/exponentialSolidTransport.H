@@ -68,7 +68,7 @@ class exponentialSolidTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         //- Constant thermal coefficient.
         scalar kappa0_;
@@ -113,7 +113,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -140,7 +140,7 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const exponentialSolidTransport&);
 

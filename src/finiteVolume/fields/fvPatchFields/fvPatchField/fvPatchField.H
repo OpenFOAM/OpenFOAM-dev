@@ -85,7 +85,7 @@ class fvPatchField
 :
     public Field<Type>
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const fvPatch& patch_;
@@ -288,7 +288,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -518,7 +518,7 @@ public:
             void check(const fvPatchField<Type>&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&);
 

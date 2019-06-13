@@ -71,7 +71,7 @@ class rigidBodyMotion
 {
     friend class rigidBodySolver;
 
-    // Private data
+    // Private Data
 
         //- Motion state data object
         rigidBodyModelState motionState_;

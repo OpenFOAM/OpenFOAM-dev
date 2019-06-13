@@ -109,7 +109,7 @@ class thermalBaffle1DFvPatchScalarField
     public mappedPatchBase,
     public mixedFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of the temperature field
         word TName_;
@@ -222,7 +222,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

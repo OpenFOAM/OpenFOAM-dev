@@ -68,7 +68,7 @@ class viewFactor
 :
     public radiationModel
 {
-    // Private data
+    // Private Data
 
         //- Agglomeration List
         labelListIOList finalAgglom_;
@@ -148,7 +148,7 @@ public:
     virtual ~viewFactor();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 

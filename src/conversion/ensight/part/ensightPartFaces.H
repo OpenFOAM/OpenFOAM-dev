@@ -79,7 +79,7 @@ protected:
         };
 
 
-    // Static data members
+    // Static Data Members
 
         static const List<word> elemTypes_;
 

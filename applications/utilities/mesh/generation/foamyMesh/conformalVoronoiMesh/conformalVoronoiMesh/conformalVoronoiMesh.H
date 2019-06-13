@@ -134,7 +134,7 @@ private:
         static const scalar searchAngleOppositeSurface;
 
 
-    // Private data
+    // Private Data
 
         //- The time registry of the application
         const Time& runTime_;

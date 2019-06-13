@@ -76,7 +76,7 @@ class uniformFixedValueFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         autoPtr<Function1<Type>> uniformValue_;
 
@@ -157,7 +157,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

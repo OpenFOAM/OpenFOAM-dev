@@ -87,7 +87,7 @@ class turbulentIntensityKineticEnergyInletFvPatchScalarField
 :
     public inletOutletFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Turbulent intensity as fraction of mean velocity
         scalar intensity_;
@@ -172,7 +172,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

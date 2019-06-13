@@ -116,7 +116,7 @@ protected:
 
 private:
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         STARCD(const STARCD&) = delete;

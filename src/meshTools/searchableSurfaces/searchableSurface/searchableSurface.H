@@ -68,7 +68,7 @@ class searchableSurface
 :
     public regIOobject
 {
-    // Private data
+    // Private Data
 
         const word name_;
 

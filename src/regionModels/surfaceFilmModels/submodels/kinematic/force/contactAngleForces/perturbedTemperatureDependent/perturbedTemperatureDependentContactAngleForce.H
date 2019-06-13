@@ -82,7 +82,7 @@ class perturbedTemperatureDependentContactAngleForce
         const autoPtr<distributionModel> distribution_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         perturbedTemperatureDependentContactAngleForce

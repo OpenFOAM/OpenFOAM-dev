@@ -53,15 +53,9 @@ class downwind
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private data
+    // Private Data
 
         const surfaceScalarField& faceFlux_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const downwind&) = delete;
 
 
 public:
@@ -125,6 +119,12 @@ public:
         {
             return neg(faceFlux_);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const downwind&) = delete;
 };
 
 

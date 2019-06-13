@@ -106,7 +106,7 @@ class waveVelocityFvPatchVectorField
 :
     public directionMixedFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of the flux field
         const word phiName_;
@@ -191,7 +191,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

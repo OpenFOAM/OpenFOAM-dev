@@ -105,7 +105,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Interpolation method
         const word methodName_;

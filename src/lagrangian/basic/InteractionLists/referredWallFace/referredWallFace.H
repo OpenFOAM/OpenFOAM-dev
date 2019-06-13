@@ -63,7 +63,7 @@ class referredWallFace
 :
     public face
 {
-    // Private data
+    // Private Data
 
         //- Points of face
         pointField pts_;

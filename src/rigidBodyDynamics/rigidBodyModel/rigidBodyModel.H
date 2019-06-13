@@ -76,7 +76,7 @@ class restraint;
 
 class rigidBodyModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Initialize the model with the root-body
         //  which is a fixed massless bodyat the origin.

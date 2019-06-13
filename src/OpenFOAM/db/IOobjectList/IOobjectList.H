@@ -79,7 +79,7 @@ public:
     ~IOobjectList();
 
 
-    // Member functions
+    // Member Functions
 
         //- Add an IOobject to the list
         bool add(IOobject&);

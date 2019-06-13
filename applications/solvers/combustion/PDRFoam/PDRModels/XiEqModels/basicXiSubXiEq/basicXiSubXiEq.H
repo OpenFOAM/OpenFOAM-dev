@@ -83,7 +83,7 @@ class basicSubGrid
 :
     public XiEqModel
 {
-    // Private data
+    // Private Data
 
         //- tblock
         volSymmTensorField B_;

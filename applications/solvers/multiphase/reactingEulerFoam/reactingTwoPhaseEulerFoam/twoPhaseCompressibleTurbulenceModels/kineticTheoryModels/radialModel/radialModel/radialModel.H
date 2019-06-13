@@ -50,7 +50,7 @@ namespace kineticTheoryModels
 
 class radialModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         radialModel(const radialModel&) = delete;

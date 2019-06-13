@@ -65,7 +65,7 @@ Ostream& operator<<(Ostream&, const specie&);
 
 class specie
 {
-    // Private data
+    // Private Data
 
         //- Name of specie
         word name_;
@@ -129,7 +129,7 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator=(const specie&);
         inline void operator+=(const specie&);

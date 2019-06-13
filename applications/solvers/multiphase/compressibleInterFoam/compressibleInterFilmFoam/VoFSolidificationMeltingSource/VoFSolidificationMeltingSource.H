@@ -99,7 +99,7 @@ class VoFSolidificationMeltingSource
 :
     public cellSetOption
 {
-    // Private data
+    // Private Data
 
         //- Solid fraction as a function of temperature
         autoPtr<Function1<scalar>> alphaSolidT_;

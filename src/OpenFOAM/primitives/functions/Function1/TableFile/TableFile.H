@@ -75,7 +75,7 @@ class TableFile
 :
     public TableBase<Type>
 {
-    // Private data
+    // Private Data
 
         //- File name for csv table (optional)
         fileName fName_;

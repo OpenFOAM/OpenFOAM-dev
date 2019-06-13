@@ -54,7 +54,7 @@ class IOobjectList;
 
 class lagrangianFieldDecomposer
 {
-    // Private data
+    // Private Data
 
         //- Reference to processor mesh
         const polyMesh& procMesh_;

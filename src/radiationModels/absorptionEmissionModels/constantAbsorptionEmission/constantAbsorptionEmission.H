@@ -55,7 +55,7 @@ class constant
 :
     public absorptionEmissionModel
 {
-    // Private data
+    // Private Data
 
         //- Absorption model dictionary
         dictionary coeffsDict_;

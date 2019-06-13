@@ -149,7 +149,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Input dictionary
         dictionary dict_;

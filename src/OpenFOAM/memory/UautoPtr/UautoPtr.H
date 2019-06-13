@@ -97,7 +97,7 @@ public:
             inline void clear();
 
 
-        // Member operators
+        // Member Operators
 
             //- Return reference to the object data
             inline T& operator()();

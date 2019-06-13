@@ -89,7 +89,7 @@ class thixotropicViscosity
 :
     public filmViscosityModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         thixotropicViscosity(const thixotropicViscosity&) = delete;

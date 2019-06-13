@@ -71,7 +71,7 @@ class edgeMesh
 :
     public fileFormats::edgeMeshFormatsCore
 {
-    // Private data
+    // Private Data
 
         //- Vertices of the edges
         pointField points_;

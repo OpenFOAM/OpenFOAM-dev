@@ -55,7 +55,7 @@ namespace Foam
 
 class fvFieldReconstructor
 {
-    // Private data
+    // Private Data
 
         //- Reconstructed mesh reference
         fvMesh& mesh_;

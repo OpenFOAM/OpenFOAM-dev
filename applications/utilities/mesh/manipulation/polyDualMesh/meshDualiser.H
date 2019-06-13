@@ -66,7 +66,7 @@ class polyTopoChange;
 
 class meshDualiser
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 

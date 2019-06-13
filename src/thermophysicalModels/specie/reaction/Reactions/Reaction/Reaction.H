@@ -82,7 +82,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Name of reaction
         const word name_;

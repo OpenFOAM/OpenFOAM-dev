@@ -50,7 +50,7 @@ class tolerances
 :
     public IOdictionary
 {
-    // Private data
+    // Private Data
 
         dictionary relaxationFactors_;
         dictionary solverTolerances_;

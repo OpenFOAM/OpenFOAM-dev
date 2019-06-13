@@ -261,7 +261,7 @@ public:
     virtual ~topoSet();
 
 
-    // Member functions
+    // Member Functions
 
         //- Invert contents. (insert all members 0..maxLen-1 which were not in
         //  set)
@@ -302,7 +302,7 @@ public:
 
 
 
-    // Member operators
+    // Member Operators
 
         //- Copy labelHashSet part only
         void operator=(const topoSet&);

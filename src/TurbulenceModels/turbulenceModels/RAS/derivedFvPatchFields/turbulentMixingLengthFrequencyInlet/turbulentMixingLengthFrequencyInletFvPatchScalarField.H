@@ -90,7 +90,7 @@ class turbulentMixingLengthFrequencyInletFvPatchScalarField
 :
     public inletOutletFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Turbulent length scale
         scalar mixingLength_;
@@ -175,7 +175,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

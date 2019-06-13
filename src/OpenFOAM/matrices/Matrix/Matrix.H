@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ class MatrixBlock;
 template<class Form, class Type>
 class Matrix
 {
-    // Private data
+    // Private Data
 
         //- Number of rows and columns in Matrix.
         label mRows_, nCols_;
@@ -257,7 +257,7 @@ public:
         Form T() const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Return subscript-checked row of Matrix.
         inline Type* operator[](const label);
@@ -289,7 +289,7 @@ public:
         void operator=(const Type&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read Matrix from Istream, discarding contents of existing Matrix.
         friend Istream& operator>> <Form, Type>

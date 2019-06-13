@@ -48,7 +48,7 @@ class structuredDecomp
 :
     public decompositionMethod
 {
-    // Private data
+    // Private Data
 
         dictionary methodDict_;
 

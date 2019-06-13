@@ -76,7 +76,7 @@ class rotatingWallVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Origin of the rotation
         vector origin_;
@@ -157,7 +157,7 @@ public:
 
 
 
-    // Member functions
+    // Member Functions
 
         // Access functions
 

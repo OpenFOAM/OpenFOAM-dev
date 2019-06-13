@@ -53,7 +53,7 @@ class pairPotentialList
 :
     public PtrList<pairPotential>
 {
-    // Private data
+    // Private Data
 
         label nIds_;
 

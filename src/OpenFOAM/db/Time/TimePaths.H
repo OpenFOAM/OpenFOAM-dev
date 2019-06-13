@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace Foam
 
 class TimePaths
 {
-    // Private data
+    // Private Data
 
         bool processorCase_;
         const fileName rootPath_;
@@ -85,7 +85,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
             //- Return true if this is a processor case
             bool processorCase() const

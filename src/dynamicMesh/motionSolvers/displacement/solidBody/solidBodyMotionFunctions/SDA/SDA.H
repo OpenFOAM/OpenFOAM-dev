@@ -58,7 +58,7 @@ class SDA
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Center of gravity
         vector CofG_;

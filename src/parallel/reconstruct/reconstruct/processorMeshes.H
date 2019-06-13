@@ -52,7 +52,7 @@ namespace Foam
 
 class processorMeshes
 {
-    // Private data
+    // Private Data
 
         const word meshName_;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ public:
         //- Structure for communicating between processors
         class commsStruct
         {
-            // Private data
+            // Private Data
 
                 //- procID of above processor
                 label above_;
@@ -144,7 +144,7 @@ public:
                     }
 
 
-            // Member operators
+            // Member Operators
 
                 bool operator==(const commsStruct&) const;
 
@@ -179,7 +179,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- By default this is not a parallel run
         static bool parRun_;
@@ -291,7 +291,7 @@ public:
         {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Allocate a new communicator
         static label allocateCommunicator

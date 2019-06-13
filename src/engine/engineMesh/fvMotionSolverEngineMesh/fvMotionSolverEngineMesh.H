@@ -52,7 +52,7 @@ class fvMotionSolverEngineMesh
 :
     public engineMesh
 {
-    // Private data
+    // Private Data
 
         dimensionedScalar pistonLayers_;
 

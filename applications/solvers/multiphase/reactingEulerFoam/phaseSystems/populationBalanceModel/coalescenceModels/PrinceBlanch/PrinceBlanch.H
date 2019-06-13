@@ -145,7 +145,7 @@ class PrinceBlanch
 :
     public coalescenceModel
 {
-    // Private data
+    // Private Data
 
         //- Optional coefficient C1, defaults to 0.089
         dimensionedScalar C1_;

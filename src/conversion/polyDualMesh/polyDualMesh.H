@@ -57,7 +57,7 @@ class polyDualMesh
 :
     public polyMesh
 {
-    // Private data
+    // Private Data
 
         //- From polyMesh cell to my point
         labelIOList cellPoint_;

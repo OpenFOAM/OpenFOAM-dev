@@ -94,7 +94,7 @@ class List
 :
     public UList<T>
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Allocate list storage
         inline void alloc();
@@ -253,7 +253,7 @@ public:
         void shallowCopy(const UList<T>&) = delete;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment to UList operator. Takes linear time
         void operator=(const UList<T>&);

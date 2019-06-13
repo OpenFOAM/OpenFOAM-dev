@@ -74,7 +74,7 @@ class topoSet;
 
 class multiDirRefinement
 {
-    // Private data
+    // Private Data
 
         //- Current set of cells to refine. Extended with added cells.
         labelList cellLabels_;

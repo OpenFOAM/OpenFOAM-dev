@@ -52,18 +52,9 @@ class multivariateUpwind
 :
     public multivariateSurfaceInterpolationScheme<Type>
 {
-    // Private data
+    // Private Data
 
         const surfaceScalarField& faceFlux_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        multivariateUpwind(const multivariateUpwind&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateUpwind&) = delete;
 
 
 public:
@@ -94,8 +85,14 @@ public:
             faceFlux_(faceFlux)
         {}
 
+        //- Disallow default bitwise copy construction
+        multivariateUpwind(const multivariateUpwind&) = delete;
+
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateUpwind&) = delete;
 
         //- surfaceInterpolationScheme sub-class returned by operator(field)
         //  which is used as the interpolation scheme for the field
@@ -103,7 +100,7 @@ public:
         :
             public multivariateSurfaceInterpolationScheme<Type>::fieldScheme
         {
-            // Private data
+            // Private Data
 
                 const surfaceScalarField& faceFlux_;
 

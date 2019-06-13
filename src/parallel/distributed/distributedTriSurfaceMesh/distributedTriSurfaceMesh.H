@@ -91,7 +91,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Merging distance
         scalar mergeDist_;

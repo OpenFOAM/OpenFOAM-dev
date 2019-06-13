@@ -63,7 +63,7 @@ class correlationFunction
 :
     public bufferedAccumulator<scalar>
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 
@@ -93,7 +93,7 @@ public:
     typedef typename pTraits<Type>::cmptType cmptType;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 

@@ -60,9 +60,6 @@ class wallDistData
     public volScalarField,
     public cellDistFuncs
 {
-
-private:
-
     typedef typename TransferType::dataType Type;
 
 
@@ -79,15 +76,6 @@ private:
         label nUnset_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        wallDistData(const wallDistData&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallDistData&) = delete;
-
-
 public:
 
     // Constructors
@@ -101,6 +89,9 @@ public:
             GeometricField<Type, fvPatchField, volMesh>&,
             bool correctWalls = true
         );
+
+        //- Disallow default bitwise copy construction
+        wallDistData(const wallDistData&) = delete;
 
 
     //- Destructor
@@ -127,6 +118,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallDistData&) = delete;
 };
 
 

@@ -52,7 +52,7 @@ class regionCoupledGAMGInterfaceField
 :
     public GAMGInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclic interface
         const regionCoupledGAMGInterface& regionCoupledGAMGInterface_;

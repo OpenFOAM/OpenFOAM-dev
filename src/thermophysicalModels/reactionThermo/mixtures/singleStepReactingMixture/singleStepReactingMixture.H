@@ -99,7 +99,7 @@ protected:
 
 private:
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         singleStepReactingMixture(const singleStepReactingMixture&) = delete;
@@ -130,7 +130,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()

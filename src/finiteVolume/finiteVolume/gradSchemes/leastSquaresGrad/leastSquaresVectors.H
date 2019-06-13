@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class leastSquaresVectors
 :
     public MeshObject<fvMesh, MoveableMeshObject, leastSquaresVectors>
 {
-    // Private data
+    // Private Data
 
         //- Least-squares gradient vectors
         surfaceVectorField pVectors_;
@@ -81,7 +81,7 @@ public:
     virtual ~leastSquaresVectors();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return reference to owner least square vectors
         const surfaceVectorField& pVectors() const

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace Foam
 
 class cellModeller
 {
-    // Private data
+    // Private Data
 
         //- PtrList of models
         static PtrList<cellModel> models_;
@@ -75,7 +75,7 @@ public:
     ~cellModeller();
 
 
-    // Member functions
+    // Member Functions
 
         //- Look up a model by name and return a pointer to the model or nullptr
         static const cellModel* lookup(const word&);

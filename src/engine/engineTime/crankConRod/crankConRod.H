@@ -67,7 +67,7 @@ class crankConRod
 :
     public engineTime
 {
-    // Private data
+    // Private Data
 
         //- RPM is required
         dimensionedScalar rpm_;
@@ -176,7 +176,7 @@ public:
             virtual scalar deltaTheta() const;
 
 
-        // Member functions overriding the virtual functions in time
+        // Member Functions overriding the virtual functions in time
 
             //- Convert the user-time (CA deg) to real-time (s).
             virtual scalar userTimeToTime(const scalar theta) const;

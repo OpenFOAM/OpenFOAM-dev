@@ -54,8 +54,6 @@ class searchablePlane
     public searchableSurface,
     public plane
 {
-private:
-
     // Private Member Data
 
         mutable wordList regions_;

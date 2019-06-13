@@ -101,7 +101,7 @@ protected:
 
 private:
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         directMethod(const directMethod&) = delete;

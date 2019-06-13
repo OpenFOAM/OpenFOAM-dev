@@ -52,7 +52,7 @@ class multiSolidBodyMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- The motion control function
         PtrList<solidBodyMotionFunction> SBMFs_;

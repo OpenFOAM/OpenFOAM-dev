@@ -52,8 +52,6 @@ class closedTriSurfaceMesh
 :
     public triSurfaceMesh
 {
-private:
-
         //- Disallow default bitwise copy construction
         closedTriSurfaceMesh(const closedTriSurfaceMesh&) = delete;
 

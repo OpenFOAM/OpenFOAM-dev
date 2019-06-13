@@ -212,7 +212,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         autoPtr<LESdelta> geometricDelta_;
         scalar maxDeltaRatio_;

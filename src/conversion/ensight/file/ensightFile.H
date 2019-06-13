@@ -49,7 +49,7 @@ class ensightFile
 :
     public OFstream
 {
-    // Private data
+    // Private Data
 
         //- Allow undef in results
         static bool allowUndef_;

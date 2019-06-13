@@ -57,7 +57,7 @@ Ostream& operator<<(Ostream&, const reducedUnits&);
 
 class reducedUnits
 {
-    // Private data
+    // Private Data
 
         // Reduced units
 
@@ -101,7 +101,7 @@ class reducedUnits
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Static data someStaticData
         static const scalar kb;

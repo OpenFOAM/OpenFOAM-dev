@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class solidParticle
 :
     public particle
 {
-    // Private data
+    // Private Data
 
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
@@ -112,7 +112,7 @@ public:
             );
 
 
-        // Member functions
+        // Member Functions
 
             inline const interpolationCellPoint<scalar>& rhoInterp() const;
 

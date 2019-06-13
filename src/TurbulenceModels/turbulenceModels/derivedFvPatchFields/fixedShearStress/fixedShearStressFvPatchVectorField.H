@@ -51,7 +51,7 @@ class fixedShearStressFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Constant shear stress
         const vector tau0_;
@@ -124,7 +124,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

@@ -67,7 +67,7 @@ namespace Foam
 
 class enrichedPatch
 {
-    // Private data
+    // Private Data
 
         //- Reference to master patch
         const primitiveFacePatch& masterPatch_;
@@ -172,7 +172,7 @@ class enrichedPatch
             void clearOut();
 
 
-    // Static data members
+    // Static Data Members
 
         //- Estimated ratio of original-to-enriched face size
         static const label enrichedFaceRatio_;
@@ -186,7 +186,7 @@ class enrichedPatch
 
 public:
 
-    // Static data members
+    // Static Data Members
     ClassName("enrichedPatch");
 
     // Constructors

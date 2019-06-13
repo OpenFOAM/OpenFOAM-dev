@@ -76,7 +76,7 @@ class surfaceNormalFixedValueFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         scalarField refValue_;
 
@@ -154,7 +154,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

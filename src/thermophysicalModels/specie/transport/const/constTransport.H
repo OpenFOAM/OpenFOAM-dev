@@ -78,7 +78,7 @@ class constTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         //- Constant dynamic viscosity [Pa.s]
         scalar mu_;
@@ -115,7 +115,7 @@ public:
         inline static autoPtr<constTransport> New(const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -139,7 +139,7 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const constTransport&);
         inline void operator*=(const scalar);

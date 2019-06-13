@@ -69,13 +69,6 @@ class limiterBlended
         tmp<surfaceInterpolationScheme<Type>> tScheme2_;
 
 
-        //- Disallow default bitwise copy construction
-        limiterBlended(const limiterBlended&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const limiterBlended&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -130,6 +123,9 @@ public:
                 surfaceInterpolationScheme<Type>::New(mesh, faceFlux, is)
             )
         {}
+
+        //- Disallow default bitwise copy construction
+        limiterBlended(const limiterBlended&) = delete;
 
 
     // Member Functions
@@ -223,6 +219,12 @@ public:
                 );
             }
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limiterBlended&) = delete;
 };
 
 

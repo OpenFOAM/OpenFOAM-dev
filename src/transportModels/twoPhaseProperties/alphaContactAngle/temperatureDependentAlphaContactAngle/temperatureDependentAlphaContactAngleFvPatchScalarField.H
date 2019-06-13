@@ -76,7 +76,7 @@ class temperatureDependentAlphaContactAngleFvPatchScalarField
 :
     public alphaContactAngleFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of temperature field, default = "T"
         word TName_;
@@ -161,7 +161,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the equilibrium contact-angle
         virtual tmp<scalarField> theta

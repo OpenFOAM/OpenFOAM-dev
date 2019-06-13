@@ -66,7 +66,7 @@ class keyType
 :
     public word
 {
-    // Private data
+    // Private Data
 
         //- Is the keyType a pattern (regular expression)
         bool isPattern_;
@@ -78,7 +78,7 @@ class keyType
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- An empty keyType
         static const keyType null;
@@ -110,7 +110,7 @@ public:
         keyType(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Should be treated as a match rather than a literal string
         inline bool isPattern() const;
@@ -119,7 +119,7 @@ public:
         //  Optionally force a literal match only
         bool match(const std::string&, bool literalMatch=false) const;
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -136,7 +136,7 @@ public:
             inline void operator=(const char*);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, keyType&);
         friend Ostream& operator<<(Ostream&, const keyType&);

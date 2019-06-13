@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ namespace Foam
 
 class argList
 {
-    // Private data
+    // Private Data
 
         //- Switch on/off parallel mode. Has to be first to be constructed
         //  so destructor is done last.
@@ -148,7 +148,7 @@ class argList
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- A list of valid (mandatory) arguments
         static SLList<string> validArgs;
@@ -216,7 +216,7 @@ public:
     virtual ~argList();
 
 
-    // Member functions
+    // Member Functions
 
         //- Parse
         void parse

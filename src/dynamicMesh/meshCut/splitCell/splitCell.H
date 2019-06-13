@@ -51,7 +51,7 @@ namespace Foam
 
 class splitCell
 {
-    // Private data
+    // Private Data
 
         //- Unsplit cell label. Only uptodate if this cell is 'live'
         //  (i.e. no master or slave)

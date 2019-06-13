@@ -61,7 +61,7 @@ class extendedUpwindCellToFaceStencil
 :
     public extendedCellToFaceStencil
 {
-    // Private data
+    // Private Data
 
         //- Does stencil contain upwind points only
         const bool pureUpwind_;

@@ -54,7 +54,7 @@ class twoDPointCorrector;
 
 class edgeStats
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh.
         const polyMesh& mesh_;
@@ -77,7 +77,7 @@ class edgeStats
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         // Max (cos of) angle for edges to be considered aligned with axis.
         static const scalar edgeTol_;

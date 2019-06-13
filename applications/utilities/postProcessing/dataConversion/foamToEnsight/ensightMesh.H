@@ -81,7 +81,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to the OpenFOAM mesh
         const fvMesh& mesh_;

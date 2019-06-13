@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ namespace Foam
 
 class subCycleTime
 {
-    // Private data
+    // Private Data
 
         Time& time_;
 
@@ -67,7 +67,7 @@ public:
     ~subCycleTime();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return true if the number of sub-cycles has been reached
         bool end() const;
@@ -88,7 +88,7 @@ public:
         }
 
 
-    // Member operators
+    // Member Operators
 
         //- Prefix increment
         subCycleTime& operator++();

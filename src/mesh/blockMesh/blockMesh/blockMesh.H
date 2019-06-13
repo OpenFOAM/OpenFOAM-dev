@@ -63,7 +63,7 @@ class blockMesh
 :
     public blockList
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh dictionary
         const IOdictionary& meshDict_;
@@ -197,7 +197,7 @@ class blockMesh
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         ClassName("blockMesh");
 

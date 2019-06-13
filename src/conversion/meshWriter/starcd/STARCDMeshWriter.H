@@ -89,7 +89,7 @@ class STARCD
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Face addressing from OpenFOAM faces -> pro-STAR faces
         static const label foamToStarFaceAddr[4][6];

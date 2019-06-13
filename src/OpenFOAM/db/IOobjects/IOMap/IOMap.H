@@ -83,7 +83,7 @@ public:
     virtual ~IOMap();
 
 
-    // Member functions
+    // Member Functions
 
         bool writeData(Ostream&) const;
 
@@ -101,7 +101,7 @@ public:
         }
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment of other IOMap's entries to this IOMap
         void operator=(const IOMap<T>&);

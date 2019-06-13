@@ -52,7 +52,7 @@ class fvMesh;
 
 class ignition
 {
-    // Private data
+    // Private Data
 
         const fvMesh& mesh_;
 

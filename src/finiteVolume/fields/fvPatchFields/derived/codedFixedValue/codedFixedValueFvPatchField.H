@@ -109,7 +109,7 @@ class codedFixedValueFvPatchField
         static const wordList codeKeys_;
 
 
-    // Private data
+    // Private Data
 
         //- Dictionary contents for the boundary condition
         const dictionary dict_;
@@ -147,7 +147,7 @@ class codedFixedValueFvPatchField
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the C code template to be used
         static const word codeTemplateC;
@@ -222,7 +222,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Get reference to the underlying patch
         const fvPatchField<Type>& redirectPatchField() const;

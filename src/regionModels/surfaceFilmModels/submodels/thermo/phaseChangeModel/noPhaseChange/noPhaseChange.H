@@ -54,9 +54,7 @@ class noPhaseChange
 :
     public phaseChangeModel
 {
-private:
-
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         noPhaseChange(const noPhaseChange&) = delete;

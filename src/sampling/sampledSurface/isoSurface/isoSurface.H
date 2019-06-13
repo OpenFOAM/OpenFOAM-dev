@@ -71,7 +71,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         enum cellCutType
         {

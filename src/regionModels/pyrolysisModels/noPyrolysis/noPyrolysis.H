@@ -57,9 +57,7 @@ class noPyrolysis
 :
     public pyrolysisModel
 {
-private:
-
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         noPyrolysis(const noPyrolysis&) = delete;

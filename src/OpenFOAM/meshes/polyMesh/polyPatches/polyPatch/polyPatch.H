@@ -69,7 +69,7 @@ class polyPatch
     public patchIdentifier,
     public primitivePatch
 {
-    // Private data
+    // Private Data
 
         //- Start label of this patch in the polyMesh face list
         label start_;
@@ -402,7 +402,7 @@ public:
         ) const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment
         void operator=(const polyPatch&);

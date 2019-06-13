@@ -75,7 +75,7 @@ class CSV
 :
     public TableBase<Type>
 {
-    // Private data
+    // Private Data
 
         //- Number header lines
         label nHeaderLine_;

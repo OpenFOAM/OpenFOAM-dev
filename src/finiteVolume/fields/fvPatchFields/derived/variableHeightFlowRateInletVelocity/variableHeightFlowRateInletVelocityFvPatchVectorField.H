@@ -84,7 +84,7 @@ class variableHeightFlowRateInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Inlet integral flow rate
         autoPtr<Function1<scalar>> flowRate_;
@@ -166,7 +166,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

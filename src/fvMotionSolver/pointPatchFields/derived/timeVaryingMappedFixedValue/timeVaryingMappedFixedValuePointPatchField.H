@@ -57,7 +57,7 @@ class timeVaryingMappedFixedValuePointPatchField
 :
     public fixedValuePointPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Name of the field data table, defaults to the name of the field
         word fieldTableName_;
@@ -166,7 +166,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Utility functions
 

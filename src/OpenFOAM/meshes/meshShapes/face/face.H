@@ -139,7 +139,7 @@ public:
         EDGE    // Close to edge
     };
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 

@@ -98,7 +98,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Field name
         word fieldName_;

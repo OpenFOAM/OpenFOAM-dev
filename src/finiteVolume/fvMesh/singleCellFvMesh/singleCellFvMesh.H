@@ -55,7 +55,7 @@ class singleCellFvMesh
 :
     public fvMesh
 {
-    // Private data
+    // Private Data
 
         const labelListIOList patchFaceAgglomeration_;
 
@@ -92,7 +92,7 @@ public:
         :
             public generalFvPatchFieldMapper
         {
-            // Private data
+            // Private Data
 
                 const labelListList& addressing_;
                 const scalarListList& weights_;

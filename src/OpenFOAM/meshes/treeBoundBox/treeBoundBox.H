@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,9 +89,6 @@ class treeBoundBox
 :
     public boundBox
 {
-
-private:
-
         //- To initialise edges.
         static edgeList calcEdges(const label[12][2]);
 
@@ -100,7 +97,7 @@ private:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- The great value used for greatBox and invertedBox
         static const scalar great;
@@ -219,7 +216,7 @@ public:
         inline treeBoundBox(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

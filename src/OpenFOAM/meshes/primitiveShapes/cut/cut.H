@@ -55,8 +55,6 @@ namespace cut
 template<class Type>
 class uniformOp
 {
-private:
-
     //- Data
     Type data_;
 
@@ -76,7 +74,7 @@ public:
         {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Access the data
         Type data() const
@@ -115,7 +113,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const
@@ -161,7 +159,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const
@@ -206,7 +204,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const
@@ -251,7 +249,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const
@@ -293,7 +291,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const
@@ -336,7 +334,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const
@@ -379,7 +377,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const
@@ -425,7 +423,7 @@ public:
                 {}
 
 
-            // Member operators
+            // Member Operators
 
                 //- Add together two lists
                 result operator+(const result& x) const
@@ -450,7 +448,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const
@@ -504,7 +502,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         //- Operate on nothing
         result operator()() const

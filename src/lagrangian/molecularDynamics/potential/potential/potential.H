@@ -53,7 +53,7 @@ namespace Foam
 
 class potential
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 

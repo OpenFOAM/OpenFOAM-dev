@@ -133,7 +133,7 @@ class EDC
 :
     public laminar<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         //- The selected model version
         EDCversions version_;

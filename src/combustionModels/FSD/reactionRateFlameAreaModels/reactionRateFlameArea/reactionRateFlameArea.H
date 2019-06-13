@@ -77,7 +77,7 @@ protected:
 
 private:
 
-    // Private member functions
+    // Private Member Functions
 
          //- Disallow copy construct
         reactionRateFlameArea(const reactionRateFlameArea&);
@@ -136,7 +136,7 @@ public:
         virtual ~reactionRateFlameArea();
 
 
-    // Member functions
+    // Member Functions
 
         //- Access functions
 

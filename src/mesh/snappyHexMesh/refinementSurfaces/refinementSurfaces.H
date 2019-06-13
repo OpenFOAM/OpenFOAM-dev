@@ -60,7 +60,7 @@ typedef List<point> pointList;
 
 class refinementSurfaces
 {
-    // Private data
+    // Private Data
 
         //- Reference to all geometry.
         const searchableSurfaces& allGeometry_;

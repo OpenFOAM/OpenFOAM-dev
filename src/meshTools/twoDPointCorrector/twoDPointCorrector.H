@@ -63,7 +63,7 @@ class twoDPointCorrector
 :
     public MeshObject<polyMesh, UpdateableMeshObject, twoDPointCorrector>
 {
-    // Private data
+    // Private Data
 
         //- Is 2D correction required, i.e. is the mesh
         bool required_;
@@ -103,7 +103,7 @@ class twoDPointCorrector
         void snapToWedge(const vector& n, const point& A, point& p) const;
 
 
-    // Static data members
+    // Static Data Members
 
         //- Edge orthogonality tolerance
         static const scalar edgeOrthogonalityTol;

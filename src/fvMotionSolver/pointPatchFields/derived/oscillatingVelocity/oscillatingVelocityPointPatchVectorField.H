@@ -50,7 +50,7 @@ class oscillatingVelocityPointPatchVectorField
 :
     public fixedValuePointPatchField<vector>
 {
-    // Private data
+    // Private Data
 
         vector amplitude_;
         scalar omega_;
@@ -126,7 +126,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

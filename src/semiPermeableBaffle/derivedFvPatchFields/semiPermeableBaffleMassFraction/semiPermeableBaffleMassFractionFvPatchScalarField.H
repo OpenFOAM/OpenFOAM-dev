@@ -112,7 +112,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Transfer coefficient
         const scalar c_;
@@ -205,7 +205,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

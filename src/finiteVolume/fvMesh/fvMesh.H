@@ -85,7 +85,7 @@ class fvMesh
     public fvSolution,
     public data
 {
-    // Private data
+    // Private Data
 
         //- Boundary mesh
         fvBoundaryMesh boundary_;
@@ -165,7 +165,7 @@ class fvMesh
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef fvMesh Mesh;
         typedef fvBoundaryMesh BoundaryMesh;

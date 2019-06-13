@@ -84,7 +84,7 @@ class uniformDensityHydrostaticPressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Constant density in the far-field
         scalar rho_;
@@ -171,7 +171,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

@@ -79,7 +79,7 @@ class greyDiffusiveRadiationMixedFvPatchScalarField
     public mixedFvPatchScalarField,
     public radiationCoupledBase
 {
-    // Private data
+    // Private Data
 
         //- Name of temperature field
         word TName_;
@@ -153,7 +153,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

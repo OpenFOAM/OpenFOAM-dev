@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,9 +74,7 @@ class accelerationSource
 :
     public cellSetOption
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Time-varying velocity
         autoPtr<Function1<vector>> velocity_;

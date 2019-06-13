@@ -89,10 +89,7 @@ class MeshedSurface
     template<class Face2> friend class UnsortedMeshedSurface;
     friend class surfMesh;
 
-
-private:
-
-    // Private typedefs for convenience
+    // Private Typedefs for convenience
 
         typedef PrimitivePatch<::Foam::List<Face>, pointField> ParentType;
 
@@ -149,7 +146,7 @@ protected:
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Face type used
         typedef Face FaceType;
@@ -428,7 +425,7 @@ public:
             void write(const Time&, const word& surfName="") const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const MeshedSurface<Face>&);
 

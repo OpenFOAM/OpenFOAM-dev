@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ namespace Foam
 template<class MatrixType>
 class ConstMatrixBlock
 {
-    // Private data
+    // Private Data
 
         //- Const reference to the parent matrix
         const MatrixType& matrix_;
@@ -115,7 +115,7 @@ public:
 template<class MatrixType>
 class MatrixBlock
 {
-    // Private data
+    // Private Data
 
         //- Reference to the parent matrix
         MatrixType& matrix_;
@@ -167,7 +167,7 @@ public:
         operator Field<cmptType>() const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment to a compatible matrix
         template<class Form>

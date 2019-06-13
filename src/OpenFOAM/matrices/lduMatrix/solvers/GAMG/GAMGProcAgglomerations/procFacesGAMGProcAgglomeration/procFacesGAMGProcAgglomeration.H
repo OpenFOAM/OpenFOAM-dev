@@ -61,7 +61,7 @@ class procFacesGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
-    // Private data
+    // Private Data
 
         //- When to processor agglomerate
         const label nAgglomeratingCells_;

@@ -54,7 +54,7 @@ class instability
 :
     public XiEqModel
 {
-    // Private data
+    // Private Data
 
         //- Equilibrium Xi due to instability only
         scalar XiEqIn;

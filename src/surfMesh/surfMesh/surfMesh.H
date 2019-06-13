@@ -81,7 +81,7 @@ public:
 
 private:
 
-    // Private typedefs
+    // Private Typedefs
 
         typedef MeshedSurfaceIOAllocator Allocator;
 
@@ -132,7 +132,7 @@ protected:
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
     typedef surfMesh Mesh;
 

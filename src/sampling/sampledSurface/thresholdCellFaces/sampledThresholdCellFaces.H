@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_thresholdCellFaces_H
-#define sampledSurfaces_thresholdCellFaces_H
+#ifndef sampledThresholdCellFaces_H
+#define sampledThresholdCellFaces_H
 
 #include "sampledSurface.H"
 #include "MeshedSurface.H"
@@ -55,10 +55,12 @@ class thresholdCellFaces
     public sampledSurface,
     public MeshedSurface<face>
 {
-    //- Private typedefs for convenience
-    typedef MeshedSurface<face> MeshStorage;
+    // Private Typedefs
 
-    // Private data
+        typedef MeshedSurface<face> MeshStorage;
+
+
+    // Private Data
 
         //- Field to get isoSurface of
         const word fieldName_;

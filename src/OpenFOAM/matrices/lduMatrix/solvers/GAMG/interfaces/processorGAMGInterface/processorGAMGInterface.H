@@ -52,7 +52,7 @@ class processorGAMGInterface
     public GAMGInterface,
     public processorLduInterface
 {
-    // Private data
+    // Private Data
 
         //- Communicator to use for parallel communication
         const label comm_;

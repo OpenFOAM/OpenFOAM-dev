@@ -125,15 +125,6 @@ class Poisson
         tmp<volScalarField> tyPsi_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        Poisson(const Poisson&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const Poisson&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -158,6 +149,9 @@ public:
             const labelHashSet& patchIDs
         );
 
+        //- Disallow default bitwise copy construction
+        Poisson(const Poisson&) = delete;
+
 
     // Member Functions
 
@@ -166,6 +160,12 @@ public:
 
         //- Correct the given distance-to-patch and normal-to-patch fields
         virtual bool correct(volScalarField& y, volVectorField& n);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Poisson&) = delete;
 };
 
 

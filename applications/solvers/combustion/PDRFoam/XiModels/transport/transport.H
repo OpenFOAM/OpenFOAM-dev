@@ -57,7 +57,7 @@ class transport
 :
     public XiModel
 {
-    // Private data
+    // Private Data
 
         scalar XiShapeCoef;
 

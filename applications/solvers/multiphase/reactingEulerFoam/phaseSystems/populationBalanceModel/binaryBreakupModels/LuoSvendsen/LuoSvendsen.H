@@ -156,7 +156,7 @@ class LuoSvendsen
 {
 private:
 
-    // Private data
+    // Private Data
 
         //- Interpolation table of Q(a,z) for a=2/11
         autoPtr<interpolationTable<scalar>> gammaUpperReg2by11_;

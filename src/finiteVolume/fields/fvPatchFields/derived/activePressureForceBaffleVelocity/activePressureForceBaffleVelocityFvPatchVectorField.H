@@ -108,7 +108,7 @@ class activePressureForceBaffleVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of the pressure field used to calculate the force
         //  on the active baffle
@@ -226,7 +226,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

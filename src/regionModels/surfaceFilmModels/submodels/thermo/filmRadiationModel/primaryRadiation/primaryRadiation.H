@@ -56,15 +56,13 @@ class primaryRadiation
 :
     public filmRadiationModel
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Incident radiative flux mapped from  the primary region / [kg/s3]
         volScalarField qinPrimary_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         primaryRadiation(const primaryRadiation&) = delete;

@@ -63,7 +63,7 @@ class boundedDdtScheme
 :
     public fv::ddtScheme<Type>
 {
-    // Private data
+    // Private Data
 
         tmp<fv::ddtScheme<Type>> scheme_;
 

@@ -53,7 +53,7 @@ class laminar
 :
     public ChemistryCombustion<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         //- Integrate reaction rate over the time-step
         //  using the selected ODE solver

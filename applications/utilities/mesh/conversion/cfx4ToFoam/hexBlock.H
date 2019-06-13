@@ -50,7 +50,7 @@ namespace Foam
 
 class hexBlock
 {
-    // Private data
+    // Private Data
 
         //- Handedness of the block
         enum handed

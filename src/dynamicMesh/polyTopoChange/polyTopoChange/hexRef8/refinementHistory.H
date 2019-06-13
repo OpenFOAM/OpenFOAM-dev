@@ -145,7 +145,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Is active?
         bool active_;

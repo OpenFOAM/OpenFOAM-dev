@@ -51,7 +51,7 @@ namespace Foam
 
 class searchableSurfaceFeatures
 {
-    // Private data
+    // Private Data
 
         const searchableSurface& surface_;
 

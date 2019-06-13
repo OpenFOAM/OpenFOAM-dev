@@ -88,7 +88,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()

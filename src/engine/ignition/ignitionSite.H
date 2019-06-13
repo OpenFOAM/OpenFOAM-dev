@@ -58,7 +58,7 @@ class fvMesh;
 
 class ignitionSite
 {
-    // Private data
+    // Private Data
 
         const Time& db_;
         const fvMesh& mesh_;

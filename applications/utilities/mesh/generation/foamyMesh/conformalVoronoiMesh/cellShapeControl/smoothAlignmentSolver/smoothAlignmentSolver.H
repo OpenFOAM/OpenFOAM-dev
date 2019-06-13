@@ -50,7 +50,7 @@ namespace Foam
 
 class smoothAlignmentSolver
 {
-    // Private data
+    // Private Data
 
         cellShapeControlMesh& mesh_;
 

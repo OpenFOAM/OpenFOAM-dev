@@ -131,7 +131,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Write
         virtual void write(Ostream&) const;

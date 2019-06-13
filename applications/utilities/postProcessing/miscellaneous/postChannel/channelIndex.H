@@ -53,7 +53,7 @@ namespace Foam
 class channelIndex
 {
 
-    // Private data
+    // Private Data
 
         static const NamedEnum<vector::components, 3> vectorComponentsNames_;
 

@@ -54,7 +54,7 @@ class oscillatingLinearMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Amplitude
         vector amplitude_;

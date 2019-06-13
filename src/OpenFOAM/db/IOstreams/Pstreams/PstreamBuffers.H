@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ class PstreamBuffers
     friend class UOPstream;
     friend class UIPstream;
 
-    // Private data
+    // Private Data
 
         //- Communications type of this stream
         const UPstream::commsTypes commsType_;
@@ -136,7 +136,7 @@ public:
     ~PstreamBuffers();
 
 
-    // Member functions
+    // Member Functions
 
         int tag() const
         {

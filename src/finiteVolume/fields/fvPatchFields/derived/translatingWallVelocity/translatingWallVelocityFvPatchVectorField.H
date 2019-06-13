@@ -74,7 +74,7 @@ class translatingWallVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Translational velocity
         autoPtr<Function1<vector>> U_;
@@ -148,7 +148,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

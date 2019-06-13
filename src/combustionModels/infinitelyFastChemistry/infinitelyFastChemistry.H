@@ -55,7 +55,7 @@ class infinitelyFastChemistry
 :
     public singleStepCombustion<ReactionThermo, ThermoType>
 {
-    // Private data
+    // Private Data
 
         //- Model constant
         scalar C_;

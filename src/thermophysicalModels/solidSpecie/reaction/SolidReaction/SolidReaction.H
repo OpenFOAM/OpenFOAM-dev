@@ -61,10 +61,7 @@ class SolidReaction
 :
     public Reaction<ReactionThermo>
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         //- List of gas species present in reaction system
         speciesTable pyrolisisGases_;

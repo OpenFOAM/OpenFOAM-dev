@@ -57,9 +57,7 @@ class injectionModelList
     public PtrList<injectionModel>,
     public filmSubModelBase
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- List of mass injected per patch
         scalarField massInjected_;

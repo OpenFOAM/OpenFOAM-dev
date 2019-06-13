@@ -118,7 +118,7 @@ class icoUncoupledKinematicCloud
         basicKinematicCollidingCloud kinematicCloud_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         icoUncoupledKinematicCloud(const icoUncoupledKinematicCloud&) = delete;

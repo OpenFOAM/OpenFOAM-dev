@@ -51,7 +51,7 @@ class quadraticDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         autoPtr<motionDiffusivity> basicDiffusivityPtr_;
 

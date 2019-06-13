@@ -52,7 +52,7 @@ class pointZoneSet
 :
     public pointSet
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 
@@ -102,7 +102,7 @@ public:
     virtual ~pointZoneSet();
 
 
-    // Member functions
+    // Member Functions
 
         const labelList& addressing() const
         {

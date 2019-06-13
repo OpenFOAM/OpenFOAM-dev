@@ -56,7 +56,7 @@ class solidification
 :
     public phaseChangeModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         solidification(const solidification&) = delete;

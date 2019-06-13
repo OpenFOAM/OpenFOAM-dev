@@ -68,7 +68,7 @@ class semiPermeableBaffleVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of the density field
         const word rhoName_;
@@ -146,7 +146,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

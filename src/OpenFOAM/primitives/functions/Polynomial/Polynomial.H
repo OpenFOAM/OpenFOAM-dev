@@ -85,7 +85,7 @@ class Polynomial
 {
     static_assert(PolySize > 0, "Size must be positive (non-zero)");
 
-    // Private data
+    // Private Data
 
         //- Include the log term? - only activated using integralMinus1()
         bool logActive_;

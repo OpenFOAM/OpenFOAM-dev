@@ -54,7 +54,7 @@ class cloud
 :
     public scatterModel
 {
-    // Private data
+    // Private Data
 
         //- Absorption model dictionary
         dictionary coeffsDict_;

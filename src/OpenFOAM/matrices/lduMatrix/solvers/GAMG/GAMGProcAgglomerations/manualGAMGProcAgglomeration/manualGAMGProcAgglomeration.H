@@ -78,7 +78,7 @@ class manualGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
-    // Private data
+    // Private Data
 
         //- Per level the agglomeration map
         const List<Tuple2<label, List<labelList>>> procAgglomMaps_;

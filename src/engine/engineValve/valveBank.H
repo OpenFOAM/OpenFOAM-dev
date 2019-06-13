@@ -48,8 +48,6 @@ class valveBank
 :
     public PtrList<engineValve>
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construction

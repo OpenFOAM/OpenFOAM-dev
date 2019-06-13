@@ -59,7 +59,7 @@ class boundaryPatch
 :
     public patchIdentifier
 {
-    // Private data
+    // Private Data
 
         label size_;
         label start_;

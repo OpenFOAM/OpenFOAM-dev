@@ -64,7 +64,7 @@ class symmetryPlaneFvPatchField
 :
     public basicSymmetryFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the symmetryPlane patch
         const symmetryPlaneFvPatch& symmetryPlanePatch_;
@@ -138,7 +138,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Return gradient at boundary
         virtual tmp<Field<Type>> snGrad() const;

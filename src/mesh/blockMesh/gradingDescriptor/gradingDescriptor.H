@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Ostream& operator<<(Ostream&, const gradingDescriptor&);
 
 class gradingDescriptor
 {
-    // Private data
+    // Private Data
 
         scalar blockFraction_;
         scalar nDivFraction_;
@@ -125,13 +125,13 @@ public:
             }
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the inverse gradingDescriptor with 1/expansionRatio
         gradingDescriptor inv() const;
 
 
-    // Member operators
+    // Member Operators
 
         bool operator==(const gradingDescriptor&) const;
         bool operator!=(const gradingDescriptor&) const;

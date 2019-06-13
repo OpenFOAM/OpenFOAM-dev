@@ -79,7 +79,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         static int yyBufSize;
         label lineNo_;
@@ -315,7 +315,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- List of elements
         const wordList& elementNames() const

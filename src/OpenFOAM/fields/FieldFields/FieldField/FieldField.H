@@ -128,7 +128,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Negate this field
         void negate();
@@ -146,7 +146,7 @@ public:
         tmp<FieldField<Field, Type>> T() const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const FieldField<Field, Type>&);
         void operator=(FieldField<Field, Type>&&);
@@ -172,7 +172,7 @@ public:
         void operator/=(const scalar&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Ostream& operator<< <Field, Type>
         (

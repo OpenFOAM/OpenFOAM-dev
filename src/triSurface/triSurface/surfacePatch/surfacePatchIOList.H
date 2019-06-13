@@ -61,7 +61,7 @@ class surfacePatchIOList
     public surfacePatchList,
     public regIOobject
 {
-    // Private data
+    // Private Data
 
 
     // Private Member Functions
@@ -79,7 +79,7 @@ public:
     TypeName("surfacePatchIOList");
 
 
-    // Static data members
+    // Static Data Members
 
         //- Static data someStaticData
 

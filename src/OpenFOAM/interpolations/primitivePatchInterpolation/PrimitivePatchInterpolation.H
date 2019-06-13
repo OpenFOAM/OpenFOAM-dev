@@ -51,7 +51,7 @@ namespace Foam
 template<class Patch>
 class PrimitivePatchInterpolation
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const Patch& patch_;

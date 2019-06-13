@@ -81,7 +81,7 @@ class Field
     public tmp<Field<Type>>::refCount,
     public List<Type>
 {
-    // Private member functions
+    // Private Member Functions
 
         void doMap
         (
@@ -100,7 +100,7 @@ public:
     typedef SubField<Type> subField;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -283,7 +283,7 @@ public:
         tmp<Field<Type>> T() const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const Field<Type>&);
         void operator=(Field<Type>&&);
@@ -316,7 +316,7 @@ public:
         void operator/=(const scalar&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Ostream& operator<< <Type>
         (Ostream&, const Field<Type>&);

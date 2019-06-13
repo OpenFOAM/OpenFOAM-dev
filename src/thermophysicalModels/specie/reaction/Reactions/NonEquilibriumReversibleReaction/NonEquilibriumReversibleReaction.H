@@ -57,7 +57,7 @@ class NonEquilibriumReversibleReaction
 :
     public ReactionType<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         ReactionRate fk_;
         ReactionRate rk_;
@@ -206,7 +206,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Disallow default bitwise assignment
         void operator=

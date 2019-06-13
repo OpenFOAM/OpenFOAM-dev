@@ -93,7 +93,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Keep track of the number of vertices that have been added.
         //  This allows a unique index to be assigned to each vertex.

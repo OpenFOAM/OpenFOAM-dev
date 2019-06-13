@@ -105,7 +105,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Tabulated fan curve
         interpolationTable<scalar> fanCurve_;
@@ -187,7 +187,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

@@ -54,7 +54,7 @@ class constant
 :
     public scatterModel
 {
-    // Private data
+    // Private Data
 
         //- Coefficients dictionary
         dictionary coeffsDict_;

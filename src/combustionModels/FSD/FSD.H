@@ -82,7 +82,7 @@ class FSD
 :
     public singleStepCombustion <ReactionThermo, ThermoType>
 {
-    // Private data
+    // Private Data
 
         //- Auto pointer to consumption speed per unit of flame area model
         autoPtr<reactionRateFlameArea> reactionRateFlameArea_;

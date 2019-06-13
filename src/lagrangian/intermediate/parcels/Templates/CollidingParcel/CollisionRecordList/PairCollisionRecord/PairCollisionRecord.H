@@ -84,7 +84,7 @@ Ostream& operator<<(Ostream&, const PairCollisionRecord<Type>&);
 template<class Type>
 class PairCollisionRecord
 {
-    // Private data
+    // Private Data
 
         //- Originating processor id of other collision partner
         label origProcOfOther_;

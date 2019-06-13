@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ class LeastSquaresVectors
 :
     public MeshObject<fvMesh, MoveableMeshObject, LeastSquaresVectors<Stencil>>
 {
-    // Private data
+    // Private Data
 
         //- Least-squares gradient vectors
         List<List<vector>> vectors_;
@@ -91,7 +91,7 @@ public:
     virtual ~LeastSquaresVectors();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return reference to the stencil
         const extendedCentredCellToCellStencil& stencil() const

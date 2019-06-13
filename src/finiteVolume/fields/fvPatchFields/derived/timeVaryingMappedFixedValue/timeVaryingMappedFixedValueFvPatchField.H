@@ -117,7 +117,7 @@ class timeVaryingMappedFixedValueFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         timeVaryingMappedFvPatchField<Type> fieldMapper_;
 
@@ -190,7 +190,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

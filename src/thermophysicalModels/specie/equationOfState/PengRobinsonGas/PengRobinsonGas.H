@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ class PengRobinsonGas
 :
     public Specie
 {
-    // Private data
+    // Private Data
 
         //- Critical Temperature [K]
         scalar Tc_;
@@ -135,7 +135,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -185,7 +185,7 @@ public:
             //- Write to Ostream
             void write(Ostream& os) const;
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const PengRobinsonGas&);
         inline void operator*=(const scalar);

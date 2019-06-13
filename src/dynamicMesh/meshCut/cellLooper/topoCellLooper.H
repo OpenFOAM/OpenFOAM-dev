@@ -156,7 +156,7 @@ public:
     //- Runtime type information
     TypeName("topoCellLooper");
 
-    // Static data members
+    // Static Data Members
 
         //- Cos of angle for feature recognition (of splitHexes)
         static const scalar featureCos;

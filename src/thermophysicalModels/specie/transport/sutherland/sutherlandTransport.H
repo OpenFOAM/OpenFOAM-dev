@@ -84,7 +84,7 @@ class sutherlandTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         // Sutherland's coefficients
         scalar As_, Ts_;
@@ -140,7 +140,7 @@ public:
         inline static autoPtr<sutherlandTransport> New(const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -164,7 +164,7 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const sutherlandTransport&);
         inline void operator*=(const scalar);

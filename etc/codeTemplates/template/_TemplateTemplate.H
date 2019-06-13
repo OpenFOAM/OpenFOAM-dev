@@ -68,7 +68,7 @@ class CLASSNAME
 :
     public baseClassName
 {
-    // Private data
+    // Private Data
 
         dataType data_;
 
@@ -78,7 +78,7 @@ class CLASSNAME
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Static data someStaticData
         static const dataType staticData;

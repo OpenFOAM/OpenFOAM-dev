@@ -107,7 +107,7 @@ public:
         static const direction nCols = 1;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static const char* const componentNames[];

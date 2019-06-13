@@ -79,7 +79,7 @@ public:
     virtual ~IOdictionary();
 
 
-    // Member functions
+    // Member Functions
 
         //- Is object global
         virtual bool global() const
@@ -95,7 +95,7 @@ public:
         }
 
 
-    // Member operators
+    // Member Operators
 
         //- Move assignment
         void operator=(IOdictionary&&);

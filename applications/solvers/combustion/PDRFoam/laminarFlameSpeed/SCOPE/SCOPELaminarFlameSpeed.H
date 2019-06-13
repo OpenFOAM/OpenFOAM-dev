@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ class SCOPE
         polynomial MaPolyU_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Polynomial evaluated from the given equivalence ratio
         //  and polynomial coefficients
@@ -198,7 +198,7 @@ public:
     ~SCOPE();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the Markstein number
         tmp<volScalarField> Ma() const;

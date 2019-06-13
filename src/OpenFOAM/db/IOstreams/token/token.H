@@ -125,7 +125,7 @@ public:
     :
         public refCount
     {
-        // Private data
+        // Private Data
 
             bool empty_;
 
@@ -236,7 +236,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- The token type
         tokenType type_;
@@ -269,7 +269,7 @@ private:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -311,7 +311,7 @@ public:
     inline ~token();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -375,7 +375,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -421,7 +421,7 @@ public:
             inline bool operator!=(const longDoubleScalar) const;
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, token&);
         friend Ostream& operator<<(Ostream&, const token&);

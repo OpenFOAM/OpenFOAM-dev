@@ -93,7 +93,7 @@ class GeometricField
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of mesh on which this GeometricField is instantiated
         typedef typename GeoMesh::Mesh Mesh;
@@ -114,7 +114,7 @@ public:
     :
         public FieldField<PatchField, Type>
     {
-        // Private data
+        // Private Data
 
             //- Reference to BoundaryMesh for which this field is defined
             const BoundaryMesh& bmesh_;
@@ -195,7 +195,7 @@ public:
             );
 
 
-        // Member functions
+        // Member Functions
 
             //- Read the boundary field
             void readField
@@ -229,7 +229,7 @@ public:
             void writeEntry(const word& keyword, Ostream& os) const;
 
 
-        // Member operators
+        // Member Operators
 
             //- Assignment operator
             void operator=(const Boundary&);
@@ -258,7 +258,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Current time index.
         //  Used to trigger the storing of the old-time value
@@ -289,7 +289,7 @@ public:
     TypeName("GeometricField");
 
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef typename Field<Type>::cmptType cmptType;
 
@@ -649,7 +649,7 @@ public:
         );
 
 
-    // Member operators
+    // Member Operators
 
         //- Return a const-reference to the dimensioned internal field
         //  Useful in the formulation of source-terms for FV equations

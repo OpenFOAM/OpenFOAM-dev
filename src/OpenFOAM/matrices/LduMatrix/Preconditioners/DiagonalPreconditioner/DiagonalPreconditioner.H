@@ -54,7 +54,7 @@ class DiagonalPreconditioner
 :
     public LduMatrix<Type, DType, LUType>::preconditioner
 {
-    // Private data
+    // Private Data
 
         //- The inverse (reciprocal for scalar) diagonal
         Field<DType> rD;

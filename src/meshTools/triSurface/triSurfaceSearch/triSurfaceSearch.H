@@ -55,7 +55,7 @@ class triSurface;
 
 class triSurfaceSearch
 {
-    // Private data
+    // Private Data
 
         //- Reference to surface to work on
         const triSurface& surface_;

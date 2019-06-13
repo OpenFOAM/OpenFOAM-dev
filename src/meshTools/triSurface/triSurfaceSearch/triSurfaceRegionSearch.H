@@ -57,7 +57,7 @@ class triSurfaceRegionSearch
 :
     public triSurfaceSearch
 {
-    // Private typedefs
+    // Private Typedefs
 
         typedef PrimitivePatch<IndirectList<labelledTri>, const pointField&>
             indirectTriSurface;
@@ -68,7 +68,7 @@ class triSurfaceRegionSearch
         typedef indexedOctree<treeDataIndirectTriSurface> treeType;
 
 
-    // Private data
+    // Private Data
 
         //- Surface is split into patches by region
         mutable PtrList<indirectTriSurface> indirectRegionPatches_;

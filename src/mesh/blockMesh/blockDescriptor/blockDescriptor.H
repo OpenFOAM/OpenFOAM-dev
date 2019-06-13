@@ -80,7 +80,7 @@ Ostream& operator<<(Ostream&, const blockDescriptor&);
 
 class blockDescriptor
 {
-    // Private data
+    // Private Data
 
         //- Reference to point field defining the block mesh
         const pointField& vertices_;

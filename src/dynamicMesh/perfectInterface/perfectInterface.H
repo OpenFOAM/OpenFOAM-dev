@@ -57,7 +57,7 @@ class perfectInterface
 :
     public polyMeshModifier
 {
-    // Private data
+    // Private Data
 
         //- Master face zone ID
         faceZoneID faceZoneID_;

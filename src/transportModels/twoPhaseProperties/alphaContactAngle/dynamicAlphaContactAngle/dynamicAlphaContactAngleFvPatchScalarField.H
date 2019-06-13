@@ -107,7 +107,7 @@ class dynamicAlphaContactAngleFvPatchScalarField
 :
     public alphaContactAngleFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Equilibrium contact angle
         scalar theta0_;
@@ -191,7 +191,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Evaluate and return dynamic contact-angle
         virtual tmp<scalarField> theta

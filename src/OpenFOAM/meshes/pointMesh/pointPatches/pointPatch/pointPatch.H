@@ -56,7 +56,7 @@ class PstreamBuffers;
 
 class pointPatch
 {
-    // Private data
+    // Private Data
 
         //- Reference to boundary mesh
         const pointBoundaryMesh& boundaryMesh_;

@@ -69,7 +69,7 @@ class word
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static int debug;
@@ -107,13 +107,13 @@ public:
         word(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Is this character valid for a word
         inline static bool valid(char);
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -128,7 +128,7 @@ public:
         friend word operator&(const word&, const word&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, word&);
         friend Ostream& operator<<(Ostream&, const word&);

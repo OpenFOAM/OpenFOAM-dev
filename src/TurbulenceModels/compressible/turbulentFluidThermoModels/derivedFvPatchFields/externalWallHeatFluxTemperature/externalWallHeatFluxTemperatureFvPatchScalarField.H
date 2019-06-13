@@ -133,7 +133,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Operation mode
         operationMode mode_;
@@ -241,7 +241,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

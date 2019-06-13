@@ -109,7 +109,7 @@ public:
         virtual ~CompactIOField();
 
 
-    // Member functions
+    // Member Functions
 
         virtual bool writeObject
         (
@@ -122,7 +122,7 @@ public:
         virtual bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const CompactIOField<Type, BaseType>&);
         void operator=(CompactIOField<Type, BaseType>&&);

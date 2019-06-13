@@ -52,7 +52,7 @@ class proxySurfaceWriter
     public surfaceWriter
 {
 
-    // Private data
+    // Private Data
 
         //- The associated file extension
         word ext_;

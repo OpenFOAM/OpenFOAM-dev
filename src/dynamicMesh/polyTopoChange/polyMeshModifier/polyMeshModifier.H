@@ -69,7 +69,7 @@ Ostream& operator<<(Ostream&, const polyMeshModifier&);
 
 class polyMeshModifier
 {
-    // Private data
+    // Private Data
 
         //- Name of modifier
         word name_;
@@ -95,7 +95,7 @@ class polyMeshModifier
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Runtime type information
         TypeName("meshModifier");

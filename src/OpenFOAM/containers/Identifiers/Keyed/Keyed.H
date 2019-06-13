@@ -60,7 +60,7 @@ class Keyed
 :
     public T
 {
-    // Private data
+    // Private Data
 
         label key_;
 

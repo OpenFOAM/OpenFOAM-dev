@@ -59,7 +59,7 @@ template<class T> Ostream& operator<<(Ostream&, const UIndirectList<T>&);
 template<class T>
 class UIndirectList
 {
-    // Private data
+    // Private Data
 
         UList<T>& completeList_;
         const labelUList& addressing_;

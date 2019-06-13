@@ -111,7 +111,7 @@ public:
         static const direction rank = 1;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -165,7 +165,7 @@ public:
         quaternion(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
            // Access
 
@@ -211,7 +211,7 @@ public:
                inline quaternion invTransform(const quaternion& q) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const quaternion&);
         inline void operator-=(const quaternion&);
@@ -226,7 +226,7 @@ public:
         inline void operator/=(const scalar);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream& is, quaternion&);
         friend Ostream& operator<<(Ostream& os, const quaternion& C);

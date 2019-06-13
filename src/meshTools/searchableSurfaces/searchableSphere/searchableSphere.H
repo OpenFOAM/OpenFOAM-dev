@@ -53,8 +53,6 @@ class searchableSphere
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         //- Centre point

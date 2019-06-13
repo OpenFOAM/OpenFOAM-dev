@@ -72,7 +72,7 @@ class greyMeanSolid
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Enumering of radiative properties
         enum radiativeProperties
@@ -97,7 +97,7 @@ private:
         List<FixedList<scalar, 2>> solidData_;
 
 
-    // Private member functions
+    // Private Member Functions
 
        //- Calculate the volumetric fraction of Yj
        tmp<scalarField> X(const word specie) const;

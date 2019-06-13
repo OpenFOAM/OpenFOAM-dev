@@ -48,7 +48,7 @@ class distributedWeightedFvPatchFieldMapper
 :
     public fvPatchFieldMapper
 {
-    // Private data
+    // Private Data
 
         const label singlePatchProc_;
 
@@ -61,7 +61,7 @@ class distributedWeightedFvPatchFieldMapper
         bool hasUnmapped_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         label size() const
         {

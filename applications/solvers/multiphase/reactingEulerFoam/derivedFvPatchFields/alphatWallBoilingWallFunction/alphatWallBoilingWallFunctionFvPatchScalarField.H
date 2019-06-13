@@ -158,7 +158,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- name of the other phase (vapor/liquid phase)
         word otherPhaseName_;
@@ -270,7 +270,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         using alphatPhaseChangeWallFunctionFvPatchScalarField::dmdt;
 

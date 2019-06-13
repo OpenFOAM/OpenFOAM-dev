@@ -77,7 +77,7 @@ class nutURoughWallFunctionFvPatchScalarField
 :
     public nutUWallFunctionFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Roughness height
         scalarField Ks_;
@@ -166,7 +166,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access functions
 

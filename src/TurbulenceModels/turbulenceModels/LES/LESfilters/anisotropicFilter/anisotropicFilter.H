@@ -58,7 +58,7 @@ class anisotropicFilter
 :
     public LESfilter
 {
-    // Private data
+    // Private Data
 
         scalar widthCoeff_;
         volVectorField coeff_;

@@ -61,15 +61,6 @@ class CentredFitScheme
         const scalar centralWeight_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        CentredFitScheme(const CentredFitScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const CentredFitScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -99,6 +90,9 @@ public:
             linearLimitFactor_(readScalar(is)),
             centralWeight_(1000)
         {}
+
+        //- Disallow default bitwise copy construction
+        CentredFitScheme(const CentredFitScheme&) = delete;
 
 
     // Member Functions
@@ -136,6 +130,12 @@ public:
 
             return stencil.weightedSum(vf, f);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CentredFitScheme&) = delete;
 };
 
 

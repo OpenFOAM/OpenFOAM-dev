@@ -177,7 +177,7 @@ class thermalBaffleFvPatchScalarField
 :
     public turbulentTemperatureRadCoupledMixedFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Enumeration of patch IDs
         enum patchID
@@ -200,7 +200,7 @@ class thermalBaffleFvPatchScalarField
         autoPtr<extrudePatchMesh> extrudeMeshPtr_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Extrude mesh
         void createPatchMesh();
@@ -268,7 +268,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
 
         // Mapping functions

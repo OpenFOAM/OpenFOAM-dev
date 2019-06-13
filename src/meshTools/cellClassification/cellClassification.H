@@ -144,7 +144,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -192,7 +192,7 @@ private:
 
 public:
 
-    // Static data members
+    // Static Data Members
     ClassName("cellClassification");
 
     // Constructors

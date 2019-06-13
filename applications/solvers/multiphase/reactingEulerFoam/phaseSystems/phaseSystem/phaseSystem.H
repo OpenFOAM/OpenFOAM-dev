@@ -71,7 +71,7 @@ class phaseSystem
 {
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef HashPtrTable<fvVectorMatrix> momentumTransferTable;
 

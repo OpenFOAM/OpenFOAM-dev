@@ -215,7 +215,7 @@ public:
         {}
 
 
-        // Member functions
+        // Member Functions
 
             // Access
 
@@ -366,7 +366,7 @@ public:
         {}
 
 
-        // Member functions
+        // Member Functions
 
             // Access
 
@@ -480,7 +480,7 @@ public:
         {}
 
 
-        // Member functions
+        // Member Functions
 
             //- Read and reset the preconditioner parameters
             //  from the given stream
@@ -537,7 +537,7 @@ public:
     ~lduMatrix();
 
 
-    // Member functions
+    // Member Functions
 
         // Access to addressing
 
@@ -713,7 +713,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const lduMatrix&);
 

@@ -57,7 +57,7 @@ class baseIOdictionary
     public regIOobject,
     public dictionary
 {
-    // Private data
+    // Private Data
 
         static bool writeDictionaries;
 
@@ -88,7 +88,7 @@ public:
     virtual ~baseIOdictionary();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return complete path + object name if the file exists
         //  either in the case/processor or case otherwise null
@@ -108,7 +108,7 @@ public:
         virtual bool global() const = 0;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment of other baseIOdictionary's entries to this
         //  baseIOdictionary

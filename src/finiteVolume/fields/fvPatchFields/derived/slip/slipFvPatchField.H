@@ -128,7 +128,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -139,7 +139,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         // virtual void operator=(const UList<Type>&) {}
 

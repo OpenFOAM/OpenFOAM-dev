@@ -51,7 +51,7 @@ class cellZoneSet
 :
     public cellSet
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 
@@ -98,7 +98,7 @@ public:
     virtual ~cellZoneSet();
 
 
-    // Member functions
+    // Member Functions
 
         const labelList& addressing() const
         {

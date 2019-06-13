@@ -52,7 +52,7 @@ class processorFvsPatchField
 :
     public coupledFvsPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor patch
         const processorFvPatch& procPatch_;
@@ -134,7 +134,7 @@ public:
     virtual ~processorFvsPatchField();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

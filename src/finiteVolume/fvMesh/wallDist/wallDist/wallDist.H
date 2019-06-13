@@ -70,7 +70,7 @@ class wallDist
 :
     public MeshObject<fvMesh, UpdateableMeshObject, wallDist>
 {
-    // Private data
+    // Private Data
 
         //- Set of patch IDs
         const labelHashSet patchIDs_;
@@ -96,12 +96,6 @@ class wallDist
         //- Construct the normal-to-wall field as required
         void constructn() const;
 
-        //- Disallow default bitwise copy construction
-        wallDist(const wallDist&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallDist&) = delete;
-
 
 public:
 
@@ -125,6 +119,9 @@ public:
             const labelHashSet& patchIDs,
             const word& patchTypeName = "patch"
         );
+
+        //- Disallow default bitwise copy construction
+        wallDist(const wallDist&) = delete;
 
 
     //- Destructor
@@ -153,6 +150,12 @@ public:
 
         //- Update the y-field when the mesh changes
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallDist&) = delete;
 };
 
 

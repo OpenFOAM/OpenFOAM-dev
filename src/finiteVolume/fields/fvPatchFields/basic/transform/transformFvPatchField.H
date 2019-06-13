@@ -108,7 +108,7 @@ public:
         ) const = 0;
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -151,7 +151,7 @@ public:
             virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<Type>&);
 };

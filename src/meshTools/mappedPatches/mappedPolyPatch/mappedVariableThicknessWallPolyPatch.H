@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class mappedVariableThicknessWallPolyPatch
     public mappedWallPolyPatch
 {
 
-    // Private data
+    // Private Data
 
         //- Thickness
         scalarList thickness_;
@@ -206,7 +206,7 @@ public:
     virtual ~mappedVariableThicknessWallPolyPatch();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return non const thickness
         scalarList& thickness()

@@ -50,7 +50,7 @@ namespace Foam
 
 class wallDependentModel
 {
-    // Private data
+    // Private Data
 
         //- Reference to the mesh
         const fvMesh& mesh_;

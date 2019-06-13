@@ -72,7 +72,7 @@ class matchedFlowRateOutletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Inlet patch name from which the corresponding flow rate is obtained
         word inletPatchName_;
@@ -84,7 +84,7 @@ class matchedFlowRateOutletVelocityFvPatchVectorField
         word rhoName_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Update the patch values given the appropriate density type and value
         template<class RhoType>
@@ -165,7 +165,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

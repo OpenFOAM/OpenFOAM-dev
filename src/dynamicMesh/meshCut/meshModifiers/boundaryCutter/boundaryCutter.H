@@ -65,7 +65,7 @@ class face;
 
 class boundaryCutter
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;

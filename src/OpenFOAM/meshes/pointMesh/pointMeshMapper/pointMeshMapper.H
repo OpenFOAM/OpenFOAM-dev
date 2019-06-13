@@ -54,7 +54,7 @@ class mapPolyMesh;
 
 class pointMeshMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const pointMesh& mesh_;

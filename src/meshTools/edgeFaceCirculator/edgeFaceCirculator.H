@@ -86,7 +86,7 @@ class primitiveMesh;
 
 class edgeFaceCirculator
 {
-    // Static data members
+    // Static Data Members
 
         //- End iterator primitiveMesh nullptr
         static const primitiveMesh* const endConstIterMeshPtr;
@@ -95,7 +95,7 @@ class edgeFaceCirculator
         static const edgeFaceCirculator endConstIter;
 
 
-    // Private data
+    // Private Data
 
         //- Mesh
         const primitiveMesh& mesh_;

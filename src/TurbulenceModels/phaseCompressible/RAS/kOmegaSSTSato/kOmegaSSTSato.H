@@ -119,7 +119,7 @@ class kOmegaSSTSato
 :
     public kOmegaSST<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         mutable const PhaseCompressibleTurbulenceModel
         <

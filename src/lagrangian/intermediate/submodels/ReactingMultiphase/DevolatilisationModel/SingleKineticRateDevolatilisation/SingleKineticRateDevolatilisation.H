@@ -74,7 +74,7 @@ class SingleKineticRateDevolatilisation
     // Helper class to store specie-local volatile data
     class volatileData
     {
-        // Private data
+        // Private Data
 
             //- Specie name
             word name_;
@@ -161,7 +161,7 @@ class SingleKineticRateDevolatilisation
     };
 
 
-    // Private data
+    // Private Data
 
         // Model constants
 

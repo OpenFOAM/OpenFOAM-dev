@@ -61,7 +61,7 @@ class polyBoundaryMesh;
 
 class extrude2DMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to 2D mesh
         polyMesh& mesh_;

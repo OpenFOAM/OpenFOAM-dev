@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class InterfaceCompositionModel
 {
 protected:
 
-    // Private data
+    // Private Data
 
         //- Thermo
         const Thermo& thermo_;
@@ -71,7 +71,7 @@ protected:
         const dimensionedScalar Le_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Get a reference to the local thermo for a pure mixture
         template<class ThermoType>

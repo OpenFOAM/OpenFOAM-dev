@@ -53,7 +53,7 @@ class OSstream
 :
     public Ostream
 {
-    // Private data
+    // Private Data
 
         fileName name_;
         ostream& os_;
@@ -74,7 +74,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         // Enquiry
 

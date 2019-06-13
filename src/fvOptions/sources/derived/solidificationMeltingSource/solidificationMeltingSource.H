@@ -155,7 +155,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Temperature at which isotherm melting occurs
         //  and not isotherm melting starts e.g. eutectic [K]

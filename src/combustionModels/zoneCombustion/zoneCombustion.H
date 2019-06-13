@@ -56,7 +56,7 @@ class zoneCombustion
 :
     public CombustionModel<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         //- The combustion model to be zone-filtered
         autoPtr<CombustionModel<ReactionThermo>> combustionModelPtr_;

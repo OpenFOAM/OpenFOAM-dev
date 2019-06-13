@@ -87,7 +87,7 @@ class fixedPressureCompressibleDensityFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of static pressure field
         word pName_;
@@ -166,7 +166,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

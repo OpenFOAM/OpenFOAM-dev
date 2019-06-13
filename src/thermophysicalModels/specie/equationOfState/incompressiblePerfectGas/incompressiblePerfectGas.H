@@ -87,7 +87,7 @@ class incompressiblePerfectGas
 :
     public Specie
 {
-    // Private data
+    // Private Data
 
         //- Reference pressure
         scalar pRef_;
@@ -120,7 +120,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -173,7 +173,7 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const incompressiblePerfectGas&);
         inline void operator*=(const scalar);

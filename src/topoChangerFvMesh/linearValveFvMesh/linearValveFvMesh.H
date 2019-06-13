@@ -51,7 +51,7 @@ class linearValveFvMesh
 :
     public topoChangerFvMesh
 {
-    // Private data
+    // Private Data
 
         //- Motion dictionary
         dictionary motionDict_;

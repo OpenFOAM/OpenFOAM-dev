@@ -68,7 +68,7 @@ class BlendedInterfacialModel
 :
     public regIOobject
 {
-    // Private data
+    // Private Data
 
         //- Reference to phase 1
         const phaseModel& phase1_;

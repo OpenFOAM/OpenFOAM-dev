@@ -71,7 +71,7 @@ class PrintTable
     typedef HashTable<DataType, KeyType> HashTableData;
 
 
-    // Private data
+    // Private Data
 
         //- Hash table holding the data
         HashTableData table_;

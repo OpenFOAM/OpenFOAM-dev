@@ -54,7 +54,7 @@ class waxSolventViscosity
 :
     public filmViscosityModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Correct the mixture viscosity
         void correctMu();

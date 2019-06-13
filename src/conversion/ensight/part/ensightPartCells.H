@@ -92,7 +92,7 @@ protected:
         };
 
 
-    // Static data members
+    // Static Data Members
 
         static const polyMesh* const polyMeshNullPtr_;
 

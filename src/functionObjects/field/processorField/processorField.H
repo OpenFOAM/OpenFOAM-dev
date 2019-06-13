@@ -72,7 +72,7 @@ class processorField
 :
     public fvMeshFunctionObject
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         processorField(const processorField&) = delete;

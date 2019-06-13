@@ -224,7 +224,7 @@ public:
             {}
 
 
-        // Member functions
+        // Member Functions
 
             // Access
 
@@ -334,7 +334,7 @@ public:
             {}
 
 
-        // Member functions
+        // Member Functions
 
             // Access
 
@@ -429,7 +429,7 @@ public:
             {}
 
 
-        // Member functions
+        // Member Functions
 
             //- Read and reset the preconditioner parameters
             //  from the given dictionary
@@ -485,7 +485,7 @@ public:
         ~LduMatrix();
 
 
-    // Member functions
+    // Member Functions
 
         // Access to addressing
 
@@ -638,7 +638,7 @@ public:
             tmp<Field<Type>> faceH(const tmp<Field<Type>>&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const LduMatrix<Type, DType, LUType>&);
 

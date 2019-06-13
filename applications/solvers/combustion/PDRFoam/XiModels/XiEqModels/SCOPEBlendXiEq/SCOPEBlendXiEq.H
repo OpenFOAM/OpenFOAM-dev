@@ -55,7 +55,7 @@ class SCOPEBlend
 :
     public XiEqModel
 {
-    // Private data
+    // Private Data
 
         //- Low turbulence intensity equilibrium Xi model
         autoPtr<XiEqModel> XiEqModelL_;

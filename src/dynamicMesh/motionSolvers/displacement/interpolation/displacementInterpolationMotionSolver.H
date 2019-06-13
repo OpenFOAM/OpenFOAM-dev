@@ -59,7 +59,7 @@ class displacementInterpolationMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         // Face zone information (note: could pack these to only contain
         // used zones)

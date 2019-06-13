@@ -139,7 +139,7 @@ class mapPolyMesh;
 
 class functionObject
 {
-    // Private data
+    // Private Data
 
         //- Name
         const word name_;

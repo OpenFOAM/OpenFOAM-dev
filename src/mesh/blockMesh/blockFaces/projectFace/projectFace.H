@@ -53,7 +53,7 @@ class projectFace
 :
     public blockFace
 {
-    // Private data
+    // Private Data
 
         //- The surface onto which the points are projected
         const searchableSurface& surface_;

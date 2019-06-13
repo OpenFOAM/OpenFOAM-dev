@@ -74,7 +74,7 @@ class Time
     public objectRegistry,
     public TimeState
 {
-    // Private data
+    // Private Data
 
         //- Any loaded dynamic libraries. Make sure to construct before
         //  reading controlDict.
@@ -247,7 +247,7 @@ public:
     virtual ~Time();
 
 
-    // Member functions
+    // Member Functions
 
         // Database functions
 
@@ -535,7 +535,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         //- Set deltaT to that specified and increment time via operator++()
         virtual Time& operator+=(const dimensionedScalar&);

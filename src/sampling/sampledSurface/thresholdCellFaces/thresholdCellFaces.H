@@ -53,7 +53,8 @@ class thresholdCellFaces
 :
     public MeshedSurface<face>
 {
-    //- Private typedefs for convenience
+    // Private Typedefs
+
         typedef MeshedSurface<face> MeshStorage;
 
         //- Reference to mesh
@@ -61,6 +62,7 @@ class thresholdCellFaces
 
         //- For every face the original cell in mesh
         labelList meshCells_;
+
 
     // Private Member Functions
 

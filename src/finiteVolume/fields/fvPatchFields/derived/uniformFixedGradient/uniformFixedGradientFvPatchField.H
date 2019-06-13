@@ -76,7 +76,7 @@ class uniformFixedGradientFvPatchField
 :
     public fixedGradientFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Gradient
         autoPtr<Function1<Type>> uniformGradient_;
@@ -158,7 +158,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

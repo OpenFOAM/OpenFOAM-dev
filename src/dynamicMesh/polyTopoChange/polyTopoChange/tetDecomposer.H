@@ -73,7 +73,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 

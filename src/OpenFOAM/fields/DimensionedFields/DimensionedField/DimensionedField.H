@@ -77,7 +77,7 @@ class DimensionedField
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of mesh on which this DimensionedField is instantiated
         typedef typename GeoMesh::Mesh Mesh;
@@ -91,7 +91,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const Mesh& mesh_;

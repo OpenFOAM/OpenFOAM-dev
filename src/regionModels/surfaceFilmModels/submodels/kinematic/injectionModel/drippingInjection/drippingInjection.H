@@ -61,9 +61,7 @@ class drippingInjection
 :
     public injectionModel
 {
-private:
-
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         drippingInjection(const drippingInjection&) = delete;

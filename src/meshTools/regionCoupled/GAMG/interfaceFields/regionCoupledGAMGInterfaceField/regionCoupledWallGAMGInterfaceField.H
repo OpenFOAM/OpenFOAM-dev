@@ -52,7 +52,7 @@ class regionCoupledWallGAMGInterfaceField
 :
     public GAMGInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the region coupled interface
         const regionCoupledWallGAMGInterface& regionCoupledGAMGInterface_;

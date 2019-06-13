@@ -72,7 +72,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Local reference to region couple patch
         const regionCoupledBaseFvPatch& regionCoupledPatch_;
@@ -181,7 +181,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

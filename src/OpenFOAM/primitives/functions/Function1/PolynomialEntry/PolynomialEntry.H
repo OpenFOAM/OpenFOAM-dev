@@ -65,7 +65,7 @@ class Polynomial
 :
     public Function1<Type>
 {
-    // Private data
+    // Private Data
 
         //- Polynomial coefficients - list of prefactor, exponent
         List<Tuple2<Type, Type>> coeffs_;

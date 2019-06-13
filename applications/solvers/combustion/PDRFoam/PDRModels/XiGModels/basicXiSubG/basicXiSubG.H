@@ -71,7 +71,7 @@ class basicSubGrid
 :
     public XiGModel
 {
-    // Private data
+    // Private Data
 
         //- Sub-grid generation rate coefficient
         scalar k1;

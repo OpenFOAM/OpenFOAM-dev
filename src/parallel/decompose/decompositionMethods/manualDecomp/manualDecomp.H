@@ -48,7 +48,7 @@ class manualDecomp
 :
     public decompositionMethod
 {
-    // Private data
+    // Private Data
 
         fileName decompDataFile_;
 

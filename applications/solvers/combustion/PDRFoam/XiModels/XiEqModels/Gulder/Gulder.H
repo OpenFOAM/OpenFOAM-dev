@@ -53,7 +53,7 @@ class Gulder
 :
     public XiEqModel
 {
-    // Private data
+    // Private Data
 
         //- Model constant
         scalar XiEqCoef_;

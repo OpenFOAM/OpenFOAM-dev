@@ -146,7 +146,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
             const vectorField& freestreamValue() const
             {

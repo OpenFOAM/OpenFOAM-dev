@@ -297,7 +297,7 @@ private:
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef polyMesh Mesh;
         typedef polyBoundaryMesh BoundaryMesh;

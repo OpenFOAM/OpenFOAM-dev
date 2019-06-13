@@ -149,13 +149,13 @@ class sampledSets
         };
 
 
-    // Static data members
+    // Static Data Members
 
         //- Output verbosity
         static bool verbose_;
 
 
-    // Private data
+    // Private Data
 
         //- Const reference to fvMesh
         const fvMesh& mesh_;

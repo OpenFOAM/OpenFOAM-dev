@@ -67,7 +67,7 @@ class JohnsonJacksonParticleThetaFvPatchScalarField
 :
     public mixedFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Particle-wall restitution coefficient
         dimensionedScalar restitutionCoefficient_;
@@ -143,7 +143,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

@@ -77,7 +77,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to the source mesh
         const polyMesh& srcRegion_;

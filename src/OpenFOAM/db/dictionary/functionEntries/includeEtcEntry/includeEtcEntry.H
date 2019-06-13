@@ -91,7 +91,7 @@ class includeEtcEntry
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Report which file is included to stdout
         static bool log;

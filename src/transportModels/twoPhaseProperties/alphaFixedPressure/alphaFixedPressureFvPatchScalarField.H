@@ -50,7 +50,7 @@ class alphaFixedPressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Fixed pressure
         scalarField p_;
@@ -124,7 +124,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

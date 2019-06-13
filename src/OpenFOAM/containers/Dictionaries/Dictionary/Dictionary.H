@@ -71,7 +71,7 @@ public:
         Dictionary(Dictionary&&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Remove an entry specified by keyword and delete the pointer.
         //  Returns true if the keyword was found

@@ -50,7 +50,7 @@ namespace Foam
 
 class MeshedSurfaceIOAllocator
 {
-    // Private data
+    // Private Data
 
         //- Points
         pointIOField points_;

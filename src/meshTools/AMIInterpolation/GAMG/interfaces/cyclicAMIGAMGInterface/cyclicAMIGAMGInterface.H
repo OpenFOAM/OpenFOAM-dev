@@ -52,7 +52,7 @@ class cyclicAMIGAMGInterface
     public GAMGInterface,
     public cyclicAMILduInterface
 {
-    // Private data
+    // Private Data
 
         //- Reference for the cyclicLduInterface from which this is
         //  agglomerated

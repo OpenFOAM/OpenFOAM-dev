@@ -103,7 +103,7 @@ class systemCall
 {
 protected:
 
-    // Private data
+    // Private Data
 
         //- List of calls to execute - every step
         stringList executeCalls_;
@@ -117,7 +117,7 @@ protected:
 
 private:
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         systemCall(const systemCall&) = delete;

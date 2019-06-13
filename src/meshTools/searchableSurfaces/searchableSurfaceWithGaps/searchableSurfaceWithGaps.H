@@ -61,8 +61,6 @@ class searchableSurfaceWithGaps
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         //- Gap size in metre

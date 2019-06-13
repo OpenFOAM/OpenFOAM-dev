@@ -53,7 +53,7 @@ class processorGAMGInterfaceField
     public GAMGInterfaceField,
     public processorLduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor interface
         const processorGAMGInterface& procInterface_;

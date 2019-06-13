@@ -125,7 +125,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Inherit read from ITstream
         using ITstream::read;

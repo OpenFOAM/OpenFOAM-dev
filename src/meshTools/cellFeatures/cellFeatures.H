@@ -61,7 +61,7 @@ class primitiveMesh;
 
 class cellFeatures
 {
-    // Private data
+    // Private Data
 
         const primitiveMesh& mesh_;
 

@@ -65,8 +65,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_triSurfaceMesh_H
-#define sampledSurfaces_triSurfaceMesh_H
+#ifndef sampledTriSurfaceMesh_H
+#define sampledTriSurfaceMesh_H
 
 #include "sampledSurface.H"
 #include "triSurfaceMesh.H"
@@ -103,11 +103,12 @@ public:
 
 private:
 
-    //- Private typedefs for convenience
+    // Private Typedefs
+
         typedef MeshedSurface<face> MeshStorage;
 
 
-    // Private data
+    // Private Data
 
         static const NamedEnum<samplingSource, 3> samplingSourceNames_;
 

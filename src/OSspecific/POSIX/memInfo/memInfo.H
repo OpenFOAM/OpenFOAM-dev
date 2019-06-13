@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Ostream& operator<<(Ostream&, const memInfo&);
 
 class memInfo
 {
-    // Private data
+    // Private Data
 
         //- Peak memory used by the process (VmPeak in /proc/\<pid\>/status)
         int peak_;

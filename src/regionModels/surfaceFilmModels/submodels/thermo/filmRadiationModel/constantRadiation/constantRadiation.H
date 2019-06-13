@@ -58,9 +58,7 @@ class constantRadiation
 :
     public filmRadiationModel
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Constant radiative flux [kg/s3]
         volScalarField qrConst_;
@@ -78,7 +76,7 @@ private:
         const scalar duration_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         constantRadiation(const constantRadiation&) = delete;

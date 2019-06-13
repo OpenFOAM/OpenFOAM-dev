@@ -109,7 +109,7 @@ class Luo
 :
     public coalescenceModel
 {
-    // Private data
+    // Private Data
 
         //- Coefficient beta, defaults to 2.0
         dimensionedScalar beta_;

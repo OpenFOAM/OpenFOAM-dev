@@ -53,7 +53,7 @@ class cyclicAMIPointPatchField
 :
     public coupledPointPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclicAMI patch
         const cyclicAMIPointPatch& cyclicAMIPatch_;
@@ -170,7 +170,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Constraint handling
 

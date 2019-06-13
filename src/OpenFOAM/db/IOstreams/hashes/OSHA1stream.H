@@ -55,7 +55,7 @@ class sha1streambuf
 :
     public std::streambuf
 {
-    // Private data
+    // Private Data
 
     //- This does all the work and has its own buffering
     SHA1 sha1_;
@@ -93,7 +93,7 @@ class osha1stream
     virtual public std::ios,
     public std::ostream
 {
-    // Private data
+    // Private Data
 
     sha1streambuf sbuf_;
 
@@ -167,7 +167,7 @@ public:
     }
 
 
-    // Member functions
+    // Member Functions
 
         //- Full access to the sha1
         Foam::SHA1& sha1()

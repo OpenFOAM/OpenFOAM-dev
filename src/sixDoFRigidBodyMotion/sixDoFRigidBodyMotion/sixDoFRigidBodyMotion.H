@@ -68,7 +68,7 @@ class sixDoFRigidBodyMotion
 {
     friend class sixDoFSolver;
 
-    // Private data
+    // Private Data
 
         //- Motion state data object
         sixDoFRigidBodyMotionState motionState_;

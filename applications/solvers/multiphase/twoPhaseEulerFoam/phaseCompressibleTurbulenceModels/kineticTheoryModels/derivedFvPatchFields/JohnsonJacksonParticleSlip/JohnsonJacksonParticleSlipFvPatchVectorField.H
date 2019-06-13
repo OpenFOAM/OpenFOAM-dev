@@ -67,7 +67,7 @@ class JohnsonJacksonParticleSlipFvPatchVectorField
 :
     public partialSlipFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Specularity coefficient
         dimensionedScalar specularityCoefficient_;
@@ -140,7 +140,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

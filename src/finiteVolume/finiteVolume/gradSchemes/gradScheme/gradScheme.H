@@ -62,7 +62,7 @@ class gradScheme
 :
     public tmp<gradScheme<Type>>::refCount
 {
-    // Private data
+    // Private Data
 
         const fvMesh& mesh_;
 

@@ -76,7 +76,7 @@ public:
     virtual ~IOmapDistribute();
 
 
-    // Member functions
+    // Member Functions
 
         //- ReadData function required for regIOobject read operation
         virtual bool readData(Istream&);

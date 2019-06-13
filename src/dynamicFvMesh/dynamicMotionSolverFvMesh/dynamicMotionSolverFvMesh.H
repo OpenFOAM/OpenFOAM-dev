@@ -52,7 +52,7 @@ class dynamicMotionSolverFvMesh
 :
     public dynamicFvMesh
 {
-    // Private data
+    // Private Data
 
         autoPtr<motionSolver> motionPtr_;
 

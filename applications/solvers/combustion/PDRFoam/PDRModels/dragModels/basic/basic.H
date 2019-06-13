@@ -97,7 +97,7 @@ class basic
 :
     public PDRDragModel
 {
-    // Private data
+    // Private Data
 
         dimensionedScalar Csu;
         dimensionedScalar Csk;

@@ -59,7 +59,7 @@ class P1
 :
     public radiationModel
 {
-    // Private data
+    // Private Data
 
         //- Incident radiation / [W/m2]
         volScalarField G_;
@@ -105,7 +105,7 @@ public:
     virtual ~P1();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 

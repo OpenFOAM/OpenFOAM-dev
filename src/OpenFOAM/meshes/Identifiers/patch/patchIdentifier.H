@@ -57,7 +57,7 @@ Ostream& operator<<(Ostream&, const patchIdentifier&);
 
 class patchIdentifier
 {
-    // Private data
+    // Private Data
 
         //- Name of patch
         word name_;

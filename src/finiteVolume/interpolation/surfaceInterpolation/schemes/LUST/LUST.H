@@ -57,14 +57,6 @@ class LUST
 :
     public linearUpwind<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        LUST(const LUST&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const LUST&) = delete;
-
 
 public:
 
@@ -95,6 +87,9 @@ public:
             linearUpwind<Type>(mesh, faceFlux, schemeData)
         {}
 
+        //- Disallow default bitwise copy construction
+        LUST(const LUST&) = delete;
+
 
     // Member Functions
 
@@ -124,6 +119,12 @@ public:
         {
             return 0.25*linearUpwind<Type>::correction(vf);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LUST&) = delete;
 };
 
 

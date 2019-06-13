@@ -120,7 +120,7 @@ public:
         ) const = 0;
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

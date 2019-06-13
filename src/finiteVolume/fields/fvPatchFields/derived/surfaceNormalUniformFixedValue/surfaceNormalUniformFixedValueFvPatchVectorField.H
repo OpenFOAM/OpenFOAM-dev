@@ -76,7 +76,7 @@ class surfaceNormalUniformFixedValueFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         autoPtr<Function1<scalar>> uniformValue_;
 
@@ -154,7 +154,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

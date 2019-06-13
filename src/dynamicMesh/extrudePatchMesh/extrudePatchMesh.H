@@ -90,7 +90,7 @@ class extrudePatchMesh
 :
     public fvMesh
 {
-    // Private data
+    // Private Data
 
         //- Enumeration of patch IDs
         enum patchID
@@ -107,7 +107,7 @@ class extrudePatchMesh
         dictionary dict_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Extrude mesh using polyPatches
         void extrudeMesh(const List<polyPatch*>& regionPatches);
@@ -146,7 +146,7 @@ public:
     virtual ~extrudePatchMesh();
 
 
-    // Member functions
+    // Member Functions
 
 
         // Access functions

@@ -468,7 +468,7 @@ public:
         void operator=(mapDistributeBase&&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read dictionary from Istream
         friend Istream& operator>>(Istream&, mapDistributeBase&);

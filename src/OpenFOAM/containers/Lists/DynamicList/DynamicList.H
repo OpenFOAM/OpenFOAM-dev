@@ -85,7 +85,7 @@ class DynamicList
         "Invalid sizing parameters"
     );
 
-    // Private data
+    // Private Data
 
         //- The capacity (allocated size) of the underlying list.
         label capacity_;
@@ -247,7 +247,7 @@ public:
             typename UList<T>::iterator erase(typename UList<T>::iterator);
 
 
-        // IOstream operators
+        // IOstream Operators
 
             // Write DynamicList to Ostream.
             friend Ostream& operator<< <T, SizeInc, SizeMult, SizeDiv>

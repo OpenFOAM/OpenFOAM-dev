@@ -71,7 +71,7 @@ class constIsoSolidTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         //- Constant isotropic thermal conductivity
         scalar kappa_;
@@ -104,7 +104,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -132,7 +132,7 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const constIsoSolidTransport&);
 

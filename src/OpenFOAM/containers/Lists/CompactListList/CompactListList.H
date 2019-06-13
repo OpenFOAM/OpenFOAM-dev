@@ -79,7 +79,7 @@ template<class T, class Container> Ostream& operator<<
 template<class T, class Container = List<T>>
 class CompactListList
 {
-    // Private data
+    // Private Data
 
         label size_;
 
@@ -207,7 +207,7 @@ public:
             inline label whichColumn(const label row, const label index) const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Return subscript-checked row as UList.
         inline UList<T> operator[](const label i);

@@ -71,7 +71,7 @@ class boundaryMesh
         static const scalar distanceTol_;
 
 
-    // Private data
+    // Private Data
 
         //- All boundary mesh data. Reconstructed every time faces are repatched
         bMesh* meshPtr_;

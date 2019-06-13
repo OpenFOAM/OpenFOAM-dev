@@ -123,7 +123,7 @@ class logPolynomialTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         //- Dynamic viscosity polynomial coefficients
         //  Note: input in [Pa.s], but internally uses [Pa.s/kmol]
@@ -169,7 +169,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -193,7 +193,7 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const logPolynomialTransport&);
         inline void operator*=(const scalar);

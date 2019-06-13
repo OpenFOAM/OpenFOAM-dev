@@ -64,7 +64,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Interpolation table of black body emissive power
         mutable interpolationTable<scalar> table_;
@@ -103,7 +103,7 @@ public:
     ~blackBodyEmission();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

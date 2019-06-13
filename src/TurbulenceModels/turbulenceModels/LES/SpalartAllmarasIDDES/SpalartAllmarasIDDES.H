@@ -63,7 +63,7 @@ class SpalartAllmarasIDDES
 :
     public SpalartAllmarasDES<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         // Model constants
 

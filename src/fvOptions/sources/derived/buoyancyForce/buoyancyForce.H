@@ -60,7 +60,7 @@ class buoyancyForce
 :
     public option
 {
-    // Private data
+    // Private Data
 
         uniformDimensionedVectorField g_;
 

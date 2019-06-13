@@ -81,7 +81,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Specie name
         word name_;
@@ -117,7 +117,7 @@ private:
         mutable thermoData Tb0_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Initialise thermoData object
         void init(thermoData& td);

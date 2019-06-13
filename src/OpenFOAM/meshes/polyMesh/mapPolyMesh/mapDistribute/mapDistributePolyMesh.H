@@ -66,7 +66,7 @@ Ostream& operator<<(Ostream&, const mapDistributePolyMesh&);
 
 class mapDistributePolyMesh
 {
-    // Private data
+    // Private Data
 
         //- Number of old live points
         label nOldPoints_;
@@ -284,14 +284,14 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const mapDistributePolyMesh&);
 
         void operator=(mapDistributePolyMesh&&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read dictionary from Istream
         friend Istream& operator>>(Istream&, mapDistributePolyMesh&);

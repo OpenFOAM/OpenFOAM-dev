@@ -56,7 +56,7 @@ class velocityComponentLaplacianFvMotionSolver
     public componentVelocityMotionSolver,
     public fvMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Cell-centre motion field
         mutable volScalarField cellMotionU_;

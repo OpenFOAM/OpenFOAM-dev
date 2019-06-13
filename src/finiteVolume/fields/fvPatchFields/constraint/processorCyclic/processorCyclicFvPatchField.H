@@ -68,7 +68,7 @@ class processorCyclicFvPatchField
 :
     public processorFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor patch
         const processorCyclicFvPatch& procPatch_;
@@ -150,7 +150,7 @@ public:
     virtual ~processorCyclicFvPatchField();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

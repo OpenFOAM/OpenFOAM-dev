@@ -86,7 +86,7 @@ class rotatingTotalPressureFvPatchScalarField
 :
     public totalPressureFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Angular velocity of the frame
         autoPtr<Function1<vector>> omega_;
@@ -160,7 +160,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

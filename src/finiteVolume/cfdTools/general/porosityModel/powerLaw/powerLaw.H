@@ -63,7 +63,7 @@ class powerLaw
 :
     public porosityModel
 {
-    // Private data
+    // Private Data
 
         //- C0 coefficient
         scalar C0_;

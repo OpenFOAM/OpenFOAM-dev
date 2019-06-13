@@ -53,8 +53,6 @@ class searchableCylinder
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         //- 'left' point

@@ -69,18 +69,10 @@ class IOMRFZoneList
     public IOdictionary,
     public MRFZoneList
 {
-private:
-
     // Private Member Functions
 
         //- Create IO object if dictionary is present
         IOobject createIOobject(const fvMesh& mesh) const;
-
-        //- Disallow default bitwise copy construction
-        IOMRFZoneList(const IOMRFZoneList&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const IOMRFZoneList&) = delete;
 
 
 public:
@@ -89,6 +81,9 @@ public:
 
         //- Construct from mesh
         IOMRFZoneList(const fvMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        IOMRFZoneList(const IOMRFZoneList&) = delete;
 
 
         //- Destructor
@@ -100,6 +95,12 @@ public:
 
         //- Read dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IOMRFZoneList&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -124,7 +124,7 @@ class hPolynomialThermo
 :
     public EquationOfState
 {
-    // Private data
+    // Private Data
 
         //- Heat of formation
         scalar Hf_;
@@ -215,7 +215,7 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const hPolynomialThermo&);
         inline void operator*=(const scalar);

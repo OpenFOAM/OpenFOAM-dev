@@ -83,7 +83,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Project mode names
         static const NamedEnum<projectMode, 3> projectModeNames_;

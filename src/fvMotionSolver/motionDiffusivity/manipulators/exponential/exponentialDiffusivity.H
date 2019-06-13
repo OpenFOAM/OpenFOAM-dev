@@ -51,7 +51,7 @@ class exponentialDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         scalar alpha_;
         autoPtr<motionDiffusivity> basicDiffusivityPtr_;

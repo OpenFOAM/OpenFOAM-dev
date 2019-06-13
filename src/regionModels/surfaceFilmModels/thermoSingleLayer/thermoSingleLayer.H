@@ -67,7 +67,7 @@ class thermoSingleLayer
 :
     public kinematicSingleLayer
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         thermoSingleLayer(const thermoSingleLayer&) = delete;

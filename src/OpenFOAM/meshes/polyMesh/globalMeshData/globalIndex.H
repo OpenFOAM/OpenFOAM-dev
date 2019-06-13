@@ -63,7 +63,7 @@ Ostream& operator<<(Ostream& os, const globalIndex& gi);
 
 class globalIndex
 {
-    // Private data
+    // Private Data
 
         //- Start of proci. Size is nProcs()+1. (so like CompactListList)
         labelList offsets_;

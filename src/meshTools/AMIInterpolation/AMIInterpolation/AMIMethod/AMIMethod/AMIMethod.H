@@ -55,8 +55,6 @@ namespace Foam
 
 class AMIMethod
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construction

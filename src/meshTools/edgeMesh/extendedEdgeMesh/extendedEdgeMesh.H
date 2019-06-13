@@ -543,7 +543,7 @@ public:
         );
 
 
-        // IOstream operators
+        // IOstream Operators
 
             friend Ostream& operator<<(Ostream&, const extendedEdgeMesh&);
             friend Istream& operator>>(Istream&, extendedEdgeMesh&);

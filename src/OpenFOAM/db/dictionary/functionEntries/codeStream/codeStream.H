@@ -140,7 +140,7 @@ class codeStream
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the C code template to be used
         static const word codeTemplateC;

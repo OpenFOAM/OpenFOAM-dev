@@ -50,7 +50,7 @@ class masterOFstream
 :
     public OStringStream
 {
-    // Private data
+    // Private Data
 
         const fileName pathName_;
 

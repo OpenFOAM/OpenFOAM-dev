@@ -106,7 +106,7 @@ class polynomialSolidTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         //- Thermal conductivity polynomial coefficients
         //  Note: input in [W/m/K]
@@ -147,7 +147,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -175,7 +175,7 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const polynomialSolidTransport&);
         inline void operator*=(const scalar);

@@ -108,7 +108,7 @@ class globalMeshData
     public processorTopology
 {
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -333,7 +333,7 @@ public:
     ClassName("globalMeshData");
 
 
-    // Static data members
+    // Static Data Members
 
         //- Geometric tolerance (fraction of bounding box)
         static const Foam::scalar matchTol_;

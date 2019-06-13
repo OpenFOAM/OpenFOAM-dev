@@ -64,7 +64,7 @@ protected:
 
 private:
 
-    // Private data
+    // Private Data
 
         const word name_;
 

@@ -76,7 +76,7 @@ class BrunDrippingInjection
 :
     public injectionModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         BrunDrippingInjection(const BrunDrippingInjection&) = delete;

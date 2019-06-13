@@ -53,7 +53,7 @@ class masterCoarsestGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
-    // Private data
+    // Private Data
 
         DynamicList<label> comms_;
 

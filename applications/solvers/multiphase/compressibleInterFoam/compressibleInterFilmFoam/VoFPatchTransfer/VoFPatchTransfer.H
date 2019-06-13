@@ -54,7 +54,7 @@ class VoFPatchTransfer
 :
     public transferModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         VoFPatchTransfer(const VoFPatchTransfer&) = delete;

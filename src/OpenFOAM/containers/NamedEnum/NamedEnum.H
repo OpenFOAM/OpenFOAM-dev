@@ -64,7 +64,7 @@ class NamedEnum
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- The set of names corresponding to the enumeration Enum
         static const char* names[nEnum];

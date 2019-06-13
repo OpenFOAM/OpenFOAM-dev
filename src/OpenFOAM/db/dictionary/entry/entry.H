@@ -67,7 +67,7 @@ class entry
 :
     public IDLList<entry>::link
 {
-    // Private data
+    // Private Data
 
         //- Keyword of entry
         keyType keyword_;
@@ -118,7 +118,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return keyword
         const keyType& keyword() const
@@ -169,7 +169,7 @@ public:
         virtual void write(Ostream&) const = 0;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const entry&);
 

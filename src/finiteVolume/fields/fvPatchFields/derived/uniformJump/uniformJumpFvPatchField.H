@@ -160,7 +160,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients
         virtual void updateCoeffs();

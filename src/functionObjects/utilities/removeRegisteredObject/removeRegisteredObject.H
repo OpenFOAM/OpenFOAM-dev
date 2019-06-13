@@ -78,7 +78,7 @@ class removeRegisteredObject
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to the objectRegistry
         const objectRegistry& obr_;
@@ -87,7 +87,7 @@ class removeRegisteredObject
         wordList objectNames_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         removeRegisteredObject(const removeRegisteredObject&) = delete;

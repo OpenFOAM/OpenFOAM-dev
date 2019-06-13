@@ -53,14 +53,6 @@ class cubic
 :
     public linear<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cubic(const cubic&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cubic&) = delete;
-
 
 public:
 
@@ -96,6 +88,9 @@ public:
         :
             linear<Type>(mesh)
         {}
+
+        //- Disallow default bitwise copy construction
+        cubic(const cubic&) = delete;
 
 
     // Member Functions
@@ -184,6 +179,12 @@ public:
 
             return tsfCorr;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cubic&) = delete;
 };
 
 

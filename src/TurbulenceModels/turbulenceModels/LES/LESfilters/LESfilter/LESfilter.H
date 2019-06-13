@@ -54,7 +54,7 @@ class fvMesh;
 
 class LESfilter
 {
-    // Private data
+    // Private Data
 
         const fvMesh& mesh_;
 

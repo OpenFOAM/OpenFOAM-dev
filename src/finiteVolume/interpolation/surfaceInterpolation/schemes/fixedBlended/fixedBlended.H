@@ -59,7 +59,7 @@ class fixedBlended
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private data
+    // Private Data
 
         const scalar blendingFactor_;
 
@@ -70,13 +70,6 @@ class fixedBlended
 
         //- Scheme 2
         tmp<surfaceInterpolationScheme<Type>> tScheme2_;
-
-
-        //- Disallow default bitwise copy construction
-        fixedBlended(const fixedBlended&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fixedBlended&) = delete;
 
 
 public:
@@ -161,6 +154,9 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construction
+        fixedBlended(const fixedBlended&) = delete;
+
 
     // Member Functions
 
@@ -244,6 +240,11 @@ public:
             }
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fixedBlended&) = delete;
 };
 
 

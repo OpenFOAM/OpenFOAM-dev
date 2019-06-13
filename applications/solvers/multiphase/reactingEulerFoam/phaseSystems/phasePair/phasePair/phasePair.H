@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Phase 1
         const phaseModel& phase1_;
@@ -78,7 +78,7 @@ private:
         const uniformDimensionedVectorField& g_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         // Etvos number for given diameter
         tmp<volScalarField> EoH(const volScalarField& d) const;
@@ -178,7 +178,7 @@ public:
         //- STL const_iterator
         class const_iterator
         {
-            // Private data
+            // Private Data
 
                 //- Reference to the pair for which this is an iterator
                 const phasePair& pair_;
@@ -205,7 +205,7 @@ public:
                 inline label index() const;
 
 
-            // Member operators
+            // Member Operators
 
                 inline bool operator==(const const_iterator&) const;
 

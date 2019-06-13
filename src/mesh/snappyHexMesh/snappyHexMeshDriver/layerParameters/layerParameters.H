@@ -89,13 +89,13 @@ public:
 
 private:
 
-    // Static data members
+    // Static Data Members
 
         //- Default angle for faces to be convcave
         static const scalar defaultConcaveAngle;
 
 
-    // Private data
+    // Private Data
 
         const dictionary dict_;
 

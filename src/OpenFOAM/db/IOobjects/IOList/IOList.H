@@ -85,12 +85,12 @@ public:
     virtual ~IOList();
 
 
-    // Member functions
+    // Member Functions
 
         bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const IOList<T>&);
         void operator=(IOList<T>&&);

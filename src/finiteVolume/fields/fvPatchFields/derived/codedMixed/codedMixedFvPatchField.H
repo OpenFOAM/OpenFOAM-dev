@@ -119,7 +119,7 @@ class codedMixedFvPatchField
         static const wordList codeKeys_;
 
 
-    // Private data
+    // Private Data
 
         //- Dictionary contents for the boundary condition
         mutable dictionary dict_;
@@ -157,7 +157,7 @@ class codedMixedFvPatchField
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the C code template to be used
         static const word codeTemplateC;
@@ -232,7 +232,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Get reference to the underlying patchField
         const mixedFvPatchField<Type>& redirectPatchField() const;

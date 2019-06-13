@@ -59,7 +59,7 @@ class fixedMultiPhaseHeatFluxFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Heat power [W] or flux [W/m2]
         scalarField q_;
@@ -119,7 +119,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

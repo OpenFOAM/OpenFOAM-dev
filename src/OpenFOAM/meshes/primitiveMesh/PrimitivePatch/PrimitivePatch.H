@@ -87,7 +87,7 @@ class PrimitivePatch
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef FaceList FaceListType;
 
@@ -112,7 +112,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to global list of points
         PointField points_;
@@ -510,7 +510,7 @@ public:
             virtual void movePoints(const Field<PointType>&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment operator
         void operator=

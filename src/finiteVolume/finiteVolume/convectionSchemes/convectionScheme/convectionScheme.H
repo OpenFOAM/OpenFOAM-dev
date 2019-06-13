@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class convectionScheme
 :
     public tmp<convectionScheme<Type>>::refCount
 {
-    // Private data
+    // Private Data
 
         const fvMesh& mesh_;
 
@@ -185,7 +185,7 @@ public:
         ) const = 0;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const convectionScheme<Type>&);
 };

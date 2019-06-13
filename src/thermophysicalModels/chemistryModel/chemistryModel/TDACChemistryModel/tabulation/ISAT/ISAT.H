@@ -59,7 +59,7 @@ class ISAT
 :
     public chemistryTabulationMethod<CompType, ThermoType>
 {
-    // Private data
+    // Private Data
 
         //- List of the stored 'points' organized in a binary tree
         binaryTree<CompType, ThermoType> chemisTree_;

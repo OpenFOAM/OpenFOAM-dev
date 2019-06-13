@@ -51,7 +51,7 @@ class extrudedMesh
 :
     public polyMesh
 {
-    // Private data
+    // Private Data
 
         const extrudeModel& model_;
 

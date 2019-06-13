@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class Dual
 {
 public:
 
-    //- Public typedefs
+    // Public Typedefs
 
         //- Gradient type
         typedef typename AveragingMethod<Type>::TypeGrad TypeGrad;
@@ -76,7 +76,7 @@ public:
 
 private:
 
-    //- Private data
+    // Private data
 
         //- Volume of the cell-centered regions
         const Field<scalar>& volumeCell_;
@@ -91,13 +91,13 @@ private:
         Field<Type>& dataDual_;
 
 
-    //- Private static member functions
+    // Private static member functions
 
         //- Return the size of the FieldField parts
         static autoPtr<labelList> size(const fvMesh &mesh);
 
 
-    //- Private member functions
+    // Private member functions
 
         //- Sync point data over processor boundaries
         void syncDualData();

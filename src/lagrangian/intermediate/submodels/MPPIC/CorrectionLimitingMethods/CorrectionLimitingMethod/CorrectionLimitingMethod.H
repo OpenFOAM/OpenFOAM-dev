@@ -50,8 +50,6 @@ namespace Foam
 
 class CorrectionLimitingMethod
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise assignment

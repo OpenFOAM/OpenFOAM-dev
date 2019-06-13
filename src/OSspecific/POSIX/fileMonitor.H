@@ -76,8 +76,10 @@ public:
 
         static const NamedEnum<fileState, 3> fileStateNames_;
 
+
 private:
-    // Private data
+
+    // Private Data
 
         //- Whether to use inotify (requires -DFOAM_USE_INOTIFY, see above)
         const bool useInotify_;

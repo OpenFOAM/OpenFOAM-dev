@@ -101,7 +101,7 @@ private:
         static const scalar parallelTolerance;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to surface
         const triSurface& surf_;

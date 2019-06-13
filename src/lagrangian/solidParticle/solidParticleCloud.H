@@ -57,7 +57,7 @@ class solidParticleCloud
 :
     public Cloud<solidParticle>
 {
-    // Private data
+    // Private Data
 
         const fvMesh& mesh_;
 

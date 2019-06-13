@@ -97,7 +97,7 @@ public:
         virtual ~relaxation();
 
 
-    // Member functions
+    // Member Functions
 
         //- Correct omega
         virtual void correct(const volScalarField& sigma);

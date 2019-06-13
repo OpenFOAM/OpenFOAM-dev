@@ -91,7 +91,7 @@ public:
         virtual ~CompactIOList();
 
 
-    // Member functions
+    // Member Functions
 
         virtual bool writeObject
         (
@@ -104,7 +104,7 @@ public:
         virtual bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const CompactIOList<T, BaseType>&);
         void operator=(CompactIOList<T, BaseType>&&);

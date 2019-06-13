@@ -79,7 +79,7 @@ public:
 
 private:
 
-   // Private data
+   // Private Data
 
         //- Phase type
         phaseType phase_;

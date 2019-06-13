@@ -72,7 +72,7 @@ class attachDetach
         };
 
 
-    // Private data
+    // Private Data
 
         //- Master face zone ID
         faceZoneID faceZoneID_;
@@ -134,7 +134,7 @@ class attachDetach
             void clearAddressing() const;
 
 
-    // Static data members
+    // Static Data Members
 
         //- Relative vertex position tolerance
         static const scalar positionDifference_;

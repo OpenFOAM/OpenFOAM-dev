@@ -61,7 +61,7 @@ class noFilm
         const fvMesh& mesh_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         noFilm(const noFilm&) = delete;

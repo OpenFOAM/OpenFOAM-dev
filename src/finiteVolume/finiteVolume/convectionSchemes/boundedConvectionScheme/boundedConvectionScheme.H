@@ -63,7 +63,7 @@ class boundedConvectionScheme
 :
     public fv::convectionScheme<Type>
 {
-    // Private data
+    // Private Data
 
         tmp<fv::convectionScheme<Type>> scheme_;
 

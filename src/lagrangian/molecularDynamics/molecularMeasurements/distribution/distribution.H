@@ -60,7 +60,7 @@ class distribution
 :
     public Map<label>
 {
-    // Private data
+    // Private Data
 
         scalar binWidth_;
 

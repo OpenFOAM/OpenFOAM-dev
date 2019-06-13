@@ -73,7 +73,7 @@ class cyclicAMIFvPatchField
     public coupledFvPatchField<Type>,
     public cyclicAMILduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclic patch
         const cyclicAMIFvPatch& cyclicAMIPatch_;
@@ -143,7 +143,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

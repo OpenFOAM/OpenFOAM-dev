@@ -126,7 +126,7 @@ class HashTable
 :
     public HashTableCore
 {
-    // Private data type for table entries
+    // Private Data type for table entries
 
         //- Structure to hold a hashed entry with SLList for collisions
         struct hashedEntry
@@ -151,7 +151,7 @@ class HashTable
         };
 
 
-    // Private data: size of table, the table and current number of elements
+    // Private Data: size of table, the table and current number of elements
 
         //- The current number of elements in table
         label nElmts_;
@@ -406,7 +406,7 @@ public:
 
         public:
 
-            // Member operators
+            // Member Operators
 
                 // Access
 
@@ -458,7 +458,7 @@ public:
                 inline iterator(const iteratorEnd& unused);
 
 
-            // Member operators
+            // Member Operators
 
                 //- Return referenced hash value
                 inline T& operator*();
@@ -516,7 +516,7 @@ public:
                 inline const_iterator(const iteratorEnd& unused);
 
 
-            // Member operators
+            // Member Operators
 
                 //- Return referenced hash value
                 inline const T& operator*() const;

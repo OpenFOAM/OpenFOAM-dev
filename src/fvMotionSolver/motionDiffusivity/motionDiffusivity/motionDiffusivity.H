@@ -49,7 +49,7 @@ namespace Foam
 
 class motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         //- Mesh reference
         const fvMesh& mesh_;

@@ -59,7 +59,7 @@ class globalMeshData;
 
 class createShellMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch to extrude
         const primitiveFacePatch& patch_;

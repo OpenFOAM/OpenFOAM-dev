@@ -56,7 +56,7 @@ class gaussConvectionScheme
 :
     public fv::convectionScheme<Type>
 {
-    // Private data
+    // Private Data
 
         tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 

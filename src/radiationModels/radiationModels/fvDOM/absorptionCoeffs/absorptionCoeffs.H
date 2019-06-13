@@ -63,7 +63,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         // Temperature limits of applicability for functions
 
@@ -100,7 +100,7 @@ public:
     ~absorptionCoeffs();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the coefficients corresponding to the given temperature
         const coeffArray& coeffs(const scalar T) const;

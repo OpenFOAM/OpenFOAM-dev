@@ -52,7 +52,7 @@ class cyclicFvsPatchField
 :
     public coupledFvsPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclic patch
         const cyclicFvPatch& cyclicPatch_;

@@ -50,7 +50,7 @@ namespace kineticTheoryModels
 
 class granularPressureModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         granularPressureModel(const granularPressureModel&) = delete;

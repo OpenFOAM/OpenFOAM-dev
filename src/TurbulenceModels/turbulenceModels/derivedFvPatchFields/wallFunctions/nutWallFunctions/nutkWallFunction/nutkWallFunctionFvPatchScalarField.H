@@ -141,7 +141,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Calculate and return the yPlus at the boundary
         virtual tmp<scalarField> yPlus() const;

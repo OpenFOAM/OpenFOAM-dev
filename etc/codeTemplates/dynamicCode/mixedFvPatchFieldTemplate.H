@@ -124,7 +124,7 @@ public:
     virtual ~${typeName}MixedValueFvPatch${FieldType}();
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

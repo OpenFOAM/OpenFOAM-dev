@@ -51,7 +51,7 @@ class faceZoneSet
 :
     public faceSet
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 
@@ -103,7 +103,7 @@ public:
     virtual ~faceZoneSet();
 
 
-    // Member functions
+    // Member Functions
 
         const labelList& addressing() const
         {

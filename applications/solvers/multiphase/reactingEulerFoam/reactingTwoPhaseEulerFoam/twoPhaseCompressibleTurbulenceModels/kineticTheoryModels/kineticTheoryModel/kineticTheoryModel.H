@@ -76,7 +76,7 @@ class kineticTheoryModel
         RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
     >
 {
-    // Private data
+    // Private Data
 
         // Input Fields
 

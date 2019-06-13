@@ -93,7 +93,7 @@ class Sine
 :
     public Function1<Type>
 {
-    // Private data
+    // Private Data
 
         //- Start-time for the sin function
         scalar t0_;

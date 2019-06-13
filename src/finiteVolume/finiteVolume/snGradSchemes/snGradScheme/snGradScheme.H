@@ -62,7 +62,7 @@ class snGradScheme
 :
     public tmp<snGradScheme<Type>>::refCount
 {
-    // Private data
+    // Private Data
 
         //- Hold reference to mesh
         const fvMesh& mesh_;

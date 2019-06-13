@@ -87,7 +87,7 @@ class sixDoFRigidBodyControl
 :
     public sixDoFRigidBodyState
 {
-    // Private data
+    // Private Data
 
         //- Reference to the Time
         const Time& time_;

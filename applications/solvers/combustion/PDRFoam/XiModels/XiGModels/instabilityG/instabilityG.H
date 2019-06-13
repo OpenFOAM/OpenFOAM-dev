@@ -55,7 +55,7 @@ class instabilityG
 :
     public XiGModel
 {
-    // Private data
+    // Private Data
 
         //- Flame instabilityG wrinling generation rate coefficient
         dimensionedScalar GIn_;

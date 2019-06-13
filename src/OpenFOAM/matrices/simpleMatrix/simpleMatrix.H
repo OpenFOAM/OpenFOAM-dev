@@ -64,7 +64,7 @@ class simpleMatrix
 :
     public scalarSquareMatrix
 {
-    // Private data
+    // Private Data
 
         Field<Type> source_;
 

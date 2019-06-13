@@ -217,7 +217,7 @@ class primitiveMesh
 
 protected:
 
-    // Static data members
+    // Static Data Members
 
         //- Static data to control mesh checking
 

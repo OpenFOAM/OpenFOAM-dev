@@ -53,7 +53,7 @@ namespace Foam
 
 class sammMesh
 {
-    // Private data
+    // Private Data
 
         //- Name of the case
         fileName casePrefix_;

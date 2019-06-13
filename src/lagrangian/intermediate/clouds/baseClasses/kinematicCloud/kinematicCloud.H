@@ -69,7 +69,7 @@ public:
         kinematicCloud();
 
 
-    // Member functions
+    // Member Functions
 
         // Check
 

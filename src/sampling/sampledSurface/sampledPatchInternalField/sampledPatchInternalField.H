@@ -37,8 +37,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_patchInternalField_H
-#define sampledSurfaces_patchInternalField_H
+#ifndef sampledPatchInternalField_H
+#define sampledPatchInternalField_H
 
 #include "sampledPatch.H"
 #include "mappedPatchBase.H"
@@ -58,7 +58,7 @@ class patchInternalField
 :
     public patch
 {
-    // Private data
+    // Private Data
 
         //- Mapping engines
         PtrList<mappedPatchBase> mappers_;

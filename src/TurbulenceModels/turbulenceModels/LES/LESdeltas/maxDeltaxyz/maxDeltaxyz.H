@@ -55,7 +55,7 @@ class maxDeltaxyz
 :
     public LESdelta
 {
-    // Private data
+    // Private Data
 
         //- Model coefficient
         scalar deltaCoeff_;

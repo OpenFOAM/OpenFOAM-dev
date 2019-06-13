@@ -66,7 +66,7 @@ Ostream& operator<<(Ostream&, const wallNormalInfo&);
 
 class wallNormalInfo
 {
-    // Private data
+    // Private Data
 
         //- Normal at nearest wall point
         vector normal_;

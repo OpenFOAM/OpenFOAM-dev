@@ -56,11 +56,6 @@ class localMin
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const localMin&) = delete;
-
 
 public:
 
@@ -175,6 +170,12 @@ public:
 
             return tvff;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const localMin&) = delete;
 };
 
 

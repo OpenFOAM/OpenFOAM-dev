@@ -53,7 +53,7 @@ class regionCoupledBaseGAMGInterface
     public GAMGInterface,
     virtual public regionCoupledLduInterface
 {
-    // Private data
+    // Private Data
 
         //- Reference for the regionCoupledBaseFvPatch from which this is
         //  agglomerated

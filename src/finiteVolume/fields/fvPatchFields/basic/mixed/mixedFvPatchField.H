@@ -84,7 +84,7 @@ class mixedFvPatchField
 :
     public fvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Value field
         Field<Type> refValue_;
@@ -164,7 +164,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -266,7 +266,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
 

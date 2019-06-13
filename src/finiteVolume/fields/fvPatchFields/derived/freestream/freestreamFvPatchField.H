@@ -142,7 +142,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Return defining fields
 

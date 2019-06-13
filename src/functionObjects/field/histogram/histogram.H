@@ -86,7 +86,7 @@ class histogram
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         writeFile file_;
 

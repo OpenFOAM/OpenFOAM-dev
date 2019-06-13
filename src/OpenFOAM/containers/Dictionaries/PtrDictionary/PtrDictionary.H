@@ -77,7 +77,7 @@ public:
         PtrDictionary(Istream&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Find and return entry
         const T& operator[](const word& key) const

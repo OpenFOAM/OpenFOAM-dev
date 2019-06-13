@@ -50,7 +50,7 @@ class inversePointDistanceDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         //- Patches selected to base the distance on
         wordReList patchNames_;

@@ -158,7 +158,7 @@ class polyMesh;
 
 class mapPolyMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to polyMesh
         const polyMesh& mesh_;

@@ -53,7 +53,7 @@ class mixedFixedValueSlipFvPatchField
 :
     public transformFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Value field used for boundary condition
         Field<Type> refValue_;
@@ -128,7 +128,7 @@ public:
             );
         }
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -192,7 +192,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
 

@@ -50,7 +50,7 @@ class directionalDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         vector diffusivityVector_;
 

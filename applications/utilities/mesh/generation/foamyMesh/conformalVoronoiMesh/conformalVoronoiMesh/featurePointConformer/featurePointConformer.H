@@ -69,7 +69,7 @@ class featurePointConformer
         static const scalar tolParallel;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to the mesher.
         const conformalVoronoiMesh& foamyHexMesh_;

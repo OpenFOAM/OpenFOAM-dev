@@ -54,7 +54,7 @@ class distanceSurface
 :
     public sampledSurface
 {
-    // Private data
+    // Private Data
 
         //- Surface
         const autoPtr<searchableSurface> surfPtr_;

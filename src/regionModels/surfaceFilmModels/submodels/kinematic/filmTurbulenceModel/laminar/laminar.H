@@ -54,15 +54,13 @@ class laminar
 :
     public filmTurbulenceModel
 {
-private:
-
     // Private Data
 
         //- Surface roughness coefficient
         scalar Cf_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         laminar(const laminar&) = delete;

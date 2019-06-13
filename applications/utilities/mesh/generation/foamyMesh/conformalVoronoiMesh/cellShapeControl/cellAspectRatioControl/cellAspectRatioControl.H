@@ -50,7 +50,7 @@ namespace Foam
 
 class cellAspectRatioControl
 {
-    // Private data
+    // Private Data
 
         const dictionary aspectRatioDict_;
 

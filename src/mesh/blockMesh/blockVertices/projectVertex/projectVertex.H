@@ -53,7 +53,7 @@ class projectVertex
 :
     public pointVertex
 {
-    // Private data
+    // Private Data
 
         const searchableSurfaces& geometry_;
 

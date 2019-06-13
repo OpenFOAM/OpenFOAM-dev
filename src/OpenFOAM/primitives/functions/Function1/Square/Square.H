@@ -97,7 +97,7 @@ class Square
 :
     public Function1<Type>
 {
-    // Private data
+    // Private Data
 
         //- Start-time for the square function
         scalar t0_;

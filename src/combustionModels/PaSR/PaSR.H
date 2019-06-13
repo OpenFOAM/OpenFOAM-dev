@@ -57,7 +57,7 @@ class PaSR
 :
     public laminar<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         //- Mixing constant
         scalar Cmix_;

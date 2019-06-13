@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_patch_H
-#define sampledSurfaces_patch_H
+#ifndef sampledPatch_H
+#define sampledPatch_H
 
 #include "sampledSurface.H"
 #include "MeshedSurface.H"
@@ -54,11 +54,12 @@ class patch
     public MeshedSurface<face>,
     public sampledSurface
 {
-    //- Private typedefs for convenience
-    typedef MeshedSurface<face> MeshStorage;
+    // Private Typedefs
+
+        typedef MeshedSurface<face> MeshStorage;
 
 
-    // Private data
+    // Private Data
 
         //- Name of patches
         const wordReList patchNames_;

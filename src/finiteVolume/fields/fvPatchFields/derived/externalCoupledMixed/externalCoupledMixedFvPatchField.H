@@ -134,10 +134,7 @@ class externalCoupledMixedFvPatchField
 :
     public mixedFvPatchField<Type>
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         //- Convenience typedefs
         typedef externalCoupledMixedFvPatchField<Type> patchType;
@@ -303,7 +300,7 @@ public:
     virtual ~externalCoupledMixedFvPatchField();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the log flag
         bool log() const

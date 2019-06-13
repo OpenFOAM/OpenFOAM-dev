@@ -53,7 +53,7 @@ namespace Foam
 
 class tabulated6DoFAcceleration
 {
-    // Private data
+    // Private Data
 
         const Time& time_;
 

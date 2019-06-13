@@ -92,7 +92,7 @@ class SRFFreestreamVelocityFvPatchVectorField
 :
     public inletOutletFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Is the supplied inlet value relative to the SRF
         Switch relative_;
@@ -169,7 +169,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

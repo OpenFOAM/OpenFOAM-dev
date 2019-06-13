@@ -50,7 +50,7 @@ class angularOscillatingVelocityPointPatchVectorField
 :
     public fixedValuePointPatchField<vector>
 {
-    // Private data
+    // Private Data
 
         vector axis_;
         vector origin_;
@@ -129,7 +129,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

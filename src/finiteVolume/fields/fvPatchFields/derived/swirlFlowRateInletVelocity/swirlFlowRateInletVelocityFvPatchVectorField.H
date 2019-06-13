@@ -88,7 +88,7 @@ class swirlFlowRateInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of the flux transporting the field
         const word phiName_;
@@ -178,7 +178,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

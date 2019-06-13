@@ -52,7 +52,7 @@ namespace Foam
 
 class snapParameters
 {
-    // Private data
+    // Private Data
 
         const label nSmoothPatch_;
 

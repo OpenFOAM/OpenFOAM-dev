@@ -51,7 +51,7 @@ class AverageField
 :
     public Field<Type>
 {
-    // Private data
+    // Private Data
 
         //- The average of the field
         Type average_;
@@ -71,7 +71,7 @@ public:
         AverageField(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         const Type& average() const;
 

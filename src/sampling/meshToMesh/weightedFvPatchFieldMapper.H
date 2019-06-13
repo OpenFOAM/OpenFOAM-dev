@@ -47,7 +47,7 @@ class weightedFvPatchFieldMapper
 :
     public generalFvPatchFieldMapper
 {
-    // Private data
+    // Private Data
 
         const labelListList& addressing_;
 

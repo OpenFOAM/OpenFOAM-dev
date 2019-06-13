@@ -72,7 +72,7 @@ class SmagorinskyZhang
 :
     public Smagorinsky<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         mutable const PhaseCompressibleTurbulenceModel
         <

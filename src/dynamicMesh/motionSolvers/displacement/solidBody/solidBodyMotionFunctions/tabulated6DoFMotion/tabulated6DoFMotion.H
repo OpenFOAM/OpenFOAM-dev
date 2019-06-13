@@ -58,7 +58,7 @@ class tabulated6DoFMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Time data file name read from dictionary
         fileName timeDataFileName_;

@@ -52,8 +52,6 @@ class IOporosityModelList
     public IOdictionary,
     public porosityModelList
 {
-private:
-
     // Private Member Functions
 
         //- Create IO object if dictionary is present

@@ -51,7 +51,7 @@ class extendedCentredCellToFaceStencil
 :
     public extendedCellToFaceStencil
 {
-    // Private data
+    // Private Data
 
         //- Swap map for getting neighbouring data
         autoPtr<mapDistribute> mapPtr_;

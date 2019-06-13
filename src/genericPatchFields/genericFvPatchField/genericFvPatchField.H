@@ -57,7 +57,7 @@ class genericFvPatchField
 :
     public calculatedFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         word actualTypeName_;
         dictionary dict_;
@@ -136,7 +136,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

@@ -74,7 +74,7 @@ class outletMappedUniformInletFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Name of the outlet patch to be mapped
         word outletPatchName_;
@@ -151,7 +151,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

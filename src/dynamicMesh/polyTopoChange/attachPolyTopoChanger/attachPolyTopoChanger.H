@@ -61,7 +61,7 @@ class attachPolyTopoChanger
 :
     public polyTopoChanger
 {
-    // Private data
+    // Private Data
 
     // Private Member Functions
 

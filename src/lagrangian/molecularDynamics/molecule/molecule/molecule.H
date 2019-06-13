@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class molecule
 :
     public particle
 {
-    // Private data
+    // Private Data
 
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
@@ -89,7 +89,7 @@ public:
     //- Class to hold molecule constant properties
     class constantProperties
     {
-        // Private data
+        // Private Data
 
             Field<vector> siteReferencePositions_;
 
@@ -128,7 +128,7 @@ public:
         //- Construct from dictionary
         inline constantProperties(const dictionary& dict);
 
-        // Member functions
+        // Member Functions
 
         inline const Field<vector>& siteReferencePositions() const;
 
@@ -181,7 +181,7 @@ public:
                 part_(part)
             {}
 
-        // Member functions
+        // Member Functions
 
             inline label part() const
             {
@@ -192,7 +192,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         tensor Q_;
 

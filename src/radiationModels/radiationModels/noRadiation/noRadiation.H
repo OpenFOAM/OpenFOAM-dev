@@ -81,7 +81,7 @@ public:
     virtual ~noRadiation();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 

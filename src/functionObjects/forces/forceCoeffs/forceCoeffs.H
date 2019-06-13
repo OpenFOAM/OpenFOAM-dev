@@ -106,7 +106,7 @@ class forceCoeffs
 :
     public forces
 {
-    // Private data
+    // Private Data
 
         // Force coefficient geometry
 

@@ -53,7 +53,7 @@ class projectCurveEdge
 :
     public blockEdge
 {
-    // Private data
+    // Private Data
 
         const searchableSurfaces& geometry_;
 

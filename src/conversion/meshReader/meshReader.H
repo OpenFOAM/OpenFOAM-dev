@@ -140,7 +140,7 @@ protected:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Point-cell addressing. Used for topological analysis
         // Warning. This point cell addressing list potentially contains

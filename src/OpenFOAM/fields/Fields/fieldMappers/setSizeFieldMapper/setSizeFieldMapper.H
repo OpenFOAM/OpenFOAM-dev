@@ -53,7 +53,7 @@ class setSizeFieldMapper
         label size_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         template<class Type>
         void setSize(Field<Type>& f) const;

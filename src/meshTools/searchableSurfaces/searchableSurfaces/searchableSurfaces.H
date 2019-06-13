@@ -55,7 +55,7 @@ class searchableSurfaces
 :
     public PtrList<searchableSurface>
 {
-    // Private data
+    // Private Data
 
         //- Surface names
         wordList names_;

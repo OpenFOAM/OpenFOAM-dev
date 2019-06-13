@@ -122,7 +122,7 @@ public:
     ~PtrList();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -170,7 +170,7 @@ public:
             void shuffle(const labelUList& newToOld);
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment operator
         void operator=(const PtrList<T>&);

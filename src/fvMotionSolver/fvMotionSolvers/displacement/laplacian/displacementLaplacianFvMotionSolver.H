@@ -56,7 +56,7 @@ class displacementLaplacianFvMotionSolver
     public displacementMotionSolver,
     public fvMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Cell-centre motion field
         mutable volVectorField cellDisplacement_;

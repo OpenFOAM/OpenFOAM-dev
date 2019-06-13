@@ -99,7 +99,7 @@ class PointEdgeWave
         static int dummyTrackData_;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;

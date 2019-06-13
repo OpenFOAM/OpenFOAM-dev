@@ -66,7 +66,7 @@ class faceZone
 :
     public zone
 {
-    // Private data
+    // Private Data
 
         //- The name associated with the zone-labels dictionary entry
         static const word labelsName_;
@@ -116,7 +116,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
         static const char * const labelsName;

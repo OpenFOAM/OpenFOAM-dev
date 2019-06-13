@@ -92,7 +92,7 @@ class conformationSurfaces;
 
 class backgroundMeshDecomposition
 {
-    // Private data
+    // Private Data
 
         //- Method details dictionary
         // dictionary coeffsDict_;

@@ -64,7 +64,7 @@ class fixedFluxPressureFvPatchScalarField
 :
     public fixedGradientFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Current time index (used for updating)
         label curTimeIndex_;
@@ -138,7 +138,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the patch pressure gradient field from the given snGradp
         virtual void updateCoeffs(const scalarField& snGradp);

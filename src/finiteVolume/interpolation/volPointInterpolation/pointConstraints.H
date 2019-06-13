@@ -64,7 +64,7 @@ class pointConstraints
 :
     public MeshObject<pointMesh, UpdateableMeshObject, pointConstraints>
 {
-    // Private data
+    // Private Data
 
         // Patch-patch constraints
 
@@ -81,12 +81,6 @@ class pointConstraints
         //- Make patch-patch constraints
         void makePatchPatchAddressing();
 
-        //- Disallow default bitwise copy construction
-        pointConstraints(const pointConstraints&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointConstraints&) = delete;
-
 
 public:
 
@@ -99,12 +93,15 @@ public:
         //- Constructor from pointMesh.
         explicit pointConstraints(const pointMesh&);
 
+        //- Disallow default bitwise copy construction
+        pointConstraints(const pointConstraints&) = delete;
+
 
     //- Destructor
     ~pointConstraints();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -182,6 +179,12 @@ public:
                 pointVectorField& displacement,
                 const bool overrideValue = false
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointConstraints&) = delete;
 };
 
 

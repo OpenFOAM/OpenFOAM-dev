@@ -53,7 +53,7 @@ class Callback
 :
     public CallbackRegistry<CallbackType>::link
 {
-    // Private data
+    // Private Data
 
         //- CallbackRegistry reference
         CallbackRegistry<CallbackType>& cbr_;
@@ -74,7 +74,7 @@ public:
     virtual ~Callback();
 
 
-    // Member functions
+    // Member Functions
 
         // Registration
 

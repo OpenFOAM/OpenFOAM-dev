@@ -54,7 +54,7 @@ class inclinedFilmNusseltHeightFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Mean mass flow rate per unit length [kg/s/m]
         autoPtr<Function1<scalar>> GammaMean_;
@@ -134,7 +134,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

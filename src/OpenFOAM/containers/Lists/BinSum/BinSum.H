@@ -57,7 +57,7 @@ class BinSum
 :
     public List
 {
-    // Private data
+    // Private Data
 
         const IndexType min_;
 

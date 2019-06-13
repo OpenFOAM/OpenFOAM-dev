@@ -55,7 +55,7 @@ class eagerGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
-    // Private data
+    // Private Data
 
         //- Agglpmeration level
         const label mergeLevels_;

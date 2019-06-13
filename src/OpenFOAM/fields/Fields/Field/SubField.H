@@ -96,7 +96,7 @@ public:
         inline SubField(const SubField<Type>&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return a null SubField
         static inline const SubField<Type>& null();
@@ -108,7 +108,7 @@ public:
         tmp<Field<Type>> T() const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment via UList operator. Takes linear time.
         inline void operator=(const SubField<Type>&);

@@ -53,7 +53,7 @@ namespace Foam
 //- A helper class for storing addresses.
 class IndirectListAddressing
 {
-    // Private data
+    // Private Data
 
         //- Storage for the list addressing
         List<label> addressing_;

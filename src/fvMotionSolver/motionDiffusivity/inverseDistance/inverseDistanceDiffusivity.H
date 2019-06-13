@@ -51,7 +51,7 @@ class inverseDistanceDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         //- Patches selected to base the distance on
         //  These can contain patch names or regular expressions to search for.

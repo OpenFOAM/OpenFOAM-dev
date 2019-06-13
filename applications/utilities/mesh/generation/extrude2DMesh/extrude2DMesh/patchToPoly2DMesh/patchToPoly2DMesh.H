@@ -49,7 +49,7 @@ namespace Foam
 
 class patchToPoly2DMesh
 {
-    // Private data
+    // Private Data
 
         // Reference to the meshed surface
         const MeshedSurface<face>& patch_;

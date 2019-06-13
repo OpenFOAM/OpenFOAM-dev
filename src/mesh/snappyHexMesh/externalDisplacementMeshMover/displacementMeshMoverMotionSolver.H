@@ -52,7 +52,7 @@ class displacementMeshMoverMotionSolver
 :
     public displacementMotionSolver
 {
-    // Private data
+    // Private Data
 
         mutable autoPtr<externalDisplacementMeshMover> meshMoverPtr_;
 

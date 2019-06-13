@@ -85,7 +85,7 @@ public:
         };
 
 
-    // Private data
+    // Private Data
 
         const dictionary methodDict_;
 

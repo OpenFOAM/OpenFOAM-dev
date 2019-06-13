@@ -50,7 +50,7 @@ namespace Foam
 template<class List>
 class Histogram
 {
-    // Private data
+    // Private Data
 
         //- Counts per bin
         labelList counts_;

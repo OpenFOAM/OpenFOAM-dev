@@ -77,7 +77,7 @@ class waveInletOutletFvPatchField
 :
     public mixedFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Inlet value above the wave
         const autoPtr<Function1<Type>> inletValueAbove_;
@@ -160,7 +160,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

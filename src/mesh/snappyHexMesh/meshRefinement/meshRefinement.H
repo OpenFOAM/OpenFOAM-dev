@@ -148,7 +148,7 @@ public:
 
 private:
 
-    // Static data members
+    // Static Data Members
 
         //- Control of writing level
         static writeType writeLevel_;
@@ -157,7 +157,7 @@ private:
         static outputType outputLevel_;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         fvMesh& mesh_;

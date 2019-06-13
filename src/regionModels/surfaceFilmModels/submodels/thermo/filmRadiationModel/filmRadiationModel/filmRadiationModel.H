@@ -56,8 +56,6 @@ class filmRadiationModel
 :
     public filmSubModelBase
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construction

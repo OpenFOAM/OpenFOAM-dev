@@ -54,7 +54,7 @@ class sixDoFRigidBodyMotionSolver
 :
     public displacementMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Six DoF motion object
         sixDoFRigidBodyMotion motion_;

@@ -63,7 +63,7 @@ Istream& operator>>(Istream&, wallPoint&);
 
 class wallPoint
 {
-    // Private data
+    // Private Data
 
         //- Position of nearest wall center
         point origin_;

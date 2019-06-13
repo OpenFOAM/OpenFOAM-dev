@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class AttouFerschneider
 :
     public dragModel
 {
-    // Private data
+    // Private Data
 
         //- Name of the gaseous phase
         const word gasName_;
@@ -84,7 +84,7 @@ class AttouFerschneider
         const dimensionedScalar E2_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return the momentum transfer coefficient between gas and liquid
         virtual tmp<volScalarField> KGasLiquid

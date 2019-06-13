@@ -130,7 +130,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Specify a default mesh name
         static string defaultMeshName;

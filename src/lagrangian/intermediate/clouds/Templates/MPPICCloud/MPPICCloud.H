@@ -70,7 +70,7 @@ class MPPICCloud
 {
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of cloud this cloud was instantiated for
         typedef CloudType cloudType;
@@ -84,7 +84,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Cloud copy pointer
         autoPtr<MPPICCloud<CloudType>> cloudCopyPtr_;

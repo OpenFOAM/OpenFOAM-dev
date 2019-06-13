@@ -53,7 +53,7 @@ class Time;
 
 class vtkMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         fvMesh& baseMesh_;

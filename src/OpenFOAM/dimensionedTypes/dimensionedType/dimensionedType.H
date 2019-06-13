@@ -64,7 +64,7 @@ class dictionary;
 template<class Type>
 class dimensioned
 {
-    // Private data
+    // Private Data
 
         //- Variable name
         word name_;
@@ -76,7 +76,7 @@ class dimensioned
         Type value_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Initialize from Istream
         //  Helper-function for constructors
@@ -160,7 +160,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return const reference to name.
         const word& name() const;
@@ -208,7 +208,7 @@ public:
         Istream& read(Istream& is);
 
 
-    // Member operators
+    // Member Operators
 
         //- Return a component as a dimensioned<cmptType>
         dimensioned<cmptType> operator[](const direction) const;
@@ -219,7 +219,7 @@ public:
         void operator/=(const scalar);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>> <Type>
         (Istream&, dimensioned<Type>&);

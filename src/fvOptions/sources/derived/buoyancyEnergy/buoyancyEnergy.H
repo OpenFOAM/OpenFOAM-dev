@@ -60,7 +60,7 @@ class buoyancyEnergy
 :
     public option
 {
-    // Private data
+    // Private Data
 
         //- Name of velocity field; default = U
         word UName_;

@@ -107,7 +107,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the density field
         const volScalarField& rho() const

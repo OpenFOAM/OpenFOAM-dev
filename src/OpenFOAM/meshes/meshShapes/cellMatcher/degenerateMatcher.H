@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ namespace Foam
 class degenerateMatcher
 {
 
-    // Static data members
+    // Static Data Members
 
         //- Matchers for all degenerate hex shapes
         static hexMatcher hex;
@@ -81,7 +81,7 @@ class degenerateMatcher
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Recognize shape given faces of a cell
         static cellShape match(const faceList& faces);

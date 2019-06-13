@@ -62,7 +62,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to the owner fvDOM object
         const fvDOM& dom_;
@@ -149,7 +149,7 @@ public:
     ~radiativeIntensityRay();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 

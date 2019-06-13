@@ -50,7 +50,7 @@ class ensightAsciiStream
 :
     public ensightStream
 {
-    // Private data
+    // Private Data
 
         //- Description of data_
         OFstream str_;

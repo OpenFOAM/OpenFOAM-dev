@@ -50,9 +50,6 @@ class directAMI
 :
     public AMIMethod
 {
-
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construction

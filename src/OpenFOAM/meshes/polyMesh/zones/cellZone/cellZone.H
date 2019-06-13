@@ -74,7 +74,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
         static const char * const labelsName;

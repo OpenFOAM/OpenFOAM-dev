@@ -136,7 +136,7 @@ class meshCutter
 :
     public edgeVertex
 {
-    // Private data
+    // Private Data
 
         //- Cells added in last setRefinement. Per splitcell label of added
         //  cell

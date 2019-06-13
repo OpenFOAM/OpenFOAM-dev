@@ -53,7 +53,7 @@ class vanDriestDelta
 :
     public LESdelta
 {
-    // Private data
+    // Private Data
 
         autoPtr<LESdelta> geometricDelta_;
         scalar kappa_;

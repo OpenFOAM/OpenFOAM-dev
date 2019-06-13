@@ -94,7 +94,7 @@ class syringePressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Syringe piston area
         scalar Ap_;
@@ -210,7 +210,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

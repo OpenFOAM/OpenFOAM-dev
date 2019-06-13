@@ -89,7 +89,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Master face zone ID
         faceZoneID masterFaceZoneID_;
@@ -276,7 +276,7 @@ private:
             void decoupleInterface(polyTopoChange& ref) const;
 
 
-    // Static data members
+    // Static Data Members
 
         //- Point merge tolerance
         static const scalar pointMergeTolDefault_;

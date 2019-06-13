@@ -51,17 +51,6 @@ class limitedSurfaceInterpolationScheme
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow copy construct
-        limitedSurfaceInterpolationScheme
-        (
-            const limitedSurfaceInterpolationScheme&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitedSurfaceInterpolationScheme&) = delete;
-
 
 protected:
 
@@ -117,7 +106,6 @@ public:
             faceFlux_(faceFlux)
         {}
 
-
         //- Construct from mesh and Istream.
         //  The name of the flux field is read from the Istream and looked-up
         //  from the mesh objectRegistry
@@ -136,6 +124,12 @@ public:
                 )
             )
         {}
+
+        //- Disallow copy construct
+        limitedSurfaceInterpolationScheme
+        (
+            const limitedSurfaceInterpolationScheme&
+        );
 
 
     // Selectors
@@ -189,6 +183,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitedSurfaceInterpolationScheme&) = delete;
 };
 
 

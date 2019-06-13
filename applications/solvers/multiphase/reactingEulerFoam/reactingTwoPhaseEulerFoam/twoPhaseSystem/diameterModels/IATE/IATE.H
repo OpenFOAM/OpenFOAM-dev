@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class IATE
 :
     public diameterModel
 {
-    // Private data
+    // Private Data
 
         //- Interfacial curvature (alpha*interfacial area)
         volScalarField kappai_;
@@ -89,7 +89,7 @@ class IATE
         PtrList<IATEsource> sources_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         tmp<volScalarField> dsm() const;
 

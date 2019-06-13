@@ -69,7 +69,7 @@ class limitedSnGrad
 :
     public snGradScheme<Type>
 {
-    // Private data
+    // Private Data
 
         tmp<snGradScheme<Type>> correctedScheme_;
 

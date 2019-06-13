@@ -55,7 +55,7 @@ class lduMatrix;
 
 class lduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Reference to the coupled patch this field is defined for
         const lduInterface& interface_;

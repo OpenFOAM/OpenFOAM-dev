@@ -52,7 +52,7 @@ class solidBodyMotionDisplacementPointPatchVectorField
 :
     public fixedValuePointPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- The motion control function
         autoPtr<solidBodyMotionFunction> SBMFPtr_;
@@ -135,7 +135,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

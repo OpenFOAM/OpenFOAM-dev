@@ -56,7 +56,7 @@ class nonuniformTransformCyclicFvPatchField
 :
     public cyclicFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
 public:
 

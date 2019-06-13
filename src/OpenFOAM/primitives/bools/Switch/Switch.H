@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,13 +102,13 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- The logic and enumerated text representation stored as a single byte
         switchType switch_;
 
 
-    // Static data members
+    // Static Data Members
 
         //- The set of names corresponding to the switchType enumeration
         //  Includes an extra entry for "invalid".

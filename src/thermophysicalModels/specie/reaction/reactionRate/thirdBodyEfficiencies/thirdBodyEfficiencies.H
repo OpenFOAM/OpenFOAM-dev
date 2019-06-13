@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class thirdBodyEfficiencies
 :
     public scalarList
 {
-    // Private data
+    // Private Data
 
         const speciesTable& species_;
 
@@ -81,7 +81,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Calculate and return M, the concentration of the third-bodies
         inline scalar M(const scalarList& c) const;

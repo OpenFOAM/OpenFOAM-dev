@@ -51,7 +51,7 @@ class pairGAMGAgglomeration
 :
     public GAMGAgglomeration
 {
-    // Private data
+    // Private Data
 
         //- Number of levels to merge, 1 = don't merge, 2 = merge pairs etc.
         label mergeLevels_;

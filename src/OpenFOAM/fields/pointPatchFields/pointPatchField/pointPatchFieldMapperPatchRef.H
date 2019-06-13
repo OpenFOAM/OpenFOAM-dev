@@ -47,7 +47,7 @@ class pointPatchFieldMapperPatchRef
 :
     public generalPointPatchFieldMapper
 {
-    // Private data
+    // Private Data
 
         const pointPatch& sourcePatch_;
         const pointPatch& targetPatch_;
@@ -75,7 +75,7 @@ public:
         ) = delete;
 
 
-    // Member functions
+    // Member Functions
 
         const pointPatch& sourcePatch() const
         {

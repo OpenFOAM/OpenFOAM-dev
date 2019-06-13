@@ -55,7 +55,7 @@ class conformationSurfaces
 {
     typedef extendedFeatureEdgeMesh::sideVolumeType sideVolumeType;
 
-    // Private data
+    // Private Data
 
         const Time& runTime_;
 

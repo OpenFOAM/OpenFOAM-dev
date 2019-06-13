@@ -62,7 +62,7 @@ class meshCutAndRemove
 :
     public edgeVertex
 {
-    // Private data
+    // Private Data
 
         //- Faces added in last setRefinement. Per split cell label of added
         //  face

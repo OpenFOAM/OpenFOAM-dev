@@ -54,7 +54,7 @@ class binary
 :
     public absorptionEmissionModel
 {
-    // Private data
+    // Private Data
 
         //- Coefficients dictionary
         dictionary coeffsDict_;

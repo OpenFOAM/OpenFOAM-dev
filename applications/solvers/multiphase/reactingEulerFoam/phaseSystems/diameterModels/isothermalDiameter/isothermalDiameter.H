@@ -52,7 +52,7 @@ class isothermal
 :
     public diameterModel
 {
-    // Private data
+    // Private Data
 
         //- Reference diameter for the isothermal expansion
         dimensionedScalar d0_;

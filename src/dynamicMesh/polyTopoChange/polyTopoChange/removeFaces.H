@@ -62,7 +62,7 @@ class mapDistributePolyMesh;
 
 class removeFaces
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;

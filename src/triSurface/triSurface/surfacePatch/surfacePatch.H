@@ -60,7 +60,7 @@ class surfacePatch
 :
     public geometricSurfacePatch
 {
-    // Private data
+    // Private Data
 
         //- Size of this patch in the triSurface face list
         label size_;

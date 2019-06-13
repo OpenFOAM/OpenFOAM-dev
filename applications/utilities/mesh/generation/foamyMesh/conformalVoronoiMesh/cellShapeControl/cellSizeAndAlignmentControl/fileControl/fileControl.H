@@ -50,7 +50,7 @@ class fileControl
 :
     public cellSizeAndAlignmentControl
 {
-    // Private data
+    // Private Data
 
         const fileName pointsFile_;
 

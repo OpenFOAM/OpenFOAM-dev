@@ -60,7 +60,7 @@ class fixedCoeff
 :
     public porosityModel
 {
-    // Private data
+    // Private Data
 
         //- Alpha coefficient XYZ components (user-supplied) [1/s]
         dimensionedVector alphaXYZ_;

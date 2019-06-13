@@ -46,7 +46,7 @@ namespace Foam
 template<class GeometricField>
 class subCycleField
 {
-    // Private data
+    // Private Data
 
         //- Reference to the field being sub-cycled
         GeometricField& gf_;
@@ -114,7 +114,7 @@ public:
 template<class GeometricField>
 class subCycleFields
 {
-    // Private data
+    // Private Data
 
         //- List of pointers to the fields being sub-cycled
         List<GeometricField*> gfPtrs_;

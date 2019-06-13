@@ -74,7 +74,7 @@ class NicenoKEqn
 :
     public kEqn<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         mutable const PhaseCompressibleTurbulenceModel
         <

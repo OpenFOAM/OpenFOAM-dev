@@ -90,8 +90,6 @@ class volumeFractionSource
 :
     public option
 {
-private:
-
     // Private Member Data
 
         //- The name of the phase

@@ -55,15 +55,13 @@ class constantHeatTransfer
 :
     public heatTransferModel
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Constant heat transfer coefficient [W/m2/K]
         scalar c0_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         constantHeatTransfer(const constantHeatTransfer&) = delete;

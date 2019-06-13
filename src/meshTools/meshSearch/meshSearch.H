@@ -57,7 +57,7 @@ class treeBoundBox;
 
 class meshSearch
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -149,7 +149,7 @@ public:
     ClassName("meshSearch");
 
 
-    // Static data members
+    // Static Data Members
 
         //- Tolerance on linear dimensions
         static scalar tol_;

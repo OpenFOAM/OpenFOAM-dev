@@ -52,9 +52,6 @@ class pointPatchDist
 :
     public pointScalarField
 {
-
-private:
-
     // Private Member Data
 
         //- Reference to pointField

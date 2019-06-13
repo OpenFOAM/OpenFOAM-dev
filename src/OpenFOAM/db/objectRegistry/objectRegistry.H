@@ -107,7 +107,7 @@ public:
     virtual ~objectRegistry();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

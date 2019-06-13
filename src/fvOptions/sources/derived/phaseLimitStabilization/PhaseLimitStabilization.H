@@ -75,7 +75,7 @@ class PhaseLimitStabilization
 :
     public option
 {
-    // Private data
+    // Private Data
 
         //- Field name
         word fieldName_;

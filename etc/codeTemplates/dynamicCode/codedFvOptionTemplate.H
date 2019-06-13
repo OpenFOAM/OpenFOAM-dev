@@ -138,7 +138,7 @@ public:
     virtual ~${typeName}FvOption${SourceType}();
 
 
-    // Member functions
+    // Member Functions
 
             //- Correct field
             virtual void correct

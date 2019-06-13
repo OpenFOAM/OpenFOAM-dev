@@ -58,7 +58,7 @@ class transferModel
 :
     public filmSubModelBase
 {
-    // Private data
+    // Private Data
 
         //- Transferred mass
         scalar transferredMass_;

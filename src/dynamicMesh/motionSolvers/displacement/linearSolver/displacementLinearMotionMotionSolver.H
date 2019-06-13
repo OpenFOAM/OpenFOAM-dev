@@ -73,7 +73,7 @@ class displacementLinearMotionMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Axis of the linear motion
         vector axis_;

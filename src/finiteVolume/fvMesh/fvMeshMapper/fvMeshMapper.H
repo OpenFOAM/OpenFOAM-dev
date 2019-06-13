@@ -55,7 +55,7 @@ class mapPolyMesh;
 
 class fvMeshMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const fvMesh& mesh_;

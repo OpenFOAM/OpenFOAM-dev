@@ -136,7 +136,7 @@ protected:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Drag coefficients
         KdTable Kds_;
@@ -171,7 +171,7 @@ private:
             turbulentDispersionModelTable turbulentDispersionModels_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return the drag coefficient for the phase pair
         virtual tmp<volScalarField> Kd(const phasePairKey& key) const;

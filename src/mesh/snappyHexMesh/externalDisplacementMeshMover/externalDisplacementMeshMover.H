@@ -80,6 +80,7 @@ private:
         //- Disallow default bitwise assignment
         void operator=(const externalDisplacementMeshMover&) = delete;
 
+
 public:
 
     //- Runtime type information

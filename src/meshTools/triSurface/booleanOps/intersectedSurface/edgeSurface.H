@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,9 +73,7 @@ class surfaceIntersection;
 
 class edgeSurface
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- All points (0 .. nSurfacePoints_-1 are points from surface)
         pointField points_;

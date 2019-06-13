@@ -54,7 +54,7 @@ class motionSolverList
 :
     public motionSolver
 {
-    // Private data
+    // Private Data
 
         PtrList<motionSolver> motionSolvers_;
 

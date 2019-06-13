@@ -59,7 +59,7 @@ public:
         :
             public pointPatchFieldMapperPatchRef
         {
-            // Private data
+            // Private Data
 
                 labelList directAddressing_;
 
@@ -79,7 +79,7 @@ public:
                 );
 
 
-            // Member functions
+            // Member Functions
 
                 label size() const
                 {
@@ -105,7 +105,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to complete mesh
         const pointMesh& completeMesh_;

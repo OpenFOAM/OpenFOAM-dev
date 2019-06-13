@@ -51,7 +51,7 @@ class SloanRenumber
 :
     public renumberMethod
 {
-    // Private data
+    // Private Data
 
         const Switch reverse_;
 

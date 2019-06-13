@@ -79,7 +79,7 @@ class pimpleControl
 {
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Run-time type information
         TypeName("pimpleControl");

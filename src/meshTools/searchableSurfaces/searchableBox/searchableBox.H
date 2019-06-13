@@ -54,8 +54,6 @@ class searchableBox
     public searchableSurface,
     public treeBoundBox
 {
-private:
-
     // Private Member Data
 
         mutable wordList regions_;

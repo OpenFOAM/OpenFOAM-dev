@@ -100,7 +100,7 @@ class mapDistribute;
 
 class globalPoints
 {
-    // Private data
+    // Private Data
 
         //- Mesh reference
         const polyMesh& mesh_;

@@ -49,7 +49,7 @@ namespace Foam
 
 class shortEdgeFilter2D
 {
-    // Private data
+    // Private Data
 
         const CV2D& cv2Dmesh_;
 

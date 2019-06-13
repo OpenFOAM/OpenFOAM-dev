@@ -205,15 +205,6 @@ class advectionDiffusion
         bool predicted_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        advectionDiffusion(const advectionDiffusion&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const advectionDiffusion&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -231,6 +222,9 @@ public:
             const labelHashSet& patchIDs
         );
 
+        //- Disallow default bitwise copy construction
+        advectionDiffusion(const advectionDiffusion&) = delete;
+
 
     // Member Functions
 
@@ -239,6 +233,12 @@ public:
 
         //- Correct the given distance-to-patch and normal-to-patch fields
         virtual bool correct(volScalarField& y, volVectorField& n);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const advectionDiffusion&) = delete;
 };
 
 

@@ -48,7 +48,7 @@ class manualRenumber
 :
     public renumberMethod
 {
-    // Private data
+    // Private Data
 
         const fileName dataFile_;
 

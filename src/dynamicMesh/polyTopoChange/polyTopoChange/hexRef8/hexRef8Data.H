@@ -60,7 +60,7 @@ class hexRef8Data
 
 private:
 
-    // Private data
+    // Private Data
 
         autoPtr<labelIOList> cellLevelPtr_;
 

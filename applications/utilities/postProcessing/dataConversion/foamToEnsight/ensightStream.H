@@ -50,7 +50,7 @@ namespace Foam
 
 class ensightStream
 {
-    // Private data
+    // Private Data
 
         const fileName name_;
 

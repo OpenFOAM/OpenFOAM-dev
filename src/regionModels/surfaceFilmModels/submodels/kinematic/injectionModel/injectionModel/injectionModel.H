@@ -58,7 +58,7 @@ class injectionModel
 :
     public filmSubModelBase
 {
-    // Private data
+    // Private Data
 
         //- Injected mass
         scalar injectedMass_;

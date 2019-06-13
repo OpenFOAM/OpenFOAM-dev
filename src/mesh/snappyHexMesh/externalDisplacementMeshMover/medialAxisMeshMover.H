@@ -60,7 +60,7 @@ class medialAxisMeshMover
 :
     public externalDisplacementMeshMover
 {
-    // Private data
+    // Private Data
 
         const labelList adaptPatchIDs_;
 

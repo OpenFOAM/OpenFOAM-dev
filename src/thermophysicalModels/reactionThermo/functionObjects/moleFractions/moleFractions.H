@@ -76,7 +76,7 @@ class moleFractions
 :
     public functionObjects::fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         //- Species mole fractions
         PtrList<volScalarField> X_;

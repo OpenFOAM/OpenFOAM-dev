@@ -64,7 +64,7 @@ class mapDistributePolyMesh;
 
 class hexRef8
 {
-    // Private data
+    // Private Data
 
         //- Reference to underlying mesh.
         const polyMesh& mesh_;

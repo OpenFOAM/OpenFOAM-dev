@@ -53,7 +53,7 @@ class dlLibraryTable;
 
 class codedBase
 {
-    // Private data
+    // Private Data
 
         //- Previously loaded library
         mutable fileName oldLibPath_;

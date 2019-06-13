@@ -81,7 +81,7 @@ class fixedMeanOutletInletFvPatchField
 :
     public outletInletFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- MeanValue value the field is adjusted to maintain
         autoPtr<Function1<Type>> meanValue_;
@@ -155,7 +155,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

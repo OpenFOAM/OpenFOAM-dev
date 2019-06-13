@@ -57,7 +57,7 @@ class setTimeStepFunctionObject
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to the time database
         const Time& time_;
@@ -66,7 +66,7 @@ class setTimeStepFunctionObject
         autoPtr<Function1<scalar>> timeStepPtr_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Disallow default bitwise copy construction
         setTimeStepFunctionObject(const setTimeStepFunctionObject&) = delete;

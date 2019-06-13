@@ -54,7 +54,7 @@ template<class Type> class indexedOctree;
 
 class treeDataCell
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 

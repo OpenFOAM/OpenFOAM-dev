@@ -70,7 +70,7 @@ class scalarTransport
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         //- Name of field to process
         word fieldName_;

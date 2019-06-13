@@ -59,15 +59,6 @@ class linearUpwindV
         tmp<fv::gradScheme<Type>> gradScheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        linearUpwindV(const linearUpwindV&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const linearUpwindV&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -132,6 +123,9 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construction
+        linearUpwindV(const linearUpwindV&) = delete;
+
 
     // Member Functions
 
@@ -148,6 +142,11 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const linearUpwindV&) = delete;
 };
 
 

@@ -49,7 +49,7 @@ class directFvPatchFieldMapper
     public fvPatchFieldMapper,
     public directFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Addressing from new back to old
         const labelUList& addressing_;

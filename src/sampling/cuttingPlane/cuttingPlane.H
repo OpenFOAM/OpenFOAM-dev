@@ -63,11 +63,12 @@ class cuttingPlane
     public plane,
     public MeshedSurface<face>
 {
-    //- Private typedef for convenience
-    typedef MeshedSurface<face> MeshStorage;
+    // Private Typedef
+
+        typedef MeshedSurface<face> MeshStorage;
 
 
-    // Private data
+    // Private Data
 
         //- List of cells cut by the plane
         labelList cutCells_;

@@ -66,7 +66,7 @@ class contactAngleForce
         volScalarField mask_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Initialise
         void initialise();

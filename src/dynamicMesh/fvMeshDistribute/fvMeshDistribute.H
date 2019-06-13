@@ -70,7 +70,7 @@ class mapDistributePolyMesh;
 
 class fvMeshDistribute
 {
-    // Private data
+    // Private Data
 
         //- Underlying fvMesh
         fvMesh& mesh_;

@@ -87,7 +87,7 @@ class rotatingPressureInletOutletVelocityFvPatchVectorField
 :
     public pressureInletOutletVelocityFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Angular velocity of the frame
         autoPtr<Function1<vector>> omega_;
@@ -172,7 +172,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Write
         virtual void write(Ostream&) const;

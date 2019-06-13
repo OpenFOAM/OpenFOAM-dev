@@ -159,7 +159,7 @@ class addPatchCellLayer
 
 
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;

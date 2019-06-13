@@ -49,7 +49,7 @@ namespace Foam
 
 class walkPatch
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch to walk on
         const primitivePatch& pp_;

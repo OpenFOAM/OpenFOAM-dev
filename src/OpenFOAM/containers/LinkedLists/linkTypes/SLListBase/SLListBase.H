@@ -69,7 +69,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
        //- last_ points to last element
        //  last_->next_ points to first element, i.e. circular storage
@@ -168,7 +168,7 @@ public:
             friend class SLListBase;
             friend class const_iterator;
 
-            // Private data
+            // Private Data
 
                 //- Reference to the list this is an iterator for
                 SLListBase& curList_;
@@ -193,7 +193,7 @@ public:
             //- Copy constructor
             inline iterator(const iterator&) = default;
 
-            // Member operators
+            // Member Operators
 
                 inline void operator=(const iterator&);
 
@@ -215,7 +215,7 @@ public:
         //- An STL-conforming const_iterator
         class const_iterator
         {
-            // Private data
+            // Private Data
 
                 //- Reference to the list this is an iterator for
                 const SLListBase& curList_;
@@ -234,7 +234,7 @@ public:
             //- Copy constructor
             inline const_iterator(const const_iterator&) = default;
 
-            // Member operators
+            // Member Operators
 
                 inline void operator=(const const_iterator&);
 

@@ -62,7 +62,7 @@ class functionObjectList
 :
     private PtrList<functionObject>
 {
-    // Private data
+    // Private Data
 
         //- A list of SHA1 digests for the function object dictionaries
         List<SHA1Digest> digests_;
@@ -98,7 +98,7 @@ class functionObjectList
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Default relative path to the directory structure
         //  containing the functionObject dictionary files

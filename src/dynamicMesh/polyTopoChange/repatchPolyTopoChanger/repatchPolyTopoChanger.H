@@ -51,7 +51,7 @@ namespace Foam
 
 class repatchPolyTopoChanger
 {
-    // Private data
+    // Private Data
 
         //- The polyMesh to be repatched
         polyMesh& mesh_;

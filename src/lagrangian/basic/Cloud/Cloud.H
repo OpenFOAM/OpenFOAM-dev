@@ -73,7 +73,7 @@ class Cloud
     public cloud,
     public IDLList<ParticleType>
 {
-    // Private data
+    // Private Data
 
         //- Reference to the mesh
         const polyMesh& polyMesh_;

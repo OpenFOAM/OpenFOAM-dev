@@ -156,7 +156,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

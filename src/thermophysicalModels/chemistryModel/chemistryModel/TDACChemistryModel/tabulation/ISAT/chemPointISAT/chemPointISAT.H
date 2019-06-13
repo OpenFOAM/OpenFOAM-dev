@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,7 +140,7 @@ class TDACChemistryModel;
 template<class CompType, class ThermoType>
 class chemPointISAT
 {
-    // Private data
+    // Private Data
 
         //- Pointer to the chemistryModel object
         TDACChemistryModel<CompType, ThermoType>& chemistry_;
@@ -270,7 +270,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Access to the TDACChemistryModel
         inline TDACChemistryModel<CompType, ThermoType>& chemistry()

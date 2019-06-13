@@ -51,7 +51,7 @@ namespace Foam
 
 class threePhaseInterfaceProperties
 {
-    // Private data
+    // Private Data
 
         const incompressibleThreePhaseMixture& mixture_;
 

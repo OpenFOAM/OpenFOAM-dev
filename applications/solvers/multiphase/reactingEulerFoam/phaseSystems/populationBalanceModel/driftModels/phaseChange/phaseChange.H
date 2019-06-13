@@ -56,7 +56,7 @@ class phaseChange
 :
     public driftModel
 {
-    // Private data
+    // Private Data
 
         //- PhasePairs between which phaseChange occurs, e.g.,
         //  "((gasI and liquid) (gasII and liquid))"

@@ -61,7 +61,7 @@ inline Ostream& operator<<(Ostream&, const Tuple2<Type1, Type2>&);
 template<class Type1, class Type2>
 class Tuple2
 {
-    // Private data
+    // Private Data
 
         Type1 f_;
         Type2 s_;
@@ -69,7 +69,7 @@ class Tuple2
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -121,7 +121,7 @@ public:
         }
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read Tuple2 from Istream, discarding contents of existing Tuple2.
         friend Istream& operator>> <Type1, Type2>

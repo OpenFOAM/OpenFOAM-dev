@@ -54,7 +54,7 @@ class rpm
     public SRFModel
 {
 
-    // Private data
+    // Private Data
 
         //- Revolutions per minute
         scalar rpm_;
@@ -84,7 +84,7 @@ public:
     //- Destructor
     ~rpm();
 
-    // Member functions
+    // Member Functions
 
         // I-O
 

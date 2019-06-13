@@ -58,7 +58,7 @@ class laplaceFilter
 :
     public LESfilter
 {
-    // Private data
+    // Private Data
 
         scalar widthCoeff_;
         volScalarField coeff_;

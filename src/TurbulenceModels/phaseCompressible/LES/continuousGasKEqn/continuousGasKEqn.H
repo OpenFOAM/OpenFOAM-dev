@@ -72,7 +72,7 @@ class continuousGasKEqn
 :
     public kEqn<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         mutable const turbulenceModel *liquidTurbulencePtr_;
 

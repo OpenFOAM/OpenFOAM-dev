@@ -54,7 +54,7 @@ class multiMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Motions to combine
         PtrList<solidBodyMotionFunction> SBMFs_;

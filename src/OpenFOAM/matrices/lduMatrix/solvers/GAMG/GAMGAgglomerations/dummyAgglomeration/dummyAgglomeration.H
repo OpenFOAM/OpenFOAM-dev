@@ -50,7 +50,7 @@ class dummyAgglomeration
 :
     public GAMGAgglomeration
 {
-    // Private data
+    // Private Data
 
         //- Preset number of levels
         label nLevels_;

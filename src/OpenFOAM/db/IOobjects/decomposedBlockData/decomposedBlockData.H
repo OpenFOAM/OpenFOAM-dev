@@ -124,7 +124,7 @@ public:
     virtual ~decomposedBlockData();
 
 
-    // Member functions
+    // Member Functions
 
         //- Read object
         virtual bool read();

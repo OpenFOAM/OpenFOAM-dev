@@ -81,7 +81,7 @@ public:
         {}
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const PtrMap<T>& map)
         {

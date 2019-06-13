@@ -59,7 +59,7 @@ class treeDataEdge
         static scalar tol;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to edgeList
         const edgeList& edges_;

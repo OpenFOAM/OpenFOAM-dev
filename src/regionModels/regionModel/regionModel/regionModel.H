@@ -59,9 +59,6 @@ class regionModel
 :
     public IOdictionary
 {
-
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construction

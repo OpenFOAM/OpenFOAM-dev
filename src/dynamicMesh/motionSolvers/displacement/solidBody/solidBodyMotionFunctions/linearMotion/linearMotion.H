@@ -54,7 +54,7 @@ class linearMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Linear velocity
         vector velocity_;
