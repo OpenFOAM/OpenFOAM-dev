@@ -97,6 +97,10 @@ Usage
     }
     \endverbatim
 
+See also
+    Foam::fv::damping
+    Foam::fv::isotropicDamping
+
 SourceFiles
     verticalDamping.C
 
@@ -105,15 +109,12 @@ SourceFiles
 #ifndef verticalDamping_H
 #define verticalDamping_H
 
-#include "cellSetOption.H"
+#include "damping.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-template<class Type> class Function1;
-
 namespace fv
 {
 
@@ -123,31 +124,15 @@ namespace fv
 
 class verticalDamping
 :
-    public cellSetOption
+    public damping
 {
-    // Private Data
-
-        //- Damping coefficient [1/s]
-        dimensionedScalar lambda_;
-
-        //- The scaling function
-        autoPtr<Function1<scalar>> scale_;
-
-        //- Origins of the scaling coordinate
-        vectorField origins_;
-
-        //- Directions of increasing scaling coordinate
-        vectorField directions_;
-
-
     // Private Member Functions
 
         //- Source term to momentum equation
         void add
         (
             const volVectorField& alphaRhoU,
-            fvMatrix<vector>& eqn,
-            const label fieldi
+            fvMatrix<vector>& eqn
         );
 
 
@@ -201,12 +186,6 @@ public:
                 fvMatrix<vector>& eqn,
                 const label fieldi
             );
-
-
-        // IO
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict);
 };
 
 

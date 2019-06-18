@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "verticalDamping.H"
-#include "fvMesh.H"
+#include "damping.H"
 #include "fvMatrix.H"
-#include "geometricOneField.H"
-#include "meshTools.H"
-#include "Function1.H"
-#include "uniformDimensionedFields.H"
 #include "zeroGradientFvPatchField.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -39,59 +33,18 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(verticalDamping, 0);
-    addToRunTimeSelectionTable(option, verticalDamping, dictionary);
+    defineTypeNameAndDebug(damping, 0);
 }
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::fv::verticalDamping::add
-(
-    const volVectorField& alphaRhoU,
-    fvMatrix<vector>& eqn,
-    const label fieldi
-)
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::damping::forceCoeff() const
 {
-    const uniformDimensionedVectorField& g =
-        mesh_.lookupObject<uniformDimensionedVectorField>("g");
-
-    const dimensionedSymmTensor lgg(lambda_*sqr(g)/magSqr(g));
-
-    const DimensionedField<scalar, volMesh>& V = mesh_.V();
-
-    // Calculate the scale
-    scalarField s(mesh_.nCells(), scale_.valid() ? 0 : 1);
-    forAll(origins_, i)
-    {
-        const vectorField& c = mesh_.cellCentres();
-        const scalarField x((c - origins_[i]) & directions_[i]);
-        s = max(s, scale_->value(x));
-    }
-
-    // Check dimensions
-    eqn.dimensions()
-      - V.dimensions()*(lgg.dimensions() & alphaRhoU.dimensions());
-
-    // Calculate the force and apply it to the equation
-    vectorField force(cells_.size());
-    forAll(cells_, i)
-    {
-        const label c = cells_[i];
-        force[i] = V[c]*s[c]*(lgg.value() & alphaRhoU[c]);
-    }
-    meshTools::constrainDirection(mesh_, mesh_.solutionD(), force);
-    forAll(cells_, i)
-    {
-        const label c = cells_[i];
-        eqn.source()[c] += force[i];
-    }
-
-    // Write out the force coefficient for debugging
-    if (debug && mesh_.time().writeTime())
-    {
-        volScalarField forceCoeff
+    tmp<volScalarField::Internal> tforceCoeff
+    (
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -100,18 +53,47 @@ void Foam::fv::verticalDamping::add
                 mesh_
             ),
             mesh_,
-            lambda_*mag(g),
+            dimensionedScalar(lambda_.dimensions(), scale_.valid() ? 0 : 1)
+        )
+    );
+    scalarField& forceCoeff = tforceCoeff.ref();
+
+    const scalar lambda = lambda_.value();
+
+    forAll(origins_, i)
+    {
+        const vectorField& c = mesh_.cellCentres();
+        const scalarField x((c - origins_[i]) & directions_[i]);
+        forceCoeff = lambda*max(forceCoeff, scale_->value(x));
+    }
+
+    // Write out the force coefficient for debugging
+    if (debug && mesh_.time().writeTime())
+    {
+        volScalarField vForceCoeff
+        (
+            IOobject
+            (
+                type() + ":forceCoeff",
+                mesh_.time().timeName(),
+                mesh_
+            ),
+            mesh_,
+            lambda_.dimensions(),
             zeroGradientFvPatchField<scalar>::typeName
         );
-        forceCoeff.primitiveFieldRef() *= s;
-        forceCoeff.write();
+        vForceCoeff.primitiveFieldRef() = forceCoeff;
+        vForceCoeff.correctBoundaryConditions();
+        vForceCoeff.write();
     }
+
+    return tforceCoeff;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::verticalDamping::verticalDamping
+Foam::fv::damping::damping
 (
     const word& name,
     const word& modelType,
@@ -131,40 +113,7 @@ Foam::fv::verticalDamping::verticalDamping
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::verticalDamping::addSup
-(
-    fvMatrix<vector>& eqn,
-    const label fieldi
-)
-{
-    add(eqn.psi(), eqn, fieldi);
-}
-
-
-void Foam::fv::verticalDamping::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const label fieldi
-)
-{
-    add(rho*eqn.psi(), eqn, fieldi);
-}
-
-
-void Foam::fv::verticalDamping::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const label fieldi
-)
-{
-    add(alpha*rho*eqn.psi(), eqn, fieldi);
-}
-
-
-bool Foam::fv::verticalDamping::read(const dictionary& dict)
+bool Foam::fv::damping::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
