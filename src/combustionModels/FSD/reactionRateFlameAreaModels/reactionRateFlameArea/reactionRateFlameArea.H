@@ -75,17 +75,6 @@ protected:
         volScalarField omega_;
 
 
-private:
-
-    // Private Member Functions
-
-         //- Disallow copy construct
-        reactionRateFlameArea(const reactionRateFlameArea&);
-
-         //- Disallow default bitwise assignment
-        void operator=(const reactionRateFlameArea&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -120,6 +109,9 @@ public:
             const combustionModel& combModel
         );
 
+         //- Disallow default bitwise copy construction
+        reactionRateFlameArea(const reactionRateFlameArea&);
+
 
     // Selector
 
@@ -152,6 +144,12 @@ public:
 
         //- Update from dictionary
         virtual bool read(const dictionary& dictProperties);
+
+
+    // Member Operators
+
+         //- Disallow default bitwise assignment
+        void operator=(const reactionRateFlameArea&) = delete;
 };
 
 

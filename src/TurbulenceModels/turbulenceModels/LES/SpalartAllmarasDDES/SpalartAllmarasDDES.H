@@ -69,10 +69,6 @@ class SpalartAllmarasDDES
 
         tmp<volScalarField> rd(const volScalarField& magGradU) const;
 
-        // Disallow default bitwise copy construct and assignment
-        SpalartAllmarasDDES(const SpalartAllmarasDDES&) = delete;
-        void operator=(const SpalartAllmarasDDES&);
-
 
 protected:
 
@@ -113,10 +109,19 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        SpalartAllmarasDDES(const SpalartAllmarasDDES&) = delete;
+
 
     //- Destructor
     virtual ~SpalartAllmarasDDES()
     {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SpalartAllmarasDDES&) = delete;
 };
 
 

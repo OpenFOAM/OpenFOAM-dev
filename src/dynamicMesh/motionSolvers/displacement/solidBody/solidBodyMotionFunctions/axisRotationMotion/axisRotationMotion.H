@@ -66,7 +66,7 @@ class axisRotationMotion
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         axisRotationMotion(const axisRotationMotion&);
 
         //- Disallow default bitwise assignment

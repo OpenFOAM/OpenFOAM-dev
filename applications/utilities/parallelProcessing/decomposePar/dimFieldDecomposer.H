@@ -67,15 +67,6 @@ class dimFieldDecomposer
         const labelList& cellAddressing_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        dimFieldDecomposer(const dimFieldDecomposer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const dimFieldDecomposer&) = delete;
-
-
 public:
 
     // Constructors
@@ -88,6 +79,9 @@ public:
             const labelList& faceAddressing,
             const labelList& cellAddressing
         );
+
+        //- Disallow default bitwise copy construction
+        dimFieldDecomposer(const dimFieldDecomposer&) = delete;
 
 
     //- Destructor
@@ -107,6 +101,12 @@ public:
         //- Decompose llist of fields
         template<class GeoField>
         void decomposeFields(const PtrList<GeoField>& fields) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dimFieldDecomposer&) = delete;
 };
 
 

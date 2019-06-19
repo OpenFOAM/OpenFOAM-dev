@@ -48,14 +48,6 @@ class noDecomp
 :
     public decompositionMethod
 {
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const noDecomp&) = delete;
-        noDecomp(const noDecomp&);
-
-
 public:
 
     //- Runtime type information
@@ -66,6 +58,10 @@ public:
 
         //- Construct given the decomposition dictionary
         noDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        noDecomp(const noDecomp&) = delete;
+
 
     //- Destructor
     virtual ~noDecomp()
@@ -110,6 +106,11 @@ public:
             return labelList(globalCellCells.size(), Pstream::myProcNo());
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noDecomp&) = delete;
 };
 
 

@@ -53,12 +53,6 @@ class combustionModel
 {
     // Private Member Functions
 
-        //- Disallow copy construct
-        combustionModel(const combustionModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const combustionModel&) = delete;
-
         //- Construct the base IO object
         IOobject createIOobject
         (
@@ -103,6 +97,9 @@ public:
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties=combustionPropertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        combustionModel(const combustionModel&);
 
 
     // Selectors
@@ -149,6 +146,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const combustionModel&) = delete;
 };
 
 

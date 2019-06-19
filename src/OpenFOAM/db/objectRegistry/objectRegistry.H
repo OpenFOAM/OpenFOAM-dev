@@ -99,7 +99,7 @@ public:
             const label nIoObjects = 128
         );
 
-        //- Disallow Copy constructor
+        //- Disallow default bitwise copy construction
         objectRegistry(const objectRegistry&);
 
 
@@ -235,7 +235,7 @@ public:
 
     // Member Operators
 
-        //- Disallow default bitwise copy construct and assignment
+        //- Disallow default bitwise assignment
         void operator=(const objectRegistry&) = delete;
 };
 

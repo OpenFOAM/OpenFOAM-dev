@@ -53,14 +53,6 @@ class zoltanRenumber
         const dictionary coeffsDict_;
 
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const zoltanRenumber&) = delete;
-        zoltanRenumber(const zoltanRenumber&);
-
-
 public:
 
     //- Runtime type information
@@ -71,6 +63,9 @@ public:
 
         //- Construct given the renumber dictionary
         zoltanRenumber(const dictionary& renumberDict);
+
+        //- Disallow default bitwise copy construction
+        zoltanRenumber(const zoltanRenumber&) = delete;
 
 
     //- Destructor
@@ -112,6 +107,11 @@ public:
             return labelList(0);
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const zoltanRenumber&) = delete;
 };
 
 

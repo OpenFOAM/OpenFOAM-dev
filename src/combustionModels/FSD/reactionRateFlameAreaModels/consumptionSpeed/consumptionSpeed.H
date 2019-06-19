@@ -70,12 +70,6 @@ class consumptionSpeed
         //- Return consumption rate
         scalar omega0Sigma(scalar sigma, scalar a) const;
 
-        //- Disallow copy construct
-        consumptionSpeed(const consumptionSpeed&);
-
-         //- Disallow default bitwise assignment
-        void operator=(const consumptionSpeed&) = delete;
-
 
 public:
 
@@ -88,9 +82,12 @@ public:
         //- Construct from dictionary
         consumptionSpeed(const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        consumptionSpeed(const consumptionSpeed&);
+
 
     //- Destructor
-        virtual ~consumptionSpeed();
+    virtual ~consumptionSpeed();
 
 
     // Member Functions
@@ -126,6 +123,12 @@ public:
 
         //- Update properties
         void read(const dictionary& dict);
+
+
+    // Member Operators
+
+         //- Disallow default bitwise assignment
+        void operator=(const consumptionSpeed&) = delete;
 };
 
 

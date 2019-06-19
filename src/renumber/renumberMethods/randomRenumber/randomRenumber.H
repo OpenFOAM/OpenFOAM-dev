@@ -48,13 +48,6 @@ class randomRenumber
 :
     public renumberMethod
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const randomRenumber&) = delete;
-        randomRenumber(const randomRenumber&);
-
-
 public:
 
     //- Runtime type information
@@ -65,6 +58,9 @@ public:
 
         //- Construct given the renumber dictionary
         randomRenumber(const dictionary& renumberDict);
+
+        //- Disallow default bitwise copy construction
+        randomRenumber(const randomRenumber&) = delete;
 
 
     //- Destructor
@@ -97,6 +93,12 @@ public:
             const labelListList& cellCells,
             const pointField& cc
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const randomRenumber&) = delete;
 };
 
 

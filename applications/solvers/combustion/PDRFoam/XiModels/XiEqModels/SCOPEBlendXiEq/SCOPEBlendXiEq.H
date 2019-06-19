@@ -66,7 +66,7 @@ class SCOPEBlend
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         SCOPEBlend(const SCOPEBlend&);
 
         //- Disallow default bitwise assignment

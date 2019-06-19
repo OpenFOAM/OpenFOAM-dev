@@ -68,22 +68,15 @@ class vtkMesh
         mutable autoPtr<vtkTopo> topoPtr_;
 
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        vtkMesh(const vtkMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkMesh&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from components
         vtkMesh(fvMesh& baseMesh, const word& setName = "");
+
+        //- Disallow default bitwise copy construction
+        vtkMesh(const vtkMesh&) = delete;
 
 
     // Member Functions
@@ -165,6 +158,12 @@ public:
                     return fld;
                 }
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkMesh&) = delete;
 };
 
 

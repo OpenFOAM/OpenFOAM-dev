@@ -77,13 +77,6 @@ class continuousGasKEqn
         mutable const turbulenceModel *liquidTurbulencePtr_;
 
 
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        continuousGasKEqn(const continuousGasKEqn&) = delete;
-        void operator=(const continuousGasKEqn&);
-
-
 protected:
 
     // Protected data
@@ -128,6 +121,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        continuousGasKEqn(const continuousGasKEqn&) = delete;
+
 
     //- Destructor
     virtual ~continuousGasKEqn()
@@ -138,6 +134,12 @@ public:
 
         //- Read model coefficients if they have changed
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const continuousGasKEqn&) = delete;
 };
 
 

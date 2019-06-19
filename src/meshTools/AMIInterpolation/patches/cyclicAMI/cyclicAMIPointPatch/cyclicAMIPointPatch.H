@@ -60,10 +60,10 @@ class cyclicAMIPointPatch
 
     // Private Member Functions
 
-        //- Disallow default construct as copy
+        //- Disallow default bitwise copy construction
         cyclicAMIPointPatch(const cyclicAMIPointPatch&);
 
-        //- Disallow default assignment
+        //- Disallow default bitwise assignment
         void operator=(const cyclicAMIPointPatch&);
 
 

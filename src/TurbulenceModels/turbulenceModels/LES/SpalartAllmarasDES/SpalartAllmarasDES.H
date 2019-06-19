@@ -62,13 +62,6 @@ class SpalartAllmarasDES
 :
     public LESeddyViscosity<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        SpalartAllmarasDES(const SpalartAllmarasDES&) = delete;
-        void operator=(const SpalartAllmarasDES&);
-
-
 protected:
 
     // Protected data
@@ -173,6 +166,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        SpalartAllmarasDES(const SpalartAllmarasDES&) = delete;
+
 
     //- Destructor
     virtual ~SpalartAllmarasDES()
@@ -200,6 +196,12 @@ public:
 
         //- Correct nuTilda and related properties
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SpalartAllmarasDES&) = delete;
 };
 
 

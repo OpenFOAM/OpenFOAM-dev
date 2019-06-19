@@ -104,7 +104,7 @@ public:
             const word& prefix
         );
 
-        //- Disallow default bitwise copy construct and assignment
+        //- Disallow default bitwise copy construction
         timeControl(const timeControl&) = delete;
 
 

@@ -78,7 +78,7 @@ protected:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         viscosityModel(const viscosityModel&);
 
         //- Disallow default bitwise assignment

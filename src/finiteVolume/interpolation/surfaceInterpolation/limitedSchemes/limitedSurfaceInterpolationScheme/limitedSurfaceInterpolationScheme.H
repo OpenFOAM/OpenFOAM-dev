@@ -125,7 +125,7 @@ public:
             )
         {}
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         limitedSurfaceInterpolationScheme
         (
             const limitedSurfaceInterpolationScheme&

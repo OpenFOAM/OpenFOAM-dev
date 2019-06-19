@@ -94,7 +94,7 @@ class basicSubGrid
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         basicSubGrid(const basicSubGrid&);
 
         //- Disallow default bitwise assignment

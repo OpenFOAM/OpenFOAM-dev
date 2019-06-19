@@ -91,7 +91,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         surfMesh(const surfMesh&);
 
         //- Disallow default bitwise assignment

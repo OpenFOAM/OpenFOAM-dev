@@ -162,10 +162,6 @@ class sampledSurfaces
         //- Sample and write all sampled fields
         template<class Type> void sampleAndWrite(const IOobjectList& objects);
 
-        //- Disallow default bitwise copy construct and assignment
-        sampledSurfaces(const sampledSurfaces&) = delete;
-        void operator=(const sampledSurfaces&);
-
 
 public:
 
@@ -192,6 +188,9 @@ public:
             const dictionary&,
             const bool loadFromFiles = false
         );
+
+        //- Disallow default bitwise copy construction
+        sampledSurfaces(const sampledSurfaces&) = delete;
 
 
     //- Destructor
@@ -232,6 +231,12 @@ public:
 
         //- Update for changes of mesh due to readUpdate - expires the surfaces
         virtual void readUpdate(const polyMesh::readUpdateState state);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sampledSurfaces&) = delete;
 };
 
 

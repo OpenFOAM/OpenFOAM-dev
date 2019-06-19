@@ -316,10 +316,6 @@ public:
         {
             label comm_;
 
-            //- Disallow copy and assignment
-            communicator(const communicator&);
-            void operator=(const communicator&);
-
         public:
 
             communicator
@@ -332,6 +328,9 @@ public:
                 comm_(allocateCommunicator(parent, subRanks, doPstream))
             {}
 
+            //- Disallow default bitwise copy construction
+            communicator(const communicator&) = delete;
+
             ~communicator()
             {
                 freeCommunicator(comm_);
@@ -341,6 +340,9 @@ public:
             {
                 return comm_;
             }
+
+            //- Disallow default bitwise assignment
+            void operator=(const communicator&) = delete;
         };
 
         //- Return physical processor number (i.e. processor number in

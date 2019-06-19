@@ -53,13 +53,6 @@ class simpleFilter
     public LESfilter
 
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        simpleFilter(const simpleFilter&) = delete;
-        void operator=(const simpleFilter&);
-
-
 public:
 
     //- Runtime type information
@@ -73,6 +66,9 @@ public:
 
         //- Construct from IOdictionary
         simpleFilter(const fvMesh& mesh, const dictionary&);
+
+        //- Disallow default bitwise copy construction
+        simpleFilter(const simpleFilter&) = delete;
 
 
     //- Destructor
@@ -107,6 +103,12 @@ public:
         (
             const tmp<volTensorField>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const simpleFilter&) = delete;
 };
 
 

@@ -53,7 +53,7 @@ class compressibleTransportModel
 {
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         compressibleTransportModel(const compressibleTransportModel&);
 
         //- Disallow default bitwise assignment

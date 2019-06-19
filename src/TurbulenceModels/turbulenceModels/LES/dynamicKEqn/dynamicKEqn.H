@@ -75,13 +75,6 @@ class dynamicKEqn
 :
     public LESeddyViscosity<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        dynamicKEqn(const dynamicKEqn&) = delete;
-        void operator=(const dynamicKEqn&);
-
-
 protected:
 
     // Protected data
@@ -157,6 +150,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        dynamicKEqn(const dynamicKEqn&) = delete;
+
 
     //- Destructor
     virtual ~dynamicKEqn()
@@ -189,6 +185,12 @@ public:
 
         //- Correct Eddy-Viscosity and related properties
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicKEqn&) = delete;
 };
 
 

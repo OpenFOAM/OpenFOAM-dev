@@ -94,7 +94,7 @@ public:
             mesh_(mesh)
         {}
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         snGradScheme(const snGradScheme&);
 
 

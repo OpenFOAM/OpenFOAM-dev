@@ -91,10 +91,6 @@ class ptscotchDecomp
             List<label>& finalDecomp
         ) const;
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const ptscotchDecomp&) = delete;
-        ptscotchDecomp(const ptscotchDecomp&);
-
 
 public:
 
@@ -106,6 +102,9 @@ public:
 
         //- Construct given the decomposition dictionary and mesh
         ptscotchDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        ptscotchDecomp(const ptscotchDecomp&) = delete;
 
 
     //- Destructor
@@ -160,6 +159,11 @@ public:
             const scalarField& cWeights
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ptscotchDecomp&) = delete;
 };
 
 

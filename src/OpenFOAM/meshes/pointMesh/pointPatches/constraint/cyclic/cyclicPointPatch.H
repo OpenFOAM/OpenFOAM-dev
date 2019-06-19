@@ -60,10 +60,10 @@ class cyclicPointPatch
 
     // Private Member Functions
 
-        //- Disallow default construct as copy
+        //- Disallow default bitwise copy construction
         cyclicPointPatch(const cyclicPointPatch&);
 
-        //- Disallow default assignment
+        //- Disallow default bitwise assignment
         void operator=(const cyclicPointPatch&);
 
 

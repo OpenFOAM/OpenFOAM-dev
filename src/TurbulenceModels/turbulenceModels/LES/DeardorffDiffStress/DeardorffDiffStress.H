@@ -81,13 +81,6 @@ class DeardorffDiffStress
 :
     public ReynoldsStress<LESModel<BasicTurbulenceModel>>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        DeardorffDiffStress(const DeardorffDiffStress&) = delete;
-        void operator=(const DeardorffDiffStress&);
-
-
 protected:
 
     // Protected data
@@ -132,6 +125,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        DeardorffDiffStress(const DeardorffDiffStress&) = delete;
+
 
     //- Destructor
     virtual ~DeardorffDiffStress()
@@ -148,6 +144,12 @@ public:
 
         //- Correct sub-grid stress, eddy-Viscosity and related properties
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DeardorffDiffStress&) = delete;
 };
 
 

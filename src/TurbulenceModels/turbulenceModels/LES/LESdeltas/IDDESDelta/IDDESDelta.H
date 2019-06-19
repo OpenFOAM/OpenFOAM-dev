@@ -63,10 +63,6 @@ class IDDESDelta
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct and assignment
-        IDDESDelta(const IDDESDelta&) = delete;
-        void operator=(const IDDESDelta&);
-
         //- Calculate the delta values
         void calcDelta();
 
@@ -86,6 +82,9 @@ public:
             const turbulenceModel& turbulence,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        IDDESDelta(const IDDESDelta&) = delete;
 
 
     // Destructor
@@ -107,6 +106,12 @@ public:
 
         // Correct values
         void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IDDESDelta&) = delete;
 };
 
 

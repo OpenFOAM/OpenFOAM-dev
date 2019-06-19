@@ -45,7 +45,6 @@ SourceFiles
 namespace Foam
 {
 
-
 /*---------------------------------------------------------------------------*\
                            Class channelIndex Declaration
 \*---------------------------------------------------------------------------*/
@@ -93,10 +92,6 @@ class channelIndex
             const labelList& startFaces
         );
 
-        //- Disallow default bitwise copy construct and assignment
-        channelIndex(const channelIndex&) = delete;
-        void operator=(const channelIndex&);
-
 
 public:
 
@@ -113,6 +108,9 @@ public:
             const bool symmetric,
             const direction dir
         );
+
+        //- Disallow default bitwise copy construction
+        channelIndex(const channelIndex&) = delete;
 
 
     // Member Functions
@@ -137,6 +135,11 @@ public:
                 return y_;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const channelIndex&);
 };
 
 

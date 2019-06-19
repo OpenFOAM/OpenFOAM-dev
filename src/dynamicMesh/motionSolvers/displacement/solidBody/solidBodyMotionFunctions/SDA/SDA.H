@@ -96,7 +96,7 @@ class SDA
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         SDA(const SDA&);
 
         //- Disallow default bitwise assignment

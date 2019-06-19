@@ -113,6 +113,9 @@ protected:
     //- Construct null
     vtkPVblockMeshReader();
 
+    //- Disallow default bitwise copy construction
+    vtkPVblockMeshReader(const vtkPVblockMeshReader&) = delete;
+
     //- Destructor
     ~vtkPVblockMeshReader();
 
@@ -140,14 +143,11 @@ protected:
 
     char* FileName;
 
-
-private:
-
-    //- Disallow default bitwise copy construction
-    vtkPVblockMeshReader(const vtkPVblockMeshReader&) = delete;
-
     //- Disallow default bitwise assignment
     void operator=(const vtkPVblockMeshReader&) = delete;
+
+
+private:
 
     //- Add/remove point numbers to/from the view
     void updatePointNumbersView(const bool show);

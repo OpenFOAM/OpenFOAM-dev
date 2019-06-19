@@ -53,13 +53,6 @@ class manualDecomp
         fileName decompDataFile_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const manualDecomp&) = delete;
-        manualDecomp(const manualDecomp&);
-
-
 public:
 
     //- Runtime type information
@@ -70,6 +63,10 @@ public:
 
         //- Construct given the decomposition dictionary
         manualDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        manualDecomp(const manualDecomp&) = delete;
+
 
     //- Destructor
     virtual ~manualDecomp()
@@ -112,6 +109,11 @@ public:
             return labelList(0);
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const manualDecomp&) = delete;
 };
 
 

@@ -56,15 +56,6 @@ class ensightAsciiStream
         OFstream str_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        ensightAsciiStream(const ensightAsciiStream&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightAsciiStream&) = delete;
-
-
 public:
 
     // Constructors
@@ -85,6 +76,9 @@ public:
             str_.setf(ios_base::scientific, ios_base::floatfield);
             str_.precision(5);
         }
+
+        //- Disallow default bitwise copy construction
+        ensightAsciiStream(const ensightAsciiStream&) = delete;
 
 
     //- Destructor
@@ -139,14 +133,11 @@ public:
                 << setw(10) << partI << nl;
         }
 
+
     // Member Operators
 
-    // Friend Functions
-
-    // Friend Operators
-
-    // IOstream Operators
-
+        //- Disallow default bitwise assignment
+        void operator=(const ensightAsciiStream&) = delete;
 };
 
 

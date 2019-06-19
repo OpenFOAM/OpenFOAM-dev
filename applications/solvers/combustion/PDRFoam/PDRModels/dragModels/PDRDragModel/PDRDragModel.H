@@ -74,7 +74,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         PDRDragModel(const PDRDragModel&);
 
         //- Disallow default bitwise assignment

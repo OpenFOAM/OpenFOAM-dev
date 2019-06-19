@@ -85,7 +85,7 @@ public:
         //- Construct from polyBoundaryMesh
         fvBoundaryMesh(const fvMesh&, const polyBoundaryMesh&);
 
-        //- Disallow default copy construct
+        //- Disallow default bitwise copy construction
         fvBoundaryMesh(const fvBoundaryMesh&);
 
 
@@ -134,7 +134,7 @@ public:
 
     // Member Operators
 
-        //- Disallow assignment
+        //- Disallow default bitwise assignment
         void operator=(const fvBoundaryMesh&);
 };
 

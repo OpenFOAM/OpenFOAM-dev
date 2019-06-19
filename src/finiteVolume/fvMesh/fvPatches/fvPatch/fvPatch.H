@@ -112,7 +112,7 @@ public:
         //- Construct from polyPatch and fvBoundaryMesh
         fvPatch(const polyPatch&, const fvBoundaryMesh&);
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         fvPatch(const fvPatch&);
 
 
@@ -267,7 +267,7 @@ public:
 
     // Member Operators
 
-        //- Disallow assignment
+        //- Disallow default bitwise assignment
         void operator=(const fvPatch&);
 };
 

@@ -123,15 +123,6 @@ private:
         List<patchFieldDecomposer*> patchFieldDecomposerPtrs_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        pointFieldDecomposer(const pointFieldDecomposer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointFieldDecomposer&) = delete;
-
-
 public:
 
     // Constructors
@@ -144,6 +135,9 @@ public:
             const labelList& pointAddressing,
             const labelList& boundaryAddressing
         );
+
+        //- Disallow default bitwise copy construction
+        pointFieldDecomposer(const pointFieldDecomposer&) = delete;
 
 
     //- Destructor
@@ -162,6 +156,12 @@ public:
 
         template<class GeoField>
         void decomposeFields(const PtrList<GeoField>& fields) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointFieldDecomposer&) = delete;
 };
 
 

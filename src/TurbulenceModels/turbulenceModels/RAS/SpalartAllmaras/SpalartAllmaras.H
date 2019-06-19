@@ -87,13 +87,6 @@ class SpalartAllmaras
 :
     public eddyViscosity<RASModel<BasicTurbulenceModel>>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        SpalartAllmaras(const SpalartAllmaras&) = delete;
-        void operator=(const SpalartAllmaras&);
-
-
 protected:
 
     // Protected data
@@ -172,6 +165,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        SpalartAllmaras(const SpalartAllmaras&) = delete;
+
 
     //- Destructor
     virtual ~SpalartAllmaras()
@@ -194,6 +190,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SpalartAllmaras&) = delete;
 };
 
 

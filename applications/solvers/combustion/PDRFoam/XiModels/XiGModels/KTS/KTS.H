@@ -60,7 +60,7 @@ class KTS
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         KTS(const KTS&);
 
         //- Disallow default bitwise assignment

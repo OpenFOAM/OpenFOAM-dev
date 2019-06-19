@@ -61,13 +61,6 @@ class dynamicLagrangian
 :
     public LESeddyViscosity<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        dynamicLagrangian(const dynamicLagrangian&) = delete;
-        void operator=(const dynamicLagrangian&);
-
-
 protected:
 
     // Protected data
@@ -118,6 +111,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        dynamicLagrangian(const dynamicLagrangian&) = delete;
+
 
     //- Destructor
     virtual ~dynamicLagrangian()
@@ -156,6 +152,12 @@ public:
 
         //- Correct Eddy-Viscosity and related properties
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicLagrangian&) = delete;
 };
 
 

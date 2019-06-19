@@ -53,13 +53,6 @@ class manualRenumber
         const fileName dataFile_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const manualRenumber&) = delete;
-        manualRenumber(const manualRenumber&);
-
-
 public:
 
     //- Runtime type information
@@ -70,6 +63,9 @@ public:
 
         //- Construct given the renumber dictionary
         manualRenumber(const dictionary& renumberDict);
+
+        //- Disallow default bitwise copy construction
+        manualRenumber(const manualRenumber&) = delete;
 
 
     //- Destructor
@@ -110,6 +106,12 @@ public:
             NotImplemented;
             return labelList(0);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const manualRenumber&) = delete;
 };
 
 

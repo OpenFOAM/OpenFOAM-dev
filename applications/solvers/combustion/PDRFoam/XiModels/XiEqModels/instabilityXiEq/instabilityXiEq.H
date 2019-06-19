@@ -65,7 +65,7 @@ class instability
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         instability(const instability&);
 
         //- Disallow default bitwise assignment

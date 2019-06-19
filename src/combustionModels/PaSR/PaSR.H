@@ -66,15 +66,6 @@ class PaSR
         volScalarField kappa_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        PaSR(const PaSR&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PaSR&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -91,6 +82,9 @@ public:
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        PaSR(const PaSR&);
 
 
     //- Destructor
@@ -110,6 +104,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PaSR&) = delete;
 };
 
 

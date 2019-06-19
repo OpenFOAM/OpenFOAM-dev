@@ -53,7 +53,7 @@ class transportModel
 {
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         transportModel(const transportModel&);
 
         //- Disallow default bitwise assignment

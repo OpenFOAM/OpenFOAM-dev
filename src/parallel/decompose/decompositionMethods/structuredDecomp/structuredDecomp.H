@@ -57,13 +57,6 @@ class structuredDecomp
         autoPtr<decompositionMethod> method_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const structuredDecomp&) = delete;
-        structuredDecomp(const structuredDecomp&);
-
-
 public:
 
     //- Runtime type information
@@ -74,6 +67,9 @@ public:
 
         //- Construct given the decomposition dictionary
         structuredDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        structuredDecomp(const structuredDecomp&) = delete;
 
 
     //- Destructor
@@ -104,6 +100,12 @@ public:
             const pointField& cc,
             const scalarField& cWeights
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const structuredDecomp&) = delete;
 };
 
 

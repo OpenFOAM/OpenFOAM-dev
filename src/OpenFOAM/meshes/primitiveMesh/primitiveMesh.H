@@ -437,7 +437,7 @@ public:
             const label nCells
         );
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         primitiveMesh(const primitiveMesh&);
 
 

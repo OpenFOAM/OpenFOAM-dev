@@ -87,10 +87,10 @@ class processorPointPatch
         virtual void updateMesh(PstreamBuffers&);
 
 
-        //- Disallow default construct as copy
+        //- Disallow default bitwise copy construction
         processorPointPatch(const processorPointPatch&);
 
-        //- Disallow default assignment
+        //- Disallow default bitwise assignment
         void operator=(const processorPointPatch&);
 
 public:

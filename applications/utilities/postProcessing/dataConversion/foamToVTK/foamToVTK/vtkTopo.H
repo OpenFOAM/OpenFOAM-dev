@@ -66,15 +66,6 @@ class vtkTopo
         labelList superCells_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        vtkTopo(const vtkTopo&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkTopo&) = delete;
-
-
 public:
 
    // Public static data
@@ -102,6 +93,10 @@ public:
         //- Construct from components
         vtkTopo(const polyMesh&);
 
+        //- Disallow default bitwise copy construction
+        vtkTopo(const vtkTopo&) = delete;
+
+
     // Member Functions
 
         // Access
@@ -125,6 +120,12 @@ public:
             {
                 return superCells_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkTopo&) = delete;
 };
 
 

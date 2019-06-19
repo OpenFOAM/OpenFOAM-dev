@@ -89,10 +89,6 @@ class SmagorinskyZhang
         >&
         gasTurbulence() const;
 
-        // Disallow default bitwise copy construct and assignment
-        SmagorinskyZhang(const SmagorinskyZhang&) = delete;
-        void operator=(const SmagorinskyZhang&);
-
 
 protected:
 
@@ -134,6 +130,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        SmagorinskyZhang(const SmagorinskyZhang&) = delete;
+
 
     //- Destructor
     virtual ~SmagorinskyZhang()
@@ -144,6 +143,12 @@ public:
 
         //- Read model coefficients if they have changed
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SmagorinskyZhang&) = delete;
 };
 
 

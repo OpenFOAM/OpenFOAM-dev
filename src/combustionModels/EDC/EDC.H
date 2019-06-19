@@ -149,15 +149,6 @@ class EDC
         volScalarField kappa_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        EDC(const EDC&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const EDC&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -174,6 +165,9 @@ public:
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        EDC(const EDC&);
 
 
     //- Destructor
@@ -193,6 +187,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const EDC&) = delete;
 };
 
 

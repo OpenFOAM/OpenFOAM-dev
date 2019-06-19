@@ -106,7 +106,7 @@ public:
             mesh_(mesh)
         {}
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         d2dt2Scheme(const d2dt2Scheme&);
 
 

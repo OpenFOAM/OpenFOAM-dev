@@ -73,12 +73,6 @@ class zoneCombustion
         //- Filter the given field on the cellZones
         tmp<volScalarField> filter(const tmp<volScalarField>& tS) const;
 
-        //- Disallow copy construct
-        zoneCombustion(const zoneCombustion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const zoneCombustion&) = delete;
-
 
 public:
 
@@ -96,6 +90,9 @@ public:
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        zoneCombustion(const zoneCombustion&);
 
 
     //- Destructor
@@ -121,6 +118,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const zoneCombustion&) = delete;
 };
 
 

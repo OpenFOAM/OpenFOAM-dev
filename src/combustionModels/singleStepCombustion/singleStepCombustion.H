@@ -54,15 +54,6 @@ class singleStepCombustion
 :
     public ThermoCombustion<ReactionThermo>
 {
-    // Private Member Functions
-
-        //- Disallow copy construct
-        singleStepCombustion(const singleStepCombustion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const singleStepCombustion&) = delete;
-
-
 protected:
 
     // Protected data
@@ -90,6 +81,9 @@ public:
             const word& combustionProperties
         );
 
+        //- Disallow default bitwise copy construction
+        singleStepCombustion(const singleStepCombustion&);
+
 
     //- Destructor
     virtual ~singleStepCombustion();
@@ -105,6 +99,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleStepCombustion&) = delete;
 };
 
 

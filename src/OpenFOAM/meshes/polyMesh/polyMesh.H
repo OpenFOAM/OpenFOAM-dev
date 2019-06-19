@@ -372,7 +372,7 @@ public:
             const bool syncPar = true
         );
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         polyMesh(const polyMesh&);
 
 

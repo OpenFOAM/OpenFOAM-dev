@@ -66,15 +66,6 @@ class lagrangianFieldDecomposer
         labelList particleIndices_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        lagrangianFieldDecomposer(const lagrangianFieldDecomposer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const lagrangianFieldDecomposer&) = delete;
-
-
 public:
 
     // Constructors
@@ -90,6 +81,9 @@ public:
             const Cloud<indexedParticle>& lagrangianPositions,
             const List<SLList<indexedParticle*>*>& cellParticles
         );
+
+        //- Disallow default bitwise copy construction
+        lagrangianFieldDecomposer(const lagrangianFieldDecomposer&) = delete;
 
 
     // Member Functions
@@ -144,6 +138,12 @@ public:
             const word& cloudName,
             const PtrList<GeoField>& fields
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lagrangianFieldDecomposer&) = delete;
 };
 
 

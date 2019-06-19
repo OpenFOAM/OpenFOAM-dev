@@ -70,7 +70,7 @@ class Gulder
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         Gulder(const Gulder&);
 
         //- Disallow default bitwise assignment

@@ -73,13 +73,6 @@ class kEqn
 :
     public LESeddyViscosity<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        kEqn(const kEqn&) = delete;
-        void operator=(const kEqn&);
-
-
 protected:
 
     // Protected data
@@ -126,6 +119,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        kEqn(const kEqn&) = delete;
+
 
     //- Destructor
     virtual ~kEqn()
@@ -158,6 +154,12 @@ public:
 
         //- Correct eddy-Viscosity and related properties
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kEqn&) = delete;
 };
 
 

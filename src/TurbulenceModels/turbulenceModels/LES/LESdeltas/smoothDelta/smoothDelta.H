@@ -220,10 +220,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct and assignment
-        smoothDelta(const smoothDelta&) = delete;
-        void operator=(const smoothDelta&);
-
         // Calculate the delta values
         void calcDelta();
 
@@ -265,6 +261,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        smoothDelta(const smoothDelta&) = delete;
+
 
     //- Destructor
     virtual ~smoothDelta()
@@ -278,6 +277,12 @@ public:
 
         // Correct values
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const smoothDelta&) = delete;
 };
 
 

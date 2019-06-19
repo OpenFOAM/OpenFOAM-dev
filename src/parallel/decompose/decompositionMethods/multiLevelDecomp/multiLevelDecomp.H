@@ -83,10 +83,6 @@ class multiLevelDecomp
             labelField& finalDecomp
         );
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const multiLevelDecomp&) = delete;
-        multiLevelDecomp(const multiLevelDecomp&);
-
 
 public:
 
@@ -98,6 +94,9 @@ public:
 
         //- Construct given the decomposition dictionary
         multiLevelDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        multiLevelDecomp(const multiLevelDecomp&) = delete;
 
 
     //- Destructor
@@ -131,6 +130,12 @@ public:
             const pointField& cc,
             const scalarField& cWeights
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multiLevelDecomp&) = delete;
 };
 
 

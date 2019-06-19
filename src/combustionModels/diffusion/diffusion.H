@@ -64,15 +64,6 @@ class diffusion
         word oxidantName_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        diffusion(const diffusion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const diffusion&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -90,6 +81,9 @@ public:
             const word& combustionProperties
         );
 
+        //- Disallow default bitwise copy construction
+        diffusion(const diffusion&);
+
 
     //- Destructor
     virtual ~diffusion();
@@ -102,6 +96,12 @@ public:
 
         //- Update properties
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const diffusion&) = delete;
 };
 
 

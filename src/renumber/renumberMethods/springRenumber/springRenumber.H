@@ -69,12 +69,6 @@ class springRenumber
 
         const scalar freezeFraction_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const springRenumber&) = delete;
-        springRenumber(const springRenumber&);
-
 
 public:
 
@@ -86,6 +80,9 @@ public:
 
         //- Construct given the renumber dictionary
         springRenumber(const dictionary& renumberDict);
+
+        //- Disallow default bitwise copy construction
+        springRenumber(const springRenumber&) = delete;
 
 
     //- Destructor
@@ -122,6 +119,12 @@ public:
             const labelListList& cellCells,
             const pointField& cc
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const springRenumber&) = delete;
 };
 
 

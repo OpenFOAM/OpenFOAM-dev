@@ -83,13 +83,6 @@ class LaunderSharmaKE
 :
     public eddyViscosity<RASModel<BasicTurbulenceModel>>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        LaunderSharmaKE(const LaunderSharmaKE&) = delete;
-        void operator=(const LaunderSharmaKE&);
-
-
 protected:
 
     // Protected data
@@ -146,6 +139,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        LaunderSharmaKE(const LaunderSharmaKE&) = delete;
+
 
     //- Destructor
     virtual ~LaunderSharmaKE()
@@ -191,6 +187,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LaunderSharmaKE&) = delete;
 };
 
 

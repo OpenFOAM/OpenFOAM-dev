@@ -60,10 +60,6 @@ class metisDecomp
             List<label>& finalDecomp
         );
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const metisDecomp&) = delete;
-        metisDecomp(const metisDecomp&);
-
 
 public:
 
@@ -75,6 +71,9 @@ public:
 
         //- Construct given the decomposition dictionary
         metisDecomp(const dictionary&);
+
+        //- Disallow default bitwise copy construction
+        metisDecomp(const metisDecomp&) = delete;
 
 
     //- Destructor
@@ -132,6 +131,12 @@ public:
             const pointField& cc,
             const scalarField& cWeights
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const metisDecomp&) = delete;
 };
 
 

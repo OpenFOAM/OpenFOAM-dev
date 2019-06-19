@@ -84,13 +84,6 @@ class RNGkEpsilon
 :
     public eddyViscosity<RASModel<BasicTurbulenceModel>>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        RNGkEpsilon(const RNGkEpsilon&) = delete;
-        void operator=(const RNGkEpsilon&);
-
-
 protected:
 
     // Protected data
@@ -146,6 +139,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        RNGkEpsilon(const RNGkEpsilon&) = delete;
+
 
     //- Destructor
     virtual ~RNGkEpsilon()
@@ -191,6 +187,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const RNGkEpsilon&) = delete;
 };
 
 

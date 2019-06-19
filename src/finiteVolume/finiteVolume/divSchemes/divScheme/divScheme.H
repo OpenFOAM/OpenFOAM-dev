@@ -109,7 +109,7 @@ public:
             tinterpScheme_(surfaceInterpolationScheme<Type>::New(mesh, is))
         {}
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         divScheme(const divScheme&) = delete;
 
 

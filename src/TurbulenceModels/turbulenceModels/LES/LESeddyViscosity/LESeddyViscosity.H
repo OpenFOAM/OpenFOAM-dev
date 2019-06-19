@@ -54,13 +54,6 @@ class LESeddyViscosity
 :
     public eddyViscosity<LESModel<BasicTurbulenceModel>>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        LESeddyViscosity(const LESeddyViscosity&) = delete;
-        void operator=(const LESeddyViscosity&);
-
-
 protected:
 
     // Protected data
@@ -90,6 +83,9 @@ public:
             const word& propertiesName = turbulenceModel::propertiesName
         );
 
+        //- Disallow default bitwise copy construction
+        LESeddyViscosity(const LESeddyViscosity&) = delete;
+
 
     //- Destructor
     virtual ~LESeddyViscosity()
@@ -103,6 +99,12 @@ public:
 
         //- Return sub-grid disipation rate
         virtual tmp<volScalarField> epsilon() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LESeddyViscosity&) = delete;
 };
 
 

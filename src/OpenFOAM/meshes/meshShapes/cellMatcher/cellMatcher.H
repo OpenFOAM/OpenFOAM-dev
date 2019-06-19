@@ -114,6 +114,7 @@ protected:
         //- Step along face either in righthand or lefthand direction
         inline static label nextVert(const label, const label, const bool);
 
+
     // Protected data
 
         // Map from mesh to local vertex numbering
@@ -186,7 +187,7 @@ public:
             const word& cellModelName
         );
 
-        //- Disallow default bitwise copy construct and assignment
+        //- Disallow default bitwise copy construction
         cellMatcher(const cellMatcher&) = delete;
 
 

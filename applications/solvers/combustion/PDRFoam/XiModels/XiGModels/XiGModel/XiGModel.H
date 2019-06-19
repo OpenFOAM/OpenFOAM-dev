@@ -70,7 +70,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         XiGModel(const XiGModel&);
 
         //- Disallow default bitwise assignment

@@ -63,7 +63,7 @@ protected:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         tetherPotential(const tetherPotential&);
 
         //- Disallow default bitwise assignment

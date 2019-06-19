@@ -92,12 +92,6 @@ class writeVTK
         template<class GeoField>
         UPtrList<const GeoField> lookupFields() const;
 
-        //- Disallow default bitwise copy construction
-        writeVTK(const writeVTK&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeVTK&) = delete;
-
 
 public:
 
@@ -115,6 +109,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        writeVTK(const writeVTK&) = delete;
+
 
     //- Destructor
     virtual ~writeVTK();
@@ -130,6 +127,12 @@ public:
 
         //- Write the writeVTK
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeVTK&) = delete;
 };
 
 

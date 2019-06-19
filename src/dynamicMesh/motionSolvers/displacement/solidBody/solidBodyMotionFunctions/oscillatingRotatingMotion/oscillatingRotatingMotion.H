@@ -68,7 +68,7 @@ class oscillatingRotatingMotion
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         oscillatingRotatingMotion(const oscillatingRotatingMotion&);
 
         //- Disallow default bitwise assignment

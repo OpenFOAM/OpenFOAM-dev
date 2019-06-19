@@ -59,22 +59,13 @@ class laminar
         //  using the selected ODE solver
         bool integrateReactionRate_;
 
+
 protected:
 
     // Protected Member Functions
 
         //- Return the chemical time scale
         tmp<volScalarField> tc() const;
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        laminar(const laminar&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const laminar&) = delete;
 
 
 public:
@@ -94,6 +85,9 @@ public:
             const word& combustionProperties
         );
 
+        //- Disallow default bitwise copy construction
+        laminar(const laminar&);
+
 
     //- Destructor
     virtual ~laminar();
@@ -112,6 +106,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laminar&) = delete;
 };
 
 

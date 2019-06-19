@@ -61,15 +61,6 @@ class infinitelyFastChemistry
         scalar C_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        infinitelyFastChemistry(const infinitelyFastChemistry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const infinitelyFastChemistry&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -87,6 +78,9 @@ public:
             const word& combustionProperties
         );
 
+        //- Disallow default bitwise copy construction
+        infinitelyFastChemistry(const infinitelyFastChemistry&);
+
 
     //- Destructor
     virtual ~infinitelyFastChemistry();
@@ -99,6 +93,12 @@ public:
 
         //- Update properties
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const infinitelyFastChemistry&) = delete;
 };
 
 

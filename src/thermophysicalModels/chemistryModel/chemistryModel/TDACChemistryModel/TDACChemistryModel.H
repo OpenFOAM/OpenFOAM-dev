@@ -131,7 +131,7 @@ class TDACChemistryModel
 
     // Private Member Functions
 
-        //- Disallow copy constructor
+        //- Disallow default bitwise copy construction
         TDACChemistryModel(const TDACChemistryModel&);
 
         //- Disallow default bitwise assignment

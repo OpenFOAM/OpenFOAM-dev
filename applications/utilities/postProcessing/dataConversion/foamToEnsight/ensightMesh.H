@@ -139,12 +139,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        ensightMesh(const ensightMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightMesh&) = delete;
-
         void writePoints
         (
             const scalarField& pointsComponent,
@@ -270,6 +264,9 @@ public:
             const bool binary
         );
 
+        //- Disallow default bitwise copy construction
+        ensightMesh(const ensightMesh&) = delete;
+
 
     //- Destructor
     ~ensightMesh();
@@ -378,6 +375,11 @@ public:
             Ostream& ensightCaseFile
         ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ensightMesh&) = delete;
 };
 
 

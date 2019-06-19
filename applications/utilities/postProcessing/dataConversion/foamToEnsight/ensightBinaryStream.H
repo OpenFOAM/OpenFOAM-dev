@@ -55,15 +55,6 @@ class ensightBinaryStream
         autoPtr<std::ofstream> str_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        ensightBinaryStream(const ensightBinaryStream&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightBinaryStream&) = delete;
-
-
 public:
 
     // Constructors
@@ -81,6 +72,9 @@ public:
                 )
             )
         {}
+
+        //- Disallow default bitwise copy construction
+        ensightBinaryStream(const ensightBinaryStream&) = delete;
 
 
     //- Destructor
@@ -141,14 +135,11 @@ public:
             write(partI);
         }
 
+
     // Member Operators
 
-    // Friend Functions
-
-    // Friend Operators
-
-    // IOstream Operators
-
+        //- Disallow default bitwise assignment
+        void operator=(const ensightBinaryStream&) = delete;
 };
 
 

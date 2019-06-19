@@ -73,12 +73,6 @@ class threePhaseInterfaceProperties
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct and assignment
-        threePhaseInterfaceProperties
-        (
-            const threePhaseInterfaceProperties&
-        ) = delete;
-
         //- Correction for the boundary condition on the unit normal nHat on
         //  walls to produce the correct contact dynamic angle.
         //  Calculated from the component of U parallel to the wall
@@ -104,6 +98,12 @@ public:
         (
             const incompressibleThreePhaseMixture& mixture
         );
+
+        //- Disallow default bitwise copy construction
+        threePhaseInterfaceProperties
+        (
+            const threePhaseInterfaceProperties&
+        ) = delete;
 
 
     // Member Functions

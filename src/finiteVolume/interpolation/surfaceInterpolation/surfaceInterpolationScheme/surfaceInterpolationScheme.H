@@ -105,7 +105,7 @@ public:
             mesh_(mesh)
         {}
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         surfaceInterpolationScheme(const surfaceInterpolationScheme&);
 
 

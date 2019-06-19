@@ -81,10 +81,10 @@ class polyBoundaryMesh
         //- Calculate the geometry for the patches (transformation tensors etc.)
         void calcGeometry();
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         polyBoundaryMesh(const polyBoundaryMesh&);
 
-        //- Disallow assignment
+        //- Disallow default bitwise assignment
         void operator=(const polyBoundaryMesh&);
 
 

@@ -210,7 +210,7 @@ public:
             const bool syncPar = true
         );
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         fvMesh(const fvMesh&);
 
 
@@ -388,7 +388,7 @@ public:
 
     // Member Operators
 
-        //- Disallow assignment
+        //- Disallow default bitwise assignment
         void operator=(const fvMesh&);
 
         bool operator!=(const fvMesh&) const;

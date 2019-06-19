@@ -243,11 +243,6 @@ class sampledSets
         void sampleAndWrite(fieldGroup<Type>& fields);
 
 
-        //- Disallow default bitwise copy construct and assignment
-        sampledSets(const sampledSets&) = delete;
-        void operator=(const sampledSets&);
-
-
 public:
 
     //- Runtime type information
@@ -273,6 +268,10 @@ public:
             const dictionary&,
             const bool loadFromFiles = false
         );
+
+
+        //- Disallow default bitwise copy construction
+        sampledSets(const sampledSets&) = delete;
 
 
     //- Destructor
@@ -304,6 +303,12 @@ public:
 
         //- Update for changes of mesh due to readUpdate
         virtual void readUpdate(const polyMesh::readUpdateState state);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sampledSets&) = delete;
 };
 
 

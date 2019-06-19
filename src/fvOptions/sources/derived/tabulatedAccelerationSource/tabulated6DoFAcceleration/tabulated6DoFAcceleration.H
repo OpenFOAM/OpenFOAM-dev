@@ -74,7 +74,7 @@ class tabulated6DoFAcceleration
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         tabulated6DoFAcceleration(const tabulated6DoFAcceleration&);
 
         //- Disallow default bitwise assignment

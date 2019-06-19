@@ -68,10 +68,6 @@ class simpleGeomDecomp
             const scalarField& weights
         ) const;
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const simpleGeomDecomp&) = delete;
-        simpleGeomDecomp(const simpleGeomDecomp&);
-
 
 public:
 
@@ -83,6 +79,9 @@ public:
 
         //- Construct given the decomposition dictionary
         simpleGeomDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        simpleGeomDecomp(const simpleGeomDecomp&) = delete;
 
 
     //- Destructor
@@ -128,6 +127,12 @@ public:
         {
             return decompose(cc, cWeights);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const simpleGeomDecomp&) = delete;
 };
 
 

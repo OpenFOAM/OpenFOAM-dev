@@ -66,7 +66,7 @@ protected:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         energyScalingFunction(const energyScalingFunction&);
 
         //- Disallow default bitwise assignment

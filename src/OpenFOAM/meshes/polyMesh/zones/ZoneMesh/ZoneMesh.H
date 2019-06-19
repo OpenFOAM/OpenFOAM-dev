@@ -79,10 +79,10 @@ class ZoneMesh
         //- Read if IOobject flags set. Return true if read.
         bool read();
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         ZoneMesh(const ZoneMesh&);
 
-        //- Disallow assignment
+        //- Disallow default bitwise assignment
         void operator=(const ZoneMesh<ZoneType, MeshType>&);
 
 

@@ -65,15 +65,6 @@ class relaxation
         scalar alpha_;
 
 
-     // Private Member Functions
-
-        //- Disallow copy construct
-        relaxation(const relaxation&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const relaxation&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -91,6 +82,9 @@ public:
             const combustionModel& combModel
         );
 
+        //- Disallow default bitwise copy construction
+        relaxation(const relaxation&);
+
 
     // Destructor
 
@@ -107,6 +101,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& dictProperties);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const relaxation&) = delete;
 };
 
 

@@ -84,13 +84,6 @@ class continuousGasKEpsilon
         volScalarField nutEff_;
 
 
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        continuousGasKEpsilon(const continuousGasKEpsilon&) = delete;
-        void operator=(const continuousGasKEpsilon&);
-
-
 protected:
 
     // Protected data
@@ -134,6 +127,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        continuousGasKEpsilon(const continuousGasKEpsilon&) = delete;
+
 
     //- Destructor
     virtual ~continuousGasKEpsilon()
@@ -156,6 +152,12 @@ public:
 
         //- Return the Reynolds stress tensor
         virtual tmp<volSymmTensorField> R() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const continuousGasKEpsilon&) = delete;
 };
 
 

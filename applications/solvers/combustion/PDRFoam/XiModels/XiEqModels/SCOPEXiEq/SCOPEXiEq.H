@@ -84,7 +84,7 @@ class SCOPEXiEq
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         SCOPEXiEq(const SCOPEXiEq&);
 
         //- Disallow default bitwise assignment

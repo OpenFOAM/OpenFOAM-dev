@@ -67,7 +67,7 @@ class transport
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         transport(const transport&);
 
         //- Disallow default bitwise assignment

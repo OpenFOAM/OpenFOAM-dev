@@ -64,13 +64,6 @@ class Giesekus
 :
     public Maxwell<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        Giesekus(const Giesekus&) = delete;
-        void operator=(const Giesekus&);
-
-
 protected:
 
     // Protected data
@@ -78,6 +71,7 @@ protected:
         // Model coefficients
 
             dimensionedScalar alphaG_;
+
 
     // Protected Member Functions
 
@@ -110,6 +104,10 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        Giesekus(const Giesekus&) = delete;
+
+
 
     //- Destructor
     virtual ~Giesekus()
@@ -120,6 +118,12 @@ public:
 
         //- Re-read model coefficients if they have changed
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Giesekus&) = delete;
 };
 
 

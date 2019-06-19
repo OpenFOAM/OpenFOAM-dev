@@ -50,7 +50,6 @@ namespace Foam
 
 class LESdelta
 {
-
 protected:
 
     // Protected data
@@ -58,15 +57,6 @@ protected:
         const turbulenceModel& turbulenceModel_;
 
         volScalarField delta_;
-
-
-private:
-
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        LESdelta(const LESdelta&) = delete;
-        void operator=(const LESdelta&);
 
 
 public:
@@ -99,6 +89,9 @@ public:
             const word& name,
             const turbulenceModel& turbulence
         );
+
+        //- Disallow default bitwise copy construction
+        LESdelta(const LESdelta&) = delete;
 
 
     // Selectors
@@ -142,6 +135,8 @@ public:
 
 
     // Member Operators
+
+        void operator=(const LESdelta&) = delete;
 
         virtual operator const volScalarField&() const
         {

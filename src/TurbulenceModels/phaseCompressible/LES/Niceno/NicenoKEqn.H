@@ -91,10 +91,6 @@ class NicenoKEqn
         >&
         gasTurbulence() const;
 
-        // Disallow default bitwise copy construct and assignment
-        NicenoKEqn(const NicenoKEqn&) = delete;
-        void operator=(const NicenoKEqn&);
-
 
 protected:
 
@@ -141,6 +137,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        NicenoKEqn(const NicenoKEqn&) = delete;
+
 
     //- Destructor
     virtual ~NicenoKEqn()
@@ -151,6 +150,12 @@ public:
 
         //- Read model coefficients if they have changed
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const NicenoKEqn&) = delete;
 };
 
 

@@ -70,7 +70,7 @@ protected:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         generalizedNewtonianViscosityModel
         (
             const generalizedNewtonianViscosityModel&

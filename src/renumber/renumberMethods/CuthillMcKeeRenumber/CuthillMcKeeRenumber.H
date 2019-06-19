@@ -54,13 +54,6 @@ class CuthillMcKeeRenumber
         const Switch reverse_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const CuthillMcKeeRenumber&) = delete;
-        CuthillMcKeeRenumber(const CuthillMcKeeRenumber&);
-
-
 public:
 
     //- Runtime type information
@@ -71,6 +64,9 @@ public:
 
         //- Construct given the renumber dictionary
         CuthillMcKeeRenumber(const dictionary& renumberDict);
+
+        //- Disallow default bitwise copy construction
+        CuthillMcKeeRenumber(const CuthillMcKeeRenumber&) = delete;
 
 
     //- Destructor
@@ -118,6 +114,12 @@ public:
             const labelListList& cellCells,
             const pointField& cc
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CuthillMcKeeRenumber&) = delete;
 };
 
 

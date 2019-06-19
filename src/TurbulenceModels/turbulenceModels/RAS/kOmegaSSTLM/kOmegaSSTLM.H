@@ -103,13 +103,6 @@ class kOmegaSSTLM
 :
     public kOmegaSST<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        kOmegaSSTLM(const kOmegaSSTLM&) = delete;
-        void operator=(const kOmegaSSTLM&);
-
-
 protected:
 
     // Protected data
@@ -231,6 +224,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        kOmegaSSTLM(const kOmegaSSTLM&) = delete;
+
 
     //- Destructor
     virtual ~kOmegaSSTLM()
@@ -277,6 +273,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kOmegaSSTLM&) = delete;
 };
 
 

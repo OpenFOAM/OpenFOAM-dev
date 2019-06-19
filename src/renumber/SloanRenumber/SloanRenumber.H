@@ -56,13 +56,6 @@ class SloanRenumber
         const Switch reverse_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const SloanRenumber&) = delete;
-        SloanRenumber(const SloanRenumber&);
-
-
 public:
 
     //- Runtime type information
@@ -73,6 +66,9 @@ public:
 
         //- Construct given the renumber dictionary
         SloanRenumber(const dictionary& renumberDict);
+
+        //- Disallow default bitwise copy construction
+        SloanRenumber(const SloanRenumber&) = delete;
 
 
     //- Destructor
@@ -109,6 +105,12 @@ public:
             const labelListList& cellCells,
             const pointField& cc
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SloanRenumber&) = delete;
 };
 
 

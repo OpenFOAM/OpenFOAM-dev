@@ -52,7 +52,7 @@ class ensightGeoFile
         //- Disallow default bitwise assignment
         void operator=(const ensightGeoFile&) = delete;
 
-        //- Disallow default copy constructor
+        //- Disallow default bitwise copy construction
         ensightGeoFile(const ensightGeoFile&);
 
 

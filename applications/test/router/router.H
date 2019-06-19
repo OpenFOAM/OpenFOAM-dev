@@ -159,12 +159,6 @@ class router
             DynamicList<label>& route
         ) const;
 
-        //- Disallow default bitwise copy construction
-        router(const router&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const router&) = delete;
-
 
 public:
 
@@ -176,6 +170,9 @@ public:
             const labelListList& connections,
             const List<point>& coords
         );
+
+        //- Disallow default bitwise copy construction
+        router(const router&) = delete;
 
 
     // Member Functions
@@ -197,6 +194,11 @@ public:
             //- Extract labels of route with given value.
             labelList getRoute(const label pathValue) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const router&) = delete;
 };
 
 

@@ -62,7 +62,7 @@ class linearMotion
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         linearMotion(const linearMotion&);
 
         //- Disallow default bitwise assignment

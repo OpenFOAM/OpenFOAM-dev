@@ -59,13 +59,6 @@ class LESfilter
         const fvMesh& mesh_;
 
 
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        LESfilter(const LESfilter&) = delete;
-        void operator=(const LESfilter&);
-
-
 protected:
 
     //- Temporary function to ensure the coupled boundary conditions of the
@@ -112,6 +105,9 @@ public:
             mesh_(mesh)
         {}
 
+        //- Disallow default bitwise copy construction
+        LESfilter(const LESfilter&) = delete;
+
 
     // Selectors
 
@@ -142,6 +138,8 @@ public:
 
 
     // Member Operators
+
+        void operator=(const LESfilter&) = delete;
 
         virtual tmp<volScalarField> operator()
         (

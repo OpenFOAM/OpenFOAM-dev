@@ -81,7 +81,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         laplacianScheme(const laplacianScheme&);
 
         //- Disallow default bitwise assignment

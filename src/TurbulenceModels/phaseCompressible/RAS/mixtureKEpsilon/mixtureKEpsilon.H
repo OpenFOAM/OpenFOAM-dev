@@ -90,10 +90,6 @@ class mixtureKEpsilon
 
     // Private Member Functions
 
-        // Disallow default bitwise copy construct and assignment
-        mixtureKEpsilon(const mixtureKEpsilon&) = delete;
-        void operator=(const mixtureKEpsilon&);
-
         //- Return the turbulence model for the other phase
         mixtureKEpsilon<BasicTurbulenceModel>& liquidTurbulence() const;
 
@@ -213,6 +209,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        mixtureKEpsilon(const mixtureKEpsilon&) = delete;
+
 
     //- Destructor
     virtual ~mixtureKEpsilon()
@@ -238,6 +237,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mixtureKEpsilon&) = delete;
 };
 
 

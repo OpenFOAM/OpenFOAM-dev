@@ -666,13 +666,6 @@ class vtkPVFoam
             word getPartName(const int);
 
 
-        //- Disallow default bitwise copy construction
-        vtkPVFoam(const vtkPVFoam&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkPVFoam&) = delete;
-
-
 public:
 
     //- Static data members
@@ -688,6 +681,9 @@ public:
             const char* const FileName,
             vtkPVFoamReader* reader
         );
+
+        //- Disallow default bitwise copy construction
+        vtkPVFoam(const vtkPVFoam&) = delete;
 
 
     //- Destructor
@@ -736,6 +732,12 @@ public:
         //- Simple memory used debugging information
         static void printMemory();
 
+
+    // Member Operators
+
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkPVFoam&) = delete;
 };
 
 

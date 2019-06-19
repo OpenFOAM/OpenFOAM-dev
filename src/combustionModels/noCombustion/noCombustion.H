@@ -53,14 +53,6 @@ class noCombustion
 :
     public ThermoCombustion<ReactionThermo>
 {
-
-    //- Disallow copy construct
-    noCombustion(const noCombustion&);
-
-    //- Disallow default bitwise assignment
-    void operator=(const noCombustion&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -77,6 +69,9 @@ public:
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        noCombustion(const noCombustion&);
 
 
     //- Destructor
@@ -96,6 +91,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noCombustion&) = delete;
 };
 
 

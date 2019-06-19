@@ -64,13 +64,6 @@ class laplaceFilter
         volScalarField coeff_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        laplaceFilter(const laplaceFilter&) = delete;
-        void operator=(const laplaceFilter&);
-
-
 public:
 
     //- Runtime type information
@@ -84,6 +77,9 @@ public:
 
         //- Construct from IOdictionary
         laplaceFilter(const fvMesh& mesh, const dictionary&);
+
+        //- Disallow default bitwise copy construction
+        laplaceFilter(const laplaceFilter&) = delete;
 
 
     //- Destructor
@@ -118,6 +114,12 @@ public:
         (
             const tmp<volTensorField>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laplaceFilter&) = delete;
 };
 
 

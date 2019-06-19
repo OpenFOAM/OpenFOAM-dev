@@ -106,7 +106,7 @@ class IndirectList
 {
     // Private Member Functions
 
-        //- Disallow default assignment operator
+        //- Disallow default bitwise assignment
         void operator=(const IndirectList<T>&);
 
         //- Disallow assignment from UIndirectList

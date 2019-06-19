@@ -85,10 +85,6 @@ class PrandtlDelta
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct and assignment
-        PrandtlDelta(const PrandtlDelta&) = delete;
-        void operator=(const PrandtlDelta&);
-
         // Calculate the delta values
         void calcDelta();
 
@@ -109,6 +105,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        PrandtlDelta(const PrandtlDelta&) = delete;
+
 
     //- Destructor
     virtual ~PrandtlDelta()
@@ -122,6 +121,12 @@ public:
 
         // Correct values
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PrandtlDelta&) = delete;
 };
 
 

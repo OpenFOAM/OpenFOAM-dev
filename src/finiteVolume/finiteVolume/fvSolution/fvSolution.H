@@ -59,7 +59,7 @@ public:
             solution(obr, "fvSolution")
         {}
 
-        //- Disallow default bitwise copy construct and assignment
+        //- Disallow default bitwise copy construction
         fvSolution(const fvSolution&) = delete;
 
 

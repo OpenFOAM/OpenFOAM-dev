@@ -130,7 +130,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         XiModel(const XiModel&);
 
         //- Disallow default bitwise assignment

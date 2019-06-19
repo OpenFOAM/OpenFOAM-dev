@@ -54,14 +54,6 @@ class ensightStream
 
         const fileName name_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        ensightStream(const ensightStream&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightStream&) = delete;
-
 
 public:
 
@@ -72,6 +64,9 @@ public:
         :
             name_(f)
         {}
+
+        //- Disallow default bitwise copy construction
+        ensightStream(const ensightStream&) = delete;
 
 
     //- Destructor
@@ -99,7 +94,10 @@ public:
         virtual void writePartHeader(const label) = 0;
 
 
+    // Member Operators
 
+        //- Disallow default bitwise assignment
+        void operator=(const ensightStream&) = delete;
 };
 
 

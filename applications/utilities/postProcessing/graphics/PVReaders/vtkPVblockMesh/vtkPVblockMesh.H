@@ -293,13 +293,6 @@ class vtkPVblockMesh
             );
 
 
-        //- Disallow default bitwise copy construction
-        vtkPVblockMesh(const vtkPVblockMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkPVblockMesh&) = delete;
-
-
 public:
 
     //- Static data members
@@ -315,6 +308,9 @@ public:
             const char* const FileName,
             vtkPVblockMeshReader* reader
         );
+
+        //- Disallow default bitwise copy construction
+        vtkPVblockMesh(const vtkPVblockMesh&) = delete;
 
 
     //- Destructor
@@ -339,6 +335,11 @@ public:
         //- Debug information
         void PrintSelf(ostream&, vtkIndent) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkPVblockMesh&) = delete;
 };
 
 

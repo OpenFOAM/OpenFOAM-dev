@@ -490,7 +490,7 @@ public:
             public iteratorBase
         {
 
-            //- Disallow copy constructor from const_iterator
+            //- Disallow default bitwise copy construction
             //  This would violate const-ness!
             iterator(const const_iterator&);
 

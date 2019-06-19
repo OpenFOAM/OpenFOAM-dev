@@ -69,7 +69,7 @@ class ensightFile
         //- Disallow default bitwise assignment
         void operator=(const ensightFile&) = delete;
 
-        //- Disallow default copy constructor
+        //- Disallow default bitwise copy construction
         ensightFile(const ensightFile&);
 
 

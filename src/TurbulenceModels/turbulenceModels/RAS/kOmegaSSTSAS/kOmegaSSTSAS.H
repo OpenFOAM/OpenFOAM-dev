@@ -97,13 +97,6 @@ class kOmegaSSTSAS
 :
     public kOmegaSST<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        kOmegaSSTSAS(const kOmegaSSTSAS&) = delete;
-        void operator=(const kOmegaSSTSAS&);
-
-
 protected:
 
     // Protected data
@@ -160,6 +153,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        kOmegaSSTSAS(const kOmegaSSTSAS&) = delete;
+
 
     //- Destructor
     virtual ~kOmegaSSTSAS()
@@ -176,6 +172,12 @@ public:
         {
             return delta_();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kOmegaSSTSAS&) = delete;
 };
 
 

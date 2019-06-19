@@ -63,10 +63,6 @@ class maxDeltaxyz
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct and assignment
-        maxDeltaxyz(const maxDeltaxyz&) = delete;
-        void operator=(const maxDeltaxyz&);
-
         // Calculate the delta values
         void calcDelta();
 
@@ -87,6 +83,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        maxDeltaxyz(const maxDeltaxyz&) = delete;
+
 
     //- Destructor
     virtual ~maxDeltaxyz()
@@ -100,6 +99,12 @@ public:
 
         // Correct values
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const maxDeltaxyz&) = delete;
 };
 
 

@@ -79,7 +79,7 @@ private:
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         XiEqModel(const XiEqModel&);
 
         //- Disallow default bitwise assignment

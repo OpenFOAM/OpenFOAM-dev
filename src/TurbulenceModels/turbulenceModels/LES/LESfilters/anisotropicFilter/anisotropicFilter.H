@@ -64,13 +64,6 @@ class anisotropicFilter
         volVectorField coeff_;
 
 
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        anisotropicFilter(const anisotropicFilter&) = delete;
-        void operator=(const anisotropicFilter&);
-
-
 public:
 
     //- Runtime type information
@@ -83,6 +76,9 @@ public:
 
         //- Construct from IOdictionary
         anisotropicFilter(const fvMesh& mesh, const dictionary&);
+
+        //- Disallow default bitwise copy construction
+        anisotropicFilter(const anisotropicFilter&) = delete;
 
 
     //- Destructor
@@ -97,6 +93,8 @@ public:
 
 
     // Member Operators
+
+        void operator=(const anisotropicFilter&) = delete;
 
         virtual tmp<volScalarField> operator()
         (

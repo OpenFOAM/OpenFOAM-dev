@@ -77,10 +77,6 @@ class interfaceProperties
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct and assignment
-        interfaceProperties(const interfaceProperties&) = delete;
-        void operator=(const interfaceProperties&);
-
         //- Correction for the boundary condition on the unit normal nHat on
         //  walls to produce the correct contact dynamic angle
         //  calculated from the component of U parallel to the wall
@@ -109,6 +105,9 @@ public:
             const volVectorField& U,
             const IOdictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        interfaceProperties(const interfaceProperties&) = delete;
 
 
     // Member Functions
@@ -140,6 +139,12 @@ public:
 
         //- Read transportProperties dictionary
         bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const interfaceProperties&) = delete;
 };
 
 

@@ -108,7 +108,7 @@ class basic
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         basic(const basic&);
 
         //- Disallow default bitwise assignment

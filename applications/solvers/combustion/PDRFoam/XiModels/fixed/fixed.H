@@ -55,7 +55,7 @@ class fixed
 {
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         fixed(const fixed&);
 
         //- Disallow default bitwise assignment

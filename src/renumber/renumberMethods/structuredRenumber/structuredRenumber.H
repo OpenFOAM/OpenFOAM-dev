@@ -100,13 +100,6 @@ public:
         const Switch reverse_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const structuredRenumber&) = delete;
-        structuredRenumber(const structuredRenumber&);
-
-
 public:
 
     //- Runtime type information
@@ -117,6 +110,9 @@ public:
 
         //- Construct given the renumber dictionary
         structuredRenumber(const dictionary& renumberDict);
+
+        //- Disallow default bitwise copy construction
+        structuredRenumber(const structuredRenumber&) = delete;
 
 
     //- Destructor
@@ -157,6 +153,12 @@ public:
             NotImplemented;
             return labelList(0);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const structuredRenumber&) = delete;
 };
 
 

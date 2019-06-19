@@ -69,7 +69,7 @@ class StandardChemistryModel
         template<class DeltaTType>
         scalar solve(const DeltaTType& deltaT);
 
-        //- Disallow copy constructor
+        //- Disallow default bitwise copy construction
         StandardChemistryModel(const StandardChemistryModel&);
 
         //- Disallow default bitwise assignment

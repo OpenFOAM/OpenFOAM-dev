@@ -146,27 +146,26 @@ class powerLawLopesdaCosta
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construction
-        powerLawLopesdaCosta(const powerLawLopesdaCosta&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const powerLawLopesdaCosta&) = delete;
-
 
 public:
 
     //- Runtime type information
     TypeName("powerLawLopesdaCosta");
 
-    //- Constructor
-    powerLawLopesdaCosta
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        powerLawLopesdaCosta
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        powerLawLopesdaCosta(const powerLawLopesdaCosta&) = delete;
+
 
     //- Destructor
     virtual ~powerLawLopesdaCosta();
@@ -209,7 +208,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const powerLawLopesdaCosta&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
