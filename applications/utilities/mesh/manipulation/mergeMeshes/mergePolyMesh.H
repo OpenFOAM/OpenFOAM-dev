@@ -76,13 +76,6 @@ class mergePolyMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        mergePolyMesh(const mergePolyMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const mergePolyMesh&) = delete;
-
-
         //- Return patch index given a name and type
         label patchIndex(const polyPatch&);
 
@@ -101,6 +94,9 @@ public:
         //- Construct from IOobject
         mergePolyMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        mergePolyMesh(const mergePolyMesh&) = delete;
+
 
     //- Destructor
     virtual ~mergePolyMesh()
@@ -114,6 +110,12 @@ public:
 
         //- Merge meshes
         void merge();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mergePolyMesh&) = delete;
 };
 
 

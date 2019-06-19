@@ -69,18 +69,6 @@ private:
         const word name_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cellSizeAndAlignmentControl
-        (
-            const cellSizeAndAlignmentControl&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellSizeAndAlignmentControl&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -123,6 +111,12 @@ public:
             const conformationSurfaces& geometryToConformTo,
             const scalar& defaultCellSize
         );
+
+        //- Disallow default bitwise copy construction
+        cellSizeAndAlignmentControl
+        (
+            const cellSizeAndAlignmentControl&
+        ) = delete;
 
 
     // Selectors
@@ -173,6 +167,12 @@ public:
                 scalarField& sizes,
                 triadField& alignments
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellSizeAndAlignmentControl&) = delete;
 };
 
 

@@ -85,12 +85,6 @@ class patchToPoly2DMesh
 
         void createPolyMeshComponents();
 
-        //- Disallow default bitwise copy construction
-        patchToPoly2DMesh(const patchToPoly2DMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const patchToPoly2DMesh&) = delete;
-
 
 public:
 
@@ -104,6 +98,9 @@ public:
             const labelList& patchSizes,
             const EdgeMap<label>& mapEdgesRegion
         );
+
+        //- Disallow default bitwise copy construction
+        patchToPoly2DMesh(const patchToPoly2DMesh&) = delete;
 
 
     //- Destructor
@@ -154,6 +151,12 @@ public:
 
             //- Create the mesh
             void createMesh();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchToPoly2DMesh&) = delete;
 };
 
 

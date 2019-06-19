@@ -87,11 +87,6 @@ class extrude2DMesh
         //- Find extrusion direction
         // void findExtrudeDirection();
 
-        //- Disallow default bitwise copy construction
-        extrude2DMesh(const extrude2DMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const extrude2DMesh&) = delete;
 
 public:
 
@@ -106,6 +101,9 @@ public:
             const dictionary& dict,
             const extrudeModel& model
         );
+
+        //- Disallow default bitwise copy construction
+        extrude2DMesh(const extrude2DMesh&) = delete;
 
 
     //- Destructor
@@ -138,6 +136,11 @@ public:
             return backPatchi_;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extrude2DMesh&) = delete;
 };
 
 

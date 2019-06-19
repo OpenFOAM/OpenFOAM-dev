@@ -74,12 +74,6 @@ class hexBlock
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        hexBlock(const hexBlock&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const hexBlock&) = delete;
-
         //- Vertex addressing inside the block
         inline label vtxLabel(label i, label j, label k) const;
 
@@ -90,6 +84,10 @@ public:
 
         //- Construct from components
         hexBlock(const label nx, const label ny, const label nz);
+
+        //- Disallow default bitwise copy construction
+        hexBlock(const hexBlock&) = delete;
+
 
     // Member Functions
 
@@ -145,6 +143,12 @@ public:
 
         //- Read block points
         void readPoints(Istream&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hexBlock&) = delete;
 };
 
 

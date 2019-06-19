@@ -86,13 +86,6 @@ class extrudedMesh
         );
 
 
-        //- Disallow default bitwise copy construction
-        extrudedMesh(const extrudedMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const extrudedMesh&) = delete;
-
-
 public:
 
     // Constructors
@@ -105,6 +98,15 @@ public:
             const PrimitivePatch<FaceList, PointField>& extrudePatch,
             const extrudeModel&
         );
+
+        //- Disallow default bitwise copy construction
+        extrudedMesh(const extrudedMesh&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extrudedMesh&) = delete;
 };
 
 

@@ -59,21 +59,15 @@ class cellAspectRatioControl
         vector aspectRatioDirection_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cellAspectRatioControl(const cellAspectRatioControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellAspectRatioControl&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from dictionary
         cellAspectRatioControl(const dictionary& motionDict);
+
+        //- Disallow default bitwise copy construction
+        cellAspectRatioControl(const cellAspectRatioControl&) = delete;
 
 
     //- Destructor
@@ -98,6 +92,12 @@ public:
                 const scalar rABMag,
                 vector& delta
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellAspectRatioControl&) = delete;
 };
 
 

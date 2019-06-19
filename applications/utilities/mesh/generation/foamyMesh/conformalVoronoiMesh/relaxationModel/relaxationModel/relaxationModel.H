@@ -66,16 +66,6 @@ protected:
         //- Method coeffs dictionary
         dictionary coeffDict_;
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        relaxationModel(const relaxationModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const relaxationModel&) = delete;
-
 
 public:
 
@@ -108,6 +98,9 @@ public:
             const Time& runTime
         );
 
+        //- Disallow default bitwise copy construction
+        relaxationModel(const relaxationModel&) = delete;
+
 
     // Selectors
 
@@ -133,6 +126,12 @@ public:
 
         //- Return the current relaxation coefficient
         virtual scalar relaxation() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const relaxationModel&) = delete;
 };
 
 

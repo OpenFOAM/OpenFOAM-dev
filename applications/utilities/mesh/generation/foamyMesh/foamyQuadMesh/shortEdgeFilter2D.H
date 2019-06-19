@@ -90,12 +90,6 @@ class shortEdgeFilter2D
             labelList& patchSizes
         ) const;
 
-        //- Disallow default bitwise copy construction
-        shortEdgeFilter2D(const shortEdgeFilter2D&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const shortEdgeFilter2D&) = delete;
-
 
 public:
 
@@ -105,6 +99,9 @@ public:
     // Constructors
 
         shortEdgeFilter2D(const CV2D& cv2Dmesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        shortEdgeFilter2D(const shortEdgeFilter2D&) = delete;
 
 
     //- Destructor
@@ -139,6 +136,12 @@ public:
         void filter();
 
         void writeInfo(Ostream& os);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const shortEdgeFilter2D&) = delete;
 };
 
 

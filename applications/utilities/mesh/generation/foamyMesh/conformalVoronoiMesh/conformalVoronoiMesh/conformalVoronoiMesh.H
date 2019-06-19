@@ -855,12 +855,6 @@ private:
 
         void writePointPairs(const fileName& fName) const;
 
-        //- Disallow default bitwise copy construction
-        conformalVoronoiMesh(const conformalVoronoiMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const conformalVoronoiMesh&) = delete;
-
 
 public:
 
@@ -876,6 +870,9 @@ public:
             const Time& runTime,
             const dictionary& foamyHexMeshDict
         );
+
+        //- Disallow default bitwise copy construction
+        conformalVoronoiMesh(const conformalVoronoiMesh&) = delete;
 
 
     //- Destructor
@@ -1017,6 +1014,12 @@ public:
             //- Find the cellSet of the boundary cells which have points that
             //  protrude out of the surface beyond a tolerance.
             labelHashSet findRemainingProtrusionSet(const polyMesh& mesh) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const conformalVoronoiMesh&) = delete;
 };
 
 

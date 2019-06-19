@@ -63,17 +63,6 @@ protected:
         const scalar& defaultCellSize_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cellSizeCalculationType(const cellSizeCalculationType&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellSizeCalculationType&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -107,6 +96,9 @@ public:
             const scalar& defaultCellSize
         );
 
+        //- Disallow default bitwise copy construction
+        cellSizeCalculationType(const cellSizeCalculationType&) = delete;
+
 
     // Selectors
 
@@ -127,6 +119,12 @@ public:
 
         //- Load the cell size
         virtual tmp<triSurfacePointScalarField> load() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellSizeCalculationType&) = delete;
 };
 
 

@@ -133,12 +133,6 @@ class featurePointConformer
         //- Create the points that will conform to the feature
         void createFeaturePoints(DynamicList<Vb>& pts);
 
-        //- Disallow default bitwise copy construction
-        featurePointConformer(const featurePointConformer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const featurePointConformer&) = delete;
-
 
 public:
 
@@ -153,6 +147,9 @@ public:
         (
             const conformalVoronoiMesh& foamyHexMesh
         );
+
+        //- Disallow default bitwise copy construction
+        featurePointConformer(const featurePointConformer&) = delete;
 
 
     //- Destructor
@@ -179,6 +176,12 @@ public:
 
             //- Reindex the feature point pairs using the map.
             void reIndexPointPairs(const Map<label>& oldToNewIndices);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const featurePointConformer&) = delete;
 };
 
 

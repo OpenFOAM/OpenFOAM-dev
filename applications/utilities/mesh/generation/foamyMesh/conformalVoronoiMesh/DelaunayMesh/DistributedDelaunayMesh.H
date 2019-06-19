@@ -123,15 +123,6 @@ private:
             labelPairHashSet& receivedVertices
         );
 
-        //- Disallow default bitwise copy construction
-        DistributedDelaunayMesh
-        (
-            const DistributedDelaunayMesh<Triangulation>&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const DistributedDelaunayMesh<Triangulation>&) = delete;
-
 
 public:
 
@@ -145,6 +136,12 @@ public:
             const Time& runTime,
             const word& meshName
         );
+
+        //- Disallow default bitwise copy construction
+        DistributedDelaunayMesh
+        (
+            const DistributedDelaunayMesh<Triangulation>&
+        ) = delete;
 
 
     //- Destructor
@@ -196,22 +193,17 @@ public:
             bool printErrors = true
         );
 
-//        distributeField();
 
+    // Member Operators
 
-    // Queries
-
-
+        //- Disallow default bitwise assignment
+        void operator=(const DistributedDelaunayMesh<Triangulation>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-//#include "DistributedDelaunayMeshI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

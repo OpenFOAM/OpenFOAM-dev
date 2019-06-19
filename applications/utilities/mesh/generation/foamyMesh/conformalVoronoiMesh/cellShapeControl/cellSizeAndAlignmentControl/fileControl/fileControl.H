@@ -61,15 +61,6 @@ class fileControl
         label maxPriority_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fileControl(const fileControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fileControl&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -89,6 +80,10 @@ public:
             const scalar& defaultCellSize
         );
 
+        //- Disallow default bitwise copy construction
+        fileControl(const fileControl&) = delete;
+
+
     //- Destructor
     ~fileControl();
 
@@ -97,27 +92,11 @@ public:
 
         // Access
 
-
-        // Query
-
-//            //- Return the cell size at the given location
-//            virtual scalar cellSize(const point& pt) const;
-//
-//            //- Return the cell alignment at the given location
-//            virtual tensor cellAlignment(const point& pt) const;
-//
-//            virtual void cellSizeAndAlignment
-//            (
-//                const point& pt,
-//                scalar& size,
-//                tensor& alignment
-//            ) const;
-
-
             virtual label maxPriority() const
             {
                 return maxPriority_;
             }
+
 
         // Edit
 
@@ -133,6 +112,12 @@ public:
                 scalarField& sizes,
                 triadField& alignments
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fileControl&) = delete;
 };
 
 

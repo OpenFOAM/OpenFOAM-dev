@@ -141,13 +141,6 @@ class sammMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        sammMesh(const sammMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const sammMesh&) = delete;
-
-
         //- Fill SAMM lookup tables
         void fillSammCellShapeTable();
         void fillSammAddressingTable();
@@ -230,6 +223,9 @@ public:
             const scalar scaleFactor
         );
 
+        //- Disallow default bitwise copy construction
+        sammMesh(const sammMesh&) = delete;
+
 
     //- Destructor
     ~sammMesh();
@@ -239,6 +235,12 @@ public:
 
         //- Write mesh
         void writeMesh();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sammMesh&) = delete;
 };
 
 

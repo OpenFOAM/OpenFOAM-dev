@@ -81,15 +81,6 @@ private:
         const scalar defaultCellSize_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cellShapeControlMesh(const cellShapeControlMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellShapeControlMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -102,6 +93,9 @@ public:
     // Constructors
 
         explicit cellShapeControlMesh(const Time& runTime);
+
+        //- Disallow default bitwise copy construction
+        cellShapeControlMesh(const cellShapeControlMesh&) = delete;
 
 
     //- Destructor
@@ -161,6 +155,12 @@ public:
             (
                 const autoPtr<backgroundMeshDecomposition>& decomposition
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellShapeControlMesh&) = delete;
 };
 
 

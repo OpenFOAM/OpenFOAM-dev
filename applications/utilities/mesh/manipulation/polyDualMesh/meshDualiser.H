@@ -168,12 +168,6 @@ class meshDualiser
             boolList& donePFaces            // pFaces visited
         ) const;
 
-        //- Disallow default bitwise copy construction
-        meshDualiser(const meshDualiser&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshDualiser&) = delete;
-
 
 public:
 
@@ -185,6 +179,9 @@ public:
 
         //- Construct from mesh
         meshDualiser(const polyMesh&);
+
+        //- Disallow default bitwise copy construction
+        meshDualiser(const meshDualiser&) = delete;
 
 
     // Member Functions
@@ -228,7 +225,6 @@ public:
 
         // Edit
 
-
             //- Insert all changes into meshMod to convert the polyMesh into
             //  its dual.
             //  featureFaces  : faces where we want a point at the face centre
@@ -248,6 +244,12 @@ public:
                 const labelList& multiCellFeaturePoints,
                 polyTopoChange& meshMod
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshDualiser&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

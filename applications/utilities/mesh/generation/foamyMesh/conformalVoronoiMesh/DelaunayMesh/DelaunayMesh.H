@@ -158,12 +158,6 @@ private:
             const List<DynamicList<label>>& patchOwners
         ) const;
 
-        //- Disallow default bitwise copy construction
-        DelaunayMesh(const DelaunayMesh<Triangulation>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const DelaunayMesh<Triangulation>&) = delete;
-
 
 public:
 
@@ -177,6 +171,9 @@ public:
             const Time& runTime,
             const word& meshName
         );
+
+        //- Disallow default bitwise copy construction
+        DelaunayMesh(const DelaunayMesh<Triangulation>&) = delete;
 
 
     //- Destructor
@@ -267,6 +264,12 @@ public:
                 labelList& cellMap,
                 const bool writeDelaunayData = true
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DelaunayMesh<Triangulation>&) = delete;
 };
 
 

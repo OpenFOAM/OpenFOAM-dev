@@ -91,12 +91,6 @@ class smoothAlignmentSolver
             triad& t
         ) const;
 
-        //- Disallow default bitwise copy construction
-        smoothAlignmentSolver(const smoothAlignmentSolver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const smoothAlignmentSolver&) = delete;
-
 
 public:
 
@@ -104,6 +98,9 @@ public:
 
         //- Construct null
         smoothAlignmentSolver(cellShapeControlMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        smoothAlignmentSolver(const smoothAlignmentSolver&) = delete;
 
 
     //- Destructor
@@ -116,6 +113,12 @@ public:
 
             //- Smooth the alignments on the mesh
             void smoothAlignments(const label maxSmoothingIterations);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const smoothAlignmentSolver&) = delete;
 };
 
 

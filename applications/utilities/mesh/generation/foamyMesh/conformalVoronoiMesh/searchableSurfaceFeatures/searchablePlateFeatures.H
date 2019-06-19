@@ -61,15 +61,6 @@ private:
         const extendedFeatureEdgeMesh::sideVolumeType mode_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        searchablePlateFeatures(const searchablePlateFeatures&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchablePlateFeatures&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -91,6 +82,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        searchablePlateFeatures(const searchablePlateFeatures&) = delete;
+
 
     //- Destructor
     virtual ~searchablePlateFeatures();
@@ -106,6 +100,12 @@ public:
 
         //- Return an extendedFeatureEdgeMesh containing the features
         virtual autoPtr<extendedFeatureEdgeMesh> features() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchablePlateFeatures&) = delete;
 };
 
 

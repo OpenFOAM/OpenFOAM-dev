@@ -64,15 +64,6 @@ class mirrorFvMesh
         autoPtr<labelList> pointMapPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        mirrorFvMesh(const mirrorFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const mirrorFvMesh&) = delete;
-
-
 public:
 
 
@@ -80,6 +71,9 @@ public:
 
         //- Construct from IOobject
         mirrorFvMesh(const IOobject& io, const word& dictName);
+
+        //- Disallow default bitwise copy construction
+        mirrorFvMesh(const mirrorFvMesh&) = delete;
 
 
     //- Destructor
@@ -105,6 +99,12 @@ public:
         {
             return pointMapPtr_();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mirrorFvMesh&) = delete;
 };
 
 

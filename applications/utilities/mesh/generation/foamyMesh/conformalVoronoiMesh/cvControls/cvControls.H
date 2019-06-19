@@ -207,15 +207,6 @@ class cvControls
         Switch writeBackgroundMeshDecomposition_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cvControls(const cvControls&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cvControls&) = delete;
-
-
 public:
 
    // Constructors
@@ -225,6 +216,9 @@ public:
         (
             const dictionary& foamyHexMeshDict
         );
+
+        //- Disallow default bitwise copy construction
+        cvControls(const cvControls&) = delete;
 
 
     //- Destructor
@@ -345,6 +339,12 @@ public:
 
             //- Write backgroundMeshDecomposition at output time
             inline Switch writeBackgroundMeshDecomposition() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cvControls&) = delete;
 };
 
 

@@ -185,13 +185,6 @@ class starMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        starMesh(const starMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const starMesh&) = delete;
-
-
         //- Read fixed format vertex label
         static label readVtxLabel(IFstream&);
 
@@ -295,6 +288,9 @@ public:
             const scalar scaleFactor
         );
 
+        //- Disallow default bitwise copy construction
+        starMesh(const starMesh&) = delete;
+
 
     //- Destructor
     ~starMesh();
@@ -304,6 +300,12 @@ public:
 
         //- Write mesh
         void writeMesh();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const starMesh&) = delete;
 };
 
 

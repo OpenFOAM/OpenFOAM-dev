@@ -199,13 +199,6 @@ class CV2D
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        CV2D(const CV2D&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const CV2D&) = delete;
-
-
         //- Insert point and return it's index
         inline label insertPoint
         (
@@ -333,6 +326,9 @@ public:
         //- Construct for given surface
         CV2D(const Time& runTime, const dictionary& controlDict);
 
+        //- Disallow default bitwise copy construction
+        CV2D(const CV2D&) = delete;
+
 
     //- Destructor
     ~CV2D();
@@ -451,6 +447,12 @@ public:
             void writePatch(const fileName& fName) const;
 
             void write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CV2D&) = delete;
 };
 
 

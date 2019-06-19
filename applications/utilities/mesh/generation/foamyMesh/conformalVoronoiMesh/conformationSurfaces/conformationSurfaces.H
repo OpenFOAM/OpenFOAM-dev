@@ -125,12 +125,6 @@ class conformationSurfaces
             label& featureIndex
         );
 
-        //- Disallow default bitwise copy construction
-        conformationSurfaces(const conformationSurfaces&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const conformationSurfaces&) = delete;
-
 
 public:
 
@@ -149,6 +143,10 @@ public:
             const searchableSurfaces& allGeometry,
             const dictionary& surfaceConformationDict
         );
+
+        //- Disallow default bitwise copy construction
+        conformationSurfaces(const conformationSurfaces&) = delete;
+
 
     //- Destructor
     ~conformationSurfaces();
@@ -374,6 +372,11 @@ public:
             //  an obj file
             void writeFeatureObj(const fileName& prefix) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const conformationSurfaces&) = delete;
 };
 
 

@@ -83,15 +83,6 @@ class cellShapeControl
         cellSizeAndAlignmentControls sizeAndAlignment_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cellShapeControl(const cellShapeControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellShapeControl&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -109,6 +100,9 @@ public:
             const searchableSurfaces& allGeometry,
             const conformationSurfaces& geometryToConformTo
         );
+
+        //- Disallow default bitwise copy construction
+        cellShapeControl(const cellShapeControl&) = delete;
 
 
     //- Destructor
@@ -148,6 +142,12 @@ public:
                 scalar& size,
                 tensor& alignment
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellShapeControl&) = delete;
 };
 
 

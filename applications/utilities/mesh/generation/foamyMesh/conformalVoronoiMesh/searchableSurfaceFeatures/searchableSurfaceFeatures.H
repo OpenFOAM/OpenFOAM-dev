@@ -58,15 +58,6 @@ class searchableSurfaceFeatures
         const dictionary& dict_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        searchableSurfaceFeatures(const searchableSurfaceFeatures&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceFeatures&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -96,6 +87,9 @@ public:
             const searchableSurface& surface,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableSurfaceFeatures(const searchableSurfaceFeatures&) = delete;
 
         //- Clone
         virtual autoPtr<searchableSurfaceFeatures> clone() const
@@ -141,6 +135,12 @@ public:
         {
             return autoPtr<extendedFeatureEdgeMesh>();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurfaceFeatures&) = delete;
 };
 
 

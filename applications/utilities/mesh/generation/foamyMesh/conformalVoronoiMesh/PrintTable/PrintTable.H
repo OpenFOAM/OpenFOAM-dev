@@ -80,12 +80,6 @@ class PrintTable
         string title_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const PrintTable<KeyType, DataType>&) = delete;
-
-
 public:
 
     // Constructors
@@ -116,6 +110,12 @@ public:
             const bool printSum = false,
             const bool printAverage = false
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PrintTable<KeyType, DataType>&) = delete;
 };
 
 

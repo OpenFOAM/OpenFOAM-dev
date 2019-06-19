@@ -68,15 +68,6 @@ class cv2DControls
         const dictionary& conformationControl_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cv2DControls(const cv2DControls&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cv2DControls&) = delete;
-
-
 public:
 
         // Controls
@@ -161,6 +152,9 @@ public:
             const dictionary& controlDict,
             const boundBox& bb
         );
+
+        //- Disallow default bitwise copy construction
+        cv2DControls(const cv2DControls&) = delete;
 
 
     //- Destructor
@@ -249,6 +243,12 @@ public:
                 Ostream& os,
                 const cv2DControls& s
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cv2DControls&) = delete;
 };
 
 

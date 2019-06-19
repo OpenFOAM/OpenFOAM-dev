@@ -59,15 +59,6 @@ private:
         const extendedFeatureEdgeMesh::sideVolumeType mode_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        triSurfaceMeshFeatures(const triSurfaceMeshFeatures&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceMeshFeatures&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -82,6 +73,9 @@ public:
             const searchableSurface& surface,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        triSurfaceMeshFeatures(const triSurfaceMeshFeatures&) = delete;
 
 
     //- Destructor
@@ -98,6 +92,12 @@ public:
 
         //- Return an extendedFeatureEdgeMesh containing the features
         virtual autoPtr<extendedFeatureEdgeMesh> features() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceMeshFeatures&) = delete;
 };
 
 

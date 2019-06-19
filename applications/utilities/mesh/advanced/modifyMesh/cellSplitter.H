@@ -91,11 +91,6 @@ class cellSplitter
             const Map<labelList>& cellToCells
         ) const;
 
-        //- Disallow default bitwise copy construction
-        cellSplitter(const cellSplitter&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellSplitter&) = delete;
 
 public:
 
@@ -106,6 +101,9 @@ public:
 
         //- Construct from mesh
         cellSplitter(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        cellSplitter(const cellSplitter&) = delete;
 
 
     //- Destructor
@@ -135,6 +133,12 @@ public:
             {
                 return addedPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellSplitter&) = delete;
 };
 
 

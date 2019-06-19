@@ -68,13 +68,6 @@ class edgeStats
         direction getNormalDir(const twoDPointCorrector*) const;
 
 
-        //- Disallow default bitwise copy construction
-        edgeStats(const edgeStats&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const edgeStats&) = delete;
-
-
 public:
 
     // Static Data Members
@@ -91,11 +84,20 @@ public:
         //- Construct from mesh and corrector
         edgeStats(const polyMesh& mesh, const twoDPointCorrector* );
 
+        //- Disallow default bitwise copy construction
+        edgeStats(const edgeStats&) = delete;
+
 
     // Member Functions
 
         //- Calculate minimum edge length and print
         scalar minLen(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const edgeStats&) = delete;
 };
 
 

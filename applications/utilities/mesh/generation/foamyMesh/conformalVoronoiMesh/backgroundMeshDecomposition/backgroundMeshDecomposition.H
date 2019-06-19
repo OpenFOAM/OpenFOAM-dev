@@ -183,15 +183,6 @@ class backgroundMeshDecomposition
         //- Build the surface patch and search tree
         void buildPatchAndTree();
 
-        //- Disallow default bitwise copy construction
-        backgroundMeshDecomposition
-        (
-            const backgroundMeshDecomposition&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const backgroundMeshDecomposition&) = delete;
-
 
 public:
 
@@ -209,6 +200,12 @@ public:
             const conformationSurfaces& geometryToConformTo,
             const dictionary& coeffsDict
         );
+
+        //- Disallow default bitwise copy construction
+        backgroundMeshDecomposition
+        (
+            const backgroundMeshDecomposition&
+        ) = delete;
 
 
     //- Destructor
@@ -297,18 +294,6 @@ public:
             const scalar radiusSqr
         ) const;
 
-//        //- Which processors overlap the given sphere, returns all processors
-//        //  whose boundary patch is touched by the sphere or whom the sphere
-//        //  is inside.  By default this does not return the processor that the
-//        //  query is launched from, it is assumed that the point is on that
-//        //  processor.
-//        labelListList overlapsProcessors
-//        (
-//            const List<point>& centres,
-//            const List<scalar>& radiusSqrs,
-//            const Delaunay& T,
-//            bool includeOwnProcessor
-//        ) const;
 
         // Access
 
@@ -329,6 +314,12 @@ public:
 
             //- Return the current decomposition method
             inline const decompositionMethod& decomposer() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const backgroundMeshDecomposition&) = delete;
 };
 
 

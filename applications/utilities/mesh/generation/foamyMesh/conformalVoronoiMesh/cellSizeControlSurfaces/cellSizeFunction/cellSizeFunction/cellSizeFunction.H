@@ -106,17 +106,6 @@ protected:
         label priority_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cellSizeFunction(const cellSizeFunction&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellSizeFunction&) = delete;
-
-
 public:
 
     // Declare run-time constructor selection table
@@ -147,6 +136,9 @@ public:
             const scalar& defaultCellSize,
             const labelList regionIndices
         );
+
+        //- Disallow default bitwise copy construction
+        cellSizeFunction(const cellSizeFunction&) = delete;
 
 
     // Selectors
@@ -207,6 +199,12 @@ public:
         {
             return priority_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellSizeFunction&) = delete;
 };
 
 

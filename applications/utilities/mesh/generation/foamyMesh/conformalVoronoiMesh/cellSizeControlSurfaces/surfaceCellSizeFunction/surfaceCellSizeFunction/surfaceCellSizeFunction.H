@@ -71,17 +71,6 @@ protected:
         scalar refinementFactor_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        surfaceCellSizeFunction(const surfaceCellSizeFunction&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceCellSizeFunction&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -115,6 +104,9 @@ public:
             const scalar& defaultCellSize
         );
 
+        //- Disallow default bitwise copy construction
+        surfaceCellSizeFunction(const surfaceCellSizeFunction&) = delete;
+
 
     // Selectors
 
@@ -144,6 +136,12 @@ public:
             const point& pt,
             const label index
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceCellSizeFunction&) = delete;
 };
 
 
