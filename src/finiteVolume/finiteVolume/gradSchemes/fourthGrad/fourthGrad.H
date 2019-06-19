@@ -56,15 +56,6 @@ class fourthGrad
 :
     public fv::gradScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fourthGrad(const fourthGrad&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fourthGrad&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -78,6 +69,9 @@ public:
         :
             gradScheme<Type>(mesh)
         {}
+
+        //- Disallow default bitwise copy construction
+        fourthGrad(const fourthGrad&) = delete;
 
 
     // Member Functions
@@ -93,6 +87,12 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& vsf,
             const word& name
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fourthGrad&) = delete;
 };
 
 

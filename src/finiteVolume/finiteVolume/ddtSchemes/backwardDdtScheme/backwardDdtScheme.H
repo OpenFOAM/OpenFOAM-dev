@@ -70,12 +70,6 @@ class backwardDdtScheme
         template<class GeoField>
         scalar deltaT0_(const GeoField&) const;
 
-        //- Disallow default bitwise copy construction
-        backwardDdtScheme(const backwardDdtScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const backwardDdtScheme&) = delete;
-
 
 public:
 
@@ -110,6 +104,9 @@ public:
                 mesh.V00();
             }
         }
+
+        //- Disallow default bitwise copy construction
+        backwardDdtScheme(const backwardDdtScheme&) = delete;
 
 
     // Member Functions
@@ -205,6 +202,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const backwardDdtScheme&) = delete;
 };
 
 

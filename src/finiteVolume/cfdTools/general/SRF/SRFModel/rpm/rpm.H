@@ -60,15 +60,6 @@ class rpm
         scalar rpm_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        rpm(const rpm&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const rpm&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -80,9 +71,13 @@ public:
         //- Construct from components
         rpm(const volVectorField& U);
 
+        //- Disallow default bitwise copy construction
+        rpm(const rpm&) = delete;
+
 
     //- Destructor
     ~rpm();
+
 
     // Member Functions
 
@@ -90,6 +85,12 @@ public:
 
             //- Read
             bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rpm&) = delete;
 };
 
 

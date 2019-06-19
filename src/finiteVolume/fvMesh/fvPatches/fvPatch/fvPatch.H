@@ -70,15 +70,6 @@ class fvPatch
         const fvBoundaryMesh& boundaryMesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow construct as copy
-        fvPatch(const fvPatch&);
-
-        //- Disallow assignment
-        void operator=(const fvPatch&);
-
-
 protected:
 
     // Protected Member Functions
@@ -120,6 +111,9 @@ public:
 
         //- Construct from polyPatch and fvBoundaryMesh
         fvPatch(const polyPatch&, const fvBoundaryMesh&);
+
+        //- Disallow construct as copy
+        fvPatch(const fvPatch&);
 
 
     // Selectors
@@ -269,6 +263,12 @@ public:
                 const GeometricField* = nullptr,
                 const Type* = nullptr
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow assignment
+        void operator=(const fvPatch&);
 };
 
 

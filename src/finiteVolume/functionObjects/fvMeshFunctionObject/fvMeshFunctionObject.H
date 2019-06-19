@@ -73,17 +73,6 @@ protected:
         const fvMesh& mesh_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fvMeshFunctionObject(const fvMeshFunctionObject&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvMeshFunctionObject&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -108,9 +97,18 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        fvMeshFunctionObject(const fvMeshFunctionObject&) = delete;
+
 
     //- Destructor
     virtual ~fvMeshFunctionObject();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMeshFunctionObject&) = delete;
 };
 
 

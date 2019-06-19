@@ -57,12 +57,6 @@ class IOporosityModelList
         //- Create IO object if dictionary is present
         IOobject createIOobject(const fvMesh& mesh) const;
 
-        //- Disallow default bitwise copy construction
-        IOporosityModelList(const IOporosityModelList&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const IOporosityModelList&) = delete;
-
 
 public:
 
@@ -71,6 +65,8 @@ public:
         //- Construct from mesh
         IOporosityModelList(const fvMesh& mesh);
 
+        //- Disallow default bitwise copy construction
+        IOporosityModelList(const IOporosityModelList&) = delete;
 
         //- Destructor
         virtual ~IOporosityModelList()
@@ -81,7 +77,14 @@ public:
 
         //- Read dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IOporosityModelList&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

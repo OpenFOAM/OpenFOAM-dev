@@ -159,27 +159,26 @@ class solidification
             const volVectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construction
-        solidification(const solidification&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidification&) = delete;
-
 
 public:
 
     //- Runtime type information
     TypeName("solidification");
 
-    //- Constructor
-    solidification
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        solidification
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        solidification(const solidification&) = delete;
+
 
     //- Destructor
     virtual ~solidification();
@@ -222,7 +221,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidification&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

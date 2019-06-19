@@ -113,16 +113,6 @@ class extendedUpwindCellToFaceStencil
         );
 
 
-        //- Disallow default bitwise copy construction
-        extendedUpwindCellToFaceStencil
-        (
-            const extendedUpwindCellToFaceStencil&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const extendedUpwindCellToFaceStencil&) = delete;
-
-
 public:
 
     // Constructors
@@ -143,6 +133,12 @@ public:
         (
             const cellToFaceStencil&
         );
+
+        //- Disallow default bitwise copy construction
+        extendedUpwindCellToFaceStencil
+        (
+            const extendedUpwindCellToFaceStencil&
+        ) = delete;
 
 
     // Member Functions
@@ -186,6 +182,11 @@ public:
             const List<List<scalar>>& neiWeights
         ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extendedUpwindCellToFaceStencil&) = delete;
 };
 
 

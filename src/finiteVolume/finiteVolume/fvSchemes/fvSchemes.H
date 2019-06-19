@@ -91,12 +91,6 @@ class fvSchemes
         //- Read settings from the dictionary
         void read(const dictionary&);
 
-        //- Disallow default bitwise copy construction
-        fvSchemes(const fvSchemes&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvSchemes&) = delete;
-
 
 public:
 
@@ -108,6 +102,9 @@ public:
 
         //- Construct for objectRegistry
         fvSchemes(const objectRegistry& obr);
+
+        //- Disallow default bitwise copy construction
+        fvSchemes(const fvSchemes&) = delete;
 
 
     // Member Functions
@@ -151,6 +148,12 @@ public:
 
             //- Read the fvSchemes
             bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvSchemes&) = delete;
 };
 
 

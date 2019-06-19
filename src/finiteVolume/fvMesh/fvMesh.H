@@ -156,13 +156,6 @@ class fvMesh
             void makeCf() const;
 
 
-        //- Disallow construct as copy
-        fvMesh(const fvMesh&);
-
-        //- Disallow assignment
-        void operator=(const fvMesh&);
-
-
 public:
 
     // Public Typedefs
@@ -216,6 +209,9 @@ public:
             cellList&& cells,
             const bool syncPar = true
         );
+
+        //- Disallow construct as copy
+        fvMesh(const fvMesh&);
 
 
     //- Destructor
@@ -391,6 +387,9 @@ public:
 
 
     // Member Operators
+
+        //- Disallow assignment
+        void operator=(const fvMesh&);
 
         bool operator!=(const fvMesh&) const;
         bool operator==(const fvMesh&) const;

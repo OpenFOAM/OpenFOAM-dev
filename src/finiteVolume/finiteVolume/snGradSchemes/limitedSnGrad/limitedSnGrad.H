@@ -78,9 +78,6 @@ class limitedSnGrad
 
     // Private Member Functions
 
-        //- Disallow default bitwise assignment
-        void operator=(const limitedSnGrad&) = delete;
-
         //- Lookup function for the corrected to support backward compatibility
         //  of dictionary specification
         tmp<snGradScheme<Type>> lookupCorrectedScheme(Istream& schemeData)
@@ -170,6 +167,12 @@ public:
         //  for the given field
         virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitedSnGrad&) = delete;
 };
 
 

@@ -89,15 +89,6 @@ class LeastSquaresGrad
         scalar minDet_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        LeastSquaresGrad(const LeastSquaresGrad&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const LeastSquaresGrad&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -111,6 +102,9 @@ public:
         :
             gradScheme<Type>(mesh)
         {}
+
+        //- Disallow default bitwise copy construction
+        LeastSquaresGrad(const LeastSquaresGrad&) = delete;
 
 
     // Member Functions
@@ -126,6 +120,12 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& vsf,
             const word& name
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LeastSquaresGrad&) = delete;
 };
 
 

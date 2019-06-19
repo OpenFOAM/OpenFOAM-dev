@@ -95,27 +95,26 @@ class fixedCoeff
             const scalar rho
         ) const;
 
-        //- Disallow default bitwise copy construction
-        fixedCoeff(const fixedCoeff&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fixedCoeff&) = delete;
-
 
 public:
 
     //- Runtime type information
     TypeName("fixedCoeff");
 
-    //- Constructor
-    fixedCoeff
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        fixedCoeff
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        fixedCoeff(const fixedCoeff&) = delete;
+
 
     //- Destructor
     virtual ~fixedCoeff();
@@ -158,7 +157,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fixedCoeff&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

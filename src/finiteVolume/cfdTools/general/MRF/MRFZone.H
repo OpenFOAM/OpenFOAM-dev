@@ -146,12 +146,6 @@ class MRFZone
             surfaceScalarField& phi
         ) const;
 
-        //- Disallow default bitwise copy construction
-        MRFZone(const MRFZone&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const MRFZone&) = delete;
-
 
 public:
 
@@ -169,6 +163,9 @@ public:
             const dictionary& dict,
             const word& cellZoneName = word::null
         );
+
+        //- Disallow default bitwise copy construction
+        MRFZone(const MRFZone&) = delete;
 
         //- Return clone
         autoPtr<MRFZone> clone() const
@@ -272,6 +269,12 @@ public:
 
         //- Read MRF dictionary
         bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const MRFZone&) = delete;
 };
 
 

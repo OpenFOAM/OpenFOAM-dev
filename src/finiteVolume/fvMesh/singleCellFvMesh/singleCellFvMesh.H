@@ -78,13 +78,6 @@ class singleCellFvMesh
         void agglomerateMesh(const fvMesh&, const labelListList&);
 
 
-        //- Disallow default bitwise copy construction
-        singleCellFvMesh(const singleCellFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const singleCellFvMesh&) = delete;
-
-
 public:
 
         //- Patch field mapper class for agglomerated meshes
@@ -168,6 +161,10 @@ public:
         //- Read from IOobject
         singleCellFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        singleCellFvMesh(const singleCellFvMesh&) = delete;
+
+
     // Member Functions
 
         bool agglomerate() const
@@ -209,6 +206,11 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleCellFvMesh&) = delete;
 };
 
 

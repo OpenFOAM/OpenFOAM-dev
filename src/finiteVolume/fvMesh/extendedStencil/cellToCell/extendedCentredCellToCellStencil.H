@@ -61,24 +61,18 @@ class extendedCentredCellToCellStencil
         labelListList stencil_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        extendedCentredCellToCellStencil
-        (
-            const extendedCentredCellToCellStencil&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const extendedCentredCellToCellStencil&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from uncompacted cell stencil
         explicit extendedCentredCellToCellStencil(const cellToCellStencil&);
+
+        //- Disallow default bitwise copy construction
+        extendedCentredCellToCellStencil
+        (
+            const extendedCentredCellToCellStencil&
+        );
 
 
     // Member Functions
@@ -139,6 +133,12 @@ public:
                 stencilWeights
             );
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extendedCentredCellToCellStencil&) = delete;
 };
 
 

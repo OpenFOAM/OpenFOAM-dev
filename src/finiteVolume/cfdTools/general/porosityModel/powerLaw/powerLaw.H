@@ -96,27 +96,26 @@ class powerLaw
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construction
-        powerLaw(const powerLaw&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const powerLaw&) = delete;
-
 
 public:
 
     //- Runtime type information
     TypeName("powerLaw");
 
-    //- Constructor
-    powerLaw
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        powerLaw
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        powerLaw(const powerLaw&) = delete;
+
 
     //- Destructor
     virtual ~powerLaw();
@@ -159,7 +158,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const powerLaw&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

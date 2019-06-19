@@ -80,12 +80,6 @@ class SLTSDdtScheme
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        SLTSDdtScheme(const SLTSDdtScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const SLTSDdtScheme&) = delete;
-
         //- Calculate a relaxed diagonal from the given flux field
         void relaxedDiag(scalarField& rD, const surfaceScalarField& phi) const;
 
@@ -109,6 +103,9 @@ public:
             rhoName_(is),
             alpha_(readScalar(is))
         {}
+
+        //- Disallow default bitwise copy construction
+        SLTSDdtScheme(const SLTSDdtScheme&) = delete;
 
 
     // Member Functions
@@ -204,6 +201,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SLTSDdtScheme&) = delete;
 };
 
 

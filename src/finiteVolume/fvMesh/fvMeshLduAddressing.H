@@ -66,15 +66,6 @@ class fvMeshLduAddressing
         const lduSchedule& patchSchedule_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fvMeshLduAddressing(const fvMeshLduAddressing&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvMeshLduAddressing&) = delete;
-
-
 public:
 
     // Constructors
@@ -100,6 +91,9 @@ public:
                 patchAddr_[patchi] = &mesh.boundary()[patchi].faceCells();
             }
         }
+
+        //- Disallow default bitwise copy construction
+        fvMeshLduAddressing(const fvMeshLduAddressing&) = delete;
 
 
     //- Destructor
@@ -132,6 +126,12 @@ public:
         {
             return patchSchedule_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMeshLduAddressing&) = delete;
 };
 
 

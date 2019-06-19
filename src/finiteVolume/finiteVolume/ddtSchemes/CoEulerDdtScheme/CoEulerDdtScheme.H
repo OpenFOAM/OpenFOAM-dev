@@ -78,12 +78,6 @@ class CoEulerDdtScheme
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        CoEulerDdtScheme(const CoEulerDdtScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const CoEulerDdtScheme&) = delete;
-
         //- Return the reciprocal of the Courant-number limited time-step
         tmp<volScalarField> CorDeltaT() const;
 
@@ -107,6 +101,9 @@ public:
             rhoName_(is),
             maxCo_(readScalar(is))
         {}
+
+        //- Disallow default bitwise copy construction
+        CoEulerDdtScheme(const CoEulerDdtScheme&) = delete;
 
 
     // Member Functions
@@ -202,6 +199,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CoEulerDdtScheme&) = delete;
 };
 
 

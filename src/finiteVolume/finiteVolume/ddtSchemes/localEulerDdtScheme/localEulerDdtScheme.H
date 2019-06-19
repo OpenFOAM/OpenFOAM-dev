@@ -117,12 +117,6 @@ class localEulerDdtScheme
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        localEulerDdtScheme(const localEulerDdtScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const localEulerDdtScheme&) = delete;
-
         //- Return the reciprocal of the local time-step
         const volScalarField& localRDeltaT() const;
 
@@ -149,6 +143,9 @@ public:
         :
             ddtScheme<Type>(mesh, is)
         {}
+
+        //- Disallow default bitwise copy construction
+        localEulerDdtScheme(const localEulerDdtScheme&) = delete;
 
 
     // Member Functions
@@ -254,6 +251,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const localEulerDdtScheme&) = delete;
 };
 
 

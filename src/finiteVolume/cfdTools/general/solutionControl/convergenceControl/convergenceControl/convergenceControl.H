@@ -114,18 +114,6 @@ public:
         );
 
 
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        convergenceControl(const convergenceControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const convergenceControl&) = delete;
-
-
 protected:
 
     // Protected data
@@ -147,6 +135,9 @@ public:
         //- Construct from a solution control
         convergenceControl(const solutionControl& control);
 
+        //- Disallow default bitwise copy construction
+        convergenceControl(const convergenceControl&) = delete;
+
 
     //- Destructor
     virtual ~convergenceControl();
@@ -167,6 +158,12 @@ public:
 
             //- End the run if convergance has been reached
             bool endIfConverged(Time& time);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const convergenceControl&) = delete;
 };
 
 

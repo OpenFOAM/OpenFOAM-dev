@@ -68,15 +68,6 @@ class boundedDdtScheme
         tmp<fv::ddtScheme<Type>> scheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        boundedDdtScheme(const boundedDdtScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const boundedDdtScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -94,6 +85,9 @@ public:
                 fv::ddtScheme<Type>::New(mesh, is)
             )
         {}
+
+        //- Disallow default bitwise copy construction
+        boundedDdtScheme(const boundedDdtScheme&) = delete;
 
 
     // Member Functions
@@ -189,6 +183,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const boundedDdtScheme&) = delete;
 };
 
 

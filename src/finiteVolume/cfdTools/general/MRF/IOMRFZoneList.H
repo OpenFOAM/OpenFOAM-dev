@@ -103,6 +103,7 @@ public:
         void operator=(const IOMRFZoneList&) = delete;
 };
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

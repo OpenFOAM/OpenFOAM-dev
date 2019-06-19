@@ -68,15 +68,6 @@ class boundedConvectionScheme
         tmp<fv::convectionScheme<Type>> scheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        boundedConvectionScheme(const boundedConvectionScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const boundedConvectionScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -99,6 +90,9 @@ public:
                 fv::convectionScheme<Type>::New(mesh, faceFlux, is)
             )
         {}
+
+        //- Disallow default bitwise copy construction
+        boundedConvectionScheme(const boundedConvectionScheme&) = delete;
 
 
     // Member Functions
@@ -126,6 +120,12 @@ public:
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const boundedConvectionScheme&) = delete;
 };
 
 

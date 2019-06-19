@@ -97,12 +97,6 @@ protected:
             const dimensionSet& ds
         );
 
-        //- Disallow default bitwise copy construction
-        optionList(const optionList&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const optionList&) = delete;
-
 
 public:
 
@@ -117,6 +111,9 @@ public:
 
         //- Construct from mesh and dictionary
         optionList(const fvMesh& mesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        optionList(const optionList&) = delete;
 
 
     //- Destructor
@@ -257,6 +254,12 @@ public:
                 Ostream& os,
                 const optionList& options
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const optionList&) = delete;
 };
 
 

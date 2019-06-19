@@ -60,24 +60,18 @@ class extendedCentredFaceToCellStencil
         labelListList stencil_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        extendedCentredFaceToCellStencil
-        (
-            const extendedCentredFaceToCellStencil&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const extendedCentredFaceToCellStencil&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from uncompacted face stencil
         explicit extendedCentredFaceToCellStencil(const faceToCellStencil&);
+
+        //- Disallow default bitwise copy construction
+        extendedCentredFaceToCellStencil
+        (
+            const extendedCentredFaceToCellStencil&
+        );
 
 
     // Member Functions
@@ -131,6 +125,11 @@ public:
             );
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extendedCentredFaceToCellStencil&) = delete;
 };
 
 

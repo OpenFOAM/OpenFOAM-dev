@@ -56,14 +56,6 @@ class gaussDivScheme
 :
     public fv::divScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        gaussDivScheme(const gaussDivScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussDivScheme&) = delete;
-
 
 public:
 
@@ -85,6 +77,9 @@ public:
             divScheme<Type>(mesh, is)
         {}
 
+        //- Disallow default bitwise copy construction
+        gaussDivScheme(const gaussDivScheme&) = delete;
+
 
     // Member Functions
 
@@ -96,6 +91,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussDivScheme&) = delete;
 };
 
 
