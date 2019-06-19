@@ -126,12 +126,6 @@ private:
             const vector& defaultDir
         );
 
-        //- Disallow default bitwise copy construction
-        directions(const directions&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const directions&) = delete;
-
 
 public:
 
@@ -144,6 +138,15 @@ public:
             const dictionary& dict,
             const twoDPointCorrector* correct2DPtr = nullptr
         );
+
+        //- Disallow default bitwise copy construction
+        directions(const directions&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const directions&) = delete;
 };
 
 

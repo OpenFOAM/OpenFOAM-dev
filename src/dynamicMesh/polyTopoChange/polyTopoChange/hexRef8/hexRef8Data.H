@@ -71,15 +71,6 @@ private:
         autoPtr<refinementHistory> refHistoryPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        hexRef8Data(const hexRef8Data&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const hexRef8Data&) = delete;
-
-
 public:
 
     // Constructors
@@ -106,6 +97,9 @@ public:
             const UPtrList<const hexRef8Data>&
         );
 
+        //- Disallow default bitwise copy construction
+        hexRef8Data(const hexRef8Data&) = delete;
+
 
     //- Destructor
     ~hexRef8Data();
@@ -125,6 +119,12 @@ public:
 
         //- Write
         bool write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hexRef8Data&) = delete;
 };
 
 

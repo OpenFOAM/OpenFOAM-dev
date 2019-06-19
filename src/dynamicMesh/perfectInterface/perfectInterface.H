@@ -78,13 +78,6 @@ class perfectInterface
         static pointField calcFaceCentres(const indirectPrimitivePatch&);
 
 
-        //- Disallow default bitwise copy construction
-        perfectInterface(const perfectInterface&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const perfectInterface&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -112,6 +105,9 @@ public:
             const label index,
             const polyTopoChanger& mme
         );
+
+        //- Disallow default bitwise copy construction
+        perfectInterface(const perfectInterface&) = delete;
 
 
     //- Destructor
@@ -150,6 +146,11 @@ public:
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const perfectInterface&) = delete;
 };
 
 

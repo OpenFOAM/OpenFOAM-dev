@@ -186,13 +186,6 @@ protected:
                 label& nProtected
             ) const;
 
-private:
-
-        //- Disallow default bitwise copy construction
-        dynamicRefineFvMesh(const dynamicRefineFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicRefineFvMesh&) = delete;
 
 public:
 
@@ -204,6 +197,9 @@ public:
 
         //- Construct from IOobject
         explicit dynamicRefineFvMesh(const IOobject& io);
+
+        //- Disallow default bitwise copy construction
+        dynamicRefineFvMesh(const dynamicRefineFvMesh&) = delete;
 
 
     //- Destructor
@@ -244,6 +240,12 @@ public:
             IOstream::compressionType cmp,
             const bool write = true
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicRefineFvMesh&) = delete;
 };
 
 

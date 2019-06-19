@@ -155,14 +155,6 @@ class removeFaces
             ) const;
 
 
-
-        //- Disallow default bitwise copy construction
-        removeFaces(const removeFaces&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const removeFaces&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -175,6 +167,10 @@ public:
         //  to be considered aligned. Set to >= 1 to disable checking
         //  and always merge (if on same patch)
         removeFaces(const polyMesh&, const scalar minCos);
+
+        //- Disallow default bitwise copy construction
+        removeFaces(const removeFaces&) = delete;
+
 
     // Member Functions
 
@@ -211,6 +207,12 @@ public:
         //- Force recalculation of locally stored data for mesh distribution
         void distribute(const mapDistributePolyMesh&)
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const removeFaces&) = delete;
 };
 
 

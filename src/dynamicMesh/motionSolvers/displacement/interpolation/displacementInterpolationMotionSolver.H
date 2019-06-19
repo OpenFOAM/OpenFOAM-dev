@@ -84,18 +84,6 @@ class displacementInterpolationMotionSolver
             FixedList<List<scalarField>, 3> rangeToWeights_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        displacementInterpolationMotionSolver
-        (
-            const displacementInterpolationMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementInterpolationMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -111,6 +99,12 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        displacementInterpolationMotionSolver
+        (
+            const displacementInterpolationMotionSolver&
+        );
+
 
     //- Destructor
     ~displacementInterpolationMotionSolver();
@@ -124,6 +118,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementInterpolationMotionSolver&) = delete;
 };
 
 

@@ -50,15 +50,6 @@ class staticFvMesh
 :
     public dynamicFvMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        staticFvMesh(const staticFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const staticFvMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -69,6 +60,9 @@ public:
 
         //- Construct from IOobject
         staticFvMesh(const IOobject& io);
+
+        //- Disallow default bitwise copy construction
+        staticFvMesh(const staticFvMesh&) = delete;
 
 
     //- Destructor
@@ -85,6 +79,12 @@ public:
 
         //- Dummy update function which does not change the mesh
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const staticFvMesh&) = delete;
 };
 
 

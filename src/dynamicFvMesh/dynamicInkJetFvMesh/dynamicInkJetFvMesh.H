@@ -73,15 +73,6 @@ class dynamicInkJetFvMesh
         velocityMotionCorrection velocityMotionCorrection_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        dynamicInkJetFvMesh(const dynamicInkJetFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicInkJetFvMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -93,6 +84,9 @@ public:
         //- Construct from IOobject
         dynamicInkJetFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        dynamicInkJetFvMesh(const dynamicInkJetFvMesh&) = delete;
+
 
     //- Destructor
     ~dynamicInkJetFvMesh();
@@ -102,6 +96,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicInkJetFvMesh&) = delete;
 };
 
 

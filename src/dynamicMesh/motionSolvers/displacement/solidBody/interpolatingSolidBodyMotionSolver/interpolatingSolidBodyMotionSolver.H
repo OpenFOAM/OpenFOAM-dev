@@ -76,18 +76,6 @@ class interpolatingSolidBodyMotionSolver
         pointScalarField scale_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        interpolatingSolidBodyMotionSolver
-        (
-            const interpolatingSolidBodyMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const interpolatingSolidBodyMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -103,6 +91,12 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        interpolatingSolidBodyMotionSolver
+        (
+            const interpolatingSolidBodyMotionSolver&
+        );
+
 
     //- Destructor
     ~interpolatingSolidBodyMotionSolver();
@@ -116,6 +110,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const interpolatingSolidBodyMotionSolver&) = delete;
 };
 
 

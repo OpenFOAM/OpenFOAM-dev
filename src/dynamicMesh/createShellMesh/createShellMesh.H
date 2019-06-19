@@ -96,13 +96,6 @@ class createShellMesh
         );
 
 
-        //- Disallow default bitwise copy construction
-        createShellMesh(const createShellMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const createShellMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -118,6 +111,9 @@ public:
             const faceList& pointRegions,
             const labelList& regionPoints
         );
+
+        //- Disallow default bitwise copy construction
+        createShellMesh(const createShellMesh&) = delete;
 
 
     // Member Functions
@@ -148,6 +144,10 @@ public:
             {
                 return faceToEdgeMap_;
             }
+
+        //- Disallow default bitwise assignment
+        void operator=(const createShellMesh&) = delete;
+
 
             //- From region point to patch point.
             const labelList& pointToPointMap() const
@@ -190,6 +190,9 @@ public:
                 const labelListList& extrudeEdgePatches,
                 polyTopoChange& meshMod
             );
+
+
+    // Member Operators
 
             //- Update any locally stored mesh information.
             void updateMesh(const mapPolyMesh&);

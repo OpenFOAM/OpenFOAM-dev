@@ -59,15 +59,6 @@ class motionSolverList
         PtrList<motionSolver> motionSolvers_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        motionSolverList(const motionSolverList&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const motionSolverList&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -78,6 +69,9 @@ public:
 
         //- Construct from mesh and dictionary
         motionSolverList(const polyMesh&, const dictionary&);
+
+        //- Disallow default bitwise copy construction
+        motionSolverList(const motionSolverList&) = delete;
 
 
     //- Destructor
@@ -97,6 +91,12 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const motionSolverList&) = delete;
 };
 
 

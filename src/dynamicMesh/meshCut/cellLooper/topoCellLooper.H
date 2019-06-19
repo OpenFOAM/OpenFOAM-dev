@@ -144,13 +144,6 @@ class topoCellLooper
         ) const;
 
 
-        //- Disallow default bitwise copy construction
-        topoCellLooper(const topoCellLooper&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const topoCellLooper&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -166,6 +159,9 @@ public:
 
         //- Construct from components
         topoCellLooper(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        topoCellLooper(const topoCellLooper&) = delete;
 
 
     //- Destructor
@@ -203,6 +199,12 @@ public:
             labelList& loop,
             scalarField& loopWeights
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const topoCellLooper&) = delete;
 };
 
 

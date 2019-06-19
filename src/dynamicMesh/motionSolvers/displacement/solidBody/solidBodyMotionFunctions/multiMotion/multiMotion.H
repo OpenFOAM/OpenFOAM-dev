@@ -60,15 +60,6 @@ class multiMotion
         PtrList<solidBodyMotionFunction> SBMFs_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        multiMotion(const multiMotion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multiMotion&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -83,6 +74,9 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        multiMotion(const multiMotion&);
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
@@ -109,6 +103,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& SBMFCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multiMotion&) = delete;
 };
 
 

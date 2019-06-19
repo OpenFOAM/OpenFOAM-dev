@@ -64,15 +64,6 @@ class axisRotationMotion
         vector radialVelocity_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        axisRotationMotion(const axisRotationMotion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const axisRotationMotion&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -87,6 +78,9 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        axisRotationMotion(const axisRotationMotion&);
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
@@ -113,6 +107,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& SBMFCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const axisRotationMotion&) = delete;
 };
 
 

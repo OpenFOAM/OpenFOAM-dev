@@ -63,18 +63,6 @@ protected:
         //- Point motion field
         mutable pointVectorField pointMotionU_;
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        velocityMotionSolver
-        (
-            const velocityMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const velocityMotionSolver&) = delete;
 
 public:
 
@@ -90,6 +78,12 @@ public:
             const polyMesh&,
             const dictionary&,
             const word& type
+        );
+
+        //- Disallow default bitwise copy construction
+        velocityMotionSolver
+        (
+            const velocityMotionSolver&
         );
 
 
@@ -116,6 +110,12 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const velocityMotionSolver&) = delete;
 };
 
 

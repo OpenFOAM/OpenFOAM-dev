@@ -172,13 +172,6 @@ class boundaryMesh
         ) const;
 
 
-        //- Disallow default bitwise copy construction
-        boundaryMesh(const boundaryMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const boundaryMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -189,6 +182,9 @@ public:
 
         //- Construct null
         boundaryMesh();
+
+        //- Disallow default bitwise copy construction
+        boundaryMesh(const boundaryMesh&) = delete;
 
 
     //- Destructor
@@ -381,6 +377,12 @@ public:
                 const label facei,
                 boolList& visited
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const boundaryMesh&) = delete;
 };
 
 

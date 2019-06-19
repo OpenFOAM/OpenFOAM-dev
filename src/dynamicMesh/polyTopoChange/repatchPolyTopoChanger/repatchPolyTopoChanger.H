@@ -65,12 +65,6 @@ class repatchPolyTopoChanger
         //- Demand driven access to polyTopoChange
         polyTopoChange& meshMod();
 
-        //- Disallow default bitwise copy construction
-        repatchPolyTopoChanger(const repatchPolyTopoChanger&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const repatchPolyTopoChanger&) = delete;
-
 
 public:
 
@@ -78,6 +72,9 @@ public:
 
         //- Construct for given mesh
         explicit repatchPolyTopoChanger(polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        repatchPolyTopoChanger(const repatchPolyTopoChanger&) = delete;
 
 
     //- Destructor
@@ -113,9 +110,14 @@ public:
             const label fp
         );
 
-
         //- Re-patch the mesh
         void repatch();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const repatchPolyTopoChanger&) = delete;
 };
 
 

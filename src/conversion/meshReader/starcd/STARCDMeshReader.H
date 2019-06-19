@@ -114,17 +114,6 @@ protected:
         static bool readHeader(IFstream&, word fileSignature);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        STARCD(const STARCD&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCD&) = delete;
-
-
 protected:
 
         enum cellType
@@ -168,9 +157,18 @@ public:
             const scalar scaleFactor = 1.0
         );
 
+        //- Disallow default bitwise copy construction
+        STARCD(const STARCD&) = delete;
+
 
     //- Destructor
     virtual ~STARCD();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCD&) = delete;
 };
 
 

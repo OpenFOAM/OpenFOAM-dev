@@ -69,12 +69,6 @@ class polyTopoChanger
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        polyTopoChanger(const polyTopoChanger&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyTopoChanger&) = delete;
-
         void readModifiers();
 
 
@@ -98,6 +92,9 @@ public:
 
         //- Read constructor for given polyMesh
         explicit polyTopoChanger(polyMesh&);
+
+        //- Disallow default bitwise copy construction
+        polyTopoChanger(const polyTopoChanger&) = delete;
 
 
     //- Destructor
@@ -151,6 +148,9 @@ public:
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyTopoChanger&) = delete;
 
         bool operator!=(const polyTopoChanger&) const;
         bool operator==(const polyTopoChanger&) const;

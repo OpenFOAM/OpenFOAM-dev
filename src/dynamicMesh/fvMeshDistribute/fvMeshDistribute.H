@@ -328,11 +328,6 @@ class fvMeshDistribute
                 const dictionary& fieldDicts
             );
 
-            //- Disallow default bitwise copy construction
-            fvMeshDistribute(const fvMeshDistribute&) = delete;
-
-            //- Disallow default bitwise assignment
-            void operator=(const fvMeshDistribute&) = delete;
 
 public:
 
@@ -343,6 +338,9 @@ public:
 
         //- Construct from mesh and absolute merge tolerance
         fvMeshDistribute(fvMesh& mesh, const scalar mergeTol);
+
+        //- Disallow default bitwise copy construction
+        fvMeshDistribute(const fvMeshDistribute&) = delete;
 
 
     // Member Functions
@@ -372,6 +370,12 @@ public:
 
             //- Print some info on mesh.
             static void printMeshInfo(const fvMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMeshDistribute&) = delete;
 };
 
 

@@ -64,14 +64,6 @@ class ensightParts
         //- List of parts
         PtrList<ensightPart> partsList_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        ensightParts(const ensightParts&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightParts&) = delete;
-
 
 public:
 
@@ -82,6 +74,9 @@ public:
 
         //- Construct from IOobject
         ensightParts(const IOobject&);
+
+        //- Disallow default bitwise copy construction
+        ensightParts(const ensightParts&) = delete;
 
 
     //- Destructor
@@ -147,6 +142,13 @@ public:
             ensightFile&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ensightParts&) = delete;
 
 
     // Friend Operators

@@ -235,12 +235,6 @@ private:
             face& f
         ) const;
 
-        //- Disallow default bitwise copy construction
-        edgeCollapser(const edgeCollapser&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const edgeCollapser&) = delete;
-
 
 public:
 
@@ -255,6 +249,9 @@ public:
 
         //- Construct from mesh and dict
         edgeCollapser(const polyMesh& mesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        edgeCollapser(const edgeCollapser&) = delete;
 
 
     // Member Functions
@@ -343,6 +340,12 @@ public:
                 PackedBoolList& collapseEdge,
                 Map<point>& collapsePointToLocation
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const edgeCollapser&) = delete;
 };
 
 

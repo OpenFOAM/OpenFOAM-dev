@@ -61,17 +61,6 @@ class attachPolyTopoChanger
 :
     public polyTopoChanger
 {
-    // Private Data
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        attachPolyTopoChanger(const attachPolyTopoChanger&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const attachPolyTopoChanger&) = delete;
-
-
 public:
 
     // Constructors
@@ -81,6 +70,9 @@ public:
 
         //- Read constructor for given polyMesh
         explicit attachPolyTopoChanger(polyMesh&);
+
+        //- Disallow default bitwise copy construction
+        attachPolyTopoChanger(const attachPolyTopoChanger&) = delete;
 
 
     //- Destructor
@@ -92,6 +84,12 @@ public:
 
         //- Attach mesh. By default filter out empty patches.
         void attach(const bool removeEmptyPatches = true);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const attachPolyTopoChanger&) = delete;
 };
 
 

@@ -64,15 +64,6 @@ class ensightFile
         static string dirFmt_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightFile&) = delete;
-
-        //- Disallow default bitwise copy construction
-        ensightFile(const ensightFile&);
-
-
 public:
 
     // Constructors
@@ -83,6 +74,9 @@ public:
             const fileName& pathname,
             IOstream::streamFormat format=IOstream::BINARY
         );
+
+        //- Disallow default bitwise copy construction
+        ensightFile(const ensightFile&);
 
 
     //- Destructor
@@ -152,6 +146,12 @@ public:
 
         //- Add carriage return to ascii stream
         void newline();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ensightFile&) = delete;
 };
 
 

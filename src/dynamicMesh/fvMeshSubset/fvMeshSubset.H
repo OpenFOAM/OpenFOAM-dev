@@ -134,11 +134,6 @@ class fvMeshSubset
             const label currentRegion
         ) const;
 
-        //- Disallow default bitwise copy construction
-        fvMeshSubset(const fvMeshSubset&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvMeshSubset&) = delete;
 
 public:
 
@@ -146,6 +141,9 @@ public:
 
         //- Construct given a mesh to subset
         explicit fvMeshSubset(const fvMesh&);
+
+        //- Disallow default bitwise copy construction
+        fvMeshSubset(const fvMeshSubset&) = delete;
 
 
     // Member Functions
@@ -317,6 +315,12 @@ public:
             template<class Type>
             tmp<DimensionedField<Type, volMesh>>
             interpolate(const DimensionedField<Type, volMesh>&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMeshSubset&) = delete;
 };
 
 

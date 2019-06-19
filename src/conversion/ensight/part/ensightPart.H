@@ -346,10 +346,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightPart&)
-        {
-            NotImplemented;
-        }
+        void operator=(const ensightPart&) = delete;
 
 
     // IOstream Operators
@@ -359,7 +356,6 @@ public:
 
         //- Write geometry
         friend ensightGeoFile& operator<<(ensightGeoFile&, const ensightPart&);
-
 };
 
 

@@ -94,15 +94,6 @@ class SDA
         scalar dTp_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        SDA(const SDA&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SDA&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -117,6 +108,10 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        SDA(const SDA&);
+
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
@@ -143,6 +138,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& SBMFCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SDA&) = delete;
 };
 
 

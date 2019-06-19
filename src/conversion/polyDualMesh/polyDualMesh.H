@@ -147,13 +147,6 @@ class polyDualMesh
         );
 
 
-        //- Disallow default bitwise copy construction
-        polyDualMesh(const polyDualMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyDualMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -182,6 +175,9 @@ public:
             const polyMesh&,
             const scalar featureCos
         );
+
+        //- Disallow default bitwise copy construction
+        polyDualMesh(const polyDualMesh&) = delete;
 
         //- Helper function to create feature edges and points based on
         //  feature angle and patches.
@@ -213,6 +209,12 @@ public:
             {
                 return boundaryFacePoint_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyDualMesh&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -111,12 +111,6 @@ class boundaryCutter
         ) const;
 
 
-        //- Disallow default bitwise copy construction
-        boundaryCutter(const boundaryCutter&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const boundaryCutter&) = delete;
-
 public:
 
     //- Runtime type information
@@ -126,6 +120,9 @@ public:
 
         //- Construct from mesh
         boundaryCutter(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        boundaryCutter(const boundaryCutter&) = delete;
 
 
     //- Destructor
@@ -171,6 +168,11 @@ public:
                 return faceAddedPoint_;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const boundaryCutter&) = delete;
 };
 
 

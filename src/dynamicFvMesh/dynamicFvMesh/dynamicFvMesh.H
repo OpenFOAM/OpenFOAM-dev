@@ -62,12 +62,6 @@ class dynamicFvMesh
         //- Return the dynamicMeshDict IOobject
         static IOobject dynamicMeshDictIOobject(const IOobject& io);
 
-        //- Disallow default bitwise copy construction
-        dynamicFvMesh(const dynamicFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicFvMesh&) = delete;
-
 
 public:
 
@@ -142,6 +136,9 @@ public:
             const bool syncPar = true
         );
 
+        //- Disallow default bitwise copy construction
+        dynamicFvMesh(const dynamicFvMesh&) = delete;
+
 
     // Selectors
 
@@ -171,6 +168,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicFvMesh&) = delete;
 };
 
 

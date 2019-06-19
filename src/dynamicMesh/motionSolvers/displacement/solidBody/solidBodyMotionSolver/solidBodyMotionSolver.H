@@ -64,15 +64,6 @@ class solidBodyMotionSolver
         bool moveAllCells_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        solidBodyMotionSolver(const solidBodyMotionSolver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidBodyMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -88,6 +79,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        solidBodyMotionSolver(const solidBodyMotionSolver&) = delete;
+
 
     //- Destructor
     ~solidBodyMotionSolver();
@@ -101,6 +95,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidBodyMotionSolver&) = delete;
 };
 
 

@@ -111,16 +111,6 @@ class displacementLayeredMotionMotionSolver
         );
 
 
-        //- Disallow default bitwise copy construction
-        displacementLayeredMotionMotionSolver
-        (
-            const displacementLayeredMotionMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementLayeredMotionMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -134,6 +124,12 @@ public:
         (
             const polyMesh&,
             const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        displacementLayeredMotionMotionSolver
+        (
+            const displacementLayeredMotionMotionSolver&
         );
 
 
@@ -151,6 +147,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementLayeredMotionMotionSolver&) = delete;
 };
 
 

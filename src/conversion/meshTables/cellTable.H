@@ -97,9 +97,6 @@ class cellTable
 
         void setEntry(const label id, const word& keyWord, const word& value);
 
-        //- Disallow default bitwise copy construction
-        cellTable(const cellTable&) = delete;
-
 
 public:
 
@@ -115,6 +112,9 @@ public:
             const word& name = "cellTable",
             const fileName& instance = "constant"
         );
+
+        //- Disallow default bitwise copy construction
+        cellTable(const cellTable&) = delete;
 
 
     //- Destructor

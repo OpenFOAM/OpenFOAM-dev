@@ -88,16 +88,6 @@ class displacementLinearMotionMotionSolver
         autoPtr<Function1<scalar>> displacement_;
 
 
-        //- Disallow default bitwise copy construction
-        displacementLinearMotionMotionSolver
-        (
-            const displacementLinearMotionMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementLinearMotionMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -113,6 +103,12 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        displacementLinearMotionMotionSolver
+        (
+            const displacementLinearMotionMotionSolver&
+        );
+
 
     //- Destructor
     ~displacementLinearMotionMotionSolver();
@@ -126,6 +122,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementLinearMotionMotionSolver&) = delete;
 };
 
 

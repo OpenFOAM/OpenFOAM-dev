@@ -76,15 +76,6 @@ class tabulated6DoFMotion
         Field<translationRotationVectors> values_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        tabulated6DoFMotion(const tabulated6DoFMotion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const tabulated6DoFMotion&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -99,6 +90,10 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        tabulated6DoFMotion(const tabulated6DoFMotion&);
+
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
@@ -125,6 +120,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& SBMFCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tabulated6DoFMotion&) = delete;
 };
 
 

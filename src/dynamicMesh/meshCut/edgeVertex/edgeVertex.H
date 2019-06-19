@@ -58,14 +58,6 @@ class edgeVertex
         //  here saves storing reference at higher levels where we do need it)
         const polyMesh& mesh_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        edgeVertex(const edgeVertex&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const edgeVertex&) = delete;
-
 
 public:
 
@@ -92,6 +84,9 @@ public:
         :
             mesh_(mesh)
         {}
+
+        //- Disallow default bitwise copy construction
+        edgeVertex(const edgeVertex&) = delete;
 
 
     // Member Functions
@@ -215,8 +210,18 @@ public:
         Ostream& writeCut(Ostream& os, const label cut, const scalar) const;
 
         //- Write cut descriptions to Ostream
-        Ostream& writeCuts(Ostream& os, const labelList&, const scalarField&)
-         const;
+        Ostream& writeCuts
+        (
+            Ostream& os,
+            const labelList&,
+            const scalarField&
+        ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const edgeVertex&) = delete;
 };
 
 

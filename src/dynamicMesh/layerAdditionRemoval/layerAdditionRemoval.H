@@ -88,12 +88,6 @@ class layerAdditionRemoval
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        layerAdditionRemoval(const layerAdditionRemoval&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const layerAdditionRemoval&) = delete;
-
         //- Check validity of construction data
         void checkDefinition();
 
@@ -170,6 +164,9 @@ public:
             const polyTopoChanger& ptc
         );
 
+        //- Disallow default bitwise copy construction
+        layerAdditionRemoval(const layerAdditionRemoval&) = delete;
+
 
     //- Destructor
     virtual ~layerAdditionRemoval();
@@ -217,6 +214,12 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const layerAdditionRemoval&) = delete;
 };
 
 

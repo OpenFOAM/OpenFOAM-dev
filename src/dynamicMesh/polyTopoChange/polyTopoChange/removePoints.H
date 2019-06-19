@@ -90,12 +90,6 @@ class removePoints
         ) const;
 
 
-        //- Disallow default bitwise copy construction
-        removePoints(const removePoints&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const removePoints&) = delete;
-
 public:
 
     //- Runtime type information
@@ -106,6 +100,9 @@ public:
 
         //- Construct from mesh
         removePoints(const polyMesh& mesh, const bool undoable = false);
+
+        //- Disallow default bitwise copy construction
+        removePoints(const removePoints&) = delete;
 
 
     // Member Functions
@@ -166,6 +163,12 @@ public:
                 const labelList& localPoints,
                 polyTopoChange&
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const removePoints&) = delete;
 };
 
 

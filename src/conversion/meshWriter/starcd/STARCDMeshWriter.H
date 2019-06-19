@@ -64,12 +64,6 @@ class STARCD
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        STARCD(const STARCD&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCD&) = delete;
-
         //- Pro-STAR 4+ header format
         static void writeHeader(Ostream&, const char* filetype);
 
@@ -104,6 +98,9 @@ public:
             const scalar scaleFactor = 1.0
         );
 
+        //- Disallow default bitwise copy construction
+        STARCD(const STARCD&) = delete;
+
 
     //- Destructor
     virtual ~STARCD();
@@ -125,6 +122,11 @@ public:
                 const fileName& meshName = fileName::null
             ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCD&) = delete;
 };
 
 

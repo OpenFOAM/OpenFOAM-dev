@@ -77,15 +77,6 @@ private:
         //- Return the component corresponding to the given component name
         direction cmpt(const word& cmptName) const;
 
-        //- Disallow default bitwise copy construction
-        componentVelocityMotionSolver
-        (
-            const componentVelocityMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const componentVelocityMotionSolver&) = delete;
-
 
 public:
 
@@ -101,6 +92,12 @@ public:
             const polyMesh&,
             const dictionary&,
             const word& type
+        );
+
+        //- Disallow default bitwise copy construction
+        componentVelocityMotionSolver
+        (
+            const componentVelocityMotionSolver&
         );
 
 
@@ -122,6 +119,12 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const componentVelocityMotionSolver&) = delete;
 };
 
 

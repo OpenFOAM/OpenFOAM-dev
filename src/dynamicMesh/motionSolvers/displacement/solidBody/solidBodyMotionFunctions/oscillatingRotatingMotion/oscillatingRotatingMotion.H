@@ -66,15 +66,6 @@ class oscillatingRotatingMotion
         scalar omega_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        oscillatingRotatingMotion(const oscillatingRotatingMotion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const oscillatingRotatingMotion&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -89,6 +80,9 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        oscillatingRotatingMotion(const oscillatingRotatingMotion&);
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
@@ -115,6 +109,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& SBMFCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const oscillatingRotatingMotion&) = delete;
 };
 
 

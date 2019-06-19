@@ -112,13 +112,6 @@ class faceCollapser
         ) const;
 
 
-        //- Disallow default bitwise copy construction
-        faceCollapser(const faceCollapser&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceCollapser&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -129,6 +122,9 @@ public:
 
         //- Construct from mesh.
         faceCollapser(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        faceCollapser(const faceCollapser&) = delete;
 
 
     // Member Functions
@@ -148,6 +144,12 @@ public:
             //- Update stored quantities for new mesh labels.
             void updateMesh(const mapPolyMesh&)
             {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceCollapser&) = delete;
 };
 
 

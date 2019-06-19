@@ -174,13 +174,6 @@ class meshCutAndRemove
         ) const;
 
 
-
-        //- Disallow default bitwise copy construction
-        meshCutAndRemove(const meshCutAndRemove&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshCutAndRemove&) = delete;
-
 public:
 
     //- Runtime type information
@@ -191,6 +184,9 @@ public:
 
         //- Construct from mesh
         meshCutAndRemove(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        meshCutAndRemove(const meshCutAndRemove&) = delete;
 
 
     // Member Functions
@@ -229,6 +225,12 @@ public:
             {
                 return addedPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshCutAndRemove&) = delete;
 };
 
 

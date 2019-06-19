@@ -52,9 +52,6 @@ class ensightPartFaces
 {
     // Private Member Functions
 
-        //- Disallow default bitwise assignment
-        void operator=(const ensightPartFaces&) = delete;
-
         //- Track points used
         virtual localPoints calcLocalPoints() const;
 
@@ -168,6 +165,12 @@ public:
         {
             return elemTypes_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ensightPartFaces&) = delete;
 };
 
 

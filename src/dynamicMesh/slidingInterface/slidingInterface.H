@@ -209,12 +209,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        slidingInterface(const slidingInterface&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const slidingInterface&) = delete;
-
         //- Clear out
         void clearOut() const;
 
@@ -338,6 +332,9 @@ public:
             const polyTopoChanger& mme
         );
 
+        //- Disallow default bitwise copy construction
+        slidingInterface(const slidingInterface&) = delete;
+
 
     //- Destructor
     virtual ~slidingInterface();
@@ -381,6 +378,12 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const slidingInterface&) = delete;
 };
 
 

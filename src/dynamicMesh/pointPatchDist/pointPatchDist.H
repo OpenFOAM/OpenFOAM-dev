@@ -64,15 +64,6 @@ class pointPatchDist
         label nUnset_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        pointPatchDist(const pointPatchDist&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatchDist&) = delete;
-
-
 public:
 
     // Constructors
@@ -84,6 +75,9 @@ public:
             const labelHashSet& patchIDs,
             const pointField& points
         );
+
+        //- Disallow default bitwise copy construction
+        pointPatchDist(const pointPatchDist&) = delete;
 
 
     //- Destructor
@@ -104,6 +98,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointPatchDist&) = delete;
 };
 
 

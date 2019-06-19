@@ -133,12 +133,6 @@ class enrichedPatch
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        enrichedPatch(const enrichedPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const enrichedPatch&) = delete;
-
         // Creation of demand-driven private data
 
             //- Calculate point merge map
@@ -203,6 +197,9 @@ public:
             const List<objectHit>& slavePointFaceHits
                                             // master face snapped to
         );
+
+        //- Disallow default bitwise copy construction
+        enrichedPatch(const enrichedPatch&) = delete;
 
 
     //- Destructor
@@ -279,6 +276,12 @@ public:
 
         //- Debugging: dump graphical representation to obj format file
         void writeOBJ(const fileName&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const enrichedPatch&) = delete;
 };
 
 

@@ -62,16 +62,6 @@ protected:
         pointIOField points0_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        points0MotionSolver(const points0MotionSolver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const points0MotionSolver&) = delete;
-
 public:
 
     //- Runtime type information
@@ -87,6 +77,9 @@ public:
             const dictionary&,
             const word& type
         );
+
+        //- Disallow default bitwise copy construction
+        points0MotionSolver(const points0MotionSolver&) = delete;
 
 
     //- Destructor
@@ -112,6 +105,12 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const points0MotionSolver&) = delete;
 };
 
 

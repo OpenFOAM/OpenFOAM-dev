@@ -84,15 +84,6 @@ class polyMeshModifier
         mutable Switch active_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        polyMeshModifier(const polyMeshModifier&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyMeshModifier&) = delete;
-
-
 public:
 
     // Static Data Members
@@ -128,6 +119,9 @@ public:
             const polyTopoChanger& mme,
             const bool act
         );
+
+        //- Disallow default bitwise copy construction
+        polyMeshModifier(const polyMeshModifier&) = delete;
 
 
     // Selectors
@@ -201,6 +195,12 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyMeshModifier&) = delete;
 
 
     // Ostream Operator

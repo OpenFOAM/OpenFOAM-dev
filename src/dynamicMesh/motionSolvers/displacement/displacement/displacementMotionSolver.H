@@ -61,16 +61,6 @@ protected:
         mutable pointVectorField pointDisplacement_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        displacementMotionSolver(const displacementMotionSolver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementMotionSolver&) = delete;
-
 public:
 
     //- Runtime type information
@@ -86,6 +76,9 @@ public:
             const dictionary&,
             const word& type
         );
+
+        //- Disallow default bitwise copy construction
+        displacementMotionSolver(const displacementMotionSolver&) = delete;
 
 
     //- Destructor
@@ -105,6 +98,12 @@ public:
         {
             return pointDisplacement_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementMotionSolver&) = delete;
 };
 
 

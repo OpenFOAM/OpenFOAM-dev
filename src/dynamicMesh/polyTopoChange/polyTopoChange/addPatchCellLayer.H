@@ -243,12 +243,6 @@ class addPatchCellLayer
             bool&
         );
 
-        //- Disallow default bitwise copy construction
-        addPatchCellLayer(const addPatchCellLayer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const addPatchCellLayer&) = delete;
-
 
 public:
 
@@ -260,6 +254,9 @@ public:
 
         //- Construct from mesh.
         addPatchCellLayer(const polyMesh&, const bool addToMesh = true);
+
+        //- Disallow default bitwise copy construction
+        addPatchCellLayer(const addPatchCellLayer&) = delete;
 
 
     // Member Functions
@@ -393,6 +390,12 @@ public:
                 const labelList& faceMap,   // new to old patch faces
                 const labelList& pointMap   // new to old patch points
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const addPatchCellLayer&) = delete;
 };
 
 

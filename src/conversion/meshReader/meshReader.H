@@ -172,12 +172,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        meshReader(const meshReader&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshReader&) = delete;
-
         //- Calculate pointCells
         void calcPointCells() const;
 
@@ -304,6 +298,9 @@ public:
         //- Construct from fileName
         meshReader(const fileName&, const scalar scaleFactor = 1.0);
 
+        //- Disallow default bitwise copy construction
+        meshReader(const meshReader&) = delete;
+
 
     //- Destructor
     virtual ~meshReader();
@@ -323,6 +320,12 @@ public:
             const polyMesh&,
             IOstream::streamFormat fmt = IOstream::BINARY
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshReader&) = delete;
 };
 
 

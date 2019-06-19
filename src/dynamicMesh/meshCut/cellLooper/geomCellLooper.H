@@ -65,7 +65,6 @@ class geomCellLooper
 :
     public cellLooper
 {
-
     // Static
 
         //- Tolerance for point equal test. Fraction of edge length.
@@ -112,13 +111,6 @@ class geomCellLooper
         bool edgeEndsCut(const labelList&, const label index) const;
 
 
-        //- Disallow default bitwise copy construction
-        geomCellLooper(const geomCellLooper&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const geomCellLooper&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -138,12 +130,13 @@ public:
         }
 
 
-
-
     // Constructors
 
         //- Construct from components
         geomCellLooper(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        geomCellLooper(const geomCellLooper&) = delete;
 
 
     //- Destructor
@@ -151,8 +144,6 @@ public:
 
 
     // Member Functions
-
-
 
         //- Create cut along circumference of celli. Gets current mesh cuts.
         //  Cut along circumference is expressed as loop of cuts plus weights
@@ -183,6 +174,12 @@ public:
             labelList& loop,
             scalarField& loopWeights
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const geomCellLooper&) = delete;
 };
 
 

@@ -97,13 +97,6 @@ private:
         ) const;
 
 
-        //- Disallow default bitwise copy construction
-        hexCellLooper(const hexCellLooper&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const hexCellLooper&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -114,6 +107,9 @@ public:
 
         //- Construct from components
         hexCellLooper(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        hexCellLooper(const hexCellLooper&) = delete;
 
 
     //- Destructor
@@ -152,6 +148,12 @@ public:
             labelList& loop,
             scalarField& loopWeights
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hexCellLooper&) = delete;
 };
 
 

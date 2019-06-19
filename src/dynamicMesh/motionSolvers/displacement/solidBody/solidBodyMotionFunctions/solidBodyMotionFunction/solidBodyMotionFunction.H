@@ -68,17 +68,6 @@ protected:
         const Time& time_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        solidBodyMotionFunction(const solidBodyMotionFunction&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidBodyMotionFunction&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -105,6 +94,9 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        solidBodyMotionFunction(const solidBodyMotionFunction&) = delete;
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const = 0;
@@ -134,6 +126,12 @@ public:
 
         //- Write in dictionary format
         virtual void writeData(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidBodyMotionFunction&) = delete;
 };
 
 

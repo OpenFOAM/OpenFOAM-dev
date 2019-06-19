@@ -450,13 +450,6 @@ class cellCuts
             void check() const;
 
 
-        //- Disallow default bitwise copy construction
-        cellCuts(const cellCuts&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellCuts&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -526,6 +519,9 @@ public:
             const label nLoops,
             const labelListList& cellAnchorPoints
         );
+
+        //- Disallow default bitwise copy construction
+        cellCuts(const cellCuts&) = delete;
 
 
     //- Destructor
@@ -631,6 +627,11 @@ public:
             //- debugging:Write edges of cell and loop
             void writeCellOBJ(const fileName& dir, const label celli) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellCuts&) = delete;
 };
 
 

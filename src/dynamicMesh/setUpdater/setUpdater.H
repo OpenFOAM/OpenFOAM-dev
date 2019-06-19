@@ -58,12 +58,6 @@ class setUpdater
         template<class Type>
         void updateSets(const mapPolyMesh& morphMap) const;
 
-        //- Disallow default bitwise copy construction
-        setUpdater(const setUpdater&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const setUpdater&) = delete;
-
 
 public:
 
@@ -81,6 +75,9 @@ public:
             const label index,
             const polyTopoChanger& mme
         );
+
+        //- Disallow default bitwise copy construction
+        setUpdater(const setUpdater&) = delete;
 
 
     //- Destructor
@@ -107,6 +104,12 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const setUpdater&) = delete;
 };
 
 

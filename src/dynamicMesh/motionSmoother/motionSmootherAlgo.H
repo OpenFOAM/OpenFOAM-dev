@@ -283,12 +283,6 @@ class motionSmootherAlgo
             PackedBoolList& isAffectedPoint
         ) const;
 
-        //- Disallow default bitwise copy construction
-        motionSmootherAlgo(const motionSmootherAlgo&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const motionSmootherAlgo&) = delete;
-
 
 public:
 
@@ -308,6 +302,9 @@ public:
             const labelList& adaptPatchIDs,     // patches forming 'outside'
             const dictionary& paramDict
         );
+
+        //- Disallow default bitwise copy construction
+        motionSmootherAlgo(const motionSmootherAlgo&) = delete;
 
 
     //- Destructor
@@ -499,6 +496,12 @@ public:
                     const scalarField& edgeWeight,
                     GeometricField<Type, pointPatchField, pointMesh>& newFld
                 ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const motionSmootherAlgo&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

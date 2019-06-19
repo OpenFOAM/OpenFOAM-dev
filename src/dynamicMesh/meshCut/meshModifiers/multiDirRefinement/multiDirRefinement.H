@@ -138,13 +138,6 @@ class multiDirRefinement
         );
 
 
-        //- Disallow default bitwise copy construction
-        multiDirRefinement(const multiDirRefinement&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const multiDirRefinement&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -184,6 +177,9 @@ public:
             const bool writeMesh = false    // write intermediate meshes
         );
 
+        //- Disallow default bitwise copy construction
+        multiDirRefinement(const multiDirRefinement&) = delete;
+
 
     // Member Functions
 
@@ -192,6 +188,12 @@ public:
         {
             return addedCells_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multiDirRefinement&) = delete;
 };
 
 

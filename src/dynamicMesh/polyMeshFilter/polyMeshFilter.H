@@ -186,12 +186,6 @@ class polyMeshFilter
             labelList& origToCurrentPointMap
         ) const;
 
-        //- Disallow default bitwise copy construction
-        polyMeshFilter(const polyMeshFilter&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyMeshFilter&) = delete;
-
 
 public:
 
@@ -214,6 +208,9 @@ public:
             const labelList& pointPriority,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        polyMeshFilter(const polyMeshFilter&) = delete;
 
 
     //- Destructor
@@ -255,6 +252,12 @@ public:
 
             //- Filter edges only.
             label filterEdges(const label nOriginalBadFaces);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyMeshFilter&) = delete;
 };
 
 

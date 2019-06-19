@@ -256,14 +256,6 @@ class meshCutter
         ) const;
 
 
-
-        //- Disallow default bitwise copy construction
-        meshCutter(const meshCutter&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshCutter&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -274,6 +266,9 @@ public:
 
         //- Construct from mesh
         meshCutter(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        meshCutter(const meshCutter&) = delete;
 
 
     //- Destructor
@@ -311,6 +306,12 @@ public:
             {
                 return addedPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshCutter&) = delete;
 };
 
 

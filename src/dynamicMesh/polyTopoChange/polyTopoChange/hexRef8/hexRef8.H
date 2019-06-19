@@ -336,13 +336,6 @@ class hexRef8
             ) const;
 
 
-        //- Disallow default bitwise copy construction
-        hexRef8(const hexRef8&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const hexRef8&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -376,6 +369,9 @@ public:
             const labelList& pointLevel,
             const scalar level0Edge = -great
         );
+
+        //- Disallow default bitwise copy construction
+        hexRef8(const hexRef8&) = delete;
 
 
     // Member Functions
@@ -568,6 +564,11 @@ public:
             //- Force writing refinement+history to polyMesh directory.
             bool write(const bool write = true) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hexRef8&) = delete;
 };
 
 

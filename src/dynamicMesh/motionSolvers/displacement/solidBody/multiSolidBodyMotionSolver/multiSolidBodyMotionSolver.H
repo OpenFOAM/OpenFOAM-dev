@@ -64,15 +64,6 @@ class multiSolidBodyMotionSolver
         labelListList pointIDs_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        multiSolidBodyMotionSolver(const multiSolidBodyMotionSolver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const multiSolidBodyMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -88,6 +79,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        multiSolidBodyMotionSolver(const multiSolidBodyMotionSolver&) = delete;
+
 
     //- Destructor
     ~multiSolidBodyMotionSolver();
@@ -101,6 +95,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multiSolidBodyMotionSolver&) = delete;
 };
 
 

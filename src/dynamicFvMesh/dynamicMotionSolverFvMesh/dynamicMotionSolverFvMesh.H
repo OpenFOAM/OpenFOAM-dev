@@ -62,15 +62,6 @@ class dynamicMotionSolverFvMesh
         velocityMotionCorrection velocityMotionCorrection_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        dynamicMotionSolverFvMesh(const dynamicMotionSolverFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicMotionSolverFvMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -81,6 +72,9 @@ public:
 
         //- Construct from IOobject
         dynamicMotionSolverFvMesh(const IOobject& io);
+
+        //- Disallow default bitwise copy construction
+        dynamicMotionSolverFvMesh(const dynamicMotionSolverFvMesh&) = delete;
 
 
     //- Destructor
@@ -106,6 +100,12 @@ public:
                 IOstream::compressionType cmp,
                 const bool write = true
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicMotionSolverFvMesh&) = delete;
 };
 
 

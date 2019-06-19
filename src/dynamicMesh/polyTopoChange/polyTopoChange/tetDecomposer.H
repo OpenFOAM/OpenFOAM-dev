@@ -126,12 +126,6 @@ private:
         //- Work out triangle index given the starting vertex in the face
         label triIndex(const label facei, const label fp) const;
 
-        //- Disallow default bitwise copy construction
-        tetDecomposer(const tetDecomposer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const tetDecomposer&) = delete;
-
 
 public:
 
@@ -143,6 +137,9 @@ public:
 
         //- Construct from mesh
         tetDecomposer(const polyMesh&);
+
+        //- Disallow default bitwise copy construction
+        tetDecomposer(const tetDecomposer&) = delete;
 
 
     // Member Functions
@@ -189,6 +186,12 @@ public:
 
             //- Force recalculation of locally stored data on topological change
             void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tetDecomposer&) = delete;
 };
 
 

@@ -68,14 +68,6 @@ class duplicatePoints
         labelListList duplicates_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        duplicatePoints(const duplicatePoints&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const duplicatePoints&) = delete;
-
 public:
 
     //- Runtime type information
@@ -86,6 +78,9 @@ public:
 
         //- Construct from mesh
         duplicatePoints(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        duplicatePoints(const duplicatePoints&) = delete;
 
 
     // Member Functions
@@ -112,6 +107,12 @@ public:
 
             //- Force recalculation of locally stored data on topological change
             void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const duplicatePoints&) = delete;
 };
 
 

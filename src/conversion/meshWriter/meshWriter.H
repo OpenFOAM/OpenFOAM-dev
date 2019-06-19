@@ -89,15 +89,6 @@ namespace Foam
 
 class meshWriter
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        meshWriter(const meshWriter&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshWriter&) = delete;
-
-
 protected:
 
     // Protected data
@@ -144,6 +135,9 @@ public:
             const scalar scaleFactor = 1.0
         );
 
+        //- Disallow default bitwise copy construction
+        meshWriter(const meshWriter&) = delete;
+
 
     //- Destructor
     virtual ~meshWriter();
@@ -173,6 +167,11 @@ public:
                 const fileName& timeName = fileName::null
             ) const = 0;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshWriter&) = delete;
 };
 
 

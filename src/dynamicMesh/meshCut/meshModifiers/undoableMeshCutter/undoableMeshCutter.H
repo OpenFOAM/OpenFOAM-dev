@@ -128,13 +128,6 @@ class undoableMeshCutter
         static void updateLabels(const labelList& map, Map<splitCell*>&);
 
 
-        //- Disallow default bitwise copy construction
-        undoableMeshCutter(const undoableMeshCutter&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const undoableMeshCutter&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -147,6 +140,9 @@ public:
         //- Construct from mesh and flag whether refinement pattern needs
         //  to be stored.
         undoableMeshCutter(const polyMesh& mesh, const bool undoable = true);
+
+        //- Disallow default bitwise copy construction
+        undoableMeshCutter(const undoableMeshCutter&) = delete;
 
 
     //- Destructor
@@ -199,6 +195,12 @@ public:
                 const labelList& splitFaces,
                 polyTopoChange&
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const undoableMeshCutter&) = delete;
 };
 
 

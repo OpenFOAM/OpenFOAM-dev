@@ -115,13 +115,6 @@ class combineFaces
         ) const;
 
 
-
-        //- Disallow default bitwise copy construction
-        combineFaces(const combineFaces&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const combineFaces&) = delete;
-
 public:
 
     //- Runtime type information
@@ -132,6 +125,9 @@ public:
 
         //- Construct from mesh
         combineFaces(const polyMesh& mesh, const bool undoable = false);
+
+        //- Disallow default bitwise copy construction
+        combineFaces(const combineFaces&) = delete;
 
 
     // Member Functions
@@ -215,6 +211,12 @@ public:
                 Map<label>& restoredFaces,
                 Map<label>& restoredCells
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const combineFaces&) = delete;
 };
 
 

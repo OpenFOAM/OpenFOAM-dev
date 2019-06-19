@@ -53,9 +53,6 @@ class ensightPartCells
 {
     // Private Member Functions
 
-        //- Disallow default bitwise assignment
-        void operator=(const ensightPartCells&) = delete;
-
         //- Classify the cell types, set elemLists.
         void classify
         (
@@ -164,6 +161,12 @@ public:
         {
             return elemTypes_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ensightPartCells&) = delete;
 };
 
 

@@ -107,12 +107,6 @@ class attachDetach
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        attachDetach(const attachDetach&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const attachDetach&) = delete;
-
         //- Check validity of construction data
         void checkDefinition();
 
@@ -170,6 +164,9 @@ public:
             const polyTopoChanger& mesh
         );
 
+        //- Disallow default bitwise copy construction
+        attachDetach(const attachDetach&) = delete;
+
 
     //- Destructor
     virtual ~attachDetach();
@@ -225,12 +222,17 @@ public:
             return triggerTimes_;
         }
 
-
         //- Write
         virtual void write(Ostream&) const;
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const attachDetach&) = delete;
 };
 
 
