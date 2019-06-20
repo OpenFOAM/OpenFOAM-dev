@@ -53,13 +53,13 @@ class solidProperties
 {
     // Private Data
 
-        //- Density [kg/m3]
+        //- Density [kg/m^3]
         scalar rho_;
 
-        //- Specific heat capacity [J/(kg.K)]
+        //- Specific heat capacity [J/kg/K]
         scalar Cp_;
 
-        //- Thermal conductivity [W/(m.K)]
+        //- Thermal conductivity [W/m/K]
         scalar kappa_;
 
         //- Heat of formation [J/kg]
@@ -136,13 +136,13 @@ public:
 
         // Physical constants which define the solidProperties
 
-            //- Density [kg/m3]
+            //- Density [kg/m^3]
             inline scalar rho() const;
 
-            //- Specific heat capacity [J/(kg.K)]
+            //- Specific heat capacity [J/kg/K]
             inline scalar Cp() const;
 
-            //- Thermal conductivity [W/(m.K)]
+            //- Thermal conductivity [W/m/K]
             inline scalar kappa() const;
 
             //- Heat of formation [J/kg]

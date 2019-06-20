@@ -38,7 +38,7 @@ Description
 
     \vartable
         p      | pressure [Pa]
-        \rho   | density [kg/m3]
+        \rho   | density [kg/m^3]
         \mu    | laminar viscosity [Pa s]
         D      | Darcy coefficient
         I      | inertial coefficient

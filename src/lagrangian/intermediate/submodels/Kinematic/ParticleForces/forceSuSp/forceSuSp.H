@@ -85,7 +85,7 @@ public:
 
         // Access
 
-            //- Return const access to the explicit contribution [kg.m/s2]
+            //- Return const access to the explicit contribution [kg m/s^2]
             inline const vector& Su() const;
 
             //- Return const access to the implicit coefficient [kg/s]

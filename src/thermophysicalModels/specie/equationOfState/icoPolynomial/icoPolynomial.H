@@ -49,7 +49,7 @@ Usage
         \f]
 
 Note
-    Input in [kg/m3], but internally uses [kg/m3/kmol].
+    Input in [kg/m^3], but internally uses [kg/m3/kmol].
 
 SourceFiles
     icoPolynomialI.H
@@ -176,7 +176,7 @@ public:
             //- Return Cv departure [J/(kg K]
             inline scalar Cv(scalar p, scalar T) const;
 
-            //- Return entropy [J/(kg K)]
+            //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
             //- Return compressibility rho/p [s^2/m^2]

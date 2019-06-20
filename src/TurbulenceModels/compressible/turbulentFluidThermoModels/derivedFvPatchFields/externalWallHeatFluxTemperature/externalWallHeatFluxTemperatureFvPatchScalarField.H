@@ -141,10 +141,10 @@ private:
         //- Heat power [W]
         scalar Q_;
 
-        //- Heat flux [W/m2]
+        //- Heat flux [W/m^2]
         scalarField q_;
 
-        //- Heat transfer coefficient [W/m2K]
+        //- Heat transfer coefficient [W/m^2K]
         scalarField h_;
 
         //- Ambient temperature [K]

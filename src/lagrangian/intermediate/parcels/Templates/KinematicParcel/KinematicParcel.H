@@ -108,10 +108,10 @@ public:
             //  of parcels issued by this cloud
             demandDrivenEntry<label> parcelTypeId_;
 
-            //- Minimum density [kg/m3]
+            //- Minimum density [kg/m^3]
             demandDrivenEntry<scalar> rhoMin_;
 
-            //- Particle density [kg/m3] (constant)
+            //- Particle density [kg/m^3] (constant)
             demandDrivenEntry<scalar> rho0_;
 
             //- Minimum parcel mass [kg]
@@ -183,7 +183,7 @@ public:
 
             // Cached continuous phase properties
 
-                //- Density [kg/m3]
+                //- Density [kg/m^3]
                 scalar rhoc_;
 
                 //- Velocity [m/s]
@@ -281,7 +281,7 @@ protected:
             //- Velocity of Parcel [m/s]
             vector U_;
 
-            //- Density [kg/m3]
+            //- Density [kg/m^3]
             scalar rho_;
 
             //- Age [s]

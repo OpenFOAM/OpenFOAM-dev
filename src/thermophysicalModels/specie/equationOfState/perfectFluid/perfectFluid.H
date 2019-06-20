@@ -136,7 +136,7 @@ public:
             //- Is the equation of state is isochoric i.e. rho = const
             static const bool isochoric = false;
 
-            //- Return fluid constant [J/(kg K)]
+            //- Return fluid constant [J/kg/K]
             inline scalar R() const;
 
             //- Return density [kg/m^3]
@@ -154,7 +154,7 @@ public:
             //- Return Cv departure [J/(kg K]
             inline scalar Cv(scalar p, scalar T) const;
 
-            //- Return entropy [J/(kg K)]
+            //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
             //- Return compressibility rho/p [s^2/m^2]

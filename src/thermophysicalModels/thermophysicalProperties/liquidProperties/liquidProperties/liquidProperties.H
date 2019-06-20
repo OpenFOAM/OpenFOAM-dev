@@ -223,7 +223,7 @@ public:
             //- Absolute Enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
 
-            // Entropy [J/(kg K)]
+            // Entropy [J/kg/K]
             scalar S(const scalar p, const scalar T) const;
 
 
@@ -238,7 +238,7 @@ public:
             //- Liquid enthalpy [J/kg] - reference to 298.15 K
             virtual scalar h(scalar p, scalar T) const = 0;
 
-            //- Vapour heat capacity [J/(kg K)]
+            //- Vapour heat capacity [J/kg/K]
             virtual scalar Cpg(scalar p, scalar T) const = 0;
 
             //- Liquid viscosity [Pa s]
@@ -247,13 +247,13 @@ public:
             //- Vapour viscosity [Pa s]
             virtual scalar mug(scalar p, scalar T) const = 0;
 
-            //- Liquid thermal conductivity  [W/(m K)]
+            //- Liquid thermal conductivity  [W/m/K]
             virtual scalar kappa(scalar p, scalar T) const = 0;
 
-            //- Liquid thermal diffusivity of enthalpy [kg/ms]
+            //- Liquid thermal diffusivity of enthalpy [kg/m/s]
             inline scalar alphah(const scalar p, const scalar T) const;
 
-            //- Vapour thermal conductivity  [W/(m K)]
+            //- Vapour thermal conductivity  [W/m/K]
             virtual scalar kappag(scalar p, scalar T) const = 0;
 
             //- Surface tension [N/m]

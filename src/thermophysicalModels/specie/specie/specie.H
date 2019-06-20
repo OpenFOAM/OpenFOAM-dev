@@ -119,7 +119,7 @@ public:
             //- No of moles of this species in mixture
             inline scalar Y() const;
 
-            //- Gas constant [J/(kg K)]
+            //- Gas constant [J/kg/K]
             inline scalar R() const;
 
 

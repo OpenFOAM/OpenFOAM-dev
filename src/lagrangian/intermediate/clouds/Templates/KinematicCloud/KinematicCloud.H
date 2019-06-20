@@ -172,7 +172,7 @@ protected:
 
         // References to the carrier gas fields
 
-            //- Density [kg/m3]
+            //- Density [kg/m^3]
             const volScalarField& rho_;
 
             //- Velocity [m/s]

@@ -34,17 +34,17 @@ mixture
     }
     equationOfState
     {
-        R           3000;      // [J/(kg K)]
+        R           3000;      // [J/kg/K]
         rho0        1027;      // [kg/m^3]
     }
     thermodynamics
     {
-        Cp          4181;      // [J/(kg K)] at T = 293 K
+        Cp          4181;      // [J/kg/K] at T = 293 K
         Hf          0;
     }
     transport
     {
-        mu          1.0e-03;    // [kg/(m s)]
+        mu          1.0e-03;    // [kg/m/s]
         Pr          0.7;
     }
 }

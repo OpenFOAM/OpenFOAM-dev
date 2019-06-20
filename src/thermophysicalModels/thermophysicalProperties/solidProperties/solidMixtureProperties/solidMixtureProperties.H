@@ -131,7 +131,7 @@ public:
         //  mass fractions
         scalar rho(const scalarField& Y) const;
 
-        //- Calculate the mixture heat capacity [J/(kg K)] as a function of
+        //- Calculate the mixture heat capacity [J/kg/K] as a function of
         //  mass fractions
         scalar Cp(const scalarField& Y) const;
 };

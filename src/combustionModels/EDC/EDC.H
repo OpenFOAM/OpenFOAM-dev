@@ -182,7 +182,7 @@ public:
         //- Fuel consumption rate matrix.
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-        //- Heat release rate [kg/m/s3]
+        //- Heat release rate [kg/m/s^3]
         virtual tmp<volScalarField> Qdot() const;
 
         //- Update properties from given dictionary

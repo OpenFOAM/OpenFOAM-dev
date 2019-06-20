@@ -61,7 +61,7 @@ class fixedMultiPhaseHeatFluxFvPatchScalarField
 {
     // Private Data
 
-        //- Heat power [W] or flux [W/m2]
+        //- Heat power [W] or flux [W/m^2]
         scalarField q_;
 
         //- Relaxation factor

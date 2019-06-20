@@ -42,7 +42,7 @@ Description
         x, y, z | global cartesian co-ordinates [m]
         u, v, w | global cartesian velocity components [m/s]
         d       | diameter [m]
-        rho     | density [kg/m3]
+        rho     | density [kg/m^3]
         mDot    | mass flow rate [kg/s]
     \endplaintable
 

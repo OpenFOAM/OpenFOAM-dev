@@ -78,7 +78,7 @@ protected:
         //- Number of components being solved by ODE
         label nSpecie_;
 
-        //- List of reaction rate per gas [kg/m3/s]
+        //- List of reaction rate per gas [kg/m^3/s]
         PtrList<volScalarField::Internal> RRg_;
 
 

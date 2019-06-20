@@ -159,10 +159,10 @@ public:
             //- Burnt gas compressibility [s^2/m^2]
             virtual tmp<volScalarField> psib() const = 0;
 
-            //- Dynamic viscosity of unburnt gas [kg/ms]
+            //- Dynamic viscosity of unburnt gas [kg/m/s]
             virtual tmp<volScalarField> muu() const = 0;
 
-            //- Dynamic viscosity of burnt gas [kg/ms]
+            //- Dynamic viscosity of burnt gas [kg/m/s]
             virtual tmp<volScalarField> mub() const = 0;
 };
 

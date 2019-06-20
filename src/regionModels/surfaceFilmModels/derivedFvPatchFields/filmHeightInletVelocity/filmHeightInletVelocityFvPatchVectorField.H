@@ -39,8 +39,8 @@ Description
         U_p    | patch velocity [m/s]
         n      | patch normal vector
         \phi   | mass flux [kg/s]
-        \rho   | density [kg/m3]
-        Sf     | patch face area vectors [m2]
+        \rho   | density [kg/m^3]
+        Sf     | patch face area vectors [m^2]
         \delta | film height [m]
     \endvartable
 

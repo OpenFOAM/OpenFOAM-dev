@@ -60,7 +60,7 @@ class constantRadiation
 {
     // Private Data
 
-        //- Constant radiative flux [kg/s3]
+        //- Constant radiative flux [kg/s^3]
         volScalarField qrConst_;
 
         //- Radiation mask

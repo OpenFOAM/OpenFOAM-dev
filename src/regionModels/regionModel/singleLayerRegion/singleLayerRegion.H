@@ -76,7 +76,7 @@ protected:
             //- Patch normal vectors
             autoPtr<volVectorField> nHatPtr_;
 
-            //- Face area magnitudes / [m2]
+            //- Face area magnitudes / [m^2]
             autoPtr<volScalarField> magSfPtr_;
 
 
@@ -126,7 +126,7 @@ public:
                 //- Return the patch normal vectors
                 virtual const volVectorField& nHat() const;
 
-                //- Return the face area magnitudes / [m2]
+                //- Return the face area magnitudes / [m^2]
                 virtual const volScalarField& magSf() const;
 
 

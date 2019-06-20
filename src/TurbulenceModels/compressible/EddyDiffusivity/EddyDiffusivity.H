@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,14 +115,14 @@ public:
         }
 
         //- Effective thermal turbulent diffusivity for temperature
-        //  of mixture [J/m/s/K]
+        //  of mixture [W/m/K]
         virtual tmp<volScalarField> kappaEff() const
         {
             return this->transport_.kappaEff(alphat());
         }
 
         //- Effective thermal turbulent diffusivity for temperature
-        //  of mixture for patch [J/m/s/K]
+        //  of mixture for patch [W/m/K]
         virtual tmp<scalarField> kappaEff(const label patchi) const
         {
             return this->transport_.kappaEff(alphat(patchi), patchi);

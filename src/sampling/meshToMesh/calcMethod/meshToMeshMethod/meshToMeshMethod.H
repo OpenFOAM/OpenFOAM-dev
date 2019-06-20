@@ -59,7 +59,7 @@ protected:
         //- Reference to the target mesh
         const polyMesh& tgt_;
 
-        //- Cell total volume in overlap region [m3]
+        //- Cell total volume in overlap region [m^3]
         scalar V_;
 
         //- Tolerance used in volume overlap calculations

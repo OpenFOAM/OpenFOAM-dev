@@ -58,13 +58,13 @@ Description
         d_j         |  Diameter of bubble j [m]
         u_{ij}      |  Mean approach velocity [m/s]
         \xi_{ij}    |  Bubble size ratio [-]
-        \rho_d      |  Density of dispersed phase [kg/m3]
-        \rho_c      |  Density of continuous phase [kg/m3]
+        \rho_d      |  Density of dispersed phase [kg/m^3]
+        \rho_c      |  Density of continuous phase [kg/m^3]
         \sigma      |  Surface tension [N/m]
         C_{vm}      |  Virtual mass coefficient [-]
         C_1         |  Coefficient [-]
         \beta       |  Coefficient [-]
-        \epsilon_c  |  Continuous phase turbulent dissipation rate [m2/s3]
+        \epsilon_c  |  Continuous phase turbulent dissipation rate [m2/s^3]
     \endvartable
 
     Reference:

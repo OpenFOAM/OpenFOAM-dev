@@ -256,7 +256,7 @@ public:
                     //  - fully explicit
                     inline tmp<volScalarField::Internal> Srho() const;
 
-                    //- Return total mass source term [kg/m3/s]
+                    //- Return total mass source term [kg/m^3/s]
                     inline tmp<fvScalarMatrix> Srho(volScalarField& rho) const;
 
 

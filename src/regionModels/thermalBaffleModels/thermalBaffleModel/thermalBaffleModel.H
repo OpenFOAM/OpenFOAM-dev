@@ -200,7 +200,7 @@ public:
 
             // Fields
 
-                //- Return density [kg/m3]
+                //- Return density [kg/m^3]
                 virtual const volScalarField& rho() const = 0;
 
                 //- Return const temperature [K]

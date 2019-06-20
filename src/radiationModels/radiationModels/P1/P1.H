@@ -61,10 +61,10 @@ class P1
 {
     // Private Data
 
-        //- Incident radiation / [W/m2]
+        //- Incident radiation / [W/m^2]
         volScalarField G_;
 
-        //- Total radiative heat flux [W/m2]
+        //- Total radiative heat flux [W/m^2]
         volScalarField qr_;
 
         //- Absorption coefficient

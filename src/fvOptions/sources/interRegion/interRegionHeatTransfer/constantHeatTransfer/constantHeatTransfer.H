@@ -25,7 +25,7 @@ Class
     Foam::fv::constantHeatTransfer
 
 Description
-    Constant heat transfer model. htcConst [W/m2/K] and area/volume [1/m]
+    Constant heat transfer model. htcConst [W/m^2/K] and area/volume [1/m]
     must be provided.
 
 \*---------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ class constantHeatTransfer
 {
     // Private Data
 
-        //- Constant heat transfer coefficient [W/m2/K]
+        //- Constant heat transfer coefficient [W/m^2/K]
         autoPtr<volScalarField> htcConst_;
 
         //- Area per unit volume of heat exchanger [1/m]

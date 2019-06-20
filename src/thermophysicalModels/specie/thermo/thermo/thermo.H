@@ -152,7 +152,7 @@ public:
         // Fundamental properties
         // (These functions must be provided in derived types)
 
-            // Heat capacity at constant pressure [J/(kg K)]
+            // Heat capacity at constant pressure [J/kg/K]
             // inline scalar Cp(const scalar p, const scalar T) const;
 
             // Sensible enthalpy [J/kg]
@@ -164,7 +164,7 @@ public:
             // Absolute Enthalpy [J/kg]
             // inline scalar Ha(const scalar p, const scalar T) const;
 
-            // Heat capacity at constant volume [J/(kg K)]
+            // Heat capacity at constant volume [J/kg/K]
             // inline scalar Cv(const scalar p, const scalar T) const;
 
             // Sensible internal energy [J/kg]
@@ -173,13 +173,13 @@ public:
             // Absolute internal energy [J/kg]
             // inline scalar Ea(const scalar p, const scalar T) const;
 
-            // Entropy [J/(kg K)]
+            // Entropy [J/kg/K]
             // inline scalar S(const scalar p, const scalar T) const;
 
 
         // Mass specific derived properties
 
-            //- Heat capacity at constant pressure/volume [J/(kg K)]
+            //- Heat capacity at constant pressure/volume [J/kg/K]
             inline scalar Cpv(const scalar p, const scalar T) const;
 
             //- Gamma = Cp/Cv []
@@ -201,7 +201,7 @@ public:
 
         // Mole specific derived properties
 
-            //- Heat capacity at constant pressure [J/(kmol K)]
+            //- Heat capacity at constant pressure [J/kmol/K]
             inline scalar cp(const scalar p, const scalar T) const;
 
             //- Absolute Enthalpy [J/kmol]
@@ -213,13 +213,13 @@ public:
             //- Chemical enthalpy [J/kmol]
             inline scalar hc() const;
 
-            //- Entropy [J/(kmol K)]
+            //- Entropy [J/kmol/K]
             inline scalar s(const scalar p, const scalar T) const;
 
             //- Enthalpy/Internal energy [J/kmol]
             inline scalar he(const scalar p, const scalar T) const;
 
-            //- Heat capacity at constant volume [J/(kmol K)]
+            //- Heat capacity at constant volume [J/kmol/K]
             inline scalar cv(const scalar p, const scalar T) const;
 
             //- Sensible internal energy [J/kmol]

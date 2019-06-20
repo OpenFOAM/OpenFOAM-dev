@@ -117,7 +117,7 @@ public:
             //- Return the film mean temperature [K]
             virtual const volScalarField& T() const;
 
-            //- Return density [Kg/m3]
+            //- Return density [Kg/m^3]
             virtual const volScalarField& rho() const;
 
             //- Return thermal conductivity [W/m/K]

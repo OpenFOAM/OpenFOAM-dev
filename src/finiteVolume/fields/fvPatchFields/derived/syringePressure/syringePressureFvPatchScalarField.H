@@ -37,15 +37,15 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        Ap           | syringe piston area [m2] | yes        |
+        Ap           | syringe piston area [m^2] | yes        |
         Sp           | syringe piston speed [m/s] | yes      |
-        VsI          | initial syringe volume [m3] | yes     |
+        VsI          | initial syringe volume [m^3] | yes     |
         tas          | start of piston acceleration [s] | yes |
         tae          | end of piston acceleration [s] | yes  |
         tds          | start of piston deceleration [s] | yes |
         tde          | end of piston deceleration [s] | yes  |
         psI          | initial syringe pressure [Pa] | yes   |
-        psi          | gas compressibility [m2/s2] | yes     |
+        psi          | gas compressibility [m2/s^2] | yes     |
         ams          | added (or removed) gas mass [kg] | yes |
     \endtable
 

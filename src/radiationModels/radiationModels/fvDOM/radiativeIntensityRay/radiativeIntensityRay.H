@@ -76,7 +76,7 @@ private:
         //- Black body
         const blackBodyEmission& blackBody_;
 
-        //- Total radiative intensity / [W/m2]
+        //- Total radiative intensity / [W/m^2]
         volScalarField I_;
 
         //- Total radiative heat flux on boundary

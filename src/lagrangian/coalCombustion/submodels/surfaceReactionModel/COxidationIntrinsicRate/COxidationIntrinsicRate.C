@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,7 +157,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
     // Diffusion rate coefficient [m2/s]
     const scalar D0 = C1_/d*pow(0.5*(T + Tc), 0.75);
 
-    // Apparent density of pyrolysis char [kg/m3]
+    // Apparent density of pyrolysis char [kg/m^3]
     const scalar rhop = 6.0*mass/(constant::mathematical::pi*pow3(d));
 
     // Knusden diffusion coefficient [m2/s]
@@ -185,7 +185,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
     // Chemical rate [kmol/m2/s]
     const scalar R = eta*d/6.0*rhop*Ag_*ki;
 
-    // Particle surface area [m2]
+    // Particle surface area [m^2]
     const scalar Ap = constant::mathematical::pi*sqr(d);
 
     // Change in C mass [kg]

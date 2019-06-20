@@ -172,7 +172,7 @@ public:
 
             // Geometry
 
-                //- Return the face area magnitudes / [m2]
+                //- Return the face area magnitudes / [m^2]
                 inline const surfaceScalarField& nMagSf() const;
 
                 //- Return the number of layers in the region

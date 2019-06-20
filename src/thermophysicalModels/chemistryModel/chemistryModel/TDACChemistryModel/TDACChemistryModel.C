@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -359,7 +359,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
     scalar cp = 0;
     for (label i=0; i<this->c_.size(); i++)
     {
-        // cp function returns [J/(kmol K)]
+        // cp function returns [J/kmol/K]
         cp += this->c_[i]*this->specieThermo_[i].cp(p, T);
     }
     cp /= rho;
@@ -481,7 +481,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
     scalar dcpdTMean = 0;
     forAll(this->c_, i)
     {
-        cpMean += this->c_[i]*cpi[i]; // J/(m3.K)
+        cpMean += this->c_[i]*cpi[i]; // J/(m^3 K)
         // Already multiplied by rho
         dcpdTMean += this->c_[i]*this->specieThermo_[i].dcpdT(p, T);
     }
@@ -494,12 +494,12 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
             const label si = completeToSimplifiedIndex_[i];
             if (si != -1)
             {
-                dTdt += hi[i]*dcdt[si]; // J/(m3.s)
+                dTdt += hi[i]*dcdt[si]; // J/(m^3 s)
             }
         }
         else
         {
-            dTdt += hi[i]*dcdt[i]; // J/(m3.s)
+            dTdt += hi[i]*dcdt[i]; // J/(m^3 s)
         }
     }
     dTdt /= -cpMean; // K/s
@@ -514,8 +514,8 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
             J(this->nSpecie_, i) += hi[sj]*J(j, i);
         }
         const label si = reduced ? simplifiedToCompleteIndex_[i] : i;
-        J(this->nSpecie_, i) += cpi[si]*dTdt; // J/(mol.s)
-        J(this->nSpecie_, i) /= -cpMean;    // K/s / (mol/m3)
+        J(this->nSpecie_, i) += cpi[si]*dTdt; // J/(mol s)
+        J(this->nSpecie_, i) /= -cpMean;    // K/s / (mol/m^3)
     }
 
     // ddT of dTdt

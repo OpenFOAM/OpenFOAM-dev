@@ -81,7 +81,7 @@ public:
 
         // Per specie thermo properties
 
-            //- Heat capacity at constant pressure [J/(kg K)]
+            //- Heat capacity at constant pressure [J/kg/K]
             virtual scalar Cp
             (
                 const label speciei,
@@ -89,7 +89,7 @@ public:
                 const scalar T
             ) const;
 
-            //- Heat capacity at constant volume [J/(kg K)]
+            //- Heat capacity at constant volume [J/kg/K]
             virtual scalar Cv
             (
                 const label speciei,
@@ -116,7 +116,7 @@ public:
             //- Chemical enthalpy [J/kg]
             virtual scalar Hc(const label speciei) const;
 
-            //- Entropy [J/(kg K)]
+            //- Entropy [J/kg/K]
             virtual scalar S
             (
                 const label speciei,
@@ -175,7 +175,7 @@ public:
                 const scalar T
             ) const;
 
-            //- Density [kg/m3]
+            //- Density [kg/m^3]
             virtual scalar rho
             (
                 const label speciei,
@@ -214,13 +214,13 @@ public:
             virtual tmp<volScalarField> W() const = 0;
 
             //- Thermal diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappa
             (
                 const label patchi
             ) const = 0;
 
-            //- Thermal diffusivity for temperature of mixture [J/m/s/K]
+            //- Thermal diffusivity for temperature of mixture [W/m/K]
             virtual tmp<volScalarField> kappa() const = 0;
 };
 

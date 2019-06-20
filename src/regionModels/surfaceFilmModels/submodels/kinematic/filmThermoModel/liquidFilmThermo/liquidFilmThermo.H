@@ -124,13 +124,13 @@ public:
 
         // Elemental access
 
-            //- Return density [kg/m3]
+            //- Return density [kg/m^3]
             virtual scalar rho(const scalar p, const scalar T) const;
 
             //- Return dynamic viscosity [Pa.s]
             virtual scalar mu(const scalar p, const scalar T) const;
 
-            //- Return surface tension [kg/s2]
+            //- Return surface tension [kg/s^2]
             virtual scalar sigma(const scalar p, const scalar T) const;
 
             //- Return specific heat capacity [J/kg/K]
@@ -157,13 +157,13 @@ public:
 
         // Field access
 
-            //- Return density [kg/m3]
+            //- Return density [kg/m^3]
             virtual tmp<volScalarField> rho() const;
 
             //- Return dynamic viscosity [Pa.s]
             virtual tmp<volScalarField> mu() const;
 
-            //- Return surface tension [kg/s2]
+            //- Return surface tension [kg/s^2]
             virtual tmp<volScalarField> sigma() const;
 
             //- Return specific heat capacity [J/kg/K]

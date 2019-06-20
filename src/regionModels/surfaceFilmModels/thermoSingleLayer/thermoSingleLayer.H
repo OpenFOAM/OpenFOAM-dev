@@ -167,10 +167,10 @@ protected:
             autoPtr<filmViscosityModel> viscosity_;
 
             //- Heat transfer coefficient between film surface and primary
-            //  region [W/m2/K]
+            //  region [W/m^2/K]
             autoPtr<heatTransferModel> htcs_;
 
-            //- Heat transfer coefficient between wall and film [W/m2/K]
+            //- Heat transfer coefficient between wall and film [W/m^2/K]
             autoPtr<heatTransferModel> htcw_;
 
             //- Phase change
@@ -311,8 +311,8 @@ public:
                 const label patchi,            // patchi on primary region
                 const label facei,             // facei of patchi
                 const scalar massSource,       // [kg]
-                const vector& momentumSource,  // [kg.m/s] (tangential momentum)
-                const scalar pressureSource,   // [kg.m/s] (normal momentum)
+                const vector& momentumSource,  // [kg m/s] (tangential momentum)
+                const scalar pressureSource,   // [kg m/s] (normal momentum)
                 const scalar energySource      // [J]
             );
 

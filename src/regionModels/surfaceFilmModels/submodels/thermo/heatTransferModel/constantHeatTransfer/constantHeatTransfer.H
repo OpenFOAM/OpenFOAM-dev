@@ -57,7 +57,7 @@ class constantHeatTransfer
 {
     // Private Data
 
-        //- Constant heat transfer coefficient [W/m2/K]
+        //- Constant heat transfer coefficient [W/m^2/K]
         scalar c0_;
 
 
@@ -97,7 +97,7 @@ public:
             //- Correct
             virtual void correct();
 
-            //- Return the heat transfer coefficient [W/m2/K]
+            //- Return the heat transfer coefficient [W/m^2/K]
             virtual tmp<volScalarField> h() const;
 };
 

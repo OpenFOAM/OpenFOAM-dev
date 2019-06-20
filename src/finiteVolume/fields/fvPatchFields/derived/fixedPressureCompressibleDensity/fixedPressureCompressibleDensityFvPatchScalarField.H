@@ -35,8 +35,8 @@ Description
     where
 
     \vartable
-        \rho    | density [kg/m3]
-        \rho_{l,sat} | saturation liquid density [kg/m3]
+        \rho    | density [kg/m^3]
+        \rho_{l,sat} | saturation liquid density [kg/m^3]
         \psi_l  | liquid compressibility
         p       | pressure [Pa]
         p_{sat} | saturation pressure [Pa]

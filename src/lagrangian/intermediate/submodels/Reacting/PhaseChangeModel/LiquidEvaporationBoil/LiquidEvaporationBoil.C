@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -167,7 +167,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
     // droplet surface pressure assumed to surface vapour pressure
     scalar ps = liquids_.pv(pc, Ts, X);
 
-    // vapour density at droplet surface [kg/m3]
+    // vapour density at droplet surface [kg/m^3]
     scalar rhos = ps*liquids_.W(X)/(RR*Ts);
 
     // construct carrier phase species volume fractions for cell, celli

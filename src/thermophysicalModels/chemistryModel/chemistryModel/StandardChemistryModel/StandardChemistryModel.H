@@ -101,7 +101,7 @@ protected:
         //- Temperature below which the reaction rates are assumed 0
         scalar Treact_;
 
-        //- List of reaction rate per specie [kg/m3/s]
+        //- List of reaction rate per specie [kg/m^3/s]
         PtrList<volScalarField::Internal> RR_;
 
         //- Temporary concentration field
@@ -193,7 +193,7 @@ public:
                 const label i
             ) const;
 
-            //- Return non const access to chemical source terms [kg/m3/s]
+            //- Return non const access to chemical source terms [kg/m^3/s]
             virtual volScalarField::Internal& RR
             (
                 const label i
@@ -217,7 +217,7 @@ public:
             //- Return the chemical time scale
             virtual tmp<volScalarField> tc() const;
 
-            //- Return the heat release rate [kg/m/s3]
+            //- Return the heat release rate [kg/m/s^3]
             virtual tmp<volScalarField> Qdot() const;
 
 

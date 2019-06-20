@@ -145,13 +145,13 @@ public:
 
             // Fields
 
-                //- Return const access to chemical source terms [kg/m3/s]
+                //- Return const access to chemical source terms [kg/m^3/s]
                 virtual const volScalarField::Internal& RR
                 (
                     const label i
                 ) const = 0;
 
-                //- Return access to chemical source terms [kg/m3/s]
+                //- Return access to chemical source terms [kg/m^3/s]
                 virtual volScalarField::Internal& RR
                 (
                     const label i
@@ -181,7 +181,7 @@ public:
                 //- Return the chemical time scale
                 virtual tmp<volScalarField> tc() const = 0;
 
-                //- Return the heat release rate [kg/m/s3]
+                //- Return the heat release rate [kg/m/s^3]
                 virtual tmp<volScalarField> Qdot() const = 0;
 };
 

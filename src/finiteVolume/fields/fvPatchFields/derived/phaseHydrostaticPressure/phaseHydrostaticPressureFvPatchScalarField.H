@@ -38,7 +38,7 @@ Description
         p_{ref} | reference pressure [Pa]
         x_{ref} | reference point in Cartesian co-ordinates
         \rho    | density (assumed uniform)
-        g       | acceleration due to gravity [m/s2]
+        g       | acceleration due to gravity [m/s^2]
     \endtable
 
     The values are assigned according to the phase-fraction field:

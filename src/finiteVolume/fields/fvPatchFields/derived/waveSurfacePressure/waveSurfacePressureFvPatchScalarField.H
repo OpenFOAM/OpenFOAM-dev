@@ -33,8 +33,8 @@ Description
         \f]
 
     \vartable
-        \rho  | density [kg/m3]
-        g     | acceleration due to gravity [m/s2]
+        \rho  | density [kg/m^3]
+        g     | acceleration due to gravity [m/s^2]
         \zeta | wave amplitude [m]
     \endvartable
 

@@ -99,5 +99,5 @@
     Info << constProp << " will be held constant." << nl
         << " p   = " << p[0] << " [Pa]" << nl
         << " T   = " << thermo.T()[0] << " [K] " << nl
-        << " rho = " << rho[0] << " [kg/m3]" << nl
+        << " rho = " << rho[0] << " [kg/m^3]" << nl
         << endl;

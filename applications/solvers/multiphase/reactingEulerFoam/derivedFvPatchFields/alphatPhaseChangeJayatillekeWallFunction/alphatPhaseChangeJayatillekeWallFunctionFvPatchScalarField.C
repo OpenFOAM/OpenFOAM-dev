@@ -155,7 +155,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::calcAlphat
 
     scalarField Tp(Tw.patchInternalField());
 
-    // Heat flux [W/m2] - lagging alphatw
+    // Heat flux [W/m^2] - lagging alphatw
     const scalarField qDot
     (
         (prevAlphat + alphaw)*hew.snGrad()

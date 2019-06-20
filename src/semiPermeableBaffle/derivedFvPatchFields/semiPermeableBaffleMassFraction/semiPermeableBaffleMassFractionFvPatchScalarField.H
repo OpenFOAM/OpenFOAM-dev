@@ -40,8 +40,8 @@ Description
         where
         \vartable
             \phi_{Yi}  | flux of the permeable species [kg/s]
-            c          | transfer coefficient [kg/m2/s/<input-dimensions>]
-            A          | patch face area [m2]
+            c          | transfer coefficient [kg/m^2/s/<input-dimensions>]
+            A          | patch face area [m^2]
             \psi_i     | input variable on the patch []
             \psi_{i,n} | input variable on the neighbour patch []
         \endvartable

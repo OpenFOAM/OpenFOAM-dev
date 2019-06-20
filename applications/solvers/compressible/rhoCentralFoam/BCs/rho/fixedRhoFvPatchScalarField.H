@@ -37,7 +37,7 @@ Description
     where
     \vartable
         p     | pressure [Pa]
-        \rho  | density [kg/m3]
+        \rho  | density [kg/m^3]
     \endvartable
 
 

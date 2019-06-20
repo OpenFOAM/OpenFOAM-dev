@@ -88,7 +88,7 @@ public:
 
         // Private Data
 
-            //- Young's modulus [N/m2]
+            //- Young's modulus [N/m^2]
             demandDrivenEntry<scalar> youngsModulus_;
 
             //- Poisson's ratio

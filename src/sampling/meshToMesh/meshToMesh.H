@@ -109,7 +109,7 @@ private:
         //- Target to source cell interpolation weights
         scalarListList tgtToSrcCellWght_;
 
-        //- Cell total volume in overlap region [m3]
+        //- Cell total volume in overlap region [m^3]
         scalar V_;
 
         //- Index of processor that holds all of both sides. -1 in all other

@@ -146,10 +146,10 @@ public:
 
         // Access to transport variables
 
-            //- Dynamic viscosity of unburnt gas [kg/ms]
+            //- Dynamic viscosity of unburnt gas [kg/m/s]
             virtual tmp<volScalarField> muu() const;
 
-            //- Dynamic viscosity of burnt gas [kg/ms]
+            //- Dynamic viscosity of burnt gas [kg/m/s]
             virtual tmp<volScalarField> mub() const;
 };
 

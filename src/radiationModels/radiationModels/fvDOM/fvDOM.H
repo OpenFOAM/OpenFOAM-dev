@@ -88,16 +88,16 @@ class fvDOM
     // Private Data
 
 
-        //- Incident radiation  [W/m2]
+        //- Incident radiation  [W/m^2]
         volScalarField G_;
 
-        //- Total radiative heat flux [W/m2]
+        //- Total radiative heat flux [W/m^2]
         volScalarField qr_;
 
-         //- Emitted radiative heat flux [W/m2]
+         //- Emitted radiative heat flux [W/m^2]
         volScalarField qem_;
 
-        //- Incidet radiative heat flux [W/m2]
+        //- Incidet radiative heat flux [W/m^2]
         volScalarField qin_;
 
         //- Total absorption coefficient [1/m]

@@ -92,7 +92,7 @@ public:
             //- Maximum temperature [K]
             demandDrivenEntry<scalar> TMax_;
 
-            //- Particle specific heat capacity [J/(kg.K)]
+            //- Particle specific heat capacity [J/kg/K]
             demandDrivenEntry<scalar> Cp0_;
 
             //- Particle emissivity [] (radiation)
@@ -133,7 +133,7 @@ public:
                 inline void setTMax(const scalar TMax);
 
                 //- Return const access to the particle specific heat capacity
-                //  [J/(kg.K)]
+                //  [J/kg/K]
                 inline scalar Cp0() const;
 
                 //- Return const access to the particle emissivity []
@@ -183,7 +183,7 @@ public:
                 //- Temperature [K]
                 scalar Tc_;
 
-                //- Specific heat capacity [J/(kg.K)]
+                //- Specific heat capacity [J/kg/K]
                 scalar Cpc_;
 
 
@@ -249,7 +249,7 @@ protected:
             //- Temperature [K]
             scalar T_;
 
-            //- Specific heat capacity [J/(kg.K)]
+            //- Specific heat capacity [J/kg/K]
             scalar Cp_;
 
 

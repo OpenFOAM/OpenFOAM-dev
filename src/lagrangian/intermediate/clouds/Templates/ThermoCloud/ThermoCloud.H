@@ -256,10 +256,10 @@ public:
                  //- Radiation flag
                 inline bool radiation() const;
 
-                //- Radiation sum of parcel projected areas [m2]
+                //- Radiation sum of parcel projected areas [m^2]
                 inline volScalarField::Internal& radAreaP();
 
-                //- Radiation sum of parcel projected areas [m2]
+                //- Radiation sum of parcel projected areas [m^2]
                 inline const volScalarField::Internal&
                     radAreaP() const;
 
@@ -295,7 +295,7 @@ public:
                     inline const volScalarField::Internal&
                         hsCoeff() const;
 
-                    //- Return sensible enthalpy source term [J/kg/m3/s]
+                    //- Return sensible enthalpy source term [J/kg/m^3/s]
                     inline tmp<fvScalarMatrix> Sh(volScalarField& hs) const;
 
 

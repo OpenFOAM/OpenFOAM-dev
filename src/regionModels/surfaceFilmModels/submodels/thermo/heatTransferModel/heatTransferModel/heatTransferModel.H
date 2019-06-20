@@ -120,7 +120,7 @@ public:
             //- Correct
             virtual void correct() = 0;
 
-            //- Return the heat transfer coefficient [W/m2/K]
+            //- Return the heat transfer coefficient [W/m^2/K]
             virtual tmp<volScalarField> h() const = 0;
 };
 

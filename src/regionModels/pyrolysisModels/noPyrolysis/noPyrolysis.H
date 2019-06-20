@@ -123,7 +123,7 @@ public:
 
         // Fields
 
-            //- Return density [kg/m3]
+            //- Return density [kg/m^3]
             virtual const volScalarField& rho() const;
 
             //- Return const temperature [K]
@@ -138,7 +138,7 @@ public:
             //- Return the region thermal conductivity [W/m/k]
             virtual tmp<volScalarField> kappa() const;
 
-            //- Return the total gas mass flux to primary region [kg/m2/s]
+            //- Return the total gas mass flux to primary region [kg/m^2/s]
             virtual const surfaceScalarField& phiGas() const;
 
 

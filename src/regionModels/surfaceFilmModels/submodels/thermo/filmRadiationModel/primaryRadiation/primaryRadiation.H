@@ -58,7 +58,7 @@ class primaryRadiation
 {
     // Private Data
 
-        //- Incident radiative flux mapped from  the primary region / [kg/s3]
+        //- Incident radiative flux mapped from  the primary region / [kg/s^3]
         volScalarField qinPrimary_;
 
 

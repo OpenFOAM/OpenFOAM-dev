@@ -196,7 +196,7 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     const fvPatchScalarField& hew =
         turbModel.transport().he().boundaryField()[patchi];
 
-    // Heat flux [W/m2] - lagging alphatw
+    // Heat flux [W/m^2] - lagging alphatw
     const scalarField qDot
     (
         turbModel.transport().alphaEff(alphatw, patchi)*hew.snGrad()

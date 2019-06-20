@@ -66,7 +66,7 @@ class constant
         //- Emission coefficient / [1/m]
         dimensionedScalar e_;
 
-        //- Emission contribution / [kg/(m s^3)]
+        //- Emission contribution / [kg/m/s^3]
         dimensionedScalar E_;
 
 

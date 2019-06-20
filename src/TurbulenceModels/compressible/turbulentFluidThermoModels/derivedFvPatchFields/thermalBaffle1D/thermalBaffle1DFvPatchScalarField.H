@@ -43,7 +43,7 @@ Usage
         samplePatch     <slavePatchName>;
 
         thickness       uniform 0.005;  // thickness [m]
-        Qs              uniform 100;    // heat flux [W/m2]
+        Qs              uniform 100;    // heat flux [W/m^2]
 
         qr              none;
         qrRelaxation    1;
@@ -120,7 +120,7 @@ class thermalBaffle1DFvPatchScalarField
         //- Baffle thickness [m]
         mutable scalarField thickness_;
 
-        //- Superficial heat source [W/m2]
+        //- Superficial heat source [W/m^2]
         mutable scalarField Qs_;
 
         //- Solid dictionary

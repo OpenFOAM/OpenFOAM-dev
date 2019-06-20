@@ -136,7 +136,7 @@ public:
 
         // Fundamental properties
 
-            //- Heat capacity at constant volume [J/(kg K)]
+            //- Heat capacity at constant volume [J/kg/K]
             inline scalar Cv(const scalar p, const scalar T) const;
 
             //- Sensible internal energy [J/kg]
@@ -148,7 +148,7 @@ public:
             //- Chemical enthalpy [J/kg]
             inline scalar Hc() const;
 
-            //- Entropy [J/(kg K)]
+            //- Entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
             #include "EtoHthermo.H"

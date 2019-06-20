@@ -186,7 +186,7 @@ public:
             virtual tmp<volScalarField> nuEff() const;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             using BasePhaseModel::kappaEff;
 
             //- Return the effective thermal conductivity

@@ -119,19 +119,19 @@ public:
         //- Return const access to the solid thermo package
         inline const solidReactionThermo& solidThermo() const;
 
-        //- Return total gases mass source term [kg/m3/s]
+        //- Return total gases mass source term [kg/m^3/s]
         virtual tmp<volScalarField::Internal> RRg() const = 0;
 
-        //- Return total solids mass source term [kg/m3/s]
+        //- Return total solids mass source term [kg/m^3/s]
         virtual tmp<volScalarField::Internal> RRs() const = 0;
 
-        //- Return chemical source terms for solids [kg/m3/s]
+        //- Return chemical source terms for solids [kg/m^3/s]
         virtual const volScalarField::Internal& RRs
         (
             const label i
         ) const = 0;
 
-        //- Return chemical source terms for gases [kg/m3/s]
+        //- Return chemical source terms for gases [kg/m^3/s]
         virtual const volScalarField::Internal& RRg
         (
             const label i

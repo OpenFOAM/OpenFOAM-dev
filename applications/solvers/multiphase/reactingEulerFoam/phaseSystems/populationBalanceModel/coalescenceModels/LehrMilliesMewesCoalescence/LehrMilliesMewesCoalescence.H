@@ -54,7 +54,7 @@ Description
     \vartable
         d_i           |  Diameter of bubble i [m]
         d_j           |  Diameter of bubble j [m]
-        \epsilon_c    |  Turbulent dissipation rate of continuous phase [m2/s3]
+        \epsilon_c    |  Turbulent dissipation rate of continuous phase [m2/s^3]
         \alpha        |  Total void fraction of the bubbles [-]
         \alpha_{max}  |  Maximum packing density of the bubbles [-]
         u_{crit}      |  Critical velocity for coalescence [m/s]

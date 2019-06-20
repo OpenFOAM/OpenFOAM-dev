@@ -221,7 +221,7 @@ void reactingOneDim::updateMesh(const scalarField& mass0)
     const scalarField newV(mass0/rho_);
 
     Info<< "Initial/final volumes = " << gSum(regionMesh().V()) << ", "
-        << gSum(newV) << " [m3]" << endl;
+        << gSum(newV) << " [m^3]" << endl;
 
     // move the mesh
     const labelList moveMap = moveMesh(regionMesh().V() - newV, minimumDelta_);

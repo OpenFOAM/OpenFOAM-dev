@@ -138,7 +138,7 @@ public:
             //- Return Cv departure [J/(kg K]
             inline scalar Cv(scalar p, scalar T) const;
 
-            //- Return entropy [J/(kg K)]
+            //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
             //- Return compressibility rho/p [s^2/m^2]

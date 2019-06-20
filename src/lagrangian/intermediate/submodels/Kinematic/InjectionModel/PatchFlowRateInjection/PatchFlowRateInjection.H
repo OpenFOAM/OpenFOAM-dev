@@ -82,7 +82,7 @@ class PatchFlowRateInjection
         //- Concentration profile of particle volume to carrier volume [-]
         const TimeFunction1<scalar> concentration_;
 
-        //- Parcels to introduce per unit volume flow rate m3 [n/m3]
+        //- Parcels to introduce per unit volume flow rate m3 [n/m^3]
         const scalar parcelConcentration_;
 
         //- Parcel size distribution model

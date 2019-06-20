@@ -79,7 +79,7 @@ public:
             //- Sensible enthalpy transfer [J/kg]
             inline tmp<volScalarField::Internal> hsTrans() const;
 
-            //- Return sensible enthalpy source term [J/kg/m3/s]
+            //- Return sensible enthalpy source term [J/kg/m^3/s]
             inline tmp<fvScalarMatrix> Sh(volScalarField& hs) const;
 
 
@@ -90,7 +90,7 @@ public:
                 volScalarField& Yi
             ) const;
 
-            //- Return total mass transfer [kg/m3]
+            //- Return total mass transfer [kg/m^3]
             inline tmp<volScalarField::Internal> rhoTrans() const;
 
             //- Return tmp total mass source for carrier phase
@@ -104,7 +104,7 @@ public:
                 const label i
             ) const;
 
-            //- Return total mass source term [kg/m3/s]
+            //- Return total mass source term [kg/m^3/s]
             inline tmp<fvScalarMatrix> Srho(volScalarField& rho) const;
 };
 

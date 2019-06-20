@@ -79,7 +79,7 @@ class viewFactor
         //- Coarse mesh
         singleCellFvMesh coarseMesh_;
 
-        //- Net radiative heat flux [W/m2]
+        //- Net radiative heat flux [W/m^2]
         volScalarField qr_;
 
         //- View factor matrix

@@ -132,7 +132,7 @@ public:
 
         // Fundamental properties
 
-            //- Heat capacity at constant pressure [J/(kg K)]
+            //- Heat capacity at constant pressure [J/kg/K]
             inline scalar Cp(const scalar p, const scalar T) const;
 
             //- Absolute Enthalpy [J/kg]
@@ -144,7 +144,7 @@ public:
             //- Chemical enthalpy [J/kg]
             inline scalar Hc() const;
 
-            //- Entropy [J/(kg K)]
+            //- Entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
             #include "HtoEthermo.H"

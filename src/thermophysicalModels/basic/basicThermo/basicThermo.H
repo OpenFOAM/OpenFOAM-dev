@@ -422,11 +422,11 @@ public:
 
         // Fields derived from transport state variables
 
-            //- Thermal diffusivity for temperature of mixture [J/m/s/K]
+            //- Thermal diffusivity for temperature of mixture [W/m/K]
             virtual tmp<volScalarField> kappa() const = 0;
 
             //- Thermal diffusivity for temperature of mixture
-            //  for patch [J/m/s/K]
+            //  for patch [W/m/K]
             virtual tmp<scalarField> kappa
             (
                 const label patchi
@@ -439,14 +439,14 @@ public:
             virtual tmp<scalarField> alphahe(const label patchi) const = 0;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture [J/m/s/K]
+            //  of mixture [W/m/K]
             virtual tmp<volScalarField> kappaEff
             (
                 const volScalarField&
             ) const = 0;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappaEff
             (
                 const scalarField& alphat,

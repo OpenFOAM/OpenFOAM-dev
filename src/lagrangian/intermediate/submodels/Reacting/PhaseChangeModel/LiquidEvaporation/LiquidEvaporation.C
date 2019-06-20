@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,10 +193,10 @@ void Foam::LiquidEvaporation<CloudType>::calculate
         // mass transfer coefficient [m/s]
         const scalar kc = Sh*Dab/(d + rootVSmall);
 
-        // vapour concentration at surface [kmol/m3] at film temperature
+        // vapour concentration at surface [kmol/m^3] at film temperature
         const scalar Cs = pSat/(RR*Ts);
 
-        // vapour concentration in bulk gas [kmol/m3] at film temperature
+        // vapour concentration in bulk gas [kmol/m^3] at film temperature
         const scalar Cinf = Xc[gid]*pc/(RR*Ts);
 
         // molar flux of vapour [kmol/m2/s]

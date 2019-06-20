@@ -69,7 +69,7 @@ protected:
 
     // Protected data
 
-        //- Acceleration due to gravity [m/s2]
+        //- Acceleration due to gravity [m/s^2]
         const dimensionedVector& g_;
 
 
@@ -137,7 +137,7 @@ public:
             //- Return the film wall velocity [m/s]
             virtual const volVectorField& Uw() const = 0;
 
-            //- Return the film density [kg/m3]
+            //- Return the film density [kg/m^3]
             virtual const volScalarField& rho() const = 0;
 
             //- Return the film mean temperature [K]

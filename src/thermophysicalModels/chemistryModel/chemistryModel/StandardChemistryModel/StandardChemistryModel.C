@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,13 +237,13 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
     scalar dcpdTMean = 0;
     for (label i=0; i<nSpecie_; i++)
     {
-        cpMean += c_[i]*cpi[i]; // J/(m3.K)
+        cpMean += c_[i]*cpi[i]; // J/(m^3 K)
         dcpdTMean += c_[i]*specieThermo_[i].dcpdT(p, T);
     }
     scalar dTdt = 0.0;
     for (label i=0; i<nSpecie_; i++)
     {
-        dTdt += hi[i]*dcdt[i]; // J/(m3.s)
+        dTdt += hi[i]*dcdt[i]; // J/(m^3 s)
     }
     dTdt /= -cpMean; // K/s
 
@@ -254,8 +254,8 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
         {
             J(nSpecie_, i) += hi[j]*J(j, i);
         }
-        J(nSpecie_, i) += cpi[i]*dTdt; // J/(mol.s)
-        J(nSpecie_, i) /= -cpMean;    // K/s / (mol/m3)
+        J(nSpecie_, i) += cpi[i]*dTdt; // J/(mol s)
+        J(nSpecie_, i) /= -cpMean;    // K/s/(mol/m3)
     }
 
     // ddT of dTdt

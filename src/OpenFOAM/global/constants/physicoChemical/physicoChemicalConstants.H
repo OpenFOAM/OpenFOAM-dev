@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,16 +54,16 @@ namespace physicoChemical
     //- Faraday constant: default SI units: [C/mol]
     extern const dimensionedScalar F;
 
-    //- Stefan-Boltzmann constant: default SI units: [W/m2/K4]
+    //- Stefan-Boltzmann constant: default SI units: [W/m^2/K^4]
     extern const dimensionedScalar sigma;
 
-    //- Wien displacement law constant: default SI units: [m.K]
+    //- Wien displacement law constant: default SI units: [m K]
     extern const dimensionedScalar b;
 
-    //- First radiation constant: default SI units: [W/m2]
+    //- First radiation constant: default SI units: [W/m^2]
     extern const dimensionedScalar c1;
 
-    //- Second radiation constant: default SI units: [m.K]
+    //- Second radiation constant: default SI units: [m K]
     extern const dimensionedScalar c2;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ protected:
         //- Time index - used for updating htc
         label timeIndex_;
 
-        //- Heat transfer coefficient [W/m2/k] times area/volume [1/m]
+        //- Heat transfer coefficient [W/m^2/k] times area/volume [1/m]
         volScalarField htc_;
 
         //- Flag to activate semi-implicit coupling

@@ -33,7 +33,7 @@ Description
 
     where
     \vartable
-        d        | Darcy coefficient [1/m2]
+        d        | Darcy coefficient [1/m^2]
         f        | Forchheimer coefficient [1/m]
     \endvartable
 
@@ -72,13 +72,13 @@ class DarcyForchheimer
 {
     // Private Data
 
-        //- Darcy coeffient XYZ components (user-supplied) [1/m2]
+        //- Darcy coeffient XYZ components (user-supplied) [1/m^2]
         dimensionedVector dXYZ_;
 
         //- Forchheimer coeffient XYZ components (user-supplied) [1/m]
         dimensionedVector fXYZ_;
 
-        //- Darcy coefficient - converted from dXYZ [1/m2]
+        //- Darcy coefficient - converted from dXYZ [1/m^2]
         List<tensorField> D_;
 
         //- Forchheimer coefficient - converted from fXYZ [1/m]

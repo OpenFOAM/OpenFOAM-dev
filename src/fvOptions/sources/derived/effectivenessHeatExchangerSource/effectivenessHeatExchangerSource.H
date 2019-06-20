@@ -53,7 +53,7 @@ Description
     where:
     \vartable
         Q_c     | source for cell
-        V_c     | volume of the cell [m3]
+        V_c     | volume of the cell [m^3]
         U_c     | local cell velocity [m/s]
         T_c     | local call temperature [K]
         T_{ref} | min or max(T) in cell zone depending on the sign of Q_t [K]

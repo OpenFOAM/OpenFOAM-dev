@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,7 @@ protected:
         //- Inverse rotation tensor for flap angle
         List<tensor> invR_;
 
-        //- Area [m2]
+        //- Area [m^2]
         List<scalar> area_;
 
         //- Rotor local cylindrical co-ordinate system (r, theta, z)

@@ -192,7 +192,7 @@ public:
             const scalarField& X
         ) const;
 
-        //- Calculate the mixture heat capacity [J/(kg K)]
+        //- Calculate the mixture heat capacity [J/kg/K]
         scalar Cp
         (
             const scalar p,
@@ -216,7 +216,7 @@ public:
             const scalarField& X
         ) const;
 
-        //- Estimate thermal conductivity  [W/(m K)]
+        //- Estimate thermal conductivity  [W/m/K]
         //  Li's method, Eq. 10-12.27 - 10.12-19
         scalar kappa
         (
