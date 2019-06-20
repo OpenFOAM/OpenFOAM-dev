@@ -50,15 +50,6 @@ namespace kineticTheoryModels
 
 class conductivityModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        conductivityModel(const conductivityModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const conductivityModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -89,6 +80,9 @@ public:
         //- Construct from components
         conductivityModel(const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        conductivityModel(const conductivityModel&) = delete;
+
 
     // Selectors
 
@@ -118,6 +112,12 @@ public:
         {
             return true;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const conductivityModel&) = delete;
 };
 
 

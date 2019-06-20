@@ -53,15 +53,6 @@ class fixed
 :
     public XiModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fixed(const fixed&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fixed&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -82,6 +73,9 @@ public:
             const surfaceScalarField& phi
         );
 
+        //- Disallow default bitwise copy construction
+        fixed(const fixed&);
+
 
     //- Destructor
     virtual ~fixed();
@@ -100,6 +94,11 @@ public:
         virtual void writeFields()
         {}
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fixed&) = delete;
 };
 
 

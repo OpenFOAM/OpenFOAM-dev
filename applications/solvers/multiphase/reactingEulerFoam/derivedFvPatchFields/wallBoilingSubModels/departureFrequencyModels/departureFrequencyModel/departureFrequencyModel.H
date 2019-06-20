@@ -55,15 +55,6 @@ namespace wallBoilingModels
 
 class departureFrequencyModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        departureFrequencyModel(const departureFrequencyModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const departureFrequencyModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -88,6 +79,9 @@ public:
         //- Construct null
         departureFrequencyModel();
 
+        //- Disallow default bitwise copy construction
+        departureFrequencyModel(const departureFrequencyModel&) = delete;
+
 
     // Selectors
 
@@ -111,6 +105,12 @@ public:
         ) const = 0;
 
         virtual void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const departureFrequencyModel&) = delete;
 };
 
 

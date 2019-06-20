@@ -96,18 +96,6 @@ class compressibleInterPhaseTransportModel
         > turbulence2_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        compressibleInterPhaseTransportModel
-        (
-            const compressibleInterPhaseTransportModel&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const compressibleInterPhaseTransportModel&) = delete;
-
-
 public:
 
     // Constructors
@@ -121,6 +109,12 @@ public:
             const surfaceScalarField& rhoPhi,
             const surfaceScalarField& alphaPhi10,
             const twoPhaseMixtureThermo& mixture
+        );
+
+        //- Disallow default bitwise copy construction
+        compressibleInterPhaseTransportModel
+        (
+            const compressibleInterPhaseTransportModel&
         );
 
 
@@ -138,6 +132,12 @@ public:
 
         //- Correct the phase or mixture transport models
         void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const compressibleInterPhaseTransportModel&) = delete;
 };
 
 

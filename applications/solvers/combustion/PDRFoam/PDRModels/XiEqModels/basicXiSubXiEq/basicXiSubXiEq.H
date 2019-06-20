@@ -92,15 +92,6 @@ class basicSubGrid
         autoPtr<XiEqModel> XiEqModel_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        basicSubGrid(const basicSubGrid&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const basicSubGrid&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -118,6 +109,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        basicSubGrid(const basicSubGrid&);
+
 
     //- Destructor
     virtual ~basicSubGrid();
@@ -130,6 +124,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiEqProperties);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const basicSubGrid&) = delete;
 };
 
 

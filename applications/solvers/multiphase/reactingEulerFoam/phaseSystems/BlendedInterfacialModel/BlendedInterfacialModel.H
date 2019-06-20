@@ -94,15 +94,6 @@ class BlendedInterfacialModel
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        BlendedInterfacialModel
-        (
-            const BlendedInterfacialModel<ModelType>&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const BlendedInterfacialModel<ModelType>&) = delete;
-
         //- Correct coeff/value on fixed flux boundary conditions
         template<class GeoField>
         void correctFixedFluxBCs(GeoField& field) const;
@@ -158,6 +149,12 @@ public:
             const bool correctFixedFluxBCs = true
         );
 
+        //- Disallow default bitwise copy construction
+        BlendedInterfacialModel
+        (
+            const BlendedInterfacialModel<ModelType>&
+        ) = delete;
+
 
     //- Destructor
     ~BlendedInterfacialModel();
@@ -198,6 +195,12 @@ public:
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const BlendedInterfacialModel<ModelType>&) = delete;
 };
 
 

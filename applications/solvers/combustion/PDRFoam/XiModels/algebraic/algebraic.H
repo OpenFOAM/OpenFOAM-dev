@@ -65,15 +65,6 @@ class algebraic
         autoPtr<XiGModel> XiGModel_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        algebraic(const algebraic&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const algebraic&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -93,6 +84,9 @@ public:
             const volScalarField& b,
             const surfaceScalarField& phi
         );
+
+        //- Disallow default bitwise copy construction
+        algebraic(const algebraic&);
 
 
     //- Destructor
@@ -116,6 +110,11 @@ public:
             XiEqModel_().writeFields();
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const algebraic&) = delete;
 };
 
 

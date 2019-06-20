@@ -56,21 +56,15 @@ class wallDependentModel
         const fvMesh& mesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        wallDependentModel(const wallDependentModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallDependentModel&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from a mesh
         wallDependentModel(const fvMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        wallDependentModel(const wallDependentModel&) = delete;
 
 
     //- Destructor
@@ -83,6 +77,12 @@ public:
 
         // Return the wall normal, creating and storing it if necessary
         const volVectorField& nWall() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallDependentModel&) = delete;
 };
 
 

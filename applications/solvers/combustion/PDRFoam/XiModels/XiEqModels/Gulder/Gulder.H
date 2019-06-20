@@ -68,15 +68,6 @@ class Gulder
         bool subGridSchelkin_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        Gulder(const Gulder&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Gulder&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -94,6 +85,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        Gulder(const Gulder&);
+
 
     //- Destructor
     virtual ~Gulder();
@@ -107,6 +101,11 @@ public:
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiEqProperties);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Gulder&) = delete;
 };
 
 

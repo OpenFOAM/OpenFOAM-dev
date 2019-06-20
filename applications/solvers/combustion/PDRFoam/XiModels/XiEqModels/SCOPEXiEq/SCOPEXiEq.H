@@ -82,15 +82,6 @@ class SCOPEXiEq
         laminarFlameSpeedModels::SCOPE MaModel;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        SCOPEXiEq(const SCOPEXiEq&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SCOPEXiEq&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -108,6 +99,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        SCOPEXiEq(const SCOPEXiEq&);
+
 
     //- Destructor
     virtual ~SCOPEXiEq();
@@ -120,6 +114,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiEqProperties);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SCOPEXiEq&) = delete;
 };
 
 

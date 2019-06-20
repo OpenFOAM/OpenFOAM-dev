@@ -63,15 +63,6 @@ class instability
         autoPtr<XiEqModel> XiEqModel_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        instability(const instability&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const instability&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -89,6 +80,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        instability(const instability&);
+
 
     //- Destructor
     virtual ~instability();
@@ -102,6 +96,11 @@ public:
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiEqProperties);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const instability&) = delete;
 };
 
 

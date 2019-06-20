@@ -50,15 +50,6 @@ namespace kineticTheoryModels
 
 class granularPressureModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        granularPressureModel(const granularPressureModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const granularPressureModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -88,6 +79,9 @@ public:
 
         //- Construct from components
         granularPressureModel(const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        granularPressureModel(const granularPressureModel&) = delete;
 
 
     // Selectors
@@ -127,6 +121,12 @@ public:
         {
             return true;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const granularPressureModel&) = delete;
 };
 
 

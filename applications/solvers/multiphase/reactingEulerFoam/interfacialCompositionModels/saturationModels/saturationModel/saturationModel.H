@@ -53,15 +53,6 @@ class saturationModel
 :
     public IOdictionary
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        saturationModel(const saturationModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const saturationModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -85,6 +76,9 @@ public:
 
         //- Construct null
         saturationModel(const objectRegistry& db);
+
+        //- Disallow default bitwise copy construction
+        saturationModel(const saturationModel&) = delete;
 
 
     // Selectors
@@ -126,6 +120,12 @@ public:
         (
             const volScalarField& p
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const saturationModel&) = delete;
 };
 
 

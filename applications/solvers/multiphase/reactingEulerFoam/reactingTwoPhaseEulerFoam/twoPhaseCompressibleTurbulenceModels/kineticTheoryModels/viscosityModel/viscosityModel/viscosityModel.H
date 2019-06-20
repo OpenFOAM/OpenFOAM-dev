@@ -52,15 +52,6 @@ namespace kineticTheoryModels
 
 class viscosityModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        viscosityModel(const viscosityModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const viscosityModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -91,6 +82,9 @@ public:
         //- Construct from components
         viscosityModel(const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        viscosityModel(const viscosityModel&) = delete;
+
 
     // Selectors
 
@@ -120,6 +114,12 @@ public:
         {
             return true;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const viscosityModel&) = delete;
 };
 
 

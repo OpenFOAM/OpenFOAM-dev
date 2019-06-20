@@ -53,15 +53,6 @@ namespace wallBoilingModels
 
 class partitioningModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        partitioningModel(const partitioningModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const partitioningModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -86,6 +77,9 @@ public:
         //- Construct null
         partitioningModel();
 
+        //- Disallow default bitwise copy construction
+        partitioningModel(const partitioningModel&) = delete;
+
 
     // Selectors
 
@@ -106,6 +100,12 @@ public:
         ) const = 0;
 
         virtual void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const partitioningModel&) = delete;
 };
 
 

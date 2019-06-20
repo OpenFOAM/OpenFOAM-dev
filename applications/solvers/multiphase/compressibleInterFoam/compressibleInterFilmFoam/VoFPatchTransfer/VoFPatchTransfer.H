@@ -54,15 +54,6 @@ class VoFPatchTransfer
 :
     public transferModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        VoFPatchTransfer(const VoFPatchTransfer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const VoFPatchTransfer&) = delete;
-
-
 protected:
 
         //- Factor of the cell height above which the film is transferred
@@ -100,6 +91,9 @@ public:
         //- Construct from surface film model
         VoFPatchTransfer(surfaceFilmRegionModel& film, const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        VoFPatchTransfer(const VoFPatchTransfer&) = delete;
+
 
     //- Destructor
     virtual ~VoFPatchTransfer();
@@ -128,6 +122,12 @@ public:
         (
             scalarField& patchMasses
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const VoFPatchTransfer&) = delete;
 };
 
 

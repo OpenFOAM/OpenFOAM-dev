@@ -51,15 +51,6 @@ namespace kineticTheoryModels
 
 class frictionalStressModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        frictionalStressModel(const frictionalStressModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const frictionalStressModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -90,6 +81,9 @@ public:
 
         //- Construct from components
         frictionalStressModel(const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        frictionalStressModel(const frictionalStressModel&) = delete;
 
 
     // Selectors
@@ -130,6 +124,12 @@ public:
         ) const = 0;
 
         virtual bool read() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const frictionalStressModel&) = delete;
 };
 
 

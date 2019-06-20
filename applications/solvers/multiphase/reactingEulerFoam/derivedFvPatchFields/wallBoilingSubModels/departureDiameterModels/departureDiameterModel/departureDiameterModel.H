@@ -55,15 +55,6 @@ namespace wallBoilingModels
 
 class departureDiameterModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        departureDiameterModel(const departureDiameterModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const departureDiameterModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -87,6 +78,9 @@ public:
 
         //- Construct null
         departureDiameterModel();
+
+        //- Disallow default bitwise copy construction
+        departureDiameterModel(const departureDiameterModel&) = delete;
 
 
     // Selectors
@@ -113,6 +107,12 @@ public:
         ) const = 0;
 
         virtual void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const departureDiameterModel&) = delete;
 };
 
 

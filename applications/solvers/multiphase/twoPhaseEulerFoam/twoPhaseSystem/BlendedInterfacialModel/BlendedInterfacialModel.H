@@ -81,15 +81,6 @@ class BlendedInterfacialModel
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        BlendedInterfacialModel
-        (
-            const BlendedInterfacialModel<modelType>&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const BlendedInterfacialModel<modelType>&) = delete;
-
         //- Correct coeff/value on fixed flux boundary conditions
         template<class GeometricField>
         void correctFixedFluxBCs(GeometricField& field) const;
@@ -109,6 +100,12 @@ public:
             const orderedPhasePair& pair2In1,
             const bool correctFixedFluxBCs = true
         );
+
+        //- Disallow default bitwise copy construction
+        BlendedInterfacialModel
+        (
+            const BlendedInterfacialModel<modelType>&
+        ) = delete;
 
 
     //- Destructor
@@ -138,6 +135,12 @@ public:
 
         //- Return the blended diffusivity
         tmp<volScalarField> D() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const BlendedInterfacialModel<modelType>&) = delete;
 };
 
 

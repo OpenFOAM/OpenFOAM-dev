@@ -58,15 +58,6 @@ class KTS
         scalar GEtaCoef_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        KTS(const KTS&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const KTS&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -84,6 +75,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        KTS(const KTS&);
+
 
     //- Destructor
     virtual ~KTS();
@@ -96,6 +90,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiGProperties);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const KTS&) = delete;
 };
 
 

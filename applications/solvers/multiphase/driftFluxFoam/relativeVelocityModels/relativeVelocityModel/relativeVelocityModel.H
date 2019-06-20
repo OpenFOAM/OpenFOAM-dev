@@ -55,12 +55,6 @@ class relativeVelocityModel
         //- Return the list of patchFieldTypes for Udm derived from U
         wordList UdmPatchFieldTypes() const;
 
-        //- Disallow default bitwise copy construction
-        relativeVelocityModel(const relativeVelocityModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const relativeVelocityModel&) = delete;
-
 
 protected:
 
@@ -114,6 +108,9 @@ public:
             const incompressibleTwoPhaseInteractingMixture& mixture
         );
 
+        //- Disallow default bitwise copy construction
+        relativeVelocityModel(const relativeVelocityModel&) = delete;
+
 
     // Selector
     static autoPtr<relativeVelocityModel> New
@@ -149,6 +146,12 @@ public:
 
         //- Update the diffusion velocity
         virtual void correct() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const relativeVelocityModel&) = delete;
 };
 
 

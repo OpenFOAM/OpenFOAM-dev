@@ -66,17 +66,6 @@ protected:
         const volScalarField& Su_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        XiGModel(const XiGModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const XiGModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -105,10 +94,10 @@ public:
         );
 
 
-    // Selectors
+    // Constructors
 
-        //- Return a reference to the selected XiG model
-        static autoPtr<XiGModel> New
+        //- Construct from components
+        XiGModel
         (
             const dictionary& XiGProperties,
             const psiuReactionThermo& thermo,
@@ -116,11 +105,14 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        XiGModel(const XiGModel&);
 
-    // Constructors
 
-        //- Construct from components
-        XiGModel
+    // Selectors
+
+        //- Return a reference to the selected XiG model
+        static autoPtr<XiGModel> New
         (
             const dictionary& XiGProperties,
             const psiuReactionThermo& thermo,
@@ -146,6 +138,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiGProperties) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const XiGModel&) = delete;
 };
 
 

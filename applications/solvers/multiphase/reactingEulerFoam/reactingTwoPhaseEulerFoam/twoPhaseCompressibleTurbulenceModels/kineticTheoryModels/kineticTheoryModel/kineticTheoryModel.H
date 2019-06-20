@@ -147,12 +147,6 @@ class kineticTheoryModel
         void correctNut()
         {}
 
-        //- Disallow default bitwise copy construction
-        kineticTheoryModel(const kineticTheoryModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const kineticTheoryModel&) = delete;
-
 
 public:
 
@@ -174,6 +168,9 @@ public:
             const word& propertiesName = turbulenceModel::propertiesName,
             const word& type = typeName
         );
+
+        //- Disallow default bitwise copy construction
+        kineticTheoryModel(const kineticTheoryModel&) = delete;
 
 
     //- Destructor
@@ -222,6 +219,12 @@ public:
 
         //- Solve the kinetic theory equations and correct the viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kineticTheoryModel&) = delete;
 };
 
 

@@ -75,17 +75,6 @@ protected:
         const volScalarField& Su_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        XiEqModel(const XiEqModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const XiEqModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -114,10 +103,10 @@ public:
         );
 
 
-    // Selectors
+    // Constructors
 
-        //- Return a reference to the selected XiEq model
-        static autoPtr<XiEqModel> New
+        //- Construct from components
+        XiEqModel
         (
             const dictionary& XiEqProperties,
             const psiuReactionThermo& thermo,
@@ -125,11 +114,14 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        XiEqModel(const XiEqModel&);
 
-    // Constructors
 
-        //- Construct from components
-        XiEqModel
+    // Selectors
+
+        //- Return a reference to the selected XiEq model
+        static autoPtr<XiEqModel> New
         (
             const dictionary& XiEqProperties,
             const psiuReactionThermo& thermo,
@@ -158,6 +150,12 @@ public:
 
         //- Write fields
         void writeFields() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const XiEqModel&) = delete;
 };
 
 

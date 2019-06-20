@@ -67,15 +67,6 @@ class instabilityG
         autoPtr<XiGModel> XiGModel_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        instabilityG(const instabilityG&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const instabilityG&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -93,6 +84,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        instabilityG(const instabilityG&);
+
 
     //- Destructor
     virtual ~instabilityG();
@@ -108,6 +102,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiGProperties);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const instabilityG&) = delete;
 };
 
 

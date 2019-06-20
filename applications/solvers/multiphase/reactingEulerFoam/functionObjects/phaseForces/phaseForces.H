@@ -88,15 +88,6 @@ class phaseForces
 :
     public fvMeshFunctionObject
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        phaseForces(const phaseForces&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const phaseForces&) = delete;
-
-
 protected:
 
     // Protected data
@@ -133,6 +124,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        phaseForces(const phaseForces&) = delete;
+
 
     //- Destructor
     virtual ~phaseForces();
@@ -148,6 +142,12 @@ public:
 
         //- Write the force fields
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const phaseForces&) = delete;
 };
 
 

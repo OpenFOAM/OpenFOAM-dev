@@ -64,15 +64,6 @@ class SCOPEBlend
         autoPtr<XiEqModel> XiEqModelH_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        SCOPEBlend(const SCOPEBlend&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SCOPEBlend&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -90,6 +81,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        SCOPEBlend(const SCOPEBlend&);
+
 
     //- Destructor
     virtual ~SCOPEBlend();
@@ -106,6 +100,11 @@ public:
             return true;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SCOPEBlend&) = delete;
 };
 
 

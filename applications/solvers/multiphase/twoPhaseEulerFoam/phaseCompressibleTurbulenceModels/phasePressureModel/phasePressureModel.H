@@ -106,12 +106,6 @@ class phasePressureModel
         void correctNut()
         {}
 
-        //- Disallow default bitwise copy construction
-        phasePressureModel(const phasePressureModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const phasePressureModel&) = delete;
-
 
 public:
 
@@ -133,6 +127,9 @@ public:
             const word& propertiesName = turbulenceModel::propertiesName,
             const word& type = typeName
         );
+
+        //- Disallow default bitwise copy construction
+        phasePressureModel(const phasePressureModel&) = delete;
 
 
     //- Destructor
@@ -181,6 +178,12 @@ public:
 
         //- Solve the kinetic theory equations and correct the viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const phasePressureModel&) = delete;
 };
 
 

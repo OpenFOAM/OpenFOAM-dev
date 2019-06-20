@@ -106,15 +106,6 @@ class basic
         volSymmTensorField CR_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        basic(const basic&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const basic&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -132,6 +123,9 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi
         );
+
+        //- Disallow default bitwise copy construction
+        basic(const basic&);
 
 
     //- Destructor
@@ -151,6 +145,12 @@ public:
 
         //- Write fields
         void writeFields() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const basic&) = delete;
 };
 
 

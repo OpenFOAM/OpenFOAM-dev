@@ -70,17 +70,6 @@ protected:
         Switch on_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        PDRDragModel(const PDRDragModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PDRDragModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -111,10 +100,10 @@ public:
         );
 
 
-    // Selectors
+    // Constructors
 
-        //- Return a reference to the selected Xi model
-        static autoPtr<PDRDragModel> New
+        //- Construct from components
+        PDRDragModel
         (
             const dictionary& PDRProperties,
             const compressible::RASModel& turbulence,
@@ -123,11 +112,14 @@ public:
             const surfaceScalarField& phi
         );
 
+        //- Disallow default bitwise copy construction
+        PDRDragModel(const PDRDragModel&);
 
-    // Constructors
 
-        //- Construct from components
-        PDRDragModel
+    // Selectors
+
+        //- Return a reference to the selected Xi model
+        static autoPtr<PDRDragModel> New
         (
             const dictionary& PDRProperties,
             const compressible::RASModel& turbulence,
@@ -170,6 +162,12 @@ public:
         {
             NotImplemented;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PDRDragModel&) = delete;
 };
 
 

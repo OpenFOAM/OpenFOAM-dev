@@ -50,15 +50,6 @@ namespace kineticTheoryModels
 
 class radialModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        radialModel(const radialModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const radialModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -88,6 +79,9 @@ public:
 
         //- Construct from components
         radialModel(const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        radialModel(const radialModel&) = delete;
 
 
     // Selectors
@@ -124,6 +118,12 @@ public:
         {
             return true;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const radialModel&) = delete;
 };
 
 
