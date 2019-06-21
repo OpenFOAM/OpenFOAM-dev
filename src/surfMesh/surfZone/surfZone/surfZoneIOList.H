@@ -61,15 +61,6 @@ class surfZoneIOList
     public surfZoneList,
     public regIOobject
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        surfZoneIOList(const surfZoneIOList&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfZoneIOList&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -87,6 +78,9 @@ public:
         //- Construct from IOobject and surfZoneList
         surfZoneIOList(const IOobject&, surfZoneList&&);
 
+        //- Disallow default bitwise copy construction
+        surfZoneIOList(const surfZoneIOList&) = delete;
+
 
     //- Destructor
     ~surfZoneIOList();
@@ -96,6 +90,12 @@ public:
 
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfZoneIOList&) = delete;
 
 
     // IOstream Operators

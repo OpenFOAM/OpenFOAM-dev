@@ -131,12 +131,6 @@ class moleculeCloud
             const molecule::constantProperties& cP
         );
 
-        //- Disallow default bitwise copy construction
-        moleculeCloud(const moleculeCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const moleculeCloud&) = delete;
-
 
 public:
 
@@ -158,6 +152,9 @@ public:
             const IOdictionary& mdInitialiseDict,
             bool readFields = true
         );
+
+        //- Disallow default bitwise copy construction
+        moleculeCloud(const moleculeCloud&) = delete;
 
 
     // Member Functions
@@ -192,10 +189,16 @@ public:
             inline Random& rndGen();
 
 
-    // Member Operators
+    // Member Functions
 
         //- Write molecule sites in XYZ format
         void writeXYZ(const fileName& fName) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const moleculeCloud&) = delete;
 };
 
 

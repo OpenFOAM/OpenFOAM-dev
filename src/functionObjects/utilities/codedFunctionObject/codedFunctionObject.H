@@ -132,15 +132,6 @@ protected:
         virtual const wordList& codeKeys() const;
 
 
-private:
-
-        //- Disallow default bitwise copy construction
-        codedFunctionObject(const codedFunctionObject&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const codedFunctionObject&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -156,6 +147,9 @@ public:
             const Time& time,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        codedFunctionObject(const codedFunctionObject&) = delete;
 
 
     //- Destructor
@@ -183,6 +177,12 @@ public:
 
         //- Read and set the function object if its data have changed
         virtual bool read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const codedFunctionObject&) = delete;
 };
 
 

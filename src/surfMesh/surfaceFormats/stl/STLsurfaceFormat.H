@@ -80,12 +80,6 @@ class STLsurfaceFormat
             const label zoneI
         );
 
-        //- Disallow default bitwise copy construction
-        STLsurfaceFormat(const STLsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const STLsurfaceFormat<Face>&) = delete;
-
 
 public:
 
@@ -93,6 +87,9 @@ public:
 
         //- Construct from file name
         STLsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        STLsurfaceFormat(const STLsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -158,6 +155,12 @@ public:
         {
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const STLsurfaceFormat<Face>&) = delete;
 };
 
 

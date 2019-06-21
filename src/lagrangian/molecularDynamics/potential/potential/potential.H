@@ -86,12 +86,6 @@ class potential
             IOdictionary& idListDict
         );
 
-        //- Disallow default bitwise copy construction
-        potential(const potential&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const potential&) = delete;
-
 
 public:
 
@@ -107,6 +101,9 @@ public:
             const IOdictionary& mdInitialiseDict,
             IOdictionary& idListDict
         );
+
+        //- Disallow default bitwise copy construction
+        potential(const potential&) = delete;
 
 
     //- Destructor
@@ -134,6 +131,12 @@ public:
             inline const tetherPotentialList& tetherPotentials() const;
 
             inline const vector& gravity() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const potential&) = delete;
 };
 
 

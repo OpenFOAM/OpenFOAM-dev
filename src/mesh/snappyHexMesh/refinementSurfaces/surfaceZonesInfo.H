@@ -103,12 +103,6 @@ private:
         faceZoneType faceType_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceZonesInfo&) = delete;
-
-
 public:
 
     // Constructors
@@ -235,6 +229,12 @@ public:
                 const labelList& namedSurfaces,
                 polyMesh& mesh
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceZonesInfo&) = delete;
 };
 
 

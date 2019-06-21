@@ -62,15 +62,6 @@ class solidChemistryModel
     public CompType,
     public ODESystem
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        solidChemistryModel(const solidChemistryModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidChemistryModel&) = delete;
-
-
 protected:
 
         //- Reference to solid mass fractions
@@ -114,6 +105,9 @@ public:
 
         //- Construct from thermo
         solidChemistryModel(typename CompType::reactionThermo& thermo);
+
+        //- Disallow default bitwise copy construction
+        solidChemistryModel(const solidChemistryModel&);
 
 
     //- Destructor
@@ -229,6 +223,12 @@ public:
                 scalar& deltaT,
                 scalar& subDeltaT
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidChemistryModel&) = delete;
 };
 
 

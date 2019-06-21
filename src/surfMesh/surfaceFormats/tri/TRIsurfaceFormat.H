@@ -70,12 +70,6 @@ class TRIsurfaceFormat
             const label zoneI
         );
 
-        //- Disallow default bitwise copy construction
-        TRIsurfaceFormat(const TRIsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const TRIsurfaceFormat<Face>&) = delete;
-
 
 public:
 
@@ -83,6 +77,9 @@ public:
 
         //- Construct from file name
         TRIsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        TRIsurfaceFormat(const TRIsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -119,6 +116,12 @@ public:
         {
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TRIsurfaceFormat<Face>&) = delete;
 };
 
 

@@ -62,12 +62,6 @@ class thermalBaffleModel
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        thermalBaffleModel(const thermalBaffleModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const thermalBaffleModel&) = delete;
-
         //- Initialize thermal Baffle
         void init();
 
@@ -148,6 +142,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        thermalBaffleModel(const thermalBaffleModel&) = delete;
+
 
     // Selectors
 
@@ -220,6 +217,12 @@ public:
 
             //- Pre-evolve region
             virtual void preEvolveRegion();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const thermalBaffleModel&) = delete;
 };
 
 

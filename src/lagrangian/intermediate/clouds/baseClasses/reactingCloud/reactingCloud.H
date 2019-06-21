@@ -48,15 +48,6 @@ namespace Foam
 
 class reactingCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        reactingCloud(const reactingCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const reactingCloud&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -67,9 +58,18 @@ public:
         //- Null constructor
         reactingCloud();
 
+        //- Disallow default bitwise copy construction
+        reactingCloud(const reactingCloud&) = delete;
+
 
     //- Destructor
     virtual ~reactingCloud();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reactingCloud&) = delete;
 };
 
 

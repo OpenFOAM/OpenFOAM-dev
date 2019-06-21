@@ -221,12 +221,6 @@ class regionSizeDistribution
             const coordSet& coords              // graph data for bins
         ) const;
 
-        //- Disallow default bitwise copy construction
-        regionSizeDistribution(const regionSizeDistribution&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionSizeDistribution&) = delete;
-
 
 public:
 
@@ -245,6 +239,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        regionSizeDistribution(const regionSizeDistribution&) = delete;
+
 
     // Destructor
 
@@ -261,6 +258,12 @@ public:
 
         //- Calculate the regionSizeDistribution and write
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regionSizeDistribution&) = delete;
 };
 
 

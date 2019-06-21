@@ -73,15 +73,6 @@ class pointFieldReconstructor
         label nReconstructed_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        pointFieldReconstructor(const pointFieldReconstructor&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointFieldReconstructor&) = delete;
-
-
 public:
 
         //- Mapper for sizing only - does not do any actual mapping.
@@ -113,6 +104,9 @@ public:
             const PtrList<labelIOList>& boundaryProcAddressing
         );
 
+        //- Disallow default bitwise copy construction
+        pointFieldReconstructor(const pointFieldReconstructor&) = delete;
+
 
     // Member Functions
 
@@ -134,6 +128,12 @@ public:
             const IOobjectList& objects,
             const HashSet<word>& selectedFields
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointFieldReconstructor&) = delete;
 };
 
 

@@ -137,17 +137,6 @@ protected:
         );
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        wallHeatTransferCoeff(const wallHeatTransferCoeff&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallHeatTransferCoeff&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -164,6 +153,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        wallHeatTransferCoeff(const wallHeatTransferCoeff&) = delete;
+
 
     //- Destructor
     virtual ~wallHeatTransferCoeff();
@@ -179,6 +171,12 @@ public:
 
         //- Write the wall heat transfer coefficient
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallHeatTransferCoeff&) = delete;
 };
 
 

@@ -260,12 +260,6 @@ protected:
         //- Helper function to write bin data
         void writeBins();
 
-        //- Disallow default bitwise copy construction
-        forces(const forces&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const forces&) = delete;
-
 
 public:
 
@@ -291,6 +285,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        forces(const forces&) = delete;
+
 
     //- Destructor
     virtual ~forces();
@@ -315,6 +312,12 @@ public:
 
         //- Write the forces
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const forces&) = delete;
 };
 
 

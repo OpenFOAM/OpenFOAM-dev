@@ -112,17 +112,6 @@ protected:
         ) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        readFields(const readFields&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const readFields&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -140,6 +129,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        readFields(const readFields&) = delete;
+
 
     //- Destructor
     virtual ~readFields();
@@ -155,6 +147,12 @@ public:
 
         //- Do nothing
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const readFields&) = delete;
 };
 
 

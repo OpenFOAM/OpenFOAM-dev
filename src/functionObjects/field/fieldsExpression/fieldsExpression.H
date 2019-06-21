@@ -91,17 +91,6 @@ protected:
         virtual bool calc() = 0;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fieldsExpression(const fieldsExpression&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fieldsExpression&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -119,6 +108,9 @@ public:
             const wordList& fieldNames = wordList::null(),
             const word& resultName = word::null
         );
+
+        //- Disallow default bitwise copy construction
+        fieldsExpression(const fieldsExpression&) = delete;
 
 
     //- Destructor
@@ -138,6 +130,12 @@ public:
 
         //- Clear the result fields from the objectRegistry
         virtual bool clear();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fieldsExpression&) = delete;
 };
 
 

@@ -545,14 +545,6 @@ private:
                 ) const;
 
 
-
-        //- Disallow default bitwise copy construction
-        snappyLayerDriver(const snappyLayerDriver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const snappyLayerDriver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -567,6 +559,9 @@ public:
             const labelList& globalToMasterPatch,
             const labelList& globalToSlavePatch
         );
+
+        //- Disallow default bitwise copy construction
+        snappyLayerDriver(const snappyLayerDriver&) = delete;
 
 
     // Member Functions
@@ -600,6 +595,11 @@ public:
                 fvMeshDistribute& distributor
             );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snappyLayerDriver&) = delete;
 };
 
 

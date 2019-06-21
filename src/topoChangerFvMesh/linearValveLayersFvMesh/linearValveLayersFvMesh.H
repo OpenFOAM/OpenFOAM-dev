@@ -56,16 +56,6 @@ class linearValveLayersFvMesh
         //- Motion dictionary
         dictionary motionDict_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        linearValveLayersFvMesh(const linearValveLayersFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const linearValveLayersFvMesh&) = delete;
-
-
         //- Add linearValveLayers zones and modifiers
         void addZonesAndModifiers();
 
@@ -93,6 +83,9 @@ public:
         //- Construct from database
         explicit linearValveLayersFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        linearValveLayersFvMesh(const linearValveLayersFvMesh&) = delete;
+
 
     //- Destructor
     virtual ~linearValveLayersFvMesh();
@@ -102,6 +95,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const linearValveLayersFvMesh&) = delete;
 };
 
 

@@ -54,15 +54,6 @@ class splineEdge
     public blockEdge,
     public CatmullRomSpline
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        splineEdge(const splineEdge&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const splineEdge&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -90,6 +81,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        splineEdge(const splineEdge&) = delete;
+
 
     //- Destructor
     virtual ~splineEdge();
@@ -103,6 +97,12 @@ public:
 
         //- Return the length of the spline curve (not implemented)
         virtual scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const splineEdge&) = delete;
 };
 
 

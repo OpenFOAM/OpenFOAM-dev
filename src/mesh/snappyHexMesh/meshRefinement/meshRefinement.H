@@ -572,12 +572,6 @@ private:
             ) const;
 
 
-        //- Disallow default bitwise copy construction
-        meshRefinement(const meshRefinement&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshRefinement&) = delete;
-
 public:
 
     //- Runtime type information
@@ -596,6 +590,9 @@ public:
             const refinementFeatures&,
             const shellSurfaces&
         );
+
+        //- Disallow default bitwise copy construction
+        meshRefinement(const meshRefinement&) = delete;
 
 
     // Member Functions
@@ -1116,6 +1113,11 @@ public:
             template<class Enum>
             static int readFlags(const Enum& namedEnum, const wordList&);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshRefinement&) = delete;
 };
 
 

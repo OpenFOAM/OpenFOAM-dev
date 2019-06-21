@@ -115,17 +115,6 @@ protected:
         ) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        surfaceInterpolate(const surfaceInterpolate&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceInterpolate&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -143,6 +132,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        surfaceInterpolate(const surfaceInterpolate&) = delete;
+
 
     //- Destructor
     virtual ~surfaceInterpolate();
@@ -158,6 +150,12 @@ public:
 
         //- Write the interpolated fields
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceInterpolate&) = delete;
 };
 
 

@@ -82,21 +82,6 @@ class perturbedTemperatureDependentContactAngleForce
         const autoPtr<distributionModel> distribution_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        perturbedTemperatureDependentContactAngleForce
-        (
-            const perturbedTemperatureDependentContactAngleForce&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=
-        (
-            const perturbedTemperatureDependentContactAngleForce&
-        ) = delete;
-
-
 protected:
 
         //- Return the contact angle field
@@ -118,9 +103,24 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        perturbedTemperatureDependentContactAngleForce
+        (
+            const perturbedTemperatureDependentContactAngleForce&
+        ) = delete;
+
 
     //- Destructor
     virtual ~perturbedTemperatureDependentContactAngleForce();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const perturbedTemperatureDependentContactAngleForce&
+        ) = delete;
 };
 
 

@@ -108,16 +108,6 @@ class searchableSurfaceCollection
         ) const;
 
 
-        //- Disallow default bitwise copy construction
-        searchableSurfaceCollection
-        (
-            const searchableSurfaceCollection&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceCollection&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -132,6 +122,12 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableSurfaceCollection
+        (
+            const searchableSurfaceCollection&
+        ) = delete;
 
 
     //- Destructor
@@ -281,6 +277,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurfaceCollection&) = delete;
 };
 
 

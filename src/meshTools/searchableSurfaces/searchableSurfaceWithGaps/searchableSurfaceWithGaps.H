@@ -96,13 +96,6 @@ class searchableSurfaceWithGaps
         );
 
 
-        //- Disallow default bitwise copy construction
-        searchableSurfaceWithGaps(const searchableSurfaceWithGaps&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceWithGaps&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -117,6 +110,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableSurfaceWithGaps(const searchableSurfaceWithGaps&) = delete;
+
 
     //- Destructor
     virtual ~searchableSurfaceWithGaps();
@@ -295,6 +292,11 @@ public:
                 return surface().writeData(os);
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurfaceWithGaps&) = delete;
 };
 
 

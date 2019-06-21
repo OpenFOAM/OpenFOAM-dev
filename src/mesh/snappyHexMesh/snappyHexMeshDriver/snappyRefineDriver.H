@@ -147,13 +147,6 @@ class snappyRefineDriver
         );
 
 
-        //- Disallow default bitwise copy construction
-        snappyRefineDriver(const snappyRefineDriver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const snappyRefineDriver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -172,6 +165,9 @@ public:
             const labelList& globalToSlavePatch
         );
 
+        //- Disallow default bitwise copy construction
+        snappyRefineDriver(const snappyRefineDriver&) = delete;
+
 
     // Member Functions
 
@@ -184,6 +180,12 @@ public:
             const bool prepareForSnapping,
             const dictionary& motionDict
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snappyRefineDriver&) = delete;
 };
 
 

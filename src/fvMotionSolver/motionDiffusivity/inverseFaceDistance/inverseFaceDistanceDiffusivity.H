@@ -56,18 +56,6 @@ class inverseFaceDistanceDiffusivity
         wordList patchNames_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        inverseFaceDistanceDiffusivity
-        (
-            const inverseFaceDistanceDiffusivity&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const inverseFaceDistanceDiffusivity&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -79,12 +67,21 @@ public:
         //- Construct for the given fvMesh and data Istream
         inverseFaceDistanceDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        inverseFaceDistanceDiffusivity
+        (
+            const inverseFaceDistanceDiffusivity&
+        ) = delete;
+
 
     //- Destructor
     virtual ~inverseFaceDistanceDiffusivity();
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const inverseFaceDistanceDiffusivity&) = delete;
 
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const;

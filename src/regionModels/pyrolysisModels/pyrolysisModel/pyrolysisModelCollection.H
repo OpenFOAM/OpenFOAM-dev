@@ -62,15 +62,6 @@ class pyrolysisModelCollection
 :
     public PtrList<pyrolysisModel>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        pyrolysisModelCollection(const pyrolysisModelCollection&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pyrolysisModelCollection&) = delete;
-
-
 public:
 
     // Runtime type information
@@ -81,6 +72,9 @@ public:
 
         //- Construct from mesh
         pyrolysisModelCollection(const fvMesh&);
+
+        //- Disallow default bitwise copy construction
+        pyrolysisModelCollection(const pyrolysisModelCollection&) = delete;
 
 
     //- Destructor
@@ -106,6 +100,12 @@ public:
 
         //- Mean diffusion number of the solid regions
         virtual scalar solidRegionDiffNo() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pyrolysisModelCollection&) = delete;
 };
 
 

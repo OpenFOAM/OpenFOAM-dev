@@ -57,15 +57,6 @@ class filmViscosityModel
 :
     public filmSubModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        filmViscosityModel(const filmViscosityModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const filmViscosityModel&) = delete;
-
-
 protected:
 
     // Protected Member Data
@@ -106,6 +97,9 @@ public:
             volScalarField& mu
         );
 
+        //- Disallow default bitwise copy construction
+        filmViscosityModel(const filmViscosityModel&) = delete;
+
 
     // Selectors
 
@@ -138,6 +132,12 @@ public:
 
             //- Provide some feedback
             virtual void info(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const filmViscosityModel&) = delete;
 };
 
 

@@ -227,15 +227,6 @@ private:
         template<class RhoFieldType>
         void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn);
 
-        //- Disallow default bitwise copy construction
-        solidificationMeltingSource
-        (
-            const solidificationMeltingSource&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidificationMeltingSource&) = delete;
-
 
 public:
 
@@ -253,6 +244,12 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        solidificationMeltingSource
+        (
+            const solidificationMeltingSource&
+        ) = delete;
 
 
     // Member Functions
@@ -289,6 +286,12 @@ public:
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidificationMeltingSource&) = delete;
 };
 
 

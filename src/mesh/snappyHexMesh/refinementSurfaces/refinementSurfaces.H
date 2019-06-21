@@ -93,15 +93,6 @@ class refinementSurfaces
         PtrList<dictionary> patchInfo_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        refinementSurfaces(const refinementSurfaces&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const refinementSurfaces&) = delete;
-
-
 public:
 
     // Constructors
@@ -128,6 +119,9 @@ public:
             const scalarField& perpendicularAngle,
             PtrList<dictionary>& patchInfo
         );
+
+        //- Disallow default bitwise copy construction
+        refinementSurfaces(const refinementSurfaces&) = delete;
 
 
     // Member Functions
@@ -354,6 +348,12 @@ public:
                 const pointField& pt,
                 labelList& insideSurfaces
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const refinementSurfaces&) = delete;
 };
 
 

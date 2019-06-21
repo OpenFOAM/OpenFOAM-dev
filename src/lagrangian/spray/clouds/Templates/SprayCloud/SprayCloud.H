@@ -85,15 +85,6 @@ private:
         scalar averageParcelMass_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        SprayCloud(const SprayCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const SprayCloud&) = delete;
-
-
 protected:
 
     // Protected data
@@ -148,6 +139,8 @@ public:
             const SprayCloud<CloudType>& c
         );
 
+        //- Disallow default bitwise copy construction
+        SprayCloud(const SprayCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
         virtual autoPtr<Cloud<parcelType>> clone(const word& name)
@@ -237,6 +230,12 @@ public:
 
             //- Print cloud information
             void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SprayCloud&) = delete;
 };
 
 

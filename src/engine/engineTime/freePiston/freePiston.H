@@ -79,15 +79,6 @@ class freePiston
         autoPtr<Function1<scalar>> pistonPositionTime_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        freePiston(const freePiston&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const freePiston&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -106,6 +97,10 @@ public:
             const fileName& constantName = "constant",
             const fileName& dictName = "engineGeometry"
         );
+
+        //- Disallow default bitwise copy construction
+        freePiston(const freePiston&) = delete;
+
 
     //- Destructor
     virtual ~freePiston()
@@ -131,6 +126,12 @@ public:
 
             //- Return engine time increment
             virtual scalar deltaTheta() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const freePiston&) = delete;
 };
 
 

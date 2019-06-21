@@ -111,12 +111,6 @@ class scalarTransport
         //- Return the diffusivity field
         tmp<volScalarField> D(const surfaceScalarField& phi) const;
 
-        //- Disallow default bitwise copy construction
-        scalarTransport(const scalarTransport&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const scalarTransport&) = delete;
-
 
 public:
 
@@ -134,6 +128,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        scalarTransport(const scalarTransport&) = delete;
+
 
     //- Destructor
     virtual ~scalarTransport();
@@ -150,6 +147,12 @@ public:
         //- Do nothing.
         //  The volScalarField is registered and written automatically
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const scalarTransport&) = delete;
 };
 
 

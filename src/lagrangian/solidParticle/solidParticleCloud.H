@@ -68,15 +68,6 @@ class solidParticleCloud
         scalar mu_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        solidParticleCloud(const solidParticleCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidParticleCloud&) = delete;
-
-
 public:
 
     // Constructors
@@ -88,6 +79,9 @@ public:
             const word& cloudName = "defaultCloud",
             bool readFields = true
         );
+
+        //- Disallow default bitwise copy construction
+        solidParticleCloud(const solidParticleCloud&) = delete;
 
 
     // Member Functions
@@ -106,6 +100,12 @@ public:
             //- Move the particles under the influence of the given
             //  gravitational acceleration
             void move(const dimensionedVector& g);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidParticleCloud&) = delete;
 };
 
 

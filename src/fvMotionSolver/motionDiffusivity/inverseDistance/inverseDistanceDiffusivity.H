@@ -63,12 +63,6 @@ class inverseDistanceDiffusivity
         //- Return patch-cell-centre distance field
         tmp<scalarField> y() const;
 
-        //- Disallow default bitwise copy construction
-        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const inverseDistanceDiffusivity&) = delete;
-
 
 public:
 
@@ -81,12 +75,18 @@ public:
         //- Construct for the given fvMesh and data Istream
         inverseDistanceDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~inverseDistanceDiffusivity();
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const inverseDistanceDiffusivity&) = delete;
 
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const;

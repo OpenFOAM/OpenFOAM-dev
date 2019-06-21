@@ -84,12 +84,6 @@ class triSurfaceSearch
             const vector& lineVec
         ) const;
 
-        //- Disallow default bitwise copy construction
-        triSurfaceSearch(const triSurfaceSearch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceSearch&) = delete;
-
 
 public:
 
@@ -109,15 +103,18 @@ public:
             const label maxTreeDepth
         );
 
+        //- Disallow default bitwise copy construction
+        triSurfaceSearch(const triSurfaceSearch&) = delete;
+
 
     //- Destructor
     ~triSurfaceSearch();
 
-        //- Clear storage
-        void clearOut();
-
 
     // Member Functions
+
+        //- Clear storage
+        void clearOut();
 
         //- Demand driven construction of the octree
         const indexedOctree<treeDataTriSurface>& tree() const;
@@ -178,6 +175,12 @@ public:
             const pointField& end,
             List<List<pointIndexHit>>& info
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceSearch&) = delete;
 };
 
 

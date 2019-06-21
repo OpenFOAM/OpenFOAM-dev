@@ -133,20 +133,11 @@ class engineValve
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        engineValve(const engineValve&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const engineValve&) = delete;
-
-
         //- Adjust crank angle to drop within the limits of the lift profile
         scalar adjustCrankAngle(const scalar theta) const;
 
+
 public:
-
-    // Static Data Members
-
 
     // Constructors
 
@@ -182,8 +173,8 @@ public:
             const dictionary& dict
         );
 
-
-    // Destructor - default
+        //- Disallow default bitwise copy construction
+        engineValve(const engineValve&) = delete;
 
 
     // Member Functions
@@ -309,6 +300,12 @@ public:
 
         //- Write dictionary
         void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const engineValve&) = delete;
 };
 
 

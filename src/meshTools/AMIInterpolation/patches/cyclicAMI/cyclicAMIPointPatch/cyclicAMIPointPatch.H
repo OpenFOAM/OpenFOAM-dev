@@ -58,15 +58,6 @@ class cyclicAMIPointPatch
         const cyclicAMIPolyPatch& cyclicAMIPolyPatch_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cyclicAMIPointPatch(const cyclicAMIPointPatch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicAMIPointPatch&);
-
-
 protected:
 
     // Protected Member Functions
@@ -104,6 +95,9 @@ public:
             const polyPatch& patch,
             const pointBoundaryMesh& bm
         );
+
+        //- Disallow default bitwise copy construction
+        cyclicAMIPointPatch(const cyclicAMIPointPatch&);
 
 
     //- Destructor
@@ -152,6 +146,12 @@ public:
         {
             return cyclicAMIPolyPatch_.reverseT();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicAMIPointPatch&);
 };
 
 

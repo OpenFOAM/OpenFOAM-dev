@@ -136,13 +136,6 @@ class meshSearch
             ) const;
 
 
-        //- Disallow default bitwise copy construction
-        meshSearch(const meshSearch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshSearch&) = delete;
-
-
 public:
 
     // Declare name of the class and its debug switch
@@ -174,6 +167,10 @@ public:
             const treeBoundBox& bb,
             const polyMesh::cellDecomposition = polyMesh::CELL_TETS
         );
+
+        //- Disallow default bitwise copy construction
+        meshSearch(const meshSearch&) = delete;
+
 
     //- Destructor
     ~meshSearch();
@@ -267,6 +264,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshSearch&) = delete;
 };
 
 

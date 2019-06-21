@@ -64,15 +64,6 @@ class injectionModel
         scalar injectedMass_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        injectionModel(const injectionModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const injectionModel&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -118,6 +109,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        injectionModel(const injectionModel&) = delete;
+
 
     // Selectors
 
@@ -151,6 +145,12 @@ public:
         //  scalarField provided
         virtual void patchInjectedMassTotals(scalarField& patchMasses) const
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const injectionModel&) = delete;
 };
 
 

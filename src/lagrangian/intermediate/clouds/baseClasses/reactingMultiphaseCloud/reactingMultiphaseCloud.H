@@ -48,15 +48,6 @@ namespace Foam
 
 class reactingMultiphaseCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        reactingMultiphaseCloud(const reactingMultiphaseCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const reactingMultiphaseCloud&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -67,9 +58,18 @@ public:
         //- Null constructor
         reactingMultiphaseCloud();
 
+        //- Disallow default bitwise copy construction
+        reactingMultiphaseCloud(const reactingMultiphaseCloud&) = delete;
+
 
     //- Destructor
     virtual ~reactingMultiphaseCloud();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reactingMultiphaseCloud&) = delete;
 };
 
 

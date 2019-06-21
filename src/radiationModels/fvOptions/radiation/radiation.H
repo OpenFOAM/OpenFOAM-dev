@@ -69,15 +69,6 @@ class radiation
         autoPtr<radiationModel> radiation_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        radiation(const radiation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const radiation&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -94,6 +85,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        radiation(const radiation&) = delete;
 
 
     // Member Functions
@@ -113,6 +107,12 @@ public:
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const radiation&) = delete;
 };
 
 

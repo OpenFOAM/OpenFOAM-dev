@@ -61,15 +61,6 @@ class ignition
         PtrList<ignitionSite> ignSites_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        ignition(const ignition&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ignition&) = delete;
-
-
 public:
 
     // Constructors
@@ -79,6 +70,9 @@ public:
 
         //- Construct from Istream and engineTime
         ignition(const dictionary&, const engineTime&, const fvMesh&);
+
+        //- Disallow default bitwise copy construction
+        ignition(const ignition&) = delete;
 
 
     // Member Functions
@@ -102,6 +96,12 @@ public:
 
             //- Has the mixture been ignited?
             bool ignited() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ignition&) = delete;
 };
 
 

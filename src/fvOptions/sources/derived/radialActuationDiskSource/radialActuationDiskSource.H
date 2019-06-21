@@ -109,12 +109,6 @@ class radialActuationDiskSource
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construction
-        radialActuationDiskSource(const radialActuationDiskSource&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const radialActuationDiskSource&) = delete;
-
 
 public:
 
@@ -132,6 +126,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        radialActuationDiskSource(const radialActuationDiskSource&) = delete;
 
 
     //- Destructor
@@ -161,6 +158,12 @@ public:
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const radialActuationDiskSource&) = delete;
 };
 
 

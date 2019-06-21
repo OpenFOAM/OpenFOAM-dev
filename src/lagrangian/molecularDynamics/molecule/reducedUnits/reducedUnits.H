@@ -92,12 +92,6 @@ class reducedUnits
 
         void calcRefValues();
 
-        //- Disallow default bitwise copy construction
-        reducedUnits(const reducedUnits&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const reducedUnits&) = delete;
-
 
 public:
 
@@ -125,6 +119,9 @@ public:
 
         //- Construct from dictionary
         reducedUnits(const IOdictionary& reducedUnitsDict);
+
+        //- Disallow default bitwise copy construction
+        reducedUnits(const reducedUnits&) = delete;
 
 
     //- Destructor
@@ -166,6 +163,12 @@ public:
             inline scalar refMassDensity() const;
 
             inline scalar refNumberDensity() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reducedUnits&) = delete;
 
 
     // IOstream Operators

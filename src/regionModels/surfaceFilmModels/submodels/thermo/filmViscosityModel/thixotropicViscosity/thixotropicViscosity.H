@@ -89,15 +89,6 @@ class thixotropicViscosity
 :
     public filmViscosityModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        thixotropicViscosity(const thixotropicViscosity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const thixotropicViscosity&) = delete;
-
-
 protected:
 
     // Protected data
@@ -145,6 +136,9 @@ public:
             volScalarField& mu
         );
 
+        //- Disallow default bitwise copy construction
+        thixotropicViscosity(const thixotropicViscosity&) = delete;
+
 
     //- Destructor
     virtual ~thixotropicViscosity();
@@ -158,6 +152,12 @@ public:
             const volScalarField& p,
             const volScalarField& T
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const thixotropicViscosity&) = delete;
 };
 
 

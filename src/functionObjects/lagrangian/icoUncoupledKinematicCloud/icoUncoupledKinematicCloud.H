@@ -118,15 +118,6 @@ class icoUncoupledKinematicCloud
         basicKinematicCollidingCloud kinematicCloud_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        icoUncoupledKinematicCloud(const icoUncoupledKinematicCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator==(const icoUncoupledKinematicCloud&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -144,6 +135,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        icoUncoupledKinematicCloud(const icoUncoupledKinematicCloud&) = delete;
+
 
     //- Destructor
     virtual ~icoUncoupledKinematicCloud();
@@ -159,6 +153,12 @@ public:
 
         //- Write the cloud
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator==(const icoUncoupledKinematicCloud&) = delete;
 };
 
 

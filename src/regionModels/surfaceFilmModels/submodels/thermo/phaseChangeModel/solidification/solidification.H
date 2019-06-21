@@ -56,15 +56,6 @@ class solidification
 :
     public phaseChangeModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        solidification(const solidification&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidification&) = delete;
-
-
 protected:
 
     // Protected data
@@ -98,6 +89,9 @@ public:
         //- Construct from surface film model
         solidification(surfaceFilmRegionModel& film, const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        solidification(const solidification&) = delete;
+
 
     //- Destructor
     virtual ~solidification();
@@ -115,6 +109,12 @@ public:
                 scalarField& dMass,
                 scalarField& dEnergy
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidification&) = delete;
 };
 
 

@@ -58,18 +58,6 @@ class regionCoupledWallGAMGInterfaceField
         const regionCoupledWallGAMGInterface& regionCoupledGAMGInterface_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        regionCoupledWallGAMGInterfaceField
-        (
-            const regionCoupledWallGAMGInterfaceField&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionCoupledWallGAMGInterfaceField&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -91,6 +79,12 @@ public:
             const GAMGInterface& GAMGCp,
             const bool doTransform,
             const int rank
+        );
+
+        //- Disallow default bitwise copy construction
+        regionCoupledWallGAMGInterfaceField
+        (
+            const regionCoupledWallGAMGInterfaceField&
         );
 
 
@@ -120,6 +114,11 @@ public:
             ) const
             {}
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regionCoupledWallGAMGInterfaceField&) = delete;
 };
 
 

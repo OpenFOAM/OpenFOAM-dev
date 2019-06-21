@@ -90,15 +90,6 @@ private:
         autoPtr<MPPICCloud<CloudType>> cloudCopyPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        MPPICCloud(const MPPICCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const MPPICCloud&) = delete;
-
-
 protected:
 
     // Protected data
@@ -152,6 +143,9 @@ public:
             const word& name,
             const MPPICCloud<CloudType>& c
         );
+
+        //- Disallow default bitwise copy construction
+        MPPICCloud(const MPPICCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
         virtual autoPtr<Cloud<parcelType>> clone(const word& name)
@@ -229,6 +223,12 @@ public:
 
             //- Print cloud information
             void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const MPPICCloud&) = delete;
 };
 
 

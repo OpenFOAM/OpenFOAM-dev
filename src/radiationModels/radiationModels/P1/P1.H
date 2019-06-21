@@ -77,15 +77,6 @@ class P1
         volScalarField E_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        P1(const P1&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const P1&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -99,6 +90,9 @@ public:
 
         //- Construct from components
         P1(const dictionary& dict, const volScalarField& T);
+
+        //- Disallow default bitwise copy construction
+        P1(const P1&) = delete;
 
 
     //- Destructor
@@ -123,6 +117,12 @@ public:
 
             //- Source term component (constant)
             virtual tmp<volScalarField::Internal> Ru() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const P1&) = delete;
 };
 
 

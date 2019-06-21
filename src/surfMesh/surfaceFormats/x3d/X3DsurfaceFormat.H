@@ -57,20 +57,15 @@ class X3DsurfaceFormat
     public MeshedSurface<Face>,
     public X3DsurfaceFormatCore
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        X3DsurfaceFormat(const X3DsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const X3DsurfaceFormat<Face>&) = delete;
-
 public:
 
     // Constructors
 
         //- Construct null
         X3DsurfaceFormat();
+
+        //- Disallow default bitwise copy construction
+        X3DsurfaceFormat(const X3DsurfaceFormat<Face>&) = delete;
 
 
     //- Destructor
@@ -89,6 +84,11 @@ public:
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const X3DsurfaceFormat<Face>&) = delete;
 };
 
 

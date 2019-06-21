@@ -72,15 +72,6 @@ class XiReactionRate
 :
     public fvMeshFunctionObject
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        XiReactionRate(const XiReactionRate&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const XiReactionRate&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -97,6 +88,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        XiReactionRate(const XiReactionRate&) = delete;
+
 
     //- Destructor
     virtual ~XiReactionRate();
@@ -109,6 +103,12 @@ public:
 
         //- Write the cell-centre fields
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const XiReactionRate&) = delete;
 };
 
 

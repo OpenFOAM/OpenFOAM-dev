@@ -49,12 +49,6 @@ class none
 :
     public chemistryTabulationMethod<CompType, ThermoType>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        none(const none&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -68,6 +62,9 @@ public:
             const dictionary& chemistryProperties,
             TDACChemistryModel<CompType, ThermoType>& chemistry
         );
+
+        //- Disallow default bitwise copy construction
+        none(const none&) = delete;
 
 
     // Destructor

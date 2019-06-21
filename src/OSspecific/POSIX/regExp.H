@@ -69,12 +69,6 @@ class regExp
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        regExp(const regExp&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const regExp&) = delete;
-
         //- Return true if it matches and sets the sub-groups matched.
         //  Templated to support both std::string and Foam::string
         template<class StringType>
@@ -118,6 +112,9 @@ public:
 
         //- Construct from std::string (or string), optionally ignoring case
         regExp(const std::string&, const bool ignoreCase=false);
+
+        //- Disallow default bitwise copy construction
+        regExp(const regExp&) = delete;
 
 
     //- Destructor
@@ -188,6 +185,9 @@ public:
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regExp&) = delete;
 
         //- Assign and compile pattern from a character array
         //  Always case sensitive

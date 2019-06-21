@@ -67,20 +67,6 @@ protected:
         pointVectorField& pointDisplacement_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        externalDisplacementMeshMover
-        (
-            const externalDisplacementMeshMover&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const externalDisplacementMeshMover&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -112,6 +98,12 @@ public:
             const dictionary& dict,
             const List<labelPair>& baffles,
             pointVectorField& pointDisplacement
+        );
+
+        //- Disallow default bitwise copy construction
+        externalDisplacementMeshMover
+        (
+            const externalDisplacementMeshMover&
         );
 
 
@@ -176,6 +168,12 @@ public:
 
             //-  Update local data for topology changes
             virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const externalDisplacementMeshMover&) = delete;
 };
 
 

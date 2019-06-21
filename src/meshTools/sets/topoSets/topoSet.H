@@ -105,9 +105,6 @@ protected:
         ) const;
 
 
-        //- Disallow default bitwise copy construction
-        topoSet(const topoSet&) = delete;
-
 public:
 
     //- Runtime type information
@@ -214,6 +211,8 @@ public:
         //- Construct from IOobject and labelHashSet.
         topoSet(const IOobject&, const labelHashSet&);
 
+        //- Disallow default bitwise copy construction
+        topoSet(const topoSet&) = delete;
 
 
         //- Clone

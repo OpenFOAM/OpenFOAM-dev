@@ -61,15 +61,6 @@ class projectVertex
         labelList surfaces_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        projectVertex(const projectVertex&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const projectVertex&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -87,6 +78,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        projectVertex(const projectVertex&) = delete;
+
 
     //- Destructor
     virtual ~projectVertex()
@@ -97,6 +91,12 @@ public:
 
         //- Project the given points onto the surface
         virtual operator point() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const projectVertex&) = delete;
 };
 
 

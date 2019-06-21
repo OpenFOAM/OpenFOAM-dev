@@ -51,15 +51,6 @@ class passiveParticleCloud
 :
     public Cloud<passiveParticle>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        passiveParticleCloud(const passiveParticleCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const passiveParticleCloud&) = delete;
-
-
 public:
 
     // Constructors
@@ -79,6 +70,15 @@ public:
             const word& cloudName,
             const IDLList<passiveParticle>& particles
         );
+
+        //- Disallow default bitwise copy construction
+        passiveParticleCloud(const passiveParticleCloud&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const passiveParticleCloud&) = delete;
 };
 
 

@@ -116,15 +116,6 @@ private:
         label myRayId_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        radiativeIntensityRay(const radiativeIntensityRay&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const radiativeIntensityRay&) = delete;
-
-
 public:
 
     // Constructors
@@ -143,6 +134,9 @@ public:
             const blackBodyEmission& blackBody,
             const label rayId
         );
+
+        //- Disallow default bitwise copy construction
+        radiativeIntensityRay(const radiativeIntensityRay&) = delete;
 
 
     //- Destructor
@@ -214,6 +208,11 @@ public:
             //- Return the radiative intensity for a given wavelength
             inline const volScalarField& ILambda(const label lambdaI) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const radiativeIntensityRay&) = delete;
 };
 
 

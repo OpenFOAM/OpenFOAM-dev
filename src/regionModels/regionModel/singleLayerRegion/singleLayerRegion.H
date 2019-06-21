@@ -54,12 +54,6 @@ class singleLayerRegion
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        singleLayerRegion(const singleLayerRegion&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const singleLayerRegion&) = delete;
-
         //- Construct region mesh and fields
         void constructMeshObjects();
 
@@ -112,6 +106,9 @@ public:
             bool readFields = true
         );
 
+        //- Disallow default bitwise copy construction
+        singleLayerRegion(const singleLayerRegion&) = delete;
+
 
     //- Destructor
     virtual ~singleLayerRegion();
@@ -149,6 +146,12 @@ public:
             //  Mapping region prescribed by underlying mapped poly patch
             template<class Type>
             wordList mappedPushedFieldPatchTypes() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleLayerRegion&) = delete;
 };
 
 

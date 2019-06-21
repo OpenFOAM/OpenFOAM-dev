@@ -101,17 +101,6 @@ protected:
         void writeResidual(const word& fieldName);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        residuals(const residuals&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const residuals&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -128,6 +117,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        residuals(const residuals&) = delete;
+
 
     //- Destructor
     virtual ~residuals();
@@ -143,6 +135,12 @@ public:
 
         //- Write the residuals
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const residuals&) = delete;
 };
 
 

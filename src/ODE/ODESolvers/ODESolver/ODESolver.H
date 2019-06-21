@@ -84,12 +84,6 @@ protected:
             const scalarField& err
         ) const;
 
-        //- Disallow default bitwise copy construction
-        ODESolver(const ODESolver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ODESolver&) = delete;
-
 
 public:
 
@@ -147,6 +141,9 @@ public:
             const scalarField& absTol,
             const scalarField& relTol
         );
+
+        //- Disallow default bitwise copy construction
+        ODESolver(const ODESolver&) = delete;
 
 
     // Selectors
@@ -217,6 +214,12 @@ public:
             scalarField& y,
             scalar& dxEst
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ODESolver&) = delete;
 };
 
 

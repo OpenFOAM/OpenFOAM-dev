@@ -73,18 +73,6 @@ class displacementLaplacianFvMotionSolver
         label frozenPointsZone_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        displacementLaplacianFvMotionSolver
-        (
-            const displacementLaplacianFvMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementLaplacianFvMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -98,6 +86,12 @@ public:
         (
             const polyMesh&,
             const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        displacementLaplacianFvMotionSolver
+        (
+            const displacementLaplacianFvMotionSolver&
         );
 
 
@@ -130,6 +124,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementLaplacianFvMotionSolver&) = delete;
 };
 
 

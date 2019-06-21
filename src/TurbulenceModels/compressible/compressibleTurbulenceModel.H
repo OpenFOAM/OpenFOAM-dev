@@ -69,20 +69,6 @@ protected:
         {}
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        compressibleTurbulenceModel
-        (
-            const compressibleTurbulenceModel&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const compressibleTurbulenceModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -100,6 +86,12 @@ public:
             const surfaceScalarField& phi,
             const word& propertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        compressibleTurbulenceModel
+        (
+            const compressibleTurbulenceModel&
+        ) = delete;
 
 
     //- Destructor
@@ -126,6 +118,12 @@ public:
 
         //- Correct the turbulence thermal diffusivity for energy transport
         virtual void correctEnergyTransport();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const compressibleTurbulenceModel&) = delete;
 };
 
 

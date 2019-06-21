@@ -97,17 +97,6 @@ protected:
         void calculateMaxProducts();
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        singleStepReactingMixture(const singleStepReactingMixture&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const singleStepReactingMixture&) = delete;
-
-
 public:
 
     //- The type of thermo package this mixture is instantiated for
@@ -123,6 +112,9 @@ public:
             const fvMesh&,
             const word&
         );
+
+        //- Disallow default bitwise copy construction
+        singleStepReactingMixture(const singleStepReactingMixture&) = delete;
 
 
     //- Destructor
@@ -176,6 +168,12 @@ public:
 
             //- Read dictionary
             void read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleStepReactingMixture&) = delete;
 };
 
 

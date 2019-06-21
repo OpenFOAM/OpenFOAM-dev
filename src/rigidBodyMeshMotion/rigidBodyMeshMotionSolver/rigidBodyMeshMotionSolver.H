@@ -111,18 +111,6 @@ class rigidBodyMeshMotionSolver
 
         displacementMotionSolver& meshSolver_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        rigidBodyMeshMotionSolver
-        (
-            const rigidBodyMeshMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMeshMotionSolver&) = delete;
-
         //- To avoid warning from clang
         using RBD::rigidBodyMotion::write;
 
@@ -140,6 +128,12 @@ public:
         (
             const polyMesh&,
             const dictionary& dict
+        );
+
+        //- Disallow default bitwise copy construction
+        rigidBodyMeshMotionSolver
+        (
+            const rigidBodyMeshMotionSolver&
         );
 
 
@@ -163,6 +157,12 @@ public:
 
         //- Write motion state information for restart
         virtual bool write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rigidBodyMeshMotionSolver&) = delete;
 };
 
 

@@ -65,12 +65,6 @@ class arcEdge
         //- Calculate the coordinate system, angle and radius
         cylindricalCS calcAngle();
 
-        //- Disallow default bitwise copy construction
-        arcEdge(const arcEdge&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const arcEdge&) = delete;
-
 
 public:
 
@@ -98,6 +92,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        arcEdge(const arcEdge&) = delete;
+
 
     //- Destructor
     virtual ~arcEdge()
@@ -112,6 +109,12 @@ public:
 
         //- Return the length of the curve
         scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const arcEdge&) = delete;
 };
 
 

@@ -73,12 +73,6 @@ class TRIsurfaceFormatCore
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        TRIsurfaceFormatCore(const TRIsurfaceFormatCore&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const TRIsurfaceFormatCore&) = delete;
-
         bool read(const fileName&);
 
 
@@ -88,6 +82,9 @@ public:
 
         //- Read from file, filling in the information
         TRIsurfaceFormatCore(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        TRIsurfaceFormatCore(const TRIsurfaceFormatCore&) = delete;
 
 
     //- Destructor
@@ -128,6 +125,12 @@ public:
         {
             return sizes_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TRIsurfaceFormatCore&) = delete;
 };
 
 

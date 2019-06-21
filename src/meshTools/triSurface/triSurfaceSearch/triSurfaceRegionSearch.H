@@ -77,15 +77,6 @@ class triSurfaceRegionSearch
         mutable PtrList<treeType> treeByRegion_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        triSurfaceRegionSearch(const triSurfaceRegionSearch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceRegionSearch&) = delete;
-
-
 public:
 
     // Constructors
@@ -95,6 +86,9 @@ public:
 
         //- Construct from surface and dictionary. Holds reference to surface!
         triSurfaceRegionSearch(const triSurface&, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        triSurfaceRegionSearch(const triSurfaceRegionSearch&) = delete;
 
 
     //- Destructor
@@ -125,6 +119,12 @@ public:
                 const labelList& regionIndices,
                 List<pointIndexHit>& info
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceRegionSearch&) = delete;
 };
 
 

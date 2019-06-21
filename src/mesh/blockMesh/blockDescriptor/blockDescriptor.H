@@ -130,12 +130,6 @@ class blockDescriptor
         void findCurvedFaces();
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const blockDescriptor&) = delete;
-
-
 public:
 
     // Constructors
@@ -243,6 +237,12 @@ public:
 
         //- Write block index with dictionary lookup
         static void write(Ostream&, const label blocki, const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const blockDescriptor&) = delete;
 
 
     // IOstream Operators

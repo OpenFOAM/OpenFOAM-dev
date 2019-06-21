@@ -70,12 +70,6 @@ class pyrolysisModel
         //- Read pyrolysis controls
         void readPyrolysisControls();
 
-        //- Disallow default bitwise copy construction
-        pyrolysisModel(const pyrolysisModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pyrolysisModel&) = delete;
-
 
 protected:
 
@@ -150,6 +144,9 @@ public:
             const word& regionType
         );
 
+        //- Disallow default bitwise copy construction
+        pyrolysisModel(const pyrolysisModel&) = delete;
+
         //- Return clone
         autoPtr<pyrolysisModel> clone() const
         {
@@ -222,6 +219,12 @@ public:
 
             //- Return max diffusivity allowed in the solid
             virtual scalar maxDiff() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pyrolysisModel&) = delete;
 };
 
 

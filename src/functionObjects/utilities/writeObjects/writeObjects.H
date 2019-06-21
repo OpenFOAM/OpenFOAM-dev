@@ -129,12 +129,6 @@ private:
         //- Write the requested registered IO object
         virtual void writeObject(const regIOobject& obj);
 
-        //- Disallow default bitwise copy construction
-        writeObjects(const writeObjects&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeObjects&) = delete;
-
 
 public:
 
@@ -152,6 +146,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        writeObjects(const writeObjects&) = delete;
+
 
     //- Destructor
     virtual ~writeObjects();
@@ -167,6 +164,12 @@ public:
 
         //- Write the registered objects
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeObjects&) = delete;
 };
 
 

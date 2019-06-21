@@ -61,21 +61,15 @@ class SMESHsurfaceFormat
 :
     public MeshedSurface<Face>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        SMESHsurfaceFormat(const SMESHsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const SMESHsurfaceFormat<Face>&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct null
         SMESHsurfaceFormat();
+
+        //- Disallow default bitwise copy construction
+        SMESHsurfaceFormat(const SMESHsurfaceFormat<Face>&) = delete;
 
 
     //- Destructor
@@ -93,6 +87,12 @@ public:
         {
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SMESHsurfaceFormat<Face>&) = delete;
 };
 
 

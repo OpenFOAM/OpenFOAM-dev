@@ -87,12 +87,6 @@ class moleFractions
         //- Calculate the mole fraction fields
         virtual void calculateMoleFractions();
 
-        //- Disallow default bitwise copy construction
-        moleFractions(const moleFractions&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const moleFractions&) = delete;
-
 
 public:
 
@@ -110,6 +104,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        moleFractions(const moleFractions&) = delete;
+
 
     //- Destructor
     virtual ~moleFractions();
@@ -125,6 +122,12 @@ public:
 
         //- The mole-fraction fields auto-write
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const moleFractions&) = delete;
 };
 
 

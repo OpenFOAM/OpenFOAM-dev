@@ -137,15 +137,6 @@ private:
         static const string illegalSource_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        topoSetSource(const topoSetSource&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const topoSetSource&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -239,6 +230,9 @@ public:
         //- Construct from components
         topoSetSource(const polyMesh& mesh);
 
+        //- Disallow default bitwise copy construction
+        topoSetSource(const topoSetSource&) = delete;
+
         //- Clone
         autoPtr<topoSetSource> clone() const
         {
@@ -284,6 +278,11 @@ public:
 
         virtual void applyToSet(const setAction action, topoSet&) const = 0;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const topoSetSource&) = delete;
 };
 
 

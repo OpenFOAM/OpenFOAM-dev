@@ -94,17 +94,6 @@ protected:
         virtual void printCoeffs(const word& type);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        LESModel(const LESModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const LESModel&) = delete;
-
-
 public:
 
     typedef typename BasicTurbulenceModel::alphaField alphaField;
@@ -150,6 +139,9 @@ public:
             const transportModel& transport,
             const word& propertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        LESModel(const LESModel&) = delete;
 
 
     // Selectors
@@ -223,6 +215,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LESModel&) = delete;
 };
 
 

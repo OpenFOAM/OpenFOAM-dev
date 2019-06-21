@@ -52,15 +52,6 @@ class topoChangerFvMesh
 :
     public dynamicFvMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        topoChangerFvMesh(const topoChangerFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const topoChangerFvMesh&) = delete;
-
-
 protected:
 
     // Protected Data
@@ -79,6 +70,9 @@ public:
         //- Construct from objectRegistry, and read/write options
         explicit topoChangerFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        topoChangerFvMesh(const topoChangerFvMesh&) = delete;
+
 
     //- Destructor
     virtual ~topoChangerFvMesh();
@@ -88,6 +82,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const topoChangerFvMesh&) = delete;
 };
 
 

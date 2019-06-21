@@ -73,21 +73,15 @@ class snapParameters
         const Switch detectNearSurfacesSnap_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        snapParameters(const snapParameters&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const snapParameters&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from dictionary
         snapParameters(const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        snapParameters(const snapParameters&) = delete;
 
 
     // Member Functions
@@ -148,6 +142,11 @@ public:
                 return detectNearSurfacesSnap_;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snapParameters&) = delete;
 };
 
 

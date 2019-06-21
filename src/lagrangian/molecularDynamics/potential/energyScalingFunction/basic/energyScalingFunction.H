@@ -64,15 +64,6 @@ protected:
         const pairPotential& pairPot_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        energyScalingFunction(const energyScalingFunction&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const energyScalingFunction&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -116,6 +107,9 @@ public:
             const pairPotential& pairPot
         );
 
+        //- Disallow default bitwise copy construction
+        energyScalingFunction(const energyScalingFunction&);
+
 
     //- Destructor
     virtual ~energyScalingFunction()
@@ -136,6 +130,12 @@ public:
         (
             const dictionary& energyScalingFunctionProperties
         ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const energyScalingFunction&) = delete;
 };
 
 

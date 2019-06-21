@@ -149,12 +149,6 @@ private:
             const bool applyFlip
         );
 
-        //- Disallow default bitwise copy construction
-        fvFieldDecomposer(const fvFieldDecomposer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvFieldDecomposer&) = delete;
-
 
 public:
 
@@ -169,6 +163,9 @@ public:
             const labelList& cellAddressing,
             const labelList& boundaryAddressing
         );
+
+        //- Disallow default bitwise copy construction
+        fvFieldDecomposer(const fvFieldDecomposer&) = delete;
 
 
     //- Destructor
@@ -196,6 +193,12 @@ public:
 
         template<class GeoField>
         void decomposeFields(const PtrList<GeoField>& fields) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvFieldDecomposer&) = delete;
 };
 
 

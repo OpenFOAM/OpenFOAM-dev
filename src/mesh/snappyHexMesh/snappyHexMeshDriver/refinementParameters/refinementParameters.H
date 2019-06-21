@@ -89,14 +89,6 @@ class refinementParameters
 
         Switch handleSnapProblems_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        refinementParameters(const refinementParameters&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const refinementParameters&) = delete;
-
 
 public:
 
@@ -104,6 +96,9 @@ public:
 
         //- Construct from dictionary - new syntax
         refinementParameters(const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        refinementParameters(const refinementParameters&) = delete;
 
 
     // Member Functions
@@ -183,6 +178,11 @@ public:
             //- Checks that cells are in mesh. Returns cells they are in.
             labelList findCells(const polyMesh&) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const refinementParameters&) = delete;
 };
 
 

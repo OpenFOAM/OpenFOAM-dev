@@ -50,15 +50,6 @@ class uniformDiffusivity
 :
     public motionDiffusivity
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        uniformDiffusivity(const uniformDiffusivity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const uniformDiffusivity&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -70,12 +61,18 @@ public:
         //- Construct for the given fvMesh and data Istream
         uniformDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        uniformDiffusivity(const uniformDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~uniformDiffusivity();
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const uniformDiffusivity&) = delete;
 
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const;

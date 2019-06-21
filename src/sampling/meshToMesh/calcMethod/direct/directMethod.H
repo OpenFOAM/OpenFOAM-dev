@@ -99,24 +99,19 @@ protected:
         ) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        directMethod(const directMethod&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const directMethod&) = delete;
-
-
 public:
 
     //- Run-time type information
     TypeName("direct");
 
-    //- Construct from source and target meshes
-    directMethod(const polyMesh& src, const polyMesh& tgt);
+    // Constructors
+
+        //- Construct from source and target meshes
+        directMethod(const polyMesh& src, const polyMesh& tgt);
+
+        //- Disallow default bitwise copy construction
+        directMethod(const directMethod&) = delete;
+
 
     //- Destructor
     virtual ~directMethod();
@@ -134,6 +129,12 @@ public:
                 labelListList& tgtToTgtAddr,
                 scalarListList& tgtToTgtWght
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const directMethod&) = delete;
 };
 
 

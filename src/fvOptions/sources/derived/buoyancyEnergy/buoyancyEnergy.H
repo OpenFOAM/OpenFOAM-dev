@@ -66,15 +66,6 @@ class buoyancyEnergy
         word UName_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        buoyancyEnergy(const buoyancyEnergy&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const buoyancyEnergy&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -91,6 +82,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        buoyancyEnergy(const buoyancyEnergy&) = delete;
 
 
     // Member Functions
@@ -110,6 +104,12 @@ public:
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const buoyancyEnergy&) = delete;
 };
 
 

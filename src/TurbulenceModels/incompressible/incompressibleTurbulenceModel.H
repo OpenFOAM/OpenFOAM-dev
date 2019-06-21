@@ -54,7 +54,6 @@ class incompressibleTurbulenceModel
 :
     public turbulenceModel
 {
-
 protected:
 
     // Protected data
@@ -68,20 +67,6 @@ protected:
         //  thermal transport layer is complete
         virtual void correctNut()
         {}
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        incompressibleTurbulenceModel
-        (
-            const incompressibleTurbulenceModel&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const incompressibleTurbulenceModel&) = delete;
 
 
 public:
@@ -101,6 +86,12 @@ public:
             const surfaceScalarField& phi,
             const word& propertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        incompressibleTurbulenceModel
+        (
+            const incompressibleTurbulenceModel&
+        ) = delete;
 
 
     //- Destructor
@@ -133,6 +124,12 @@ public:
 
         //- Return the source term for the momentum equation
         virtual tmp<fvVectorMatrix> divDevReff(volVectorField& U) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const incompressibleTurbulenceModel&) = delete;
 };
 
 

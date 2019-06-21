@@ -65,15 +65,6 @@ class buoyancyForce
         uniformDimensionedVectorField g_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        buoyancyForce(const buoyancyForce&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const buoyancyForce&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -90,6 +81,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        buoyancyForce(const buoyancyForce&) = delete;
 
 
     // Member Functions
@@ -116,6 +110,12 @@ public:
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const buoyancyForce&) = delete;
 };
 
 

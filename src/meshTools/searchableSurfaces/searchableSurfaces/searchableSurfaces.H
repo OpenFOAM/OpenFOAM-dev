@@ -81,13 +81,6 @@ class searchableSurfaces
         );
 
 
-        //- Disallow default bitwise copy construction
-        searchableSurfaces(const searchableSurfaces&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaces&) = delete;
-
-
 public:
 
     ClassName("searchableSurfaces");
@@ -112,6 +105,9 @@ public:
             const dictionary&,
             const bool singleRegionName
         );
+
+        //- Disallow default bitwise copy construction
+        searchableSurfaces(const searchableSurfaces&) = delete;
 
 
     // Member Functions
@@ -268,6 +264,10 @@ public:
         searchableSurface& operator[](const word&);
 
 
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurfaces&) = delete;
 };
 
 

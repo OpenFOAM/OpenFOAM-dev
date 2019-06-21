@@ -65,21 +65,6 @@ class velocityComponentLaplacianFvMotionSolver
         autoPtr<motionDiffusivity> diffusivityPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        velocityComponentLaplacianFvMotionSolver
-        (
-            const velocityComponentLaplacianFvMotionSolver&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=
-        (
-            const velocityComponentLaplacianFvMotionSolver&
-        ) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -94,6 +79,12 @@ public:
             const polyMesh&,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        velocityComponentLaplacianFvMotionSolver
+        (
+            const velocityComponentLaplacianFvMotionSolver&
+        ) = delete;
 
 
     //- Destructor
@@ -117,6 +108,15 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const velocityComponentLaplacianFvMotionSolver&
+        ) = delete;
 };
 
 

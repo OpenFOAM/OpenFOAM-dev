@@ -57,15 +57,6 @@ class force
 :
     public filmSubModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        force(const force&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const force&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -99,6 +90,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        force(const force&) = delete;
+
 
     // Selectors
 
@@ -121,6 +115,12 @@ public:
 
             //- Correct
             virtual tmp<fvVectorMatrix> correct(volVectorField& U) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const force&) = delete;
 };
 
 

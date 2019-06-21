@@ -60,12 +60,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construction
-        faceAreaWeightAMI(const faceAreaWeightAMI&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceAreaWeightAMI&) = delete;
-
         // Marching front
 
             //- Calculate addressing and weights using temporary storage
@@ -148,6 +142,9 @@ public:
             const bool restartUncoveredSourceFace = true
         );
 
+        //- Disallow default bitwise copy construction
+        faceAreaWeightAMI(const faceAreaWeightAMI&) = delete;
+
 
     //- Destructor
     virtual ~faceAreaWeightAMI();
@@ -167,6 +164,12 @@ public:
                 label srcFacei = -1,
                 label tgtFacei = -1
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceAreaWeightAMI&) = delete;
 };
 
 

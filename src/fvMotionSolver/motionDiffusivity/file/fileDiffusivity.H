@@ -51,23 +51,11 @@ class fileDiffusivity
 :
     public motionDiffusivity
 {
-
 protected:
 
     // Protected data
 
         surfaceScalarField faceDiffusivity_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fileDiffusivity(const fileDiffusivity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fileDiffusivity&) = delete;
 
 
 public:
@@ -81,6 +69,9 @@ public:
         //- Construct for the given fvMesh and data Istream
         fileDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        fileDiffusivity(const fileDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~fileDiffusivity();
@@ -88,15 +79,21 @@ public:
 
     // Member Functions
 
+        //- Do not correct the motion diffusivity
+        virtual void correct()
+        {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fileDiffusivity&) = delete;
+
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const
         {
             return faceDiffusivity_;
         }
-
-        //- Do not correct the motion diffusivity
-        virtual void correct()
-        {}
 };
 
 

@@ -87,15 +87,6 @@ class time
         scalar clockTime0_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        time(const time&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const time&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -120,6 +111,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        time(const time&) = delete;
+
 
     //- Destructor
     virtual ~time();
@@ -135,6 +129,12 @@ public:
 
         //- Write the time
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const time&) = delete;
 };
 
 

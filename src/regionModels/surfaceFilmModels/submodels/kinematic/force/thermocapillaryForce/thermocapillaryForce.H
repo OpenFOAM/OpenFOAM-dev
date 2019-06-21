@@ -54,15 +54,6 @@ class thermocapillaryForce
 :
     public force
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        thermocapillaryForce(const thermocapillaryForce&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const thermocapillaryForce&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -78,6 +69,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        thermocapillaryForce(const thermocapillaryForce&) = delete;
+
 
     //- Destructor
     virtual ~thermocapillaryForce();
@@ -89,6 +83,12 @@ public:
 
             //- Correct
             virtual tmp<fvVectorMatrix> correct(volVectorField& U);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const thermocapillaryForce&) = delete;
 };
 
 

@@ -65,15 +65,6 @@ class cyclicAMIGAMGInterface
         List<vectorTensorTransform> AMITransforms_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cyclicAMIGAMGInterface(const cyclicAMIGAMGInterface&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicAMIGAMGInterface&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -94,6 +85,9 @@ public:
             const label fineLevelIndex,
             const label coarseComm
         );
+
+        //- Disallow default bitwise copy construction
+        cyclicAMIGAMGInterface(const cyclicAMIGAMGInterface&) = delete;
 
 
     //- Destructor
@@ -169,6 +163,12 @@ public:
                 // cyclicAMIGAMGInterface.
                 NotImplemented;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicAMIGAMGInterface&) = delete;
 };
 
 

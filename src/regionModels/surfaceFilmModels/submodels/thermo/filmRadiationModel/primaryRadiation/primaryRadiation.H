@@ -62,15 +62,6 @@ class primaryRadiation
         volScalarField qinPrimary_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        primaryRadiation(const primaryRadiation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const primaryRadiation&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -85,6 +76,9 @@ public:
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        primaryRadiation(const primaryRadiation&) = delete;
 
 
     //- Destructor
@@ -101,6 +95,12 @@ public:
             //- Return the radiation sensible enthalpy source
             //  Also updates qrNet
             virtual tmp<volScalarField> Shs();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const primaryRadiation&) = delete;
 };
 
 

@@ -80,12 +80,6 @@ class processorMeshes
         //- Read all meshes
         void read();
 
-        //- Disallow default bitwise copy construction
-        processorMeshes(const processorMeshes&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorMeshes&) = delete;
-
 
 public:
 
@@ -93,6 +87,9 @@ public:
 
         //- Construct from components
         processorMeshes(PtrList<Time>& databases, const word& meshName);
+
+        //- Disallow default bitwise copy construction
+        processorMeshes(const processorMeshes&) = delete;
 
 
     // Member Functions
@@ -129,6 +126,10 @@ public:
         }
 
 
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorMeshes&) = delete;
 };
 
 

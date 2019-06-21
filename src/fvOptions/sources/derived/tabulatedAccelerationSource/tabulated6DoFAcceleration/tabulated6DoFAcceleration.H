@@ -72,15 +72,6 @@ class tabulated6DoFAcceleration
         Field<accelerationVectors> values_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        tabulated6DoFAcceleration(const tabulated6DoFAcceleration&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const tabulated6DoFAcceleration&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -96,6 +87,9 @@ public:
             const Time& runTime
         );
 
+        //- Disallow default bitwise copy construction
+        tabulated6DoFAcceleration(const tabulated6DoFAcceleration&);
+
 
     //- Destructor
     virtual ~tabulated6DoFAcceleration();
@@ -108,6 +102,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& accelerationCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tabulated6DoFAcceleration&) = delete;
 };
 
 

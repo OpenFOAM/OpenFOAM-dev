@@ -65,18 +65,6 @@ class displacementSBRStressFvMotionSolver
         autoPtr<motionDiffusivity> diffusivityPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        displacementSBRStressFvMotionSolver
-        (
-            const displacementSBRStressFvMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementSBRStressFvMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -90,6 +78,12 @@ public:
         (
             const polyMesh&,
             const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        displacementSBRStressFvMotionSolver
+        (
+            const displacementSBRStressFvMotionSolver&
         );
 
 
@@ -125,6 +119,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementSBRStressFvMotionSolver&) = delete;
 };
 
 

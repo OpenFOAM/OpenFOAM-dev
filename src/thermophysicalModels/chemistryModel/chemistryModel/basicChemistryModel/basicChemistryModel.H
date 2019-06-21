@@ -58,15 +58,6 @@ class basicChemistryModel
 :
     public IOdictionary
 {
-    // Private Member Functions
-
-        //- Construct as copy (not implemented)
-        basicChemistryModel(const basicChemistryModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const basicChemistryModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -107,6 +98,9 @@ public:
 
         //- Construct from thermo
         basicChemistryModel(basicThermo& thermo);
+
+        //- Construct as copy (not implemented)
+        basicChemistryModel(const basicChemistryModel&);
 
 
     // Selectors
@@ -183,6 +177,12 @@ public:
 
                 //- Return the heat release rate [kg/m/s^3]
                 virtual tmp<volScalarField> Qdot() const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const basicChemistryModel&) = delete;
 };
 
 

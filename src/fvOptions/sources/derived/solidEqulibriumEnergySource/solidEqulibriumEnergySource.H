@@ -87,18 +87,6 @@ class solidEqulibriumEnergySource
         const solidThermo& thermo() const;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        solidEqulibriumEnergySource
-        (
-            const solidEqulibriumEnergySource&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidEqulibriumEnergySource&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -115,6 +103,12 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        solidEqulibriumEnergySource
+        (
+            const solidEqulibriumEnergySource&
+        ) = delete;
 
 
     //- Destructor
@@ -147,6 +141,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidEqulibriumEnergySource&) = delete;
 };
 
 

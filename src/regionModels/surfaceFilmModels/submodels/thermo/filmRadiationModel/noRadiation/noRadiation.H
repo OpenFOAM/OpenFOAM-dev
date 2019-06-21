@@ -55,15 +55,6 @@ class noRadiation
 :
     public filmRadiationModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        noRadiation(const noRadiation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const noRadiation&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -79,6 +70,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        noRadiation(const noRadiation&) = delete;
+
 
     //- Destructor
     virtual ~noRadiation();
@@ -93,6 +87,12 @@ public:
 
             //- Return the radiation sensible enthalpy source
             virtual tmp<volScalarField> Shs();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noRadiation&) = delete;
 };
 
 

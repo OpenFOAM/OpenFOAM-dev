@@ -61,16 +61,6 @@ protected:
         //- Model coefficients dictionary
         dictionary coeffDict_;
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        decompositionConstraint(const decompositionConstraint&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const decompositionConstraint&) = delete;
-
 
 public:
 
@@ -101,6 +91,10 @@ public:
             const dictionary& constraintsDict,
             const word& type
         );
+
+        //- Disallow default bitwise copy construction
+        decompositionConstraint(const decompositionConstraint&) = delete;
+
 
     // Selectors
 
@@ -141,6 +135,12 @@ public:
             labelList& decomposition
         ) const
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const decompositionConstraint&) = delete;
 };
 
 

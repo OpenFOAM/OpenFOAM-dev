@@ -87,15 +87,6 @@ class removeRegisteredObject
         wordList objectNames_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        removeRegisteredObject(const removeRegisteredObject&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const removeRegisteredObject&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -112,6 +103,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        removeRegisteredObject(const removeRegisteredObject&) = delete;
+
 
     //- Destructor
     virtual ~removeRegisteredObject();
@@ -127,6 +121,12 @@ public:
 
         //- Do nothing
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const removeRegisteredObject&) = delete;
 };
 
 

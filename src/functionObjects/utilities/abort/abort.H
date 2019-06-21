@@ -93,12 +93,6 @@ private:
         //- Remove abort file.
         void removeFile() const;
 
-        //- Disallow default bitwise copy construction
-        abort(const abort&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const abort&) = delete;
-
 
 public:
 
@@ -115,6 +109,9 @@ public:
             const Time& runTime,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        abort(const abort&) = delete;
 
 
     //- Destructor
@@ -134,6 +131,12 @@ public:
 
         //- Execute at the final time-loop, used for cleanup
         virtual bool end();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const abort&) = delete;
 };
 
 

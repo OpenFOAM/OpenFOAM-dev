@@ -68,7 +68,6 @@ class limitTemperature
 :
     public cellSetOption
 {
-
 protected:
 
     // Protected data
@@ -81,17 +80,6 @@ protected:
 
         //- Optional phase name [K]
         word phase_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        limitTemperature(const limitTemperature&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitTemperature&) = delete;
 
 
 public:
@@ -111,6 +99,9 @@ public:
             const fvMesh& mesh
         );
 
+        //- Disallow default bitwise copy construction
+        limitTemperature(const limitTemperature&) = delete;
+
 
     //- Destructor
     virtual ~limitTemperature()
@@ -124,6 +115,12 @@ public:
 
         //- Correct the energy field
         virtual void correct(volScalarField& he);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitTemperature&) = delete;
 };
 
 

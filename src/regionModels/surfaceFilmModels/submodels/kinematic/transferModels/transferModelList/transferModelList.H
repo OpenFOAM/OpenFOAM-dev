@@ -63,15 +63,6 @@ class transferModelList
         scalarField massTransferred_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        transferModelList(const transferModelList&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const transferModelList&) = delete;
-
-
 public:
 
     // Constructors
@@ -85,6 +76,9 @@ public:
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        transferModelList(const transferModelList&) = delete;
 
 
     //- Destructor
@@ -110,6 +104,12 @@ public:
 
         //- Provide some info
         virtual void info(Ostream& os);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const transferModelList&) = delete;
 };
 
 

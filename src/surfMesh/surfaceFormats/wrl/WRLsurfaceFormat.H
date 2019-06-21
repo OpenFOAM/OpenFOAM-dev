@@ -58,20 +58,15 @@ class WRLsurfaceFormat
     public WRLsurfaceFormatCore
 
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        WRLsurfaceFormat(const WRLsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const WRLsurfaceFormat<Face>&) = delete;
-
 public:
 
     // Constructors
 
         //- Construct null
         WRLsurfaceFormat();
+
+        //- Disallow default bitwise copy construction
+        WRLsurfaceFormat(const WRLsurfaceFormat<Face>&) = delete;
 
 
     //- Destructor
@@ -90,6 +85,11 @@ public:
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const WRLsurfaceFormat<Face>&) = delete;
 };
 
 

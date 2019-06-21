@@ -100,12 +100,6 @@ class yPlus
             const turbulenceModel& turbModel
         );
 
-        //- Disallow default bitwise copy construction
-        yPlus(const yPlus&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const yPlus&) = delete;
-
 
 public:
 
@@ -123,6 +117,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        yPlus(const yPlus&) = delete;
+
 
     //- Destructor
     virtual ~yPlus();
@@ -138,6 +135,12 @@ public:
 
         //- Write the yPlus field
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const yPlus&) = delete;
 };
 
 

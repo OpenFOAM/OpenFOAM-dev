@@ -73,16 +73,6 @@ class coordinateSystems
 :
     public IOPtrList<coordinateSystem>
 {
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        coordinateSystems(const coordinateSystems&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const coordinateSystems&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -107,6 +97,9 @@ public:
             PtrList<coordinateSystem>&&
         );
 
+        //- Disallow default bitwise copy construction
+        coordinateSystems(const coordinateSystems&) = delete;
+
 
     // Selectors
 
@@ -130,6 +123,12 @@ public:
 
         //- Write data
         bool writeData(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const coordinateSystems&) = delete;
 };
 
 

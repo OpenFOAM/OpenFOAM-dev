@@ -83,16 +83,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        tabulatedAccelerationSource
-        (
-            const tabulatedAccelerationSource&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const tabulatedAccelerationSource&) = delete;
-
-
         //- Source term to momentum equation
         template<class RhoFieldType>
         void addSup
@@ -120,6 +110,12 @@ public:
             const fvMesh& mesh
         );
 
+        //- Disallow default bitwise copy construction
+        tabulatedAccelerationSource
+        (
+            const tabulatedAccelerationSource&
+        ) = delete;
+
 
     //- Destructor
     virtual ~tabulatedAccelerationSource()
@@ -145,6 +141,12 @@ public:
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tabulatedAccelerationSource&) = delete;
 };
 
 

@@ -51,15 +51,6 @@ class indexedParticleCloud
 :
     public Cloud<indexedParticle>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        indexedParticleCloud(const indexedParticleCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const indexedParticleCloud&) = delete;
-
-
 public:
 
     // Constructors
@@ -71,6 +62,15 @@ public:
             const word& cloudName = "defaultCloud",
             bool readFields = true
         );
+
+        //- Disallow default bitwise copy construction
+        indexedParticleCloud(const indexedParticleCloud&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const indexedParticleCloud&) = delete;
 };
 
 

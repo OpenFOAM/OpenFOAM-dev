@@ -103,17 +103,6 @@ protected:
         ) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        meshToMeshMethod(const meshToMeshMethod&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshToMeshMethod&) = delete;
-
-
 public:
 
     //- Run-time type information
@@ -132,8 +121,14 @@ public:
         (src, tgt)
     );
 
-    //- Construct from source and target meshes
-    meshToMeshMethod(const polyMesh& src, const polyMesh& tgt);
+    // Constructors
+
+        //- Construct from source and target meshes
+        meshToMeshMethod(const polyMesh& src, const polyMesh& tgt);
+
+        //- Disallow default bitwise copy construction
+        meshToMeshMethod(const meshToMeshMethod&) = delete;
+
 
     //- Selector
     static autoPtr<meshToMeshMethod> New
@@ -183,6 +178,12 @@ public:
                 const polyMesh& mesh2,
                 const labelListList& mesh1ToMesh2Addr
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshToMeshMethod&) = delete;
 };
 
 

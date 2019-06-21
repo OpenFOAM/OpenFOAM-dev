@@ -61,15 +61,6 @@ class noFilm
         const fvMesh& mesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        noFilm(const noFilm&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const noFilm&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -86,6 +77,9 @@ public:
             const dimensionedVector& g,
             const word& regionType
         );
+
+        //- Disallow default bitwise copy construction
+        noFilm(const noFilm&) = delete;
 
 
     //- Destructor
@@ -119,6 +113,12 @@ public:
 
             //- Main driver routing to evolve the region - calls other evolves
             virtual void evolve();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noFilm&) = delete;
 };
 
 

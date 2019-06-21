@@ -84,15 +84,6 @@ class rigidBodyState
         wordList names_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        rigidBodyState(const rigidBodyState&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const rigidBodyState&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -117,6 +108,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        rigidBodyState(const rigidBodyState&) = delete;
+
 
     //- Destructor
     virtual ~rigidBodyState();
@@ -134,6 +128,12 @@ public:
 
         //- Write the rigidBodyState
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rigidBodyState&) = delete;
 };
 
 

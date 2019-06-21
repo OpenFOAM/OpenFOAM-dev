@@ -57,21 +57,15 @@ class GTSsurfaceFormat
 :
     public UnsortedMeshedSurface<Face>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        GTSsurfaceFormat(const GTSsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const GTSsurfaceFormat<Face>&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from file name
         GTSsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        GTSsurfaceFormat(const GTSsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -107,6 +101,12 @@ public:
         {
             write(name, *this);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GTSsurfaceFormat<Face>&) = delete;
 };
 
 

@@ -66,15 +66,6 @@ class kinematicSingleLayer
 :
     public surfaceFilmRegionModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        kinematicSingleLayer(const kinematicSingleLayer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const kinematicSingleLayer&) = delete;
-
-
 protected:
 
     // Protected data
@@ -309,6 +300,9 @@ public:
             const bool readFields = true
         );
 
+        //- Disallow default bitwise copy construction
+        kinematicSingleLayer(const kinematicSingleLayer&) = delete;
+
 
     //- Destructor
     virtual ~kinematicSingleLayer();
@@ -531,6 +525,12 @@ public:
 
             //- Provide some feedback
             virtual void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kinematicSingleLayer&) = delete;
 };
 
 

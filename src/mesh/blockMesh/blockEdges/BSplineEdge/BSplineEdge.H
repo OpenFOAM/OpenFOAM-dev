@@ -54,15 +54,6 @@ class BSplineEdge
     public blockEdge,
     public BSpline
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        BSplineEdge(const BSplineEdge&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const BSplineEdge&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -90,6 +81,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        BSplineEdge(const BSplineEdge&) = delete;
+
 
     //- Destructor
     virtual ~BSplineEdge();
@@ -103,6 +97,12 @@ public:
 
         //- Return the length of the spline curve (not implemented)
         virtual scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const BSplineEdge&) = delete;
 };
 
 

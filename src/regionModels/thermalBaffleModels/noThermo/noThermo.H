@@ -55,15 +55,6 @@ class noThermo
 :
     public thermalBaffleModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        noThermo(const noThermo&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const noThermo&) = delete;
-
-
 protected:
 
     // Protected member functions
@@ -89,8 +80,10 @@ public:
             const word& modelType,
             const fvMesh& mesh,
             const dictionary& dict
-
         );
+
+        //- Disallow default bitwise copy construction
+        noThermo(const noThermo&) = delete;
 
 
     //- Destructor
@@ -131,6 +124,12 @@ public:
 
             //- Evolve the film equations
             virtual void evolveRegion();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noThermo&) = delete;
 
 };
 

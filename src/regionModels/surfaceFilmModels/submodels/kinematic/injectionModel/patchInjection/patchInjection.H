@@ -55,15 +55,6 @@ class patchInjection
 :
     public injectionModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        patchInjection(const patchInjection&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const patchInjection&) = delete;
-
-
 protected:
 
         //- Stable film thickness - mass only removed if thickness exceeds
@@ -88,6 +79,9 @@ public:
         //- Construct from surface film model
         patchInjection(surfaceFilmRegionModel& film, const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        patchInjection(const patchInjection&) = delete;
+
 
     //- Destructor
     virtual ~patchInjection();
@@ -109,6 +103,12 @@ public:
         (
             scalarField& patchMasses
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchInjection&) = delete;
 };
 
 

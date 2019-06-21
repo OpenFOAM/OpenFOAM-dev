@@ -48,15 +48,6 @@ class valveBank
 :
     public PtrList<engineValve>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        valveBank(const valveBank&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const valveBank&) = delete;
-
-
 public:
 
     // Constructors
@@ -87,11 +78,14 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construction
+        valveBank(const valveBank&) = delete;
 
-    // Destructor - default
 
+    // Member Operators
 
-    // Member Functions
+        //- Disallow default bitwise assignment
+        void operator=(const valveBank&) = delete;
 };
 
 

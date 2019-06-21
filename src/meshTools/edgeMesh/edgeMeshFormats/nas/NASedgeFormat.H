@@ -54,20 +54,15 @@ class NASedgeFormat
     public edgeMesh,
     public NASCore
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        NASedgeFormat(const NASedgeFormat&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const NASedgeFormat&) = delete;
-
 public:
 
     // Constructors
 
         //- Construct from file name
         NASedgeFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        NASedgeFormat(const NASedgeFormat&) = delete;
 
 
     // Selectors
@@ -91,6 +86,12 @@ public:
 
         //- Read from a file
         virtual bool read(const fileName&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const NASedgeFormat&) = delete;
 };
 
 

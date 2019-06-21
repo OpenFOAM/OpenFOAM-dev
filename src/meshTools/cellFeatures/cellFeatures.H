@@ -105,12 +105,6 @@ class cellFeatures
         void calcSuperFaces() const;
 
 
-        //- Disallow default bitwise copy construction
-        cellFeatures(const cellFeatures&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellFeatures&) = delete;
-
 public:
 
     // Constructors
@@ -122,6 +116,9 @@ public:
             const scalar minCos,    // angle to use for feature recognition.
             const label celli
         );
+
+        //- Disallow default bitwise copy construction
+        cellFeatures(const cellFeatures&) = delete;
 
 
     //- Destructor
@@ -175,6 +172,11 @@ public:
             //  point
             bool isFeatureVertex(const label facei, const label vertI) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellFeatures&) = delete;
 };
 
 

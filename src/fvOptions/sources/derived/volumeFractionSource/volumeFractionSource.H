@@ -150,11 +150,6 @@ class volumeFractionSource
             const label fieldi
         );
 
-        //- Disallow default bitwise copy construction
-        volumeFractionSource(const volumeFractionSource&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const volumeFractionSource&) = delete;
 
 public:
 
@@ -172,6 +167,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        volumeFractionSource(const volumeFractionSource&) = delete;
 
 
     //- Destructor
@@ -280,6 +278,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const volumeFractionSource&) = delete;
 };
 
 

@@ -60,15 +60,6 @@ class laminar
         scalar Cf_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        laminar(const laminar&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const laminar&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -79,6 +70,9 @@ public:
 
         //- Construct from surface film model
         laminar(surfaceFilmRegionModel& film, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        laminar(const laminar&) = delete;
 
 
     //- Destructor
@@ -100,6 +94,12 @@ public:
 
             //- Return the source for the film momentum equation
             virtual tmp<fvVectorMatrix> Su(volVectorField& U) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laminar&) = delete;
 };
 
 

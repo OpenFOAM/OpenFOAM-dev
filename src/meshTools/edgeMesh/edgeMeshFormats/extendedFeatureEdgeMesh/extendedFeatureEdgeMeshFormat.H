@@ -52,24 +52,18 @@ class extendedFeatureEdgeMeshFormat
 :
     public edgeMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        extendedFeatureEdgeMeshFormat
-        (
-            const extendedFeatureEdgeMeshFormat&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const extendedFeatureEdgeMeshFormat&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from file name
         extendedFeatureEdgeMeshFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        extendedFeatureEdgeMeshFormat
+        (
+            const extendedFeatureEdgeMeshFormat&
+        ) = delete;
 
 
     // Selectors
@@ -94,6 +88,11 @@ public:
         //- Read from file
         virtual bool read(const fileName&);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extendedFeatureEdgeMeshFormat&) = delete;
 };
 
 

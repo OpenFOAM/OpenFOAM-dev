@@ -78,15 +78,6 @@ class FaceCellWave
 :
     public FaceCellWaveName
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        FaceCellWave(const FaceCellWave&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const FaceCellWave&) = delete;
-
-
 protected:
 
     // Protected data
@@ -321,6 +312,9 @@ public:
             TrackingData& td = dummyTrackData_
         );
 
+        //- Disallow default bitwise copy construction
+        FaceCellWave(const FaceCellWave&) = delete;
+
 
     //- Destructor
     virtual ~FaceCellWave()
@@ -387,6 +381,12 @@ public:
             //- Iterate until no changes or maxIter reached.  Returns actual
             //  number of iterations.
             virtual label iterate(const label maxIter);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const FaceCellWave&) = delete;
 };
 
 

@@ -68,12 +68,6 @@ class ReactionList
         const dictionary dict_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const ReactionList&) = delete;
-
-
 public:
 
     // Constructors
@@ -108,7 +102,14 @@ public:
 
         //- Write
         void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ReactionList&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

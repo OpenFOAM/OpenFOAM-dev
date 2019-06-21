@@ -59,7 +59,6 @@ class turbulenceModel
 :
     public IOdictionary
 {
-
 protected:
 
     // Protected data
@@ -73,17 +72,6 @@ protected:
 
         //- Near wall distance boundary field
         nearWallDist y_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        turbulenceModel(const turbulenceModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const turbulenceModel&) = delete;
 
 
 public:
@@ -105,6 +93,9 @@ public:
             const surfaceScalarField& phi,
             const word& propertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        turbulenceModel(const turbulenceModel&) = delete;
 
 
     //- Destructor
@@ -208,6 +199,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const turbulenceModel&) = delete;
 };
 
 

@@ -131,12 +131,6 @@ class TDACChemistryModel
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        TDACChemistryModel(const TDACChemistryModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const TDACChemistryModel&) = delete;
-
         //- Solve the reaction system for the given time step
         //  of given type and return the characteristic time
         //  Variable number of species added
@@ -154,6 +148,9 @@ public:
 
         //- Construct from thermo
         TDACChemistryModel(ReactionThermo& thermo);
+
+        //- Disallow default bitwise copy construction
+        TDACChemistryModel(const TDACChemistryModel&);
 
 
     //- Destructor
@@ -279,6 +276,12 @@ public:
             void setTabulationResultsRetrieve(const label celli);
 
             inline void resetTabulationResults();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TDACChemistryModel&) = delete;
 };
 
 

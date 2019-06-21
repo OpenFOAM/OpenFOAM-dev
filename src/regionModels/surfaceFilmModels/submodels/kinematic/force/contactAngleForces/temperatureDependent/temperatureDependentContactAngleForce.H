@@ -68,18 +68,6 @@ class temperatureDependentContactAngleForce
         autoPtr<Function1<scalar>> thetaPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        temperatureDependentContactAngleForce
-        (
-            const temperatureDependentContactAngleForce&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const temperatureDependentContactAngleForce&) = delete;
-
-
 protected:
 
         //- Return the contact angle field
@@ -101,9 +89,21 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        temperatureDependentContactAngleForce
+        (
+            const temperatureDependentContactAngleForce&
+        );
+
 
     //- Destructor
     virtual ~temperatureDependentContactAngleForce();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const temperatureDependentContactAngleForce&) = delete;
 };
 
 

@@ -224,12 +224,6 @@ class medialAxisMeshMover
             labelList& checkFaces
         );
 
-        //- Disallow default bitwise copy construction
-        medialAxisMeshMover(const medialAxisMeshMover&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const medialAxisMeshMover&) = delete;
-
 
 public:
 
@@ -246,6 +240,9 @@ public:
             const List<labelPair>& baffles,
             pointVectorField& pointDisplacement
         );
+
+        //- Disallow default bitwise copy construction
+        medialAxisMeshMover(const medialAxisMeshMover&) = delete;
 
 
     // Destructor
@@ -274,6 +271,11 @@ public:
             NotImplemented;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const medialAxisMeshMover&) = delete;
 };
 
 

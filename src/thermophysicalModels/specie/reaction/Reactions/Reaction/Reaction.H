@@ -105,9 +105,6 @@ private:
         //- Construct reaction thermo
         void setThermo(const HashPtrTable<ReactionThermo>& thermoDatabase);
 
-        //- Disallow default bitwise assignment
-        void operator=(const Reaction<ReactionThermo>&) = delete;
-
         //- Return new reaction ID for un-named reactions
         label getNewReactionID();
 
@@ -353,6 +350,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Reaction<ReactionThermo>&) = delete;
 
 
     // Ostream Operator

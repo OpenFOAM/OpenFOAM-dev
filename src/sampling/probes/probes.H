@@ -181,12 +181,6 @@ private:
         template<class Type>
         void sampleAndWriteSurfaceFields(const fieldGroup<Type>&);
 
-        //- Disallow default bitwise copy construction
-        probes(const probes&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const probes&) = delete;
-
 
 public:
 
@@ -213,6 +207,9 @@ public:
             const dictionary& dict,
             const bool loadFromFiles = false
         );
+
+        //- Disallow default bitwise copy construction
+        probes(const probes&) = delete;
 
 
     //- Destructor
@@ -285,6 +282,12 @@ public:
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const probes&) = delete;
 };
 
 

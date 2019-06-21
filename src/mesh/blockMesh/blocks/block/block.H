@@ -82,12 +82,6 @@ class block
         //- Creates boundary patch faces for the block
         void createBoundary();
 
-        //- Disallow default bitwise copy construction
-        block(const block&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const block&) = delete;
-
 
 public:
 
@@ -129,6 +123,9 @@ public:
 
         //- Construct from a block definition
         block(const blockDescriptor&);
+
+        //- Disallow default bitwise copy construction
+        block(const block&) = delete;
 
         //- Clone
         autoPtr<block> clone() const
@@ -202,10 +199,17 @@ public:
                 boundaryPatches() const;
 
 
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const block&) = delete;
+
+
     // Ostream Operator
 
         friend Ostream& operator<<(Ostream&, const block&);
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -151,12 +151,6 @@ class PatchEdgeFaceWave
         //- Update coupled edges
         void syncEdges();
 
-        //- Disallow default bitwise copy construction
-        PatchEdgeFaceWave(const PatchEdgeFaceWave&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const PatchEdgeFaceWave&) = delete;
-
 
 public:
 
@@ -204,6 +198,9 @@ public:
             UList<Type>& allFaceInfo,
             TrackingData& td = dummyTrackData_
         );
+
+        //- Disallow default bitwise copy construction
+        PatchEdgeFaceWave(const PatchEdgeFaceWave&) = delete;
 
 
     // Member Functions
@@ -253,6 +250,12 @@ public:
         //- Iterate until no changes or maxIter reached. Returns actual
         //  number of iterations.
         label iterate(const label maxIter);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PatchEdgeFaceWave&) = delete;
 };
 
 

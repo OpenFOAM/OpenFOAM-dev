@@ -53,15 +53,6 @@ namespace regionModels
 
 class surfaceFilmModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        surfaceFilmModel(const surfaceFilmModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceFilmModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -88,8 +79,12 @@ public:
          );
 
 
-    //- Constructor
-    surfaceFilmModel();
+    // Constructors
+
+        surfaceFilmModel();
+
+        //- Disallow default bitwise copy construction
+        surfaceFilmModel(const surfaceFilmModel&) = delete;
 
 
     // Selectors
@@ -134,6 +129,12 @@ public:
 
             //- Main driver routing to evolve the region - calls other evolves
             virtual void evolve() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceFilmModel&) = delete;
 };
 
 

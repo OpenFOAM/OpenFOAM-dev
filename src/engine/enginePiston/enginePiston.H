@@ -77,15 +77,6 @@ class enginePiston
             const scalar maxLayer_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        enginePiston(const enginePiston&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const enginePiston&) = delete;
-
-
 public:
 
     // Static Data Members
@@ -111,8 +102,8 @@ public:
             const dictionary& dict
         );
 
-
-    // Destructor - default
+        //- Disallow default bitwise copy construction
+        enginePiston(const enginePiston&) = delete;
 
 
     // Member Functions
@@ -144,6 +135,12 @@ public:
 
         //- Write dictionary
         void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const enginePiston&) = delete;
 };
 
 

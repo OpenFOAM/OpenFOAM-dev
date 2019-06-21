@@ -69,12 +69,6 @@ class StandardChemistryModel
         template<class DeltaTType>
         scalar solve(const DeltaTType& deltaT);
 
-        //- Disallow default bitwise copy construction
-        StandardChemistryModel(const StandardChemistryModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const StandardChemistryModel&) = delete;
-
 
 protected:
 
@@ -128,6 +122,9 @@ public:
 
         //- Construct from thermo
         StandardChemistryModel(ReactionThermo& thermo);
+
+        //- Disallow default bitwise copy construction
+        StandardChemistryModel(const StandardChemistryModel&);
 
 
     //- Destructor
@@ -249,6 +246,12 @@ public:
                 scalar& deltaT,
                 scalar& subDeltaT
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const StandardChemistryModel&) = delete;
 };
 
 

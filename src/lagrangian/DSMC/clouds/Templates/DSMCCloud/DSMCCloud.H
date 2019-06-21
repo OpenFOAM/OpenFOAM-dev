@@ -182,12 +182,6 @@ class DSMCCloud
         //- Calculate the volume field data
         void calculateFields();
 
-        //- Disallow default bitwise copy construction
-        DSMCCloud(const DSMCCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const DSMCCloud&) = delete;
-
 
 public:
 
@@ -209,6 +203,9 @@ public:
             const fvMesh& mesh,
             const IOdictionary& dsmcInitialiseDict
         );
+
+        //- Disallow default bitwise copy construction
+        DSMCCloud(const DSMCCloud&) = delete;
 
 
     //- Destructor
@@ -469,6 +466,12 @@ public:
 
             //- Remap the particles to the correct cells following mesh change
             virtual void autoMap(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DSMCCloud&) = delete;
 };
 
 

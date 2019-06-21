@@ -94,24 +94,19 @@ protected:
         ) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cellVolumeWeightMethod(const cellVolumeWeightMethod&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellVolumeWeightMethod&) = delete;
-
-
 public:
 
     //- Run-time type information
     TypeName("cellVolumeWeight");
 
-    //- Construct from source and target meshes
-    cellVolumeWeightMethod(const polyMesh& src, const polyMesh& tgt);
+    // Constructors
+
+        //- Construct from source and target meshes
+        cellVolumeWeightMethod(const polyMesh& src, const polyMesh& tgt);
+
+        //- Disallow default bitwise copy construction
+        cellVolumeWeightMethod(const cellVolumeWeightMethod&) = delete;
+
 
     //- Destructor
     virtual ~cellVolumeWeightMethod();
@@ -129,6 +124,12 @@ public:
                 labelListList& tgtToTgtAddr,
                 scalarListList& tgtToTgtWght
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellVolumeWeightMethod&) = delete;
 };
 
 

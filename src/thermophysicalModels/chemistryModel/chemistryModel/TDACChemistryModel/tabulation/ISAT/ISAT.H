@@ -118,9 +118,6 @@ class ISAT
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        ISAT(const ISAT&) = delete;
-
         //- Add a chemPoint to the MRU list
         void addToMRU(chemPointISAT<CompType, ThermoType>* phi0);
 
@@ -190,6 +187,9 @@ public:
             const dictionary& chemistryProperties,
             TDACChemistryModel<CompType, ThermoType>& chemistry
         );
+
+        //- Disallow default bitwise copy construction
+        ISAT(const ISAT&) = delete;
 
 
     // Destructor

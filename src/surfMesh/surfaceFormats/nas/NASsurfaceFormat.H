@@ -65,21 +65,15 @@ class NASsurfaceFormat
     public MeshedSurface<Face>,
     public NASCore
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        NASsurfaceFormat(const NASsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const NASsurfaceFormat<Face>&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from file name
         NASsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        NASsurfaceFormat(const NASsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -103,6 +97,12 @@ public:
 
         //- Read from a file
         virtual bool read(const fileName&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const NASsurfaceFormat<Face>&) = delete;
 };
 
 

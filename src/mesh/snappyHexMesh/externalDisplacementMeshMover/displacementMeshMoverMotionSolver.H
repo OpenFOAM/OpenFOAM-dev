@@ -57,18 +57,6 @@ class displacementMeshMoverMotionSolver
         mutable autoPtr<externalDisplacementMeshMover> meshMoverPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        displacementMeshMoverMotionSolver
-        (
-            const displacementMeshMoverMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementMeshMoverMotionSolver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -79,6 +67,12 @@ public:
 
         //- Construct from polyMesh and dictionary
         displacementMeshMoverMotionSolver(const polyMesh&, const dictionary&);
+
+        //- Disallow default bitwise copy construction
+        displacementMeshMoverMotionSolver
+        (
+            const displacementMeshMoverMotionSolver&
+        );
 
 
     //- Destructor
@@ -100,6 +94,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementMeshMoverMotionSolver&) = delete;
 };
 
 

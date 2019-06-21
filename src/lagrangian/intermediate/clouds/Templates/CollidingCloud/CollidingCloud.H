@@ -84,15 +84,6 @@ private:
         autoPtr<CollidingCloud<CloudType>> cloudCopyPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        CollidingCloud(const CollidingCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const CollidingCloud&) = delete;
-
-
 protected:
 
     // Protected data
@@ -158,6 +149,9 @@ public:
             const word& name,
             const CollidingCloud<CloudType>& c
         );
+
+        //- Disallow default bitwise copy construction
+        CollidingCloud(const CollidingCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
         virtual autoPtr<Cloud<parcelType>> clone(const word& name)
@@ -234,6 +228,12 @@ public:
 
             //- Print cloud information
             void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CollidingCloud&) = delete;
 };
 
 

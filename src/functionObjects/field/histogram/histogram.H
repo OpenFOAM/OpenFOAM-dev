@@ -115,12 +115,6 @@ class histogram
             const scalarField& values
         ) const;
 
-        //- Disallow default bitwise copy construction
-        histogram(const histogram&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const histogram&) = delete;
-
 
 public:
 
@@ -137,6 +131,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        histogram(const histogram&) = delete;
 
 
     // Destructor
@@ -155,6 +152,12 @@ public:
         //  postProcess overrides the usual writeControl behaviour and
         //  forces writing always (used in post-processing mode)
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const histogram&) = delete;
 };
 
 

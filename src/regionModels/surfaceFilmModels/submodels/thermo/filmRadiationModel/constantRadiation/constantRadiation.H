@@ -76,15 +76,6 @@ class constantRadiation
         const scalar duration_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        constantRadiation(const constantRadiation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const constantRadiation&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -99,6 +90,9 @@ public:
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        constantRadiation(const constantRadiation&) = delete;
 
 
     //- Destructor
@@ -115,6 +109,12 @@ public:
             //- Return the radiation sensible enthalpy source
             //  Also updates qrNet
             virtual tmp<volScalarField> Shs();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const constantRadiation&) = delete;
 };
 
 

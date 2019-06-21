@@ -115,17 +115,6 @@ protected:
         stringList writeCalls_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        systemCall(const systemCall&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const systemCall&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -141,6 +130,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        systemCall(const systemCall&) = delete;
 
 
     //- Destructor
@@ -160,6 +152,12 @@ public:
 
         //- Write, execute the "writeCalls"
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const systemCall&) = delete;
 };
 
 

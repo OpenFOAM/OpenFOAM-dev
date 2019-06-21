@@ -96,17 +96,6 @@ protected:
         virtual void writeFileHeader(const label i);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cloudInfo(const cloudInfo&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cloudInfo&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -123,6 +112,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        cloudInfo(const cloudInfo&) = delete;
+
 
     //- Destructor
     virtual ~cloudInfo();
@@ -138,6 +130,12 @@ public:
 
         //- Write
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cloudInfo&) = delete;
 };
 
 

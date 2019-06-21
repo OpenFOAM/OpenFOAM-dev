@@ -135,15 +135,6 @@ class forceCoeffs
             scalar Aref_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        forceCoeffs(const forceCoeffs&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const forceCoeffs&) = delete;
-
-
 protected:
 
     //- Output file header information
@@ -166,6 +157,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        forceCoeffs(const forceCoeffs&) = delete;
+
 
     //- Destructor
     virtual ~forceCoeffs();
@@ -181,6 +175,12 @@ public:
 
         //- Write the forces
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const forceCoeffs&) = delete;
 };
 
 

@@ -56,15 +56,6 @@ class waxSolventEvaporation
 :
     public phaseChangeModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        waxSolventEvaporation(const waxSolventEvaporation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const waxSolventEvaporation&) = delete;
-
-
 protected:
 
     // Protected data
@@ -129,6 +120,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        waxSolventEvaporation(const waxSolventEvaporation&) = delete;
+
 
     //- Destructor
     virtual ~waxSolventEvaporation();
@@ -144,6 +138,12 @@ public:
             scalarField& dMass,
             scalarField& dEnergy
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const waxSolventEvaporation&) = delete;
 };
 
 

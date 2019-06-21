@@ -63,15 +63,6 @@ class ArrheniusViscosity
 :
     public filmViscosityModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        ArrheniusViscosity(const ArrheniusViscosity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const ArrheniusViscosity&) = delete;
-
-
 protected:
 
     // Protected data
@@ -105,6 +96,9 @@ public:
             volScalarField& mu
         );
 
+        //- Disallow default bitwise copy construction
+        ArrheniusViscosity(const ArrheniusViscosity&) = delete;
+
 
     //- Destructor
     virtual ~ArrheniusViscosity();
@@ -118,6 +112,12 @@ public:
             const volScalarField& p,
             const volScalarField& T
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ArrheniusViscosity&) = delete;
 };
 
 

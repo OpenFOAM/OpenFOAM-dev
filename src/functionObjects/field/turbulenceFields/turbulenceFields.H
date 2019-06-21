@@ -163,17 +163,6 @@ protected:
         tmp<volScalarField> omega(const Model& model) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        turbulenceFields(const turbulenceFields&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const turbulenceFields&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -189,6 +178,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        turbulenceFields(const turbulenceFields&) = delete;
 
 
     //- Destructor
@@ -206,6 +198,12 @@ public:
         //- Do nothing.
         //  The turbulence fields are registered and written automatically
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const turbulenceFields&) = delete;
 };
 
 

@@ -114,12 +114,6 @@ private:
         //- Initialise
         void initialise();
 
-        //- Disallow default bitwise copy construction
-        radiationModel(const radiationModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const radiationModel&) = delete;
-
 
 public:
 
@@ -168,6 +162,9 @@ public:
             const dictionary& dict,
             const volScalarField& T
         );
+
+        //- Disallow default bitwise copy construction
+        radiationModel(const radiationModel&) = delete;
 
 
     // Selectors
@@ -229,6 +226,12 @@ public:
 
             //- Access to soot Model
             const radiationModels::sootModel& soot() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const radiationModel&) = delete;
 };
 
 

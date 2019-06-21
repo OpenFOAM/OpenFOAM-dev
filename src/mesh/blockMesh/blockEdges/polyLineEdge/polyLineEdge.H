@@ -54,15 +54,6 @@ class polyLineEdge
     public blockEdge,
     public polyLine
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        polyLineEdge(const polyLineEdge&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyLineEdge&) = delete;
-
-
 public:
 
     // Static Data Members
@@ -90,6 +81,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        polyLineEdge(const polyLineEdge&) = delete;
+
 
         //- Destructor
         virtual ~polyLineEdge();
@@ -103,6 +97,12 @@ public:
 
         //- Return the length of the curve
         scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyLineEdge&) = delete;
 };
 
 

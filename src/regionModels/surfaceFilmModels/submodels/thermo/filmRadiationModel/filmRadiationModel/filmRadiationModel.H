@@ -56,15 +56,6 @@ class filmRadiationModel
 :
     public filmSubModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        filmRadiationModel(const filmRadiationModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const filmRadiationModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -98,6 +89,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        filmRadiationModel(const filmRadiationModel&) = delete;
+
 
     // Selectors
 
@@ -122,6 +116,12 @@ public:
 
             //- Return the radiation sensible enthalpy source
             virtual tmp<volScalarField> Shs() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const filmRadiationModel&) = delete;
 };
 
 

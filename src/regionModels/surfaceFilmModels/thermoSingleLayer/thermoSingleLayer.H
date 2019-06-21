@@ -69,12 +69,6 @@ class thermoSingleLayer
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        thermoSingleLayer(const thermoSingleLayer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const thermoSingleLayer&) = delete;
-
         //- Return boundary types for sensible enthalpy field
         wordList hsBoundaryTypes();
 
@@ -246,6 +240,9 @@ public:
             const bool readFields = true
         );
 
+        //- Disallow default bitwise copy construction
+        thermoSingleLayer(const thermoSingleLayer&) = delete;
+
 
     //- Destructor
     virtual ~thermoSingleLayer();
@@ -395,6 +392,12 @@ public:
 
             //- Provide some feedback
             virtual void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const thermoSingleLayer&) = delete;
 };
 
 

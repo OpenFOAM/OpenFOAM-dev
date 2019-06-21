@@ -83,13 +83,6 @@ class movingConeTopoFvMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        movingConeTopoFvMesh(const movingConeTopoFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const movingConeTopoFvMesh&) = delete;
-
-
         //- Add mixer zones and modifiers
         void addZonesAndModifiers();
 
@@ -113,6 +106,9 @@ public:
         //- Construct from database
         explicit movingConeTopoFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        movingConeTopoFvMesh(const movingConeTopoFvMesh&) = delete;
+
 
     //- Destructor
     virtual ~movingConeTopoFvMesh();
@@ -122,6 +118,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const movingConeTopoFvMesh&) = delete;
 };
 
 

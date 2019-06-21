@@ -50,15 +50,6 @@ class staticEngineMesh
 :
     public engineMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        staticEngineMesh(const staticEngineMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const staticEngineMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -70,6 +61,9 @@ public:
         //- Construct from IOobject
         staticEngineMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        staticEngineMesh(const staticEngineMesh&) = delete;
+
 
     //- Destructor
     ~staticEngineMesh();
@@ -80,6 +74,12 @@ public:
         // Edit
 
             void move();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const staticEngineMesh&) = delete;
 };
 
 

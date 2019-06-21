@@ -56,15 +56,6 @@ class surfaceFilmRegionModel
     public surfaceFilmModel,
     public singleLayerRegion
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        surfaceFilmRegionModel(const surfaceFilmRegionModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceFilmRegionModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -95,6 +86,9 @@ public:
             const dimensionedVector& g,
             const word& regionType
         );
+
+        //- Disallow default bitwise copy construction
+        surfaceFilmRegionModel(const surfaceFilmRegionModel&) = delete;
 
 
     //- Destructor
@@ -178,6 +172,12 @@ public:
 
             //- Main driver routing to evolve the region - calls other evolves
             virtual void evolve();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceFilmRegionModel&) = delete;
 };
 
 

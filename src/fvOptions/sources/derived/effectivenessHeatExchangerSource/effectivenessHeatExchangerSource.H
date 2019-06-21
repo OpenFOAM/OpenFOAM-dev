@@ -197,15 +197,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        effectivenessHeatExchangerSource
-        (
-            const effectivenessHeatExchangerSource&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const effectivenessHeatExchangerSource&) = delete;
-
         //- Initialise heat exchanger source model
         void initialise();
 
@@ -228,6 +219,12 @@ public:
             const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
+        );
+
+        //- Disallow default bitwise copy construction
+        effectivenessHeatExchangerSource
+        (
+            const effectivenessHeatExchangerSource&
         );
 
 
@@ -266,6 +263,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const effectivenessHeatExchangerSource&) = delete;
 };
 
 

@@ -122,12 +122,6 @@ class viewFactor
             scalarSquareMatrix& matrix
         );
 
-        //- Disallow default bitwise copy construction
-        viewFactor(const viewFactor&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const viewFactor&) = delete;
-
 
 public:
 
@@ -142,6 +136,9 @@ public:
 
         //- Construct from components
         viewFactor(const dictionary& dict, const volScalarField& T);
+
+        //- Disallow default bitwise copy construction
+        viewFactor(const viewFactor&) = delete;
 
 
     //- Destructor
@@ -169,6 +166,12 @@ public:
 
         //- Const access to total radiative heat flux field
         inline const volScalarField& qr() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const viewFactor&) = delete;
 };
 
 

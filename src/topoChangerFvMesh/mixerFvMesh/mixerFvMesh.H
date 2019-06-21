@@ -70,13 +70,6 @@ class mixerFvMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        mixerFvMesh(const mixerFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const mixerFvMesh&) = delete;
-
-
         //- Add mixer zones and modifiers
         void addZonesAndModifiers();
 
@@ -98,6 +91,9 @@ public:
         //- Construct from IOobject
         explicit mixerFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        mixerFvMesh(const mixerFvMesh&) = delete;
+
 
     //- Destructor
     virtual ~mixerFvMesh();
@@ -113,6 +109,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mixerFvMesh&) = delete;
 };
 
 

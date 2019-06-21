@@ -56,15 +56,6 @@ class filmThermoModel
 :
     public filmSubModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        filmThermoModel(const filmThermoModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const filmThermoModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -97,6 +88,9 @@ public:
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        filmThermoModel(const filmThermoModel&) = delete;
 
 
     // Selectors
@@ -168,6 +162,12 @@ public:
 
             //- Return thermal conductivity [W/m/K]
             virtual tmp<volScalarField> kappa() const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const filmThermoModel&) = delete;
 };
 
 

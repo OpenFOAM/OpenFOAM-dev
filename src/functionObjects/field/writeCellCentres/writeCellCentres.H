@@ -72,15 +72,6 @@ class writeCellCentres
 :
     public fvMeshFunctionObject
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        writeCellCentres(const writeCellCentres&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeCellCentres&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -97,6 +88,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        writeCellCentres(const writeCellCentres&) = delete;
+
 
     //- Destructor
     virtual ~writeCellCentres();
@@ -109,6 +103,12 @@ public:
 
         //- Write the cell-centre fields
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeCellCentres&) = delete;
 };
 
 

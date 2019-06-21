@@ -56,15 +56,6 @@ class quadraticDiffusivity
         autoPtr<motionDiffusivity> basicDiffusivityPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        quadraticDiffusivity(const quadraticDiffusivity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const quadraticDiffusivity&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -76,6 +67,9 @@ public:
         //- Construct for the given fvMesh and data Istream
         quadraticDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        quadraticDiffusivity(const quadraticDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~quadraticDiffusivity();
@@ -83,11 +77,17 @@ public:
 
     // Member Functions
 
-        //- Return diffusivity field
-        virtual tmp<surfaceScalarField> operator()() const;
-
         //- Correct the motion diffusivity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const quadraticDiffusivity&) = delete;
+
+        //- Return diffusivity field
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

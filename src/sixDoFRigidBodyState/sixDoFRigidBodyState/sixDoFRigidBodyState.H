@@ -87,12 +87,6 @@ class sixDoFRigidBodyState
 
         const sixDoFRigidBodyMotion& motion() const;
 
-        //- Disallow default bitwise copy construction
-        sixDoFRigidBodyState(const sixDoFRigidBodyState&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyState&) = delete;
-
 
 protected:
 
@@ -118,6 +112,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        sixDoFRigidBodyState(const sixDoFRigidBodyState&) = delete;
+
 
     //- Destructor
     virtual ~sixDoFRigidBodyState();
@@ -139,6 +136,12 @@ public:
 
         //- Write the sixDoFRigidBodyState
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sixDoFRigidBodyState&) = delete;
 };
 
 

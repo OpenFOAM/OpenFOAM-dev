@@ -85,9 +85,6 @@ class SolidReaction
         //- Return string representation of the right of the reaction
         void solidReactionStrRight(OStringStream&) const;
 
-        //- Disallow default bitwise assignment
-        void operator=(const SolidReaction&) = delete;
-
 
 public:
 
@@ -145,6 +142,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SolidReaction&) = delete;
 
 
     // Ostream Operator

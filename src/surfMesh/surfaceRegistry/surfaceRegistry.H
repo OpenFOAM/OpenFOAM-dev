@@ -50,16 +50,6 @@ class surfaceRegistry
 :
     public objectRegistry
 {
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        surfaceRegistry(const surfaceRegistry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceRegistry&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -77,9 +67,18 @@ public:
         //- Construct for the given objectRegistry and named surface
         surfaceRegistry(const objectRegistry&, const word& surfName = "");
 
+        //- Disallow default bitwise copy construction
+        surfaceRegistry(const surfaceRegistry&) = delete;
+
 
     //- Destructor
     virtual ~surfaceRegistry();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceRegistry&) = delete;
 };
 
 

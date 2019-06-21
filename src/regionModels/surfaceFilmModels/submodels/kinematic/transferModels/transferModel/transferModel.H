@@ -64,15 +64,6 @@ class transferModel
         scalar transferredMass_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        transferModel(const transferModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const transferModel&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -118,6 +109,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        transferModel(const transferModel&) = delete;
+
 
     // Selectors
 
@@ -158,6 +152,12 @@ public:
         //  scalarField provided
         virtual void patchTransferredMassTotals(scalarField& patchMasses) const
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const transferModel&) = delete;
 };
 
 

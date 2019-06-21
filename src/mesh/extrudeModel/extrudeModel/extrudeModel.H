@@ -64,15 +64,6 @@ protected:
         const dictionary& coeffDict_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        extrudeModel(const extrudeModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const extrudeModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -97,6 +88,9 @@ public:
         //- Construct from dictionary
         extrudeModel(const word& modelType, const dictionary&);
 
+        //- Disallow default bitwise copy construction
+        extrudeModel(const extrudeModel&) = delete;
+
 
     // Selectors
 
@@ -118,6 +112,9 @@ public:
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extrudeModel&) = delete;
 
         //- Helper: calculate cumulative relative thickness for layer.
         //  (layer=0 -> 0; layer=nLayers -> 1)

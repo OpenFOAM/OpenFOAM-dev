@@ -52,12 +52,6 @@ class mapNearestAMI
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        mapNearestAMI(const mapNearestAMI&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const mapNearestAMI&) = delete;
-
         // Marching front
 
             //- Find nearest target face for source face srcFacei
@@ -116,6 +110,9 @@ public:
             const bool requireMatch = true
         );
 
+        //- Disallow default bitwise copy construction
+        mapNearestAMI(const mapNearestAMI&) = delete;
+
 
     //- Destructor
     virtual ~mapNearestAMI();
@@ -135,6 +132,12 @@ public:
                 label srcFacei = -1,
                 label tgtFacei = -1
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mapNearestAMI&) = delete;
 };
 
 

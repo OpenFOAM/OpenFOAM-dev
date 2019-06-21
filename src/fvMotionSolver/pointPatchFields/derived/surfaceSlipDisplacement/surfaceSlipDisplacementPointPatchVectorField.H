@@ -69,7 +69,6 @@ class surfaceSlipDisplacementPointPatchVectorField
 :
     public pointPatchVectorField
 {
-
 public:
 
     // Public data types
@@ -111,12 +110,6 @@ private:
 
         //- Calculate displacement (w.r.t. points0()) to project onto surface
         void calcProjection(vectorField& displacement) const;
-
-        //- Disallow default bitwise assignment
-        void operator=
-        (
-            const surfaceSlipDisplacementPointPatchVectorField&
-        ) = delete;
 
 
 public:
@@ -205,6 +198,15 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const surfaceSlipDisplacementPointPatchVectorField&
+        ) = delete;
 };
 
 

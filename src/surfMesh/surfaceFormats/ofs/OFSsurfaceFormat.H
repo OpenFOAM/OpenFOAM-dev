@@ -62,21 +62,15 @@ class OFSsurfaceFormat
     public MeshedSurface<Face>,
     public OFSsurfaceFormatCore
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        OFSsurfaceFormat(const OFSsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const OFSsurfaceFormat<Face>&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from file name
         OFSsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        OFSsurfaceFormat(const OFSsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -134,6 +128,12 @@ public:
         {
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const OFSsurfaceFormat<Face>&) = delete;
 };
 
 

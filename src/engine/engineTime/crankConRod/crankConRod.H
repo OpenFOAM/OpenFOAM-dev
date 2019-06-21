@@ -81,14 +81,9 @@ class crankConRod
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        crankConRod(const crankConRod&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const crankConRod&) = delete;
-
         //- Adjust read time values
         void timeAdjustment();
+
 
 public:
 
@@ -108,6 +103,10 @@ public:
             const fileName& constantName = "constant",
             const fileName& dictName = "engineGeometry"
         );
+
+        //- Disallow default bitwise copy construction
+        crankConRod(const crankConRod&) = delete;
+
 
     //- Destructor
     virtual ~crankConRod()
@@ -192,6 +191,12 @@ public:
 
             //- Read the controlDict and set all the parameters
             virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const crankConRod&) = delete;
 };
 
 

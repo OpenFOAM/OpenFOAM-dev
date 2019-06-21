@@ -138,12 +138,6 @@ protected:
             const Type& maxValue
         );
 
-        //- Disallow default bitwise copy construction
-        fieldMinMax(const fieldMinMax&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fieldMinMax&) = delete;
-
         //- Calculate the field min/max
         template<class Type>
         void calcMinMaxFields
@@ -172,6 +166,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        fieldMinMax(const fieldMinMax&) = delete;
+
 
     //- Destructor
     virtual ~fieldMinMax();
@@ -187,6 +184,12 @@ public:
 
         //- Write the fieldMinMax
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fieldMinMax&) = delete;
 };
 
 

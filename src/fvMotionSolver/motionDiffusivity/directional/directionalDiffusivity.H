@@ -55,15 +55,6 @@ class directionalDiffusivity
         vector diffusivityVector_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        directionalDiffusivity(const directionalDiffusivity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const directionalDiffusivity&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -75,12 +66,18 @@ public:
         //- Construct for the given fvMesh and data Istream
         directionalDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        directionalDiffusivity(const directionalDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~directionalDiffusivity();
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const directionalDiffusivity&) = delete;
 
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const;

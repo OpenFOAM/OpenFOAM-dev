@@ -57,15 +57,6 @@ class noPyrolysis
 :
     public pyrolysisModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        noPyrolysis(const noPyrolysis&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const noPyrolysis&) = delete;
-
-
 protected:
 
     // Protected member functions
@@ -114,6 +105,9 @@ public:
             const word& regionType
         );
 
+        //- Disallow default bitwise copy construction
+        noPyrolysis(const noPyrolysis&) = delete;
+
 
     //- Destructor
     virtual ~noPyrolysis();
@@ -150,6 +144,11 @@ public:
             //- Evolve the pyrolysis equations
             virtual void evolveRegion();
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noPyrolysis&) = delete;
 };
 
 

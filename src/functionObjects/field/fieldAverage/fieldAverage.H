@@ -257,13 +257,6 @@ protected:
             void readAveragingProperties();
 
 
-        //- Disallow default bitwise copy construction
-        fieldAverage(const fieldAverage&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fieldAverage&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -280,6 +273,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        fieldAverage(const fieldAverage&) = delete;
+
 
     //- Destructor
     virtual ~fieldAverage();
@@ -295,6 +291,12 @@ public:
 
         //- Write the field averages
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fieldAverage&) = delete;
 };
 
 

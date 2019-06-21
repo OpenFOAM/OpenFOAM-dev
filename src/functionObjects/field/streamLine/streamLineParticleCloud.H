@@ -51,15 +51,6 @@ class streamLineParticleCloud
 :
     public Cloud<streamLineParticle>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        streamLineParticleCloud(const streamLineParticleCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const streamLineParticleCloud&) = delete;
-
-
 public:
 
     //- Type of parcel the cloud was instantiated for
@@ -82,6 +73,15 @@ public:
             const word& cloudName,
             const IDLList<streamLineParticle>& particles
         );
+
+        //- Disallow default bitwise copy construction
+        streamLineParticleCloud(const streamLineParticleCloud&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const streamLineParticleCloud&) = delete;
 };
 
 

@@ -75,15 +75,6 @@ class BSpline
 :
     public polyLine
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        BSpline(const BSpline&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const BSpline&) = delete;
-
-
 public:
 
     // Constructors
@@ -94,6 +85,9 @@ public:
             const pointField& knots,
             const bool notImplementedClosed = false
         );
+
+        //- Disallow default bitwise copy construction
+        BSpline(const BSpline&) = delete;
 
 
     // Member Functions
@@ -108,6 +102,12 @@ public:
 
         //- Return the length of the curve
         scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const BSpline&) = delete;
 };
 
 

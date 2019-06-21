@@ -68,15 +68,6 @@ class curvatureSeparation
 :
     public injectionModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        curvatureSeparation(const curvatureSeparation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const curvatureSeparation&) = delete;
-
-
 protected:
 
     // Protected data
@@ -123,6 +114,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        curvatureSeparation(const curvatureSeparation&) = delete;
+
 
     //- Destructor
     virtual ~curvatureSeparation();
@@ -139,6 +133,12 @@ public:
                 scalarField& massToInject,
                 scalarField& diameterToInject
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const curvatureSeparation&) = delete;
 };
 
 

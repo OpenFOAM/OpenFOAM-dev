@@ -103,12 +103,6 @@ class cloudSolution
             List<Tuple2<word, Tuple2<bool, scalar>>> schemes_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const cloudSolution&) = delete;
-
-
 public:
 
     // Constructors
@@ -207,6 +201,12 @@ public:
 
         //- Returns true if writing this step
         bool output() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cloudSolution&) = delete;
 };
 
 

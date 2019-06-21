@@ -124,12 +124,6 @@ private:
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construction
-        actuationDiskSource(const actuationDiskSource&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const actuationDiskSource&) = delete;
-
 
 public:
 
@@ -147,6 +141,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        actuationDiskSource(const actuationDiskSource&) = delete;
 
 
     //- Destructor
@@ -205,6 +202,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const actuationDiskSource&) = delete;
 };
 
 

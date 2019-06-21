@@ -75,18 +75,6 @@ class displacementComponentLaplacianFvMotionSolver
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        displacementComponentLaplacianFvMotionSolver
-        (
-            const displacementComponentLaplacianFvMotionSolver&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=
-        (
-            const displacementComponentLaplacianFvMotionSolver&
-        ) = delete;
-
         //- Return the component corresponding to the given component name
         direction cmpt(const word& cmptName) const;
 
@@ -105,6 +93,12 @@ public:
             const polyMesh&,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        displacementComponentLaplacianFvMotionSolver
+        (
+            const displacementComponentLaplacianFvMotionSolver&
+        ) = delete;
 
 
     //- Destructor
@@ -129,6 +123,14 @@ public:
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const displacementComponentLaplacianFvMotionSolver&
+        ) = delete;
 };
 
 

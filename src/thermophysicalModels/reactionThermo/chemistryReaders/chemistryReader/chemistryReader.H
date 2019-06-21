@@ -56,15 +56,6 @@ typedef HashTable<List<specieElement>> speciesCompositionTable;
 template<class ThermoType>
 class chemistryReader
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        chemistryReader(const chemistryReader&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const chemistryReader&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -79,6 +70,9 @@ public:
         //- Construct null
         chemistryReader()
         {}
+
+        //- Disallow default bitwise copy construction
+        chemistryReader(const chemistryReader&) = delete;
 
 
     // Declare run-time constructor selection table
@@ -124,6 +118,12 @@ public:
 
         //- Return access to the list of reactions
         virtual const ReactionList<ThermoType>& reactions() const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const chemistryReader&) = delete;
 };
 
 

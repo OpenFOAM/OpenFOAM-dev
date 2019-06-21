@@ -62,13 +62,6 @@ class linearValveFvMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        linearValveFvMesh(const linearValveFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const linearValveFvMesh&) = delete;
-
-
         //- Add linearValve zones and modifiers
         void addZonesAndModifiers();
 
@@ -93,6 +86,9 @@ public:
         //- Construct from database
         explicit linearValveFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        linearValveFvMesh(const linearValveFvMesh&) = delete;
+
 
     //- Destructor
     virtual ~linearValveFvMesh();
@@ -102,6 +98,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const linearValveFvMesh&) = delete;
 };
 
 

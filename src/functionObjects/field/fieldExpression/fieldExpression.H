@@ -76,17 +76,6 @@ protected:
         bool foundObject(const word& name);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fieldExpression(const fieldExpression&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fieldExpression&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -104,6 +93,9 @@ public:
             const word& fieldName = word::null,
             const word& resultName = word::null
         );
+
+        //- Disallow default bitwise copy construction
+        fieldExpression(const fieldExpression&) = delete;
 
 
     //- Destructor
@@ -123,6 +115,12 @@ public:
 
         //- Clear the result field from the objectRegistry
         virtual bool clear();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fieldExpression&) = delete;
 };
 
 

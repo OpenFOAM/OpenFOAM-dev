@@ -123,17 +123,6 @@ protected:
         );
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        wallShearStress(const wallShearStress&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallShearStress&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -150,6 +139,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        wallShearStress(const wallShearStress&) = delete;
+
 
     //- Destructor
     virtual ~wallShearStress();
@@ -165,6 +157,12 @@ public:
 
         //- Write the wall shear-stress
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallShearStress&) = delete;
 };
 
 

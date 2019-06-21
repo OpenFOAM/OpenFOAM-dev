@@ -50,20 +50,6 @@ class regionCoupledWallGAMGInterface
 :
     public regionCoupledBaseGAMGInterface
 {
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        regionCoupledWallGAMGInterface
-        (
-            const regionCoupledWallGAMGInterface&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionCoupledWallGAMGInterface&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -85,10 +71,18 @@ public:
             const label coarseComm
         );
 
+        //- Disallow default bitwise copy construction
+        regionCoupledWallGAMGInterface
+        (
+            const regionCoupledWallGAMGInterface&
+        ) = delete;
+
 
     //- Destructor
     virtual ~regionCoupledWallGAMGInterface();
 
+
+    // Member Functions
 
         // I/O
 
@@ -100,6 +94,11 @@ public:
                 NotImplemented;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regionCoupledWallGAMGInterface&) = delete;
 };
 
 

@@ -81,17 +81,6 @@ class writeDictionary
         );
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        writeDictionary(const writeDictionary&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeDictionary&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -108,6 +97,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        writeDictionary(const writeDictionary&) = delete;
+
 
     //- Destructor
     virtual ~writeDictionary();
@@ -123,6 +115,12 @@ public:
 
         //- Write the selected dictionaries
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeDictionary&) = delete;
 };
 
 

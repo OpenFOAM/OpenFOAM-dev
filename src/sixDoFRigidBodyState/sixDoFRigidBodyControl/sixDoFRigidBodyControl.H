@@ -103,14 +103,6 @@ class sixDoFRigidBodyControl
         vector meanAngularVelocity_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        sixDoFRigidBodyControl(const sixDoFRigidBodyControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyControl&) = delete;
-
 
 public:
 
@@ -128,6 +120,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        sixDoFRigidBodyControl(const sixDoFRigidBodyControl&) = delete;
+
 
     //- Destructor
     virtual ~sixDoFRigidBodyControl();
@@ -140,6 +135,12 @@ public:
 
         //- Execute, currently does nothing
         virtual bool execute();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sixDoFRigidBodyControl&) = delete;
 };
 
 

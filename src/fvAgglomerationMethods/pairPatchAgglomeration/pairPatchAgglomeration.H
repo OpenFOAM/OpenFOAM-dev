@@ -127,12 +127,6 @@ private:
         //- Maps current level with base patch
         void mapBaseToTopAgglom(const label fineLevelIndex);
 
-        //- Disallow default bitwise copy construction
-        pairPatchAgglomeration(const pairPatchAgglomeration&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pairPatchAgglomeration&) = delete;
-
 
 public:
 
@@ -145,6 +139,9 @@ public:
             const dictionary& controlDict,
             const bool additionalWeights = false
         );
+
+        //- Disallow default bitwise copy construction
+        pairPatchAgglomeration(const pairPatchAgglomeration&) = delete;
 
 
     // Destructor
@@ -200,6 +197,12 @@ public:
                 const Field<Type>& cf,
                 const label coarseLevelIndex
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pairPatchAgglomeration&) = delete;
 };
 
 

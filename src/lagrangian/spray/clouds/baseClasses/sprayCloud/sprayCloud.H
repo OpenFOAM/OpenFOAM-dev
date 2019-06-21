@@ -48,15 +48,6 @@ namespace Foam
 
 class sprayCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        sprayCloud(const sprayCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const sprayCloud&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -67,9 +58,18 @@ public:
         //- Null constructor
         sprayCloud();
 
+        //- Disallow default bitwise copy construction
+        sprayCloud(const sprayCloud&) = delete;
+
 
     //- Destructor
     virtual ~sprayCloud();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sprayCloud&) = delete;
 };
 
 

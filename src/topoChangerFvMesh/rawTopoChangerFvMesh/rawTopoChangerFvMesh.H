@@ -70,11 +70,6 @@ class rawTopoChangerFvMesh
         template<class Type, template<class> class PatchField, class GeoMesh>
         void zeroUnmappedValues(const PackedBoolList&) const;
 
-        //- Disallow default bitwise copy construction
-        rawTopoChangerFvMesh(const rawTopoChangerFvMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const rawTopoChangerFvMesh&) = delete;
 
 public:
 
@@ -87,6 +82,10 @@ public:
         //- Construct from database
         explicit rawTopoChangerFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        rawTopoChangerFvMesh(const rawTopoChangerFvMesh&) = delete;
+
+
     //- Destructor
     virtual ~rawTopoChangerFvMesh();
 
@@ -95,6 +94,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rawTopoChangerFvMesh&) = delete;
 };
 
 

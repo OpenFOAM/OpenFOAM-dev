@@ -56,15 +56,6 @@ class heatTransferModel
 :
     public filmSubModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        heatTransferModel(const heatTransferModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const heatTransferModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -85,6 +76,7 @@ public:
              (film, dict)
          );
 
+
     // Constructors
 
         //- Construct null
@@ -97,6 +89,9 @@ public:
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        heatTransferModel(const heatTransferModel&) = delete;
 
 
     // Selectors
@@ -122,6 +117,12 @@ public:
 
             //- Return the heat transfer coefficient [W/m^2/K]
             virtual tmp<volScalarField> h() const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const heatTransferModel&) = delete;
 };
 
 

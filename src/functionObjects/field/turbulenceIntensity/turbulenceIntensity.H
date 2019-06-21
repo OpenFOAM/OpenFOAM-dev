@@ -108,12 +108,6 @@ class turbulenceIntensity
         //- File header information
         virtual void writeFileHeader(const label i);
 
-        //- Disallow default bitwise copy construction
-        turbulenceIntensity(const turbulenceIntensity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const turbulenceIntensity&) = delete;
-
 
 public:
 
@@ -131,6 +125,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        turbulenceIntensity(const turbulenceIntensity&) = delete;
+
 
     //- Destructor
     virtual ~turbulenceIntensity();
@@ -146,6 +143,12 @@ public:
 
         //- Write the turbulenceIntensity field
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const turbulenceIntensity&) = delete;
 };
 
 

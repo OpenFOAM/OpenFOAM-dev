@@ -71,12 +71,6 @@ class contactAngleForce
         //- Initialise
         void initialise();
 
-        //- Disallow default bitwise copy construction
-        contactAngleForce(const contactAngleForce&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const contactAngleForce&) = delete;
-
 
 protected:
 
@@ -100,6 +94,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        contactAngleForce(const contactAngleForce&) = delete;
+
 
     //- Destructor
     virtual ~contactAngleForce();
@@ -109,6 +106,12 @@ public:
 
         //- Correct
         virtual tmp<fvVectorMatrix> correct(volVectorField& U);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const contactAngleForce&) = delete;
 };
 
 

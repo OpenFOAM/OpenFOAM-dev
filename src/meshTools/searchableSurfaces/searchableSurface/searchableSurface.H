@@ -74,14 +74,6 @@ class searchableSurface
 
         boundBox bounds_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        searchableSurface(const searchableSurface&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurface&) = delete;
-
 
 public:
 
@@ -133,6 +125,9 @@ public:
     // Constructors
 
         searchableSurface(const IOobject& io);
+
+        //- Disallow default bitwise copy construction
+        searchableSurface(const searchableSurface&) = delete;
 
         //- Clone
         virtual autoPtr<searchableSurface> clone() const
@@ -368,6 +363,12 @@ public:
             {
                 values.clear();
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurface&) = delete;
 };
 
 

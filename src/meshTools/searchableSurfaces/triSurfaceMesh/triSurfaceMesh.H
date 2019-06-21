@@ -157,12 +157,6 @@ class triSurfaceMesh
             const pointIndexHitList& hitInfo
         ) const;
 
-        //- Disallow default bitwise copy construction
-        triSurfaceMesh(const triSurfaceMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceMesh&) = delete;
-
 
 public:
 
@@ -199,15 +193,18 @@ public:
                 const bool isGlobal
             );
 
+        //- Disallow default bitwise copy construction
+        triSurfaceMesh(const triSurfaceMesh&) = delete;
+
 
     //- Destructor
     virtual ~triSurfaceMesh();
 
-        //- Clear storage
-        void clearOut();
-
 
     // Member Functions
+
+        //- Clear storage
+        void clearOut();
 
         //- Move points
         virtual void movePoints(const pointField&);
@@ -362,6 +359,12 @@ public:
             {
                 return searchableSurface::globalFilePath(type());
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceMesh&) = delete;
 };
 
 

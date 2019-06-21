@@ -121,18 +121,6 @@ class rigidBodyMeshMotion
         //- Current time index (used for updating)
         label curTimeIndex_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        rigidBodyMeshMotion
-        (
-            const rigidBodyMeshMotion&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMeshMotion&) = delete;
-
         //- To avoid warning from clang
         using RBD::rigidBodyMotion::write;
 
@@ -152,6 +140,12 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        rigidBodyMeshMotion
+        (
+            const rigidBodyMeshMotion&
+        );
+
 
     //- Destructor
     ~rigidBodyMeshMotion();
@@ -167,6 +161,12 @@ public:
 
         //- Write motion state information for restart
         virtual bool write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rigidBodyMeshMotion&) = delete;
 };
 
 

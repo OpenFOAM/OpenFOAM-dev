@@ -60,15 +60,6 @@ class dsmcFields
 :
     public fvMeshFunctionObject
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        dsmcFields(const dsmcFields&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const dsmcFields&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -85,6 +76,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        dsmcFields(const dsmcFields&) = delete;
+
 
     //- Destructor
     virtual ~dsmcFields();
@@ -100,6 +94,12 @@ public:
 
         //- Calculate and write the DSMC fields
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dsmcFields&) = delete;
 };
 
 

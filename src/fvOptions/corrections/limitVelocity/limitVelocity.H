@@ -65,7 +65,6 @@ class limitVelocity
 :
     public cellSetOption
 {
-
 protected:
 
     // Protected data
@@ -75,17 +74,6 @@ protected:
 
         //- Maximum velocity magnitude
         scalar max_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        limitVelocity(const limitVelocity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitVelocity&) = delete;
 
 
 public:
@@ -105,6 +93,9 @@ public:
             const fvMesh& mesh
         );
 
+        //- Disallow default bitwise copy construction
+        limitVelocity(const limitVelocity&) = delete;
+
 
     //- Destructor
     virtual ~limitVelocity()
@@ -118,6 +109,12 @@ public:
 
         //- Correct the energy field
         virtual void correct(volVectorField& U);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitVelocity&) = delete;
 };
 
 

@@ -165,14 +165,6 @@ protected:
         ) const;
 
 
-private:
-
-        //- Disallow default bitwise copy construction
-        nearWallFields(const nearWallFields&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const nearWallFields&) = delete;
-
 public:
 
     //- Runtime type information
@@ -190,6 +182,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        nearWallFields(const nearWallFields&) = delete;
+
 
     //- Destructor
     virtual ~nearWallFields();
@@ -205,6 +200,12 @@ public:
 
         //- Write the near-wall fields
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nearWallFields&) = delete;
 };
 
 

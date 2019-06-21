@@ -89,15 +89,6 @@ private:
             MeshReference;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        surfMesh(const surfMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfMesh&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -168,6 +159,9 @@ public:
             MeshedSurface<face>&& surf,
             const word& surfName=""
         );
+
+        //- Disallow default bitwise copy construction
+        surfMesh(const surfMesh&);
 
 
     //- Destructor
@@ -281,7 +275,14 @@ public:
 
             //- Remove all files from mesh instance()
             void removeFiles() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfMesh&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

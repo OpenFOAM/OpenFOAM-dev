@@ -67,18 +67,6 @@ class mappedConvectiveHeatTransfer
         volScalarField htcConvFilm_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        mappedConvectiveHeatTransfer
-        (
-            const mappedConvectiveHeatTransfer&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const mappedConvectiveHeatTransfer&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -94,6 +82,12 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        mappedConvectiveHeatTransfer
+        (
+            const mappedConvectiveHeatTransfer&
+        ) = delete;
+
 
     //- Destructor
     virtual ~mappedConvectiveHeatTransfer();
@@ -108,6 +102,12 @@ public:
 
             //- Return the heat transfer coefficient [W/m^2/K]
             virtual tmp<volScalarField> h() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mappedConvectiveHeatTransfer&) = delete;
 };
 
 

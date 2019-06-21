@@ -155,12 +155,6 @@ private:
             const scalar totalOverFirst
         ) const;
 
-        //- Disallow default bitwise copy construction
-        layerParameters(const layerParameters&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const layerParameters&) = delete;
-
 
 public:
 
@@ -168,6 +162,9 @@ public:
 
         //- Construct from dictionary
         layerParameters(const dictionary& dict, const polyBoundaryMesh&);
+
+        //- Disallow default bitwise copy construction
+        layerParameters(const layerParameters&) = delete;
 
 
     // Member Functions
@@ -347,6 +344,12 @@ public:
                 const label nLayers,
                 const scalar expansionRatio
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const layerParameters&) = delete;
 };
 
 

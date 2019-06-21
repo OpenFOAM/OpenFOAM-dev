@@ -290,13 +290,6 @@ private:
             void distributeFields(const mapDistribute& map);
 
 
-        //- Disallow default bitwise copy construction
-        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const distributedTriSurfaceMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -323,6 +316,9 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&) = delete;
 
 
     //- Destructor
@@ -471,6 +467,12 @@ public:
             {
                 return searchableSurface::localFilePath(type());
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const distributedTriSurfaceMesh&) = delete;
 };
 
 

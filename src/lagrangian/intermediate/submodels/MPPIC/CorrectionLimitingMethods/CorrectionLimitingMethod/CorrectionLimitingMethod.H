@@ -50,12 +50,6 @@ namespace Foam
 
 class CorrectionLimitingMethod
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const CorrectionLimitingMethod&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -104,6 +98,12 @@ public:
             const vector dU,
             const vector uMean
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CorrectionLimitingMethod&) = delete;
 };
 
 

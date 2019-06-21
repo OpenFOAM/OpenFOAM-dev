@@ -59,21 +59,6 @@ class regionCoupledBaseGAMGInterface
         //  agglomerated
         const regionCoupledLduInterface& fineRegionCoupledLduInterface_;
 
-        //- AMI interface
-        // autoPtr<AMIInterpolation> amiPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        regionCoupledBaseGAMGInterface
-        (
-            const regionCoupledBaseGAMGInterface&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionCoupledBaseGAMGInterface&) = delete;
-
 
 public:
 
@@ -92,6 +77,12 @@ public:
             const label fineLevelIndex,
             const label coarseComm
         );
+
+        //- Disallow default bitwise copy construction
+        regionCoupledBaseGAMGInterface
+        (
+            const regionCoupledBaseGAMGInterface&
+        ) = delete;
 
 
     //- Destructor
@@ -159,6 +150,11 @@ public:
                 return mesh.interfaces()[index];
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regionCoupledBaseGAMGInterface&) = delete;
 };
 
 

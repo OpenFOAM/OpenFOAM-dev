@@ -100,12 +100,6 @@ class searchableCylinder
         //- Return the boundBox of the cylinder
         boundBox calcBounds() const;
 
-        //- Disallow default bitwise copy construction
-        searchableCylinder(const searchableCylinder&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableCylinder&) = delete;
-
 
 public:
 
@@ -130,6 +124,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableCylinder(const searchableCylinder&) = delete;
+
 
     //- Destructor
     virtual ~searchableCylinder();
@@ -237,6 +235,11 @@ public:
                 return false;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableCylinder&) = delete;
 };
 
 

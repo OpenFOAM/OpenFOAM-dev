@@ -61,15 +61,6 @@ class fvMotionSolverEngineMesh
         velocityComponentLaplacianFvMotionSolver motionSolver_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        fvMotionSolverEngineMesh(const fvMotionSolverEngineMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvMotionSolverEngineMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -81,6 +72,9 @@ public:
         //- Construct from IOobject
         fvMotionSolverEngineMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        fvMotionSolverEngineMesh(const fvMotionSolverEngineMesh&) = delete;
+
 
     //- Destructor
     ~fvMotionSolverEngineMesh();
@@ -91,6 +85,12 @@ public:
         // Edit
 
             void move();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMotionSolverEngineMesh&) = delete;
 };
 
 

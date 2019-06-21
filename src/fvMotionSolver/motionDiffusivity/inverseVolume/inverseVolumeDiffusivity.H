@@ -50,15 +50,6 @@ class inverseVolumeDiffusivity
 :
     public motionDiffusivity
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        inverseVolumeDiffusivity(const inverseVolumeDiffusivity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const inverseVolumeDiffusivity&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -70,12 +61,18 @@ public:
         //- Construct for the given fvMesh and data Istream
         inverseVolumeDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        inverseVolumeDiffusivity(const inverseVolumeDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~inverseVolumeDiffusivity();
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const inverseVolumeDiffusivity&) = delete;
 
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const;

@@ -113,13 +113,6 @@ class patchProbes
         tmp<Field<Type>> sample(const word& fieldName) const;
 
 
-        //- Disallow default bitwise copy construction
-        patchProbes(const patchProbes&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const patchProbes&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -146,6 +139,9 @@ public:
             const bool loadFromFiles = false
         );
 
+        //- Disallow default bitwise copy construction
+        patchProbes(const patchProbes&) = delete;
+
 
     //- Destructor
     virtual ~patchProbes();
@@ -161,6 +157,12 @@ public:
 
         //- Find elements containing patchProbes
         virtual void findElements(const fvMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchProbes&) = delete;
 };
 
 

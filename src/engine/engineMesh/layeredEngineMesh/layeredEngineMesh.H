@@ -56,15 +56,6 @@ class layeredEngineMesh
         dimensionedScalar pistonLayers_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        layeredEngineMesh(const layeredEngineMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const layeredEngineMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -76,6 +67,9 @@ public:
         //- Construct from IOobject
         layeredEngineMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        layeredEngineMesh(const layeredEngineMesh&) = delete;
+
 
     //- Destructor
     ~layeredEngineMesh();
@@ -86,6 +80,12 @@ public:
         // Edit
 
             void move();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const layeredEngineMesh&) = delete;
 };
 
 

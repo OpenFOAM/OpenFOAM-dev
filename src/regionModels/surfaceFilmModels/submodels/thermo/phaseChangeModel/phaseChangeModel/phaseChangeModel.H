@@ -57,15 +57,6 @@ class phaseChangeModel
 :
     public filmSubModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        phaseChangeModel(const phaseChangeModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const phaseChangeModel&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -110,6 +101,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        phaseChangeModel(const phaseChangeModel&) = delete;
+
 
     // Selectors
 
@@ -152,6 +146,12 @@ public:
 
             //- Provide some feedback
             virtual void info(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const phaseChangeModel&) = delete;
 };
 
 

@@ -73,12 +73,6 @@ class specieReactionRates
         //- File header information
         virtual void writeFileHeader(const label i);
 
-        //- Disallow default bitwise copy construction
-        specieReactionRates(const specieReactionRates&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const specieReactionRates&) = delete;
-
 
 public:
 
@@ -96,6 +90,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        specieReactionRates(const specieReactionRates&) = delete;
+
 
     //- Destructor
     virtual ~specieReactionRates();
@@ -111,6 +108,12 @@ public:
 
         //- Write the specie reaction rates
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const specieReactionRates&) = delete;
 };
 
 

@@ -269,7 +269,6 @@ public:
             const bool loadFromFiles = false
         );
 
-
         //- Disallow default bitwise copy construction
         sampledSets(const sampledSets&) = delete;
 

@@ -166,15 +166,6 @@ private:
         autoPtr<mapDistribute> tgtMapPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        AMIInterpolation(const AMIInterpolation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const AMIInterpolation&) = delete;
-
-
         // Parallel functionality
 
             //- Calculate if patches are on multiple processors
@@ -372,6 +363,9 @@ public:
             const labelList& neighbourRestrictAddressing,
             const bool report = false
         );
+
+        //- Disallow default bitwise copy construction
+        AMIInterpolation(const AMIInterpolation&) = delete;
 
 
     //- Destructor
@@ -607,6 +601,12 @@ public:
                 const primitivePatch& tgtPatch,
                 const labelListList& srcAddress
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const AMIInterpolation&) = delete;
 };
 
 

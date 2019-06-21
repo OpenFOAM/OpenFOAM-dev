@@ -61,15 +61,6 @@ class drippingInjection
 :
     public injectionModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        drippingInjection(const drippingInjection&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const drippingInjection&) = delete;
-
-
 protected:
 
     // Protected data
@@ -107,6 +98,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        drippingInjection(const drippingInjection&) = delete;
+
 
     //- Destructor
     virtual ~drippingInjection();
@@ -123,6 +117,12 @@ public:
                 scalarField& massToInject,
                 scalarField& diameterToInject
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const drippingInjection&) = delete;
 };
 
 

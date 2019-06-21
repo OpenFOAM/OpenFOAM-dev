@@ -59,12 +59,6 @@ class waxSolventViscosity
         //- Correct the mixture viscosity
         void correctMu();
 
-        //- Disallow default bitwise copy construction
-        waxSolventViscosity(const waxSolventViscosity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const waxSolventViscosity&) = delete;
-
 
 protected:
 
@@ -99,6 +93,9 @@ public:
             volScalarField& mu
         );
 
+        //- Disallow default bitwise copy construction
+        waxSolventViscosity(const waxSolventViscosity&) = delete;
+
 
     //- Destructor
     virtual ~waxSolventViscosity();
@@ -112,6 +109,12 @@ public:
             const volScalarField& p,
             const volScalarField& T
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const waxSolventViscosity&) = delete;
 };
 
 

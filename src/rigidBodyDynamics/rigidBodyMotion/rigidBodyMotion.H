@@ -100,12 +100,6 @@ class rigidBodyMotion
         //- Initialize the body-state
         void initialize();
 
-        //- Disallow default bitwise copy construction
-        rigidBodyMotion(const rigidBodyMotion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMotion&) = delete;
-
 
 public:
 
@@ -126,6 +120,9 @@ public:
             const dictionary& dict,
             const dictionary& stateDict
         );
+
+        //- Disallow default bitwise copy construction
+        rigidBodyMotion(const rigidBodyMotion&);
 
 
     //- Destructor
@@ -219,6 +216,12 @@ public:
         //- Read coefficients dictionary and update system parameters,
         //  constraints and restraints but not the current state
         bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rigidBodyMotion&) = delete;
 };
 
 

@@ -76,15 +76,6 @@ class BrunDrippingInjection
 :
     public injectionModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        BrunDrippingInjection(const BrunDrippingInjection&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const BrunDrippingInjection&) = delete;
-
-
 protected:
 
     // Protected data
@@ -122,6 +113,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        BrunDrippingInjection(const BrunDrippingInjection&) = delete;
+
 
     //- Destructor
     virtual ~BrunDrippingInjection();
@@ -136,6 +130,12 @@ public:
             scalarField& massToInject,
             scalarField& diameterToInject
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const BrunDrippingInjection&) = delete;
 };
 
 

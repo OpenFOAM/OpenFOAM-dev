@@ -48,15 +48,6 @@ namespace Foam
 
 class thermoCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        thermoCloud(const thermoCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const thermoCloud&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -67,6 +58,9 @@ public:
         //- Null constructor
         thermoCloud();
 
+        //- Disallow default bitwise copy construction
+        thermoCloud(const thermoCloud&) = delete;
+
 
     //- Destructor
     virtual ~thermoCloud();
@@ -74,18 +68,20 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Return tmp equivalent particulate emission
+        virtual tmp<volScalarField> Ep() const = 0;
 
-            // Radiation
+        //- Return tmp equivalent particulate absorption
+        virtual tmp<volScalarField> ap() const = 0;
 
-                //- Return tmp equivalent particulate emission
-                virtual tmp<volScalarField> Ep() const = 0;
+        //- Return tmp equivalent particulate scattering factor
+        virtual tmp<volScalarField> sigmap() const = 0;
 
-                //- Return tmp equivalent particulate absorption
-                virtual tmp<volScalarField> ap() const = 0;
 
-                //- Return tmp equivalent particulate scattering factor
-                virtual tmp<volScalarField> sigmap() const = 0;
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const thermoCloud&) = delete;
 };
 
 

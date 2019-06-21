@@ -54,21 +54,6 @@ class liquidViscosity
 :
     public filmViscosityModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        liquidViscosity(const liquidViscosity&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const liquidViscosity&) = delete;
-
-
-protected:
-
-    // Protected data
-
-
-
 public:
 
     //- Runtime type information
@@ -85,6 +70,9 @@ public:
             volScalarField& mu
         );
 
+        //- Disallow default bitwise copy construction
+        liquidViscosity(const liquidViscosity&) = delete;
+
 
     //- Destructor
     virtual ~liquidViscosity();
@@ -100,6 +88,12 @@ public:
                 const volScalarField& p,
                 const volScalarField& T
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const liquidViscosity&) = delete;
 };
 
 

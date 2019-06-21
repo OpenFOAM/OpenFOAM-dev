@@ -60,24 +60,11 @@ namespace laminarModels
 
 class generalizedNewtonianViscosityModel
 {
-
 protected:
 
     // Protected data
 
         dictionary viscosityProperties_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        generalizedNewtonianViscosityModel
-        (
-            const generalizedNewtonianViscosityModel&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const generalizedNewtonianViscosityModel&) = delete;
 
 
 public:
@@ -117,6 +104,12 @@ public:
             const dictionary& viscosityProperties
         );
 
+        //- Disallow default bitwise copy construction
+        generalizedNewtonianViscosityModel
+        (
+            const generalizedNewtonianViscosityModel&
+        );
+
 
     //- Destructor
     virtual ~generalizedNewtonianViscosityModel()
@@ -140,6 +133,12 @@ public:
 
         //- Read transportProperties dictionary
         virtual bool read(const dictionary& viscosityProperties) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const generalizedNewtonianViscosityModel&) = delete;
 };
 
 

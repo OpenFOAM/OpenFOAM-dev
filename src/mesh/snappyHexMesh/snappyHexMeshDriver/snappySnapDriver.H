@@ -496,13 +496,6 @@ class snappySnapDriver
                 ) const;
 
 
-        //- Disallow default bitwise copy construction
-        snappySnapDriver(const snappySnapDriver&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const snappySnapDriver&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -518,6 +511,9 @@ public:
             const labelList& globalToMasterPatch,
             const labelList& globalToSlavePatch
         );
+
+        //- Disallow default bitwise copy construction
+        snappySnapDriver(const snappySnapDriver&) = delete;
 
 
     // Member Functions
@@ -620,6 +616,12 @@ public:
                 const scalar planarAngle,
                 const snapParameters& snapParams
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snappySnapDriver&) = delete;
 };
 
 

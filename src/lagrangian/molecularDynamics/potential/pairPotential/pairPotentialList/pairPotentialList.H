@@ -79,12 +79,6 @@ class pairPotentialList
             const polyMesh& mesh
         );
 
-        //- Disallow default bitwise assignment
-        void operator=(const pairPotentialList&) = delete;
-
-        //- Disallow default bitwise copy construction
-        pairPotentialList(const pairPotentialList&) = delete;
-
 
 public:
 
@@ -99,6 +93,9 @@ public:
             const dictionary& pairPotentialDict,
             const polyMesh& mesh
         );
+
+        //- Disallow default bitwise assignment
+        void operator=(const pairPotentialList&) = delete;
 
 
     //- Destructor
@@ -160,6 +157,12 @@ public:
             ) const;
 
             inline const pairPotential& electrostatic() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise copy construction
+        pairPotentialList(const pairPotentialList&) = delete;
 };
 
 

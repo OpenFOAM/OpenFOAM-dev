@@ -64,21 +64,15 @@ class AC3DsurfaceFormat
     public MeshedSurface<Face>,
     public AC3DsurfaceFormatCore
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        AC3DsurfaceFormat(const AC3DsurfaceFormat<Face>&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const AC3DsurfaceFormat<Face>&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from file name
         AC3DsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        AC3DsurfaceFormat(const AC3DsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -114,6 +108,12 @@ public:
         {
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const AC3DsurfaceFormat<Face>&) = delete;
 };
 
 

@@ -253,59 +253,55 @@ private:
             ) const;
 
 
-        //- Disallow default bitwise copy construction
-        meshToMesh(const meshToMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshToMesh&) = delete;
-
-
 public:
 
     //- Run-time type information
     TypeName("meshToMesh");
 
+    // Constructors
 
-    //- Construct from source and target meshes
-    meshToMesh
-    (
-        const polyMesh& src,
-        const polyMesh& tgt,
-        const interpolationMethod& method,
-        const bool interpAllPatches = true
-    );
+        //- Construct from source and target meshes
+        meshToMesh
+        (
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const interpolationMethod& method,
+            const bool interpAllPatches = true
+        );
 
-    //- Construct from source and target meshes, generic mapping methods
-    meshToMesh
-    (
-        const polyMesh& src,
-        const polyMesh& tgt,
-        const word& methodName,     // internal mapping
-        const word& AMIMethodName,  // boundary mapping
-        const bool interpAllPatches = true
-    );
+        //- Construct from source and target meshes, generic mapping methods
+        meshToMesh
+        (
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const word& methodName,     // internal mapping
+            const word& AMIMethodName,  // boundary mapping
+            const bool interpAllPatches = true
+        );
 
-    //- Construct from source and target meshes
-    meshToMesh
-    (
-        const polyMesh& src,
-        const polyMesh& tgt,
-        const interpolationMethod& method,
-        const HashTable<word>& patchMap,
-        const wordList& cuttingPatches
-    );
+        //- Construct from source and target meshes
+        meshToMesh
+        (
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const interpolationMethod& method,
+            const HashTable<word>& patchMap,
+            const wordList& cuttingPatches
+        );
 
+        //- Construct from source and target meshes, generic mapping methods
+        meshToMesh
+        (
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const word& methodName,     // internal mapping
+            const word& AMIMethodName,  // boundary mapping
+            const HashTable<word>& patchMap,
+            const wordList& cuttingPatches
+        );
 
-    //- Construct from source and target meshes, generic mapping methods
-    meshToMesh
-    (
-        const polyMesh& src,
-        const polyMesh& tgt,
-        const word& methodName,     // internal mapping
-        const word& AMIMethodName,  // boundary mapping
-        const HashTable<word>& patchMap,
-        const wordList& cuttingPatches
-    );
+        //- Disallow default bitwise copy construction
+        meshToMesh(const meshToMesh&) = delete;
 
 
     //- Destructor
@@ -538,6 +534,12 @@ public:
                     const tmp<GeometricField<Type, fvPatchField, volMesh>>&
                         tfield
                 ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshToMesh&) = delete;
 };
 
 

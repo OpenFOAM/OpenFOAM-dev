@@ -59,15 +59,6 @@ class basicSolidChemistryModel
 :
     public basicChemistryModel
 {
-    // Private Member Functions
-
-        //- Construct as copy (not implemented)
-        basicSolidChemistryModel(const basicSolidChemistryModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const basicSolidChemistryModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -101,6 +92,9 @@ public:
 
         //- Construct from thermo
         basicSolidChemistryModel(solidReactionThermo& thermo);
+
+        //- Construct as copy (not implemented)
+        basicSolidChemistryModel(const basicSolidChemistryModel&);
 
 
     //- Selector
@@ -169,6 +163,12 @@ public:
 
         //- Return non-const access to the total source terms
         virtual volScalarField::Internal& RR(const label i);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const basicSolidChemistryModel&) = delete;
 };
 
 

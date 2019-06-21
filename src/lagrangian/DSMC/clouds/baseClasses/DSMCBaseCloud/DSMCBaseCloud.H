@@ -48,15 +48,6 @@ namespace Foam
 
 class DSMCBaseCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        DSMCBaseCloud(const DSMCBaseCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const DSMCBaseCloud&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -67,8 +58,18 @@ public:
         //- Null constructor
         DSMCBaseCloud();
 
+        //- Disallow default bitwise copy construction
+        DSMCBaseCloud(const DSMCBaseCloud&) = delete;
+
+
     //- Destructor
     virtual ~DSMCBaseCloud();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DSMCBaseCloud&) = delete;
 };
 
 

@@ -72,15 +72,6 @@ class processorField
 :
     public fvMeshFunctionObject
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        processorField(const processorField&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorField&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -97,6 +88,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        processorField(const processorField&) = delete;
+
 
     //- Destructor
     virtual ~processorField();
@@ -112,6 +106,12 @@ public:
 
         //- Write the processorID field
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorField&) = delete;
 };
 
 

@@ -224,12 +224,6 @@ private:
         //- Do all seeding and tracking
         void track();
 
-        //- Disallow default bitwise copy construction
-        streamLine(const streamLine&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const streamLine&) = delete;
-
 
 public:
 
@@ -246,6 +240,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        streamLine(const streamLine&) = delete;
 
 
     //- Destructor
@@ -268,6 +265,12 @@ public:
 
         //- Update for mesh point-motion
         virtual void movePoints(const polyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const streamLine&) = delete;
 };
 
 

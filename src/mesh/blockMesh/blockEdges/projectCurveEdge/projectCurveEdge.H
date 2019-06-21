@@ -61,15 +61,6 @@ class projectCurveEdge
         labelList surfaces_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        projectCurveEdge(const projectCurveEdge&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const projectCurveEdge&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -87,6 +78,9 @@ public:
             const pointField& points,
             Istream&
         );
+
+        //- Disallow default bitwise copy construction
+        projectCurveEdge(const projectCurveEdge&) = delete;
 
 
     //- Destructor
@@ -114,6 +108,12 @@ public:
             NotImplemented;
             return 1;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const projectCurveEdge&) = delete;
 };
 
 

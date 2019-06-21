@@ -62,15 +62,6 @@ class reactingMixture
         speciesCompositionTable speciesComposition_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        reactingMixture(const reactingMixture&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const reactingMixture&) = delete;
-
-
 public:
 
     //- The type of thermo package this mixture is instantiated for
@@ -81,6 +72,9 @@ public:
 
         //- Construct from dictionary, mesh and phase name
         reactingMixture(const dictionary&, const fvMesh&, const word&);
+
+        //- Disallow default bitwise copy construction
+        reactingMixture(const reactingMixture&) = delete;
 
 
     //- Destructor
@@ -119,6 +113,12 @@ public:
         {
             return speciesComposition_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reactingMixture&) = delete;
 };
 
 

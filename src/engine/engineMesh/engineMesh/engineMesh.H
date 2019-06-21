@@ -53,15 +53,6 @@ class engineMesh
 :
     public fvMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        engineMesh(const engineMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const engineMesh&) = delete;
-
-
 protected:
 
     // Protected data
@@ -99,6 +90,9 @@ public:
         //- Construct from objectRegistry, and read/write options
         explicit engineMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        engineMesh(const engineMesh&) = delete;
+
 
     // Selectors
 
@@ -115,6 +109,12 @@ public:
         // Edit
 
             virtual void move() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const engineMesh&) = delete;
 };
 
 

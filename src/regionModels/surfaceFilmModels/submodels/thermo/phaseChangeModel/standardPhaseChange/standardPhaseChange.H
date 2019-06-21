@@ -54,15 +54,6 @@ class standardPhaseChange
 :
     public phaseChangeModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        standardPhaseChange(const standardPhaseChange&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const standardPhaseChange&) = delete;
-
-
 protected:
 
     // Protected data
@@ -112,6 +103,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        standardPhaseChange(const standardPhaseChange&) = delete;
+
 
     //- Destructor
     virtual ~standardPhaseChange();
@@ -129,6 +123,12 @@ public:
                 scalarField& dMass,
                 scalarField& dEnergy
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const standardPhaseChange&) = delete;
 };
 
 

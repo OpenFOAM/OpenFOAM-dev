@@ -83,17 +83,6 @@ protected:
         virtual scalar magUbarAve(const volVectorField& U) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        patchMeanVelocityForce(const patchMeanVelocityForce&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const patchMeanVelocityForce&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -110,6 +99,15 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        patchMeanVelocityForce(const patchMeanVelocityForce&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchMeanVelocityForce&) = delete;
 };
 
 

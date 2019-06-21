@@ -89,12 +89,6 @@ protected:
         //- Initialise the liquid pointer
         void initLiquid(const dictionary& dict);
 
-        //- Disallow default bitwise copy construction
-        liquidFilmThermo(const liquidFilmThermo&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const liquidFilmThermo&) = delete;
-
 
 public:
 
@@ -110,6 +104,9 @@ public:
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        liquidFilmThermo(const liquidFilmThermo&) = delete;
 
 
     //- Destructor
@@ -171,6 +168,12 @@ public:
 
             //- Return thermal conductivity [W/m/K]
             virtual tmp<volScalarField> kappa() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const liquidFilmThermo&) = delete;
 };
 
 

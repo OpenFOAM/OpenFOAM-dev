@@ -58,12 +58,6 @@ class pyrolysisChemistryModel
 :
     public solidChemistryModel<CompType, SolidThermo>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const pyrolysisChemistryModel&) = delete;
-
-
 protected:
 
         //- List of gas species present in reaction system
@@ -229,6 +223,12 @@ public:
                 scalar& deltaT,
                 scalar& subDeltaT
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pyrolysisChemistryModel&) = delete;
 };
 
 

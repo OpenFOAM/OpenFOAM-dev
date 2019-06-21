@@ -87,15 +87,6 @@ class PhaseLimitStabilization
         scalar residualAlpha_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        PhaseLimitStabilization(const PhaseLimitStabilization&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const PhaseLimitStabilization&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -112,6 +103,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        PhaseLimitStabilization(const PhaseLimitStabilization&) = delete;
 
 
     //- Destructor
@@ -132,6 +126,12 @@ public:
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PhaseLimitStabilization&) = delete;
 };
 
 

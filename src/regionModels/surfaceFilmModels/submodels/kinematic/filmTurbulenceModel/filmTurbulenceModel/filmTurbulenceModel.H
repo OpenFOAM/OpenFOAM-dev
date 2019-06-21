@@ -58,15 +58,6 @@ class filmTurbulenceModel
 :
     public filmSubModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        filmTurbulenceModel(const filmTurbulenceModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const filmTurbulenceModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -100,6 +91,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        filmTurbulenceModel(const filmTurbulenceModel&) = delete;
+
 
     // Selectors
 
@@ -130,6 +124,12 @@ public:
 
             //- Return the source for the film momentum equation
             virtual tmp<fvVectorMatrix> Su(volVectorField& U) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const filmTurbulenceModel&) = delete;
 };
 
 

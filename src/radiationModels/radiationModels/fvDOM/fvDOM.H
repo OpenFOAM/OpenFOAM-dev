@@ -139,12 +139,6 @@ class fvDOM
         //- Initialise
         void initialise();
 
-        //- Disallow default bitwise copy construction
-        fvDOM(const fvDOM&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvDOM&) = delete;
-
         //- Update nlack body emission
         void updateBlackBodyEmission();
 
@@ -162,6 +156,9 @@ public:
 
         //- Construct from components
         fvDOM(const dictionary& dict, const volScalarField& T);
+
+        //- Disallow default bitwise copy construction
+        fvDOM(const fvDOM&) = delete;
 
 
     //- Destructor
@@ -244,6 +241,12 @@ public:
 
             //- Return omegaMax
             inline scalar omegaMax() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvDOM&) = delete;
 };
 
 

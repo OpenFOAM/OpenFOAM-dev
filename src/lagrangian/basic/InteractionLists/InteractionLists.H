@@ -198,12 +198,6 @@ class InteractionLists
         //- Write the referred wall faces out for debug
         void writeReferredWallFaces() const;
 
-        //- Disallow default bitwise copy construction
-        InteractionLists(const InteractionLists&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const InteractionLists&) = delete;
-
 
 public:
 
@@ -221,6 +215,10 @@ public:
             Switch writeCloud = false,
             const word& UName = "U"
         );
+
+        //- Disallow default bitwise copy construction
+        InteractionLists(const InteractionLists&) = delete;
+
 
     // Destructor
 
@@ -298,6 +296,12 @@ public:
 
             //- Return non-const access to the referred particle container
             inline List<IDLList<ParticleType>>& referredParticles();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const InteractionLists&) = delete;
 };
 
 

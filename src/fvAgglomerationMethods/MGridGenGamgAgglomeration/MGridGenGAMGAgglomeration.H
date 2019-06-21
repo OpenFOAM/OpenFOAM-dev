@@ -113,13 +113,6 @@ class MGridGenGAMGAgglomeration
         );
 
 
-        //- Disallow default bitwise copy construction
-        MGridGenGAMGAgglomeration(const MGridGenGAMGAgglomeration&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const MGridGenGAMGAgglomeration&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -134,6 +127,15 @@ public:
             const lduMesh& mesh,
             const dictionary& controlDict
         );
+
+        //- Disallow default bitwise copy construction
+        MGridGenGAMGAgglomeration(const MGridGenGAMGAgglomeration&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const MGridGenGAMGAgglomeration&) = delete;
 };
 
 

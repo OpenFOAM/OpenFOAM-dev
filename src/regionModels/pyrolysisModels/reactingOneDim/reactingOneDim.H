@@ -59,12 +59,6 @@ class reactingOneDim
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construction
-        reactingOneDim(const reactingOneDim&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const reactingOneDim&) = delete;
-
         //- Read model controls
         void readReactingOneDimControls();
 
@@ -217,7 +211,8 @@ public:
             const word& regionType
         );
 
-
+        //- Disallow default bitwise copy construction
+        reactingOneDim(const reactingOneDim&) = delete;
 
 
     //- Destructor
@@ -284,6 +279,12 @@ public:
 
             //- Provide some feedback
             virtual void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reactingOneDim&) = delete;
 };
 
 

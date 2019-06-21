@@ -49,15 +49,6 @@ namespace Foam
 
 class kinematicCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        kinematicCloud(const kinematicCloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const kinematicCloud&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -67,6 +58,13 @@ public:
 
         //- Null constructor
         kinematicCloud();
+
+        //- Disallow default bitwise copy construction
+        kinematicCloud(const kinematicCloud&) = delete;
+
+
+    //- Destructor
+    virtual ~kinematicCloud();
 
 
     // Member Functions
@@ -110,8 +108,10 @@ public:
                 virtual const tmp<volScalarField> rhoEff() const = 0;
 
 
-    //- Destructor
-    virtual ~kinematicCloud();
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kinematicCloud&) = delete;
 };
 
 

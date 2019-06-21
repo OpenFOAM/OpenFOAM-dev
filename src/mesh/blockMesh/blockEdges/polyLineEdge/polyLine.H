@@ -53,15 +53,6 @@ namespace Foam
 
 class polyLine
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        polyLine(const polyLine&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyLine&) = delete;
-
-
 protected:
 
     // Protected data
@@ -98,6 +89,9 @@ public:
             const bool notImplementedClosed = false
         );
 
+        //- Disallow default bitwise copy construction
+        polyLine(const polyLine&) = delete;
+
 
     // Member Functions
 
@@ -117,6 +111,12 @@ public:
 
         //- Return the length of the curve
         scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyLine&) = delete;
 };
 
 

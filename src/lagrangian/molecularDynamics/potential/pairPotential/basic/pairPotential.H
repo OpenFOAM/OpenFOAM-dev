@@ -83,12 +83,6 @@ protected:
 
         void scaleEnergy(scalar& e, const scalar r) const;
 
-        //- Disallow default bitwise copy construction
-        pairPotential(const pairPotential&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pairPotential&) = delete;
-
 
 public:
 
@@ -129,6 +123,9 @@ public:
             const word& name,
             const dictionary& pairPotentialProperties
         );
+
+        //- Disallow default bitwise copy construction
+        pairPotential(const pairPotential&);
 
 
     //- Destructor
@@ -177,6 +174,12 @@ public:
 
         //- Read pairPotential dictionary
         virtual bool read(const dictionary& pairPotentialProperties) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pairPotential&) = delete;
 };
 
 

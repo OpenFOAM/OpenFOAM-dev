@@ -71,12 +71,6 @@ class tetherPotentialList
             const List<word>& tetherSiteIdList
         );
 
-        //- Disallow default bitwise assignment
-        void operator=(const tetherPotentialList&) = delete;
-
-        //- Disallow default bitwise copy construction
-        tetherPotentialList(const tetherPotentialList&) = delete;
-
 
 public:
 
@@ -91,6 +85,9 @@ public:
             const dictionary& tetherPotentialDict,
             const List<word>& tetherSiteIdList
         );
+
+        //- Disallow default bitwise assignment
+        void operator=(const tetherPotentialList&) = delete;
 
 
     //- Destructor
@@ -115,6 +112,12 @@ public:
             vector force(const label a, const vector rIT) const;
 
             scalar energy (const label a, const vector rIT) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise copy construction
+        tetherPotentialList(const tetherPotentialList&) = delete;
 };
 
 

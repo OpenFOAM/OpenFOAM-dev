@@ -122,12 +122,6 @@ private:
         //- Initialise thermoData object
         void init(thermoData& td);
 
-        //- Disallow default bitwise copy construction
-        constantFilmThermo(const constantFilmThermo&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const constantFilmThermo&) = delete;
-
 
 public:
 
@@ -143,6 +137,9 @@ public:
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        constantFilmThermo(const constantFilmThermo&) = delete;
 
 
     //- Destructor
@@ -204,6 +201,12 @@ public:
 
             //- Return thermal conductivity [W/m/K]
             virtual tmp<volScalarField> kappa() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const constantFilmThermo&) = delete;
 };
 
 

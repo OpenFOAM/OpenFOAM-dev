@@ -90,12 +90,6 @@ class foamChemistryReader
         //- Read the species composition
         void readSpeciesComposition();
 
-        //- Disallow default bitwise copy construction
-        foamChemistryReader(const foamChemistryReader&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const foamChemistryReader&) = delete;
-
 
 public:
 
@@ -120,6 +114,9 @@ public:
             const dictionary& thermoDict,
             speciesTable& species
         );
+
+        //- Disallow default bitwise copy construction
+        foamChemistryReader(const foamChemistryReader&) = delete;
 
 
     //- Destructor
@@ -164,6 +161,12 @@ public:
         {
             return reactions_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const foamChemistryReader&) = delete;
 };
 
 

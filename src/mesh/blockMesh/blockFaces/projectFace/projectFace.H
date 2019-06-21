@@ -83,12 +83,6 @@ class projectFace
             scalarField& lambdaJ
         ) const;
 
-        //- Disallow default bitwise copy construction
-        projectFace(const projectFace&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const projectFace&) = delete;
-
 
 public:
 
@@ -107,6 +101,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        projectFace(const projectFace&) = delete;
+
 
     //- Destructor
     virtual ~projectFace()
@@ -122,6 +119,12 @@ public:
             const label blockFacei,
             pointField& points
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const projectFace&) = delete;
 };
 
 

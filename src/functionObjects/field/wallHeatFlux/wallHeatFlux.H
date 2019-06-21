@@ -115,17 +115,6 @@ protected:
         );
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        wallHeatFlux(const wallHeatFlux&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallHeatFlux&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -142,6 +131,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        wallHeatFlux(const wallHeatFlux&) = delete;
+
 
     //- Destructor
     virtual ~wallHeatFlux();
@@ -157,6 +149,12 @@ public:
 
         //- Write the wall heat-flux
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallHeatFlux&) = delete;
 };
 
 
