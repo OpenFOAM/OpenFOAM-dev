@@ -45,7 +45,7 @@ mixture
     transport
     {
         mu          1.0e-03;    // [kg/m/s]
-        Pr          0.7;
+        Pr          7;
     }
 }
 
