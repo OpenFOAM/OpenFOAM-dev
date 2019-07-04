@@ -58,14 +58,14 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::damping::forceCoeff() const
     );
     scalarField& forceCoeff = tforceCoeff.ref();
 
-    const scalar lambda = lambda_.value();
-
     forAll(origins_, i)
     {
         const vectorField& c = mesh_.cellCentres();
         const scalarField x((c - origins_[i]) & directions_[i]);
-        forceCoeff = lambda*max(forceCoeff, scale_->value(x));
+        forceCoeff = max(forceCoeff, scale_->value(x));
     }
+
+    forceCoeff *= lambda_.value();
 
     // Write out the force coefficient for debugging
     if (debug && mesh_.time().writeTime())
