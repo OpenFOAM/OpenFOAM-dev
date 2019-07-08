@@ -64,7 +64,7 @@ Description
         C_{vm}      |  Virtual mass coefficient [-]
         C_1         |  Coefficient [-]
         \beta       |  Coefficient [-]
-        \epsilon_c  |  Continuous phase turbulent dissipation rate [m2/s^3]
+        \epsilon_c  |  Continuous phase turbulent dissipation rate [m^2/s^3]
     \endvartable
 
     Reference:

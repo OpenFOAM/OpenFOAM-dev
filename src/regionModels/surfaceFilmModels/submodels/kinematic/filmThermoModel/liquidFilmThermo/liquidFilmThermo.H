@@ -136,7 +136,7 @@ public:
             //- Return thermal conductivity [W/m/K]
             virtual scalar kappa(const scalar p, const scalar T) const;
 
-            //- Return diffusivity [m2/s]
+            //- Return diffusivity [m^2/s]
             virtual scalar D(const scalar p, const scalar T) const;
 
             //- Return latent heat [J/kg]

@@ -34,8 +34,8 @@ Description
         \f]
         where
         \vartable
-            p_p     | incompressible pressure at patch [m2/s^2]
-            p_0     | incompressible total pressure [m2/s^2]
+            p_p     | incompressible pressure at patch [m^2/s^2]
+            p_0     | incompressible total pressure [m^2/s^2]
             U       | velocity
         \endvartable
 
@@ -71,7 +71,7 @@ Description
             p_p     | pressure at patch [Pa]
             p_0     | total pressure [Pa]
             \gamma  | ratio of specific heats (Cp/Cv)
-            \psi    | compressibility [m2/s^2]
+            \psi    | compressibility [m^2/s^2]
             G       | coefficient given by \f$\frac{\gamma}{1-\gamma}\f$
         \endvartable
 

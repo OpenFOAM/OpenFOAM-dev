@@ -46,7 +46,7 @@ Usage
     \endverbatim
 
 Note
-    The units of kinematic turbulent thermal conductivity are [m2/s]
+    The units of kinematic turbulent thermal conductivity are [m^2/s]
 
 See also
     Foam::fixedValueFvPatchField

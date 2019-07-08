@@ -43,7 +43,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         massFlowRate | mass flow rate [kg/s]   | no          |
-        volumetricFlowRate | volumetric flow rate [m3/s]| no |
+        volumetricFlowRate | volumetric flow rate [m^3/s]| no |
         rho          | density field name      | no          | rho
         rhoInlet     | inlet density           | no          |
         extrapolateProfile | Extrapolate velocity profile | no | false

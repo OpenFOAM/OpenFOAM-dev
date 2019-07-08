@@ -173,7 +173,7 @@ void standardPhaseChange::correctModel
                 // Vapour mass fraction at interface
                 const scalar Ys = Wliq*pSat/(Wliq*pSat + Wvap*(pc - pSat));
 
-                // Vapour diffusivity [m2/s]
+                // Vapour diffusivity [m^2/s]
                 const scalar Dab = filmThermo.D(pc, Tloc);
 
                 // Schmidt number

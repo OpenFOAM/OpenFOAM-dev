@@ -212,7 +212,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
         }
         else
         {
-            // vapour diffusivity [m2/s]
+            // vapour diffusivity [m^2/s]
             const scalar Dab = liquids_.properties()[lid].D(ps, Ts);
 
             // Schmidt number

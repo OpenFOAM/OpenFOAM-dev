@@ -274,7 +274,7 @@ void waxSolventEvaporation::correctModel
             // Reynolds number
             const scalar Re = rhoInfc*mag(dU[celli])*L_/muInfc;
 
-            // Vapour diffusivity [m2/s]
+            // Vapour diffusivity [m^2/s]
             const scalar Dab = filmThermo.D(pc, Tloc);
 
             // Schmidt number

@@ -80,7 +80,7 @@ class COxidationIntrinsicRate
             //- Activation energy
             const scalar Ei_;
 
-            //- Char specific internal area [m2/kg]
+            //- Char specific internal area [m^2/kg]
             const scalar Ag_;
 
             //- Pore tortuosity []; default to sqrt(2)

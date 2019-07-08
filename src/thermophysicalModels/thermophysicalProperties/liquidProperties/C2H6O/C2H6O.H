@@ -157,10 +157,10 @@ public:
         //- Surface tension [N/m]
         inline scalar sigma(scalar p, scalar T) const;
 
-        //- Vapour diffussivity [m2/s]
+        //- Vapour diffussivity [m^2/s]
         inline scalar D(scalar p, scalar T) const;
 
-        //- Vapour diffussivity [m2/s] with specified binary pair
+        //- Vapour diffussivity [m^2/s] with specified binary pair
         inline scalar D(scalar p, scalar T, scalar Wb) const;
 
 

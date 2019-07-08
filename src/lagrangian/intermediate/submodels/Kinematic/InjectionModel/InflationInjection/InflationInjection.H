@@ -83,7 +83,7 @@ class InflationInjection
         //- Injection duration [s]
         scalar duration_;
 
-        //- Flow rate profile relative to SOI [m3/s]
+        //- Flow rate profile relative to SOI [m^3/s]
         TimeFunction1<scalar> flowRateProfile_;
 
         //- Growth rate of particle diameters towards target [m/s]

@@ -87,7 +87,7 @@ Description
 
     \vartable
         \alpha_c    |  Void fraction of continuous phase [-]
-        \epsilon_c  |  Turbulent dissipation rate of continuous phase [m2/s^3]
+        \epsilon_c  |  Turbulent dissipation rate of continuous phase [m^2/s^3]
         d_j         |  Diameter of mother bubble j [m^3]
         v_i         |  Volume of daughter bubble i [m^3]
         v_j         |  Volume of mother bubble j [m^3]

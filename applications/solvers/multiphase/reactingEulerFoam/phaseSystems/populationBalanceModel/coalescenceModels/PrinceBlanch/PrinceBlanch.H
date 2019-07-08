@@ -83,16 +83,16 @@ Description
     is currently neglected.
 
     \vartable
-        \theta_{ij}^{T} |  Turbulent collision rate [m3/s]
-        \theta_{ij}^{B} |  Buoyancy-driven collision rate [m3/s]
-        \theta_{ij}^{LS}|  Laminar shear collision rate [m3/s]
+        \theta_{ij}^{T} |  Turbulent collision rate [m^3/s]
+        \theta_{ij}^{B} |  Buoyancy-driven collision rate [m^3/s]
+        \theta_{ij}^{LS}|  Laminar shear collision rate [m^3/s]
         \lambda_{ij}    |  Coalescence efficiency [-]
         r_{ij}          |  Equivalent radius [m]
         \rho_c          |  Density of continuous phase [kg/m^3]
         \sigma          |  Surface tension [N/m]
         h_0             |  Initial film thickness [m]
         h_f             |  Critical film thickness [m]
-        \epsilon_c      |  Continuous phase turbulent dissipation rate [m2/s^3]
+        \epsilon_c      |  Continuous phase turbulent dissipation rate [m^2/s^3]
         d_i             |  Diameter of bubble i [m]
         d_j             |  Diameter of bubble j [m]
         u_{ri}          |  Rise velocity of bubble i [m/s]

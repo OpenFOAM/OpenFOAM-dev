@@ -52,7 +52,7 @@ Description
         \rho_{\inf} | Freestream density [kg/m^3]
         p_{\inf}    | Freestream pressure [Pa]
         U_{\inf}    | Freestream velocity [m/s]
-        p_k         | Kinematic pressure (p/rho)[m2/s^2]
+        p_k         | Kinematic pressure (p/rho) [m^2/s^2]
         p           | Pressure [Pa]
         p_0         | Total pressure [Pa]
         p_{ref}     | Reference pressure level [Pa]

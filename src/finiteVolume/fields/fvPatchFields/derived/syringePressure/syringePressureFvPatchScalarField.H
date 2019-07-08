@@ -45,7 +45,7 @@ Usage
         tds          | start of piston deceleration [s] | yes |
         tde          | end of piston deceleration [s] | yes  |
         psI          | initial syringe pressure [Pa] | yes   |
-        psi          | gas compressibility [m2/s^2] | yes     |
+        psi          | gas compressibility [m^2/s^2] | yes     |
         ams          | added (or removed) gas mass [kg] | yes |
     \endtable
 

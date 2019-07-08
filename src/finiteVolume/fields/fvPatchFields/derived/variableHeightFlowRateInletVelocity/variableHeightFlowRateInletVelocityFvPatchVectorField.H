@@ -34,7 +34,7 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        flowRate     | volumetric flow rate [m3/s] | yes |
+        flowRate     | volumetric flow rate [m^3/s] | yes |
         alpha        | phase-fraction field    | yes |
     \endtable
 

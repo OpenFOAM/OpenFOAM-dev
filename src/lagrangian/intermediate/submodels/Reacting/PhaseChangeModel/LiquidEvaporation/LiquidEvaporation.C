@@ -173,7 +173,7 @@ void Foam::LiquidEvaporation<CloudType>::calculate
         const label gid = liqToCarrierMap_[i];
         const label lid = liqToLiqMap_[i];
 
-        // vapour diffusivity [m2/s]
+        // vapour diffusivity [m^2/s]
         const scalar Dab = liquids_.properties()[lid].D(pc, Ts);
 
         // saturation pressure for species i [pa]

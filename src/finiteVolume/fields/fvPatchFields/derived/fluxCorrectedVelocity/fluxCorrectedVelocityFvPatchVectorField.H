@@ -39,7 +39,7 @@ Description
         U_p | velocity at the patch [m/s]
         U_c | velocity in cells adjacent to the patch [m/s]
         n   | patch normal vectors
-        \phi_p | flux at the patch [m3/s or kg/s]
+        \phi_p | flux at the patch [m^3/s or kg/s]
         S_f | patch face area vectors [m^2]
     \endvartable
 

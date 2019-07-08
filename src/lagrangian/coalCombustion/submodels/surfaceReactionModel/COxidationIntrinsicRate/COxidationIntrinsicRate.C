@@ -154,16 +154,16 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
         return 0.0;
     }
 
-    // Diffusion rate coefficient [m2/s]
+    // Diffusion rate coefficient [m^2/s]
     const scalar D0 = C1_/d*pow(0.5*(T + Tc), 0.75);
 
     // Apparent density of pyrolysis char [kg/m^3]
     const scalar rhop = 6.0*mass/(constant::mathematical::pi*pow3(d));
 
-    // Knusden diffusion coefficient [m2/s]
+    // Knusden diffusion coefficient [m^2/s]
     const scalar Dkn = 97.0*rMean_*sqrt(T/WO2_);
 
-    // Effective diffusion [m2/s]
+    // Effective diffusion [m^2/s]
     const scalar De = theta_/sqr(tau_)/(1.0/Dkn + 1/D0);
 
     // Cell carrier phase O2 species density [kg/m^3]

@@ -65,7 +65,7 @@ Description
     \vartable
         \rho_c          |  Density of continuous phase [kg/m^3]
         \sigma          |  Surface tension [N/m]
-        \epsilon_c      |  Continuous phase turbulent dissipation rate [m2/s^3]
+        \epsilon_c      |  Continuous phase turbulent dissipation rate [m^2/s^3]
         d_i             |  Diameter of daughter bubble i [m]
         d_j             |  Diameter of mother bubble j [m]
     \endvartable

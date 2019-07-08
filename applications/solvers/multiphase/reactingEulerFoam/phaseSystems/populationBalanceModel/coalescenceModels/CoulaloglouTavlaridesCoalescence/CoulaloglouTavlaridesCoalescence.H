@@ -47,7 +47,7 @@ Description
         \sigma      |  Surface tension [N/m]
         v_i         |  Volume of droplet i [m^3]
         v_j         |  Volume of droplet j [m^3]
-        \epsilon_c  |  Turbulent dissipation rate of continuous phase [m2/s^3]
+        \epsilon_c  |  Turbulent dissipation rate of continuous phase [m^2/s^3]
         \alpha_d    |  Total void fraction of disperse phase [-]
         \mu_c       |  Molecular dynamic viscosity of liquid phase [Pa s]
         \rho_c      |  Density of continuous phase [kg/m^3]

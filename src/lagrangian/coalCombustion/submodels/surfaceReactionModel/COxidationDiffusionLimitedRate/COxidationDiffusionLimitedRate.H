@@ -65,7 +65,7 @@ class COxidationDiffusionLimitedRate
             //- Stoichiometry of reaction
             const scalar Sb_;
 
-            //- Diffusion coefficient of oxidants [m2/s]
+            //- Diffusion coefficient of oxidants [m^2/s]
             const scalar D_;
 
 

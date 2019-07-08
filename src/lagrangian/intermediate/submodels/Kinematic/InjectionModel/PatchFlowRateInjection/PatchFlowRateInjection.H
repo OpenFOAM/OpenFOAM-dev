@@ -133,7 +133,7 @@ public:
         //- Return the end-of-injection time
         scalar timeEnd() const;
 
-        //- Return the total volumetric flow rate across the patch [m3/s]
+        //- Return the total volumetric flow rate across the patch [m^3/s]
         virtual scalar flowRate() const;
 
         //- Number of parcels to introduce relative to SOI
