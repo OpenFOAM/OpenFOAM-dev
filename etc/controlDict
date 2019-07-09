@@ -79,6 +79,9 @@ OptimisationSwitches
 
     // Force dumping (at next timestep) upon signal (-1 to disable) and exit
     stopAtWriteNowSignal        -1;
+
+    // Default dictionary scoping syntax
+    inputSyntax dot;
 }
 
 

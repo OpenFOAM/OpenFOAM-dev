@@ -111,7 +111,7 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, const ITstream& is)
     entry(key),
     ITstream(is)
 {
-    name() += '.' + keyword();
+    name() += '/' + keyword();
 }
 
 

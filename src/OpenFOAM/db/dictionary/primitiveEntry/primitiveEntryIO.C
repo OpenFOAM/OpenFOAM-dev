@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,7 +203,7 @@ Foam::primitiveEntry::primitiveEntry
     entry(key),
     ITstream
     (
-        is.name() + '.' + key,
+        is.name() + '/' + key,
         tokenList(10),
         is.format(),
         is.version()
@@ -218,7 +218,7 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, Istream& is)
     entry(key),
     ITstream
     (
-        is.name() + '.' + key,
+        is.name() + '/' + key,
         tokenList(10),
         is.format(),
         is.version()

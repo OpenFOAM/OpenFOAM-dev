@@ -71,11 +71,31 @@ Foam::string foamSpecieString(const char* YYText)
     return specieString;
 }
 
+class foamSpecieName
+{
+public:
+
+    //- Is this character valid for a foamSpecieName
+    inline static bool valid(char c)
+    {
+        return
+        (
+            !isspace(c)
+            && c != '"'   // string quote
+            && c != '\''  // string quote
+            && c != '/'   // slash
+            && c != ';'   // end statement
+            && c != '{'   // beg subdict
+            && c != '}'   // end subdict
+        );
+    }
+};
+
 
 Foam::word foamName(const char* YYText)
 {
     Foam::string fn(YYText);
-    Foam::string::stripInvalid<Foam::word>(fn);
+    Foam::string::stripInvalid<foamSpecieName>(fn);
     return fn;
 }
 
@@ -83,7 +103,7 @@ Foam::word foamName(const char* YYText)
 Foam::word foamName(const Foam::string& s)
 {
     Foam::string fn(s);
-    Foam::string::stripInvalid<Foam::word>(fn);
+    Foam::string::stripInvalid<foamSpecieName>(fn);
     return fn;
 }
 
@@ -121,7 +141,7 @@ startIsotopeMolW      {space}"/"{space}
 isotopeMolW           {space}{floatNum}{space}"/"{space}
 
 specieName            {space}[A-Za-z](([A-Za-z0-9)*+-])|("("[^+]))*{space}
-Y                {space}{floatNum}{space}
+Y                     {space}{floatNum}{space}
 
 thermoTemp            .{10}
 
