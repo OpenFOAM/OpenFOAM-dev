@@ -50,8 +50,14 @@ Ostream& operator<<(Ostream&, const bool);
 
 bool readBool(Istream&);
 
-} // End namespace Foam
+inline void writeEntry(Ostream& os, const bool value)
+{
+    os << value;
+}
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

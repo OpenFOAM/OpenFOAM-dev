@@ -72,6 +72,11 @@ Ostream& operator<<(Ostream&, const int32_t);
     Ostream& operator<<(Ostream&, const long);
 #endif
 
+inline void writeEntry(Ostream& os, const int32_t value)
+{
+    os << value;
+}
+
 
 //- Template specialization for pTraits<int32_t>
 template<>

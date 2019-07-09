@@ -66,11 +66,6 @@ inline label readLabel(Istream& is)
     return INT_SIZE(readInt,) (is);
 }
 
-inline void writeEntry(Ostream& os, const label value)
-{
-    os << value;
-}
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
