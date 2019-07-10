@@ -16,47 +16,12 @@ FoamFile
 
 #inputSyntax slash;
 
-internalField 3.4;
+internalField 5.6;
 
 active
 {
     type            fixedValue;
     value.air       $internalField;
-}
-
-inactive
-{
-    type            anotherFixedValue;
-
-    value           $../active/value.air;
-    anotherValue    $!active/value.air;
-
-    sub
-    {
-        value           $../../active/value.air;
-        anotherValue    $!active/value.air;
-    }
-}
-
-"U.*"
-{
-    solver GAMG;
-}
-
-e.air
-{
-    // This does expand
-    $U.air;
-}
-
-external
-{
-    value $testSlashDict2!active/value.air;
-}
-
-active2
-{
-    $testSlashDict2!active;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -30,6 +30,7 @@ License
 #include "OSHA1stream.H"
 #include "DynamicList.H"
 #include "inputSyntaxEntry.H"
+#include "fileOperation.H"
 
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
@@ -173,18 +174,13 @@ const Foam::entry* Foam::dictionary::lookupDotScopedSubEntryPtr
 }
 
 
-const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
+const Foam::entry* Foam::dictionary::lookupSlashScopedSubEntryPtr
 (
     const word& keyword,
     bool recursive,
     bool patternMatch
 ) const
 {
-    if (functionEntries::inputSyntaxEntry::dot())
-    {
-        return lookupDotScopedSubEntryPtr(keyword, recursive, patternMatch);
-    }
-
     string::size_type slashPos = keyword.find('/');
 
     if (slashPos == string::npos)
@@ -297,6 +293,97 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
             {
                 return nullptr;
             }
+        }
+    }
+}
+
+
+const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
+(
+    const word& keyword,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    if (functionEntries::inputSyntaxEntry::dot())
+    {
+        return lookupDotScopedSubEntryPtr(keyword, recursive, patternMatch);
+    }
+    else
+    {
+        // Check for the dictionary boundary marker
+        const string::size_type emarkPos = keyword.find('!');
+
+        if (emarkPos == string::npos || emarkPos == 0)
+        {
+            // Lookup in this dictionary
+
+            return lookupSlashScopedSubEntryPtr
+            (
+                keyword,
+                recursive,
+                patternMatch
+            );
+        }
+        else
+        {
+            // Lookup in the dictionary specified by file name
+            // created from the part of the keyword before the '!'
+
+            const fileName fName = keyword.substr(0, emarkPos);
+
+            if (fName == topDict().name())
+            {
+                FatalIOErrorInFunction
+                (
+                    *this
+                )   << "Attempt to re-read current dictionary " << fName
+                    << " for keyword "
+                    << keyword
+                    << exit(FatalIOError);
+            }
+
+            const word localKeyword = keyword.substr
+            (
+                emarkPos + 1,
+                keyword.size() - emarkPos - 1
+            );
+
+            autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
+            ISstream& ifs = ifsPtr();
+
+            if (!ifs || !ifs.good())
+            {
+                FatalIOErrorInFunction
+                (
+                    *this
+                )   << "dictionary file " << fName
+                    << " cannot be found for keyword "
+                    << keyword
+                    << exit(FatalIOError);
+            }
+
+            dictionary dict(ifs);
+
+            const Foam::entry* hmm = dict.lookupScopedEntryPtr
+            (
+                localKeyword,
+                recursive,
+                patternMatch
+            );
+
+            if (!hmm)
+            {
+                FatalIOErrorInFunction
+                (
+                    dict
+                )   << "keyword " << localKeyword
+                    << " is undefined in dictionary "
+                    << dict.name()
+                    << exit(FatalIOError);
+            }
+
+            return hmm->clone(*this).ptr();
         }
     }
 }
@@ -728,7 +815,13 @@ const Foam::entry* Foam::dictionary::lookupScopedEntryPtr
     bool patternMatch
 ) const
 {
-    if (keyword[0] == ':')
+    // '!' indicates the top-level directory in the "slash" syntax
+    // ':' indicates the top-level directory in the "dot" syntax
+    if
+    (
+        (functionEntries::inputSyntaxEntry::slash() && keyword[0] == '!')
+     || (functionEntries::inputSyntaxEntry::dot() && keyword[0] == ':')
+    )
     {
         // Go up to top level
         const dictionary* dictPtr = this;
