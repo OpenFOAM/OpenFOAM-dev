@@ -25,7 +25,14 @@ Class
     Foam::blockEdges::arcEdge
 
 Description
-    Defines the arcEdge of a circle in terms of 3 points on its circumference
+    An arcEdge between two points on a circle. The arc is defined either by a
+    third point that the arc passes through, or by the angle of the sector and
+    the axis of the circle.
+
+    If the angle-axis specification is used, the axis may not be not
+    perpendicular to the line connecting the end points. In that case, the axis
+    is considered to be that of a cylinder, and the arc represents a portion of
+    a helix on the surface of that cylinder.
 
 SourceFiles
     arcEdge.C
@@ -36,7 +43,6 @@ SourceFiles
 #define blockEdges_arcEdge_H
 
 #include "blockEdge.H"
-#include "cylindricalCS.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,15 +61,34 @@ class arcEdge
 {
     // Private Data
 
-        point p1_, p2_, p3_;
-        cylindricalCS cs_;
-        scalar angle_;
-        scalar radius_;
+        //- The start point of the arc
+        const point p0_;
+
+        //- The end point of the arc
+        const point p1_;
+
+        //- The centre of the circle of which the arc is a part
+        point centre_;
+
+        //- The axis of the circle of which the arc is a part
+        vector axis_;
+
+        //- The sector angle of the arc
+        scalar theta_;
+
+        //- The axial length of the arc/helix
+        scalar length_;
+
 
     // Private Member Functions
 
-        //- Calculate the coordinate system, angle and radius
-        cylindricalCS calcAngle();
+        //- Calculate the coordinate system, angle and radius from a mid point
+        //  somewhere within the arc
+        void calc(const point& pM);
+
+        //- Calculate the coordinate system, angle and radius from a sector
+        //  angle and a normal to the plane of the arc
+        void calc(const scalar theta, const vector& axis);
 
 
 public:
@@ -73,14 +98,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from components
-        arcEdge
-        (
-            const pointField& points,
-            const label start, const label end,
-            const point& pMid
-        );
 
         //- Construct from Istream setting pointsList
         arcEdge
