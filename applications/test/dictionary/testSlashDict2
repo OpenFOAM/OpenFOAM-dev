@@ -13,6 +13,7 @@ FoamFile
     object      testSlashDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// This dictionary is read by entries in testSlashDict
 
 #inputSyntax slash;
 

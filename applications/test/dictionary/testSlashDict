@@ -13,6 +13,8 @@ FoamFile
     object      testSlashDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// To expand this dictionary run
+//     foamDictionary testSlashDict
 
 #inputSyntax slash;
 
