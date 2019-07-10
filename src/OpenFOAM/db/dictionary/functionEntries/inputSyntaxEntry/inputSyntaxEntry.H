@@ -34,12 +34,13 @@ Description
 
     The possible input syntax:
       - \par slash      use '/' as the scope operator
-                        and '../' to go to the parent dictionary
+                            '../' to go to the parent dictionary
+                        and '!' to go to the top-level dictionary
       - \par dot        use '.' as the scope operator
-                        and '..' to go to the parent dictionary
-      - \par default    currently identical to dot
+                            '..' to go to the parent dictionary
+                        and ':' to go to the top-level dictionary
 
-    The default dictionary syntax is \c dot but changed to \c slash in
+    The default dictionary syntax is \c dot but can be changed to \c slash in
     etc/controlDict
     \verbatim
         OptimisationSwitches
@@ -83,6 +84,9 @@ class inputSyntaxEntry
             DOT
         };
 
+        //- The default input syntax
+        static inputSyntax defaultSyntax_;
+
         //- The current input syntax
         static inputSyntax syntax_;
 
@@ -110,7 +114,8 @@ public:
         //- Execute the functionEntry in a sub-dict context
         static bool execute(dictionary& parentDict, Istream&);
 
-        //- Reset the inputSyntax to %default (ie, %merge)
+        //- Reset the inputSyntax to the default specified in etc/controlDict
+        //  if not specified to %dot
         static void clear();
 
         //- Return true if the inputSyntax is %slash

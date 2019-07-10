@@ -37,8 +37,9 @@ const Foam::word Foam::functionEntries::inputSyntaxEntry::typeName
 // might include inputSyntax entries
 int Foam::functionEntries::inputSyntaxEntry::debug(0);
 
+// Read the default dictionary syntax from etc/controlDict if specified
 Foam::functionEntries::inputSyntaxEntry::inputSyntax
-    Foam::functionEntries::inputSyntaxEntry::syntax_
+    Foam::functionEntries::inputSyntaxEntry::defaultSyntax_
 (
     Foam::debug::optimisationSwitches().found("inputSyntax")
   ? Foam::functionEntries::inputSyntaxEntry::syntax
@@ -49,6 +50,13 @@ Foam::functionEntries::inputSyntaxEntry::inputSyntax
         )
     )
   : DOT
+);
+
+// Initialise the current dictionary syntax to the default
+Foam::functionEntries::inputSyntaxEntry::inputSyntax
+    Foam::functionEntries::inputSyntaxEntry::syntax_
+(
+    Foam::functionEntries::inputSyntaxEntry::defaultSyntax_
 );
 
 
@@ -76,7 +84,7 @@ Foam::functionEntries::inputSyntaxEntry::syntax
 )
 {
     word syntax(is);
-    if (syntax == "slash" || syntax == "default")
+    if (syntax == "slash")
     {
         return SLASH;
     }
@@ -88,9 +96,10 @@ Foam::functionEntries::inputSyntaxEntry::syntax
     {
         WarningInFunction
             << "unsupported input syntax'" << syntax
-            << "' ... defaulting to 'dot'"
+            << ", setting to default"
             << endl;
-        return DOT;
+
+        return defaultSyntax_;
     }
 }
 
@@ -110,7 +119,7 @@ bool Foam::functionEntries::inputSyntaxEntry::execute
 
 void Foam::functionEntries::inputSyntaxEntry::clear()
 {
-    syntax_ = DOT;
+    syntax_ = defaultSyntax_;
 }
 
 
