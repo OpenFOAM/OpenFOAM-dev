@@ -38,6 +38,7 @@ SourceFiles
 #define sampledIsoSurface_H
 
 #include "sampledSurface.H"
+#include "isoSurface.H"
 #include "MeshedSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -65,7 +66,7 @@ class isoSurface
         const scalarField isoVals_;
 
         //- Whether to coarsen
-        const Switch regularise_;
+        const Foam::isoSurface::filterType filter_;
 
         //- If restricted to zones, name of this zone or a regular expression
         keyType zoneKey_;

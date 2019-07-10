@@ -66,7 +66,7 @@ class distanceSurface
         const bool signed_;
 
         //- Whether to coarsen
-        const Switch regularise_;
+        const isoSurface::filterType filter_;
 
         //- Whether to recalculate cell values as average of point values
         const Switch average_;
@@ -132,7 +132,7 @@ public:
             const word& surfaceName,
             const scalar distance,
             const bool signedDistance,
-            const Switch regularise,
+            const isoSurface::filterType filter,
             const Switch average
         );
 

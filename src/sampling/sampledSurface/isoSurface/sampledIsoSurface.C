@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledIsoSurface.H"
-#include "isoSurface.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -121,9 +120,7 @@ bool Foam::sampledSurfaces::isoSurface::updateGeometry() const
                 cellFld.primitiveField(),
                 pointFld().primitiveField(),
                 isoVals_[isoi],
-                regularise_
-              ? Foam::isoSurface::DIAGCELL
-              : Foam::isoSurface::NONE
+                filter_
             )
         );
     }
@@ -215,7 +212,8 @@ bool Foam::sampledSurfaces::isoSurface::updateGeometry() const
         Pout<< "sampledSurfaces::isoSurface::updateGeometry() : "
                "constructed iso:"
             << nl
-            << "    regularise     : " << regularise_ << nl
+            << "    filtering      : "
+            << Foam::isoSurface::filterTypeNames_[filter_] << nl
             << "    isoField       : " << isoField_ << nl;
         if (isoVals_.size() == 1)
         {
@@ -251,7 +249,12 @@ Foam::sampledSurfaces::isoSurface::isoSurface
       ? scalarField(dict.lookup("isoValues"))
       : scalarField(1, readScalar(dict.lookup("isoValue")))
     ),
-    regularise_(dict.lookupOrDefault("regularise", true)),
+    filter_
+    (
+        dict.found("filtering")
+      ? Foam::isoSurface::filterTypeNames_.read(dict.lookup("filtering"))
+      : Foam::isoSurface::filterType::full
+    ),
     zoneKey_(keyType::null),
     prevTimeIndex_(-1),
     meshCells_(0)

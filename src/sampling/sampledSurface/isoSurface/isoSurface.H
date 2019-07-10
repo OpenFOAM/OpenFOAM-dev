@@ -41,6 +41,7 @@ SourceFiles
 #include "PackedBoolList.H"
 #include "MeshedSurface.H"
 #include "edgeList.H"
+#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,24 +61,28 @@ class isoSurface
 {
 public:
 
-        enum filterType
+        enum class filterType
         {
-            NONE,       // No filtering
-            DIAGCELL,   // Remove points from face-diagonal and pyramid
-                        // (vertex to cell-centre) edges
-            CELL        // Only remove points from pyramid edges
+            none,       // No filtering
+            partial,    // Remove points from vertex to cell-centre edges and
+                        // merge triangles that form a contiguous cut through a
+                        // single cell
+            full        // Also remove points from face-diagonals and merge
+                        // edges that originate from the same face
         };
+
+        static const NamedEnum<filterType, 3> filterTypeNames_;
 
 
 private:
 
     // Private Data
 
-        enum cellCutType
+        enum class cellCutType
         {
-            NOTCUT,     // Not cut
-            SPHERE,     // All edges to cell centre cut
-            CUT         // Normal cut
+            notCut,     // Not cut
+            sphere,     // All edges to cell centre cut
+            cut         // Normal cut
         };
 
 
@@ -222,7 +227,7 @@ public:
             const scalarField& cellValues,
             const scalarField& pointValues,
             const scalar iso,
-            const filterType filter = DIAGCELL
+            const filterType filter
         );
 
 

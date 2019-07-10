@@ -38,6 +38,15 @@ namespace Foam
     defineTypeNameAndDebug(isoSurface, 0);
 }
 
+namespace Foam
+{
+    template<>
+    const char* NamedEnum<isoSurface::filterType, 3>::names[] =
+        {"none", "partial", "full"};
+}
+
+const Foam::NamedEnum<Foam::isoSurface::filterType, 3>
+    Foam::isoSurface::filterTypeNames_;
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -75,11 +84,11 @@ Foam::isoSurface::cellCutType Foam::isoSurface::calcCutType
 
                 if (isTriCut(tri, pVals_))
                 {
-                    return CUT;
+                    return cellCutType::cut;
                 }
             }
         }
-        return NOTCUT;
+        return cellCutType::notCut;
     }
     else
     {
@@ -134,7 +143,7 @@ Foam::isoSurface::cellCutType Foam::isoSurface::calcCutType
         {
             // Count actual cuts (expensive since addressing needed)
             // Note: not needed if you don't want to preserve maxima/minima
-            // centred around cellcentre. In that case just always return CUT
+            // centred around cellcentre. In that case just always return cut
 
             const labelList& cPoints = mesh_.cellPoints(celli);
 
@@ -150,16 +159,16 @@ Foam::isoSurface::cellCutType Foam::isoSurface::calcCutType
 
             if (nPyrCuts == cPoints.size())
             {
-                return SPHERE;
+                return cellCutType::sphere;
             }
             else
             {
-                return CUT;
+                return cellCutType::cut;
             }
         }
         else
         {
-            return NOTCUT;
+            return cellCutType::notCut;
         }
     }
 }
@@ -179,7 +188,7 @@ Foam::label Foam::isoSurface::calcCutTypes
     {
         cellCutTypes[celli] = calcCutType(tet.isA(mesh_, celli), celli);
 
-        if (cellCutTypes[celli] == CUT)
+        if (cellCutTypes[celli] == cellCutType::cut)
         {
             nCutCells++;
         }
@@ -1161,7 +1170,8 @@ Foam::isoSurface::isoSurface
 {
     if (debug)
     {
-        Pout<< "isoSurface : iso:" << iso_ << " filter:" << filter << endl;
+        Pout<< "isoSurface : iso:" << iso_
+            << " filter:" << filterTypeNames_[filter] << endl;
     }
 
     fixTetBasePtIs();
@@ -1195,7 +1205,7 @@ Foam::isoSurface::isoSurface
     for (label celli = 0; celli < mesh_.nCells(); celli++)
     {
         startTri[celli] = faceLabels.size();
-        if (cellCutTypes[celli] != NOTCUT)
+        if (cellCutTypes[celli] != cellCutType::notCut)
         {
             generateTriPoints
             (
@@ -1278,7 +1288,7 @@ Foam::isoSurface::isoSurface
     }
 
 
-    if (filter != NONE)
+    if (filter != filterType::none)
     {
         // Triangulate outside (filter edges to cell centres and optionally
         // face diagonals)
@@ -1288,7 +1298,7 @@ Foam::isoSurface::isoSurface
         (
             removeInsidePoints
             (
-                (filter == DIAGCELL ? true : false),
+                (filter == filterType::full ? true : false),
                 *this,
                 pointFromDiag,
                 pointToFace_,
@@ -1311,7 +1321,7 @@ Foam::isoSurface::isoSurface
         }
 
 
-        if (filter == DIAGCELL)
+        if (filter == filterType::full)
         {
             // We remove verts on face diagonals. This is in fact just
             // straightening the edges of the face through the cell. This can

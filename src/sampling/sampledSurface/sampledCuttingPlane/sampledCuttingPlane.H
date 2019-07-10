@@ -63,7 +63,7 @@ class cuttingPlane
         const plane plane_;
 
         //- Whether to coarsen
-        const Switch regularise_;
+        const isoSurface::filterType filter_;
 
         //- Whether to recalculate cell values as average of point values
         const Switch average_;
