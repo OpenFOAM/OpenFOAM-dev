@@ -349,7 +349,10 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
                 keyword.size() - emarkPos - 1
             );
 
-            autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
+            autoPtr<ISstream> ifsPtr
+            (
+                fileHandler().NewIFstream(topDict().name().path()/fName)
+            );
             ISstream& ifs = ifsPtr();
 
             if (!ifs || !ifs.good())
