@@ -14,8 +14,7 @@ FoamFile
     object      nut;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "include/caseSettings"
+#inputSyntax slash;
 
 dimensions      [0 2 -1 0 0 0 0];
 
@@ -27,11 +26,26 @@ boundaryField
     {
         type            wedge;
     }
-    front { $back; }
-    liner { $:wall.nut; }
-    cylinderHead { $liner; }
-    piston { $liner; }
-}
+
+    front
+    {
+        $back;
+    }
+
+    liner
+    {
+        $include/caseSettings!wall/nut;
+    }
+
+    cylinderHead
+    {
+        $liner;
+    }
+
+    piston
+    {
+        $liner;
+    }
 }
 
 

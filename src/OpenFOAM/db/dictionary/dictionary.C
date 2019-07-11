@@ -31,7 +31,7 @@ License
 #include "DynamicList.H"
 #include "inputSyntaxEntry.H"
 #include "fileOperation.H"
-
+#include "stringOps.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -330,7 +330,12 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
             // Lookup in the dictionary specified by file name
             // created from the part of the keyword before the '!'
 
-            const fileName fName = keyword.substr(0, emarkPos);
+            fileName fName = keyword.substr(0, emarkPos);
+
+            if (!fName.isAbsolute())
+            {
+                fName = topDict().name().path()/fName;
+            }
 
             if (fName == topDict().name())
             {
@@ -351,7 +356,7 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
 
             autoPtr<ISstream> ifsPtr
             (
-                fileHandler().NewIFstream(topDict().name().path()/fName)
+                fileHandler().NewIFstream(fName)
             );
             ISstream& ifs = ifsPtr();
 
