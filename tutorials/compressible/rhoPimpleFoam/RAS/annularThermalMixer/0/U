@@ -26,18 +26,29 @@ boundaryField
     innerInlet
     {
         type            fixedValue;
-        value           uniform $:innerInlet.U;
+        value           uniform $!innerInlet/U;
     }
 
     outerInlet
     {
         type            fixedValue;
-        value           uniform $:outerInlet.U;
+        value           uniform $!outerInlet/U;
     }
 
-    outlet      { $:outlet.U; }
-    staticWalls { $:wall.U; }
-    movingWalls { $:movingWall.U; }
+    outlet
+    {
+        $!outlet/U;
+    }
+
+    staticWalls
+    {
+        $!wall/U;
+    }
+
+    movingWalls
+    {
+        $!movingWall/U;
+    }
 
     #includeEtc "caseDicts/setConstraintTypes"
 }

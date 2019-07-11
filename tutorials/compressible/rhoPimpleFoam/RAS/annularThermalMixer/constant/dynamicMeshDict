@@ -14,6 +14,7 @@ FoamFile
     object      dynamicMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash;
 
 #include "${FOAM_CASE}/constant/caseSettings"
 
@@ -27,6 +28,6 @@ solidBodyMotionFunction  rotatingMotion;
 
 origin      (0 0 0);
 axis        (0 0 1);
-omega       $:meshMotionProperties.omega;
+omega       $!meshMotionProperties/omega;
 
 // ************************************************************************* //

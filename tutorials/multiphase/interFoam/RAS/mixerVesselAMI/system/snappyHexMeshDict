@@ -13,6 +13,7 @@ FoamFile
     object      snappyHexMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash;
 
 // Which of the steps to run
 castellatedMesh true;
@@ -274,7 +275,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 
@@ -283,7 +284,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 
@@ -292,7 +293,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 
@@ -301,7 +302,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 
@@ -310,7 +311,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 

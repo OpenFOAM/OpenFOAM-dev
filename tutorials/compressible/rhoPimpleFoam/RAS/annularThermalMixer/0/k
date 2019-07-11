@@ -19,25 +19,36 @@ FoamFile
 
 dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform $:innerInlet.k;
+internalField   uniform $!innerInlet/k;
 
 boundaryField
 {
     innerInlet
     {
         type            fixedValue;
-        value           uniform $:innerInlet.k;
+        value           uniform $!innerInlet/k;
     }
 
     outerInlet
     {
         type            fixedValue;
-        value           uniform $:outerInlet.k;
+        value           uniform $!outerInlet/k;
     }
 
-    outlet      { $:outlet.k; }
-    staticWalls { $:wall.k; }
-    movingWalls { $staticWalls; }
+    outlet
+    {
+        $!outlet/k;
+    }
+
+    staticWalls
+    {
+        $!wall/k;
+    }
+
+    movingWalls
+    {
+        $staticWalls;
+    }
 
     #includeEtc "caseDicts/setConstraintTypes"
 }

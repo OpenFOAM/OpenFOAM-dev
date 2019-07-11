@@ -7,7 +7,7 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version         2;
+    version         10;
     format          ascii;
     class           dictionary;
     location        "system";
@@ -18,7 +18,7 @@ application     reactingFoam;
 
 startFrom       startTime;
 
-startTime       0;
+startTime       10;
 
 stopAt          endTime;
 
@@ -43,6 +43,8 @@ timeFormat      general;
 timePrecision   6;
 
 runTimeModifiable true;
+
+FoamFile/version 0;
 
 
 // ************************************************************************* //

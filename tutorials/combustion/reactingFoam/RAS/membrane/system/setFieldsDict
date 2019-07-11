@@ -19,9 +19,9 @@ FoamFile
 
 defaultFieldValues
 (
-    volScalarFieldValue CH4 $:sleeve.CH4
-    volScalarFieldValue N2 $:sleeve.N2
-    volScalarFieldValue O2 $:sleeve.O2
+    volScalarFieldValue CH4 $!sleeve/CH4
+    volScalarFieldValue N2 $!sleeve/N2
+    volScalarFieldValue O2 $!sleeve/O2
 );
 
 regions
@@ -31,9 +31,9 @@ regions
         name pipe;
         fieldValues
         (
-            volScalarFieldValue CH4 $:pipe.CH4
-            volScalarFieldValue N2 $:pipe.N2
-            volScalarFieldValue O2 $:pipe.O2
+            volScalarFieldValue CH4 $!pipe/CH4
+            volScalarFieldValue N2 $!pipe/N2
+            volScalarFieldValue O2 $!pipe/O2
         );
     }
 );

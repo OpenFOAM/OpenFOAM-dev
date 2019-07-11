@@ -26,24 +26,24 @@ boundaryField
     inletSleeve
     {
         type            fixedValue;
-        value           uniform $:sleeve.O2;
+        value           uniform $!sleeve/O2;
     }
     inletPipe
     {
         type            fixedValue;
-        value           uniform $:pipe.O2;
+        value           uniform $!pipe/O2;
     }
     outletSleeve
     {
         type            inletOutlet;
-        inletValue      uniform $:sleeve.O2;
-        value           uniform $:sleeve.O2;
+        inletValue      uniform $!sleeve/O2;
+        value           uniform $!sleeve/O2;
     }
     outletPipe
     {
         type            inletOutlet;
-        inletValue      uniform $:pipe.O2;
-        value           uniform $:pipe.O2;
+        inletValue      uniform $!pipe/O2;
+        value           uniform $!pipe/O2;
     }
     wall
     {
@@ -52,12 +52,12 @@ boundaryField
     membraneSleeve
     {
         type            semiPermeableBaffleMassFraction;
-        value           uniform $:sleeve.O2;
+        value           uniform $!sleeve/O2;
     }
     membranePipe
     {
         type            semiPermeableBaffleMassFraction;
-        value           uniform $:pipe.O2;
+        value           uniform $!pipe/O2;
     }
 }
 

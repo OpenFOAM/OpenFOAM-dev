@@ -14,6 +14,7 @@ FoamFile
     object      caseProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash;
 
 calculated
 {
@@ -54,21 +55,21 @@ outlet
     T
     {
         type            inletOutlet;
-        inletValue      uniform $:outerInlet.T;
+        inletValue      uniform $!outerInlet/T;
         value           $inletValue;
     }
 
     k
     {
         type            inletOutlet;
-        inletValue      uniform $:innerInlet.k;
+        inletValue      uniform $!innerInlet/k;
         value           $inletValue;
     }
 
     epsilon
     {
         type            inletOutlet;
-        inletValue      uniform $:innerInlet.epsilon;
+        inletValue      uniform $!innerInlet/epsilon;
         value           $inletValue;
     }
 }
@@ -94,13 +95,13 @@ wall
     k
     {
         type            kqRWallFunction;
-        value           uniform $:innerInlet.k;
+        value           uniform $!innerInlet/k;
     }
 
     epsilon
     {
         type            epsilonWallFunction;
-        value           uniform $:innerInlet.epsilon;
+        value           uniform $!innerInlet/epsilon;
     }
 
     nut

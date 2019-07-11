@@ -13,6 +13,7 @@ FoamFile
     object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash;
 
 backgroundMesh
 {
@@ -31,37 +32,29 @@ convertToMeters 1;
 
 vertices
 (
-    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMin)
-    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMin)
-    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMin)
-    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMin)
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMin)
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMin)
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMin)
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMin)
 
-    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMax)
-    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMax)
-    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMax)
-    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMax)
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMax)
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMax)
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMax)
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMax)
 );
 
 blocks
 (
     hex (0 1 2 3 4 5 6 7)
     (
-        $:backgroundMesh.xCells
-        $:backgroundMesh.yCells
-        $:backgroundMesh.zCells
+        $!backgroundMesh/xCells
+        $!backgroundMesh/yCells
+        $!backgroundMesh/zCells
     )
     simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 boundary
-(
-);
-
-mergePatchPairs
 (
 );
 
