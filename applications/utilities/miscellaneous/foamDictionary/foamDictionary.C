@@ -123,6 +123,7 @@ Usage
 #include "IFstream.H"
 #include "OFstream.H"
 #include "includeEntry.H"
+#include "inputSyntaxEntry.H"
 
 using namespace Foam;
 
@@ -164,12 +165,16 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
 }
 
 
-//- Converts old scope syntax to new syntax
+//- Convert keyword syntax to "dot" if the dictionary is "dot" syntax
 word scope(const fileName& entryName)
 {
-    if (entryName.find(':') != string::npos)
+    if
+    (
+        functionEntries::inputSyntaxEntry::dot()
+     && entryName.find('/') != string::npos
+    )
     {
-        wordList entryNames(entryName.components(':'));
+        wordList entryNames(entryName.components('/'));
 
         word entry(entryNames[0]);
         for (label i = 1; i < entryNames.size(); i++)
@@ -188,7 +193,11 @@ word scope(const fileName& entryName)
 //- Extracts dict name and keyword
 Pair<word> dictAndKeyword(const word& scopedName)
 {
-    string::size_type i = scopedName.find_last_of(".");
+    string::size_type i = scopedName.find_last_of
+    (
+        functionEntries::inputSyntaxEntry::scopeChar()
+    );
+
     if (i != string::npos)
     {
         return Pair<word>
@@ -394,7 +403,7 @@ int main(int argc, char *argv[])
     word entryName;
     if (args.optionReadIfPresent("entry", entryName))
     {
-        word scopedName(scope(entryName));
+        const word scopedName(scope(entryName));
 
         string newValue;
         if
@@ -446,6 +455,7 @@ int main(int argc, char *argv[])
 
             if (overwrite)
             {
+                Info << "New entry " << *ePtr << endl;
                 const_cast<dictionary&>(d).set(ePtr);
             }
             else

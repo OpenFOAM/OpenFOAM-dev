@@ -135,4 +135,10 @@ bool Foam::functionEntries::inputSyntaxEntry::dot()
 }
 
 
+char Foam::functionEntries::inputSyntaxEntry::scopeChar()
+{
+    return syntax_ == SLASH ? '/' : '.';
+}
+
+
 // ************************************************************************* //

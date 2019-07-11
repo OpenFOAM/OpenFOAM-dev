@@ -124,6 +124,9 @@ public:
         //- Return true if the inputSyntax is %dot
         static bool dot();
 
+        //- Return true if the inputSyntax is %slash
+        static char scopeChar();
+
 
     // Member Operators
 
