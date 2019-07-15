@@ -69,52 +69,112 @@ Foam::label Foam::vtkPVFoam::addToSelection
 
 
 template<template<class> class patchType, class meshType>
-void Foam::vtkPVFoam::addToSelection
+void Foam::vtkPVFoam::addFieldsToSelection
 (
     vtkDataArraySelection *select,
-    const Time& runTime,
-    const instantList& times,
-    const word& regionPrefix,
+    const IOobjectList& objects,
     const string& suffix
 )
 {
-    forAll(times, timei)
-    {
-        // Search for list of objects for this time and mesh region
-        IOobjectList objects(runTime, times[timei].name(), regionPrefix);
+    addToSelection<GeometricField<scalar, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
 
-        //- Add volume fields to GUI
-        addToSelection<GeometricField<scalar, patchType, meshType>>
-        (
-            select,
-            objects,
-            suffix
-        );
-        addToSelection<GeometricField<vector, patchType, meshType>>
-        (
-            select,
-            objects,
-            suffix
-        );
-        addToSelection<GeometricField<sphericalTensor, patchType, meshType>>
-        (
-            select,
-            objects,
-            suffix
-        );
-        addToSelection<GeometricField<symmTensor, patchType, meshType>>
-        (
-            select,
-            objects,
-            suffix
-        );
-        addToSelection<GeometricField<tensor, patchType, meshType>>
-        (
-            select,
-            objects,
-            suffix
-        );
-    }
+    addToSelection<GeometricField<vector, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection<GeometricField<sphericalTensor, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection<GeometricField<symmTensor, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection<GeometricField<tensor, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+}
+
+
+template<template<class> class patchType, class meshType>
+void Foam::vtkPVFoam::addInternalFieldsToSelection
+(
+    vtkDataArraySelection *select,
+    const IOobjectList& objects,
+    const string& suffix
+)
+{
+    addToSelection
+    <
+        typename
+        GeometricField<scalar, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection
+    <
+        typename
+        GeometricField<vector, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection
+    <
+        typename
+        GeometricField<sphericalTensor, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection
+    <
+        typename
+        GeometricField<symmTensor, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection
+    <
+        typename
+        GeometricField<tensor, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
 }
 
 

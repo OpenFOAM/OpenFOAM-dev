@@ -383,12 +383,19 @@ class vtkPVFoam
 
             //- Add objects of Type to paraview array selection
             template<template<class> class patchType, class meshType>
-            void addToSelection
+            void addFieldsToSelection
             (
                 vtkDataArraySelection *select,
-                const Time& runTime,
-                const instantList& times,
-                const word& regionPrefix,
+                const IOobjectList& objects,
+                const string& suffix=string::null
+            );
+
+            //- Add objects of Type to paraview array selection
+            template<template<class> class patchType, class meshType>
+            void addInternalFieldsToSelection
+            (
+                vtkDataArraySelection *select,
+                const IOobjectList& objects,
                 const string& suffix=string::null
             );
 
@@ -517,6 +524,15 @@ class vtkPVFoam
                 vtkMultiBlockDataSet* output
             );
 
+            //- Volume internal fields - all types
+            template<class Type>
+            void convertVolInternalFields
+            (
+                const fvMesh&,
+                const IOobjectList&,
+                vtkMultiBlockDataSet* output
+            );
+
             //- Volume field - all selected parts
             template<class Type>
             void convertVolFieldBlock
@@ -528,11 +544,23 @@ class vtkPVFoam
                 const List<polyDecomp>& decompLst
             );
 
+            //- Volume internal field - all selected parts
+            template<class Type>
+            void convertVolInternalFieldBlock
+            (
+                const typename GeometricField<Type, fvPatchField, volMesh>
+                    ::Internal&,
+                vtkMultiBlockDataSet* output,
+                const arrayRange&,
+                const List<polyDecomp>& decompLst
+            );
+
             //- Volume field
             template<class Type>
-            void convertVolField
+            void convertVolInternalField
             (
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const typename GeometricField<Type, fvPatchField, volMesh>
+                    ::Internal&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const label datasetNo,

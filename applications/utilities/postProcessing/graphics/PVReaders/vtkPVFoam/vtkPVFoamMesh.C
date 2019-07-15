@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,21 +48,21 @@ void Foam::vtkPVFoam::convertMeshVolume
 )
 {
     arrayRange& range = arrayRangeVolume_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
 
-    // resize for decomposed polyhedra
+    // Resize for decomposed polyhedra
     regionPolyDecomp_.setSize(range.size());
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshVolume" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
     // Convert the internalMesh
-    // this looks like more than one part, but it isn't
+    // This looks like more than one part, but it isn't
     for (int partId = range.start(); partId < range.end(); ++partId)
     {
         const word partName = "internalMesh";
@@ -87,7 +87,7 @@ void Foam::vtkPVFoam::convertMeshVolume
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -95,7 +95,6 @@ void Foam::vtkPVFoam::convertMeshVolume
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshVolume" << endl;
         printMemory();
     }
 }
@@ -108,13 +107,13 @@ void Foam::vtkPVFoam::convertMeshLagrangian
 )
 {
     arrayRange& range = arrayRangeLagrangian_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshLagrangian" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -138,7 +137,7 @@ void Foam::vtkPVFoam::convertMeshLagrangian
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -146,7 +145,6 @@ void Foam::vtkPVFoam::convertMeshLagrangian
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshLagrangian" << endl;
         printMemory();
     }
 }
@@ -159,14 +157,14 @@ void Foam::vtkPVFoam::convertMeshPatches
 )
 {
     arrayRange& range = arrayRangePatches_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshPatches" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -184,7 +182,8 @@ void Foam::vtkPVFoam::convertMeshPatches
 
         if (debug)
         {
-            Info<< "Creating VTK mesh for patches [" << patchIds <<"] "
+            InfoInFunction
+                << "Creating VTK mesh for patches [" << patchIds <<"] "
                 << patchName << endl;
         }
 
@@ -227,7 +226,7 @@ void Foam::vtkPVFoam::convertMeshPatches
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -235,7 +234,6 @@ void Foam::vtkPVFoam::convertMeshPatches
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshPatches" << endl;
         printMemory();
     }
 }
@@ -248,11 +246,11 @@ void Foam::vtkPVFoam::convertMeshCellZones
 )
 {
     arrayRange& range = arrayRangeCellZones_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
 
-    // resize for decomposed polyhedra
+    // Resize for decomposed polyhedra
     zonePolyDecomp_.setSize(range.size());
 
     if (range.empty())
@@ -262,7 +260,7 @@ void Foam::vtkPVFoam::convertMeshCellZones
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshCellZones" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -279,7 +277,8 @@ void Foam::vtkPVFoam::convertMeshCellZones
 
         if (debug)
         {
-            Info<< "Creating VTK mesh for cellZone[" << zoneId << "] "
+            InfoInFunction
+                << "Creating VTK mesh for cellZone[" << zoneId << "] "
                 << zoneName << endl;
         }
 
@@ -306,7 +305,7 @@ void Foam::vtkPVFoam::convertMeshCellZones
                 zonePolyDecomp_[datasetNo].addPointCellLabels()
             );
 
-            // copy pointMap as well, otherwise pointFields fail
+            // Copy pointMap as well, otherwise pointFields fail
             zonePolyDecomp_[datasetNo].pointMap() = subsetter.pointMap();
 
             AddToBlock(output, vtkmesh, range, datasetNo, zoneName);
@@ -316,7 +315,7 @@ void Foam::vtkPVFoam::convertMeshCellZones
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -324,7 +323,6 @@ void Foam::vtkPVFoam::convertMeshCellZones
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshCellZones" << endl;
         printMemory();
     }
 }
@@ -337,16 +335,16 @@ void Foam::vtkPVFoam::convertMeshCellSets
 )
 {
     arrayRange& range = arrayRangeCellSets_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
 
-    // resize for decomposed polyhedra
+    // Resize for decomposed polyhedra
     csetPolyDecomp_.setSize(range.size());
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshCellSets" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -361,7 +359,8 @@ void Foam::vtkPVFoam::convertMeshCellSets
 
         if (debug)
         {
-            Info<< "Creating VTK mesh for cellSet=" << partName << endl;
+            InfoInFunction
+                << "Creating VTK mesh for cellSet=" << partName << endl;
         }
 
         const cellSet cSet(mesh, partName);
@@ -388,7 +387,7 @@ void Foam::vtkPVFoam::convertMeshCellSets
                 csetPolyDecomp_[datasetNo].addPointCellLabels()
             );
 
-            // copy pointMap as well, otherwise pointFields fail
+            // Copy pointMap as well, otherwise pointFields fail
             csetPolyDecomp_[datasetNo].pointMap() = subsetter.pointMap();
 
             AddToBlock(output, vtkmesh, range, datasetNo, partName);
@@ -398,7 +397,7 @@ void Foam::vtkPVFoam::convertMeshCellSets
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -406,7 +405,6 @@ void Foam::vtkPVFoam::convertMeshCellSets
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshCellSets" << endl;
         printMemory();
     }
 }
@@ -419,8 +417,8 @@ void Foam::vtkPVFoam::convertMeshFaceZones
 )
 {
     arrayRange& range = arrayRangeFaceZones_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
 
     if (range.empty())
@@ -430,7 +428,7 @@ void Foam::vtkPVFoam::convertMeshFaceZones
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshFaceZones" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -447,7 +445,8 @@ void Foam::vtkPVFoam::convertMeshFaceZones
 
         if (debug)
         {
-            Info<< "Creating VTKmesh for faceZone[" << zoneId << "] "
+            InfoInFunction
+                << "Creating VTKmesh for faceZone[" << zoneId << "] "
                 << zoneName << endl;
         }
 
@@ -462,7 +461,7 @@ void Foam::vtkPVFoam::convertMeshFaceZones
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -470,7 +469,6 @@ void Foam::vtkPVFoam::convertMeshFaceZones
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshFaceZones" << endl;
         printMemory();
     }
 }
@@ -483,13 +481,13 @@ void Foam::vtkPVFoam::convertMeshFaceSets
 )
 {
     arrayRange& range = arrayRangeFaceSets_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshFaceSets" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -504,7 +502,8 @@ void Foam::vtkPVFoam::convertMeshFaceSets
 
         if (debug)
         {
-            Info<< "Creating VTK mesh for faceSet=" << partName << endl;
+            InfoInFunction
+                << "Creating VTK mesh for faceSet=" << partName << endl;
         }
 
         const faceSet fSet(mesh, partName);
@@ -519,7 +518,7 @@ void Foam::vtkPVFoam::convertMeshFaceSets
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -527,7 +526,6 @@ void Foam::vtkPVFoam::convertMeshFaceSets
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshFaceSets" << endl;
         printMemory();
     }
 }
@@ -540,13 +538,13 @@ void Foam::vtkPVFoam::convertMeshPointZones
 )
 {
     arrayRange& range = arrayRangePointZones_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshPointZones" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -574,7 +572,7 @@ void Foam::vtkPVFoam::convertMeshPointZones
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -582,7 +580,6 @@ void Foam::vtkPVFoam::convertMeshPointZones
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshPointZones" << endl;
         printMemory();
     }
 }
@@ -596,13 +593,13 @@ void Foam::vtkPVFoam::convertMeshPointSets
 )
 {
     arrayRange& range = arrayRangePointSets_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertMeshPointSets" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -617,7 +614,8 @@ void Foam::vtkPVFoam::convertMeshPointSets
 
         if (debug)
         {
-            Info<< "Creating VTK mesh for pointSet=" << partName << endl;
+            InfoInFunction
+                << "Creating VTK mesh for pointSet=" << partName << endl;
         }
 
         const pointSet pSet(mesh, partName);
@@ -632,7 +630,7 @@ void Foam::vtkPVFoam::convertMeshPointSets
         }
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
@@ -640,7 +638,6 @@ void Foam::vtkPVFoam::convertMeshPointSets
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertMeshPointSets" << endl;
         printMemory();
     }
 }

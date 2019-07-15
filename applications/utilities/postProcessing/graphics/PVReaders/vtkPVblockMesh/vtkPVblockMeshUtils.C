@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,8 @@ void Foam::vtkPVblockMesh::AddToBlock
 
     if (debug)
     {
-        Info<< "block[" << blockNo << "] has "
+        InfoInFunction
+            << "block[" << blockNo << "] has "
             << block->GetNumberOfBlocks()
             <<  " datasets prior to adding set " << datasetNo
             <<  " with name: " << datasetName << endl;
@@ -228,7 +229,8 @@ Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
     if (debug)
     {
         label nElem = select->GetNumberOfArrays();
-        Info<< "available(";
+        InfoInFunction
+            << "available(";
         for (int elemI = 0; elemI < nElem; ++elemI)
         {
             Info<< " \"" << select->GetArrayName(elemI) << "\"";
@@ -267,7 +269,8 @@ Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
 
     if (debug)
     {
-        Info<< "available(";
+        InfoInFunction
+            << "available(";
         for (int elemI = range.start(); elemI < range.end(); ++elemI)
         {
             Info<< " \"" << select->GetArrayName(elemI) << "\"";
@@ -319,7 +322,7 @@ void Foam::vtkPVblockMesh::updateBoolListStatus
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVblockMesh::updateBoolListStatus" << endl;
+        InfoInFunction << endl;
     }
 
     const label nElem = selection->GetNumberOfArrays();
@@ -337,20 +340,12 @@ void Foam::vtkPVblockMesh::updateBoolListStatus
 
         if (debug)
         {
-            Info<< "  part[" << elemI << "] = "
+            Info<< "    part[" << elemI << "] = "
                 << status[elemI]
                 << " : " << selection->GetArrayName(elemI) << endl;
         }
     }
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVblockMesh::updateBoolListStatus" << endl;
-    }
 }
-
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

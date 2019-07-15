@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,13 +49,13 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::lagrangianVTKMesh - timePath "
+        InfoInFunction<< "timePath "
             << mesh.time().timePath()/cloud::prefix/cloudName << endl;
         printMemory();
     }
 
 
-    // the region name is already in the mesh db
+    // The region name is already in the mesh db
     IOobjectList sprayObjs
     (
         mesh,
@@ -70,7 +70,8 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
 
         if (debug)
         {
-            Info<< "cloud with " << parcels.size() << " parcels" << endl;
+            Info<< "    cloud with " << parcels.size()
+                << " parcels" << endl;
         }
 
         vtkmesh = vtkPolyData::New();
@@ -98,7 +99,6 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::lagrangianVTKMesh" << endl;
         printMemory();
     }
 

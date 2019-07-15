@@ -82,10 +82,7 @@ Foam::IOobjectList Foam::vtkPVFoam::getObjects
 }
 
 
-void Foam::vtkPVFoam::convertFields
-(
-    vtkMultiBlockDataSet* output
-)
+void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
 {
     const fvMesh& mesh = *meshPtr_;
 
@@ -118,8 +115,8 @@ void Foam::vtkPVFoam::convertFields
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertVolFields" << nl
-            << "converting OpenFOAM volume fields" << endl;
+        InfoInFunction<< nl
+            << "    converting OpenFOAM volume fields" << endl;
         forAllConstIter(IOobjectList, objects, iter)
         {
             Info<< "  " << iter()->name()
@@ -168,6 +165,27 @@ void Foam::vtkPVFoam::convertFields
         mesh, ppInterpList, objects, interpFields, output
     );
 
+    convertVolInternalFields<scalar>
+    (
+        mesh, objects, output
+    );
+    convertVolInternalFields<vector>
+    (
+        mesh, objects, output
+    );
+    convertVolInternalFields<sphericalTensor>
+    (
+        mesh, objects, output
+    );
+    convertVolInternalFields<symmTensor>
+    (
+        mesh, objects, output
+    );
+    convertVolInternalFields<tensor>
+    (
+        mesh, objects, output
+    );
+
     convertSurfaceFields<scalar>(mesh, objects, output);
     convertSurfaceFields<vector>(mesh, objects, output);
     convertSurfaceFields<sphericalTensor>(mesh, objects, output);
@@ -185,16 +203,12 @@ void Foam::vtkPVFoam::convertFields
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertVolFields" << endl;
         printMemory();
     }
 }
 
 
-void Foam::vtkPVFoam::convertLagrangianFields
-(
-    vtkMultiBlockDataSet* output
-)
+void Foam::vtkPVFoam::convertLagrangianFields(vtkMultiBlockDataSet* output)
 {
     arrayRange& range = arrayRangeLagrangian_;
     const fvMesh& mesh = *meshPtr_;
@@ -211,7 +225,7 @@ void Foam::vtkPVFoam::convertLagrangianFields
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::convertLagrangianFields" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -247,7 +261,8 @@ void Foam::vtkPVFoam::convertLagrangianFields
 
         if (debug)
         {
-            Info<< "converting OpenFOAM lagrangian fields" << nl;
+            InfoInFunction
+                << "converting OpenFOAM lagrangian fields" << nl << "    ";
             forAllConstIter(IOobjectList, objects, iter)
             {
                 Info<< "  " << iter()->name()
@@ -283,7 +298,6 @@ void Foam::vtkPVFoam::convertLagrangianFields
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertLagrangianFields" << endl;
         printMemory();
     }
 }

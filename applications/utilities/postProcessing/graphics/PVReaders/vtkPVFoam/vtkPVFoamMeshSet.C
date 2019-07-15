@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ vtkPolyData* Foam::vtkPVFoam::faceSetVTKMesh
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::faceSetVTKMesh" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -100,7 +100,6 @@ vtkPolyData* Foam::vtkPVFoam::faceSetVTKMesh
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::faceSetVTKMesh" << endl;
         printMemory();
     }
 
@@ -118,7 +117,7 @@ vtkPolyData* Foam::vtkPVFoam::pointSetVTKMesh
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::pointSetVTKMesh" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -137,7 +136,6 @@ vtkPolyData* Foam::vtkPVFoam::pointSetVTKMesh
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::pointSetVTKMesh" << endl;
         printMemory();
     }
 

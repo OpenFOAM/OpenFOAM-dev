@@ -37,7 +37,6 @@ InClass
 
 #include "vtkPVFoamSurfaceField.H"
 #include "vtkPVFoamPatchField.H"
-
 #include "vtkOpenFOAMTupleRemap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,7 +55,7 @@ void Foam::vtkPVFoam::convertVolFields
 
     forAllConstIter(IOobjectList, objects, iter)
     {
-        // restrict to GeometricField<Type, ...>
+        // Restrict to GeometricField<Type, ...>
         if
         (
             iter()->headerClassName()
@@ -79,8 +78,7 @@ void Foam::vtkPVFoam::convertVolFields
         {
             if (debug)
             {
-                Info<< "convertVolFieldBlock interpolating:" << tf.name()
-                    << endl;
+                InfoInFunction<< "interpolating:" << tf.name() << endl;
             }
 
             ptfPtr.reset
@@ -271,6 +269,63 @@ void Foam::vtkPVFoam::convertVolFields
 
 
 template<class Type>
+void Foam::vtkPVFoam::convertVolInternalFields
+(
+    const fvMesh& mesh,
+    const IOobjectList& objects,
+    vtkMultiBlockDataSet* output
+)
+{
+    forAllConstIter(IOobjectList, objects, iter)
+    {
+        // Restrict to GeometricField<Type, ...>::Internal
+        if
+        (
+            iter()->headerClassName()
+         != GeometricField<Type, fvPatchField, volMesh>::Internal::typeName
+        )
+        {
+            continue;
+        }
+
+        // Load field
+        typename GeometricField<Type, fvPatchField, volMesh>::Internal tf
+        (
+            *iter(),
+            mesh
+        );
+
+        // Convert activated internalMesh regions
+        convertVolInternalFieldBlock<Type>
+        (
+            tf,
+            output,
+            arrayRangeVolume_,
+            regionPolyDecomp_
+        );
+
+        // Convert activated cellZones
+        convertVolInternalFieldBlock<Type>
+        (
+            tf,
+            output,
+            arrayRangeCellZones_,
+            zonePolyDecomp_
+        );
+
+        // Convert activated cellSets
+        convertVolInternalFieldBlock<Type>
+        (
+            tf,
+            output,
+            arrayRangeCellSets_,
+            csetPolyDecomp_
+        );
+    }
+}
+
+
+template<class Type>
 void Foam::vtkPVFoam::convertVolFieldBlock
 (
     const GeometricField<Type, fvPatchField, volMesh>& tf,
@@ -286,7 +341,7 @@ void Foam::vtkPVFoam::convertVolFieldBlock
 
         if (datasetNo >= 0 && partStatus_[partId])
         {
-            convertVolField
+            convertVolInternalField<Type>
             (
                 tf,
                 output,
@@ -313,9 +368,37 @@ void Foam::vtkPVFoam::convertVolFieldBlock
 
 
 template<class Type>
-void Foam::vtkPVFoam::convertVolField
+void Foam::vtkPVFoam::convertVolInternalFieldBlock
 (
-    const GeometricField<Type, fvPatchField, volMesh>& tf,
+    const typename GeometricField<Type, fvPatchField, volMesh>::Internal& tf,
+    vtkMultiBlockDataSet* output,
+    const arrayRange& range,
+    const List<polyDecomp>& decompLst
+)
+{
+    for (int partId = range.start(); partId < range.end(); ++partId)
+    {
+        const label datasetNo = partDataset_[partId];
+
+        if (datasetNo >= 0 && partStatus_[partId])
+        {
+            convertVolInternalField<Type>
+            (
+                tf,
+                output,
+                range,
+                datasetNo,
+                decompLst[datasetNo]
+            );
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::vtkPVFoam::convertVolInternalField
+(
+    const typename GeometricField<Type, fvPatchField, volMesh>::Internal& tf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
     const label datasetNo,
@@ -333,8 +416,8 @@ void Foam::vtkPVFoam::convertVolField
 
     if (debug)
     {
-        Info<< "convert volField: "
-            << tf.name()
+        InfoInFunction
+            << "converting volField::Internal: " << tf.name()
             << " size = " << tf.size()
             << " nComp=" << nComp
             << " nTuples = " << superCells.size() <<  endl;
