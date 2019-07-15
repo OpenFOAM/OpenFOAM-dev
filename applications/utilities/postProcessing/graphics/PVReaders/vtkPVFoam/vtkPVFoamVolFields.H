@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ InClass
 #include "faceSet.H"
 #include "volPointInterpolation.H"
 
-#include "vtkPVFoamFaceField.H"
+#include "vtkPVFoamSurfaceField.H"
 #include "vtkPVFoamPatchField.H"
 
 #include "vtkOpenFOAMTupleRemap.H"
@@ -121,9 +121,7 @@ void Foam::vtkPVFoam::convertVolFields
         );
 
 
-        //
         // Convert patches - if activated
-        //
         for
         (
             int partId = arrayRangePatches_.start();
@@ -205,9 +203,7 @@ void Foam::vtkPVFoam::convertVolFields
             }
         }
 
-        //
         // Convert face zones - if activated
-        //
         for
         (
             int partId = arrayRangeFaceZones_.start();
@@ -231,7 +227,7 @@ void Foam::vtkPVFoam::convertVolFields
                 continue;
             }
 
-            convertFaceField
+            convertSurfaceField
             (
                 tf,
                 output,
@@ -240,13 +236,9 @@ void Foam::vtkPVFoam::convertVolFields
                 mesh,
                 zMesh[zoneId]
             );
-
-            // TODO: points
         }
 
-        //
         // Convert face sets - if activated
-        //
         for
         (
             int partId = arrayRangeFaceSets_.start();
@@ -264,7 +256,7 @@ void Foam::vtkPVFoam::convertVolFields
 
             const faceSet fSet(mesh, selectName);
 
-            convertFaceField
+            convertSurfaceField
             (
                 tf,
                 output,
@@ -273,8 +265,6 @@ void Foam::vtkPVFoam::convertVolFields
                 mesh,
                 fSet.toc()
             );
-
-            // TODO: points
         }
     }
 }

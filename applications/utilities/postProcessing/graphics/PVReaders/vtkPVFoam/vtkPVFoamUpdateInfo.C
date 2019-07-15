@@ -26,6 +26,7 @@ License
 #include "vtkPVFoam.H"
 
 // OpenFOAM includes
+#include "vtkPVFoamReader.h"
 #include "cellSet.H"
 #include "faceSet.H"
 #include "pointSet.H"
@@ -34,11 +35,10 @@ License
 #include "polyBoundaryMeshEntries.H"
 #include "entry.H"
 #include "Cloud.H"
-#include "vtkPVFoamReader.h"
+#include "surfaceFields.H"
 
-// local headers
+// Local includes
 #include "vtkPVFoamAddToSelection.H"
-#include "vtkPVFoamUpdateInfoFields.H"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
@@ -68,7 +68,7 @@ public:
             close();
         }
 
-   // Member Functions
+   // Member functions
 
         bool writeData(Ostream&) const
         {
@@ -252,7 +252,6 @@ void Foam::vtkPVFoam::updateInfoPatches
         const wordList allPatchNames = patches.names();
 
         // Add patch groups
-        // ~~~~~~~~~~~~~~~~
 
         for
         (
@@ -303,7 +302,6 @@ void Foam::vtkPVFoam::updateInfoPatches
 
 
         // Add patches
-        // ~~~~~~~~~~~
 
         if (!reader_->GetShowGroupsOnly())
         {
@@ -350,7 +348,6 @@ void Foam::vtkPVFoam::updateInfoPatches
 
 
             // Read patches and determine sizes
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             wordList names(patchEntries.size());
             labelList sizes(patchEntries.size());
@@ -365,7 +362,6 @@ void Foam::vtkPVFoam::updateInfoPatches
 
 
             // Add (non-zero) patch groups to the list of mesh parts
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             HashTable<labelList, word> groups(patchEntries.size());
 
@@ -450,7 +446,6 @@ void Foam::vtkPVFoam::updateInfoPatches
 
 
             // Add (non-zero) patches to the list of mesh parts
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             if (!reader_->GetShowGroupsOnly())
             {
@@ -527,9 +522,7 @@ void Foam::vtkPVFoam::updateInfoZones
 
     wordList namesLst;
 
-    //
     // cellZones information
-    // ~~~~~~~~~~~~~~~~~~~~~
     if (meshPtr_)
     {
         namesLst = getZoneNames(meshPtr_->cellZones());
@@ -550,9 +543,7 @@ void Foam::vtkPVFoam::updateInfoZones
     arrayRangeCellZones_ += namesLst.size();
 
 
-    //
     // faceZones information
-    // ~~~~~~~~~~~~~~~~~~~~~
     if (meshPtr_)
     {
         namesLst = getZoneNames(meshPtr_->faceZones());
@@ -573,9 +564,7 @@ void Foam::vtkPVFoam::updateInfoZones
     arrayRangeFaceZones_ += namesLst.size();
 
 
-    //
     // pointZones information
-    // ~~~~~~~~~~~~~~~~~~~~~~
     if (meshPtr_)
     {
         namesLst = getZoneNames(meshPtr_->pointZones());
@@ -677,6 +666,105 @@ void Foam::vtkPVFoam::updateInfoSets
         getSelectedArrayEntries(arraySelection);
 
         Info<< "<end> Foam::vtkPVFoam::updateInfoSets" << endl;
+    }
+}
+
+
+void Foam::vtkPVFoam::updateInfoFields()
+{
+    if (debug)
+    {
+        Info<< "<beg> Foam::vtkPVFoam::updateInfoFields "
+               " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]"
+            << endl;
+    }
+
+    vtkDataArraySelection* fieldSelection = reader_->GetFieldSelection();
+
+    // Use the db directly since this might be called without a mesh,
+    // but the region must get added back in
+    word regionPrefix;
+    if (meshRegion_ != polyMesh::defaultRegion)
+    {
+        regionPrefix = meshRegion_;
+    }
+
+    const Time& runTime = dbPtr_();
+    const instantList times = runTime.times();
+
+    stringList enabledEntries;
+
+    if (fieldSelection->GetNumberOfArrays() == 0 && !meshPtr_)
+    {
+        const wordReList defaultFieldRes
+        (
+            configDict_.lookupOrDefault
+            (
+                "defaultFields",
+                wordReList(wordList{"p", "U"})
+            )
+        );
+
+        wordHashSet objectNameSet;
+        forAll(times, timei)
+        {
+            // Search for list of objects for this time and mesh region
+            IOobjectList objects(runTime, times[timei].name(), regionPrefix);
+
+            forAllConstIter(IOobjectList, objects, iter)
+            {
+                objectNameSet.insert(iter.key());
+            }
+        }
+
+        const wordList objectNames(objectNameSet.toc());
+        const labelList defaultFields
+        (
+            findStrings(defaultFieldRes, objectNames)
+        );
+
+        enabledEntries.setSize(defaultFields.size());
+        forAll(defaultFields, i)
+        {
+            enabledEntries[i] = objectNames[defaultFields[i]];
+        }
+    }
+    else
+    {
+        // Preserve the enabled selections
+        enabledEntries = getSelectedArrayEntries(fieldSelection);
+    }
+
+    fieldSelection->RemoveAllArrays();
+
+    addToSelection<fvPatchField, volMesh>
+    (
+        fieldSelection,
+        runTime,
+        times,
+        regionPrefix
+    );
+    addToSelection<fvsPatchField, surfaceMesh>
+    (
+        fieldSelection,
+        runTime,
+        times,
+        regionPrefix
+    );
+    addToSelection<pointPatchField, pointMesh>
+    (
+        fieldSelection,
+        runTime,
+        times,
+        regionPrefix
+    );
+
+    // Restore the enabled selections
+    setSelectedArrayEntries(fieldSelection, enabledEntries);
+
+    if (debug)
+    {
+        Info<< "<end> Foam::vtkPVFoam::updateInfoFields" << endl;
     }
 }
 

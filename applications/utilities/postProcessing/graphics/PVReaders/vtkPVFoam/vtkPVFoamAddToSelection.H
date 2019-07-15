@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 // OpenFOAM includes
 #include "IOobjectList.H"
 #include "SortableList.H"
+#include "surfaceFields.H"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
@@ -64,6 +65,56 @@ Foam::label Foam::vtkPVFoam::addToSelection
     }
 
     return names.size();
+}
+
+
+template<template<class> class patchType, class meshType>
+void Foam::vtkPVFoam::addToSelection
+(
+    vtkDataArraySelection *select,
+    const Time& runTime,
+    const instantList& times,
+    const word& regionPrefix,
+    const string& suffix
+)
+{
+    forAll(times, timei)
+    {
+        // Search for list of objects for this time and mesh region
+        IOobjectList objects(runTime, times[timei].name(), regionPrefix);
+
+        //- Add volume fields to GUI
+        addToSelection<GeometricField<scalar, patchType, meshType>>
+        (
+            select,
+            objects,
+            suffix
+        );
+        addToSelection<GeometricField<vector, patchType, meshType>>
+        (
+            select,
+            objects,
+            suffix
+        );
+        addToSelection<GeometricField<sphericalTensor, patchType, meshType>>
+        (
+            select,
+            objects,
+            suffix
+        );
+        addToSelection<GeometricField<symmTensor, patchType, meshType>>
+        (
+            select,
+            objects,
+            suffix
+        );
+        addToSelection<GeometricField<tensor, patchType, meshType>>
+        (
+            select,
+            objects,
+            suffix
+        );
+    }
 }
 
 

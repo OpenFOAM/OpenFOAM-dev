@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ Foam::IOobjectList Foam::vtkPVFoam::getObjects
 }
 
 
-void Foam::vtkPVFoam::convertVolFields
+void Foam::vtkPVFoam::convertFields
 (
     vtkMultiBlockDataSet* output
 )
@@ -91,7 +91,7 @@ void Foam::vtkPVFoam::convertVolFields
 
     wordHashSet selectedFields = getSelected
     (
-        reader_->GetVolFieldSelection()
+        reader_->GetFieldSelection()
     );
 
     if (selectedFields.empty())
@@ -168,92 +168,24 @@ void Foam::vtkPVFoam::convertVolFields
         mesh, ppInterpList, objects, interpFields, output
     );
 
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVFoam::convertVolFields" << endl;
-        printMemory();
-    }
-}
-
-
-void Foam::vtkPVFoam::convertPointFields
-(
-    vtkMultiBlockDataSet* output
-)
-{
-    const fvMesh& mesh = *meshPtr_;
-
-    wordHashSet selectedFields = getSelected
-    (
-        reader_->GetPointFieldSelection()
-    );
-
-    if (selectedFields.empty())
-    {
-        if (debug)
-        {
-            Info<< "no point fields selected" << endl;
-        }
-        return;
-    }
-
-    // Get objects (fields) for this time - only keep selected fields
-    // the region name is already in the mesh db
-    IOobjectList objects
-    (
-        getObjects
-        (
-            selectedFields,
-            mesh,
-            dbPtr_().timeName()
-        )
-    );
-
-    if (objects.empty())
-    {
-        return;
-    }
-
-    if (debug)
-    {
-        Info<< "<beg> Foam::vtkPVFoam::convertPointFields" << nl
-            << "converting OpenFOAM volume fields -> point fields" << endl;
-        forAllConstIter(IOobjectList, objects, iter)
-        {
-            Info<< "  " << iter()->name()
-                << " == " << iter()->objectPath() << nl;
-        }
-        printMemory();
-    }
+    convertSurfaceFields<scalar>(mesh, objects, output);
+    convertSurfaceFields<vector>(mesh, objects, output);
+    convertSurfaceFields<sphericalTensor>(mesh, objects, output);
+    convertSurfaceFields<symmTensor>(mesh, objects, output);
+    convertSurfaceFields<tensor>(mesh, objects, output);
 
     // Construct interpolation on the raw mesh
     const pointMesh& pMesh = pointMesh::New(mesh);
 
-
-    convertPointFields<scalar>
-    (
-        mesh, pMesh, objects, output
-    );
-    convertPointFields<vector>
-    (
-        mesh, pMesh, objects, output
-    );
-    convertPointFields<sphericalTensor>
-    (
-        mesh, pMesh, objects, output
-    );
-    convertPointFields<symmTensor>
-    (
-        mesh, pMesh, objects, output
-    );
-    convertPointFields<tensor>
-    (
-        mesh, pMesh, objects, output
-    );
+    convertPointFields<scalar>(mesh, pMesh, objects, output);
+    convertPointFields<vector>(mesh, pMesh, objects, output);
+    convertPointFields<sphericalTensor>(mesh, pMesh, objects, output);
+    convertPointFields<symmTensor>(mesh, pMesh, objects, output);
+    convertPointFields<tensor>(mesh, pMesh, objects, output);
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::convertPointFields" << endl;
+        Info<< "<end> Foam::vtkPVFoam::convertVolFields" << endl;
         printMemory();
     }
 }

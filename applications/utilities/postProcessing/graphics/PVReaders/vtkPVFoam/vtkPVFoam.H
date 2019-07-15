@@ -37,13 +37,12 @@ SourceFiles
     vtkPVFoamMeshSet.C
     vtkPVFoamMeshVolume.C
     vtkPVFoamMeshZone.C
-    vtkPVFoamFaceField.H
+    vtkPVFoamSurfaceField.H
     vtkPVFoamLagrangianFields.H
     vtkPVFoamPatchField.H
     vtkPVFoamPointFields.H
     vtkPVFoamPoints.H
     vtkPVFoamUpdateInfo.C
-    vtkPVFoamUpdateInfoFields.H
     vtkPVFoamUtils.C
     vtkPVFoamVolFields.H
     vtkPVFoamAddToSelection.H
@@ -68,6 +67,8 @@ SourceFiles
 #include "primitivePatch.H"
 #include "PrimitivePatchInterpolation.H"
 #include "volPointInterpolation.H"
+#include "surfaceFieldsFwd.H"
+#include "instantList.H"
 
 // * * * * * * * * * * * * * Forward Declarations  * * * * * * * * * * * * * //
 
@@ -380,9 +381,19 @@ class vtkPVFoam
                 const string& suffix=string::null
             );
 
-            //- Field info
+            //- Add objects of Type to paraview array selection
             template<template<class> class patchType, class meshType>
-            void updateInfoFields(vtkDataArraySelection*);
+            void addToSelection
+            (
+                vtkDataArraySelection *select,
+                const Time& runTime,
+                const instantList& times,
+                const word& regionPrefix,
+                const string& suffix=string::null
+            );
+
+            //- Field info
+            void updateInfoFields();
 
             //- Lagrangian field info
             void updateInfoLagrangianFields();
@@ -475,11 +486,8 @@ class vtkPVFoam
 
         // Field conversion functions
 
-            //- Convert volume fields
-            void convertVolFields(vtkMultiBlockDataSet*);
-
-            //- Convert point fields
-            void convertPointFields(vtkMultiBlockDataSet*);
+            //- Convert fields
+            void convertFields(vtkMultiBlockDataSet*);
 
             //- Convert Lagrangian fields
             void convertLagrangianFields(vtkMultiBlockDataSet*);
@@ -542,9 +550,9 @@ class vtkPVFoam
                 const label datasetNo
             );
 
-            //- Face set/zone field
+            //- Face set/zone field from volField
             template<class Type>
-            void convertFaceField
+            void convertSurfaceField
             (
                 const GeometricField<Type, fvPatchField, volMesh>&,
                 vtkMultiBlockDataSet* output,
@@ -552,6 +560,27 @@ class vtkPVFoam
                 const label datasetNo,
                 const fvMesh&,
                 const labelList& faceLabels
+            );
+
+            //- Face set/zone field from surfaceField
+            template<class Type>
+            void convertSurfaceField
+            (
+                const GeometricField<Type, fvsPatchField, surfaceMesh>& tf,
+                vtkMultiBlockDataSet* output,
+                const arrayRange& range,
+                const label datasetNo,
+                const fvMesh& mesh,
+                const labelList& faceLabels
+            );
+
+            //- Surface fields - all types
+            template<class Type>
+            void convertSurfaceFields
+            (
+                const fvMesh& mesh,
+                const IOobjectList& objects,
+                vtkMultiBlockDataSet* output
             );
 
             //- Lagrangian fields - all types

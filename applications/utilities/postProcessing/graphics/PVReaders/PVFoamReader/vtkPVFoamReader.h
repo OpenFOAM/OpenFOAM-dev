@@ -63,7 +63,6 @@ class vtkPVFoamReader
     public vtkMultiBlockDataSetAlgorithm
 {
 public:
-
     vtkTypeMacro(vtkPVFoamReader, vtkMultiBlockDataSetAlgorithm);
     void PrintSelf(ostream&, vtkIndent);
 
@@ -140,20 +139,12 @@ public:
     const char* GetPartArrayName(int index);
 
     // Description:
-    // volField selection list control
-    virtual vtkDataArraySelection* GetVolFieldSelection();
-    int  GetNumberOfVolFieldArrays();
-    int  GetVolFieldArrayStatus(const char* name);
-    void SetVolFieldArrayStatus(const char* name, int status);
-    const char* GetVolFieldArrayName(int index);
-
-    // Description:
-    // pointField selection list control
-    virtual vtkDataArraySelection* GetPointFieldSelection();
-    int  GetNumberOfPointFieldArrays();
-    int  GetPointFieldArrayStatus(const char* name);
-    void SetPointFieldArrayStatus(const char* name, int status);
-    const char* GetPointFieldArrayName(int index);
+    // Field selection list control
+    virtual vtkDataArraySelection* GetFieldSelection();
+    int  GetNumberOfFieldArrays();
+    int  GetFieldArrayStatus(const char* name);
+    void SetFieldArrayStatus(const char* name, int status);
+    const char* GetFieldArrayName(int index);
 
     // Description:
     // lagrangianField selection list control
@@ -181,9 +172,6 @@ protected:
 
     //- Construct null
     vtkPVFoamReader();
-
-    //- Disallow default bitwise copy construction
-    vtkPVFoamReader(const vtkPVFoamReader&) = delete;
 
     //- Destructor
     ~vtkPVFoamReader();
@@ -213,11 +201,14 @@ protected:
     //- The file name for this case
     char* FileName;
 
-    //- Disallow default bitwise assignment
-    void operator=(const vtkPVFoamReader&) = delete;
-
 
 private:
+
+    //- Disallow default bitwise copy construct
+    vtkPVFoamReader(const vtkPVFoamReader&);
+
+    //- Disallow default bitwise assignment
+    void operator=(const vtkPVFoamReader&);
 
     //- Add/remove patch names to/from the view
     void updatePatchNamesView(const bool show);
@@ -236,8 +227,7 @@ private:
     int InterpolateVolFields;
 
     vtkDataArraySelection* PartSelection;
-    vtkDataArraySelection* VolFieldSelection;
-    vtkDataArraySelection* PointFieldSelection;
+    vtkDataArraySelection* FieldSelection;
     vtkDataArraySelection* LagrangianFieldSelection;
 
     //- Cached data for output port0 (experimental!)

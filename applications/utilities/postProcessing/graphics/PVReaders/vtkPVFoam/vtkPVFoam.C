@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,6 @@ namespace Foam
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 #include "vtkPVFoamAddToSelection.H"
-#include "vtkPVFoamUpdateInfoFields.H"
 
 void Foam::vtkPVFoam::resetCounters()
 {
@@ -428,14 +427,51 @@ void Foam::vtkPVFoam::updateInfo()
     }
 
     // Update volume, point and lagrangian fields
-    updateInfoFields<fvPatchField, volMesh>
-    (
-        reader_->GetVolFieldSelection()
-    );
-    updateInfoFields<pointPatchField, pointMesh>
-    (
-        reader_->GetPointFieldSelection()
-    );
+    updateInfoFields();
+    updateInfoLagrangianFields();
+
+    {
+        // Use the db directly since this might be called without a mesh,
+        // but the region must get added back in
+        word regionPrefix;
+        if (meshRegion_ != polyMesh::defaultRegion)
+        {
+            regionPrefix = meshRegion_;
+        }
+
+        vtkDataArraySelection* select = reader_->GetFieldSelection();
+
+        stringList enabledEntries(getSelectedArrayEntries(select));
+        select->RemoveAllArrays();
+
+        const Time& runTime = dbPtr_();
+        const instantList times = runTime.times();
+        addToSelection<fvPatchField, volMesh>
+        (
+            select,
+            runTime,
+            times,
+            regionPrefix
+        );
+        addToSelection<fvsPatchField, surfaceMesh>
+        (
+            select,
+            runTime,
+            times,
+            regionPrefix
+        );
+        addToSelection<pointPatchField, pointMesh>
+        (
+            select,
+            runTime,
+            times,
+            regionPrefix
+        );
+
+        // Restore the enabled selections
+        setSelectedArrayEntries(select, enabledEntries);
+    }
+
     updateInfoLagrangianFields();
 
     if (debug)
@@ -556,13 +592,14 @@ void Foam::vtkPVFoam::Update
     reader_->UpdateProgress(0.8);
 
     // Update fields
-    convertVolFields(output);
-    convertPointFields(output);
+    convertFields(output);
     convertLagrangianFields(lagrangianOutput);
+
     if (debug)
     {
         Info<< "done reader part" << endl;
     }
+
     reader_->UpdateProgress(0.95);
 
     meshChanged_ = fieldsChanged_ = false;
