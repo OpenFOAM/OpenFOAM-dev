@@ -94,7 +94,7 @@ class scalarTransport
         scalar alphaDt_;
 
         //- Number of corrector iterations (optional)
-        label nCorr_;
+        int nCorr_;
 
         //- Name of field whose schemes are used (optional)
         word schemesField_;

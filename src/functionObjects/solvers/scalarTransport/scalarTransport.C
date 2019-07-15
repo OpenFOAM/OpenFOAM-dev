@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -189,7 +189,7 @@ bool Foam::functionObjects::scalarTransport::execute()
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
 
-        for (label i = 0; i <= nCorr_; i++)
+        for (int i=0; i<=nCorr_; i++)
         {
             fvScalarMatrix sEqn
             (
@@ -209,7 +209,7 @@ bool Foam::functionObjects::scalarTransport::execute()
     }
     else if (phi.dimensions() == dimVolume/dimTime)
     {
-        for (label i = 0; i <= nCorr_; i++)
+        for (int i=0; i<=nCorr_; i++)
         {
             fvScalarMatrix sEqn
             (

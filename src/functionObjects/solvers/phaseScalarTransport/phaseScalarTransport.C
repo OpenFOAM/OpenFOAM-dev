@@ -409,7 +409,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
     // Solve
     if (alphaPhi.dimensions() == dimVolume/dimTime)
     {
-        for (label i = 0; i <= nCorr_; ++ i)
+        for (int i=0; i<=nCorr_; i++)
         {
             fvScalarMatrix fieldEqn
             (
@@ -437,7 +437,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
 
-        for (label i = 0; i <= nCorr_; ++ i)
+        for (int i=0; i<=nCorr_; i++)
         {
             fvScalarMatrix fieldEqn
             (

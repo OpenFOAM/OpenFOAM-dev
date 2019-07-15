@@ -152,7 +152,7 @@ class phaseScalarTransport
         scalar alphaDt_;
 
         //- Number of corrector iterations (optional)
-        label nCorr_;
+        int nCorr_;
 
         //- Residual volume-fraction
         scalar residualAlpha_;
