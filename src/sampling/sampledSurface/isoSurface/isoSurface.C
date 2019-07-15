@@ -38,6 +38,15 @@ namespace Foam
     defineTypeNameAndDebug(isoSurface, 0);
 }
 
+namespace Foam
+{
+    template<>
+    const char* NamedEnum<isoSurface::filterType, 3>::names[] =
+        {"none", "partial", "full"};
+}
+
+const Foam::NamedEnum<Foam::isoSurface::filterType, 3>
+    Foam::isoSurface::filterTypeNames_;
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -75,11 +84,11 @@ Foam::isoSurface::cellCutType Foam::isoSurface::calcCutType
 
                 if (isTriCut(tri, pVals_))
                 {
-                    return CUT;
+                    return cellCutType::cut;
                 }
             }
         }
-        return NOTCUT;
+        return cellCutType::notCut;
     }
     else
     {
@@ -108,13 +117,7 @@ Foam::isoSurface::cellCutType Foam::isoSurface::calcCutType
                 break;
             }
 
-            label fp0 = tetBasePtIs_[facei];
-
-            // Fall back for problem decompositions
-            if (fp0 < 0)
-            {
-                fp0 = 0;
-            }
+            const label fp0 = tetBasePtIs_[facei] < 0 ? 0 : tetBasePtIs_[facei];
 
             label fp = f.fcIndex(fp0);
             for (label i = 2; i < f.size(); i++)
@@ -140,7 +143,7 @@ Foam::isoSurface::cellCutType Foam::isoSurface::calcCutType
         {
             // Count actual cuts (expensive since addressing needed)
             // Note: not needed if you don't want to preserve maxima/minima
-            // centred around cellcentre. In that case just always return CUT
+            // centred around cellcentre. In that case just always return cut
 
             const labelList& cPoints = mesh_.cellPoints(celli);
 
@@ -156,16 +159,16 @@ Foam::isoSurface::cellCutType Foam::isoSurface::calcCutType
 
             if (nPyrCuts == cPoints.size())
             {
-                return SPHERE;
+                return cellCutType::sphere;
             }
             else
             {
-                return CUT;
+                return cellCutType::cut;
             }
         }
         else
         {
-            return NOTCUT;
+            return cellCutType::notCut;
         }
     }
 }
@@ -185,7 +188,7 @@ Foam::label Foam::isoSurface::calcCutTypes
     {
         cellCutTypes[celli] = calcCutType(tet.isA(mesh_, celli), celli);
 
-        if (cellCutTypes[celli] == CUT)
+        if (cellCutTypes[celli] == cellCutType::cut)
         {
             nCutCells++;
         }
@@ -247,37 +250,31 @@ void Foam::isoSurface::fixTetBasePtIs()
     tetBasePtIs_ = mesh_.tetBasePtIs();
 
 
-    // Pre-filter: mark all cells with illegal base points
-    labelHashSet problemCells(cells.size()/128);
+    // Mark all cells with illegal base points as potentially problematic
+    PackedBoolList problemCells(cells.size(), false);
     forAll(tetBasePtIs_, facei)
     {
         if (tetBasePtIs_[facei] == -1)
         {
-            problemCells.insert(faceOwner[facei]);
+            problemCells[faceOwner[facei]] = true;
             if (mesh_.isInternalFace(facei))
             {
-                problemCells.insert(faceNeighbour[facei]);
+                problemCells[faceNeighbour[facei]] = true;
             }
         }
     }
 
 
-    label nAdapted = 0;
-
-
-    // Number of times a point occurs in a cell. Used to detect dangling
-    // vertices (count = 2)
-    Map<label> pointCount;
-
-    // Analyse problem cells for points shared by two faces only
+    // Mark all points which are shared by just two faces within an adjacent
+    // problem cell as problematic
+    PackedBoolList problemPoints(mesh_.points().size(), false);
     forAll(cells, celli)
     {
-        if (problemCells.found(celli))
+        if (problemCells[celli])
         {
             const cell& cFaces = cells[celli];
 
-            pointCount.clear();
-
+            Map<label> pointCount;
             forAll(cFaces, i)
             {
                 const label facei = cFaces[i];
@@ -293,13 +290,11 @@ void Foam::isoSurface::fixTetBasePtIs()
                     }
                     else
                     {
-                        ++pointFnd();
+                        ++ pointFnd();
                     }
                 }
             }
 
-            // Check for any points with count 2
-            bool haveDangling = false;
             forAllConstIter(Map<label>, pointCount, iter)
             {
                 if (iter() == 1)
@@ -308,63 +303,75 @@ void Foam::isoSurface::fixTetBasePtIs()
                         << " at:" << mesh_.points()[iter.key()]
                         << " only used by one face" << exit(FatalError);
                 }
-                else if (iter() == 2)
+                if (iter() == 2)
                 {
-                    haveDangling = true;
-                    break;
+                    problemPoints[iter.key()] = true;
                 }
             }
+        }
+    }
 
-            if (haveDangling)
+
+    // For all faces which form a part of a problem-cell, check if the base
+    // point is adjacent to any problem points. If it is, re-calculate the base
+    // point so that it is not.
+    label nAdapted = 0;
+    forAll(tetBasePtIs_, facei)
+    {
+        if
+        (
+            problemCells[faceOwner[facei]]
+         || (mesh_.isInternalFace(facei) && problemCells[faceNeighbour[facei]])
+        )
+        {
+            const face& f = faces[facei];
+
+            // Check if either of the points adjacent to the base point is a
+            // problem point. If not, the existing base point can be retained.
+            const label fp0 = tetBasePtIs_[facei] < 0 ? 0 : tetBasePtIs_[facei];
+
+            const bool prevPointIsProblem = problemPoints[f[f.rcIndex(fp0)]];
+            const bool nextPointIsProblem = problemPoints[f[f.fcIndex(fp0)]];
+
+            if (!prevPointIsProblem && !nextPointIsProblem)
             {
-                // Any point next to a dangling point should not be used
-                // as the fan base since this would cause two duplicate
-                // triangles.
-                forAll(cFaces, i)
+                continue;
+            }
+
+            // A new base point is required. Pick the point that results in the
+            // least-worst-worst tet, and which is not adjacent to any problem
+            // points.
+            scalar maxQ = -GREAT;
+            label maxFp = -1;
+            forAll(f, fp)
+            {
+                const bool prevPointIsProblem = problemPoints[f[f.rcIndex(fp)]];
+                const bool nextPointIsProblem = problemPoints[f[f.fcIndex(fp)]];
+
+                if (!prevPointIsProblem && !nextPointIsProblem)
                 {
-                    const label facei = cFaces[i];
-                    if (tetBasePtIs_[facei] == -1)
+                    const scalar q = minTetQ(facei, fp);
+                    if (q > maxQ)
                     {
-                        const face& f = faces[facei];
-
-                        // All the possible base points cause negative tets.
-                        // Choose the least-worst one
-                        scalar maxQ = -GREAT;
-                        label maxFp = -1;
-
-                        label prevCount = pointCount[f.last()];
-                        forAll(f, fp)
-                        {
-                            label nextCount = pointCount[f[f.fcIndex(fp)]];
-
-                            if (prevCount > 2 && nextCount > 2)
-                            {
-                                const scalar q = minTetQ(facei, fp);
-                                if (q > maxQ)
-                                {
-                                    maxQ = q;
-                                    maxFp = fp;
-                                }
-                            }
-                            prevCount = pointCount[f[fp]];
-                        }
-
-                        if (maxFp != -1)
-                        {
-                            // Least worst base point
-                            tetBasePtIs_[facei] = maxFp;
-                        }
-                        else
-                        {
-                            // No point found on face that would not result
-                            // in some duplicate triangle. Very rare. Do what?
-                            tetBasePtIs_[facei] = 0;
-                        }
-
-                        nAdapted++;
+                        maxQ = q;
+                        maxFp = fp;
                     }
                 }
             }
+
+            if (maxFp != -1)
+            {
+                // Success! Set the new base point
+                tetBasePtIs_[facei] = maxFp;
+            }
+            else
+            {
+                // No point was found on face that would not result in some
+                // duplicate triangle. Do what? Continue and hope? Spit an
+                // error? Silently or noisily reduce the filtering level?
+            }
+
+            ++ nAdapted;
         }
     }
 
@@ -373,8 +380,6 @@ void Foam::isoSurface::fixTetBasePtIs()
         Pout<< "isoSurface : adapted starting point of triangulation on "
             << nAdapted << " faces." << endl;
     }
-
-    syncTools::syncFaceList(mesh_, tetBasePtIs_, maxEqOp<label>());
 }
 
 
@@ -908,15 +913,9 @@ void Foam::isoSurface::generateTriPoints
             label facei = cFaces[cFacei];
             const face& f = faces[facei];
 
-            label fp0 = tetBasePtIs_[facei];
+            const label fp0 = tetBasePtIs_[facei] < 0 ? 0 : tetBasePtIs_[facei];
 
             label startTrii = verts.size();
-
-            // Fallback
-            if (fp0 < 0)
-            {
-                fp0 = 0;
-            }
 
             label fp = f.fcIndex(fp0);
             for (label i = 2; i < f.size(); i++)
@@ -1171,7 +1170,8 @@ Foam::isoSurface::isoSurface
 {
     if (debug)
     {
-        Pout<< "isoSurface : iso:" << iso_ << " filter:" << filter << endl;
+        Pout<< "isoSurface : iso:" << iso_
+            << " filter:" << filterTypeNames_[filter] << endl;
     }
 
     fixTetBasePtIs();
@@ -1205,7 +1205,7 @@ Foam::isoSurface::isoSurface
     for (label celli = 0; celli < mesh_.nCells(); celli++)
     {
         startTri[celli] = faceLabels.size();
-        if (cellCutTypes[celli] != NOTCUT)
+        if (cellCutTypes[celli] != cellCutType::notCut)
         {
             generateTriPoints
             (
@@ -1288,7 +1288,7 @@ Foam::isoSurface::isoSurface
     }
 
 
-    if (filter != NONE)
+    if (filter != filterType::none)
     {
         // Triangulate outside (filter edges to cell centres and optionally
         // face diagonals)
@@ -1298,7 +1298,7 @@ Foam::isoSurface::isoSurface
         (
             removeInsidePoints
             (
-                (filter == DIAGCELL ? true : false),
+                (filter == filterType::full ? true : false),
                 *this,
                 pointFromDiag,
                 pointToFace_,
@@ -1321,7 +1321,7 @@ Foam::isoSurface::isoSurface
         }
 
 
-        if (filter == DIAGCELL)
+        if (filter == filterType::full)
         {
             // We remove verts on face diagonals. This is in fact just
             // straightening the edges of the face through the cell. This can

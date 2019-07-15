@@ -225,7 +225,7 @@ void Foam::sampledSurfaces::cuttingPlane::createGeometry()
             cellDistance,
             pointDistance_,
             0,
-            regularise_ ? isoSurface::DIAGCELL : isoSurface::NONE
+            filter_
         )
     );
 
@@ -248,7 +248,12 @@ Foam::sampledSurfaces::cuttingPlane::cuttingPlane
 :
     sampledSurface(name, mesh, dict),
     plane_(dict),
-    regularise_(dict.lookupOrDefault("regularise", true)),
+    filter_
+    (
+        dict.found("filtering")
+      ? isoSurface::filterTypeNames_.read(dict.lookup("filtering"))
+      : isoSurface::filterType::full
+    ),
     average_(dict.lookupOrDefault("average", false)),
     zoneID_(dict.lookupOrDefault("zone", word::null), mesh.cellZones()),
     exposedPatchName_(word::null),

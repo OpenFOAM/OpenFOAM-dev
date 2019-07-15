@@ -269,7 +269,7 @@ void Foam::sampledSurfaces::distanceSurface::createGeometry()
             cellDistance,
             pointDistance_,
             distance_,
-            regularise_ ? isoSurface::DIAGCELL : isoSurface::NONE
+            filter_
         )
     );
 
@@ -310,7 +310,12 @@ Foam::sampledSurfaces::distanceSurface::distanceSurface
     ),
     distance_(readScalar(dict.lookup("distance"))),
     signed_(readBool(dict.lookup("signed"))),
-    regularise_(dict.lookupOrDefault("regularise", true)),
+    filter_
+    (
+        dict.found("filtering")
+      ? isoSurface::filterTypeNames_.read(dict.lookup("filtering"))
+      : isoSurface::filterType::full
+    ),
     average_(dict.lookupOrDefault("average", false)),
     zoneKey_(keyType::null),
     needsUpdate_(true),
@@ -327,7 +332,7 @@ Foam::sampledSurfaces::distanceSurface::distanceSurface
     const word& surfaceName,
     const scalar distance,
     const bool signedDistance,
-    const Switch regularise,
+    const isoSurface::filterType filter,
     const Switch average
 )
 :
@@ -351,7 +356,7 @@ Foam::sampledSurfaces::distanceSurface::distanceSurface
     ),
     distance_(distance),
     signed_(signedDistance),
-    regularise_(regularise),
+    filter_(filter),
     average_(average),
     zoneKey_(keyType::null),
     needsUpdate_(true),
