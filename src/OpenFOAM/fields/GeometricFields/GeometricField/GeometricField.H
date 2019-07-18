@@ -451,6 +451,15 @@ public:
         //- Clone
         tmp<GeometricField<Type, PatchField, GeoMesh>> clone() const;
 
+        //- Return a temporary field constructed from name,
+        //  internal field and list of patch fields
+        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        (
+            const word& name,
+            const Internal&,
+            const PtrList<PatchField<Type>>&
+        );
+
         //- Return a temporary field constructed from name, mesh, dimensionSet
         //  and patch type.
         static tmp<GeometricField<Type, PatchField, GeoMesh>> New
