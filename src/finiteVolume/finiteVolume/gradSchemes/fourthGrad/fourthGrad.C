@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,16 +72,9 @@ Foam::fv::fourthGrad<Type>::calcGrad
 
     tmp<GeometricField<GradType, fvPatchField, volMesh>> tfGrad
     (
-        new GeometricField<GradType, fvPatchField, volMesh>
+        GeometricField<GradType, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                name,
-                vsf.instance(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            name,
             secondfGrad
         )
     );

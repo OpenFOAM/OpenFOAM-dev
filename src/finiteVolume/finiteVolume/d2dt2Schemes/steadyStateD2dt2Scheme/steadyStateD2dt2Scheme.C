@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,25 +46,15 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return GeometricField<Type, fvPatchField, volMesh>::New
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        "d2dt2("+vf.name()+')',
+        mesh(),
+        dimensioned<Type>
         (
-            IOobject
-            (
-                "d2dt2("+vf.name()+')',
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh(),
-            dimensioned<Type>
-            (
-                "0",
-                vf.dimensions()/dimTime/dimTime,
-                Zero
-            )
+            "0",
+            vf.dimensions()/dimTime/dimTime,
+            Zero
         )
     );
 }
@@ -78,25 +68,15 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return GeometricField<Type, fvPatchField, volMesh>::New
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        "d2dt2("+rho.name()+','+vf.name()+')',
+        mesh(),
+        dimensioned<Type>
         (
-            IOobject
-            (
-                "d2dt2("+rho.name()+','+vf.name()+')',
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh(),
-            dimensioned<Type>
-            (
-                "0",
-                rho.dimensions()*vf.dimensions()/dimTime/dimTime,
-                Zero
-            )
+            "0",
+            rho.dimensions()*vf.dimensions()/dimTime/dimTime,
+            Zero
         )
     );
 }

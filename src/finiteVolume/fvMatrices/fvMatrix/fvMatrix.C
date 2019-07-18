@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -761,16 +761,9 @@ Foam::fvMatrix<Type>::H() const
 {
     tmp<GeometricField<Type, fvPatchField, volMesh>> tHphi
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                "H("+psi_.name()+')',
-                psi_.instance(),
-                psi_.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "H("+psi_.name()+')',
             psi_.mesh(),
             dimensions_/dimVol,
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -874,16 +867,9 @@ flux() const
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tfieldFlux
     (
-        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        GeometricField<Type, fvsPatchField, surfaceMesh>::New
         (
-            IOobject
-            (
-                "flux("+psi_.name()+')',
-                psi_.instance(),
-                psi_.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "flux("+psi_.name()+')',
             psi_.mesh(),
             dimensions()
         )
@@ -977,7 +963,7 @@ void Foam::fvMatrix<Type>::operator=(const fvMatrix<Type>& fvmv)
     {
         faceFluxCorrectionPtr_ =
             new GeometricField<Type, fvsPatchField, surfaceMesh>
-        (*fvmv.faceFluxCorrectionPtr_);
+            (*fvmv.faceFluxCorrectionPtr_);
     }
 }
 
@@ -1058,7 +1044,7 @@ void Foam::fvMatrix<Type>::operator-=(const fvMatrix<Type>& fvmv)
     {
         faceFluxCorrectionPtr_ =
             new GeometricField<Type, fvsPatchField, surfaceMesh>
-        (-*fvmv.faceFluxCorrectionPtr_);
+            (-*fvmv.faceFluxCorrectionPtr_);
     }
 }
 
@@ -2206,16 +2192,9 @@ Foam::operator&
 {
     tmp<GeometricField<Type, fvPatchField, volMesh>> tMphi
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                "M&" + psi.name(),
-                psi.instance(),
-                psi.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "M&" + psi.name(),
             psi.mesh(),
             M.dimensions()/dimVol,
             extrapolatedCalculatedFvPatchScalarField::typeName

@@ -95,7 +95,8 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
                     procMeshes_[proci].time().timeName(),
                     procMeshes_[proci],
                     IOobject::MUST_READ,
-                    IOobject::NO_WRITE
+                    IOobject::NO_WRITE,
+                    false
                 ),
                 procMeshes_[proci]
             )
@@ -111,7 +112,8 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
-            IOobject::NO_WRITE
+            IOobject::NO_WRITE,
+            false
         ),
         procFields
     );
@@ -322,7 +324,8 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                     procMeshes_[proci].time().timeName(),
                     procMeshes_[proci],
                     IOobject::MUST_READ,
-                    IOobject::NO_WRITE
+                    IOobject::NO_WRITE,
+                    false
                 ),
                 procMeshes_[proci]
             )
@@ -337,7 +340,8 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
-            IOobject::NO_WRITE
+            IOobject::NO_WRITE,
+            false
         ),
         procFields
     );
@@ -574,7 +578,8 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                     procMeshes_[proci].time().timeName(),
                     procMeshes_[proci],
                     IOobject::MUST_READ,
-                    IOobject::NO_WRITE
+                    IOobject::NO_WRITE,
+                    false
                 ),
                 procMeshes_[proci]
             )
@@ -589,7 +594,8 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
-            IOobject::NO_WRITE
+            IOobject::NO_WRITE,
+            false
         ),
         procFields
     );

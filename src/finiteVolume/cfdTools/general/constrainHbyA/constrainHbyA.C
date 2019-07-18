@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
     }
     else
     {
-        tHbyANew = new volVectorField("HbyA", tHbyA);
+        tHbyANew = volVectorField::New("HbyA", tHbyA);
     }
 
     volVectorField& HbyA = tHbyANew.ref();

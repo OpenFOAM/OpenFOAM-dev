@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,17 +98,9 @@ Foam::extendedCellToFaceStencil::weightedSum
 
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
     (
-        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        GeometricField<Type, fvsPatchField, surfaceMesh>::New
         (
-            IOobject
-            (
-                fld.name(),
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            fld.name(),
             mesh,
             dimensioned<Type>
             (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,19 +37,11 @@ Foam::StationaryPhaseModel<BasePhaseModel>::zeroField
     const bool cache
 ) const
 {
-    return tmp<GeometricField<Type, PatchField, GeoMesh>>
+    return GeometricField<Type, PatchField, GeoMesh>::New
     (
-        new GeometricField<Type, PatchField, GeoMesh>
-        (
-            IOobject
-            (
-                IOobject::groupName(name, this->name()),
-                this->mesh().time().timeName(),
-                this->mesh()
-            ),
-            this->mesh(),
-            dimensioned<Type>("zero", dims, pTraits<Type>::zero)
-        )
+        IOobject::groupName(name, this->name()),
+        this->mesh(),
+        dimensioned<Type>("zero", dims, pTraits<Type>::zero)
     );
 }
 

@@ -133,14 +133,9 @@ public:
 
             tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
             (
-                new GeometricField<Type, fvsPatchField, surfaceMesh>
+                GeometricField<Type, fvsPatchField, surfaceMesh>::New
                 (
-                    IOobject
-                    (
-                        "skewCorrected::skewCorrection(" + vf.name() + ')',
-                        mesh.time().timeName(),
-                        mesh
-                    ),
+                    "skewCorrected::skewCorrection(" + vf.name() + ')',
                     mesh,
                     dimensioned<Type>
                     (

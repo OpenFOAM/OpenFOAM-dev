@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -379,14 +379,9 @@ Foam::volPointInterpolation::interpolate
     // Construct tmp<pointField>
     tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf
     (
-        new GeometricField<Type, pointPatchField, pointMesh>
+        GeometricField<Type, pointPatchField, pointMesh>::New
         (
-            IOobject
-            (
-                "volPointInterpolate(" + vf.name() + ')',
-                vf.instance(),
-                pm.thisDb()
-            ),
+            "volPointInterpolate(" + vf.name() + ')',
             pm,
             vf.dimensions(),
             patchFieldTypes
@@ -454,14 +449,9 @@ Foam::volPointInterpolation::interpolate
 
         tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf
         (
-            new GeometricField<Type, pointPatchField, pointMesh>
+            GeometricField<Type, pointPatchField, pointMesh>::New
             (
-                IOobject
-                (
-                    name,
-                    vf.instance(),
-                    pm.thisDb()
-                ),
+                name,
                 pm,
                 vf.dimensions()
             )

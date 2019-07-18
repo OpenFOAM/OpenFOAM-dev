@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,16 +109,9 @@ snGradScheme<Type>::snGrad
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
     (
-        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        GeometricField<Type, fvsPatchField, surfaceMesh>::New
         (
-            IOobject
-            (
-                snGradName + "("+vf.name()+')',
-                vf.instance(),
-                vf.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            snGradName + "("+vf.name()+')',
             mesh,
             vf.dimensions()*tdeltaCoeffs().dimensions()
         )

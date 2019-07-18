@@ -119,14 +119,9 @@ public:
 
             tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tvff
             (
-                new GeometricField<Type, fvsPatchField, surfaceMesh>
+                GeometricField<Type, fvsPatchField, surfaceMesh>::New
                 (
-                    IOobject
-                    (
-                        "localMin::interpolate(" + vf.name() + ')',
-                        mesh.time().timeName(),
-                        mesh
-                    ),
+                    "localMin::interpolate(" + vf.name() + ')',
                     mesh,
                     vf.dimensions()
                 )

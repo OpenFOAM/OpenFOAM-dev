@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,16 +87,9 @@ surfaceIntegrate
 
     tmp<GeometricField<Type, fvPatchField, volMesh>> tvf
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                "surfaceIntegrate("+ssf.name()+')',
-                ssf.instance(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "surfaceIntegrate("+ssf.name()+')',
             mesh,
             dimensioned<Type>
             (
@@ -143,16 +136,9 @@ surfaceSum
 
     tmp<GeometricField<Type, fvPatchField, volMesh>> tvf
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                "surfaceSum("+ssf.name()+')',
-                ssf.instance(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "surfaceSum("+ssf.name()+')',
             mesh,
             dimensioned<Type>("0", ssf.dimensions(), Zero),
             extrapolatedCalculatedFvPatchField<Type>::typeName

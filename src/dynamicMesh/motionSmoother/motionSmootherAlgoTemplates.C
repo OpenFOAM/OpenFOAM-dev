@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,17 +143,9 @@ Foam::motionSmootherAlgo::avg
 {
     tmp<GeometricField<Type, pointPatchField, pointMesh>> tres
     (
-        new GeometricField<Type, pointPatchField, pointMesh>
+        GeometricField<Type, pointPatchField, pointMesh>::New
         (
-            IOobject
-            (
-                "avg("+fld.name()+')',
-                fld.time().timeName(),
-                fld.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "avg("+fld.name()+')',
             fld.mesh(),
             dimensioned<Type>("zero", fld.dimensions(), Zero)
         )

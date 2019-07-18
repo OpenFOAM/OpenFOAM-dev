@@ -164,17 +164,9 @@ Foam::sampledSurface::pointAverage
 
     tmp<GeometricField<Type, fvPatchField, volMesh>> tcellAvg
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                "cellAvg",
-                mesh.time().timeName(),
-                pfld.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "cellAvg",
             mesh,
             dimensioned<Type>("zero", dimless, Zero)
         )

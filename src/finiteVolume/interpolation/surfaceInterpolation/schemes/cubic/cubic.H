@@ -123,17 +123,9 @@ public:
 
             tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
             (
-                new GeometricField<Type, fvsPatchField, surfaceMesh>
+                GeometricField<Type, fvsPatchField, surfaceMesh>::New
                 (
-                    IOobject
-                    (
-                        "cubic::correction(" + vf.name() +')',
-                        mesh.time().timeName(),
-                        mesh,
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
+                    "cubic::correction(" + vf.name() +')',
                     surfaceInterpolationScheme<Type>::interpolate(vf, kSc, -kSc)
                 )
             );
