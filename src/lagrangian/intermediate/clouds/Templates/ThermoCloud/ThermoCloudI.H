@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -338,7 +338,7 @@ Foam::ThermoCloud<CloudType>::sigmap() const
         const scalar f = constProps_.f0();
         const scalarField& sumAreaP = radAreaP_->field();
 
-        sigmap *= sumAreaP*(1.0 - f)*(1.0 - epsilon)/V/dt;
+        sigmap = sumAreaP*(1.0 - f)*(1.0 - epsilon)/V/dt;
     }
 
     return tsigmap;

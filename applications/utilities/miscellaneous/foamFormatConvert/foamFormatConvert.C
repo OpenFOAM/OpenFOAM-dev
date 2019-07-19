@@ -364,15 +364,19 @@ int main(int argc, char *argv[])
 
 
         // Check for lagrangian
-        stringList lagrangianDirs
+        const fileName lagrangianDir
         (
-            1,
             fileHandler().filePath
             (
                 runTime.timePath()
               / regionPrefix
               / cloud::prefix
             )
+        );
+        stringList lagrangianDirs
+        (
+            lagrangianDir == fileName::null ? 0 : 1,
+            lagrangianDir
         );
 
         combineReduce(lagrangianDirs, uniqueEqOp());
@@ -394,7 +398,7 @@ int main(int argc, char *argv[])
                     (
                         IOobject
                         (
-                            polyMesh::defaultRegion,
+                            regionName,
                             runTime.timeName(),
                             runTime,
                             Foam::IOobject::MUST_READ
