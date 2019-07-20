@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,8 @@ Application
 Description
     Legacy VTK file format writer.
 
-    - Handles volFields, pointFields, surfaceScalarField, surfaceVectorField
-      fields.
+    - Handles volFields, volFields::Internal, pointFields,
+      surfaceScalarField and surfaceVectorField.
     - Mesh topo changes.
     - Both ascii and binary.
     - Single time step writing.
@@ -497,7 +497,6 @@ int main(int argc, char *argv[])
             Info<< "    Read new mesh" << nl << endl;
         }
 
-
         // If faceSet: write faceSet only (as polydata)
         if (faceSetName.size())
         {
@@ -521,6 +520,7 @@ int main(int argc, char *argv[])
 
             continue;
         }
+
         // If pointSet: write pointSet only (as polydata)
         if (pointSetName.size())
         {
@@ -556,12 +556,61 @@ int main(int argc, char *argv[])
             selectedFields
         );
 
+
+        // Construct the vol internal fields (on the original mesh if subsetted)
+
+        PtrList<const volScalarField::Internal> visf;
+        PtrList<const volVectorField::Internal> vivf;
+        PtrList<const volSphericalTensorField::Internal> visptf;
+        PtrList<const volSymmTensorField::Internal> visytf;
+        PtrList<const volTensorField::Internal> vitf;
+
+        if (!specifiedFields || selectedFields.size())
+        {
+            readFields(vMesh, vMesh.baseMesh(), objects, selectedFields, visf);
+            print("    volScalarField::Internal   :", Info, visf);
+
+            readFields(vMesh, vMesh.baseMesh(), objects, selectedFields, vivf);
+            print("    volVectorField::Internal   :", Info, vivf);
+
+            readFields
+            (
+                vMesh,
+                vMesh.baseMesh(),
+                objects,
+                selectedFields,
+                visptf
+            );
+            print("    volSphericalTensorFields::Internal   :", Info, visptf);
+
+            readFields
+            (
+                vMesh,
+                vMesh.baseMesh(),
+                objects,
+                selectedFields,
+                visytf
+            );
+            print("    volSymmTensorFields::Internal        :", Info, visytf);
+
+            readFields(vMesh, vMesh.baseMesh(), objects, selectedFields, vitf);
+            print("    volTensorFields::Internal  :", Info, vitf);
+        }
+
+        label nVolInternalFields =
+                visf.size()
+              + vivf.size()
+              + visptf.size()
+              + visytf.size()
+              + vitf.size();
+
+
         // Construct the vol fields (on the original mesh if subsetted)
 
         PtrList<const volScalarField> vsf;
         PtrList<const volVectorField> vvf;
-        PtrList<const volSphericalTensorField> vSpheretf;
-        PtrList<const volSymmTensorField> vSymmtf;
+        PtrList<const volSphericalTensorField> vsptf;
+        PtrList<const volSymmTensorField> vsytf;
         PtrList<const volTensorField> vtf;
 
         if (!specifiedFields || selectedFields.size())
@@ -578,9 +627,9 @@ int main(int argc, char *argv[])
                 vMesh.baseMesh(),
                 objects,
                 selectedFields,
-                vSpheretf
+                vsptf
             );
-            print("    volSphericalTensorFields   :", Info, vSpheretf);
+            print("    volSphericalTensorFields   :", Info, vsptf);
 
             readFields
             (
@@ -588,9 +637,9 @@ int main(int argc, char *argv[])
                 vMesh.baseMesh(),
                 objects,
                 selectedFields,
-                vSymmtf
+                vsytf
             );
-            print("    volSymmTensorFields        :", Info, vSymmtf);
+            print("    volSymmTensorFields        :", Info, vsytf);
 
             readFields(vMesh, vMesh.baseMesh(), objects, selectedFields, vtf);
             print("    volTensorFields            :", Info, vtf);
@@ -599,13 +648,12 @@ int main(int argc, char *argv[])
         label nVolFields =
                 vsf.size()
               + vvf.size()
-              + vSpheretf.size()
-              + vSymmtf.size()
+              + vsptf.size()
+              + vsytf.size()
               + vtf.size();
 
 
-        // Construct pointMesh only if necessary since constructs edge
-        // addressing (expensive on polyhedral meshes)
+        // Construct pointMesh only if requested
         if (noPointValues)
         {
             Info<< "    pointScalarFields : switched off"
@@ -616,8 +664,8 @@ int main(int argc, char *argv[])
 
         PtrList<const pointScalarField> psf;
         PtrList<const pointVectorField> pvf;
-        PtrList<const pointSphericalTensorField> pSpheretf;
-        PtrList<const pointSymmTensorField> pSymmtf;
+        PtrList<const pointSphericalTensorField> psptf;
+        PtrList<const pointSymmTensorField> psytf;
         PtrList<const pointTensorField> ptf;
 
         if (!noPointValues && !(specifiedFields && selectedFields.empty()))
@@ -648,9 +696,9 @@ int main(int argc, char *argv[])
                 pointMesh::New(vMesh.baseMesh()),
                 objects,
                 selectedFields,
-                pSpheretf
+                psptf
             );
-            print("    pointSphericalTensorFields :", Info, pSpheretf);
+            print("    pointSphericalTensorFields :", Info, psptf);
 
             readFields
             (
@@ -658,9 +706,9 @@ int main(int argc, char *argv[])
                 pointMesh::New(vMesh.baseMesh()),
                 objects,
                 selectedFields,
-                pSymmtf
+                psytf
             );
-            print("    pointSymmTensorFields      :", Info, pSymmtf);
+            print("    pointSymmTensorFields      :", Info, psytf);
 
             readFields
             (
@@ -677,8 +725,8 @@ int main(int argc, char *argv[])
         label nPointFields =
             psf.size()
           + pvf.size()
-          + pSpheretf.size()
-          + pSymmtf.size()
+          + psptf.size()
+          + psytf.size()
           + ptf.size();
 
         if (doWriteInternal)
@@ -697,22 +745,29 @@ int main(int argc, char *argv[])
             // Write mesh
             internalWriter writer(vMesh, binary, vtkFileName);
 
-            // VolFields + cellID
+            // cellID + volFields::Internal + VolFields
             writeFuns::writeCellDataHeader
             (
                 writer.os(),
                 vMesh.nFieldCells(),
-                1+nVolFields
+                1 + nVolInternalFields + nVolFields
             );
 
             // Write cellID field
             writer.writeCellIDs();
 
+            // Write volFields::Internal
+            writer.write(visf);
+            writer.write(vivf);
+            writer.write(visptf);
+            writer.write(visytf);
+            writer.write(vitf);
+
             // Write volFields
             writer.write(vsf);
             writer.write(vvf);
-            writer.write(vSpheretf);
-            writer.write(vSymmtf);
+            writer.write(vsptf);
+            writer.write(vsytf);
             writer.write(vtf);
 
             if (!noPointValues)
@@ -721,22 +776,22 @@ int main(int argc, char *argv[])
                 (
                     writer.os(),
                     vMesh.nFieldPoints(),
-                    nVolFields+nPointFields
+                    nVolFields + nPointFields
                 );
 
                 // pointFields
                 writer.write(psf);
                 writer.write(pvf);
-                writer.write(pSpheretf);
-                writer.write(pSymmtf);
+                writer.write(psptf);
+                writer.write(psytf);
                 writer.write(ptf);
 
                 // Interpolated volFields
                 volPointInterpolation pInterp(mesh);
                 writer.write(pInterp, vsf);
                 writer.write(pInterp, vvf);
-                writer.write(pInterp, vSpheretf);
-                writer.write(pInterp, vSymmtf);
+                writer.write(pInterp, vsptf);
+                writer.write(pInterp, vsytf);
                 writer.write(pInterp, vtf);
             }
         }
@@ -776,7 +831,7 @@ int main(int argc, char *argv[])
                 // Rework the scalar fields into vectorfields.
                 label sz = svf.size();
 
-                svf.setSize(sz+ssf.size());
+                svf.setSize(sz + ssf.size());
 
                 surfaceVectorField n(mesh.Sf()/mesh.magSf());
 
@@ -858,7 +913,7 @@ int main(int argc, char *argv[])
             (
                 writer.os(),
                 writer.nFaces(),
-                1+nVolFields
+                1 + nVolFields
             );
 
             // Write patchID field
@@ -867,8 +922,8 @@ int main(int argc, char *argv[])
             // Write volFields
             writer.write(vsf);
             writer.write(vvf);
-            writer.write(vSpheretf);
-            writer.write(vSymmtf);
+            writer.write(vsptf);
+            writer.write(vsytf);
             writer.write(vtf);
 
             if (!noPointValues)
@@ -883,12 +938,9 @@ int main(int argc, char *argv[])
                 // Write pointFields
                 writer.write(psf);
                 writer.write(pvf);
-                writer.write(pSpheretf);
-                writer.write(pSymmtf);
+                writer.write(psptf);
+                writer.write(psytf);
                 writer.write(ptf);
-
-                // no interpolated volFields since I cannot be bothered to
-                // create the patchInterpolation for all subpatches.
             }
         }
         else
@@ -938,7 +990,7 @@ int main(int argc, char *argv[])
                         (
                             writer.os(),
                             writer.nFaces(),
-                            1+nVolFields
+                            1 + nVolFields
                         );
 
                         // Write patchID field
@@ -947,8 +999,8 @@ int main(int argc, char *argv[])
                         // Write volFields
                         writer.write(vsf);
                         writer.write(vvf);
-                        writer.write(vSpheretf);
-                        writer.write(vSymmtf);
+                        writer.write(vsptf);
+                        writer.write(vsytf);
                         writer.write(vtf);
 
                         if (!noPointValues)
@@ -964,8 +1016,8 @@ int main(int argc, char *argv[])
                             // Write pointFields
                             writer.write(psf);
                             writer.write(pvf);
-                            writer.write(pSpheretf);
-                            writer.write(pSymmtf);
+                            writer.write(psptf);
+                            writer.write(psytf);
                             writer.write(ptf);
 
                             PrimitivePatchInterpolation<primitivePatch> pInter
@@ -976,8 +1028,8 @@ int main(int argc, char *argv[])
                             // Write interpolated volFields
                             writer.write(pInter, vsf);
                             writer.write(pInter, vvf);
-                            writer.write(pInter, vSpheretf);
-                            writer.write(pInter, vSymmtf);
+                            writer.write(pInter, vsptf);
+                            writer.write(pInter, vsytf);
                             writer.write(pInter, vtf);
                         }
                     }
@@ -1063,7 +1115,7 @@ int main(int argc, char *argv[])
                 (
                     writer.os(),
                     pp.size(),
-                    ssf.size()+svf.size()
+                    ssf.size() + svf.size()
                 );
 
                 writer.write(ssf);
@@ -1212,7 +1264,7 @@ int main(int argc, char *argv[])
 
         fileNameList dirs(readDir(procVTK, fileType::directory));
         label sz = dirs.size();
-        dirs.setSize(sz+1);
+        dirs.setSize(sz + 1);
         dirs[sz] = ".";
 
         forAll(dirs, i)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,7 @@ class internalWriter
 
     std::ofstream os_;
 
+
 public:
 
     // Constructors
@@ -86,6 +87,10 @@ public:
 
         //- Write cellIDs
         void writeCellIDs();
+
+        //- Write generic GeometricFields
+        template<class Type, class GeoMesh>
+        void write(const UPtrList<const DimensionedField<Type, GeoMesh>>&);
 
         //- Write generic GeometricFields
         template<class Type, template<class> class PatchField, class GeoMesh>
