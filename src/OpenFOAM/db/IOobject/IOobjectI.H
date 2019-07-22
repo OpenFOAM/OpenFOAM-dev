@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,12 @@ inline Foam::word Foam::IOobject::groupName(Name name, const word& group)
     {
         return name;
     }
+}
+
+
+inline Foam::word Foam::IOobject::modelName(const char* name) const
+{
+    return type() + ':' + name;
 }
 
 

@@ -372,6 +372,10 @@ public:
             //- Return member (name without the extension)
             word member() const;
 
+            //- Return the name of the object within this model
+            //  as <model>:<name>
+            inline word modelName(const char* name) const;
+
             const fileName& rootPath() const;
 
             const fileName& caseName() const;
