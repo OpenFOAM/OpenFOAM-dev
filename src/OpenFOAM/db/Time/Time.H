@@ -187,6 +187,9 @@ private:
         //- Is runtime modification of dictionaries allowed?
         Switch runTimeModifiable_;
 
+        //- Is temporary object cache enabled
+        mutable bool cacheTemporaryObjects_;
+
         //- Function objects executed at start and on ++, +=
         mutable functionObjectList functionObjects_;
 

@@ -162,6 +162,8 @@ Foam::regIOobject::~regIOobject()
         }
     }
 
+    db().resetCacheTemporaryObject(*this);
+
     // Check out of objectRegistry if not owned by the registry
     if (!ownedByRegistry_)
     {

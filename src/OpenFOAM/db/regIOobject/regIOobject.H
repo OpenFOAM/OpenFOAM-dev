@@ -57,19 +57,6 @@ class regIOobject
 :
     public IOobject
 {
-
-protected:
-
-        //- Helper: check readOpt flags and read if necessary
-        bool readHeaderOk
-        (
-            const IOstream::streamFormat PstreamFormat,
-            const word& typeName
-        );
-
-
-private:
-
     // Private Data
 
         //- Is this object registered with the registry
@@ -95,6 +82,16 @@ private:
 
         //- Dissallow assignment
         void operator=(const regIOobject&);
+
+
+protected:
+
+        //- Helper: check readOpt flags and read if necessary
+        bool readHeaderOk
+        (
+            const IOstream::streamFormat PstreamFormat,
+            const word& typeName
+        );
 
 
 public:

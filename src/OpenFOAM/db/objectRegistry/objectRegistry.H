@@ -38,6 +38,8 @@ SourceFiles
 #include "HashTable.H"
 #include "regIOobject.H"
 #include "wordReList.H"
+#include "HashSet.H"
+#include "Pair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,12 +69,25 @@ class objectRegistry
         //- Current event
         mutable label event_;
 
+        //- Table of temporary object names with current state
+        mutable HashTable<Pair<bool>> cacheTemporaryObjects_;
+
+        //- State of cacheTemporaryObjects_, set true after reading
+        mutable bool cacheTemporaryObjectsSet_;
+
+        //- Accumulated list of temporary objects available to cache
+        //  Used to provide diagnostics in case the requested object is not
+        //  available
+        mutable HashSet<word> temporaryObjects_;
+
 
     // Private Member Functions
 
         //- Is the objectRegistry parent_ different from time_
         //  Used to terminate searching within the ancestors
         bool parentNotTime() const;
+
+        void readCacheTemporaryObjects() const;
 
 
 public:
@@ -198,6 +213,17 @@ public:
 
             //- Remove all regIOobject owned by the registry
             void clear();
+
+            template<class Object>
+            bool cacheTemporaryObject(Object& ob) const;
+
+            //- Reset cache state of the given object
+            //  in the cacheTemporaryObjects set
+            void resetCacheTemporaryObject(const regIOobject& ob) const;
+
+            //- Check that all objects in the cacheTemporaryObjects set
+            //  were cached
+            bool checkCacheTemporaryObjects() const;
 
 
         // Reading

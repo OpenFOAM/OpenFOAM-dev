@@ -42,6 +42,46 @@ bool Foam::objectRegistry::parentNotTime() const
 }
 
 
+void Foam::objectRegistry::readCacheTemporaryObjects() const
+{
+    if
+    (
+        !cacheTemporaryObjectsSet_
+     && time_.controlDict().found("cacheTemporaryObjects")
+    )
+    {
+        cacheTemporaryObjectsSet_ = true;
+
+        const dictionary& controlDict = time_.controlDict();
+
+        wordList cacheTemporaryObjects;
+
+        if (controlDict.isDict("cacheTemporaryObjects"))
+        {
+            if(controlDict.subDict("cacheTemporaryObjects").found(name()))
+            {
+                controlDict.subDict("cacheTemporaryObjects").lookup(name())
+                    >> cacheTemporaryObjects;
+            }
+        }
+        else
+        {
+            controlDict.lookup("cacheTemporaryObjects")
+                >> cacheTemporaryObjects;
+        }
+
+        forAll(cacheTemporaryObjects, i)
+        {
+            cacheTemporaryObjects_.insert
+            (
+                cacheTemporaryObjects[i],
+                {false, false}
+            );
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors *  * * * * * * * * * * * * * //
 
 Foam::objectRegistry::objectRegistry
@@ -67,7 +107,8 @@ Foam::objectRegistry::objectRegistry
     time_(t),
     parent_(t),
     dbDir_(name()),
-    event_(1)
+    event_(1),
+    cacheTemporaryObjectsSet_(false)
 {}
 
 
@@ -82,7 +123,8 @@ Foam::objectRegistry::objectRegistry
     time_(io.time()),
     parent_(io.db()),
     dbDir_(parent_.dbDir()/local()/name()),
-    event_(1)
+    event_(1),
+    cacheTemporaryObjectsSet_(false)
 {
     writeOpt() = IOobject::AUTO_WRITE;
 }
@@ -92,6 +134,7 @@ Foam::objectRegistry::objectRegistry
 
 Foam::objectRegistry::~objectRegistry()
 {
+    cacheTemporaryObjects_.clear();
     clear();
 }
 
@@ -287,6 +330,75 @@ void Foam::objectRegistry::clear()
     {
         checkOut(*myObjects[i]);
     }
+}
+
+
+void Foam::objectRegistry::resetCacheTemporaryObject
+(
+    const regIOobject& ob
+) const
+{
+    if (cacheTemporaryObjects_.size())
+    {
+        HashTable<Pair<bool>>::iterator iter
+        (
+            cacheTemporaryObjects_.find(ob.name())
+        );
+
+        // If object ob if is in the cacheTemporaryObjects list
+        // and has been cached reset the cached flag
+        if (iter != cacheTemporaryObjects_.end())
+        {
+            iter().first() = false;
+        }
+    }
+}
+
+
+bool Foam::objectRegistry::checkCacheTemporaryObjects() const
+{
+    bool enabled = cacheTemporaryObjects_.size();
+
+    forAllConstIter(HashTable<regIOobject*>, *this, iter)
+    {
+        const objectRegistry* orPtr_ =
+            dynamic_cast<const objectRegistry*>(iter());
+
+        // Protect against re-searching the top-level registry
+        if (orPtr_ && orPtr_ != this)
+        {
+            enabled = orPtr_->checkCacheTemporaryObjects() || enabled;
+        }
+    }
+
+    if (enabled)
+    {
+        forAllIter
+        (
+            typename HashTable<Pair<bool>>,
+            cacheTemporaryObjects_,
+            iter
+        )
+        {
+            if (!iter().second())
+            {
+                Warning
+                    << "Could not find temporary object " << iter.key()
+                    << " in registry " << name() << nl
+                    << "Available temporary objects "
+                    << temporaryObjects_
+                    << endl;
+            }
+            else
+            {
+                iter().second() = false;
+            }
+        }
+
+        temporaryObjects_.clear();
+    }
+
+    return enabled;
 }
 
 

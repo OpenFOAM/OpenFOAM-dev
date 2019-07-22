@@ -25,6 +25,7 @@ License
 
 #include "DimensionedField.H"
 #include "dimensionedType.H"
+#include "Time.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -382,7 +383,9 @@ DimensionedField<Type, GeoMesh>::New
 
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::~DimensionedField()
-{}
+{
+    db().cacheTemporaryObject(*this);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

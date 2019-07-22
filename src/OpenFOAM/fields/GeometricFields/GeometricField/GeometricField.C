@@ -933,6 +933,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::~GeometricField()
 {
+    this->db().cacheTemporaryObject(*this);
+
     deleteDemandDrivenData(field0Ptr_);
     deleteDemandDrivenData(fieldPrevIterPtr_);
 }
