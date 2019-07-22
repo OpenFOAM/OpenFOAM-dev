@@ -84,6 +84,11 @@ class RNGkEpsilon
 :
     public eddyViscosity<RASModel<BasicTurbulenceModel>>
 {
+    // Private Member Functions
+
+        using IOobject::modelName;
+
+
 protected:
 
     // Protected data

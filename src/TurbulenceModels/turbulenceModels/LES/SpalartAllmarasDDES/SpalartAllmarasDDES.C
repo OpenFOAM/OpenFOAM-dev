@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,18 +42,22 @@ tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::rd
 {
     tmp<volScalarField> tr
     (
-        min
+        volScalarField::New
         (
-            this->nuEff()
-           /(
-               max
-               (
-                   magGradU,
-                   dimensionedScalar(magGradU.dimensions(), small)
-               )
-              *sqr(this->kappa_*this->y_)
-            ),
-            scalar(10)
+            modelName("rd"),
+            min
+            (
+                this->nuEff()
+               /(
+                   max
+                   (
+                       magGradU,
+                       dimensionedScalar(magGradU.dimensions(), small)
+                   )
+                  *sqr(this->kappa_*this->y_)
+               ),
+                scalar(10)
+            )
         )
     );
     tr.ref().boundaryFieldRef() == 0.0;
@@ -68,7 +72,11 @@ tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::fd
     const volScalarField& magGradU
 ) const
 {
-    return 1 - tanh(pow3(8*rd(magGradU)));
+    return volScalarField::New
+    (
+        modelName("fd"),
+        1 - tanh(pow3(8*rd(magGradU)))
+    );
 }
 
 
@@ -82,16 +90,20 @@ tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::dTilda
     const volTensorField& gradU
 ) const
 {
-    return max
+    return volScalarField::New
     (
-        this->y_
-      - fd(mag(gradU))
-       *max
+        modelName("dTilda"),
+        max
         (
-            this->y_ - this->CDES_*this->delta(),
-            dimensionedScalar(dimLength, 0)
-        ),
-        dimensionedScalar(dimLength, small)
+            this->y_
+          - fd(mag(gradU))
+           *max
+            (
+                this->y_ - this->CDES_*this->delta(),
+                dimensionedScalar(dimLength, 0)
+            ),
+            dimensionedScalar(dimLength, small)
+        )
     );
 }
 

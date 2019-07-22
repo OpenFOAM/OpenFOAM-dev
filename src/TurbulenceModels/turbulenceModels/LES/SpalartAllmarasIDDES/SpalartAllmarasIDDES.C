@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,10 +37,15 @@ namespace LESModels
 template<class BasicTurbulenceModel>
 tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::alpha() const
 {
-    return max
+    return volScalarField::New
     (
-        0.25 - this->y_/static_cast<const volScalarField&>(IDDESDelta_.hmax()),
-        scalar(-5)
+        modelName("alpha"),
+        max
+        (
+            0.25
+          - this->y_/static_cast<const volScalarField&>(IDDESDelta_.hmax()),
+            scalar(-5)
+        )
     );
 }
 
@@ -51,7 +56,11 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::ft
     const volScalarField& magGradU
 ) const
 {
-    return tanh(pow3(sqr(ct_)*rd(this->nut_, magGradU)));
+    return volScalarField::New
+    (
+        modelName("ft"),
+        tanh(pow3(sqr(ct_)*rd(this->nut_, magGradU)))
+    );
 }
 
 
@@ -61,7 +70,11 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::fl
     const volScalarField& magGradU
 ) const
 {
-    return tanh(pow(sqr(cl_)*rd(this->nu(), magGradU), 10));
+    return volScalarField::New
+    (
+        modelName("fl"),
+        tanh(pow(sqr(cl_)*rd(this->nu(), magGradU), 10))
+    );
 }
 
 
@@ -72,17 +85,21 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::rd
     const volScalarField& magGradU
 ) const
 {
-    return min
+    return volScalarField::New
     (
-        nur
-       /(
-           max
-           (
-               magGradU,
-               dimensionedScalar(magGradU.dimensions(), small)
-           )*sqr(this->kappa_*this->y_)
-       ),
-       scalar(10)
+        modelName("rd"),
+        min
+        (
+            nur
+           /(
+               max
+               (
+                   magGradU,
+                   dimensionedScalar(magGradU.dimensions(), small)
+               )*sqr(this->kappa_*this->y_)
+            ),
+            scalar(10)
+        )
     );
 }
 
@@ -93,7 +110,11 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::fd
     const volScalarField& magGradU
 ) const
 {
-    return 1 - tanh(pow3(8*rd(this->nuEff(), magGradU)));
+    return volScalarField::New
+    (
+        modelName("fd"),
+        1 - tanh(pow3(8*rd(this->nuEff(), magGradU)))
+    );
 }
 
 
@@ -136,11 +157,15 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::dTilda
         )
     );
 
-    return max
+    return volScalarField::New
     (
-        dimensionedScalar(dimLength, small),
-        fHyb*(1 + fRestore*Psi)*this->y_
-      + (1 - fHyb)*this->CDES_*Psi*this->delta()
+        modelName("dTilda"),
+        max
+        (
+            dimensionedScalar(dimLength, small),
+            fHyb*(1 + fRestore*Psi)*this->y_
+          + (1 - fHyb)*this->CDES_*Psi*this->delta()
+        )
     );
 }
 

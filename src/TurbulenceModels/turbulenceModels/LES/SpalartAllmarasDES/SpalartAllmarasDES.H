@@ -93,6 +93,8 @@ protected:
 
     // Protected Member Functions
 
+        using IOobject::modelName;
+
         tmp<volScalarField> chi() const;
 
         tmp<volScalarField> fv1(const volScalarField& chi) const;

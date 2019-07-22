@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,8 +89,9 @@ template<class BasicTurbulenceModel>
 void realizableKE<BasicTurbulenceModel>::correctNut()
 {
     tmp<volTensorField> tgradU = fvc::grad(this->U_);
-    volScalarField S2(2*magSqr(dev(symm(tgradU()))));
-    volScalarField magS(sqrt(S2));
+    volScalarField S2(modelName("S2"), 2*magSqr(dev(symm(tgradU()))));
+    volScalarField magS(modelName("magS"), sqrt(S2));
+
     correctNut(tgradU(), S2, magS);
 }
 
@@ -262,16 +263,28 @@ void realizableKE<BasicTurbulenceModel>::correct()
 
     eddyViscosity<RASModel<BasicTurbulenceModel>>::correct();
 
-    volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
+    volScalarField::Internal divU
+    (
+        modelName("divU"),
+        fvc::div(fvc::absolute(this->phi(), U))()
+    );
 
     tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField S2(2*magSqr(dev(symm(tgradU()))));
-    volScalarField magS(sqrt(S2));
+    volScalarField S2(modelName("S2"), 2*magSqr(dev(symm(tgradU()))));
+    volScalarField magS(modelName("magS"), sqrt(S2));
 
-    volScalarField eta(magS*k_/epsilon_);
-    volScalarField C1(max(eta/(scalar(5) + eta), scalar(0.43)));
+    volScalarField::Internal eta(modelName("eta"), magS()*k_()/epsilon_());
+    volScalarField::Internal C1
+    (
+        modelName("C1"),
+        max(eta/(scalar(5) + eta), scalar(0.43))
+    );
 
-    volScalarField G(this->GName(), nut*(tgradU() && dev(twoSymm(tgradU()))));
+    volScalarField::Internal G
+    (
+        this->GName(),
+        nut*(tgradU().v() && dev(twoSymm(tgradU().v())))
+    );
 
     // Update epsilon and G at the wall
     epsilon_.boundaryFieldRef().updateCoeffs();
@@ -283,10 +296,10 @@ void realizableKE<BasicTurbulenceModel>::correct()
       + fvm::div(alphaRhoPhi, epsilon_)
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
-        C1*alpha*rho*magS*epsilon_
+        C1*alpha()*rho()*magS()*epsilon_()
       - fvm::Sp
         (
-            C2_*alpha*rho*epsilon_/(k_ + sqrt(this->nu()*epsilon_)),
+            C2_*alpha()*rho()*epsilon_()/(k_() + sqrt(this->nu()()*epsilon_())),
             epsilon_
         )
       + epsilonSource()
@@ -309,9 +322,9 @@ void realizableKE<BasicTurbulenceModel>::correct()
       + fvm::div(alphaRhoPhi, k_)
       - fvm::laplacian(alpha*rho*DkEff(), k_)
      ==
-        alpha*rho*G
-      - fvm::SuSp(2.0/3.0*alpha*rho*divU, k_)
-      - fvm::Sp(alpha*rho*epsilon_/k_, k_)
+        alpha()*rho()*G
+      - fvm::SuSp(2.0/3.0*alpha()*rho()*divU, k_)
+      - fvm::Sp(alpha()*rho()*epsilon_()/k_(), k_)
       + kSource()
       + fvOptions(alpha, rho, k_)
     );

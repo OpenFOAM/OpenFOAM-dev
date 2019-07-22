@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,10 @@ namespace LESModels
 template<class BasicTurbulenceModel>
 tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::chi() const
 {
-    return nuTilda_/this->nu();
+    return volScalarField::New
+    (
+        modelName("chi"), nuTilda_/this->nu()
+    );
 }
 
 
@@ -49,7 +52,11 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::fv1
 ) const
 {
     const volScalarField chi3("chi3", pow3(chi));
-    return chi3/(chi3 + pow3(Cv1_));
+    return volScalarField::New
+    (
+        modelName("fv1"),
+        chi3/(chi3 + pow3(Cv1_))
+    );
 }
 
 
@@ -60,7 +67,11 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::fv2
     const volScalarField& fv1
 ) const
 {
-    return 1.0 - chi/(1.0 + chi*fv1);
+    return volScalarField::New
+    (
+        modelName("fv2"),
+        1.0 - chi/(1.0 + chi*fv1)
+    );
 }
 
 
@@ -70,7 +81,11 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::S
     const volTensorField& gradU
 ) const
 {
-    return sqrt(2.0)*mag(symm(gradU));
+    return volScalarField::New
+    (
+        modelName("S"),
+        sqrt(2.0)*mag(symm(gradU))
+    );
 }
 
 
@@ -80,7 +95,11 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::Omega
     const volTensorField& gradU
 ) const
 {
-    return sqrt(2.0)*mag(skew(gradU));
+    return volScalarField::New
+    (
+        modelName("Omega"),
+        sqrt(2.0)*mag(skew(gradU))
+    );
 }
 
 
@@ -93,8 +112,9 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::Stilda
     const volScalarField& dTilda
 ) const
 {
-    return
+    return volScalarField::New
     (
+        modelName("Stilda"),
         max
         (
             Omega
@@ -115,18 +135,22 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::r
 {
     tmp<volScalarField> tr
     (
-        min
+        volScalarField::New
         (
-            nur
-           /(
-                max
-                (
-                    Omega,
-                    dimensionedScalar(Omega.dimensions(), small)
-                )
-                *sqr(kappa_*dTilda)
-            ),
-            scalar(10)
+            modelName("r"),
+            min
+            (
+                nur
+               /(
+                   max
+                   (
+                       Omega,
+                       dimensionedScalar(Omega.dimensions(), small)
+                   )
+                  *sqr(kappa_*dTilda)
+               ),
+                scalar(10)
+            )
         )
     );
     tr.ref().boundaryFieldRef() == 0.0;
@@ -145,7 +169,11 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::fw
     const volScalarField r(this->r(nuTilda_, Omega, dTilda));
     const volScalarField g(r + Cw2_*(pow6(r) - r));
 
-    return g*pow((1 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0);
+    return volScalarField::New
+    (
+        modelName("fw"),
+        g*pow((1 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0)
+    );
 }
 
 
@@ -157,7 +185,14 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::dTilda
     const volTensorField& gradU
 ) const
 {
-    tmp<volScalarField> tdTilda(CDES_*this->delta());
+    tmp<volScalarField> tdTilda
+    (
+        volScalarField::New
+        (
+            modelName("dTilda"),
+            CDES_*this->delta()
+        )
+    );
     min(tdTilda.ref().ref(), tdTilda(), y_);
     return tdTilda;
 }

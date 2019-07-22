@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ namespace RASModels
 template<class BasicTurbulenceModel>
 tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::chi() const
 {
-    return nuTilda_/this->nu();
+    return volScalarField::New(modelName("chi"), nuTilda_/this->nu());
 }
 
 
@@ -50,54 +50,66 @@ tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::fv1
     const volScalarField& chi
 ) const
 {
-    const volScalarField chi3(pow3(chi));
-    return chi3/(chi3 + pow3(Cv1_));
+    const volScalarField chi3(modelName("chi3"), pow3(chi));
+    return volScalarField::New(modelName("fv1"), chi3/(chi3 + pow3(Cv1_)));
 }
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::fv2
+tmp<volScalarField::Internal> SpalartAllmaras<BasicTurbulenceModel>::fv2
 (
-    const volScalarField& chi,
-    const volScalarField& fv1
+    const volScalarField::Internal& chi,
+    const volScalarField::Internal& fv1
 ) const
 {
-    return 1.0 - chi/(1.0 + chi*fv1);
-}
-
-
-template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::Stilda
-(
-    const volScalarField& chi,
-    const volScalarField& fv1
-) const
-{
-    volScalarField Omega(::sqrt(2.0)*mag(skew(fvc::grad(this->U_))));
-
-    return
+    return volScalarField::Internal::New
     (
-        max
+        modelName("fv2"),
+        1.0 - chi/(1.0 + chi*fv1)
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<volScalarField::Internal> SpalartAllmaras<BasicTurbulenceModel>::Stilda
+(
+    const volScalarField::Internal& chi,
+    const volScalarField::Internal& fv1
+) const
+{
+    const volScalarField::Internal Omega
+    (
+        modelName("Omega"),
+        ::sqrt(2.0)*mag(skew(fvc::grad(this->U_)().v()))
+    );
+
+    return volScalarField::Internal::New
+    (
+        modelName("Stilda"),
         (
-            Omega
-          + fv2(chi, fv1)*nuTilda_/sqr(kappa_*y_),
-            Cs_*Omega
+            max
+            (
+                Omega
+              + fv2(chi, fv1)*nuTilda_/sqr(kappa_*y_),
+                Cs_*Omega
+            )
         )
     );
 }
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::fw
+tmp<volScalarField::Internal> SpalartAllmaras<BasicTurbulenceModel>::fw
 (
-    const volScalarField& Stilda
+    const volScalarField::Internal& Stilda
 ) const
 {
-    volScalarField r
+    const volScalarField::Internal r
     (
+        modelName("r"),
         min
         (
-            nuTilda_
+            nuTilda_()
            /(
                max
                (
@@ -109,11 +121,14 @@ tmp<volScalarField> SpalartAllmaras<BasicTurbulenceModel>::fw
             scalar(10.0)
         )
     );
-    r.boundaryFieldRef() == 0.0;
 
-    const volScalarField g(r + Cw2_*(pow6(r) - r));
+    const volScalarField::Internal g(modelName("g"), r + Cw2_*(pow6(r) - r));
 
-    return g*pow((1.0 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0);
+    return volScalarField::Internal::New
+    (
+        modelName("fw"),
+        g*pow((1.0 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0)
+    );
 }
 
 
@@ -348,7 +363,7 @@ void SpalartAllmaras<BasicTurbulenceModel>::correct()
     const volScalarField chi(this->chi());
     const volScalarField fv1(this->fv1(chi));
 
-    const volScalarField Stilda(this->Stilda(chi, fv1));
+    const volScalarField::Internal Stilda(this->Stilda(chi, fv1));
 
     tmp<fvScalarMatrix> nuTildaEqn
     (
@@ -357,8 +372,8 @@ void SpalartAllmaras<BasicTurbulenceModel>::correct()
       - fvm::laplacian(alpha*rho*DnuTildaEff(), nuTilda_)
       - Cb2_/sigmaNut_*alpha*rho*magSqr(fvc::grad(nuTilda_))
      ==
-        Cb1_*alpha*rho*Stilda*nuTilda_
-      - fvm::Sp(Cw1_*alpha*rho*fw(Stilda)*nuTilda_/sqr(y_), nuTilda_)
+        Cb1_*alpha()*rho()*Stilda*nuTilda_()
+      - fvm::Sp(Cw1_*alpha()*rho()*fw(Stilda)*nuTilda_()/sqr(y_), nuTilda_)
       + fvOptions(alpha, rho, nuTilda_)
     );
 

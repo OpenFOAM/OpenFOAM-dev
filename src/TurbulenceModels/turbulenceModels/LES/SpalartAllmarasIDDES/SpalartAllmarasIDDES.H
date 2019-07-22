@@ -96,6 +96,8 @@ protected:
 
     // Protected Member Functions
 
+        using IOobject::modelName;
+
         //- Length scale
         virtual tmp<volScalarField> dTilda
         (
