@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,10 +110,7 @@ Foam::functionObjects::sixDoFRigidBodyState::motion() const
     const dynamicMotionSolverFvMesh& mesh =
         refCast<const dynamicMotionSolverFvMesh>(obr_);
 
-    const sixDoFRigidBodyMotionSolver& motionSolver_ =
-        refCast<const sixDoFRigidBodyMotionSolver>(mesh.motion());
-
-    return motionSolver_.motion();
+    return (refCast<const sixDoFRigidBodyMotion>(mesh.motion()));
 }
 
 

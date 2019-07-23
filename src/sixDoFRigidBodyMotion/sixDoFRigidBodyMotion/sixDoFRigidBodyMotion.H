@@ -205,6 +205,10 @@ class sixDoFRigidBodyMotion
 
 public:
 
+    //- Runtime type information
+    TypeName("sixDoFRigidBodyMotion");
+
+
     // Constructors
 
         //- Construct null
@@ -222,7 +226,7 @@ public:
 
 
     //- Destructor
-    ~sixDoFRigidBodyMotion();
+    virtual ~sixDoFRigidBodyMotion();
 
 
     // Member Functions

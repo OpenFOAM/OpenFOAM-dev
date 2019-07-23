@@ -52,12 +52,10 @@ namespace Foam
 
 class sixDoFRigidBodyMotionSolver
 :
-    public displacementMotionSolver
+    public displacementMotionSolver,
+    public sixDoFRigidBodyMotion
 {
     // Private Data
-
-        //- Six DoF motion object
-        sixDoFRigidBodyMotion motion_;
 
         wordReList patches_;
 
