@@ -35,28 +35,24 @@ namespace LESModels
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::alpha() const
+tmp<volScalarField::Internal>
+SpalartAllmarasIDDES<BasicTurbulenceModel>::IDDESalpha() const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("alpha"),
-        max
-        (
-            0.25
-          - this->y_/static_cast<const volScalarField&>(IDDESDelta_.hmax()),
-            scalar(-5)
-        )
+        max(0.25 - this->y_()/IDDESDelta_.hmax(), scalar(-5))
     );
 }
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::ft
+tmp<volScalarField::Internal> SpalartAllmarasIDDES<BasicTurbulenceModel>::ft
 (
-    const volScalarField& magGradU
+    const volScalarField::Internal& magGradU
 ) const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("ft"),
         tanh(pow3(sqr(ct_)*rd(this->nut_, magGradU)))
@@ -65,12 +61,12 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::ft
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::fl
+tmp<volScalarField::Internal> SpalartAllmarasIDDES<BasicTurbulenceModel>::fl
 (
-    const volScalarField& magGradU
+    const volScalarField::Internal& magGradU
 ) const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("fl"),
         tanh(pow(sqr(cl_)*rd(this->nu(), magGradU), 10))
@@ -79,13 +75,13 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::fl
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::rd
+tmp<volScalarField::Internal> SpalartAllmarasIDDES<BasicTurbulenceModel>::rd
 (
-    const volScalarField& nur,
-    const volScalarField& magGradU
+    const volScalarField::Internal& nur,
+    const volScalarField::Internal& magGradU
 ) const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("rd"),
         min
@@ -96,7 +92,7 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::rd
                (
                    magGradU,
                    dimensionedScalar(magGradU.dimensions(), small)
-               )*sqr(this->kappa_*this->y_)
+               )*sqr(this->kappa_*this->y_())
             ),
             scalar(10)
         )
@@ -105,12 +101,12 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::rd
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::fd
+tmp<volScalarField::Internal> SpalartAllmarasIDDES<BasicTurbulenceModel>::fd
 (
-    const volScalarField& magGradU
+    const volScalarField::Internal& magGradU
 ) const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("fd"),
         1 - tanh(pow3(8*rd(this->nuEff(), magGradU)))
@@ -121,28 +117,70 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::fd
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::dTilda
+tmp<volScalarField::Internal>
+SpalartAllmarasIDDES<BasicTurbulenceModel>::dTilda
 (
-    const volScalarField& chi,
-    const volScalarField& fv1,
-    const volTensorField& gradU
+    const volScalarField::Internal& chi,
+    const volScalarField::Internal& fv1,
+    const volTensorField::Internal& gradU
 ) const
 {
-    const volScalarField alpha(this->alpha());
-    const volScalarField expTerm(exp(sqr(alpha)));
-    const volScalarField magGradU(mag(gradU));
+    const volScalarField::Internal alpha(IDDESalpha());
 
-    tmp<volScalarField> fHill =
-        2*(pos0(alpha)*pow(expTerm, -11.09) + neg(alpha)*pow(expTerm, -9.0));
+    const volScalarField::Internal expTerm
+    (
+        modelName("expTerm"),
+        exp(sqr(alpha))
+    );
 
-    tmp<volScalarField> fStep = min(2*pow(expTerm, -9.0), scalar(1));
-    const volScalarField fHyb(max(1 - fd(magGradU), fStep));
-    tmp<volScalarField> fAmp = 1 - max(ft(magGradU), fl(magGradU));
-    tmp<volScalarField> fRestore = max(fHill - 1, scalar(0))*fAmp;
+    const volScalarField::Internal magGradU(modelName("magGradU"), mag(gradU));
+
+    tmp<volScalarField::Internal> fHill
+    (
+        volScalarField::Internal::New
+        (
+            modelName("fHill"),
+            2*(pos0(alpha)*pow(expTerm, -11.09) + neg(alpha)*pow(expTerm, -9.0))
+        )
+    );
+
+    tmp<volScalarField::Internal> fStep
+    (
+        volScalarField::Internal::New
+        (
+            modelName("fStep"),
+            min(2*pow(expTerm, -9.0), scalar(1))
+        )
+    );
+
+    const volScalarField::Internal fHyb
+    (
+        modelName("fHyb"),
+        max(1 - fd(magGradU), fStep)
+    );
+
+    tmp<volScalarField::Internal> fAmp
+    (
+        volScalarField::Internal::New
+        (
+            modelName("fAmp"),
+            1 - max(ft(magGradU), fl(magGradU))
+        )
+    );
+
+    tmp<volScalarField::Internal> fRestore
+    (
+        volScalarField::Internal::New
+        (
+            modelName("fRestore"),
+            max(fHill - 1, scalar(0))*fAmp
+        )
+    );
 
     // IGNORING ft2 terms
-    const volScalarField Psi
+    const volScalarField::Internal Psi
     (
+        modelName("Psi"),
         sqrt
         (
             min
@@ -157,7 +195,7 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::dTilda
         )
     );
 
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("dTilda"),
         max

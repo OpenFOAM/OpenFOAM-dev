@@ -65,9 +65,15 @@ class SpalartAllmarasDDES
 {
     // Private Member Functions
 
-        tmp<volScalarField> fd(const volScalarField& magGradU) const;
+        tmp<volScalarField::Internal> fd
+        (
+            const volScalarField::Internal& magGradU
+        ) const;
 
-        tmp<volScalarField> rd(const volScalarField& magGradU) const;
+        tmp<volScalarField::Internal> rd
+        (
+            const volScalarField::Internal& magGradU
+        ) const;
 
 
 protected:
@@ -77,11 +83,11 @@ protected:
         using IOobject::modelName;
 
         //- Length scale
-        virtual tmp<volScalarField> dTilda
+        virtual tmp<volScalarField::Internal> dTilda
         (
-            const volScalarField& chi,
-            const volScalarField& fv1,
-            const volTensorField& gradU
+            const volScalarField::Internal& chi,
+            const volScalarField::Internal& fv1,
+            const volTensorField::Internal& gradU
         ) const;
 
 

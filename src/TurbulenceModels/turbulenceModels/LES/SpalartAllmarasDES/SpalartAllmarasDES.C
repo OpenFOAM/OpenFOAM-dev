@@ -40,7 +40,8 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::chi() const
 {
     return volScalarField::New
     (
-        modelName("chi"), nuTilda_/this->nu()
+        modelName("chi"),
+        nuTilda_/this->nu()
     );
 }
 
@@ -61,13 +62,13 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::fv1
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::fv2
+tmp<volScalarField::Internal> SpalartAllmarasDES<BasicTurbulenceModel>::fv2
 (
-    const volScalarField& chi,
-    const volScalarField& fv1
+    const volScalarField::Internal& chi,
+    const volScalarField::Internal& fv1
 ) const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("fv2"),
         1.0 - chi/(1.0 + chi*fv1)
@@ -76,26 +77,12 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::fv2
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::S
+tmp<volScalarField::Internal> SpalartAllmarasDES<BasicTurbulenceModel>::Omega
 (
-    const volTensorField& gradU
+    const volTensorField::Internal& gradU
 ) const
 {
-    return volScalarField::New
-    (
-        modelName("S"),
-        sqrt(2.0)*mag(symm(gradU))
-    );
-}
-
-
-template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::Omega
-(
-    const volTensorField& gradU
-) const
-{
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("Omega"),
         sqrt(2.0)*mag(skew(gradU))
@@ -104,21 +91,21 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::Omega
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::Stilda
+tmp<volScalarField::Internal> SpalartAllmarasDES<BasicTurbulenceModel>::Stilda
 (
-    const volScalarField& chi,
-    const volScalarField& fv1,
-    const volScalarField& Omega,
-    const volScalarField& dTilda
+    const volScalarField::Internal& chi,
+    const volScalarField::Internal& fv1,
+    const volScalarField::Internal& Omega,
+    const volScalarField::Internal& dTilda
 ) const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("Stilda"),
         max
         (
             Omega
-          + fv2(chi, fv1)*nuTilda_/sqr(kappa_*dTilda),
+          + fv2(chi, fv1)*nuTilda_()/sqr(kappa_*dTilda),
             Cs_*Omega
         )
     );
@@ -126,50 +113,44 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::Stilda
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::r
+tmp<volScalarField::Internal> SpalartAllmarasDES<BasicTurbulenceModel>::r
 (
-    const volScalarField& nur,
-    const volScalarField& Omega,
-    const volScalarField& dTilda
+    const volScalarField::Internal& nur,
+    const volScalarField::Internal& Omega,
+    const volScalarField::Internal& dTilda
 ) const
 {
-    tmp<volScalarField> tr
+    return volScalarField::Internal::New
     (
-        volScalarField::New
+        modelName("r"),
+        min
         (
-            modelName("r"),
-            min
-            (
-                nur
-               /(
-                   max
-                   (
-                       Omega,
-                       dimensionedScalar(Omega.dimensions(), small)
-                   )
-                  *sqr(kappa_*dTilda)
-               ),
-                scalar(10)
-            )
+            nur
+           /(
+                max
+                (
+                    Omega,
+                    dimensionedScalar(Omega.dimensions(), small)
+                )
+               *sqr(kappa_*dTilda)
+            ),
+            scalar(10)
         )
     );
-    tr.ref().boundaryFieldRef() == 0.0;
-
-    return tr;
 }
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::fw
+tmp<volScalarField::Internal> SpalartAllmarasDES<BasicTurbulenceModel>::fw
 (
-    const volScalarField& Omega,
-    const volScalarField& dTilda
+    const volScalarField::Internal& Omega,
+    const volScalarField::Internal& dTilda
 ) const
 {
-    const volScalarField r(this->r(nuTilda_, Omega, dTilda));
-    const volScalarField g(r + Cw2_*(pow6(r) - r));
+    const volScalarField::Internal r(this->r(nuTilda_, Omega, dTilda));
+    const volScalarField::Internal g(modelName("g"), r + Cw2_*(pow6(r) - r));
 
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("fw"),
         g*pow((1 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0)
@@ -178,23 +159,35 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::fw
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::dTilda
+tmp<volScalarField::Internal> SpalartAllmarasDES<BasicTurbulenceModel>::dTilda
 (
-    const volScalarField& chi,
-    const volScalarField& fv1,
-    const volTensorField& gradU
+    const volScalarField::Internal& chi,
+    const volScalarField::Internal& fv1,
+    const volTensorField::Internal& gradU
 ) const
 {
-    tmp<volScalarField> tdTilda
+    return volScalarField::Internal::New
     (
-        volScalarField::New
-        (
-            modelName("dTilda"),
-            CDES_*this->delta()
-        )
+        modelName("dTilda"),
+        min(CDES_*this->delta()(), y_)
     );
-    min(tdTilda.ref().ref(), tdTilda(), y_);
-    return tdTilda;
+}
+
+
+template<class BasicTurbulenceModel>
+void SpalartAllmarasDES<BasicTurbulenceModel>::cacheLESRegion
+(
+    const volScalarField::Internal& dTilda
+) const
+{
+    if (this->mesh_.cacheTemporaryObject(modelName("LESRegion")))
+    {
+        volScalarField::Internal::New
+        (
+            modelName("LESRegion"),
+            neg(dTilda - y_())
+        );
+    }
 }
 
 
@@ -407,26 +400,43 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::k() const
 {
     const volScalarField chi(this->chi());
     const volScalarField fv1(this->fv1(chi));
-    return sqr(this->nut()/ck_/dTilda(chi, fv1, fvc::grad(this->U_)));
-}
 
+    volScalarField dTildaExtrapolated
+    (
+        IOobject
+        (
+            "dTildaExtrapolated",
+            this->mesh_.time().timeName(),
+            this->mesh_
+        ),
+        this->mesh_,
+        dimLength,
+        zeroGradientFvPatchScalarField::typeName
+    );
+    dTildaExtrapolated.ref() = dTilda(chi, fv1, fvc::grad(this->U_));
+    dTildaExtrapolated.correctBoundaryConditions();
 
-template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::LESRegion() const
-{
-    const volScalarField chi(this->chi());
-    const volScalarField fv1(this->fv1(chi));
-
-    tmp<volScalarField> tLESRegion
+    tmp<volScalarField> tk
     (
         volScalarField::New
         (
-            "DES::LESRegion",
-            neg(dTilda(chi, fv1, fvc::grad(this->U_)) - y_)
+            modelName("k"),
+            sqr(this->nut()/ck_/dTildaExtrapolated)
         )
     );
 
-    return tLESRegion;
+    const fvPatchList& patches = this->mesh_.boundary();
+    volScalarField::Boundary& kBf = tk.ref().boundaryFieldRef();
+
+    forAll(patches, patchi)
+    {
+        if (isA<wallFvPatch>(patches[patchi]))
+        {
+            kBf[patchi] = 0;
+        }
+    }
+
+    return tk;
 }
 
 
@@ -451,9 +461,13 @@ void SpalartAllmarasDES<BasicTurbulenceModel>::correct()
     const volScalarField fv1(this->fv1(chi));
 
     tmp<volTensorField> tgradU = fvc::grad(U);
-    const volScalarField Omega(this->Omega(tgradU()));
-    const volScalarField dTilda(this->dTilda(chi, fv1, tgradU()));
-    const volScalarField Stilda(this->Stilda(chi, fv1, Omega, dTilda));
+    const volScalarField::Internal Omega(this->Omega(tgradU()));
+    const volScalarField::Internal dTilda(this->dTilda(chi, fv1, tgradU()));
+    const volScalarField::Internal Stilda
+    (
+        this->Stilda(chi, fv1, Omega, dTilda)
+    );
+    tgradU.clear();
 
     tmp<fvScalarMatrix> nuTildaEqn
     (
@@ -462,10 +476,10 @@ void SpalartAllmarasDES<BasicTurbulenceModel>::correct()
       - fvm::laplacian(alpha*rho*DnuTildaEff(), nuTilda_)
       - Cb2_/sigmaNut_*alpha*rho*magSqr(fvc::grad(nuTilda_))
      ==
-        Cb1_*alpha*rho*Stilda*nuTilda_
+        Cb1_*alpha()*rho()*Stilda*nuTilda_()
       - fvm::Sp
         (
-            Cw1_*alpha*rho*fw(Stilda, dTilda)*nuTilda_/sqr(dTilda),
+            Cw1_*alpha()*rho()*fw(Stilda, dTilda)*nuTilda_()/sqr(dTilda),
             nuTilda_
         )
       + fvOptions(alpha, rho, nuTilda_)
@@ -479,6 +493,9 @@ void SpalartAllmarasDES<BasicTurbulenceModel>::correct()
     nuTilda_.correctBoundaryConditions();
 
     correctNut();
+
+    // Optionally cache the LESRegion field
+    cacheLESRegion(dTilda);
 }
 
 

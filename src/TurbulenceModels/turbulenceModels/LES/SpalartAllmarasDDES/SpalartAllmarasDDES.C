@@ -35,44 +35,38 @@ namespace LESModels
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::rd
+tmp<volScalarField::Internal> SpalartAllmarasDDES<BasicTurbulenceModel>::rd
 (
-    const volScalarField& magGradU
+    const volScalarField::Internal& magGradU
 ) const
 {
-    tmp<volScalarField> tr
+    return volScalarField::Internal::New
     (
-        volScalarField::New
+        modelName("rd"),
+        min
         (
-            modelName("rd"),
-            min
-            (
-                this->nuEff()
-               /(
-                   max
-                   (
-                       magGradU,
-                       dimensionedScalar(magGradU.dimensions(), small)
-                   )
-                  *sqr(this->kappa_*this->y_)
-               ),
-                scalar(10)
-            )
+            this->nuEff()()
+           /(
+                max
+                (
+                    magGradU,
+                    dimensionedScalar(magGradU.dimensions(), small)
+                )
+               *sqr(this->kappa_*this->y_())
+            ),
+            scalar(10)
         )
     );
-    tr.ref().boundaryFieldRef() == 0.0;
-
-    return tr;
 }
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::fd
+tmp<volScalarField::Internal> SpalartAllmarasDDES<BasicTurbulenceModel>::fd
 (
-    const volScalarField& magGradU
+    const volScalarField::Internal& magGradU
 ) const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("fd"),
         1 - tanh(pow3(8*rd(magGradU)))
@@ -83,14 +77,14 @@ tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::fd
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::dTilda
+tmp<volScalarField::Internal> SpalartAllmarasDDES<BasicTurbulenceModel>::dTilda
 (
-    const volScalarField& chi,
-    const volScalarField& fv1,
-    const volTensorField& gradU
+    const volScalarField::Internal& chi,
+    const volScalarField::Internal& fv1,
+    const volTensorField::Internal& gradU
 ) const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         modelName("dTilda"),
         max
@@ -99,7 +93,7 @@ tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::dTilda
           - fd(mag(gradU))
            *max
             (
-                this->y_ - this->CDES_*this->delta(),
+                this->y_() - this->CDES_*this->delta()(),
                 dimensionedScalar(dimLength, 0)
             ),
             dimensionedScalar(dimLength, small)

@@ -44,8 +44,27 @@ timePrecision   6;
 
 runTimeModifiable true;
 
+cacheTemporaryObjects
+(
+    SpalartAllmarasDDES:LESRegion
+);
+
 functions
 {
+    writeCachedObjects
+    {
+        type        writeObjects;
+        libs        ("libutilityFunctionObjects.so");
+
+        writeControl writeTime;
+        writeOption anyWrite;
+
+        objects
+        (
+            SpalartAllmarasDDES:LESRegion
+        );
+    }
+
     #include "cuttingPlane"
     #include "streamLines"
     #include "forceCoeffs"
