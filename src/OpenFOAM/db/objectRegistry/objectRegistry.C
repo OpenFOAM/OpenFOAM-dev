@@ -333,6 +333,27 @@ void Foam::objectRegistry::clear()
 }
 
 
+void Foam::objectRegistry::addTemporaryObject
+(
+    const word& name
+) const
+{
+    if (!cacheTemporaryObjects_.found(name))
+    {
+        cacheTemporaryObjects_.insert(name, {false, false});
+    }
+}
+
+
+bool Foam::objectRegistry::cacheTemporaryObject
+(
+    const word& name
+) const
+{
+    return cacheTemporaryObjects_.found(name);
+}
+
+
 void Foam::objectRegistry::resetCacheTemporaryObject
 (
     const regIOobject& ob

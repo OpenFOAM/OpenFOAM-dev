@@ -214,10 +214,17 @@ public:
             //- Remove all regIOobject owned by the registry
             void clear();
 
+            //- Add the given name to the set of temporary objects to cache
+            void addTemporaryObject(const word& name) const;
+
+            //- Return true if given name is in the cacheTemporaryObjects set
+            bool cacheTemporaryObject(const word& name) const;
+
+            //- Cache the given object
             template<class Object>
             bool cacheTemporaryObject(Object& ob) const;
 
-            //- Reset cache state of the given object
+            //- Reset the cache state of the given object
             //  in the cacheTemporaryObjects set
             void resetCacheTemporaryObject(const regIOobject& ob) const;
 
