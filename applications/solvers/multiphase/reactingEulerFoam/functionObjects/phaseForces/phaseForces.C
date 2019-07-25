@@ -225,7 +225,7 @@ bool Foam::functionObjects::phaseForces::read(const dictionary& dict)
 
 bool Foam::functionObjects::phaseForces::execute()
 {
-    forAllIter
+    forAllConstIter
     (
         HashPtrTable<volVectorField>,
         forceFields_,
@@ -267,17 +267,17 @@ bool Foam::functionObjects::phaseForces::execute()
 
                 if (type == "liftModel")
                 {
-                    force = nonDragForce<liftModel>(pair);
+                    force += nonDragForce<liftModel>(pair);
                 }
 
                 if (type == "wallLubricationModel")
                 {
-                    force = nonDragForce<wallLubricationModel>(pair);
+                    force += nonDragForce<wallLubricationModel>(pair);
                 }
 
                 if (type == "turbulentDispersionModel")
                 {
-                    force = nonDragForce<turbulentDispersionModel>(pair);
+                    force += nonDragForce<turbulentDispersionModel>(pair);
                 }
             }
         }
@@ -289,7 +289,7 @@ bool Foam::functionObjects::phaseForces::execute()
 
 bool Foam::functionObjects::phaseForces::write()
 {
-    forAllIter
+    forAllConstIter
     (
         HashPtrTable<volVectorField>,
         forceFields_,
