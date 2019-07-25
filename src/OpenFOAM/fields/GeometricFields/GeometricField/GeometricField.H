@@ -625,36 +625,13 @@ public:
         );
 
         void max(const dimensioned<Type>&);
+
         void min(const dimensioned<Type>&);
 
         void maxMin
         (
             const dimensioned<Type>& minDt,
             const dimensioned<Type>& maxDt
-        );
-
-        void max
-        (
-            const GeometricField<Type, PatchField, GeoMesh>&,
-            const dimensioned<Type>&
-        );
-
-        void min
-        (
-            const GeometricField<Type, PatchField, GeoMesh>&,
-            const dimensioned<Type>&
-        );
-
-        void scale
-        (
-            const GeometricField<Type, PatchField, GeoMesh>&,
-            const GeometricField<Type, PatchField, GeoMesh>&
-        );
-
-        void scale
-        (
-            const GeometricField<Type, PatchField, GeoMesh>&,
-            const dimensioned<Type>&
         );
 
 
