@@ -122,7 +122,7 @@ Usage
                 {
                     C 0.5;
                     exponent 0.01;
-                    daughterSizeDistributionModel uniformBinary;
+                    daughterSizeDistributionModel uniform;
                 }
             );
 

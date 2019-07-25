@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::daughterSizeDistributionModels::uniformBinary
+    Foam::diameterModels::daughterSizeDistributionModels::uniform
 
 Description
-    Uniform binary daughter size distribution. Used for verification and
-    validation of the breakup formulation implemented in the
-    populationBalanceModel class.
+    Uniform daughter size distribution.
 
 SourceFiles
-    uniformBinary.C
+    uniform.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformBinary_H
-#define uniformBinary_H
+#ifndef uniform_H
+#define uniform_H
 
 #include "daughterSizeDistributionModel.H"
 
@@ -49,22 +47,22 @@ namespace daughterSizeDistributionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class uniformBinary Declaration
+                           Class uniform Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformBinary
+class uniform
 :
     public daughterSizeDistributionModel
 {
 public:
 
     //- Runtime type information
-    TypeName("uniformBinary");
+    TypeName("uniform");
 
 
     // Constructor
 
-        uniformBinary
+        uniform
         (
             const breakupModel& breakup,
             const dictionary& dict
@@ -72,13 +70,12 @@ public:
 
 
     //- Destructor
-    virtual ~uniformBinary();
+    virtual ~uniform();
 
 
     // Member Functions
 
-        //- Return total number of particles assigned to class i when a particle
-        //  of class k breaks
+        //- Calculate contribution to sizeGroup i due to breakup in sizeGroup k
         virtual dimensionedScalar calcNik(const label i, const label k) const;
 };
 

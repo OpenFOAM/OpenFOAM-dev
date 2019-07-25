@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,14 @@ Class
     Foam::diameterModels::daughterSizeDistributionModel
 
 Description
-    Base class for daughter size distribution models.
+    Base class for daughter size distribution models. Calculates and stores
+    the contribution to a sizeGroup i due to breakup in a larger sizeGroup k.
+
+Usage
+    \table
+        Property     | Description              | Required    | Default value
+        p            | daughter particle number | no          | 2
+    \endtable
 
 SourceFiles
     daughterSizeDistributionModel.C
@@ -60,7 +67,10 @@ protected:
         //- Reference to the breakupModel
         const breakupModel& breakup_;
 
-        //- nik
+        //- Number of daughter particles, defaults to binary breakup
+        dimensionedScalar particleNumber_;
+
+        //- Contribution to sizeGroup i due to breakup in sizeGroup k
         PtrList<PtrList<dimensionedScalar>> nik_;
 
 
@@ -109,15 +119,13 @@ public:
 
     // Member Functions
 
-        //- Return total number of particles assigned to class i when a particle
-        //  of class k breaks
+        //- Return contribution to sizeGroup i due to breakup in sizeGroup k
         const dimensionedScalar& nik(const label i, const label k) const;
 
         //- Correct field independent expressions
         void correct();
 
-        //- Calculate and return total number of particles assigned to class i
-        //  when a particle of class k breaks
+        //- Calculate contribution to sizeGroup i due to breakup in sizeGroup k
         virtual dimensionedScalar calcNik
         (
             const label i,

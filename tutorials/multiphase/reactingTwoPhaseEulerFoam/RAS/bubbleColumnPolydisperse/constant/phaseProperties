@@ -93,7 +93,7 @@ populationBalanceCoeffs
             {
                 C 10.0;
                 exponent 1.0;
-                daughterSizeDistributionModel uniformBinary;
+                daughterSizeDistributionModel uniform;
             }
         );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,14 +27,13 @@ Class
 
 Description
     Daughter size distribution model used by Laakkonen et al. (2006). Note that
-    it must be multiplied by the number of daughter particles (2). Also, the
-    coefficient C4 needs to be set to the value of 2 as to ensure number and
-    mass conservation following Kumar and Ramkrishna (1996). Also the internal
-    coordinate was changed to particle volume, which gives
+    the diameters in the original expression was substituted by bubble volumes
+    giving
 
     \f[
-        \frac{60}{v_j} \left(\frac{v_i}{v_j}\right)^{2}
-        \left(1 - \frac{v_i}{v_j}\right)^{2}
+        \left(9 + \frac{33}{2}C_4 + 9C_4^2 + \frac{3}{2}C_4^3\right)
+        \times \left(\frac{1}{3}\right) \left(\frac{1}{v_j}\right)
+        \left(\frac{v_i}{v_j}\right)^{2} \left(1 - \frac{v_i}{v_j}\right)^{C_4}
     \f]
 
     where
@@ -53,20 +52,10 @@ Description
         Eq. 3, p. 220.
     \endverbatim
 
-    \verbatim
-        Kumar, S., & Ramkrishna, D. (1996).
-        On the solution of population balance equations by discretization-I.
-        A fixed pivot technique.
-        Chemical Engineering Science, 51(8), 1311-1332.
-        Eq. 33, p. 1318.
-    \endverbatim
-
 Usage
     \table
         Property     | Description             | Required    | Default value
-        C1           | Coefficient C1          | no          | 6.0
-        C2           | Coefficient C2          | no          | 0.04
-        C3           | Coefficient C3          | no          | 0.01
+        C4           | Coefficient C4          | no          | 4.3
     \endtable
 
 SourceFiles
@@ -96,6 +85,12 @@ class LaakkonenAlopaeusAittamaaDsd
 :
     public daughterSizeDistributionModel
 {
+    // Private Data
+
+        //- Optional coefficient C4, defaults to 4.3
+        dimensionedScalar C4_;
+
+
 public:
 
     //- Runtime type information
@@ -117,8 +112,16 @@ public:
 
     // Member Functions
 
-        //- Return total number of particles assigned to class i when a particle
-        //  of class k breaks
+        //- Calculate antiderivative
+        dimensionedScalar antiderivative
+        (
+            const dimensionedScalar& xk,
+            const dimensionedScalar& v,
+            const dimensionedScalar& bndr,
+            const dimensionedScalar range
+        ) const;
+
+        //- Calculate contribution to sizeGroup i due to breakup in sizeGroup k
         virtual dimensionedScalar calcNik(const label i, const label k) const;
 };
 
