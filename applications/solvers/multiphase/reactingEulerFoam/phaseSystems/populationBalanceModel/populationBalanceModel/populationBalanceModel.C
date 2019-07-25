@@ -669,16 +669,10 @@ void Foam::diameterModels::populationBalanceModel::sources()
     // terms as required
     forAll(sizeGroups_, i)
     {
-        const sizeGroup& fi = sizeGroups_[i];
-
         if (coalescence_.size() != 0)
         {
             for (label j = 0; j <= i; j++)
             {
-                const sizeGroup& fj = sizeGroups_[j];
-
-                if (fi.x() + fj.x() > sizeGroups_.last().x()) break;
-
                 coalescenceRate_() = Zero;
 
                 forAll(coalescence_, model)
@@ -1161,39 +1155,35 @@ Foam::diameterModels::populationBalanceModel::gamma
     const dimensionedScalar& v
 ) const
 {
-    dimensionedScalar lowerBoundary(v);
-    dimensionedScalar upperBoundary(v);
+    const dimensionedScalar& x0 = sizeGroups_[0].x();
     const dimensionedScalar& xi = sizeGroups_[i].x();
+    const dimensionedScalar& xm = sizeGroups_.last().x();
+    dimensionedScalar lowerBoundary(x0);
+    dimensionedScalar upperBoundary(xm);
 
-    if (i == 0)
-    {
-       lowerBoundary = xi;
-    }
-    else
-    {
-       lowerBoundary = sizeGroups_[i-1].x();
-    }
+    if (i != 0) lowerBoundary = sizeGroups_[i-1].x();
 
-    if (i == sizeGroups_.size() - 1)
-    {
-        upperBoundary = xi;
-    }
-    else
-    {
-        upperBoundary = sizeGroups_[i+1].x();
-    }
+    if (i != sizeGroups_.size() - 1) upperBoundary = sizeGroups_[i+1].x();
 
-    if (v < lowerBoundary || v > upperBoundary)
+    if (i == 0 && v < x0)
+    {
+        return xi/v;
+    }
+    else if (i == sizeGroups_.size() - 1 && v > xm)
+    {
+        return v/xi;
+    }
+    else if (v < lowerBoundary || v > upperBoundary)
     {
         return 0;
     }
-    else if (v.value() <= xi.value())
+    else if (v > xi)
     {
-        return (v - lowerBoundary)/(xi - lowerBoundary);
+        return (upperBoundary - v)/(upperBoundary - xi);
     }
     else
     {
-        return (upperBoundary - v)/(upperBoundary - xi);
+        return (v - lowerBoundary)/(xi - lowerBoundary);
     }
 }
 
@@ -1280,10 +1270,10 @@ void Foam::diameterModels::populationBalanceModel::solve()
                         phase.alphaRhoPhi(),
                         fi
                     )
-                  - fvm::Sp
+                  + fvm::SuSp
                     (
-                        fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
-                      - fi.VelocityGroup().dmdt(),
+                        fi.VelocityGroup().dmdt()
+                      - phase.continuityErrorFlow(),
                         fi
                     )
                   ==
