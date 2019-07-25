@@ -27,7 +27,7 @@ solvers
     {
         nCorr           1;
         tolerance       1e-4;
-        renormalize     false;
+        scale           false;
     }
 
     p_rgh

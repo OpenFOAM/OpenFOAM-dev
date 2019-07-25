@@ -81,21 +81,16 @@ populationBalanceCoeffs
 
         coalescenceModels
         (
-            CoulaloglouTavlarides{}
+            LehrMilliesMewes{}
         );
 
         binaryBreakupModels
-        ();
+        (
+            LehrMilliesMewes{}
+        );
 
         breakupModels
-        (
-            exponential
-            {
-                C 10.0;
-                exponent 1.0;
-                daughterSizeDistributionModel uniform;
-            }
-        );
+        ();
 
         driftModels
         (

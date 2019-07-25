@@ -76,24 +76,16 @@ populationBalanceCoeffs
 
         coalescenceModels
         (
-            hydrodynamic
-            {
-                C 0.25;
-            }
+            LehrMilliesMewes{}
         );
 
         binaryBreakupModels
-        ();
+        (
+            LehrMilliesMewes{}
+        );
 
         breakupModels
-        (
-            exponential
-            {
-                C 0.5;
-                exponent 0.01;
-                daughterSizeDistributionModel uniform;
-            }
-        );
+        ();
 
         driftModels
         (
@@ -125,7 +117,13 @@ blending
 }
 
 surfaceTension
-();
+(
+    (gas and liquid)
+    {
+        type            constant;
+        sigma           0.07;
+    }
+);
 
 saturationModel
 {

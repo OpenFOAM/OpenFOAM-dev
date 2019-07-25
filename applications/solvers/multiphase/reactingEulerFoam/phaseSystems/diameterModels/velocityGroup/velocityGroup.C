@@ -98,29 +98,28 @@ Foam::diameterModels::velocityGroup::fSum() const
 }
 
 
-void Foam::diameterModels::velocityGroup::renormalize()
+void Foam::diameterModels::velocityGroup::scale()
 {
-        Info<< "Renormalizing sizeGroups for velocityGroup "
-            << phase_.name()
-            << endl;
+    Info<< "Scaling sizeGroups for velocityGroup " << phase_.name() << endl;
 
-        // Set negative values to zero
-        forAll(sizeGroups_, i)
-        {
-            sizeGroups_[i] *= pos(sizeGroups_[i]);
-        };
+    forAll(sizeGroups_, i)
+    {
+        sizeGroups_[i].max(0);
+    };
 
-        forAll(sizeGroups_, i)
-        {
-            sizeGroups_[i] /= fSum_;
-        };
+    f_ = fSum();
+
+    forAll(sizeGroups_, i)
+    {
+        sizeGroups_[i] /= f_;
+    };
 }
 
 
 Foam::tmp<Foam::fv::convectionScheme<Foam::scalar>>
 Foam::diameterModels::velocityGroup::mvconvection() const
 {
-    tmp<fv::convectionScheme<Foam::scalar> > mvConvection
+    tmp<fv::convectionScheme<Foam::scalar>> mvConvection
     (
         fv::convectionScheme<Foam::scalar>::New
         (
@@ -174,24 +173,6 @@ Foam::diameterModels::velocityGroup::velocityGroup
         diameterProperties.lookup("sizeGroups"),
         sizeGroup::iNew(phase, *this)
     ),
-    fSum_
-    (
-        IOobject
-        (
-            IOobject::groupName
-            (
-                "fsum",
-                IOobject::groupName
-                (
-                    phase.name(),
-                    popBalName_
-                )
-            ),
-            phase.time().timeName(),
-            phase.mesh()
-        ),
-        fSum()
-    ),
     d_
     (
         IOobject
@@ -217,49 +198,6 @@ Foam::diameterModels::velocityGroup::velocityGroup
         dimensionedScalar(dimDensity/dimTime, Zero)
     )
 {
-    if
-    (
-        phase_.mesh().solverDict(popBalName_).lookupOrDefault<Switch>
-        (
-            "renormalizeAtRestart",
-            false
-        )
-     ||
-        phase_.mesh().solverDict(popBalName_).lookupOrDefault<Switch>
-        (
-            "renormalize",
-            false
-        )
-    )
-    {
-        renormalize();
-    }
-
-    fSum_ = fSum();
-
-    if
-    (
-        mag(1 - fSum_.weightedAverage(fSum_.mesh().V()).value()) >= 1e-5
-     || mag(1 - max(fSum_).value()) >= 1e-5
-     || mag(1 - min(fSum_).value()) >= 1e-5
-    )
-    {
-        FatalErrorInFunction
-            << " Initial values of the sizeGroups belonging to velocityGroup "
-            << this->phase().name()
-            << " must add to" << nl << " unity. This condition might be"
-            << " violated due to wrong entries in the" << nl
-            << " velocityGroupCoeffs subdictionary or bad initial conditions in"
-            << " the startTime" << nl
-            << " directory. The sizeGroups can be renormalized at every"
-            << " timestep or at restart" << nl
-            << " only by setting the corresponding switch renormalize or"
-            << " renormalizeAtRestart" << nl
-            << " in the fvSolution subdictionary " << popBalName_ << "."
-            << " Note that boundary conditions are not" << nl << "renormalized."
-            << exit(FatalError);
-    }
-
     forAll(sizeGroups_, i)
     {
         fields_.add(sizeGroups_[i]);
@@ -286,6 +224,28 @@ void Foam::diameterModels::velocityGroup::preSolve()
 
 void Foam::diameterModels::velocityGroup::postSolve()
 {
+    if
+    (
+        phase_.mesh().solverDict(popBalName_).lookupOrDefault<Switch>
+        (
+            "scale",
+            true
+        )
+    )
+    {
+        scale();
+    }
+
+    f_ = fSum();
+
+    f_.correctBoundaryConditions();
+
+    Info<< phase_.name() << " sizeGroups-sum volume fraction, min, max = "
+        << f_.weightedAverage(phase_.mesh().V()).value()
+        << ' ' << min(f_).value()
+        << ' ' << max(f_).value()
+        << endl;
+
     d_ = dsm();
 
     Info<< this->phase().name() << " Sauter mean diameter, min, max = "
@@ -293,26 +253,6 @@ void Foam::diameterModels::velocityGroup::postSolve()
         << ' ' << min(d_).value()
         << ' ' << max(d_).value()
         << endl;
-
-    fSum_ = fSum();
-
-    Info<< phase_.name() << " sizeGroups-sum volume fraction, min, max = "
-        << fSum_.weightedAverage(phase_.mesh().V()).value()
-        << ' ' << min(fSum_).value()
-        << ' ' << max(fSum_).value()
-        << endl;
-
-    if
-    (
-        phase_.mesh().solverDict(popBalName_).lookupOrDefault<Switch>
-        (
-            "renormalize",
-            false
-        )
-    )
-    {
-        renormalize();
-    }
 }
 
 

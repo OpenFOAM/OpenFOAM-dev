@@ -100,7 +100,8 @@ class velocityGroup
         //- Name of the populationBalance this velocityGroup belongs to
         word popBalName_;
 
-        //- Reference field from which the sizeGroup fields are derived
+        //- Sum of the sizeGroup volume fractions and reference field from which
+        //  the sizeGroup fields are derived
         volScalarField f_;
 
         //- Form factor relating diameter and volume
@@ -108,9 +109,6 @@ class velocityGroup
 
         //- sizeGroups belonging to this velocityGroup
         PtrList<sizeGroup> sizeGroups_;
-
-        //- Sum of sizeGroup volume fractions
-        volScalarField fSum_;
 
         //- Number-based Sauter-mean diameter of the phase
         volScalarField d_;
@@ -131,7 +129,7 @@ class velocityGroup
 
         tmp<volScalarField> fSum() const;
 
-        void renormalize();
+        void scale();
 
         tmp<Foam::fv::convectionScheme<Foam::scalar>> mvconvection() const;
 
