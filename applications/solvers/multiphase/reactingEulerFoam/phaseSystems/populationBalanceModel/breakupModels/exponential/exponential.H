@@ -25,8 +25,7 @@ Class
     Foam::diameterModels::breakupModels::exponential
 
 Description
-    Exponential kernel. Used for verification and validation of the breakup
-    formulation implemented in the populationBalanceModel class.
+    Exponential kernel.
 
 SourceFiles
     exponential.C

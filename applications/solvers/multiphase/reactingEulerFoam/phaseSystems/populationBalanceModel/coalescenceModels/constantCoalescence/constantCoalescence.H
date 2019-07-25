@@ -25,8 +25,7 @@ Class
     Foam::diameterModels::coalescenceModels::constantCoalescence
 
 Description
-    Constant coalescence kernel. Used for verification and validation of the
-    coalescence formulation implemented in the populationBalanceModel class.
+    Constant coalescence kernel.
 
 SourceFiles
     constantCoalescence.C

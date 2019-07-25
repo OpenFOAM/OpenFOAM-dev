@@ -25,8 +25,7 @@ Class
     Foam::diameterModels::breakupModels::powerLaw
 
 Description
-    Powerlaw kernel. Used for verification and validation of the breakup
-    formulation implemented in the populationBalanceModel class.
+    Powerlaw kernel.
 
 SourceFiles
     powerLaw.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ Class
     Foam::diameterModels::coalescenceModels::hydrodynamic
 
 Description
-    Hydrodynamic kernel. Used for verification and validation of the coalescence
-    formulation implemented in the populationBalanceModel class.
+    Hydrodynamic kernel.
 
 SourceFiles
     hydrodynamic.C

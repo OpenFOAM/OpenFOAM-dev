@@ -25,9 +25,8 @@ Class
     Foam::diameterModels::nucleationModels::constantNucleation
 
 Description
-    Constant nucleation rate within all classes. Used for verification and
-    validation of the nucleation formulation implemented in the
-    populationBalanceModel class. Rate is calculated from fvOptions mass source.
+    Constant nucleation rate within all classes computed from fvOptions mass
+    source.
 
 SourceFiles
     constant.C

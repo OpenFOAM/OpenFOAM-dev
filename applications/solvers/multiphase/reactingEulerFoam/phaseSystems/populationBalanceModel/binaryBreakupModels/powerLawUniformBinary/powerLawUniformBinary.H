@@ -25,9 +25,7 @@ Class
     Foam::diameterModels::binaryBreakupModels::powerLawUniformBinary
 
 Description
-    Powerlaw kernel with a uniform daughter size distribution. Used for
-    verification and validation of the binary breakup formulation implemented
-    in the populationBalanceModel class.
+    Powerlaw kernel with a uniform daughter size distribution.
 
 SourceFiles
     powerLawUniformBinary.C
