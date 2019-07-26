@@ -338,11 +338,6 @@ void Foam::Field<Type>::map
     const scalarListList& mapWeights
 )
 {
-    if (this->size() != mapAddressing.size())
-    {
-        this->setSize(mapAddressing.size());
-    }
-
     if (mapWeights.size() != mapAddressing.size())
     {
         FatalErrorInFunction
@@ -353,10 +348,21 @@ void Foam::Field<Type>::map
     if (static_cast<UList<Type>*>(this) == &mapF)
     {
         Field<Type> mapFcpy(mapF);
+
+        if (this->size() != mapAddressing.size())
+        {
+            this->setSize(mapAddressing.size());
+        }
+
         doMap(mapFcpy, mapAddressing, mapWeights);
     }
     else
     {
+        if (this->size() != mapAddressing.size())
+        {
+            this->setSize(mapAddressing.size());
+        }
+
         doMap(mapF, mapAddressing, mapWeights);
     }
 }
