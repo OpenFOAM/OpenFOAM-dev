@@ -78,16 +78,6 @@ class fieldAverageItem
 {
 public:
 
-    // Public data
-
-        // File and field name extensions
-
-            //- Mean average
-            static const word EXT_MEAN;
-
-            //- Prime-squared average
-            static const word EXT_PRIME2MEAN;
-
         //- Enumeration defining the averaging base type
         enum class baseType
         {
@@ -129,6 +119,17 @@ private:
 
 
 public:
+
+    // Static data
+
+        // File and field name extensions
+
+            //- Mean average
+            static const word meanExt;
+
+            //- Prime-squared average
+            static const word prime2MeanExt;
+
 
     // Constructors
 

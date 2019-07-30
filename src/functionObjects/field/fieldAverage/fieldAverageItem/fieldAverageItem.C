@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,12 +27,12 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::word Foam::functionObjects::fieldAverageItem::EXT_MEAN
+const Foam::word Foam::functionObjects::fieldAverageItem::meanExt
 (
     "Mean"
 );
 
-const Foam::word Foam::functionObjects::fieldAverageItem::EXT_PRIME2MEAN
+const Foam::word Foam::functionObjects::fieldAverageItem::prime2MeanExt
 (
     "Prime2Mean"
 );
