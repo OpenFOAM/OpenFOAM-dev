@@ -63,12 +63,6 @@ Usage
             \kappa = 2000 - 0.15 ln(T) + 0.023 ln(T)^2
         \f]
 
-Note
-    - Dynamic viscosity polynomial coefficients evaluate to an expression in
-      [Pa.s], but internally uses [Pa.s/kmol].
-    - Thermal conductivity polynomial coefficients evaluate to an expression in
-      [W/m/K], but internally uses [W/m/K/kmol].
-
 SourceFiles
     logPolynomialTransportI.H
     logPolynomialTransport.C
@@ -125,12 +119,10 @@ class logPolynomialTransport
 {
     // Private Data
 
-        //- Dynamic viscosity polynomial coefficients
-        //  Note: input in [Pa.s], but internally uses [Pa.s/kmol]
+        //- Dynamic viscosity polynomial coefficients [Pa.s/K^i]
         Polynomial<PolySize> muCoeffs_;
 
-        //- Thermal conductivity polynomial coefficients
-        //  Note: input in [W/m/K], but internally uses [W/m/K/kmol]
+        //- Thermal conductivity polynomial coefficients [W/m/K/K^i]
         Polynomial<PolySize> kappaCoeffs_;
 
 
