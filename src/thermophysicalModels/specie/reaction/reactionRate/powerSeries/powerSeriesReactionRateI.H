@@ -59,7 +59,8 @@ inline Foam::scalar Foam::powerSeriesReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -86,7 +87,8 @@ inline Foam::scalar Foam::powerSeriesReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -124,6 +126,7 @@ inline void Foam::powerSeriesReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -133,7 +136,8 @@ inline Foam::scalar Foam::powerSeriesReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;

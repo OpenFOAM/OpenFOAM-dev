@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,8 @@ inline Foam::scalar Foam::JanevReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -93,7 +94,8 @@ inline Foam::scalar Foam::JanevReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -142,6 +144,7 @@ inline void Foam::JanevReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -151,7 +154,8 @@ inline Foam::scalar Foam::JanevReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;

@@ -210,6 +210,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& d
             ) const;
 
@@ -219,6 +220,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& f
             ) const;
 
@@ -228,6 +230,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& dcdt
             ) const;
 
@@ -237,6 +240,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalar& pf,
                 scalar& cf,
                 label& lRef,
@@ -252,7 +256,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
             //- Reverse rate constant from the given forward rate constant
@@ -261,7 +266,8 @@ public:
                 const scalar kfwd,
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
             //- Reverse rate constant
@@ -269,7 +275,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
 
@@ -282,6 +289,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarSquareMatrix& J,
                 scalarField& dcdt,
                 scalar& omegaI,
@@ -298,6 +306,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 const scalar omegaI,
                 const scalar kfwd,
                 const scalar kbwd,
@@ -312,7 +321,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
             //- Temperature derivative of reverse rate
@@ -321,6 +331,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 const scalar dkfdT,
                 const scalar kr
             ) const = 0;
@@ -336,6 +347,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& dcidc
             ) const = 0;
 
@@ -344,7 +356,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
 

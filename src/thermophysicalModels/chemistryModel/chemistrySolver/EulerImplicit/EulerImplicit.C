@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,9 +91,10 @@ void Foam::EulerImplicit<ChemistryModel>::updateRRInReactionI
 template<class ChemistryModel>
 void Foam::EulerImplicit<ChemistryModel>::solve
 (
-    scalarField& c,
-    scalar& T,
     scalar& p,
+    scalar& T,
+    scalarField& c,
+    const label li,
     scalar& deltaT,
     scalar& subDeltaT
 ) const
@@ -124,8 +125,10 @@ void Foam::EulerImplicit<ChemistryModel>::solve
         scalar pf, cf, pr, cr;
         label lRef, rRef;
 
-        const scalar omegai =
-            this->omegaI(i, c, T, p, pf, cf, lRef, pr, cr, rRef);
+        const scalar omegai
+        (
+            this->omegaI(i, p, T, c, li, pf, cf, lRef, pr, cr, rRef)
+        );
 
         scalar corr = 1;
         if (eqRateLimiter_)

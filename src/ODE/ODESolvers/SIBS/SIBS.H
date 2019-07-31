@@ -90,6 +90,7 @@ class SIBS
         (
             const scalar xStart,
             const scalarField& y,
+            const label li,
             const scalarField& dydx,
             const scalarField& dfdx,
             const scalarSquareMatrix& dfdy,
@@ -136,6 +137,7 @@ public:
         (
             scalar& x,
             scalarField& y,
+            const label li,
             scalar& dxTry
         ) const;
 };

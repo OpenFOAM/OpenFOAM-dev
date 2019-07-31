@@ -106,7 +106,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::kf
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     NotImplemented;
@@ -120,7 +121,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::kr
     const scalar kfwd,
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     NotImplemented;
@@ -133,7 +135,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::kr
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     NotImplemented;
@@ -146,7 +149,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::dkfdT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     NotImplemented;
@@ -160,6 +164,7 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::dkrdT
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     const scalar dkfdT,
     const scalar kr
 ) const
@@ -184,6 +189,7 @@ void Foam::ReactionProxy<ReactionThermo>::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {
@@ -196,7 +202,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     NotImplemented;

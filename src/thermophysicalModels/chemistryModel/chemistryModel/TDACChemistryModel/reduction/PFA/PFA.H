@@ -82,9 +82,10 @@ public:
         //- Reduce the mechanism
         virtual void reduceMechanism
         (
-            const scalarField &c,
+            const scalar p,
             const scalar T,
-            const scalar p
+            const scalarField& c,
+            const label li
         );
 };
 

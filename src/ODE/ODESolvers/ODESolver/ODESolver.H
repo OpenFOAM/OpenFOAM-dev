@@ -183,35 +183,42 @@ public:
 
         inline void resizeMatrix(scalarSquareMatrix& m) const;
 
-        //- Solve the ODE system as far as possible up to dxTry
-        //  adjusting the step as necessary to provide a solution within
-        //  the specified tolerance.
+        //- Solve the ODE system from the current state xStart, y
+        //  and the optional index into the list of systems to solve li
+        //  as far as possible up to dxTry adjusting the step as necessary
+        //  to provide a solution within the specified tolerance.
         //  Update the state and return an estimate for the next step in dxTry
         virtual void solve
         (
             scalar& x,
             scalarField& y,
+            const label li,
             scalar& dxTry
         ) const;
 
-        //- Solve the ODE system as far as possible up to dxTry
-        //  adjusting the step as necessary to provide a solution within
-        //  the specified tolerance.
-        //  Update the state and return an estimate for the next step in dxTry
+        //- Solve the ODE system from the current state xStart, y
+        //  and the optional index into the list of systems to solve li
+        //  as far as possible up to step.dxTry adjusting the step as necessary
+        //  to provide a solution within the specified tolerance.
+        //  Update the state and return the step actually taken in step.dxDid
+        //  and an estimate for the next step in step.dxTry
         virtual void solve
         (
             scalar& x,
             scalarField& y,
+            const label li,
             stepState& step
         ) const;
 
-        //- Solve the ODE system from xStart to xEnd, update the state
-        //  and return an estimate for the next step in dxTry
+        //- Solve the ODE system from the current state xStart, y
+        //  and the optional index into the list of systems to solve li
+        //  to xEnd and return an estimate for the next step in dxTry
         virtual void solve
         (
             const scalar xStart,
             const scalar xEnd,
             scalarField& y,
+            const label li,
             scalar& dxEst
         ) const;
 

@@ -97,14 +97,16 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& c
+            const scalarField& c,
+            const label li
         ) const;
 
         inline scalar ddT
         (
             const scalar p,
             const scalar T,
-            const scalarField& c
+            const scalarField& c,
+            const label li
         ) const;
 
         //- Third-body efficiencies (beta = 1-alpha)
@@ -119,6 +121,7 @@ public:
             const scalar p,
             const scalar T,
             const scalarField& c,
+            const label li,
             scalarField& dcidc
         ) const;
 
@@ -128,7 +131,8 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& c
+            const scalarField& c,
+            const label li
         ) const;
 
         //- Write to stream

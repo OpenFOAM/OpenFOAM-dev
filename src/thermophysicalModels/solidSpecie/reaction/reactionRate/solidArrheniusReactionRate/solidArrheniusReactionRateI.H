@@ -57,7 +57,8 @@ inline Foam::scalar Foam::solidArrheniusReactionRate::operator()
 (
     const scalar,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label li
 ) const
 {
     if (T < Tcrit_)
@@ -75,7 +76,8 @@ inline Foam::scalar Foam::solidArrheniusReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label li
 ) const
 {
     if (T < Tcrit_)
@@ -101,6 +103,7 @@ inline void Foam::solidArrheniusReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -110,7 +113,8 @@ inline Foam::scalar Foam::solidArrheniusReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;

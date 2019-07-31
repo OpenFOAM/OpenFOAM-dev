@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,11 +116,12 @@ void Foam::ODESolver::solve
 (
     scalar& x,
     scalarField& y,
+    const label li,
     scalar& dxTry
 ) const
 {
     stepState step(dxTry);
-    solve(x, y, step);
+    solve(x, y, li, step);
     dxTry = step.dxTry;
 }
 
@@ -129,11 +130,12 @@ void Foam::ODESolver::solve
 (
     scalar& x,
     scalarField& y,
+    const label li,
     stepState& step
 ) const
 {
     scalar x0 = x;
-    solve(x, y, step.dxTry);
+    solve(x, y, li, step.dxTry);
     step.dxDid = x - x0;
 }
 
@@ -143,6 +145,7 @@ void Foam::ODESolver::solve
     const scalar xStart,
     const scalar xEnd,
     scalarField& y,
+    const label li,
     scalar& dxTry
 ) const
 {
@@ -164,7 +167,7 @@ void Foam::ODESolver::solve
         }
 
         // Integrate as far as possible up to step.dxTry
-        solve(x, y, step);
+        solve(x, y, li, step);
 
         // Check if reached xEnd
         if ((x - xEnd)*(xEnd - xStart) >= 0)

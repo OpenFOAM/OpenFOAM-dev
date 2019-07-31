@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,10 +124,11 @@ Foam::NonEquilibriumReversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return fk_(p, T, c);
+    return fk_(p, T, c, li);
 }
 
 
@@ -148,10 +149,11 @@ Foam::NonEquilibriumReversibleReaction
     const scalar,
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return rk_(p, T, c);
+    return rk_(p, T, c, li);
 }
 
 
@@ -171,10 +173,11 @@ Foam::NonEquilibriumReversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return rk_(p, T, c);
+    return rk_(p, T, c, li);
 }
 
 
@@ -194,10 +197,11 @@ Foam::NonEquilibriumReversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return fk_.ddT(p, T, c);
+    return fk_.ddT(p, T, c, li);
 }
 
 
@@ -218,11 +222,12 @@ Foam::NonEquilibriumReversibleReaction
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     const scalar dkfdT,
     const scalar kr
 ) const
 {
-    return rk_.ddT(p, T, c);
+    return rk_.ddT(p, T, c, li);
 }
 
 
@@ -260,10 +265,11 @@ void Foam::NonEquilibriumReversibleReaction
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {
-    fk_.dcidc(p, T, c, dcidc);
+    fk_.dcidc(p, T, c, li, dcidc);
 }
 
 
@@ -282,10 +288,11 @@ Foam::scalar Foam::NonEquilibriumReversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return fk_.dcidT(p, T, c);
+    return fk_.dcidT(p, T, c, li);
 }
 
 

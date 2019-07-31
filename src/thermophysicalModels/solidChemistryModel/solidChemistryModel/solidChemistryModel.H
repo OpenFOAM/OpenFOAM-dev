@@ -126,9 +126,10 @@ public:
         //- dc/dt = omega, rate of change in concentration, for each species
         virtual scalarField omega
         (
-            const scalarField& c,
-            const scalar T,
             const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li,
             const bool updateC0 = false
         ) const = 0;
 
@@ -137,9 +138,10 @@ public:
         virtual scalar omega
         (
             const Reaction<SolidThermo>& r,
-            const scalarField& c,
-            const scalar T,
             const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li,
             scalar& pf,
             scalar& cf,
             label& lRef,
@@ -154,9 +156,10 @@ public:
         virtual scalar omegaI
         (
             label iReaction,
-            const scalarField& c,
-            const scalar T,
             const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li,
             scalar& pf,
             scalar& cf,
             label& lRef,
@@ -204,6 +207,7 @@ public:
             (
                 const scalar t,
                 const scalarField& c,
+                const label li,
                 scalarField& dcdt
             ) const = 0;
 
@@ -211,15 +215,17 @@ public:
             (
                 const scalar t,
                 const scalarField& c,
+                const label li,
                 scalarField& dcdt,
                 scalarSquareMatrix& dfdc
             ) const = 0;
 
             virtual void solve
             (
-                scalarField &c,
-                scalar& T,
                 scalar& p,
+                scalar& T,
+                scalarField& c,
+                const label li,
                 scalar& deltaT,
                 scalar& subDeltaT
             ) const = 0;

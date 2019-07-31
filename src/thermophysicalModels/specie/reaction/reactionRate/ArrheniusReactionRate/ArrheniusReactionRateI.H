@@ -56,7 +56,8 @@ inline Foam::scalar Foam::ArrheniusReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar ak = A_;
@@ -79,7 +80,8 @@ inline Foam::scalar Foam::ArrheniusReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar ak = A_;
@@ -110,6 +112,7 @@ inline void Foam::ArrheniusReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -119,7 +122,8 @@ inline Foam::scalar Foam::ArrheniusReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;

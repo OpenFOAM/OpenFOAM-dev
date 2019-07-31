@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,9 +53,10 @@ template<class CompType, class ThermoType>
 void Foam::chemistryReductionMethods::none<CompType, ThermoType>::
 reduceMechanism
 (
-    const scalarField &c,
+    const scalar p,
     const scalar T,
-    const scalar p
+    const scalarField& c,
+    const label li
 )
 {
     NotImplemented;

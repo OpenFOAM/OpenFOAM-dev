@@ -87,6 +87,7 @@ public:
         (
             const scalar x0,
             const scalarField& y0,
+            const label li,
             const scalarField& dydx0,
             const scalar dx,
             scalarField& y
@@ -97,6 +98,7 @@ public:
         (
             scalar& x,
             scalarField& y,
+            const label li,
             scalar& dxTry
         ) const;
 };

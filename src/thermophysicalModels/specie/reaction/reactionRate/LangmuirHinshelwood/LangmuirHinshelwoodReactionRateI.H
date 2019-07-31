@@ -68,7 +68,8 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     const scalar c0m = pow(c[r_[0]], m_[0]);
@@ -90,7 +91,8 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     const scalar c0m = pow(c[r_[0]], m_[0]);
@@ -125,6 +127,7 @@ inline void Foam::LangmuirHinshelwoodReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -134,7 +137,8 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;

@@ -105,6 +105,7 @@ public:
         (
             const scalarField& phiq,
             const scalarField& Rphiq,
+            const label li,
             const scalar rho,
             const scalar deltaT
         )

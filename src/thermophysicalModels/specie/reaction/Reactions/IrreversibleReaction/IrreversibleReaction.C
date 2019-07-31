@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,10 +99,11 @@ Foam::scalar Foam::IrreversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return k_(p, T, c);
+    return k_(p, T, c, li);
 }
 
 
@@ -122,7 +123,8 @@ Foam::scalar Foam::IrreversibleReaction
     const scalar kfwd,
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;
@@ -144,7 +146,8 @@ Foam::scalar Foam::IrreversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;
@@ -166,10 +169,11 @@ Foam::scalar Foam::IrreversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return k_.ddT(p, T, c);
+    return k_.ddT(p, T, c, li);
 }
 
 
@@ -189,6 +193,7 @@ Foam::scalar Foam::IrreversibleReaction
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     const scalar dkfdT,
     const scalar kr
 ) const
@@ -231,10 +236,11 @@ void Foam::IrreversibleReaction
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {
-    k_.dcidc(p, T, c, dcidc);
+    k_.dcidc(p, T, c, li, dcidc);
 }
 
 
@@ -253,10 +259,11 @@ Foam::scalar Foam::IrreversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return k_.dcidT(p, T, c);
+    return k_.dcidT(p, T, c, li);
 }
 
 

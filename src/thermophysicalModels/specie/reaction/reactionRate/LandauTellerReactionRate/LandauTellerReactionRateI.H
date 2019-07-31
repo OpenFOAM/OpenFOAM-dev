@@ -62,7 +62,8 @@ inline Foam::scalar Foam::LandauTellerReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -102,7 +103,8 @@ inline Foam::scalar Foam::LandauTellerReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -157,6 +159,7 @@ inline void Foam::LandauTellerReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -166,7 +169,8 @@ inline Foam::scalar Foam::LandauTellerReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;

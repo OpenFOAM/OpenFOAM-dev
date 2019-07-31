@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,19 +67,25 @@ public:
         virtual label nEqns() const = 0;
 
         //- Calculate the derivatives in dydx
+        //  for the current state x and y
+        //  and optional index into the list of systems to solve li
         virtual void derivatives
         (
             const scalar x,
             const scalarField& y,
+            const label li,
             scalarField& dydx
         ) const = 0;
 
         //- Calculate the Jacobian of the system
-        //  Need by the stiff-system solvers
+        //  for the current state x and y
+        //  and optional index into the list of systems to solve li.
+        //  Need by stiff-system solvers
         virtual void jacobian
         (
             const scalar x,
             const scalarField& y,
+            const label li,
             scalarField& dfdx,
             scalarSquareMatrix& dfdy
         ) const = 0;

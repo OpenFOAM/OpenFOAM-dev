@@ -108,6 +108,7 @@ class seulex
         (
             const scalar x0,
             const scalarField& y0,
+            const label li,
             const scalar dxTot,
             const label k,
             scalarField& y,
@@ -150,6 +151,7 @@ public:
         (
             scalar& x,
             scalarField& y,
+            const label li,
             stepState& step
         ) const;
 };

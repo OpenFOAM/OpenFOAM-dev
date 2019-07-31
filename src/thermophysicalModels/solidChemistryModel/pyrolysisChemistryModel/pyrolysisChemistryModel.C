@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,7 @@ pyrolysisChemistryModel
     nGases_(pyrolisisGases_.size()),
     nSpecie_(this->Ys_.size() + nGases_),
     RRg_(nGases_),
-    Ys0_(this->nSolids_),
-    cellCounter_(0)
+    Ys0_(this->nSolids_)
 {
     // create the fields for the chemistry sources
     forAll(this->RRs_, fieldi)
@@ -184,16 +183,15 @@ template<class CompType, class SolidThermo, class GasThermo>
 Foam::scalarField Foam::
 pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
 (
-    const scalarField& c,
-    const scalar T,
     const scalar p,
+    const scalar T,
+    const scalarField& c,
+    const label li,
     const bool updateC0
 ) const
 {
     scalar pf, cf, pr, cr;
     label lRef, rRef;
-
-    const label celli = cellCounter_;
 
     scalarField om(nEqns(), 0.0);
 
@@ -207,7 +205,7 @@ pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
 
         scalar omegai = omega
         (
-            R, c, T, p, pf, cf, lRef, pr, cr, rRef
+            R, p, T, c, li, pf, cf, lRef, pr, cr, rRef
         );
         scalar rhoL = 0.0;
         forAll(R.lhs(), s)
@@ -226,7 +224,7 @@ pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
 
             if (updateC0)
             {
-                Ys0_[si][celli] += sr*omegai;
+                Ys0_[si][li] += sr*omegai;
             }
         }
         forAll(R.grhs(), g)
@@ -245,9 +243,10 @@ Foam::scalar
 Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
 (
     const Reaction<SolidThermo>& R,
-    const scalarField& c,
-    const scalar T,
     const scalar p,
+    const scalar T,
+    const scalarField& c,
+    const label li,
     scalar& pf,
     scalar& cf,
     label& lRef,
@@ -258,14 +257,12 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
 {
     scalarField c1(nSpecie_, 0.0);
 
-    label celli = cellCounter_;
-
     for (label i=0; i<nSpecie_; i++)
     {
         c1[i] = max(0.0, c[i]);
     }
 
-    scalar kf = R.kf(p, T, c1);
+    scalar kf = R.kf(p, T, c1, li);
 
     const label Nl = R.lhs().size();
 
@@ -275,8 +272,8 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
         const scalar exp = R.lhs()[si].exponent;
 
         kf *=
-            pow(c1[si]/Ys0_[si][celli], exp)
-           *(Ys0_[si][celli]);
+            pow(c1[si]/Ys0_[si][li], exp)
+           *(Ys0_[si][li]);
     }
 
     return kf;
@@ -288,9 +285,10 @@ Foam::scalar Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::
 omegaI
 (
     const label index,
-    const scalarField& c,
-    const scalar T,
     const scalar p,
+    const scalar T,
+    const scalarField& c,
+    const label li,
     scalar& pf,
     scalar& cf,
     label& lRef,
@@ -301,7 +299,7 @@ omegaI
 {
 
     const Reaction<SolidThermo>& R = this->reactions_[index];
-    scalar w = omega(R, c, T, p, pf, cf, lRef, pr, cr, rRef);
+    scalar w = omega(R, p, T, c, li, pf, cf, lRef, pr, cr, rRef);
     return(w);
 }
 
@@ -311,7 +309,8 @@ void Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::
 derivatives
 (
     const scalar time,
-    const scalarField &c,
+    const scalarField& c,
+    const label li,
     scalarField& dcdt
 ) const
 {
@@ -320,7 +319,7 @@ derivatives
 
     dcdt = 0.0;
 
-    dcdt = omega(c, T, p);
+    dcdt = omega(p, T, c, li);
 
     // Total mass concentration
     scalar cTot = 0.0;
@@ -354,6 +353,7 @@ jacobian
 (
     const scalar t,
     const scalarField& c,
+    const label li,
     scalarField& dcdt,
     scalarSquareMatrix& dfdc
 ) const
@@ -377,13 +377,13 @@ jacobian
     }
 
     // length of the first argument must be nSolids
-    dcdt = omega(c2, T, p);
+    dcdt = omega(p, T, c2, li);
 
     for (label ri=0; ri<this->reactions_.size(); ri++)
     {
         const Reaction<SolidThermo>& R = this->reactions_[ri];
 
-        scalar kf0 = R.kf(p, T, c2);
+        scalar kf0 = R.kf(p, T, c2, li);
 
         forAll(R.lhs(), j)
         {
@@ -434,14 +434,13 @@ jacobian
 
     // calculate the dcdT elements numerically
     scalar delta = 1.0e-8;
-    scalarField dcdT0 = omega(c2, T - delta, p);
-    scalarField dcdT1 = omega(c2, T + delta, p);
+    scalarField dcdT0 = omega(p , T - delta, c2, li);
+    scalarField dcdT1 = omega(p, T + delta, c2, li);
 
     for (label i=0; i<nEqns(); i++)
     {
         dfdc[i][nSpecie_] = 0.5*(dcdT1[i] - dcdT0[i])/delta;
     }
-
 }
 
 
@@ -489,8 +488,6 @@ calculate()
 
     forAll(rho, celli)
     {
-        cellCounter_ = celli;
-
         const scalar delta = this->mesh().V()[celli];
 
         if (this->reactingCells_[celli])
@@ -505,7 +502,7 @@ calculate()
                 c[i] = rhoi*this->Ys_[i][celli]*delta;
             }
 
-            const scalarField dcdt = omega(c, Ti, pi, true);
+            const scalarField dcdt = omega(pi, Ti, c, celli, true);
 
             forAll(this->RRs_, i)
             {
@@ -570,8 +567,6 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::solve
     {
         if (this->reactingCells_[celli])
         {
-            cellCounter_ = celli;
-
             scalar rhoi = rho[celli];
             scalar pi = p[celli];
             scalar Ti = T[celli];
@@ -590,7 +585,7 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::solve
             while (timeLeft > small)
             {
                 scalar dt = timeLeft;
-                this->solve(c, Ti, pi, dt, this->deltaTChem_[celli]);
+                this->solve(pi, Ti, c, celli, dt, this->deltaTChem_[celli]);
                 timeLeft -= dt;
             }
 
@@ -608,7 +603,7 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::solve
             }
 
             // Update Ys0_
-            dc = omega(c0, Ti, pi, true);
+            dc = omega(pi, Ti, c0, celli, true);
         }
     }
 
@@ -654,9 +649,10 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
 template<class CompType, class SolidThermo, class GasThermo>
 void Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::solve
 (
-    scalarField &c,
-    scalar& T,
     scalar& p,
+    scalar& T,
+    scalarField& c,
+    const label li,
     scalar& deltaT,
     scalar& subDeltaT
 ) const
