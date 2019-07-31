@@ -36,8 +36,11 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::triCut
     const BelowOp& belowOp
 )
 {
-    // If everything is positive or negative, then process the triangle as a
-    // whole, and do a quick return
+    // Quick return if all levels are zero or have the same sign
+    if (level[0] == 0 && level[1] == 0 && level[2] == 0)
+    {
+        return aboveOp() + belowOp();
+    }
     if (level[0] >= 0 && level[1] >= 0 && level[2] >= 0)
     {
         return aboveOp(tri) + belowOp();
@@ -125,13 +128,17 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::tetCut
     const BelowOp& belowOp
 )
 {
-    // Get the min and max over all four vertices and quick return if there is
-    // no change of sign
+    // Get the min and max over all four vertices and quick return if
+    // all levels are zero or have the same sign
     scalar levelMin = vGreat, levelMax = - vGreat;
     for (label i = 0; i < 4; ++ i)
     {
         levelMin = min(levelMin, level[i]);
         levelMax = max(levelMax, level[i]);
+    }
+    if (levelMin == 0 && levelMax == 0)
+    {
+        return aboveOp() + belowOp();
     }
     if (levelMin >= 0)
     {
