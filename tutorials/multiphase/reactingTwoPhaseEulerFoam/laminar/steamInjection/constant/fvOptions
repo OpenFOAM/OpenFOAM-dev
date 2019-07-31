@@ -66,6 +66,26 @@ options
             h.steam      (3700 0); // kg*m^2/s^3
         }
     }
+
+    limitTsteam
+    {
+        type            limitTemperature;
+        active          yes;
+        selectionMode   all;
+        min             270;
+        max             2000;
+        phase           steam;
+    }
+
+    limitTwater
+    {
+        type            limitTemperature;
+        active          yes;
+        selectionMode   all;
+        min             270;
+        max             2000;
+        phase           water;
+    }
 }
 
 
