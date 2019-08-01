@@ -41,7 +41,10 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
     Y_(this->thermo().composition().Y()),
     reactions_
     (
-        dynamic_cast<const reactingMixture<ThermoType>&>(this->thermo())
+        dynamic_cast<const reactingMixture<ThermoType>&>
+        (
+            this->thermo()
+        ).reactions()
     ),
     specieThermo_
     (

@@ -53,10 +53,11 @@ class reactingMixture
 :
     public speciesTable,
     public autoPtr<chemistryReader<ThermoType>>,
-    public multiComponentMixture<ThermoType>,
-    public PtrList<Reaction<ThermoType>>
+    public multiComponentMixture<ThermoType>
 {
     // Private member data
+
+        PtrList<Reaction<ThermoType>> reactions_;
 
         //- Table of species composition
         speciesCompositionTable speciesComposition_;
@@ -93,19 +94,9 @@ public:
         //- Read dictionary
         void read(const dictionary&);
 
-        label size() const
+        const PtrList<Reaction<ThermoType>>& reactions() const
         {
-            return PtrList<Reaction<ThermoType>>::size();
-        }
-
-        Reaction<ThermoType>& operator[](const label i)
-        {
-            return PtrList<Reaction<ThermoType>>::operator[](i);
-        }
-
-        const Reaction<ThermoType>& operator[](const label i) const
-        {
-            return PtrList<Reaction<ThermoType>>::operator[](i);
+            return reactions_;
         }
 
         //- Table of species composition

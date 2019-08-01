@@ -148,7 +148,7 @@ singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
 :
     ThermoCombustion<ReactionThermo>(modelType, thermo, turb),
     mixture_(dynamic_cast<const reactingMixture<ThermoType>&>(this->thermo())),
-    reactions_(mixture_),
+    reactions_(mixture_.reactions()),
     stoicRatio_(dimensionedScalar("stoicRatio", dimless, 0)),
     s_(dimensionedScalar("s", dimless, 0)),
     qFuel_(dimensionedScalar("qFuel", sqr(dimVelocity), 0)),

@@ -93,7 +93,7 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
     thermo_(mesh.lookupObject<fluidThermo>(basicThermo::dictName)),
     mixture_(checkThermo(thermo_))
 {
-    const Reaction<ThermoType>& reaction = mixture_[0];
+    const Reaction<ThermoType>& reaction = mixture_.reactions()[0];
 
     scalar totalMol = 0;
     forAll(reaction.rhs(), i)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,14 +39,14 @@ Foam::solidChemistryModel<CompType, SolidThermo>::solidChemistryModel
     Ys_(this->solidThermo().composition().Y()),
     reactions_
     (
-        dynamic_cast<const reactingMixture<SolidThermo>& >
+        dynamic_cast<const reactingMixture<SolidThermo>&>
         (
             this->solidThermo()
-        )
+        ).reactions()
     ),
     solidThermo_
     (
-        dynamic_cast<const reactingMixture<SolidThermo>& >
+        dynamic_cast<const reactingMixture<SolidThermo>&>
         (
             this->solidThermo()
         ).speciesData()
