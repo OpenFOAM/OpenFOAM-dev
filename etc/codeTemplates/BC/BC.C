@@ -113,7 +113,7 @@ CONSTRUCT
     PARENT(ptf, p, iF, mapper),
     scalarData_(ptf.scalarData_),
     data_(ptf.data_),
-    fieldData_(ptf.fieldData_, mapper),
+    fieldData_(mapper(ptf.fieldData_)),
     timeVsData_(ptf.timeVsData_, false),
     wordData_(ptf.wordData_),
     labelData_(-1),
@@ -167,7 +167,7 @@ void Foam::CLASS::autoMap
 )
 {
     PARENT::autoMap(m);
-    fieldData_.autoMap(m);
+    m(fieldData_, fieldData_);
 }
 
 
