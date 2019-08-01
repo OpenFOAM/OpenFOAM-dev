@@ -48,9 +48,6 @@ Usage
             \rho = 1000 - 0.05 T + 0.003 T^2
         \f]
 
-Note
-    Input in [kg/m^3], but internally uses [kg/m3/kmol].
-
 SourceFiles
     icoPolynomialI.H
     icoPolynomial.C
@@ -116,7 +113,7 @@ class icoPolynomial
 {
     // Private Data
 
-        //- Density polynomial coefficients
+        //- Density polynomial coefficients [kg/m^3/K^i]
         Polynomial<PolySize> rhoCoeffs_;
 
 

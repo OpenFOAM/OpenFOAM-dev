@@ -88,12 +88,10 @@ class eConstThermo
 {
     // Private Data
 
-        //- Heat capacity at constant volume
-        //  Note: input in [J/kg/K], but internally uses [J/kmol/K]
+        //- Heat capacity at constant volume [J/kg/K]
         scalar Cv_;
 
-        //- Heat of formation
-        //  Note: input in [J/kg], but internally uses [J/kmol]
+        //- Heat of formation [J/kg]
         scalar Hf_;
 
 
