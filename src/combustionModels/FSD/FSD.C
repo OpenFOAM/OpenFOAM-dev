@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,15 +97,15 @@ FSD<ReactionThermo, ThermoType>::~FSD()
 template<class ReactionThermo, class ThermoType>
 void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
 {
-    this->singleMixturePtr_->fresCorrect();
+    this->fresCorrect();
 
-    const label fuelI = this->singleMixturePtr_->fuelIndex();
+    const label fuelI = this->fuelIndex();
 
     const volScalarField& YFuel = this->thermo().composition().Y()[fuelI];
 
     const volScalarField& YO2 = this->thermo().composition().Y("O2");
 
-    const dimensionedScalar s = this->singleMixturePtr_->s();
+    const dimensionedScalar s = this->s();
 
     ft_ =
         (s*YFuel - (YO2 - YO2OxiStream_))/(s*YFuelFuelStream_ + YO2OxiStream_);
@@ -247,9 +247,9 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
     List<label> productsIndex(2, label(-1));
     {
         label i = 0;
-        forAll(this->singleMixturePtr_->specieProd(), specieI)
+        forAll(this->specieProd(), specieI)
         {
-            if (this->singleMixturePtr_->specieProd()[specieI] < 0)
+            if (this->specieProd()[specieI] < 0)
             {
                 productsIndex[i] = specieI;
                 i++;
@@ -262,7 +262,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
     scalar YprodTotal = 0;
     forAll(productsIndex, j)
     {
-        YprodTotal += this->singleMixturePtr_->Yprod0()[productsIndex[j]];
+        YprodTotal += this->Yprod0()[productsIndex[j]];
     }
 
     forAll(ft_, celli)
@@ -303,7 +303,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
 
     pc = min(C_*c, scalar(1));
 
-    const volScalarField fres(this->singleMixturePtr_->fres(fuelI));
+    const volScalarField fres(this->fres(fuelI));
 
     this->wFuel_ == mgft*pc*omegaFuelBar;
 }

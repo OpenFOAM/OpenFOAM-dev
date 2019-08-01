@@ -63,7 +63,7 @@ SourceFiles
 #include "HashTable.H"
 
 #include "fluidThermo.H"
-#include "singleStepReactingMixture.H"
+#include "reactingMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,7 +86,7 @@ class mixtureFraction
     // Static functions
 
         //- Check mixture in thermo
-        static const singleStepReactingMixture<ThermoType>& checkThermo
+        static const reactingMixture<ThermoType>& checkThermo
         (
             const fluidThermo&
         );
@@ -118,8 +118,8 @@ class mixtureFraction
         //- Thermo package
         const fluidThermo& thermo_;
 
-        //- Auto Ptr to singleStepReactingMixture
-        const singleStepReactingMixture<ThermoType>& mixture_;
+        //- Auto Ptr to reactingMixture
+        const reactingMixture<ThermoType>& mixture_;
 
 
 public:

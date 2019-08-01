@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,10 +26,114 @@ License
 #include "singleStepCombustion.H"
 #include "fvmSup.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 namespace Foam
 {
 namespace combustionModels
 {
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class ReactionThermo, class ThermoType>
+void singleStepCombustion<ReactionThermo, ThermoType>::calculateqFuel()
+{
+    const Reaction<ThermoType>& reaction = reactions_[0];
+    const scalar Wu = mixture_.speciesData()[fuelIndex_].W();
+
+    forAll(reaction.lhs(), i)
+    {
+        const label speciei = reaction.lhs()[i].index;
+        const scalar stoichCoeff = reaction.lhs()[i].stoichCoeff;
+        specieStoichCoeffs_[speciei] = -stoichCoeff;
+        qFuel_.value() += mixture_.speciesData()[speciei].hc()*stoichCoeff/Wu;
+    }
+
+    forAll(reaction.rhs(), i)
+    {
+        const label speciei = reaction.rhs()[i].index;
+        const scalar stoichCoeff = reaction.rhs()[i].stoichCoeff;
+        specieStoichCoeffs_[speciei] = stoichCoeff;
+        qFuel_.value() -= mixture_.speciesData()[speciei].hc()*stoichCoeff/Wu;
+        specieProd_[speciei] = -1;
+    }
+
+    Info << "Fuel heat of combustion :" << qFuel_.value() << endl;
+}
+
+
+template<class ReactionThermo, class ThermoType>
+void singleStepCombustion<ReactionThermo, ThermoType>:: massAndAirStoichRatios()
+{
+    const label O2Index = mixture_.species()["O2"];
+    const scalar Wu = mixture_.speciesData()[fuelIndex_].W();
+
+    stoicRatio_ =
+       (mixture_.speciesData()[inertIndex_].W()
+      * specieStoichCoeffs_[inertIndex_]
+      + mixture_.speciesData()[O2Index].W()
+      * mag(specieStoichCoeffs_[O2Index]))
+      / (Wu*mag(specieStoichCoeffs_[fuelIndex_]));
+
+    s_ =
+        (mixture_.speciesData()[O2Index].W()
+      * mag(specieStoichCoeffs_[O2Index]))
+      / (Wu*mag(specieStoichCoeffs_[fuelIndex_]));
+
+    Info << "stoichiometric air-fuel ratio :" << stoicRatio_.value() << endl;
+
+    Info << "stoichiometric oxygen-fuel ratio :" << s_.value() << endl;
+}
+
+
+template<class ReactionThermo, class ThermoType>
+void singleStepCombustion<ReactionThermo, ThermoType>:: calculateMaxProducts()
+{
+    const Reaction<ThermoType>& reaction = reactions_[0];
+
+    scalar Wm = 0.0;
+    scalar totalMol = 0.0;
+    forAll(reaction.rhs(), i)
+    {
+        label speciei = reaction.rhs()[i].index;
+        totalMol += mag(specieStoichCoeffs_[speciei]);
+    }
+
+    scalarList Xi(reaction.rhs().size());
+
+    forAll(reaction.rhs(), i)
+    {
+        const label speciei = reaction.rhs()[i].index;
+        Xi[i] = mag(specieStoichCoeffs_[speciei])/totalMol;
+        Wm += Xi[i]*mixture_.speciesData()[speciei].W();
+    }
+
+    forAll(reaction.rhs(), i)
+    {
+        const label speciei = reaction.rhs()[i].index;
+        Yprod0_[speciei] =  mixture_.speciesData()[speciei].W()/Wm*Xi[i];
+    }
+
+    Info << "Maximum products mass concentrations:" << nl;
+    forAll(Yprod0_, i)
+    {
+        if (Yprod0_[i] > 0)
+        {
+            Info<< "    " << mixture_.species()[i] << ": " << Yprod0_[i] << nl;
+        }
+    }
+
+    // Normalize the stoichiometric coeff to mass
+    forAll(specieStoichCoeffs_, i)
+    {
+        specieStoichCoeffs_[i] =
+            specieStoichCoeffs_[i]
+          * mixture_.speciesData()[i].W()
+          / (mixture_.speciesData()[fuelIndex_].W()
+          * mag(specieStoichCoeffs_[fuelIndex_]));
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -43,7 +147,17 @@ singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
 )
 :
     ThermoCombustion<ReactionThermo>(modelType, thermo, turb),
-    singleMixturePtr_(nullptr),
+    mixture_(dynamic_cast<const reactingMixture<ThermoType>&>(this->thermo())),
+    reactions_(mixture_),
+    stoicRatio_(dimensionedScalar("stoicRatio", dimless, 0)),
+    s_(dimensionedScalar("s", dimless, 0)),
+    qFuel_(dimensionedScalar("qFuel", sqr(dimVelocity), 0)),
+    specieStoichCoeffs_(mixture_.species().size(), 0.0),
+    Yprod0_(mixture_.species().size(), 0.0),
+    fres_(Yprod0_.size()),
+    inertIndex_(mixture_.species()[thermo.lookup("inertSpecie")]),
+    fuelIndex_(mixture_.species()[thermo.lookup("fuel")]),
+    specieProd_(Yprod0_.size(), 1),
     wFuel_
     (
         IOobject
@@ -59,30 +173,49 @@ singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
     ),
     semiImplicit_(readBool(this->coeffs_.lookup("semiImplicit")))
 {
-    if (isA<singleStepReactingMixture<ThermoType>>(this->thermo()))
+    if (reactions_.size() == 1)
     {
-        singleMixturePtr_ =
-            &dynamic_cast<singleStepReactingMixture<ThermoType>&>
+        forAll(fres_, fresI)
+        {
+            IOobject header
             (
-                this->thermo()
+                "fres_" + mixture_.species()[fresI],
+                this->mesh().time().timeName(),
+                this->mesh()
             );
+
+            fres_.set
+            (
+                fresI,
+                new volScalarField
+                (
+                    header,
+                    this->mesh(),
+                    dimensionedScalar("fres" + name(fresI), dimless, 0)
+                )
+            );
+        }
+
+        calculateqFuel();
+
+        massAndAirStoichRatios();
+
+        calculateMaxProducts();
+
+        if (semiImplicit_)
+        {
+            Info<< "Combustion mode: semi-implicit" << endl;
+        }
+        else
+        {
+            Info<< "Combustion mode: explicit" << endl;
+        }
     }
     else
     {
         FatalErrorInFunction
-            << "Inconsistent thermo package for " << this->type() << " model:\n"
-            << "    " << this->thermo().type() << nl << nl
-            << "Please select a thermo package based on "
-            << "singleStepReactingMixture" << exit(FatalError);
-    }
-
-    if (semiImplicit_)
-    {
-        Info<< "Combustion mode: semi-implicit" << endl;
-    }
-    else
-    {
-        Info<< "Combustion mode: explicit" << endl;
+            << "Only one reaction required for single step reaction"
+            << exit(FatalError);
     }
 }
 
@@ -102,18 +235,17 @@ tmp<fvScalarMatrix> singleStepCombustion<ReactionThermo, ThermoType>::R
     volScalarField& Y
 ) const
 {
-    const label specieI =
-        this->thermo().composition().species()[Y.member()];
+    const label specieI = mixture_.species()[Y.member()];
 
     volScalarField wSpecie
     (
-        wFuel_*singleMixturePtr_->specieStoichCoeffs()[specieI]
+        wFuel_*specieStoichCoeffs()[specieI]
     );
 
     if (semiImplicit_)
     {
-        const label fNorm = singleMixturePtr_->specieProd()[specieI];
-        const volScalarField fres(singleMixturePtr_->fres(specieI));
+        const label fNorm = specieProd()[specieI];
+        const volScalarField fres(this->fres(specieI));
         wSpecie /= max(fNorm*(Y - fres), scalar(1e-2));
 
         return -fNorm*wSpecie*fres + fNorm*fvm::Sp(wSpecie, Y);
@@ -129,11 +261,11 @@ template<class ReactionThermo, class ThermoType>
 tmp<volScalarField>
 singleStepCombustion<ReactionThermo, ThermoType>::Qdot() const
 {
-    const label fuelI = singleMixturePtr_->fuelIndex();
+    const label fuelI = fuelIndex();
     volScalarField& YFuel =
         const_cast<volScalarField&>(this->thermo().composition().Y(fuelI));
 
-    return -singleMixturePtr_->qFuel()*(R(YFuel) & YFuel);
+    return -qFuel()*(R(YFuel) & YFuel);
 }
 
 
@@ -147,6 +279,61 @@ bool singleStepCombustion<ReactionThermo, ThermoType>::read()
     else
     {
         return false;
+    }
+}
+
+
+template<class ReactionThermo, class ThermoType>
+void singleStepCombustion<ReactionThermo, ThermoType>::fresCorrect()
+{
+    const Reaction<ThermoType>& reaction = reactions_[0];
+
+    const label O2Index = mixture_.species()["O2"];
+    const volScalarField& YFuel = mixture_.Y()[fuelIndex_];
+    const volScalarField& YO2 = mixture_.Y()[O2Index];
+
+    // reactants
+    forAll(reaction.lhs(), i)
+    {
+        const label speciei = reaction.lhs()[i].index;
+        if (speciei == fuelIndex_)
+        {
+            fres_[speciei] = max(YFuel - YO2/s_, scalar(0));
+        }
+        else if (speciei == O2Index)
+        {
+            fres_[speciei] = max(YO2 - YFuel*s_, scalar(0));
+        }
+    }
+
+    // products
+    forAll(reaction.rhs(), i)
+    {
+        const label speciei = reaction.rhs()[i].index;
+        if (speciei != inertIndex_)
+        {
+            forAll(fres_[speciei], celli)
+            {
+                if (fres_[fuelIndex_][celli] > 0.0)
+                {
+                    // rich mixture
+                    fres_[speciei][celli] =
+                        Yprod0_[speciei]
+                      * (1.0 + YO2[celli]/s_.value() - YFuel[celli]);
+                }
+                else
+                {
+                    // lean mixture
+                    fres_[speciei][celli] =
+                        Yprod0_[speciei]
+                      * (
+                            1.0
+                          - YO2[celli]/s_.value()*stoicRatio_.value()
+                          + YFuel[celli]*stoicRatio_.value()
+                        );
+                }
+            }
+        }
     }
 }
 

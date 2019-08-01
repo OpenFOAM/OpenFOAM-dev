@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,6 @@ License
 #include "veryInhomogeneousMixture.H"
 #include "multiComponentMixture.H"
 #include "reactingMixture.H"
-#include "singleStepReactingMixture.H"
 #include "singleComponentMixture.H"
 
 #include "thermoPhysicsTypes.H"
@@ -244,18 +243,6 @@ makeThermoPhysicsReactionThermos
 );
 
 
-// Single-step reaction thermo for sensible enthalpy
-
-makeThermoPhysicsReactionThermos
-(
-    psiThermo,
-    psiReactionThermo,
-    hePsiThermo,
-    singleStepReactingMixture,
-    gasHThermoPhysics
-);
-
-
 // Reaction thermo for internal energy
 
 makeThermoPhysicsReactionThermos
@@ -273,18 +260,6 @@ makeThermoPhysicsReactionThermos
     psiReactionThermo,
     hePsiThermo,
     reactingMixture,
-    gasEThermoPhysics
-);
-
-
-// Single-step reaction thermo for internal energy
-
-makeThermoPhysicsReactionThermos
-(
-    psiThermo,
-    psiReactionThermo,
-    hePsiThermo,
-    singleStepReactingMixture,
     gasEThermoPhysics
 );
 

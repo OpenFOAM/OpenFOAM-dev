@@ -24,21 +24,20 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mixtureFraction.H"
-#include "singleStepReactingMixture.H"
-
+#include "reactingMixture.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class ThermoType>
-const Foam::singleStepReactingMixture<ThermoType>&
+const Foam::reactingMixture<ThermoType>&
 Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::checkThermo
 (
     const fluidThermo& thermo
 )
 {
-    if (isA<singleStepReactingMixture<ThermoType>>(thermo))
+    if (isA<reactingMixture<ThermoType>>(thermo))
     {
-        return dynamic_cast<const singleStepReactingMixture<ThermoType>& >
+        return dynamic_cast<const reactingMixture<ThermoType>& >
         (
             thermo
         );
@@ -48,9 +47,9 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::checkThermo
         FatalErrorInFunction
             << "Inconsistent thermo package for " << thermo.type()
             << "Please select a thermo package based on "
-            << "singleStepReactingMixture" << exit(FatalError);
+            << "reactingMixture" << exit(FatalError);
 
-        return dynamic_cast<const singleStepReactingMixture<ThermoType>& >
+        return dynamic_cast<const reactingMixture<ThermoType>& >
         (
             thermo
         );
@@ -94,27 +93,34 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
     thermo_(mesh.lookupObject<fluidThermo>(basicThermo::dictName)),
     mixture_(checkThermo(thermo_))
 {
-    const Reaction<ThermoType>& reaction = mixture_.operator[](0);
+    const Reaction<ThermoType>& reaction = mixture_[0];
 
-    const scalarList& specieStoichCoeffs(mixture_.specieStoichCoeffs());
-
-    scalar totalMol = 0.0;
+    scalar totalMol = 0;
     forAll(reaction.rhs(), i)
     {
-        label speciei = reaction.rhs()[i].index;
-        totalMol += mag(specieStoichCoeffs[speciei]);
+        const scalar stoichCoeff = reaction.rhs()[i].stoichCoeff;
+        totalMol += mag(stoichCoeff);
     }
 
     totalMol += nuSoot_;
 
     scalarList Xi(reaction.rhs().size());
 
-    scalar Wm = 0.0;
+    scalar Wm = 0;
     forAll(reaction.rhs(), i)
     {
         const label speciei = reaction.rhs()[i].index;
-        Xi[i] = mag(specieStoichCoeffs[speciei])/totalMol;
+        const scalar stoichCoeff = reaction.rhs()[i].stoichCoeff;
+        Xi[i] = mag(stoichCoeff)/totalMol;
         Wm += Xi[i]*mixture_.speciesData()[speciei].W();
+    }
+
+    scalarList Yprod0(mixture_.species().size(), 0.0);
+
+    forAll(reaction.rhs(), i)
+    {
+        const label speciei = reaction.rhs()[i].index;
+        Yprod0[speciei] = mixture_.speciesData()[speciei].W()/Wm*Xi[i];
     }
 
     const scalar XSoot = nuSoot_/totalMol;
@@ -132,8 +138,7 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
 
     const label mapFieldIndex = mixture_.species()[mappingFieldName_];
 
-    mapFieldMax_ = mixture_.Yprod0()[mapFieldIndex];
-
+    mapFieldMax_ = Yprod0[mapFieldIndex];
 }
 
 
