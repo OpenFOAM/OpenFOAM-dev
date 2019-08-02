@@ -26,6 +26,63 @@ License
 #include "reactingMixture.H"
 #include "fvMesh.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class ThermoType>
+Foam::speciesCompositionTable
+Foam::reactingMixture<ThermoType>::readSpeciesComposition
+(
+    const dictionary& thermoDict,
+    const speciesTable& species
+) const
+{
+    speciesCompositionTable speciesComposition_;
+
+    // Loop through all species in thermoDict to retrieve
+    // the species composition
+    forAll(species, si)
+    {
+        if (thermoDict.subDict(species[si]).isDict("elements"))
+        {
+            dictionary currentElements
+            (
+                thermoDict.subDict(species[si]).subDict("elements")
+            );
+
+            wordList currentElementsName(currentElements.toc());
+            List<specieElement> currentComposition(currentElementsName.size());
+
+            forAll(currentElementsName, eni)
+            {
+                currentComposition[eni].name() = currentElementsName[eni];
+
+                currentComposition[eni].nAtoms() =
+                    currentElements.lookupOrDefault
+                    (
+                        currentElementsName[eni],
+                        0
+                    );
+            }
+
+            // Add current specie composition to the hash table
+            speciesCompositionTable::iterator specieCompositionIter
+            (
+                speciesComposition_.find(species[si])
+            );
+
+            if (specieCompositionIter != speciesComposition_.end())
+            {
+                speciesComposition_.erase(specieCompositionIter);
+            }
+
+            speciesComposition_.insert(species[si], currentComposition);
+        }
+    }
+
+    return speciesComposition_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
@@ -36,30 +93,35 @@ Foam::reactingMixture<ThermoType>::reactingMixture
     const word& phaseName
 )
 :
-    speciesTable(),
-    autoPtr<foamChemistryReader<ThermoType>>
-    (
-        new foamChemistryReader<ThermoType>(thermoDict, *this)
-    ),
     multiComponentMixture<ThermoType>
     (
         thermoDict,
-        *this,
-        autoPtr<foamChemistryReader<ThermoType>>::operator()().speciesThermo(),
         mesh,
         phaseName
     ),
-    reactions_
-    (
-        autoPtr<foamChemistryReader<ThermoType>>::operator()().reactions()
-    ),
-    speciesComposition_
-    (
-        autoPtr<foamChemistryReader<ThermoType>>::
-        operator()().specieComposition()
-    )
+    speciesComposition_(readSpeciesComposition(thermoDict, this->species()))
 {
-    autoPtr<foamChemistryReader<ThermoType>>::clear();
+    HashPtrTable<ThermoType> thermoDatabase;
+    const PtrList<ThermoType>& speciesData = this->speciesData();
+
+    forAll(speciesData, i)
+    {
+        thermoDatabase.insert
+        (
+            speciesData[i].name(),
+            speciesData[i].clone().ptr()
+        );
+    }
+
+    reactions_ = PtrList<Reaction<ThermoType>>
+    (
+        ReactionList<ThermoType>
+        (
+            this->species(),
+            thermoDatabase,
+            thermoDict
+        )
+    );
 }
 
 

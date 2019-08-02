@@ -1,13 +1,3 @@
-species
-(
-    N2
-    O2
-    CH4
-    H2
-    CO2
-    H2O
-);
-
 reactions
 {
     methaneReaction

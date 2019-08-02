@@ -106,6 +106,9 @@ public:
         //- Construct from dictionary
         exponentialSolidTransport(const dictionary&);
 
+        //- Construct and return a clone
+        inline autoPtr<exponentialSolidTransport> clone() const;
+
         // Selector from dictionary
         inline static autoPtr<exponentialSolidTransport> New
         (

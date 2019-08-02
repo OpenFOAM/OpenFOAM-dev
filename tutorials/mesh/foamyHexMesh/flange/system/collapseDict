@@ -59,7 +59,7 @@ controlMeshQualityCoeffs
 {
     // Name of the dictionary that has the mesh quality coefficients used
     // by motionSmoother::checkMesh
-    #include                    "meshQualityDict";
+    #include                    "meshQualityDict"
 
     // The amount that minimumEdgeLength will be reduced by for each
     // edge if that edge's collapse generates a poor quality face

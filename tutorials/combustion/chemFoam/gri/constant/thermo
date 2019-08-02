@@ -1,4 +1,4 @@
-species         36 ( H2 H O O2 OH H2O HO2 H2O2 C CH CH2 CH2(S) CH3 CH4 CO CO2 HCO CH2O CH2OH CH3O CH3OH C2H C2H2 C2H3 C2H4 C2H5 C2H6 HCCO CH2CO HCCOH N2 AR C3H7 C3H8 CH2CHO CH3CHO );
+species         53 ( CH4 CH2O CH3O H O2 H2 O OH H2O HO2 H2O2 C CH CH2 CH2(S) CH3 CO CO2 HCO CH2OH CH3OH C2H C2H2 C2H3 C2H4 C2H5 C2H6 HCCO CH2CO HCCOH N NH NH2 NH3 NNH NO NO2 N2O HNO CN HCN H2CN HCNN HCNO HOCN HNCO NCO N2 AR C3H7 C3H8 CH2CHO CH3CHO );
 
 OH
 {
@@ -16,8 +16,8 @@ OH
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -42,8 +42,8 @@ CN
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -68,8 +68,8 @@ C2H3
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -86,7 +86,7 @@ N2
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1000;
         highCpCoeffs    ( 2.92664 0.0014879768 -5.68476e-07 1.0097038e-10 -6.753351e-15 -922.7977 5.980528 );
@@ -94,8 +94,8 @@ N2
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -111,7 +111,7 @@ HOCN
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1368;
         highCpCoeffs    ( 5.89784885 0.00316789393 -1.11801064e-06 1.77243144e-10 -1.04339177e-14 -3706.53331 -6.18167825 );
@@ -119,8 +119,8 @@ HOCN
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -147,8 +147,8 @@ N
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -172,8 +172,8 @@ C2H
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -198,8 +198,8 @@ HNO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -225,8 +225,8 @@ CH2CO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -252,8 +252,8 @@ CH3
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -278,8 +278,8 @@ C2H5
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -304,8 +304,8 @@ C2H4
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -322,7 +322,7 @@ C3H8
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1000;
         highCpCoeffs    ( 7.5341368 0.018872239 -6.2718491e-06 9.1475649e-10 -4.7838069e-14 -16467.516 -17.892349 );
@@ -330,8 +330,8 @@ C3H8
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -356,8 +356,8 @@ HCN
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -383,8 +383,8 @@ C2H6
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -409,8 +409,8 @@ NH3
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -435,8 +435,8 @@ CO2
     }
     transport
     {
-        As              1.572e-06;
-        Ts              240;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -461,8 +461,8 @@ C2H2
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -487,8 +487,8 @@ CH2OH
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -506,7 +506,7 @@ H2CN
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           4000;
         Tcommon         1000;
         highCpCoeffs    ( 5.209703 0.0029692911 -2.8555891e-07 -1.63555e-10 3.0432589e-14 27677.109 -4.444478 );
@@ -514,8 +514,8 @@ H2CN
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -533,7 +533,7 @@ HCCOH
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1000;
         highCpCoeffs    ( 5.9238291 0.00679236 -2.5658564e-06 4.4987841e-10 -2.9940101e-14 7264.626 -7.6017742 );
@@ -541,8 +541,8 @@ HCCOH
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -568,8 +568,8 @@ H2O2
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -594,8 +594,8 @@ HCO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -621,8 +621,8 @@ NNH
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -647,8 +647,8 @@ N2O
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -673,8 +673,8 @@ CH2(S)
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -699,8 +699,8 @@ O2
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -716,7 +716,7 @@ CH2CHO
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1000;
         highCpCoeffs    ( 5.97567 0.008130591 -2.743624e-06 4.070304e-10 -2.176017e-14 490.3218 -5.045251 );
@@ -724,8 +724,8 @@ CH2CHO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -743,7 +743,7 @@ HNCO
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1478;
         highCpCoeffs    ( 6.22395134 0.00317864004 -1.09378755e-06 1.70735163e-10 -9.95021955e-15 -16659.9344 -8.38224741 );
@@ -751,8 +751,8 @@ HNCO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -771,7 +771,7 @@ HCCO
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           4000;
         Tcommon         1000;
         highCpCoeffs    ( 5.6282058 0.0040853401 -1.5934547e-06 2.8626052e-10 -1.9407832e-14 19327.215 -3.9302595 );
@@ -779,8 +779,8 @@ HCCO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -806,8 +806,8 @@ H2
     }
     transport
     {
-        As              6.362e-07;
-        Ts              72;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -831,8 +831,8 @@ NO2
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -857,8 +857,8 @@ CH4
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -883,8 +883,8 @@ C
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -908,8 +908,8 @@ HO2
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -934,8 +934,8 @@ CH3CHO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -953,7 +953,7 @@ C3H7
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1000;
         highCpCoeffs    ( 7.7026987 0.016044203 -5.283322e-06 7.629859e-10 -3.9392284e-14 8298.4336 -15.48018 );
@@ -961,8 +961,8 @@ C3H7
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -987,8 +987,8 @@ CH3OH
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1014,8 +1014,8 @@ CH2O
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1041,8 +1041,8 @@ CO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1059,7 +1059,7 @@ CH3O
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           3000;
         Tcommon         1000;
         highCpCoeffs    ( 3.770799 0.007871497 -2.656384e-06 3.944431e-10 -2.112616e-14 127.83252 2.929575 );
@@ -1067,8 +1067,8 @@ CH3O
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1094,8 +1094,8 @@ O
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1111,7 +1111,7 @@ HCNN
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1000;
         highCpCoeffs    ( 5.8946362 0.0039895959 -1.598238e-06 2.9249395e-10 -2.0094686e-14 53452.941 -5.1030502 );
@@ -1119,8 +1119,8 @@ HCNN
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1146,8 +1146,8 @@ NCO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1173,8 +1173,8 @@ CH2
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1191,7 +1191,7 @@ HCNO
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1382;
         highCpCoeffs    ( 6.59860456 0.00302778626 -1.07704346e-06 1.71666528e-10 -1.01439391e-14 17966.1339 -10.3306599 );
@@ -1199,8 +1199,8 @@ HCNO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1227,8 +1227,8 @@ NH2
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1253,8 +1253,8 @@ H2O
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1279,8 +1279,8 @@ NH
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1305,8 +1305,8 @@ H
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1322,7 +1322,7 @@ AR
     }
     thermodynamics
     {
-        Tlow            250;
+        Tlow            200;
         Thigh           5000;
         Tcommon         1000;
         highCpCoeffs    ( 2.5 0 0 0 0 -745.375 4.366 );
@@ -1330,8 +1330,8 @@ AR
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1355,8 +1355,8 @@ NO
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {
@@ -1381,8 +1381,8 @@ CH
     }
     transport
     {
-        As              1.512e-06;
-        Ts              120;
+        As              0;
+        Ts              0;
     }
     elements
     {

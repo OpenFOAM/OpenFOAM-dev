@@ -35,14 +35,16 @@ SourceFiles
 #ifndef reactingMixture_H
 #define reactingMixture_H
 
-#include "speciesTable.H"
-#include "foamChemistryReader.H"
 #include "multiComponentMixture.H"
+#include "ReactionList.H"
+#include "specieElement.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+typedef HashTable<List<specieElement>> speciesCompositionTable;
 
 /*---------------------------------------------------------------------------*\
                       Class reactingMixture Declaration
@@ -51,16 +53,20 @@ namespace Foam
 template<class ThermoType>
 class reactingMixture
 :
-    public speciesTable,
-    public autoPtr<foamChemistryReader<ThermoType>>,
     public multiComponentMixture<ThermoType>
 {
     // Private member data
 
-        PtrList<Reaction<ThermoType>> reactions_;
-
         //- Table of species composition
         speciesCompositionTable speciesComposition_;
+
+        PtrList<Reaction<ThermoType>> reactions_;
+
+        speciesCompositionTable readSpeciesComposition
+        (
+            const dictionary& thermoDict,
+            const speciesTable& speciesTable_
+        ) const;
 
 
 public:

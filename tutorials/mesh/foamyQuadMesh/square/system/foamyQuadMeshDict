@@ -159,7 +159,7 @@ extrusion
 {
     extrude     off;
 
-    #include    "extrude2DMeshDict";
+    #include    "extrude2DMeshDict"
 }
 
 

@@ -31,9 +31,9 @@ inertSpecie N2;
 fuel    C3H8;
 
 
-foamChemistryFile "$FOAM_CASE/constant/reactions";
+#include "reactions"
 
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo.compressibleGas";
+#include "thermo.compressibleGas"
 
 liquids
 {

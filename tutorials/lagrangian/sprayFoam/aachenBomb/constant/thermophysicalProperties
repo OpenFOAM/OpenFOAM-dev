@@ -26,8 +26,7 @@ thermoType
     specie          specie;
 }
 
-foamChemistryFile "$FOAM_CASE/constant/reactions";
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo";
+#include "speciesThermo"
 
 newFormat       yes;
 
@@ -41,5 +40,6 @@ liquids
 solids
 {}
 
+#include "reactions"
 
 // ************************************************************************* //

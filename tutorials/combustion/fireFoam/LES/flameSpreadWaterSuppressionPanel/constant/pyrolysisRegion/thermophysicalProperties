@@ -25,12 +25,6 @@ thermoType
     energy          sensibleEnthalpy;
 }
 
-
-
-foamChemistryFile "$FOAM_CASE/constant/pyrolysisRegion/reactions";
-
-foamChemistryThermoFile "$FOAM_CASE/constant/pyrolysisRegion/thermo.solid";
-
 gasThermoType
 {
     transport       sutherland;
@@ -39,7 +33,6 @@ gasThermoType
     specie          specie;
     energy          sensibleEnthalpy;
 }
-
 
 gas
 {
@@ -62,5 +55,7 @@ gas
     }
 }
 
+#include "thermo.solid"
+#include "reactions"
 
 // ************************************************************************* //

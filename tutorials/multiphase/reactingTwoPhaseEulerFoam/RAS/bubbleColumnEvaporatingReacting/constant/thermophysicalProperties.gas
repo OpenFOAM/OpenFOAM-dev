@@ -28,10 +28,7 @@ thermoType
 
 inertSpecie AIR;
 
-
-foamChemistryFile "$FOAM_CASE/constant/reactions.gas";
-
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo.gas";
-
+#include "thermo.gas"
+#include "reactions.gas"
 
 // ************************************************************************* //

@@ -27,9 +27,9 @@ thermoType
 }
 
 
-foamChemistryThermoFile "$FOAM_CASE/constant/foam.dat";
+#include "speciesThermo"
 
-foamChemistryFile "$FOAM_CASE/constant/foam.inp";
+#include "reactions"
 
 inertSpecie     N2;
 

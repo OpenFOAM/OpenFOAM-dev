@@ -57,6 +57,17 @@ inline Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
 
 template<class Thermo>
 inline Foam::autoPtr<Foam::exponentialSolidTransport<Thermo>>
+Foam::exponentialSolidTransport<Thermo>::clone() const
+{
+    return autoPtr<exponentialSolidTransport<Thermo>>
+    (
+        new exponentialSolidTransport<Thermo>(*this)
+    );
+}
+
+
+template<class Thermo>
+inline Foam::autoPtr<Foam::exponentialSolidTransport<Thermo>>
 Foam::exponentialSolidTransport<Thermo>::New
 (
     const dictionary& dict

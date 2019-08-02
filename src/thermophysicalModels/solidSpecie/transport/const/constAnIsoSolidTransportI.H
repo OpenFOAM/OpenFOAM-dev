@@ -51,6 +51,17 @@ inline Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
 
 template<class Thermo>
 inline Foam::autoPtr<Foam::constAnIsoSolidTransport<Thermo>>
+Foam::constAnIsoSolidTransport<Thermo>::clone() const
+{
+    return autoPtr<constAnIsoSolidTransport<Thermo>>
+    (
+        new constAnIsoSolidTransport<Thermo>(*this)
+    );
+}
+
+
+template<class Thermo>
+inline Foam::autoPtr<Foam::constAnIsoSolidTransport<Thermo>>
 Foam::constAnIsoSolidTransport<Thermo>::New
 (
     const dictionary& dict

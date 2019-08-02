@@ -28,8 +28,8 @@ thermoType
 
 inertSpecie N2;
 
-foamChemistryFile "$FOAM_CASE/constant/reactionsGRI";
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo.compressibleGasGRI";
+#include "reactionsGRI"
+#include "thermo.compressibleGasGRI"
 
 
 // ************************************************************************* //

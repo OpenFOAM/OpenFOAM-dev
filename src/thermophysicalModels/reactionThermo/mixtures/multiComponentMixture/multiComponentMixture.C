@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,34 +72,6 @@ void Foam::multiComponentMixture<ThermoType>::correctMassFractions()
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class ThermoType>
-Foam::multiComponentMixture<ThermoType>::multiComponentMixture
-(
-    const dictionary& thermoDict,
-    const wordList& specieNames,
-    const HashPtrTable<ThermoType>& thermoData,
-    const fvMesh& mesh,
-    const word& phaseName
-)
-:
-    basicSpecieMixture(thermoDict, specieNames, mesh, phaseName),
-    speciesData_(species_.size()),
-    mixture_("mixture", *thermoData[specieNames[0]]),
-    mixtureVol_("volMixture", *thermoData[specieNames[0]])
-{
-    forAll(species_, i)
-    {
-        speciesData_.set
-        (
-            i,
-            new ThermoType(*thermoData[species_[i]])
-        );
-    }
-
-    correctMassFractions();
-}
-
 
 template<class ThermoType>
 Foam::multiComponentMixture<ThermoType>::multiComponentMixture

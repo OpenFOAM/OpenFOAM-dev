@@ -79,11 +79,19 @@ public:
             const HashPtrTable<ThermoType>& thermoDatabase
         );
 
-        //- Construct from dictionary
+        //- Construct from thermoDatabase and dictionary
         ReactionList
         (
             const speciesTable& species,
             const HashPtrTable<ThermoType>& thermoDatabase,
+            const dictionary& dict
+        );
+
+        //- Construct from thermo list and dictionary
+        ReactionList
+        (
+            const speciesTable& species,
+            const PtrList<ThermoType>& thermoDatabase,
             const dictionary& dict
         );
 

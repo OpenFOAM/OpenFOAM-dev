@@ -86,17 +86,6 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary, specie names, thermo database,
-        //  mesh and phase name
-        multiComponentMixture
-        (
-            const dictionary&,
-            const wordList& specieNames,
-            const HashPtrTable<ThermoType>& thermoData,
-            const fvMesh&,
-            const word&
-        );
-
         //- Construct from dictionary, mesh and phase name
         multiComponentMixture(const dictionary&, const fvMesh&, const word&);
 

@@ -97,6 +97,9 @@ public:
         //- Construct from dictionary
         constIsoSolidTransport(const dictionary& dict);
 
+        //- Construct and return a clone
+        inline autoPtr<constIsoSolidTransport> clone() const;
+
         // Selector from dictionary
         inline static autoPtr<constIsoSolidTransport> New
         (

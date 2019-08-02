@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 cleanCase
 
-rm -rf 0 chemFoam.out constant/reactions constant/thermo \
+rm -rf 0 chemFoam.out constant/reactions constant/speciesThermo \
    validation/OF_vs_CHEMKINII.eps validation/chemkinII
 
 #------------------------------------------------------------------------------

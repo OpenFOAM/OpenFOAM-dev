@@ -9,7 +9,7 @@ application=$(getApplication)
 
 runApplication chemkinToFoam \
                chemkin/chem.inp chemkin/therm.dat chemkin/transportProperties \
-               constant/reactions constant/thermo
+               constant/reactions constant/speciesThermo
 
 runApplication $application
 

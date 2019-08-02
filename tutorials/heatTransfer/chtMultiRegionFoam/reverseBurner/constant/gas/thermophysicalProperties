@@ -28,10 +28,7 @@ thermoType
 
 inertSpecie N2;
 
-
-foamChemistryFile "$FOAM_CASE/constant/gas/reactions";
-
-foamChemistryThermoFile "$FOAM_CASE/constant/gas/thermo.compressibleGas";
-
+#include "thermo.compressibleGas"
+#include "reactions"
 
 // ************************************************************************* //

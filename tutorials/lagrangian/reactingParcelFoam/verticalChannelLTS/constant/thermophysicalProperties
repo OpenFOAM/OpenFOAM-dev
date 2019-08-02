@@ -27,9 +27,9 @@ thermoType
 }
 
 
-foamChemistryFile "$FOAM_CASE/constant/reactions";
+#include "reactions"
 
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo.incompressiblePoly";
+#include "thermo.incompressiblePoly"
 
 inertSpecie     air;
 
