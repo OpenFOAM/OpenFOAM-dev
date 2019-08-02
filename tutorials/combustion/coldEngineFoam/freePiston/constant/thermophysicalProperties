@@ -28,7 +28,6 @@ thermoType
 
 inertSpecie air;
 
-chemistryReader foamChemistryReader;
 
 foamChemistryFile "$FOAM_CASE/constant/include/reactions.air";
 

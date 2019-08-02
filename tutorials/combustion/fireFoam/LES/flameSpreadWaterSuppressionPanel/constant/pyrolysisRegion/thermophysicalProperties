@@ -26,7 +26,6 @@ thermoType
 }
 
 
-chemistryReader foamChemistryReader;
 
 foamChemistryFile "$FOAM_CASE/constant/pyrolysisRegion/reactions";
 

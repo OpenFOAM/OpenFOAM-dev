@@ -26,7 +26,6 @@ thermoType
     specie          specie;
 }
 
-chemistryReader foamChemistryReader;
 
 foamChemistryThermoFile "$FOAM_CASE/constant/foam.dat";
 

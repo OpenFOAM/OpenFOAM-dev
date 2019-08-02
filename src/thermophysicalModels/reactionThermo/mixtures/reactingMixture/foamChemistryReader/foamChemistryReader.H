@@ -35,18 +35,15 @@ SourceFiles
 #ifndef foamChemistryReader_H
 #define foamChemistryReader_H
 
-#include "chemistryReader.H"
-#include "fileName.H"
-#include "typeInfo.H"
-#include "HashPtrTable.H"
-#include "labelList.H"
-#include "speciesTable.H"
-#include "atomicWeights.H"
+#include "specieElement.H"
+#include "ReactionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+typedef HashTable<List<specieElement>> speciesCompositionTable;
 
 /*---------------------------------------------------------------------------*\
                        Class foamChemistry Declaration
@@ -54,8 +51,6 @@ namespace Foam
 
 template<class ThermoType>
 class foamChemistryReader
-:
-    public chemistryReader<ThermoType>
 {
         //- Chemistry/reactions dictionary
         dictionary chemDict_;
@@ -92,10 +87,6 @@ class foamChemistryReader
 
 
 public:
-
-    //- Runtime type information
-    TypeName("foamChemistryReader");
-
 
     // Constructors
 

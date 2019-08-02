@@ -37,28 +37,29 @@ Foam::reactingMixture<ThermoType>::reactingMixture
 )
 :
     speciesTable(),
-    autoPtr<chemistryReader<ThermoType>>
+    autoPtr<foamChemistryReader<ThermoType>>
     (
-        chemistryReader<ThermoType>::New(thermoDict, *this)
+        new foamChemistryReader<ThermoType>(thermoDict, *this)
     ),
     multiComponentMixture<ThermoType>
     (
         thermoDict,
         *this,
-        autoPtr<chemistryReader<ThermoType>>::operator()().speciesThermo(),
+        autoPtr<foamChemistryReader<ThermoType>>::operator()().speciesThermo(),
         mesh,
         phaseName
     ),
     reactions_
     (
-        autoPtr<chemistryReader<ThermoType>>::operator()().reactions()
+        autoPtr<foamChemistryReader<ThermoType>>::operator()().reactions()
     ),
     speciesComposition_
     (
-        autoPtr<chemistryReader<ThermoType>>::operator()().specieComposition()
+        autoPtr<foamChemistryReader<ThermoType>>::
+        operator()().specieComposition()
     )
 {
-    autoPtr<chemistryReader<ThermoType>>::clear();
+    autoPtr<foamChemistryReader<ThermoType>>::clear();
 }
 
 

@@ -36,7 +36,6 @@ SourceFiles
 #ifndef chemkinReader_H
 #define chemkinReader_H
 
-#include "chemistryReader.H"
 #include "fileName.H"
 #include "typeInfo.H"
 #include "Switch.H"
@@ -45,6 +44,7 @@ SourceFiles
 #include "DynamicList.H"
 #include "labelList.H"
 #include "speciesTable.H"
+#include "specieElement.H"
 #include "atomicWeights.H"
 #include "reactionTypes.H"
 
@@ -55,13 +55,14 @@ SourceFiles
 namespace Foam
 {
 
+typedef HashTable<List<specieElement>> speciesCompositionTable;
+
 /*---------------------------------------------------------------------------*\
                        Class chemkinReader Declaration
 \*---------------------------------------------------------------------------*/
 
 class chemkinReader
 :
-    public chemistryReader<gasHThermoPhysics>,
     public yyFlexLexer
 {
 
@@ -289,10 +290,6 @@ private:
 
 
 public:
-
-    //- Runtime type information
-    TypeName("chemkinReader");
-
 
     // Constructors
 

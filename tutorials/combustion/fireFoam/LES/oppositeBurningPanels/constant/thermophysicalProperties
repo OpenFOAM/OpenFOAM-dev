@@ -30,7 +30,6 @@ inertSpecie N2;
 
 fuel        C3H8;
 
-chemistryReader foamChemistryReader;
 
 foamChemistryFile "$FOAM_CASE/constant/reactions";
 

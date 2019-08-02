@@ -43,14 +43,6 @@ License
 #include "addToRunTimeSelectionTable.H"
 
 
-/* * * * * * * * * * * * * * * * * Static data * * * * * * * * * * * * * * * */
-
-namespace Foam
-{
-    addChemistryReaderType(chemkinReader, gasHThermoPhysics);
-}
-
-
 /* * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * */
 
 const char* Foam::chemkinReader::reactionTypeNames[4] =

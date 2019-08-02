@@ -36,7 +36,7 @@ SourceFiles
 #define reactingMixture_H
 
 #include "speciesTable.H"
-#include "chemistryReader.H"
+#include "foamChemistryReader.H"
 #include "multiComponentMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,7 +52,7 @@ template<class ThermoType>
 class reactingMixture
 :
     public speciesTable,
-    public autoPtr<chemistryReader<ThermoType>>,
+    public autoPtr<foamChemistryReader<ThermoType>>,
     public multiComponentMixture<ThermoType>
 {
     // Private member data

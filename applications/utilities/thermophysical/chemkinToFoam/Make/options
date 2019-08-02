@@ -1,4 +1,5 @@
 EXE_INC = \
+    -IchemkinReader \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude
 

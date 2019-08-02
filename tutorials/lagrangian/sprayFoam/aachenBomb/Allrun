@@ -11,8 +11,7 @@ runApplication chemkinToFoam \
                chemkin/chem.inp chemkin/therm.dat chemkin/transportProperties \
                constant/reactions constant/thermo
 
+runApplication blockMesh
 runApplication $application
-
-(cd validation && ./Allrun $*)
 
 #------------------------------------------------------------------------------

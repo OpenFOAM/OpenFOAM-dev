@@ -26,8 +26,7 @@ thermoType
     specie          specie;
 }
 
-CHEMKINFile     "$FOAM_CASE/chemkin/chem.inp";
-CHEMKINThermoFile "$FOAM_CASE/chemkin/therm.dat";
-CHEMKINTransportFile "$FOAM_CASE/chemkin/transportProperties";
+foamChemistryFile "$FOAM_CASE/constant/reactions";
+foamChemistryThermoFile "$FOAM_CASE/constant/thermo";
 
 // ************************************************************************* //
