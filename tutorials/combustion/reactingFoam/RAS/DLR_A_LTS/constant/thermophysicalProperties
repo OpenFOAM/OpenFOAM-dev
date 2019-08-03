@@ -19,7 +19,7 @@ thermoType
 {
 
     type            hePsiThermo;
-    mixture         reactingMixture;
+    mixture         multiComponentMixture;
     transport       sutherland;
     thermo          janaf;
     energy          sensibleEnthalpy;
@@ -30,6 +30,5 @@ thermoType
 inertSpecie N2;
 
 #include "thermo.compressibleGasGRI"
-#include "reactionsGRI"
 
 // ************************************************************************* //

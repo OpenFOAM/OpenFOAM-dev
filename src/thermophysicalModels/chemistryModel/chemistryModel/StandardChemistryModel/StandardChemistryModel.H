@@ -39,10 +39,9 @@ SourceFiles
 #define StandardChemistryModel_H
 
 #include "BasicChemistryModel.H"
-#include "Reaction.H"
+#include "ReactionList.H"
 #include "ODESystem.H"
 #include "volFields.H"
-#include "simpleMatrix.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,11 +79,11 @@ protected:
         //- Reference to the field of specie mass fractions
         PtrList<volScalarField>& Y_;
 
-        //- Reactions
-        const PtrList<Reaction<ThermoType>>& reactions_;
-
         //- Thermodynamic data of the species
         const PtrList<ThermoType>& specieThermo_;
+
+        //- Reactions
+        const ReactionList<ThermoType> reactions_;
 
         //- Number of species
         label nSpecie_;

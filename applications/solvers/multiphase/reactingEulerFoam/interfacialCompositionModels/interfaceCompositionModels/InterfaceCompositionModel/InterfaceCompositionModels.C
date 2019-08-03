@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,6 @@ License
 
 #include "pureMixture.H"
 #include "multiComponentMixture.H"
-#include "reactingMixture.H"
 #include "SpecieMixture.H"
 
 #include "rhoThermo.H"
@@ -64,32 +63,6 @@ License
         multiComponentMixture, Thermo1,                                        \
         heRhoThermo, rhoReactionThermo,                                        \
         multiComponentMixture, Thermo2                                         \
-    );                                                                         \
-    makeSpecieInterfaceCompositionType                                         \
-    (                                                                          \
-        Model,                                                                 \
-        heRhoThermo, rhoReactionThermo,                                        \
-        reactingMixture, Thermo1,                                              \
-        heRhoThermo, rhoReactionThermo,                                        \
-        multiComponentMixture, Thermo2                                         \
-    );                                                                         \
-                                                                               \
-    /* Composition at an interface with a reacting mixture */                  \
-    makeSpecieInterfaceCompositionType                                         \
-    (                                                                          \
-        Model,                                                                 \
-        heRhoThermo, rhoReactionThermo,                                        \
-        multiComponentMixture, Thermo1,                                        \
-        heRhoThermo, rhoReactionThermo,                                        \
-        reactingMixture, Thermo2                                               \
-    );                                                                         \
-    makeSpecieInterfaceCompositionType                                         \
-    (                                                                          \
-        Model,                                                                 \
-        heRhoThermo, rhoReactionThermo,                                        \
-        reactingMixture, Thermo1,                                              \
-        heRhoThermo, rhoReactionThermo,                                        \
-        reactingMixture, Thermo2                                               \
     );
 
 #define makeInterfaceCompositionModel(Model, Thermo1, Thermo2)                 \
@@ -100,14 +73,6 @@ License
         Model,                                                                 \
         heRhoThermo, rhoReactionThermo,                                        \
         multiComponentMixture, Thermo1,                                        \
-        heRhoThermo, rhoThermo,                                                \
-        pureMixture, Thermo2                                                   \
-    );                                                                         \
-    makeInterfaceCompositionType                                               \
-    (                                                                          \
-        Model,                                                                 \
-        heRhoThermo, rhoReactionThermo,                                        \
-        reactingMixture, Thermo1,                                              \
         heRhoThermo, rhoThermo,                                                \
         pureMixture, Thermo2                                                   \
     );                                                                         \

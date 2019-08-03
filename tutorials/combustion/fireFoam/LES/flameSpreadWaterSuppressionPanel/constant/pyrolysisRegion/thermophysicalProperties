@@ -17,7 +17,7 @@ FoamFile
 thermoType
 {
     type            heSolidThermo;
-    mixture         reactingMixture;
+    mixture         multiComponentMixture;
     transport       constIso;
     thermo          hConst;
     equationOfState rhoConst;
@@ -56,6 +56,5 @@ gas
 }
 
 #include "thermo.solid"
-#include "reactions"
 
 // ************************************************************************* //

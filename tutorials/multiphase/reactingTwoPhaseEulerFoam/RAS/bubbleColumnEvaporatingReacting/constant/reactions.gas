@@ -1,12 +1,3 @@
-species
-(
-    CO
-    CO2
-    H2
-    H2O
-    AIR
-);
-
 reactions
 {
     waterGasShift

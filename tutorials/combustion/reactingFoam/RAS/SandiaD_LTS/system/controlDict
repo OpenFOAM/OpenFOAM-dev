@@ -18,7 +18,7 @@ application     reactingFoam;
 
 startFrom       startTime;
 
-startTime       10;
+startTime       0;
 
 stopAt          endTime;
 

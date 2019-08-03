@@ -15,24 +15,6 @@ Notes:
     configuration. It should not be considered general-purpose.
 
 \*---------------------------------------------------------------------------*/
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      reactions;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-species
-(
-    O2
-    H2O
-    CH4
-    CO2
-    N2
-);
 
 reactions
 {
@@ -45,6 +27,5 @@ reactions
         Ta       14906;
     }
 }
-
 
 // ************************************************************************* //

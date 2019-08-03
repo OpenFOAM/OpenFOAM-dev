@@ -70,7 +70,7 @@ Foam::TDACChemistryModel<ReactionThermo, ThermoType>::TDACChemistryModel
     basicSpecieMixture& composition = this->thermo().composition();
 
     const HashTable<List<specieElement>>& specComp =
-        dynamicCast<const reactingMixture<ThermoType>&>(this->thermo())
+        dynamicCast<const multiComponentMixture<ThermoType>&>(this->thermo())
        .specieComposition();
 
     forAll(specieComp_, i)

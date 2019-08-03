@@ -18,16 +18,13 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         reactingMixture;
+    mixture         multiComponentMixture;
     transport       polynomial;
     thermo          hPolynomial;
     energy          sensibleEnthalpy;
     equationOfState icoPolynomial;
     specie          specie;
 }
-
-
-#include "reactions"
 
 #include "thermo.incompressiblePoly"
 

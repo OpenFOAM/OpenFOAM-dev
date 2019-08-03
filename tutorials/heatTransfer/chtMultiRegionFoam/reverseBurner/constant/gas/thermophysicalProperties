@@ -18,7 +18,7 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         reactingMixture;
+    mixture         multiComponentMixture;
     transport       sutherland;
     thermo          janaf;
     equationOfState incompressiblePerfectGas;
@@ -29,6 +29,5 @@ thermoType
 inertSpecie N2;
 
 #include "thermo.compressibleGas"
-#include "reactions"
 
 // ************************************************************************* //

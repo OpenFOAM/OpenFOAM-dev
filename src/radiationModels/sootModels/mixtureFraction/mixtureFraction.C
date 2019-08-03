@@ -24,20 +24,20 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mixtureFraction.H"
-#include "reactingMixture.H"
+#include "multiComponentMixture.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class ThermoType>
-const Foam::reactingMixture<ThermoType>&
+const Foam::multiComponentMixture<ThermoType>&
 Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::checkThermo
 (
     const fluidThermo& thermo
 )
 {
-    if (isA<reactingMixture<ThermoType>>(thermo))
+    if (isA<multiComponentMixture<ThermoType>>(thermo))
     {
-        return dynamic_cast<const reactingMixture<ThermoType>& >
+        return dynamic_cast<const multiComponentMixture<ThermoType>& >
         (
             thermo
         );
@@ -47,9 +47,9 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::checkThermo
         FatalErrorInFunction
             << "Inconsistent thermo package for " << thermo.type()
             << "Please select a thermo package based on "
-            << "reactingMixture" << exit(FatalError);
+            << "multiComponentMixture" << exit(FatalError);
 
-        return dynamic_cast<const reactingMixture<ThermoType>& >
+        return dynamic_cast<const multiComponentMixture<ThermoType>& >
         (
             thermo
         );

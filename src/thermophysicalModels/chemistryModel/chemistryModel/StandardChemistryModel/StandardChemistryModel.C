@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "StandardChemistryModel.H"
-#include "reactingMixture.H"
+#include "multiComponentMixture.H"
 #include "UniformField.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
 
@@ -39,17 +39,17 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
     BasicChemistryModel<ReactionThermo>(thermo),
     ODESystem(),
     Y_(this->thermo().composition().Y()),
-    reactions_
-    (
-        dynamic_cast<const reactingMixture<ThermoType>&>
-        (
-            this->thermo()
-        ).reactions()
-    ),
     specieThermo_
     (
-        dynamic_cast<const reactingMixture<ThermoType>&>
+        dynamic_cast<const multiComponentMixture<ThermoType>&>
             (this->thermo()).speciesData()
+    ),
+    reactions_
+    (
+        *this,
+         dynamic_cast<const multiComponentMixture<ThermoType>&>
+            (this->thermo()).species(),
+        specieThermo_
     ),
 
     nSpecie_(Y_.size()),

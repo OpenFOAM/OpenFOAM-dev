@@ -48,7 +48,6 @@ License
 #include "inhomogeneousMixture.H"
 #include "veryInhomogeneousMixture.H"
 #include "multiComponentMixture.H"
-#include "reactingMixture.H"
 #include "singleComponentMixture.H"
 
 #include "thermoPhysicsTypes.H"
@@ -294,81 +293,6 @@ makeThermoPhysicsReactionThermos
 );
 
 
-// Reaction thermo for internal energy
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constGasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    gasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constIncompressibleGasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    incompressibleGasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    icoPoly8EThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constFluidEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constAdiabaticFluidEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constEThermoPhysics
-);
-
-
 // Single-component thermo for internal energy
 
 makeThermoPhysicsReactionThermo
@@ -544,81 +468,6 @@ makeThermoPhysicsReactionThermos
     rhoReactionThermo,
     heRhoThermo,
     multiComponentMixture,
-    constHThermoPhysics
-);
-
-
-// Reaction thermo for sensible enthalpy
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constGasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    gasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constIncompressibleGasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    incompressibleGasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    icoPoly8HThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constFluidHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constAdiabaticFluidHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
     constHThermoPhysics
 );
 

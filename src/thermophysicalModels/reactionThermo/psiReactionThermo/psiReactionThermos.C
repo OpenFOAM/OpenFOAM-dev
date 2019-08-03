@@ -41,7 +41,6 @@ License
 #include "inhomogeneousMixture.H"
 #include "veryInhomogeneousMixture.H"
 #include "multiComponentMixture.H"
-#include "reactingMixture.H"
 #include "singleComponentMixture.H"
 
 #include "thermoPhysicsTypes.H"
@@ -218,48 +217,6 @@ makeThermoPhysicsReactionThermos
     psiReactionThermo,
     hePsiThermo,
     multiComponentMixture,
-    gasEThermoPhysics
-);
-
-
-// Reaction thermo for sensible enthalpy
-
-makeThermoPhysicsReactionThermos
-(
-    psiThermo,
-    psiReactionThermo,
-    hePsiThermo,
-    reactingMixture,
-    constGasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    psiThermo,
-    psiReactionThermo,
-    hePsiThermo,
-    reactingMixture,
-    gasHThermoPhysics
-);
-
-
-// Reaction thermo for internal energy
-
-makeThermoPhysicsReactionThermos
-(
-    psiThermo,
-    psiReactionThermo,
-    hePsiThermo,
-    reactingMixture,
-    constGasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    psiThermo,
-    psiReactionThermo,
-    hePsiThermo,
-    reactingMixture,
     gasEThermoPhysics
 );
 

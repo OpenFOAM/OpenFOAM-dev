@@ -535,7 +535,6 @@ DebugSwitches
     hMixtureThermo<inhomogeneousMixture<constTransport<thermo<hConstThermo<perfectGas>>>>> 0;
     hMixtureThermo<inhomogeneousMixture<sutherlandTransport<thermo<janafThermo<perfectGas>>>>> 0;
     hMixtureThermo<multiComponentMixture<sutherlandTransport<thermo<janafThermo<perfectGas>>>>> 0;
-    hMixtureThermo<reactingMixture> 0;
     hMixtureThermo<veryInhomogeneousMixture<constTransport<thermo<hConstThermo<perfectGas>>>>> 0;
     hMixtureThermo<veryInhomogeneousMixture<sutherlandTransport<thermo<janafThermo<perfectGas>>>>> 0;
     hThermo<pureMixture<constTransport<thermo<hConstThermo<perfectGas>>>>> 0;

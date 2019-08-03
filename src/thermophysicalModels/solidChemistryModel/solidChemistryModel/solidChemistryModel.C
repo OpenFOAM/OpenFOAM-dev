@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solidChemistryModel.H"
-#include "reactingMixture.H"
+#include "multiComponentMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -37,19 +37,19 @@ Foam::solidChemistryModel<CompType, SolidThermo>::solidChemistryModel
     CompType(thermo),
     ODESystem(),
     Ys_(this->solidThermo().composition().Y()),
-    reactions_
-    (
-        dynamic_cast<const reactingMixture<SolidThermo>&>
-        (
-            this->solidThermo()
-        ).reactions()
-    ),
     solidThermo_
     (
-        dynamic_cast<const reactingMixture<SolidThermo>&>
+        dynamic_cast<const multiComponentMixture<SolidThermo>&>
         (
             this->solidThermo()
         ).speciesData()
+    ),
+    reactions_
+    (
+        *this,
+         dynamic_cast<const multiComponentMixture<SolidThermo>&>
+            (this->solidThermo()).species(),
+        solidThermo_
     ),
     nSolids_(Ys_.size()),
     nReaction_(reactions_.size()),

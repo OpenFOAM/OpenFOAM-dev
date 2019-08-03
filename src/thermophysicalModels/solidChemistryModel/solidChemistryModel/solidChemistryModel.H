@@ -39,10 +39,9 @@ SourceFiles
 #ifndef solidChemistryModel_H
 #define solidChemistryModel_H
 
-#include "Reaction.H"
+#include "ReactionList.H"
 #include "ODESystem.H"
 #include "volFields.H"
-#include "simpleMatrix.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,11 +66,11 @@ protected:
         //- Reference to solid mass fractions
         PtrList<volScalarField>& Ys_;
 
-        //- Reactions
-        const PtrList<Reaction<SolidThermo>>& reactions_;
-
         //- Thermodynamic data of solids
         const PtrList<SolidThermo>& solidThermo_;
+
+        //- Reactions
+        const ReactionList<SolidThermo> reactions_;
 
         //- Number of solid components
         label nSolids_;

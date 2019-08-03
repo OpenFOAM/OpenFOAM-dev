@@ -185,7 +185,7 @@ greyMeanCombustionCoeffs
 
 scatterModel    none;
 
-sootModel mixtureFraction<gasHThermoPhysics>;
+sootModel none; // mixtureFraction<gasHThermoPhysics>;
 
 mixtureFractionCoeffs
 {

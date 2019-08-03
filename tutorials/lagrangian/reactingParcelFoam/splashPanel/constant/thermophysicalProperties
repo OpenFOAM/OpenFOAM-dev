@@ -18,16 +18,13 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         reactingMixture;
+    mixture         multiComponentMixture;
     transport       sutherland;
     thermo          janaf;
     energy          sensibleEnthalpy;
     equationOfState perfectGas;
     specie          specie;
 }
-
-
-#include "reactions"
 
 #include "speciesThermo"
 

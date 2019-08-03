@@ -24,4 +24,6 @@ chemistry       off;
 
 initialChemicalTimeStep 1e-7;
 
+#include "reactions"
+
 // ************************************************************************* //

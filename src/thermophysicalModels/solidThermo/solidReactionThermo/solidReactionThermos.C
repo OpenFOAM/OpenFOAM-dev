@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,6 @@ License
 #include "constAnIsoSolidTransport.H"
 #include "exponentialSolidTransport.H"
 
-#include "reactingMixture.H"
 #include "multiComponentMixture.H"
 
 #include "sensibleEnthalpy.H"
@@ -53,7 +52,7 @@ makeReactingSolidThermo
 (
     solidReactionThermo,
     heSolidThermo,
-    reactingMixture,
+    multiComponentMixture,
     constIsoSolidTransport,
     sensibleEnthalpy,
     hConstThermo,
@@ -66,23 +65,10 @@ makeReactingSolidThermo
 (
     solidReactionThermo,
     heSolidThermo,
-    reactingMixture,
-    constIsoSolidTransport,
-    sensibleEnthalpy,
-    hPowerThermo,
-    rhoConst,
-    specie
-);
-
-
-makeReactingSolidThermo
-(
-    solidThermo,
-    heSolidThermo,
     multiComponentMixture,
     constIsoSolidTransport,
     sensibleEnthalpy,
-    hConstThermo,
+    hPowerThermo,
     rhoConst,
     specie
 );

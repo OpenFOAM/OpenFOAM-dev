@@ -63,7 +63,7 @@ SourceFiles
 #include "HashTable.H"
 
 #include "fluidThermo.H"
-#include "reactingMixture.H"
+#include "multiComponentMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,7 +86,7 @@ class mixtureFraction
     // Static functions
 
         //- Check mixture in thermo
-        static const reactingMixture<ThermoType>& checkThermo
+        static const multiComponentMixture<ThermoType>& checkThermo
         (
             const fluidThermo&
         );
@@ -118,8 +118,8 @@ class mixtureFraction
         //- Thermo package
         const fluidThermo& thermo_;
 
-        //- Auto Ptr to reactingMixture
-        const reactingMixture<ThermoType>& mixture_;
+        //- Auto Ptr to multiComponentMixture
+        const multiComponentMixture<ThermoType>& mixture_;
 
 
 public:
@@ -145,12 +145,6 @@ public:
 
     // Member Functions
 
-        // Edit
-
-            //- Main update/correction routine
-            virtual void correct();
-
-
         // Access
 
             //- Return Ysoot
@@ -159,6 +153,10 @@ public:
                 return soot_;
             }
 
+        // Edit
+
+            //- Main update/correction routine
+            virtual void correct();
 };
 
 
