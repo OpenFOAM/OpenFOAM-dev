@@ -28,10 +28,6 @@ thermoType
 
 inertSpecie N2;
 
-
-#include "reactions"
-
 #include "thermo.compressibleGas"
-
 
 // ************************************************************************* //

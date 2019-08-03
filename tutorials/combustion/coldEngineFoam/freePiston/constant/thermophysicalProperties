@@ -26,9 +26,13 @@ thermoType
     energy          sensibleInternalEnergy;
 }
 
+species
+(
+    air
+);
+
 inertSpecie air;
 
 #include "include/thermo.air"
-#include "include/reactions.air"
 
 // ************************************************************************* //
