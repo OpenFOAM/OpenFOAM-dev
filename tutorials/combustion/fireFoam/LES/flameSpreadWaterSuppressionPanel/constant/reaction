@@ -5,23 +5,11 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      reactions;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-reactions
+reaction
 {
-    propaneReaction
-    {
-        type irreversibleinfiniteReaction;
-        reaction     "C3H8 + 5O2 + 18.8N2 = 3CO2 + 4H2O + 18.8N2";
-    }
+    type irreversibleinfiniteReaction;
+    reaction     "C3H8 + 5O2 + 18.8N2 = 3CO2 + 4H2O + 18.8N2";
 }
 
 // ************************************************************************* //

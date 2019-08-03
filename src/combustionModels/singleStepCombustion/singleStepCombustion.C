@@ -38,7 +38,7 @@ namespace combustionModels
 template<class ReactionThermo, class ThermoType>
 void singleStepCombustion<ReactionThermo, ThermoType>::calculateqFuel()
 {
-    const Reaction<ThermoType>& reaction = reactions_[0];
+    const Reaction<ThermoType>& reaction = reaction_();
     const scalar Wu = mixture_.speciesData()[fuelIndex_].W();
 
     forAll(reaction.lhs(), i)
@@ -89,7 +89,7 @@ void singleStepCombustion<ReactionThermo, ThermoType>:: massAndAirStoichRatios()
 template<class ReactionThermo, class ThermoType>
 void singleStepCombustion<ReactionThermo, ThermoType>:: calculateMaxProducts()
 {
-    const Reaction<ThermoType>& reaction = reactions_[0];
+    const Reaction<ThermoType>& reaction = reaction_();
 
     scalar Wm = 0.0;
     scalar totalMol = 0.0;
@@ -151,11 +151,14 @@ singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
     (
         dynamic_cast<const multiComponentMixture<ThermoType>&>(this->thermo())
     ),
-    reactions_
+    reaction_
     (
-        thermo,
-        mixture_.species(),
-        mixture_.speciesData()
+        Reaction<ThermoType>::New
+        (
+            mixture_.species(),
+            mixture_.speciesData(),
+            this->subDict("reaction")
+        )
     ),
     stoicRatio_(dimensionedScalar("stoicRatio", dimless, 0)),
     s_(dimensionedScalar("s", dimless, 0)),
@@ -181,49 +184,40 @@ singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
     ),
     semiImplicit_(readBool(this->coeffs_.lookup("semiImplicit")))
 {
-    if (reactions_.size() == 1)
+    forAll(fres_, fresI)
     {
-        forAll(fres_, fresI)
-        {
-            IOobject header
+        IOobject header
+        (
+            "fres_" + mixture_.species()[fresI],
+            this->mesh().time().timeName(),
+            this->mesh()
+        );
+
+        fres_.set
+        (
+            fresI,
+            new volScalarField
             (
-                "fres_" + mixture_.species()[fresI],
-                this->mesh().time().timeName(),
-                this->mesh()
-            );
+                header,
+                this->mesh(),
+                dimensionedScalar("fres" + name(fresI), dimless, 0)
+            )
+        );
+    }
 
-            fres_.set
-            (
-                fresI,
-                new volScalarField
-                (
-                    header,
-                    this->mesh(),
-                    dimensionedScalar("fres" + name(fresI), dimless, 0)
-                )
-            );
-        }
+    calculateqFuel();
 
-        calculateqFuel();
+    massAndAirStoichRatios();
 
-        massAndAirStoichRatios();
+    calculateMaxProducts();
 
-        calculateMaxProducts();
-
-        if (semiImplicit_)
-        {
-            Info<< "Combustion mode: semi-implicit" << endl;
-        }
-        else
-        {
-            Info<< "Combustion mode: explicit" << endl;
-        }
+    if (semiImplicit_)
+    {
+        Info<< "Combustion mode: semi-implicit" << endl;
     }
     else
     {
-        FatalErrorInFunction
-            << "Only one reaction required for single step reaction"
-            << exit(FatalError);
+        Info<< "Combustion mode: explicit" << endl;
     }
 }
 
@@ -294,7 +288,7 @@ bool singleStepCombustion<ReactionThermo, ThermoType>::read()
 template<class ReactionThermo, class ThermoType>
 void singleStepCombustion<ReactionThermo, ThermoType>::fresCorrect()
 {
-    const Reaction<ThermoType>& reaction = reactions_[0];
+    const Reaction<ThermoType>& reaction = reaction_();
 
     const label O2Index = mixture_.species()["O2"];
     const volScalarField& YFuel = mixture_.Y()[fuelIndex_];

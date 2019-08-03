@@ -30,10 +30,6 @@ inertSpecie N2;
 
 fuel        CH4;
 
-
-#include "reactions"
-
 #include "thermo.compressibleGas"
-
 
 // ************************************************************************* //

@@ -67,7 +67,7 @@ public:
         (
             const dictionary& dict,
             const speciesTable& species,
-            const PtrList<ThermoType>& thermoDatabase
+            const PtrList<ThermoType>& speciesThermo
         );
 
         //- Construct copy

@@ -61,8 +61,8 @@ protected:
 
         const multiComponentMixture<ThermoType>& mixture_;
 
-        //- Reactions
-        ReactionList<ThermoType> reactions_;
+        //- The single-step reaction
+        autoPtr<Reaction<ThermoType>> reaction_;
 
         //- Stoichiometric air-fuel mass ratio
         dimensionedScalar stoicRatio_;

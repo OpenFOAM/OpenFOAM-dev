@@ -23,4 +23,6 @@ infinitelyFastChemistryCoeffs
     C               10;
 }
 
+#include "reaction"
+
 // ************************************************************************* //

@@ -173,6 +173,16 @@ public:
             const dictionary& dict
         );
 
+        //- Return a pointer to new patchField created on freestore from dict.
+        //  This is used to construct a single reaction given a speciesThermo
+        //  list from which a temporary thermoDatabase is created.
+        static autoPtr<Reaction<ReactionThermo>> New
+        (
+            const speciesTable& species,
+            const PtrList<ReactionThermo>& speciesThermo,
+            const dictionary& dict
+        );
+
 
     //- Destructor
     virtual ~Reaction()

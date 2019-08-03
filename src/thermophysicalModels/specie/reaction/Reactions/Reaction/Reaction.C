@@ -184,6 +184,29 @@ Foam::Reaction<ReactionThermo>::New
 }
 
 
+template<class ReactionThermo>
+Foam::autoPtr<Foam::Reaction<ReactionThermo>>
+Foam::Reaction<ReactionThermo>::New
+(
+    const speciesTable& species,
+    const PtrList<ReactionThermo>& speciesThermo,
+    const dictionary& dict
+)
+{
+    HashPtrTable<ReactionThermo> thermoDatabase;
+    forAll(speciesThermo, i)
+    {
+        thermoDatabase.insert
+        (
+            speciesThermo[i].name(),
+            speciesThermo[i].clone().ptr()
+        );
+    }
+
+    return New(species, thermoDatabase, dict);
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
