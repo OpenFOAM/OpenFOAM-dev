@@ -100,25 +100,7 @@ int main(int argc, char *argv[])
     }
 
     thermoDict.write(OFstream(args[5])(), false);
-
-
-    OFstream reactionsFile(args[4]);
-    cr.reactions().write(reactionsFile);
-
-    reactionsFile << nl;
-
-    writeEntry
-    (
-        reactionsFile,
-        "Tlow",
-        Reaction<gasHThermoPhysics>::TlowDefault
-    );
-    writeEntry
-    (
-        reactionsFile,
-        "Thigh",
-        Reaction<gasHThermoPhysics>::ThighDefault
-    );
+    cr.reactions().write(OFstream(args[4])());
 
     Info<< "End\n" << endl;
 

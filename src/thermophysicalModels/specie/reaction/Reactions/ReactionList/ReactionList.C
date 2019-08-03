@@ -24,91 +24,57 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ReactionList.H"
-#include "IFstream.H"
-#include "SLPtrList.H"
+#include "HashPtrTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
 Foam::ReactionList<ThermoType>::ReactionList
 (
+    const dictionary& dict,
     const speciesTable& species,
-    const HashPtrTable<ThermoType>& thermoDb
+    const PtrList<ThermoType>& speciesThermo
 )
-:
-    SLPtrList<Reaction<ThermoType>>(),
-    species_(species),
-    thermoDb_(thermoDb),
-    dict_(dictionary::null)
-{}
-
-
-template<class ThermoType>
-Foam::ReactionList<ThermoType>::ReactionList
-(
-    const speciesTable& species,
-    const HashPtrTable<ThermoType>& thermoDb,
-    const dictionary& dict
-)
-:
-    SLPtrList<Reaction<ThermoType>>(),
-    species_(species),
-    thermoDb_(thermoDb),
-    dict_(dict)
 {
-    readReactionDict();
-}
-
-
-template<class ThermoType>
-Foam::ReactionList<ThermoType>::ReactionList(const ReactionList& reactions)
-:
-    SLPtrList<Reaction<ThermoType>>(reactions),
-    species_(reactions.species_),
-    thermoDb_(reactions.thermoDb_),
-    dict_(reactions.dict_)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class ThermoType>
-Foam::ReactionList<ThermoType>::~ReactionList()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ThermoType>
-bool Foam::ReactionList<ThermoType>::readReactionDict()
-{
-    const dictionary& reactions(dict_.subDict("reactions"));
-
     // Set general temperature limits from the dictionary
     Reaction<ThermoType>::TlowDefault =
-        dict_.lookupOrDefault<scalar>("Tlow", 0);
+        dict.lookupOrDefault<scalar>("Tlow", 0);
 
     Reaction<ThermoType>::ThighDefault =
-        dict_.lookupOrDefault<scalar>("Thigh", great);
+        dict.lookupOrDefault<scalar>("Thigh", great);
 
-    forAllConstIter(dictionary, reactions, iter)
+    const dictionary& reactions(dict.subDict("reactions"));
+
+    HashPtrTable<ThermoType> thermoDatabase;
+    forAll(speciesThermo, i)
     {
-        const word reactionName = iter().keyword();
-
-        this->append
+        thermoDatabase.insert
         (
-            Reaction<ThermoType>::New
-            (
-                species_,
-                thermoDb_,
-                reactions.subDict(reactionName)
-            ).ptr()
+            speciesThermo[i].name(),
+            speciesThermo[i].clone().ptr()
         );
     }
 
-    return true;
+    this->setSize(reactions.size());
+    label i = 0;
+
+    forAllConstIter(dictionary, reactions, iter)
+    {
+        this->set
+        (
+            i++,
+            Reaction<ThermoType>::New
+            (
+                species,
+                thermoDatabase,
+                reactions.subDict(iter().keyword())
+            ).ptr()
+        );
+    }
 }
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
 void Foam::ReactionList<ThermoType>::write(Ostream& os) const
@@ -116,17 +82,26 @@ void Foam::ReactionList<ThermoType>::write(Ostream& os) const
     os  << "reactions" << nl;
     os  << token::BEGIN_BLOCK << incrIndent << nl;
 
-    forAllConstIter(typename SLPtrList<Reaction<ThermoType>>, *this, iter)
+    forAll(*this, i)
     {
-        const Reaction<ThermoType>& r = iter();
+        const Reaction<ThermoType>& r = this->operator[](i);
+
         os  << indent << r.name() << nl
             << indent << token::BEGIN_BLOCK << incrIndent << nl;
+
         writeEntry(os, "type", r.type());
+
         r.write(os);
+
         os  << decrIndent << indent << token::END_BLOCK << nl;
     }
 
     os << decrIndent << token::END_BLOCK << nl;
+
+    writeEntry(os, "Tlow", Reaction<ThermoType>::TlowDefault);
+    writeEntry(os, "Thigh", Reaction<ThermoType>::ThighDefault);
+
+    os << nl;
 }
 
 

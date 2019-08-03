@@ -28,21 +28,79 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ThermoType>
-const ThermoType& Foam::multiComponentMixture<ThermoType>::constructSpeciesData
+Foam::PtrList<ThermoType>
+Foam::multiComponentMixture<ThermoType>::readSpeciesData
 (
     const dictionary& thermoDict
-)
+) const
 {
+    PtrList<ThermoType> speciesData(species_.size());
+
     forAll(species_, i)
     {
-        speciesData_.set
+        speciesData.set
         (
             i,
             new ThermoType(thermoDict.subDict(species_[i]))
         );
     }
 
-    return speciesData_[0];
+    return speciesData;
+}
+
+
+template<class ThermoType>
+typename Foam::multiComponentMixture<ThermoType>::speciesCompositionTable
+Foam::multiComponentMixture<ThermoType>::readSpeciesComposition
+(
+    const dictionary& thermoDict,
+    const speciesTable& species
+) const
+{
+    speciesCompositionTable speciesComposition_;
+
+    // Loop through all species in thermoDict to retrieve
+    // the species composition
+    forAll(species, si)
+    {
+        if (thermoDict.subDict(species[si]).isDict("elements"))
+        {
+            dictionary currentElements
+            (
+                thermoDict.subDict(species[si]).subDict("elements")
+            );
+
+            wordList currentElementsName(currentElements.toc());
+            List<specieElement> currentComposition(currentElementsName.size());
+
+            forAll(currentElementsName, eni)
+            {
+                currentComposition[eni].name() = currentElementsName[eni];
+
+                currentComposition[eni].nAtoms() =
+                    currentElements.lookupOrDefault
+                    (
+                        currentElementsName[eni],
+                        0
+                    );
+            }
+
+            // Add current specie composition to the hash table
+            speciesCompositionTable::iterator specieCompositionIter
+            (
+                speciesComposition_.find(species[si])
+            );
+
+            if (specieCompositionIter != speciesComposition_.end())
+            {
+                speciesComposition_.erase(specieCompositionIter);
+            }
+
+            speciesComposition_.insert(species[si], currentComposition);
+        }
+    }
+
+    return speciesComposition_;
 }
 
 
@@ -88,8 +146,9 @@ Foam::multiComponentMixture<ThermoType>::multiComponentMixture
         mesh,
         phaseName
     ),
-    speciesData_(species_.size()),
-    mixture_("mixture", constructSpeciesData(thermoDict)),
+    speciesData_(readSpeciesData(thermoDict)),
+    speciesComposition_(readSpeciesComposition(thermoDict, species())),
+    mixture_("mixture", speciesData_[0]),
     mixtureVol_("volMixture", speciesData_[0])
 {
     correctMassFractions();

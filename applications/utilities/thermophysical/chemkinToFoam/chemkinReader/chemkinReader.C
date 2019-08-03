@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "chemkinReader.H"
-#include <fstream>
+#include "IFstream.H"
 #include "atomicWeights.H"
 #include "ReactionProxy.H"
 #include "IrreversibleReaction.H"
@@ -839,7 +839,6 @@ Foam::chemkinReader::chemkinReader
     lineNo_(1),
     specieNames_(10),
     speciesTable_(species),
-    reactions_(speciesTable_, speciesThermo_),
     newFormat_(newFormat),
     imbalanceTol_(rootSmall)
 {
@@ -856,7 +855,6 @@ Foam::chemkinReader::chemkinReader
     lineNo_(1),
     specieNames_(10),
     speciesTable_(species),
-    reactions_(speciesTable_, speciesThermo_),
     newFormat_(thermoDict.lookupOrDefault("newFormat", false)),
     imbalanceTol_(thermoDict.lookupOrDefault("imbalanceTolerance", rootSmall))
 {

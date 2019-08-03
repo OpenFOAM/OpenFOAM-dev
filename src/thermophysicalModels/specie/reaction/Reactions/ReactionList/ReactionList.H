@@ -35,12 +35,9 @@ SourceFiles
 #ifndef ReactionList_H
 #define ReactionList_H
 
-#include "PtrList.H"
-#include "SLPtrList.H"
-#include "speciesTable.H"
-#include "HashPtrTable.H"
 #include "Reaction.H"
-#include "fileName.H"
+#include "speciesTable.H"
+#include "PtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,59 +51,30 @@ namespace Foam
 template<class ThermoType>
 class ReactionList
 :
-    public SLPtrList<Reaction<ThermoType>>
+    public PtrList<Reaction<ThermoType>>
 {
-    // Private Data
-
-        //- Reference to the table of species
-        const speciesTable& species_;
-
-        //- Reference to the thermo database
-        const HashPtrTable<ThermoType>& thermoDb_;
-
-        //- The dictionary used for construction
-        const dictionary dict_;
-
 
 public:
 
     // Constructors
 
-        //- Construct null
-        ReactionList
-        (
-            const speciesTable& species,
-            const HashPtrTable<ThermoType>& thermoDatabase
-        );
-
-        //- Construct from thermoDatabase and dictionary
-        ReactionList
-        (
-            const speciesTable& species,
-            const HashPtrTable<ThermoType>& thermoDatabase,
-            const dictionary& dict
-        );
+        //- Construct empty
+        ReactionList()
+        {}
 
         //- Construct from thermo list and dictionary
         ReactionList
         (
+            const dictionary& dict,
             const speciesTable& species,
-            const PtrList<ThermoType>& thermoDatabase,
-            const dictionary& dict
+            const PtrList<ThermoType>& thermoDatabase
         );
 
         //- Construct copy
-        ReactionList(const ReactionList<ThermoType>& reactions);
-
-
-    //- Destructor
-    ~ReactionList();
+        ReactionList(const ReactionList<ThermoType>& reactions) = delete;
 
 
     // Public Member Functions
-
-        //- Read reactions from dictionary
-        bool readReactionDict();
 
         //- Write
         void write(Ostream& os) const;

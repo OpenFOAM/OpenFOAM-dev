@@ -37,14 +37,11 @@ SourceFiles
 
 #include "multiComponentMixture.H"
 #include "ReactionList.H"
-#include "specieElement.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-typedef HashTable<List<specieElement>> speciesCompositionTable;
 
 /*---------------------------------------------------------------------------*\
                       Class reactingMixture Declaration
@@ -57,23 +54,10 @@ class reactingMixture
 {
     // Private member data
 
-        //- Table of species composition
-        speciesCompositionTable speciesComposition_;
-
-        PtrList<Reaction<ThermoType>> reactions_;
-
-        speciesCompositionTable readSpeciesComposition
-        (
-            const dictionary& thermoDict,
-            const speciesTable& speciesTable_
-        ) const;
+        ReactionList<ThermoType> reactions_;
 
 
 public:
-
-    //- The type of thermo package this mixture is instantiated for
-    typedef ThermoType thermoType;
-
 
     // Constructors
 
@@ -97,18 +81,9 @@ public:
             return "reactingMixture<" + ThermoType::typeName() + '>';
         }
 
-        //- Read dictionary
-        void read(const dictionary&);
-
         const PtrList<Reaction<ThermoType>>& reactions() const
         {
             return reactions_;
-        }
-
-        //- Table of species composition
-        const speciesCompositionTable& specieComposition() const
-        {
-            return speciesComposition_;
         }
 
 
