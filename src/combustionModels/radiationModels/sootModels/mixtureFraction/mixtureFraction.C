@@ -24,44 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mixtureFraction.H"
-#include "multiComponentMixture.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<class ThermoType>
-const Foam::multiComponentMixture<ThermoType>&
-Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::checkThermo
-(
-    const fluidThermo& thermo
-)
-{
-    if (isA<multiComponentMixture<ThermoType>>(thermo))
-    {
-        return dynamic_cast<const multiComponentMixture<ThermoType>& >
-        (
-            thermo
-        );
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Inconsistent thermo package for " << thermo.type()
-            << "Please select a thermo package based on "
-            << "multiComponentMixture" << exit(FatalError);
-
-        return dynamic_cast<const multiComponentMixture<ThermoType>& >
-        (
-            thermo
-        );
-    }
-
-}
-
+#include "singleStepCombustion.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
+template<class ReactionThermo, class ThermoType>
+Foam::radiationModels::sootModels::mixtureFraction<ReactionThermo, ThermoType>::
+mixtureFraction
 (
     const dictionary& dict,
     const fvMesh& mesh,
@@ -89,11 +58,22 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
     (
         coeffsDict_.lookupOrDefault<word>("mappingField", "none")
     ),
-    mapFieldMax_(1),
-    thermo_(mesh.lookupObject<fluidThermo>(basicThermo::dictName)),
-    mixture_(checkThermo(thermo_))
+    mapFieldMax_(1)
 {
-    const Reaction<ThermoType>& reaction = mixture_.reactions()[0];
+    const combustionModels::singleStepCombustion<ReactionThermo, ThermoType>&
+    combustion
+    (
+        mesh.lookupObject
+        <
+            combustionModels::singleStepCombustion<ReactionThermo, ThermoType>
+        >
+        (
+            combustionModel::combustionPropertiesName
+        )
+    );
+
+    const multiComponentMixture<ThermoType>& mixture(combustion.mixture());
+    const Reaction<ThermoType>& reaction = combustion.reaction();
 
     scalar totalMol = 0;
     forAll(reaction.rhs(), i)
@@ -112,15 +92,15 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
         const label speciei = reaction.rhs()[i].index;
         const scalar stoichCoeff = reaction.rhs()[i].stoichCoeff;
         Xi[i] = mag(stoichCoeff)/totalMol;
-        Wm += Xi[i]*mixture_.speciesData()[speciei].W();
+        Wm += Xi[i]*mixture.speciesData()[speciei].W();
     }
 
-    scalarList Yprod0(mixture_.species().size(), 0.0);
+    scalarList Yprod0(mixture.species().size(), 0.0);
 
     forAll(reaction.rhs(), i)
     {
         const label speciei = reaction.rhs()[i].index;
-        Yprod0[speciei] = mixture_.speciesData()[speciei].W()/Wm*Xi[i];
+        Yprod0[speciei] = mixture.speciesData()[speciei].W()/Wm*Xi[i];
     }
 
     const scalar XSoot = nuSoot_/totalMol;
@@ -133,10 +113,10 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
     if (mappingFieldName_ == "none")
     {
         const label index = reaction.rhs()[0].index;
-        mappingFieldName_ = mixture_.Y(index).name();
+        mappingFieldName_ = mixture.Y(index).name();
     }
 
-    const label mapFieldIndex = mixture_.species()[mappingFieldName_];
+    const label mapFieldIndex = mixture.species()[mappingFieldName_];
 
     mapFieldMax_ = Yprod0[mapFieldIndex];
 }
@@ -144,16 +124,18 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::
+template<class ReactionThermo, class ThermoType>
+Foam::radiationModels::sootModels::mixtureFraction<ReactionThermo, ThermoType>::
 ~mixtureFraction()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::correct()
+template<class ReactionThermo, class ThermoType>
+void
+Foam::radiationModels::sootModels::mixtureFraction<ReactionThermo, ThermoType>::
+correct()
 {
     const volScalarField& mapField =
         mesh_.lookupObject<volScalarField>(mappingFieldName_);

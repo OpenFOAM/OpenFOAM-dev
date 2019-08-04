@@ -135,6 +135,14 @@ public:
 
         // Access functions
 
+    const multiComponentMixture<ThermoType>& mixture() const
+    {
+        return mixture_;
+    }
+
+            //- Return the single step reaction
+            inline const Reaction<ThermoType>& reaction() const;
+
             //- Return the stoichiometric air-fuel mass ratio
             inline const dimensionedScalar stoicRatio() const;
 

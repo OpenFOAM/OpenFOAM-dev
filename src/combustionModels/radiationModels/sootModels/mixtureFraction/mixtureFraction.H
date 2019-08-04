@@ -39,9 +39,9 @@ Description
     The spacial distribution is given by the normalization of the first product
     on the rhs of the reaction by default or it can be added as input.
 
-    The input dictionary reads like in the radiationProperties dictionary:
+    For example in the radiationProperties dictionary set:
 
-    sootModel mixtureFraction<gasHThermoPhysics>;
+    sootModel mixtureFraction<psiReactionThermo,gasHThermoPhysics>;
 
     mixtureFractionSootCoeffs
     {
@@ -58,12 +58,7 @@ SourceFiles
 #ifndef mixtureFraction_H
 #define mixtureFraction_H
 
-#include "interpolationLookUpTable.H"
 #include "sootModel.H"
-#include "HashTable.H"
-
-#include "fluidThermo.H"
-#include "multiComponentMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,20 +73,11 @@ namespace sootModels
                      Class mixtureFraction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
+template<class ReactionThermo, class ThermoType>
 class mixtureFraction
 :
     public sootModel
 {
-    // Static functions
-
-        //- Check mixture in thermo
-        static const multiComponentMixture<ThermoType>& checkThermo
-        (
-            const fluidThermo&
-        );
-
-
     // Private Data
 
          //- Soot mass fraction
@@ -114,12 +100,6 @@ class mixtureFraction
 
         //- Maximum value of the map field
         scalar mapFieldMax_;
-
-        //- Thermo package
-        const fluidThermo& thermo_;
-
-        //- Auto Ptr to multiComponentMixture
-        const multiComponentMixture<ThermoType>& mixture_;
 
 
 public:

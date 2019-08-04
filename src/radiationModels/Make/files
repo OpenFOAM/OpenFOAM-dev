@@ -29,7 +29,6 @@ absorptionEmissionModels/greyMeanSolid/greyMeanSolid.C
 /* Soot model */
 sootModels/sootModel/sootModel.C
 sootModels/sootModel/sootModelNew.C
-/* sootModels/mixtureFraction/mixtureFractions.C */
 sootModels/noSoot/noSoot.C
 
 /* Boundary conditions */

@@ -35,6 +35,14 @@ namespace combustionModels
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo, class ThermoType>
+inline const Foam::Reaction<ThermoType>&
+singleStepCombustion<ReactionThermo, ThermoType>::reaction() const
+{
+    return reaction_();
+}
+
+
+template<class ReactionThermo, class ThermoType>
 inline const dimensionedScalar
 singleStepCombustion<ReactionThermo, ThermoType>::stoicRatio() const
 {
