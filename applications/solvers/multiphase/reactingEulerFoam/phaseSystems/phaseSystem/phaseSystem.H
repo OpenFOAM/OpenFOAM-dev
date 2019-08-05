@@ -437,6 +437,13 @@ public:
             //- Return the surface tension coefficient for a pair
             tmp<volScalarField> sigma(const phasePairKey& key) const;
 
+            //- Return the surface tension coefficient for a pair on a patch
+            tmp<scalarField> sigma
+            (
+                const phasePairKey& key,
+                label patchi
+            ) const;
+
             //- Return the mass transfer rate for a pair
             virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
 

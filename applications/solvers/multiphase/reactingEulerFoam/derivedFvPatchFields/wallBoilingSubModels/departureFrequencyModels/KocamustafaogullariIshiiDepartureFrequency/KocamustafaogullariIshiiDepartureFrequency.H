@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,29 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallBoilingModels::departureDiameterModels::KocamustafaogullariIshii
+    Foam::wallBoilingModels::departureFrequencyModels::
+    KocamustafaogullariIshiiDepartureFrequency
 
 Description
-    A correlation for bubble departure diameter.
-
-    Requires model parameter 'phi': contact angle in degrees.
+    Correlation for bubble departure frequency.
 
     Reference:
     \verbatim
-        Kocamustafaogullari, G., & Ishii, M. (1983).
-        Interfacial area and nucleation site density in boiling systems.
-        International Journal of Heat and Mass Transfer, 26(9), 1377-1387.
+        Kocamustafaogullari, G., & Ishii, M. (1995).
+        Foundation of the interfacial area transport equation and its closure
+        relations.
+        International Journal of Heat and Mass Transfer, 38(3), 481-493.
     \endverbatim
 
 SourceFiles
-    KocamustafaogullariIshii.C
+    KocamustafaogullariIshiiDepartureFrequency.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef KocamustafaogullariIshii_H
-#define KocamustafaogullariIshii_H
+#ifndef KocamustafaogullariIshiiDepartureFrequency_H
+#define KocamustafaogullariIshiiDepartureFrequency_H
 
-#include "departureDiameterModel.H"
+#include "departureFrequencyModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,21 +52,21 @@ namespace Foam
 {
 namespace wallBoilingModels
 {
-namespace departureDiameterModels
+namespace departureFrequencyModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class KocamustafaogullariIshii Declaration
+         Class KocamustafaogullariIshiiDepartureFrequency Declaration
 \*---------------------------------------------------------------------------*/
 
-class KocamustafaogullariIshii
+class KocamustafaogullariIshiiDepartureFrequency
 :
-    public departureDiameterModel
+    public departureFrequencyModel
 {
-    // Private Data
+    // Private data
 
-        //- Contact angle
-        scalar phi_;
+        //- Model parameter
+        scalar Cf_;
 
 
 public:
@@ -74,27 +74,29 @@ public:
     //- Runtime type information
     TypeName("KocamustafaogullariIshii");
 
+
     // Constructors
 
         //- Construct from a dictionary
-        KocamustafaogullariIshii(const dictionary& dict);
+        KocamustafaogullariIshiiDepartureFrequency(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~KocamustafaogullariIshii();
+    virtual ~KocamustafaogullariIshiiDepartureFrequency();
 
 
     // Member Functions
 
-        //- Calculate and return the departure diameter field
-        virtual tmp<scalarField> dDeparture
+        //- Calculate and return the bubble departure frequency
+        virtual tmp<scalarField> fDeparture
         (
             const phaseModel& liquid,
             const phaseModel& vapor,
             const label patchi,
             const scalarField& Tl,
             const scalarField& Tsatw,
-            const scalarField& L
+            const scalarField& L,
+            const scalarField& dDep
         ) const;
 
         virtual void write(Ostream& os) const;
@@ -103,7 +105,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace departureDiameterModels
+} // End namespace departureFrequencyModels
 } // End namespace wallBoilingModels
 } // End namespace Foam
 

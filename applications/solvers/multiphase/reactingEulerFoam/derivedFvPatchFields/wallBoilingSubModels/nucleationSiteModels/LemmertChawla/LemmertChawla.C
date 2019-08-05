@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,9 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::LemmertChawla
 )
 :
     nucleationSiteModel(),
-    Cn_(dict.lookupOrDefault<scalar>("Cn", 1))
+    Cn_(dict.lookupOrDefault<scalar>("Cn", 1)),
+    NRef_(dict.lookupOrDefault<scalar>("NRef", 9.922e5)),
+    deltaTRef_(dict.lookupOrDefault<scalar>("deltaTRef", 10))
 {}
 
 
@@ -74,13 +76,25 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::N
     const label patchi,
     const scalarField& Tl,
     const scalarField& Tsatw,
-    const scalarField& L
+    const scalarField& L,
+    const scalarField& dDep,
+    const scalarField& fDep
 ) const
 {
     const fvPatchScalarField& Tw =
         liquid.thermo().T().boundaryField()[patchi];
 
-    return Cn_*9.922e5*pow(max((Tw - Tsatw)/10, scalar(0)), 1.805);
+    return Cn_*NRef_*pow(max((Tw - Tsatw)/deltaTRef_, scalar(0)), 1.805);
+}
+
+
+void Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::
+    write(Ostream& os) const
+{
+    nucleationSiteModel::write(os);
+    os.writeKeyword("Cn") << Cn_ << token::END_STATEMENT << nl;
+    os.writeKeyword("NRef") << NRef_ << token::END_STATEMENT << nl;
+    os.writeKeyword("deltaTRef") << deltaTRef_ << token::END_STATEMENT << nl;
 }
 
 

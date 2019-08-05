@@ -115,8 +115,11 @@ public:
 
     // Member Functions
 
-        //- Aspect ratio
+        //- Surface tension
         virtual tmp<volScalarField> sigma() const = 0;
+
+        //- Surface tension for a patch
+        virtual tmp<scalarField> sigma(label patchi) const = 0;
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;

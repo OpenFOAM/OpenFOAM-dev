@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,12 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Cole.H"
+#include "KocamustafaogullariIshiiDepartureFrequency.H"
 #include "addToRunTimeSelectionTable.H"
 #include "uniformDimensionedFields.H"
 #include "compressibleTurbulenceModel.H"
 #include "ThermalDiffusivity.H"
 #include "PhaseCompressibleTurbulenceModel.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,11 +39,11 @@ namespace wallBoilingModels
 {
 namespace departureFrequencyModels
 {
-    defineTypeNameAndDebug(Cole, 0);
+    defineTypeNameAndDebug(KocamustafaogullariIshiiDepartureFrequency, 0);
     addToRunTimeSelectionTable
     (
         departureFrequencyModel,
-        Cole,
+        KocamustafaogullariIshiiDepartureFrequency,
         dictionary
     );
 }
@@ -53,16 +54,19 @@ namespace departureFrequencyModels
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::departureFrequencyModels::
-Cole::Cole(const dictionary& dict)
+KocamustafaogullariIshiiDepartureFrequency::
+KocamustafaogullariIshiiDepartureFrequency(const dictionary& dict)
 :
-    departureFrequencyModel()
+    departureFrequencyModel(),
+    Cf_(dict.lookupOrDefault<scalar>("Cf", 1.18))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::departureFrequencyModels::
-Cole::~Cole()
+KocamustafaogullariIshiiDepartureFrequency::
+~KocamustafaogullariIshiiDepartureFrequency()
 {}
 
 
@@ -70,7 +74,7 @@ Cole::~Cole()
 
 Foam::tmp<Foam::scalarField>
 Foam::wallBoilingModels::departureFrequencyModels::
-Cole::fDeparture
+KocamustafaogullariIshiiDepartureFrequency::fDeparture
 (
     const phaseModel& liquid,
     const phaseModel& vapor,
@@ -88,12 +92,26 @@ Cole::fDeparture
     const scalarField rhoLiquid(liquid.thermo().rho(patchi));
     const scalarField rhoVapor(vapor.thermo().rho(patchi));
 
-    return sqrt
+    const tmp<volScalarField> tsigma
     (
-        4*mag(g).value()
-       *max(rhoLiquid - rhoVapor, scalar(0.1))
-       /(3*dDep*rhoLiquid)
+        liquid.fluid().sigma(phasePairKey(liquid.name(), vapor.name()))
     );
+
+    const volScalarField& sigma = tsigma();
+    const fvPatchScalarField& sigmaw = sigma.boundaryField()[patchi];
+
+    return (Cf_/dDep)*pow025
+    (
+        sigmaw*mag(g.value())*(rhoLiquid - rhoVapor)/sqr(rhoLiquid)
+    );
+}
+
+
+void Foam::wallBoilingModels::departureFrequencyModels::
+KocamustafaogullariIshiiDepartureFrequency::write(Ostream& os) const
+{
+    departureFrequencyModel::write(os);
+    os.writeKeyword("Cf") << Cf_ << token::END_STATEMENT << nl;
 }
 
 

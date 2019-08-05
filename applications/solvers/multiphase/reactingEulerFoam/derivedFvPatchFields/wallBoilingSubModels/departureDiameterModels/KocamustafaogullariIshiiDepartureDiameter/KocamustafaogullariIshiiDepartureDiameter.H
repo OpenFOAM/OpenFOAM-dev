@@ -22,25 +22,30 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallBoilingModels::departureFrequencyModel
+    Foam::wallBoilingModels::departureDiameterModels::
+    KocamustafaogullariIshiiDepartureDiameter
 
 Description
-    Base class for bubble departure frequency models
+    A correlation for bubble departure diameter.
+
+    Requires model parameter 'phi': contact angle in degrees.
+
+    Reference:
+    \verbatim
+        Kocamustafaogullari, G., & Ishii, M. (1983).
+        Interfacial area and nucleation site density in boiling systems.
+        International Journal of Heat and Mass Transfer, 26(9), 1377-1387.
+    \endverbatim
 
 SourceFiles
-    departureFrequencyModel.C
-    newdepartureFrequencyModel.C
+    KocamustafaogullariIshiiDepartureDiameter.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef departureFrequencyModel_H
-#define departureFrequencyModel_H
+#ifndef KocamustafaogullariIshiiDepartureDiameter_H
+#define KocamustafaogullariIshiiDepartureDiameter_H
 
-#include "volFields.H"
-#include "dictionary.H"
-#include "runTimeSelectionTables.H"
-
-#include "phaseModel.H"
+#include "departureDiameterModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,76 +53,58 @@ namespace Foam
 {
 namespace wallBoilingModels
 {
+namespace departureDiameterModels
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class departureFrequencyModel Declaration
+          Class KocamustafaogullariIshiiDepartureDiameter Declaration
 \*---------------------------------------------------------------------------*/
 
-class departureFrequencyModel
+class KocamustafaogullariIshiiDepartureDiameter
+:
+    public departureDiameterModel
 {
+    // Private Data
+
+        //- Contact angle
+        scalar phi_;
+
+
 public:
 
     //- Runtime type information
-    TypeName("departureFrequencyModel");
-
-
-    //- Declare runtime construction
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        departureFrequencyModel,
-        dictionary,
-        (
-            const dictionary& dict
-        ),
-        (dict)
-    );
-
+    TypeName("KocamustafaogullariIshii");
 
     // Constructors
 
-        //- Construct null
-        departureFrequencyModel();
-
-        //- Disallow default bitwise copy construction
-        departureFrequencyModel(const departureFrequencyModel&) = delete;
-
-
-    // Selectors
-
-        //- Select null constructed
-        static autoPtr<departureFrequencyModel> New(const dictionary& dict);
+        //- Construct from a dictionary
+        KocamustafaogullariIshiiDepartureDiameter(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~departureFrequencyModel();
+    virtual ~KocamustafaogullariIshiiDepartureDiameter();
 
 
     // Member Functions
 
-        //- Calculate and return the bubble departure frequency
-        virtual tmp<scalarField> fDeparture
+        //- Calculate and return the departure diameter field
+        virtual tmp<scalarField> dDeparture
         (
             const phaseModel& liquid,
             const phaseModel& vapor,
             const label patchi,
             const scalarField& Tl,
             const scalarField& Tsatw,
-            const scalarField& L,
-            const scalarField& dDep
-        ) const = 0;
+            const scalarField& L
+        ) const;
 
         virtual void write(Ostream& os) const;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const departureFrequencyModel&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace departureDiameterModels
 } // End namespace wallBoilingModels
 } // End namespace Foam
 

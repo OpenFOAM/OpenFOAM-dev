@@ -103,7 +103,9 @@ public:
             const label patchi,
             const scalarField& Tl,
             const scalarField& Tsatw,
-            const scalarField& L
+            const scalarField& L,
+            const scalarField& dDep,
+            const scalarField& fDep
         ) const = 0;
 
         virtual void write(Ostream& os) const;

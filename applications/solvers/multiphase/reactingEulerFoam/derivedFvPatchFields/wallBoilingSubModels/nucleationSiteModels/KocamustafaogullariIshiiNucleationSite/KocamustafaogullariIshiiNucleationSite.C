@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,12 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "KocamustafaogullariIshii.H"
+#include "KocamustafaogullariIshiiNucleationSite.H"
 #include "addToRunTimeSelectionTable.H"
-#include "uniformDimensionedFields.H"
-#include "compressibleTurbulenceModel.H"
-#include "ThermalDiffusivity.H"
-#include "PhaseCompressibleTurbulenceModel.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -37,13 +33,13 @@ namespace Foam
 {
 namespace wallBoilingModels
 {
-namespace departureDiameterModels
+namespace nucleationSiteModels
 {
-    defineTypeNameAndDebug(KocamustafaogullariIshii, 0);
+    defineTypeNameAndDebug(KocamustafaogullariIshiiNucleationSite, 0);
     addToRunTimeSelectionTable
     (
-        departureDiameterModel,
-        KocamustafaogullariIshii,
+        nucleationSiteModel,
+        KocamustafaogullariIshiiNucleationSite,
         dictionary
     );
 }
@@ -53,65 +49,68 @@ namespace departureDiameterModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::departureDiameterModels::
-KocamustafaogullariIshii::KocamustafaogullariIshii
+Foam::wallBoilingModels::nucleationSiteModels::
+KocamustafaogullariIshiiNucleationSite::KocamustafaogullariIshiiNucleationSite
 (
     const dictionary& dict
 )
 :
-    departureDiameterModel(),
-    phi_(readScalar(dict.lookup("phi")))
+    nucleationSiteModel(),
+    Cn_(dict.lookupOrDefault<scalar>("Cn", 1))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::departureDiameterModels::
-KocamustafaogullariIshii::~KocamustafaogullariIshii()
+Foam::wallBoilingModels::nucleationSiteModels::
+KocamustafaogullariIshiiNucleationSite::
+~KocamustafaogullariIshiiNucleationSite()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::scalarField>
-Foam::wallBoilingModels::departureDiameterModels::
-KocamustafaogullariIshii::dDeparture
+Foam::wallBoilingModels::nucleationSiteModels::
+KocamustafaogullariIshiiNucleationSite::N
 (
     const phaseModel& liquid,
     const phaseModel& vapor,
     const label patchi,
     const scalarField& Tl,
     const scalarField& Tsatw,
-    const scalarField& L
+    const scalarField& L,
+    const scalarField& dDep,
+    const scalarField& fDep
 ) const
 {
-    // Gravitational acceleration
-    const uniformDimensionedVectorField& g =
-        liquid.mesh().lookupObject<uniformDimensionedVectorField>("g");
+    const fvPatchScalarField& Tw =
+        liquid.thermo().T().boundaryField()[patchi];
 
     const scalarField rhoLiquid(liquid.thermo().rho(patchi));
     const scalarField rhoVapor(vapor.thermo().rho(patchi));
-
     const scalarField rhoM((rhoLiquid - rhoVapor)/rhoVapor);
 
-    const tmp<volScalarField>& tsigma
+    const scalarField sigmaw
     (
-        liquid.fluid().sigma(phasePairKey(liquid.name(), vapor.name()))
+        liquid.fluid().sigma(phasePairKey(liquid.name(), vapor.name()), patchi)
     );
-    const volScalarField& sigma = tsigma();
-    const fvPatchScalarField& sigmaw = sigma.boundaryField()[patchi];
 
-    return
-        0.0012*pow(rhoM, 0.9)*0.0208*phi_
-       *sqrt(sigmaw/(mag(g.value())*(rhoLiquid - rhoVapor)));
+    //eq. (32)
+    const scalarField f(2.157e-7*pow(rhoM,-3.2)*pow(1 + 0.0049*rhoM,4.13));
+
+    // eq. (17)
+    const scalarField rRc(max(Tw-Tsatw,scalar(0))*rhoVapor*L/(2*sigmaw*Tsatw));
+
+    return (Cn_/sqr(dDep))*pow(rRc,4.4)*f;
 }
 
 
-void Foam::wallBoilingModels::departureDiameterModels::
-KocamustafaogullariIshii::write(Ostream& os) const
+void Foam::wallBoilingModels::nucleationSiteModels::
+KocamustafaogullariIshiiNucleationSite::write(Ostream& os) const
 {
-    departureDiameterModel::write(os);
-    writeEntry(os, "phi", phi_);
+    nucleationSiteModel::write(os);
+    os.writeKeyword("Cn") << Cn_ << token::END_STATEMENT << nl;
 }
 
 

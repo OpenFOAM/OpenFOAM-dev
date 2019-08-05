@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallBoilingModels::departureFrequencyModel
+    Foam::wallBoilingModels::nucleationSiteModels::
+    KocamustafaogullariIshiiNucleationSite
 
 Description
-    Base class for bubble departure frequency models
+    A correlation for nucleation site density.
+
+    Reference:
+    \verbatim
+        Kocamustafaogullari, G., & Ishii, M. (1983).
+        Interfacial area and nucleation site density in boiling systems.
+        International Journal of Heat and Mass Transfer, 26(9), 1377-1387.
+    \endverbatim
 
 SourceFiles
-    departureFrequencyModel.C
-    newdepartureFrequencyModel.C
+    KocamustafaogullariIshiiNucleationSite.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef departureFrequencyModel_H
-#define departureFrequencyModel_H
+#ifndef KocamustafaogullariIshiiNucleationSite_H
+#define KocamustafaogullariIshiiNucleationSite_H
 
-#include "volFields.H"
-#include "dictionary.H"
-#include "runTimeSelectionTables.H"
-
-#include "phaseModel.H"
+#include "nucleationSiteModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,55 +51,42 @@ namespace Foam
 {
 namespace wallBoilingModels
 {
+namespace nucleationSiteModels
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class departureFrequencyModel Declaration
+            Class KocamustafaogullariIshiiNucleationSite Declaration
 \*---------------------------------------------------------------------------*/
 
-class departureFrequencyModel
+class KocamustafaogullariIshiiNucleationSite
+:
+    public nucleationSiteModel
 {
+    // Private data:
+
+        //- User adjustable coefficient for nucleation density
+        scalar Cn_;
+
+
 public:
 
     //- Runtime type information
-    TypeName("departureFrequencyModel");
-
-
-    //- Declare runtime construction
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        departureFrequencyModel,
-        dictionary,
-        (
-            const dictionary& dict
-        ),
-        (dict)
-    );
-
+    TypeName("KocamustafaogullariIshii");
 
     // Constructors
 
-        //- Construct null
-        departureFrequencyModel();
-
-        //- Disallow default bitwise copy construction
-        departureFrequencyModel(const departureFrequencyModel&) = delete;
-
-
-    // Selectors
-
-        //- Select null constructed
-        static autoPtr<departureFrequencyModel> New(const dictionary& dict);
+        //- Construct from a dictionary
+        KocamustafaogullariIshiiNucleationSite(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~departureFrequencyModel();
+    virtual ~KocamustafaogullariIshiiNucleationSite();
 
 
     // Member Functions
 
-        //- Calculate and return the bubble departure frequency
-        virtual tmp<scalarField> fDeparture
+        //- Calculate and return the nucleation-site density
+        virtual tmp<scalarField> N
         (
             const phaseModel& liquid,
             const phaseModel& vapor,
@@ -104,20 +94,17 @@ public:
             const scalarField& Tl,
             const scalarField& Tsatw,
             const scalarField& L,
-            const scalarField& dDep
-        ) const = 0;
+            const scalarField& dDep,
+            const scalarField& fDep
+        ) const;
 
         virtual void write(Ostream& os) const;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const departureFrequencyModel&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace nucleationSiteModels
 } // End namespace wallBoilingModels
 } // End namespace Foam
 

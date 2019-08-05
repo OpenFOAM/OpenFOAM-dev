@@ -23,12 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Cole.H"
+#include "KocamustafaogullariIshiiDepartureDiameter.H"
 #include "addToRunTimeSelectionTable.H"
 #include "uniformDimensionedFields.H"
 #include "compressibleTurbulenceModel.H"
 #include "ThermalDiffusivity.H"
 #include "PhaseCompressibleTurbulenceModel.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -36,13 +37,13 @@ namespace Foam
 {
 namespace wallBoilingModels
 {
-namespace departureFrequencyModels
+namespace departureDiameterModels
 {
-    defineTypeNameAndDebug(Cole, 0);
+    defineTypeNameAndDebug(KocamustafaogullariIshiiDepartureDiameter, 0);
     addToRunTimeSelectionTable
     (
-        departureFrequencyModel,
-        Cole,
+        departureDiameterModel,
+        KocamustafaogullariIshiiDepartureDiameter,
         dictionary
     );
 }
@@ -52,33 +53,38 @@ namespace departureFrequencyModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::departureFrequencyModels::
-Cole::Cole(const dictionary& dict)
+Foam::wallBoilingModels::departureDiameterModels::
+KocamustafaogullariIshiiDepartureDiameter::
+KocamustafaogullariIshiiDepartureDiameter
+(
+    const dictionary& dict
+)
 :
-    departureFrequencyModel()
+    departureDiameterModel(),
+    phi_(readScalar(dict.lookup("phi")))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::departureFrequencyModels::
-Cole::~Cole()
+Foam::wallBoilingModels::departureDiameterModels::
+KocamustafaogullariIshiiDepartureDiameter::
+~KocamustafaogullariIshiiDepartureDiameter()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::scalarField>
-Foam::wallBoilingModels::departureFrequencyModels::
-Cole::fDeparture
+Foam::wallBoilingModels::departureDiameterModels::
+KocamustafaogullariIshiiDepartureDiameter::dDeparture
 (
     const phaseModel& liquid,
     const phaseModel& vapor,
     const label patchi,
     const scalarField& Tl,
     const scalarField& Tsatw,
-    const scalarField& L,
-    const scalarField& dDep
+    const scalarField& L
 ) const
 {
     // Gravitational acceleration
@@ -88,12 +94,24 @@ Cole::fDeparture
     const scalarField rhoLiquid(liquid.thermo().rho(patchi));
     const scalarField rhoVapor(vapor.thermo().rho(patchi));
 
-    return sqrt
+    const scalarField rhoM((rhoLiquid - rhoVapor)/rhoVapor);
+
+    const scalarField sigmaw
     (
-        4*mag(g).value()
-       *max(rhoLiquid - rhoVapor, scalar(0.1))
-       /(3*dDep*rhoLiquid)
+        liquid.fluid().sigma(phasePairKey(liquid.name(), vapor.name()), patchi)
     );
+
+    return
+        0.0012*pow(rhoM, 0.9)*0.0208*phi_
+       *sqrt(sigmaw/(mag(g.value())*(rhoLiquid - rhoVapor)));
+}
+
+
+void Foam::wallBoilingModels::departureDiameterModels::
+KocamustafaogullariIshiiDepartureDiameter::write(Ostream& os) const
+{
+    departureDiameterModel::write(os);
+    writeEntry(os, "phi", phi_);
 }
 
 

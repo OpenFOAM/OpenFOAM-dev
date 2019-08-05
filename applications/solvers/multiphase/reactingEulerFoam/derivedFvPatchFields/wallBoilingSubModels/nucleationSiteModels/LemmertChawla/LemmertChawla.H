@@ -67,11 +67,17 @@ class LemmertChawla
 :
     public nucleationSiteModel
 {
-
     // Private Data:
 
         //- Coefficient for nucleation site density
         scalar Cn_;
+
+        //- Reference nucleations density
+        scalar NRef_;
+
+        //- Reference temperature difference
+        scalar deltaTRef_;
+
 
 public:
 
@@ -98,8 +104,12 @@ public:
             const label patchi,
             const scalarField& Tl,
             const scalarField& Tsatw,
-            const scalarField& L
+            const scalarField& L,
+            const scalarField& dDep,
+            const scalarField& fDep
         ) const;
+
+        virtual void write(Ostream& os) const;
 };
 
 
