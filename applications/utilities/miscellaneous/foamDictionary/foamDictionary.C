@@ -29,6 +29,21 @@ Description
 
 Usage
     \b foamDictionary [OPTION] dictionary
+      - \par -case \<dir\>
+        Select a case directory,
+        required to process decomposed fields in parallel cases
+
+      - \par -parallel
+        Specify case as a parallel job
+
+      - \par -doc
+        Display the documentation in browser
+
+      - \par -srcDoc
+        Display the source documentation in browser
+
+      - \par -help
+        Print the usage
 
       - \par -entry \<name\>
         Selects an entry
@@ -88,6 +103,13 @@ Usage
              -set "uniform (2 0 0)"
         \endverbatim
 
+      - Change bc parameter in parallel:
+        \verbatim
+           mpirun -np 4 foamDictionary -case . 0/U \
+             -entry boundaryField.movingWall.value \
+             -set "uniform (2 0 0)" -parallel
+        \endverbatim
+
       - Change whole bc type:
         \verbatim
           foamDictionary 0/U -entry boundaryField.movingWall \
@@ -118,7 +140,8 @@ Usage
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "IOobject.H"
+#include "Time.H"
+#include "localIOdictionary.H"
 #include "Pair.H"
 #include "IFstream.H"
 #include "OFstream.H"
@@ -290,8 +313,6 @@ void remove(dictionary& dict, const dictionary& removeDict)
 
 int main(int argc, char *argv[])
 {
-    #include "removeCaseOptions.H"
-
     writeInfoHeader = false;
 
     argList::addNote("manipulates dictionaries");
@@ -360,7 +381,7 @@ int main(int argc, char *argv[])
 
     if (listIncludes)
     {
-        Foam::functionEntries::includeEntry::log = true;
+        functionEntries::includeEntry::log = true;
     }
 
     if (args.optionFound("disableFunctionEntries"))
@@ -368,10 +389,49 @@ int main(int argc, char *argv[])
         entry::disableFunctionEntries = true;
     }
 
-
     const fileName dictFileName(args[1]);
-    dictionary dict;
-    IOstream::streamFormat dictFormat = readDict(dict, dictFileName);
+
+    Time* runTimePtr = nullptr;
+    localIOdictionary* localDictPtr = nullptr;
+
+    dictionary* dictPtr = nullptr;
+    IOstream::streamFormat dictFormat = IOstream::ASCII;
+
+    // If the case option is specified read the dictionary as a
+    // case localIOdictionary supporting parallel operation and file handlers
+    if (args.optionFound("case"))
+    {
+        if (!args.checkRootCase())
+        {
+            FatalError.exit();
+        }
+
+        runTimePtr = new Time(Time::controlDictName, args);
+
+        const word oldTypeName = localIOdictionary::typeName;
+        const_cast<word&>(localIOdictionary::typeName) = word::null;
+
+        localDictPtr = new localIOdictionary
+        (
+            IOobject
+            (
+                dictFileName,
+                *runTimePtr,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
+
+        const_cast<word&>(localIOdictionary::typeName) = oldTypeName;
+    }
+    else
+    {
+        dictPtr = new dictionary;
+        dictFormat = readDict(*dictPtr, dictFileName);
+    }
+
+    dictionary& dict = localDictPtr ? *localDictPtr : *dictPtr;
 
     bool changed = false;
 
@@ -383,7 +443,7 @@ int main(int argc, char *argv[])
     {
         IOobject::writeBanner(Info)
             <<"//\n// " << dictFileName << "\n//\n";
-        dict.write(Info, false);
+        dict.dictionary::write(Info, false);
         IOobject::writeDivider(Info);
 
         return 0;
@@ -581,20 +641,31 @@ int main(int argc, char *argv[])
     else if (args.optionFound("diff"))
     {
         remove(dict, diffDict);
-        dict.write(Info, false);
+        dict.dictionary::write(Info, false);
     }
     else
     {
-        dict.write(Info, false);
+        dict.dictionary::write(Info, false);
     }
 
     if (changed)
     {
-        OFstream os(dictFileName, dictFormat);
-        IOobject::writeBanner(os);
-        dict.write(os, false);
-        IOobject::writeEndDivider(os);
+        if (localDictPtr)
+        {
+            localDictPtr->regIOobject::write();
+        }
+        else if (dictPtr)
+        {
+            OFstream os(dictFileName, dictFormat);
+            IOobject::writeBanner(os);
+            dictPtr->write(os, false);
+            IOobject::writeEndDivider(os);
+        }
     }
+
+    delete dictPtr;
+    delete localDictPtr;
+    delete runTimePtr;
 
     return 0;
 }
