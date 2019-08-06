@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -85,6 +85,24 @@ findFiles () {
     [ "$_ext" = "ANY" ] && findFilesInDirs "$_dirs" "${_prefix}.*"
 }
 
+# Remove files from unrelated version subdirs in ~/.OpenFOAM directory
+pruneFiles () {
+    _files="$@"
+    _vers="$(find ~/.OpenFOAM/ \
+             -maxdepth 1 -mindepth 1 \
+             -type d -name "[[:digit:]]*" \
+             -o -name "dev" | \
+             grep -v $WM_PROJECT_VERSION | \
+             awk -F "/" '{print $NF}')"
+    [ "$_vers" ] && \
+        for _v in $_vers
+        do
+            _files="$(echo $_files | xargs -n 1 | grep -v ".OpenFOAM/$_v")"
+        done
+
+    echo "$_files"
+}
+
 nArgs () {
     echo "$1" | xargs -n 1 | wc -l
 }
@@ -140,7 +158,6 @@ noFilesMessage () {
 }
 
 searchDirs="\
-    ${HOME}/.OpenFOAM/$WM_PROJECT_VERSION \
     ${HOME}/.OpenFOAM"
 [ -n "$WM_PROJECT_SITE" ] && searchDirs="$searchDirs \
     $WM_PROJECT_SITE/$WM_PROJECT_VERSION/etc \
@@ -211,6 +228,10 @@ prefix="$1"
 [ -d "$tgt" ] || error "target directory does not exist: '$tgt'"
 
 files="$(findFiles "$searchDirs" "$prefix" "$ext")"
+
+# For ~/.OpenFOAM, prune out version subdirs except current version
+files="$(pruneFiles $files)"
+
 [ -z "$files" ] && \
     error "no file $prefix found $(noFilesMessage "$ext")"
 
