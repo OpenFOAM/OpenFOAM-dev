@@ -97,6 +97,15 @@ public:
             const dictionary& dict
         );
 
+        //- Construct from objectRegistry and dictionary
+        ReversibleReaction
+        (
+            const speciesTable& species,
+            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const objectRegistry& ob,
+            const dictionary& dict
+        );
+
         //- Construct and return a clone
         virtual autoPtr<ReactionType<ReactionThermo>> clone() const
         {

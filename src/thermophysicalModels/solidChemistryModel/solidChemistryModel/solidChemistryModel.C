@@ -46,10 +46,13 @@ Foam::solidChemistryModel<CompType, SolidThermo>::solidChemistryModel
     ),
     reactions_
     (
-        *this,
-         dynamic_cast<const multiComponentMixture<SolidThermo>&>
-            (this->solidThermo()).species(),
-        solidThermo_
+        dynamic_cast<const multiComponentMixture<SolidThermo>&>
+        (
+            this->solidThermo()
+        ).species(),
+        solidThermo_,
+        this->mesh(),
+        *this
     ),
     nSolids_(Ys_.size()),
     nReaction_(reactions_.size()),

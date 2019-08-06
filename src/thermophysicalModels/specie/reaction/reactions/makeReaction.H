@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeReaction(Thermo, ReactionType, ReactionRate)                       \
-                                                                               \
+#define makeReactionName(Thermo, ReactionType, ReactionRate)                   \
     typedef Reaction<Thermo> Reaction##Thermo;                                 \
                                                                                \
     typedef ReactionType<Reaction, Thermo, ReactionRate>                       \
@@ -70,13 +69,28 @@ namespace Foam
         ReactionType::typeName_()                                              \
       + ReactionRate::type()                                                   \
       + Reaction##Thermo::typeName_()                                          \
-    );                                                                         \
+    );
+
+
+#define makeReaction(Thermo, ReactionType, ReactionRate)                       \
+    makeReactionName(Thermo, ReactionType, ReactionRate)                       \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
         Reaction##Thermo,                                                      \
         ReactionType##Thermo##ReactionRate,                                    \
         dictionary                                                             \
+    );
+
+
+#define makeGeneralReaction(Thermo, ReactionType, ReactionRate)                \
+    makeReactionName(Thermo, ReactionType, ReactionRate)                       \
+                                                                               \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        Reaction##Thermo,                                                      \
+        ReactionType##Thermo##ReactionRate,                                    \
+        objectRegistry                                                         \
     );
 
 
@@ -88,7 +102,6 @@ namespace Foam
     ReactionRate,                                                              \
     FallOffFunction                                                            \
 )                                                                              \
-                                                                               \
     typedef PressureDependentReactionRate<ReactionRate, FallOffFunction>       \
         PressureDependentReactionRate##ReactionRate##FallOffFunction;          \
                                                                                \
@@ -101,21 +114,16 @@ namespace Foam
 
 
 #define makeIRReactions(Thermo, ReactionRate)                                  \
-                                                                               \
     makeReaction(Thermo, IrreversibleReaction, ReactionRate)                   \
-                                                                               \
     makeReaction(Thermo, ReversibleReaction, ReactionRate)
 
 
 #define makeIRNReactions(Thermo, ReactionRate)                                 \
-                                                                               \
     makeIRReactions(Thermo, ReactionRate)                                      \
-                                                                               \
     makeReaction(Thermo, NonEquilibriumReversibleReaction, ReactionRate)
 
 
 #define makePressureDependentReactions(Thermo, ReactionRate, FallOffFunction)  \
-                                                                               \
     makePressureDependentReaction                                              \
     (                                                                          \
         Thermo,                                                                \

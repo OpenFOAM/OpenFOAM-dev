@@ -46,10 +46,13 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
     ),
     reactions_
     (
-        *this,
-         dynamic_cast<const multiComponentMixture<ThermoType>&>
-            (this->thermo()).species(),
-        specieThermo_
+        dynamic_cast<const multiComponentMixture<ThermoType>&>
+        (
+            this->thermo()
+        ).species(),
+        specieThermo_,
+        this->mesh(),
+        *this
     ),
 
     nSpecie_(Y_.size()),

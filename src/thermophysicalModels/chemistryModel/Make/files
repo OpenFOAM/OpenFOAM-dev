@@ -6,6 +6,8 @@ chemistryModel/TDACChemistryModel/tabulation/makeChemistryTabulationMethods.C
 
 chemistrySolver/chemistrySolver/makeChemistrySolvers.C
 
+reactions/fluxLimitedLangmuirHinshelwood/makefluxLimitedLangmuirHinshelwoodReactions.C
+
 functionObjects/specieReactionRates/specieReactionRates.C
 
 LIB = $(FOAM_LIBBIN)/libchemistryModel

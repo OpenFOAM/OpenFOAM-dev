@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,7 @@ namespace Foam
         ReactionType##Thermo##ReactionRate;                                    \
                                                                                \
     defineTemplateRunTimeSelectionTable(Reaction##Thermo, dictionary);         \
+    defineTemplateRunTimeSelectionTable(Reaction##Thermo, objectRegistry);     \
                                                                                \
     defineTemplateTypeNameAndDebug(SolidReaction##Thermo, 0);                  \
     defineTemplateTypeNameAndDebug(Reaction##Thermo, 0);                       \

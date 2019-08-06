@@ -59,6 +59,7 @@ class Reaction;
 template<class ReactionThermo>
 inline Ostream& operator<<(Ostream&, const Reaction<ReactionThermo>&);
 
+class objectRegistry;
 
 /*---------------------------------------------------------------------------*\
                            Class Reaction Declaration
@@ -130,6 +131,20 @@ public:
             (species, thermoDatabase, dict)
         );
 
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            Reaction,
+            objectRegistry,
+            (
+                const speciesTable& species,
+                const HashPtrTable<ReactionThermo>& thermoDatabase,
+                const objectRegistry& ob,
+                const dictionary& dict
+            ),
+            (species, thermoDatabase, ob, dict)
+        );
+
 
     // Constructors
 
@@ -165,11 +180,22 @@ public:
 
     // Selectors
 
-        //- Return a pointer to new patchField created on freestore from dict
+        //- Return a pointer to new patchField created on freestore
+        //  from dictionary
         static autoPtr<Reaction<ReactionThermo>> New
         (
             const speciesTable& species,
             const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const dictionary& dict
+        );
+
+        //- Return a pointer to new patchField created on freestore
+        //  from objectRegistry and dictionary
+        static autoPtr<Reaction<ReactionThermo>> New
+        (
+            const speciesTable& species,
+            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const objectRegistry& ob,
             const dictionary& dict
         );
 

@@ -189,6 +189,59 @@ Foam::autoPtr<Foam::Reaction<ReactionThermo>>
 Foam::Reaction<ReactionThermo>::New
 (
     const speciesTable& species,
+    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const objectRegistry& ob,
+    const dictionary& dict
+)
+{
+    // If the objectRegistry constructor table is empty
+    // use the dictionary constructor table only
+    if (!objectRegistryConstructorTablePtr_)
+    {
+        return New(species, thermoDatabase, dict);
+    }
+    else
+    {
+        const word& reactionTypeName = dict.lookup("type");
+
+        typename objectRegistryConstructorTable::iterator cstrIter
+            = objectRegistryConstructorTablePtr_->find(reactionTypeName);
+
+        if (cstrIter == objectRegistryConstructorTablePtr_->end())
+        {
+            typename dictionaryConstructorTable::iterator cstrIter
+                = dictionaryConstructorTablePtr_->find(reactionTypeName);
+
+            if (cstrIter == dictionaryConstructorTablePtr_->end())
+            {
+                FatalErrorInFunction
+                    << "Unknown reaction type "
+                    << reactionTypeName << nl << nl
+                    << "Valid reaction types are :" << nl
+                    << dictionaryConstructorTablePtr_->sortedToc()
+                    << objectRegistryConstructorTablePtr_->sortedToc()
+                    << exit(FatalError);
+            }
+
+            return autoPtr<Reaction<ReactionThermo>>
+            (
+                cstrIter()(species, thermoDatabase, dict)
+            );
+        }
+
+        return autoPtr<Reaction<ReactionThermo>>
+        (
+            cstrIter()(species, thermoDatabase, ob, dict)
+        );
+    }
+}
+
+
+template<class ReactionThermo>
+Foam::autoPtr<Foam::Reaction<ReactionThermo>>
+Foam::Reaction<ReactionThermo>::New
+(
+    const speciesTable& species,
     const PtrList<ReactionThermo>& speciesThermo,
     const dictionary& dict
 )

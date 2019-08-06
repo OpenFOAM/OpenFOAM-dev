@@ -31,9 +31,9 @@ License
 template<class ThermoType>
 Foam::ReactionList<ThermoType>::ReactionList
 (
-    const dictionary& dict,
     const speciesTable& species,
-    const PtrList<ThermoType>& speciesThermo
+    const PtrList<ThermoType>& speciesThermo,
+    const dictionary& dict
 )
 {
     // Set general temperature limits from the dictionary
@@ -67,6 +67,54 @@ Foam::ReactionList<ThermoType>::ReactionList
             (
                 species,
                 thermoDatabase,
+                reactions.subDict(iter().keyword())
+            ).ptr()
+        );
+    }
+}
+
+
+template<class ThermoType>
+Foam::ReactionList<ThermoType>::ReactionList
+(
+    const speciesTable& species,
+    const PtrList<ThermoType>& speciesThermo,
+    const objectRegistry& ob,
+    const dictionary& dict
+)
+{
+    // Set general temperature limits from the dictionary
+    Reaction<ThermoType>::TlowDefault =
+        dict.lookupOrDefault<scalar>("Tlow", 0);
+
+    Reaction<ThermoType>::ThighDefault =
+        dict.lookupOrDefault<scalar>("Thigh", great);
+
+    const dictionary& reactions(dict.subDict("reactions"));
+
+    HashPtrTable<ThermoType> thermoDatabase;
+    forAll(speciesThermo, i)
+    {
+        thermoDatabase.insert
+        (
+            speciesThermo[i].name(),
+            speciesThermo[i].clone().ptr()
+        );
+    }
+
+    this->setSize(reactions.size());
+    label i = 0;
+
+    forAllConstIter(dictionary, reactions, iter)
+    {
+        this->set
+        (
+            i++,
+            Reaction<ThermoType>::New
+            (
+                species,
+                thermoDatabase,
+                ob,
                 reactions.subDict(iter().keyword())
             ).ptr()
         );

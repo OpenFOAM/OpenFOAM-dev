@@ -73,6 +73,26 @@ template
 Foam::ReversibleReaction<ReactionType, ReactionThermo, ReactionRate>::
 ReversibleReaction
 (
+    const speciesTable& species,
+    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const objectRegistry& ob,
+    const dictionary& dict
+)
+:
+    ReactionType<ReactionThermo>(species, thermoDatabase, dict),
+    k_(species, ob, dict)
+{}
+
+
+template
+<
+    template<class> class ReactionType,
+    class ReactionThermo,
+    class ReactionRate
+>
+Foam::ReversibleReaction<ReactionType, ReactionThermo, ReactionRate>::
+ReversibleReaction
+(
     const ReversibleReaction<ReactionType, ReactionThermo, ReactionRate>& rr,
     const speciesTable& species
 )

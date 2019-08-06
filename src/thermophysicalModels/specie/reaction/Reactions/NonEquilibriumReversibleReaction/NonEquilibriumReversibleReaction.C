@@ -91,6 +91,32 @@ Foam::NonEquilibriumReversibleReaction
 >::
 NonEquilibriumReversibleReaction
 (
+    const speciesTable& species,
+    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const objectRegistry& ob,
+    const dictionary& dict
+)
+:
+    ReactionType<ReactionThermo>(species, thermoDatabase, dict),
+    fk_(species, ob, dict.subDict("forward")),
+    rk_(species, ob, dict.subDict("reverse"))
+{}
+
+
+template
+<
+    template<class> class ReactionType,
+    class ReactionThermo,
+    class ReactionRate
+>
+Foam::NonEquilibriumReversibleReaction
+<
+    ReactionType,
+    ReactionThermo,
+    ReactionRate
+>::
+NonEquilibriumReversibleReaction
+(
     const NonEquilibriumReversibleReaction
     <
         ReactionType,

@@ -65,9 +65,18 @@ public:
         //- Construct from thermo list and dictionary
         ReactionList
         (
-            const dictionary& dict,
             const speciesTable& species,
-            const PtrList<ThermoType>& speciesThermo
+            const PtrList<ThermoType>& speciesThermo,
+            const dictionary& dict
+        );
+
+        //- Construct from thermo list, objectRegistry and dictionary
+        ReactionList
+        (
+            const speciesTable& species,
+            const PtrList<ThermoType>& speciesThermo,
+            const objectRegistry& ob,
+            const dictionary& dict
         );
 
         //- Construct copy
