@@ -315,6 +315,33 @@ public:
                 const label patchi
             ) const = 0;
 
+            //- Absolute enthalpy [J/kg]
+            virtual tmp<volScalarField> ha() const = 0;
+
+            //- Absolute enthalpy
+            //  for given pressure and temperature [J/kg]
+            virtual tmp<volScalarField> ha
+            (
+                const volScalarField& p,
+                const volScalarField& T
+            ) const = 0;
+
+            //- Absolute enthalpy for cell-set [J/kg]
+            virtual tmp<scalarField> ha
+            (
+                const scalarField& p,
+                const scalarField& T,
+                const labelList& cells
+            ) const = 0;
+
+            //- Absolute enthalpy for patch [J/kg]
+            virtual tmp<scalarField> ha
+            (
+                const scalarField& p,
+                const scalarField& T,
+                const label patchi
+            ) const = 0;
+
             //- Chemical enthalpy [J/kg]
             virtual tmp<volScalarField> hc() const = 0;
 
