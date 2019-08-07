@@ -27,11 +27,14 @@ Application
 Description
     Interrogates and manipulates dictionaries.
 
+    Supports parallel operation for decomposed dictionary files associated with
+    a case.  These may be mesh or field files or any other decomposed
+    dictionaries.
+
 Usage
     \b foamDictionary [OPTION] dictionary
       - \par -case \<dir\>
-        Select a case directory,
-        required to process decomposed fields in parallel cases
+        Select a case directory
 
       - \par -parallel
         Specify case as a parallel job
@@ -105,7 +108,7 @@ Usage
 
       - Change bc parameter in parallel:
         \verbatim
-           mpirun -np 4 foamDictionary -case . 0/U \
+           mpirun -np 4 foamDictionary 0.5/U \
              -entry boundaryField.movingWall.value \
              -set "uniform (2 0 0)" -parallel
         \endverbatim
@@ -316,7 +319,9 @@ int main(int argc, char *argv[])
     writeInfoHeader = false;
 
     argList::addNote("manipulates dictionaries");
+
     argList::validArgs.append("dictionary file");
+
     argList::addBoolOption("keywords", "list keywords");
     argList::addOption("entry", "name", "report/select the named entry");
     argList::addBoolOption
@@ -389,7 +394,7 @@ int main(int argc, char *argv[])
         entry::disableFunctionEntries = true;
     }
 
-    const fileName dictFileName(args[1]);
+    const fileName dictPath(args[1]);
 
     Time* runTimePtr = nullptr;
     localIOdictionary* localDictPtr = nullptr;
@@ -397,9 +402,9 @@ int main(int argc, char *argv[])
     dictionary* dictPtr = nullptr;
     IOstream::streamFormat dictFormat = IOstream::ASCII;
 
-    // If the case option is specified read the dictionary as a
-    // case localIOdictionary supporting parallel operation and file handlers
-    if (args.optionFound("case"))
+    // When running in parallel read the dictionary as a case localIOdictionary
+    // supporting file handlers
+    if (Pstream::parRun())
     {
         if (!args.checkRootCase())
         {
@@ -407,6 +412,28 @@ int main(int argc, char *argv[])
         }
 
         runTimePtr = new Time(Time::controlDictName, args);
+
+        const wordList dictPathComponents(dictPath.components());
+
+        if (dictPathComponents.size() == 1)
+        {
+            FatalErrorInFunction
+                << "File name " << dictPath
+                << " does not contain an instance path needed in parallel"
+                << exit(FatalError, 1);
+        }
+
+        const word instance = dictPathComponents[0];
+        const fileName dictFileName
+        (
+            SubList<word>(dictPathComponents, dictPathComponents.size() - 1, 1)
+        );
+
+        scalar time;
+        if (readScalar(instance.c_str(), time))
+        {
+            runTimePtr->setTime(time, 0);
+        }
 
         const word oldTypeName = localIOdictionary::typeName;
         const_cast<word&>(localIOdictionary::typeName) = word::null;
@@ -416,6 +443,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 dictFileName,
+                instance,
                 *runTimePtr,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
@@ -428,7 +456,7 @@ int main(int argc, char *argv[])
     else
     {
         dictPtr = new dictionary;
-        dictFormat = readDict(*dictPtr, dictFileName);
+        dictFormat = readDict(*dictPtr, dictPath);
     }
 
     dictionary& dict = localDictPtr ? *localDictPtr : *dictPtr;
@@ -442,7 +470,7 @@ int main(int argc, char *argv[])
     else if (args.optionFound("expand"))
     {
         IOobject::writeBanner(Info)
-            <<"//\n// " << dictFileName << "\n//\n";
+            <<"//\n// " << dictPath << "\n//\n";
         dict.dictionary::write(Info, false);
         IOobject::writeDivider(Info);
 
@@ -656,7 +684,7 @@ int main(int argc, char *argv[])
         }
         else if (dictPtr)
         {
-            OFstream os(dictFileName, dictFormat);
+            OFstream os(dictPath, dictFormat);
             IOobject::writeBanner(os);
             dictPtr->write(os, false);
             IOobject::writeEndDivider(os);
