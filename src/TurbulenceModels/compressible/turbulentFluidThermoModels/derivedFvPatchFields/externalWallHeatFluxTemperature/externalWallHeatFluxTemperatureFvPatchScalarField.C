@@ -66,7 +66,7 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch(), "undefined", "undefined", "undefined-K"),
+    temperatureCoupledBase(patch()),
     mode_(fixedHeatFlux),
     Q_(0),
     Ta_(),

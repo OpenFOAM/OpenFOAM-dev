@@ -46,7 +46,7 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch(), "undefined", "undefined", "undefined-K"),
+    temperatureCoupledBase(patch()),
     TnbrName_("undefined-Tnbr"),
     thicknessLayers_(0),
     kappaLayers_(0),

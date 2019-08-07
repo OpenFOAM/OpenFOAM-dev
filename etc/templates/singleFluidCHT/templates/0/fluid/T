@@ -39,8 +39,6 @@ boundaryField
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         neighbourFieldName T;
-        kappaMethod     fluidThermo;
-        kappa           kappa;
         Tnbr            T;
         value           uniform $Tinitial;
     }

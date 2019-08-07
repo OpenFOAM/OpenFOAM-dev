@@ -67,7 +67,6 @@ fvAgglomerationMethods/Allwmake $targetType $*
 wmake $targetType fvMotionSolver
 wmake $targetType engine
 wmake $targetType fvOptions
-wmake $targetType regionCoupled
 
 functionObjects/Allwmake $targetType $*
 

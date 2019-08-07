@@ -37,7 +37,6 @@ boundaryField
         pyrolysisRegion pyrolysisRegion;
         filmRegion      filmRegion;
         Tnbr            T;
-        kappaMethod     solidThermo;
         qrNbr           qr;
         qr              none;
         filmDeltaDry    0.0;

@@ -9,7 +9,6 @@
 T
 {
         type                compressible::thermalBaffle;
-        kappaMethod         fluidThermo;
         value               uniform 300;
 
         regionName          ${baffleRegionName};

@@ -27,35 +27,20 @@ Class
 Description
     Common functions used in temperature coupled boundaries.
 
-    The thermal conductivity \c kappa may be obtained by the following methods:
-      - 'lookup' : lookup volScalarField (or volSymmTensorField) with name
-        defined by 'kappa'
-      - 'fluidThermo' : use fluidThermo and default
-        compressible::turbulenceModel to calculate kappa
-      - 'solidThermo' : use solidThermo kappa()
-      - 'directionalSolidThermo': uses look up for volSymmTensorField for
-        transformed kappa vector. Field name definable in 'alphaAni',
-        named 'Anialpha' in solid solver by default
+    The thermal conductivity \c kappa is obtained from the region fluidThermo
+    or solidThermo as appropriate.
+
+    For turbulent fluid regions \c kappa is obtained from the
+    compressible::turbulenceModel \c kappaEff.
+
+    For solid regions kappa may be obtained from the anisotropic alpha field
+    by specifying the optional \c alphaAni field name.
 
     \par Keywords provided by this class:
       \table
-        Property     | Description                | Required    | Default value
-        kappaMethod  | Thermal conductivity method        | yes |
-        kappa        | Name of thermal conductivity field | no  | none
-        alphaAni     | Name of the non-isotropic alpha    | no  | Anialpha
+        Property | Description                     | Required | Default value
+        alphaAni | Name of the non-isotropic alpha | no  |
       \endtable
-
-Usage
-    \verbatim
-    nonIsotropicWall
-    {
-        ...
-        kappaMethod     directionalSolidThermo;
-        kappa           none;
-        alphaAni        Anialpha;
-        ...
-    }
-    \endverbatim
 
 SourceFiles
     temperatureCoupledBase.C
@@ -80,36 +65,13 @@ namespace Foam
 
 class temperatureCoupledBase
 {
-public:
-
-    // Public enumerations
-
-        //- Type of supplied Kappa
-        enum KMethodType
-        {
-            mtFluidThermo,
-            mtSolidThermo,
-            mtDirectionalSolidThermo,
-            mtLookup
-        };
-
-
-protected:
-
-    // Protected data
-
-        static const NamedEnum<KMethodType, 4> KMethodTypeNames_;
+    // Private data
 
         //- Underlying patch
         const fvPatch& patch_;
 
-        //- How to get K
-        const KMethodType method_;
-
-        //- Name of thermal conductivity field (if looked up from database)
-        const word kappaName_;
-
-        //- Name of the non-Isotropic alpha (default: Anialpha)
+        //- Name of the optional anisotropic alpha for solid conductivity
+        //  This field is read and used if available
         const word alphaAniName_;
 
 
@@ -117,13 +79,10 @@ public:
 
     // Constructors
 
-        //- Construct from patch and K name
+        //- Construct from patch
         temperatureCoupledBase
         (
-            const fvPatch& patch,
-            const word& calculationMethod,
-            const word& kappaName,
-            const word& alphaAniName
+            const fvPatch& patch
         );
 
         //- Construct from patch and dictionary
@@ -142,18 +101,6 @@ public:
 
 
     // Member Functions
-
-        //- Method to obtain K
-        word KMethod() const
-        {
-            return KMethodTypeNames_[method_];
-        }
-
-        //- Name of thermal conductivity field
-        const word& kappaName() const
-        {
-            return kappaName_;
-        }
 
         //- Given patch temperature calculate corresponding K field
         tmp<scalarField> kappa(const scalarField& Tp) const;

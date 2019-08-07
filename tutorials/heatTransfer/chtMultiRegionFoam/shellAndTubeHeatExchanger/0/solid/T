@@ -32,14 +32,12 @@ boundaryField
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
         Tnbr            T;
-        kappaMethod     solidThermo;
     }
     solid_to_tube
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
         Tnbr            T;
-        kappaMethod     solidThermo;
     }
 }
 

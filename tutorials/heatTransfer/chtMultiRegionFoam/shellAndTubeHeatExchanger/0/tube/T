@@ -43,7 +43,6 @@ boundaryField
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
         Tnbr            T;
-        kappaMethod     fluidThermo;
     }
 }
 

@@ -42,8 +42,6 @@ Usage
         qr         | name of the radiative flux in this region | no | none
         thicknessLayers | list of thicknesses per layer [m] | no |
         kappaLayers  | list of thermal conductivites per layer [W/m/K] | no |
-        kappaMethod  | inherited from temperatureCoupledBase | inherited |
-        kappa        | inherited from temperatureCoupledBase | inherited |
     \endtable
 
     Example of the boundary condition specification:
@@ -56,8 +54,6 @@ Usage
         qr              qr; // or none. Name of qr field on local region
         thicknessLayers (0.1 0.2 0.3 0.4);
         kappaLayers     (1 2 3 4);
-        kappaMethod     lookup;
-        kappa           kappa;
         value           uniform 300;
     }
     \endverbatim

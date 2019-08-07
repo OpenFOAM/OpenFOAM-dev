@@ -24,7 +24,6 @@ boundaryField
     bottom
     {
         type                compressible::thermalBaffle;
-        kappaMethod         solidThermo;
         value               uniform 300;
     }
     side
@@ -34,7 +33,6 @@ boundaryField
     top
     {
         type                compressible::thermalBaffle;
-        kappaMethod         solidThermo;
         value               uniform 300;
     }
 }

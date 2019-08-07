@@ -46,7 +46,7 @@ turbulentTemperatureRadCoupledMixedFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch(), "undefined", "undefined", "undefined-K"),
+    temperatureCoupledBase(patch()),
     TnbrName_("undefined-Tnbr"),
     qrNbrName_("undefined-qrNbr"),
     qrName_("undefined-qr"),

@@ -63,8 +63,6 @@ Usage
     emissivity   | Surface emissivity for radiative flux to ambient | no | 0
     qr           | Name of the radiative field | no | none
     qrRelaxation | Relaxation factor for radiative field | no | 1
-    kappaMethod  | Inherited from temperatureCoupledBase | inherited |
-    kappa        | Inherited from temperatureCoupledBase | inherited |
     \endtable
 
     Example of the boundary condition specification:
@@ -79,8 +77,6 @@ Usage
         h               uniform 10.0;
         thicknessLayers (0.1 0.2 0.3 0.4);
         kappaLayers     (1 2 3 4);
-
-        kappaMethod     fluidThermo;
 
         value           $internalField;
     }

@@ -26,7 +26,6 @@ boundaryField
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
-        kappaMethod     solidThermo;
         kappa           kappa;
         Tnbr            T;
     }

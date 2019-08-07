@@ -39,7 +39,6 @@ boundaryField
         type            compressible::turbulentTemperatureRadCoupledMixed;
         value           $internalField;
         Tnbr            T;
-        kappaMethod     fluidThermo;
         qrNbr           none;
         qr              qr;
     }
