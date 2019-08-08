@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -254,6 +254,88 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::he
     {
         the.ref() +=
             phasei().boundaryField()[patchi]*phasei().thermo().he(p, T, patchi);
+    }
+
+    return the;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::ha() const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    tmp<volScalarField> the(phasei()*phasei().thermo().ha());
+
+    for (++phasei; phasei != phases_.end(); ++phasei)
+    {
+        the.ref() += phasei()*phasei().thermo().ha();
+    }
+
+    return the;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::ha
+(
+    const volScalarField& p,
+    const volScalarField& T
+) const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    tmp<volScalarField> the(phasei()*phasei().thermo().ha(p, T));
+
+    for (++phasei; phasei != phases_.end(); ++phasei)
+    {
+        the.ref() += phasei()*phasei().thermo().ha(p, T);
+    }
+
+    return the;
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::ha
+(
+    const scalarField& p,
+    const scalarField& T,
+    const labelList& cells
+) const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    tmp<scalarField> the
+    (
+        scalarField(phasei(), cells)*phasei().thermo().ha(p, T, cells)
+    );
+
+    for (++phasei; phasei != phases_.end(); ++phasei)
+    {
+        the.ref() +=
+            scalarField(phasei(), cells)*phasei().thermo().ha(p, T, cells);
+    }
+
+    return the;
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::ha
+(
+    const scalarField& p,
+    const scalarField& T,
+    const label patchi
+) const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    tmp<scalarField> the
+    (
+        phasei().boundaryField()[patchi]*phasei().thermo().ha(p, T, patchi)
+    );
+
+    for (++phasei; phasei != phases_.end(); ++phasei)
+    {
+        the.ref() +=
+            phasei().boundaryField()[patchi]*phasei().thermo().ha(p, T, patchi);
     }
 
     return the;

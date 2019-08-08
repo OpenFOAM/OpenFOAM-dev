@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,6 +175,48 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::he
     return
         alpha1().boundaryField()[patchi]*thermo1_->he(p, T, patchi)
       + alpha2().boundaryField()[patchi]*thermo2_->he(p, T, patchi);
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::ha() const
+{
+    return alpha1()*thermo1_->ha() + alpha2()*thermo2_->ha();
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::ha
+(
+    const volScalarField& p,
+    const volScalarField& T
+) const
+{
+    return alpha1()*thermo1_->ha(p, T) + alpha2()*thermo2_->ha(p, T);
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::ha
+(
+    const scalarField& p,
+    const scalarField& T,
+    const labelList& cells
+) const
+{
+    return
+        scalarField(alpha1(), cells)*thermo1_->ha(p, T, cells)
+      + scalarField(alpha2(), cells)*thermo2_->ha(p, T, cells);
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::ha
+(
+    const scalarField& p,
+    const scalarField& T,
+    const label patchi
+) const
+{
+    return
+        alpha1().boundaryField()[patchi]*thermo1_->ha(p, T, patchi)
+      + alpha2().boundaryField()[patchi]*thermo2_->ha(p, T, patchi);
 }
 
 
