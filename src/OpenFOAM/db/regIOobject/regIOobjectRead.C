@@ -160,6 +160,7 @@ Foam::Istream& Foam::regIOobject::readStream
             read
          && expectName.size()
          && headerClassName() != expectName
+         && headerClassName() != dictionary::typeName
         )
         {
             if (expectName == dictionary::typeName)
