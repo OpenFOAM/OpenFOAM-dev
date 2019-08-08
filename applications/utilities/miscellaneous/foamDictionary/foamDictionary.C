@@ -452,6 +452,8 @@ int main(int argc, char *argv[])
         );
 
         const_cast<word&>(localIOdictionary::typeName) = oldTypeName;
+        const_cast<word&>(localDictPtr->type()) =
+            localDictPtr->headerClassName();
     }
     else
     {
