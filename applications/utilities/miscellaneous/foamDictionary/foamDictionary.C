@@ -174,7 +174,7 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
 
     // If the first entry is the "FoamFile" header dictionary
     // read and set the stream format
-    if (firstEntry->isDict() && firstEntry->keyword() == "FoamFile")
+    if (firstEntry->isDict() && firstEntry->keyword() == IOobject::foamFile)
     {
         dictFormat = IOstream::formatEnum(firstEntry->dict().lookup("format"));
         dictFile().format(dictFormat);
@@ -184,7 +184,7 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
     dict.add(firstEntry);
 
     // Read and add the rest of the dictionary entries
-    // preserving the "FoamFile" header dictionary if present
+    // preserving the IOobject::foamFile header dictionary if present
     dict.read(dictFile(), true);
 
     return dictFormat;
@@ -435,9 +435,6 @@ int main(int argc, char *argv[])
             runTimePtr->setTime(time, 0);
         }
 
-        const word oldTypeName = localIOdictionary::typeName;
-        const_cast<word&>(localIOdictionary::typeName) = word::null;
-
         localDictPtr = new localIOdictionary
         (
             IOobject
@@ -450,10 +447,6 @@ int main(int argc, char *argv[])
                 false
             )
         );
-
-        const_cast<word&>(localIOdictionary::typeName) = oldTypeName;
-        const_cast<word&>(localDictPtr->type()) =
-            localDictPtr->headerClassName();
     }
     else
     {
@@ -688,6 +681,13 @@ int main(int argc, char *argv[])
         {
             OFstream os(dictPath, dictFormat);
             IOobject::writeBanner(os);
+            if (dictPtr->found(IOobject::foamFile))
+            {
+                os << IOobject::foamFile;
+                dictPtr->subDict(IOobject::foamFile).write(os);
+                dictPtr->remove(IOobject::foamFile);
+                IOobject::writeDivider(os) << nl;
+            }
             dictPtr->write(os, false);
             IOobject::writeEndDivider(os);
         }

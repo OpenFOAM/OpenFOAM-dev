@@ -196,7 +196,7 @@ void Foam::decomposedBlockData::writeHeader
 )
 {
     IOobject::writeBanner(os)
-        << "FoamFile\n{\n"
+        << IOobject::foamFile << "\n{\n"
         << "    version     " << version << ";\n"
         << "    format      " << format << ";\n"
         << "    class       " << type << ";\n";
@@ -1076,7 +1076,7 @@ Foam::label Foam::decomposedBlockData::numBlocks(const fileName& fName)
     (
         is.good()
      && firstToken.isWord()
-     && firstToken.wordToken() == "FoamFile"
+     && firstToken.wordToken() == IOobject::foamFile
     )
     {
         dictionary headerDict(is);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,13 @@ License
 
 #include "dictionaryListEntry.H"
 #include "keyType.H"
-#include "IOstreams.H"
+#include "IOobject.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::label Foam::dictionaryListEntry::realSize(const dictionary& dict)
 {
-    if (dict.size() < 1 || dict.first()->keyword() != "FoamFile")
+    if (dict.size() < 1 || dict.first()->keyword() != IOobject::foamFile)
     {
         return dict.size();
     }

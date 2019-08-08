@@ -215,7 +215,7 @@ bool Foam::fileOperations::collatedFileOperation::appendObject
     if (isMaster)
     {
         IOobject::writeBanner(os)
-            << "FoamFile\n{\n"
+            << IOobject::foamFile << "\n{\n"
             << "    version     " << os.version() << ";\n"
             << "    format      " << os.format() << ";\n"
             << "    class       " << decomposedBlockData::typeName

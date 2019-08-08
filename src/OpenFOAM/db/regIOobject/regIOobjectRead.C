@@ -153,21 +153,27 @@ Foam::Istream& Foam::regIOobject::readStream
         readStream(read);
 
         // Check the className of the regIOobject
-        // dictionary is an allowable name in case the actual class
-        // instantiated is a dictionary
+        // dictionary is an allowable name so that any file can be processed
+        // as raw dictionary and the original type preserved
         if
         (
             read
          && expectName.size()
          && headerClassName() != expectName
-         && headerClassName() != "dictionary"
         )
         {
-            FatalIOErrorInFunction(isPtr_())
-                << "unexpected class name " << headerClassName()
-                << " expected " << expectName << endl
-                << "    while reading object " << name()
-                << exit(FatalIOError);
+            if (expectName == dictionary::typeName)
+            {
+                const_cast<word&>(type()) = headerClassName();
+            }
+            else
+            {
+                FatalIOErrorInFunction(isPtr_())
+                    << "unexpected class name " << headerClassName()
+                    << " expected " << expectName << endl
+                    << "    while reading object " << name()
+                    << exit(FatalIOError);
+            }
         }
     }
 

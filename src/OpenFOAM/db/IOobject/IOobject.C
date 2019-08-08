@@ -29,6 +29,8 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
+const Foam::word Foam::IOobject::foamFile("FoamFile");
+
 namespace Foam
 {
     defineTypeNameAndDebug(IOobject, 0);

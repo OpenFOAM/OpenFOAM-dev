@@ -95,6 +95,10 @@ class IOobject
 
 public:
 
+    //- Keyword for the FoamFile header sub-dictionary
+    static const word foamFile;
+
+
     // Public data types
 
         //- Enumeration defining the valid states of an IOobject

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 #include "IFstream.H"
 #include "addToMemberFunctionSelectionTable.H"
 #include "stringOps.H"
-#include "IOstreams.H"
+#include "IOobject.H"
 #include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -143,9 +143,9 @@ bool Foam::functionEntries::includeEntry::execute
 
         // Cache the FoamFile entry if present
         dictionary foamFileDict;
-        if (parentDict.found("FoamFile"))
+        if (parentDict.found(IOobject::foamFile))
         {
-            foamFileDict = parentDict.subDict("FoamFile");
+            foamFileDict = parentDict.subDict(IOobject::foamFile);
         }
 
         // Read and clear the FoamFile entry
@@ -156,7 +156,7 @@ bool Foam::functionEntries::includeEntry::execute
         {
             dictionary parentDictTmp(parentDict);
             parentDict.clear();
-            parentDict.add("FoamFile", foamFileDict);
+            parentDict.add(IOobject::foamFile, foamFileDict);
             parentDict += parentDictTmp;
         }
 

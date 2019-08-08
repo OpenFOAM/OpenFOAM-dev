@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dictionary.H"
+#include "IOobject.H"
 #include "inputSyntaxEntry.H"
 #include "inputModeEntry.H"
 #include "regExp.H"
@@ -113,7 +114,7 @@ bool Foam::dictionary::read(Istream& is, const bool keepHeader)
     // normally remove the FoamFile header entry if it exists
     if (!keepHeader)
     {
-        remove("FoamFile");
+        remove(IOobject::foamFile);
     }
 
     if (is.bad())
