@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,6 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     {
         if (keyword[0] == '#')      // ... Function entry
         {
-            word functionName = keyword(1, keyword.size()-1);
             if (disableFunctionEntries)
             {
                 return parentDict.add
@@ -169,6 +168,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             }
             else
             {
+                const word functionName = keyword(1, keyword.size() - 1);
                 return functionEntry::execute(functionName, parentDict, is);
             }
         }

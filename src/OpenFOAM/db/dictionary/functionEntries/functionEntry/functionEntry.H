@@ -68,7 +68,7 @@ class functionEntry
     // Private Member Functions
 
         //- Read line as string token
-        static token readLine(const word& key, Istream& is);
+        static string readLine(const word& key, Istream& is);
 
 
 public:

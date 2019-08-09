@@ -131,6 +131,10 @@ public:
             //- Raw, low-level getline into a string function.
             inline ISstream& getLine(string&);
 
+            //- Get multiple lines using the '\' continuation character
+            //   into a string
+            inline ISstream& getMultiLines(string&);
+
             //- Raw, low-level putback character function.
             inline ISstream& putback(const char&);
 

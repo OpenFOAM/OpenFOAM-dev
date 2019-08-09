@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,6 +270,9 @@ bool Foam::functionObjectList::readFunctionObject
         ++i;
     }
 
+    // Strip whitespace from the function name
+    string::stripInvalid<word>(funcName);
+
     // Search for the functionObject dictionary
     fileName path = findDict(funcName, region);
 
@@ -285,7 +288,12 @@ bool Foam::functionObjectList::readFunctionObject
     autoPtr<ISstream> fileStreamPtr(fileHandler().NewIFstream(path));
     ISstream& fileStream = fileStreamPtr();
 
+    // Delay processing the functionEntries
+    // until after the function argument entries have been added
+    entry::disableFunctionEntries = true;
     dictionary funcsDict(fileStream);
+    entry::disableFunctionEntries = false;
+
     dictionary* funcDictPtr = &funcsDict;
 
     if (funcsDict.found(funcName) && funcsDict.isDict(funcName))
@@ -338,6 +346,15 @@ bool Foam::functionObjectList::readFunctionObject
     const word funcNameArgsWord = string::validate<word>(funcNameArgs);
     dictionary funcArgsDict;
     funcArgsDict.add(funcNameArgsWord, funcDict);
+
+    // Re-parse the funcDict to execute the functionEntries
+    // now that the function argument entries have been added
+    {
+        OStringStream os;
+        funcArgsDict.write(os);
+        funcArgsDict = dictionary(IStringStream(os.str())());
+    }
+
     functionsDict.merge(funcArgsDict);
     functionsDict.subDict(funcNameArgsWord).name() = funcDict.name();
 
