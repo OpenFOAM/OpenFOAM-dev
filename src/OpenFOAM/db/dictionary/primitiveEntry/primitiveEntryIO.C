@@ -232,7 +232,7 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, Istream& is)
 
 void Foam::primitiveEntry::write(Ostream& os, const bool contentsOnly) const
 {
-    if (!contentsOnly && keyword().size() && keyword()[0] != '#')
+    if (!contentsOnly && keyword().size())
     {
         os.writeKeyword(keyword());
     }

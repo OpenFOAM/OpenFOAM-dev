@@ -229,6 +229,9 @@ public:
 
         // Access
 
+            //- Return the command line string
+            inline const string& commandLine() const;
+
             //- Name of executable without the path
             inline const word& executable() const;
 

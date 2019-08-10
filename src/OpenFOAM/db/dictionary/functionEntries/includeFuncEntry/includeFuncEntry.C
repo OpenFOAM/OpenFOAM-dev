@@ -65,6 +65,7 @@ bool Foam::functionEntries::includeFuncEntry::execute
     (
         fNameArgs,
         parentDict,
+        "file " + is.name() + " at line " + Foam::name(is.lineNumber()),
         selectedFields
     );
 }

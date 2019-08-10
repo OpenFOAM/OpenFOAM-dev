@@ -70,7 +70,7 @@ Foam::functionEntry::functionEntry
     primitiveEntry
     (
         word(key + dict.name() + Foam::name(is.lineNumber())),
-        readLine(key, is).c_str()
+        token(word(readLine(key, is)), is.lineNumber())
     )
 {}
 
@@ -164,16 +164,29 @@ bool Foam::functionEntry::execute
 
 void Foam::functionEntry::write(Ostream& os) const
 {
-    // Contents should be single string token
-    const token& t = operator[](0);
-    const string& s = t.stringToken();
+    os.indent();
 
-    for (size_t i = 0; i < s.size(); i++)
+    for (label i=0; i<size(); ++i)
     {
-        os.write(s[i]);
+        const token& t = operator[](i);
+        if (t.type() == token::VERBATIMSTRING)
+        {
+            // Bypass token output operator to avoid losing verbatimness.
+            // Handle in Ostreams themselves
+            os.write(t);
+        }
+        else
+        {
+            os  << t;
+        }
+
+        if (i < size()-1)
+        {
+            os  << token::SPACE;
+        }
     }
 
-    os << endl;
+    os  << endl;
 }
 
 

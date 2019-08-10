@@ -95,6 +95,14 @@ class functionObjectList
         //  configuration files, add to the given map and recurse
         static void listDir(const fileName& dir, HashSet<word>& foMap);
 
+        static void checkUnsetEntries
+        (
+            const string& funcNameArgs,
+            const dictionary& funcArgsDict,
+            const dictionary& funcDict,
+            const string& context
+        );
+
 
 public:
 
@@ -247,6 +255,7 @@ public:
         (
             const string& funcNameArgs0,
             dictionary& functionsDict,
+            const string& context,
             HashSet<word>& requiredFields,
             const word& region = word::null
         );

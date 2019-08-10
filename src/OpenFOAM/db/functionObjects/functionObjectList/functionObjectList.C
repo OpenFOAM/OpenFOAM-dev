@@ -180,10 +180,55 @@ Foam::fileName Foam::functionObjectList::findDict
 }
 
 
+void Foam::functionObjectList::checkUnsetEntries
+(
+    const string& funcCall,
+    const dictionary& funcArgsDict,
+    const dictionary& funcDict,
+    const string& context
+)
+{
+    const wordRe unset("<.*>");
+    unset.compile();
+
+    forAllConstIter(IDLList<entry>, funcArgsDict, iter)
+    {
+        if (iter().isStream())
+        {
+            ITstream& tokens = iter().stream();
+
+            forAll(tokens, i)
+            {
+                if (tokens[i].isWord())
+                {
+                    if (unset.match(tokens[i].wordToken()))
+                    {
+                        FatalIOErrorInFunction(funcDict)
+                            << "Essential value for keyword '"
+                            << iter().keyword()
+                            << "' not set in function entry" << nl
+                            << "    " << funcCall.c_str() << nl
+                            << "    in " << context.c_str() << nl
+                            << "    Placeholder value is "
+                            << tokens[i].wordToken()
+                            << exit(FatalIOError);
+                    }
+                }
+            }
+        }
+        else
+        {
+            checkUnsetEntries(funcCall, iter().dict(), funcDict, context);
+        }
+    }
+}
+
+
 bool Foam::functionObjectList::readFunctionObject
 (
-    const string& funcNameArgs,
+    const string& funcCall,
     dictionary& functionsDict,
+    const string& context,
     HashSet<word>& requiredFields,
     const word& region
 )
@@ -195,7 +240,7 @@ bool Foam::functionObjectList::readFunctionObject
     //     'patchAverage(patch=inlet, p)' -> funcName = patchAverage;
     //         args = (patch=inlet, p); field = p
 
-    word funcName(funcNameArgs);
+    word funcName(funcCall);
 
     int argLevel = 0;
     wordList args;
@@ -209,8 +254,8 @@ bool Foam::functionObjectList::readFunctionObject
 
     for
     (
-        word::const_iterator iter = funcNameArgs.begin();
-        iter != funcNameArgs.end();
+        word::const_iterator iter = funcCall.begin();
+        iter != funcCall.end();
         ++iter
     )
     {
@@ -220,7 +265,7 @@ bool Foam::functionObjectList::readFunctionObject
         {
             if (argLevel == 0)
             {
-                funcName = funcNameArgs(start, i - start);
+                funcName = funcCall(start, i - start);
                 start = i+1;
             }
             ++argLevel;
@@ -236,7 +281,7 @@ bool Foam::functionObjectList::readFunctionObject
                         Tuple2<word, string>
                         (
                             argName,
-                            funcNameArgs(start, i - start)
+                            funcCall(start, i - start)
                         )
                     );
                     namedArg = false;
@@ -245,7 +290,7 @@ bool Foam::functionObjectList::readFunctionObject
                 {
                     args.append
                     (
-                        string::validate<word>(funcNameArgs(start, i - start))
+                        string::validate<word>(funcCall(start, i - start))
                     );
                 }
                 start = i+1;
@@ -262,7 +307,7 @@ bool Foam::functionObjectList::readFunctionObject
         }
         else if (c == '=')
         {
-            argName = string::validate<word>(funcNameArgs(start, i - start));
+            argName = string::validate<word>(funcCall(start, i - start));
             start = i+1;
             namedArg = true;
         }
@@ -303,6 +348,9 @@ bool Foam::functionObjectList::readFunctionObject
 
     dictionary& funcDict = *funcDictPtr;
 
+    // Store the funcDict as read for error reporting context
+    const dictionary funcDict0(funcDict);
+
     // Insert the 'field' and/or 'fields' entry corresponding to the optional
     // arguments or read the 'field' or 'fields' entry and add the required
     // fields to requiredFields
@@ -310,20 +358,10 @@ bool Foam::functionObjectList::readFunctionObject
     {
         funcDict.set("field", args[0]);
         funcDict.set("fields", args);
-        requiredFields.insert(args[0]);
     }
     else if (args.size() > 1)
     {
         funcDict.set("fields", args);
-        requiredFields.insert(args);
-    }
-    else if (funcDict.found("field"))
-    {
-        requiredFields.insert(word(funcDict.lookup("field")));
-    }
-    else if (funcDict.found("fields"))
-    {
-        requiredFields.insert(wordList(funcDict.lookup("fields")));
     }
 
     // Insert named arguments
@@ -343,9 +381,9 @@ bool Foam::functionObjectList::readFunctionObject
     }
 
     // Merge this functionObject dictionary into functionsDict
-    const word funcNameArgsWord = string::validate<word>(funcNameArgs);
+    const word funcCallKeyword = string::validate<word>(funcCall);
     dictionary funcArgsDict;
-    funcArgsDict.add(funcNameArgsWord, funcDict);
+    funcArgsDict.add(funcCallKeyword, funcDict);
 
     // Re-parse the funcDict to execute the functionEntries
     // now that the function argument entries have been added
@@ -355,8 +393,22 @@ bool Foam::functionObjectList::readFunctionObject
         funcArgsDict = dictionary(IStringStream(os.str())());
     }
 
+    checkUnsetEntries(funcCall, funcArgsDict, funcDict0, context);
+
+    // Lookup the field and fields entries from the now expanded funcDict
+    // and insert into the requiredFields
+    dictionary& expandedFuncDict = funcArgsDict.subDict(funcCallKeyword);
+    if (expandedFuncDict.found("field"))
+    {
+        requiredFields.insert(word(expandedFuncDict.lookup("field")));
+    }
+    else if (expandedFuncDict.found("fields"))
+    {
+        requiredFields.insert(wordList(expandedFuncDict.lookup("fields")));
+    }
+
     functionsDict.merge(funcArgsDict);
-    functionsDict.subDict(funcNameArgsWord).name() = funcDict.name();
+    functionsDict.subDict(funcCallKeyword).name() = funcDict.name();
 
     return true;
 }
@@ -451,6 +503,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
             (
                 args["func"],
                 functionsDict,
+                "command line " + args.commandLine(),
                 requiredFields,
                 region
             );
@@ -466,6 +519,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
                 (
                     funcs[i],
                     functionsDict,
+                    "command line " + args.commandLine(),
                     requiredFields,
                     region
                 );

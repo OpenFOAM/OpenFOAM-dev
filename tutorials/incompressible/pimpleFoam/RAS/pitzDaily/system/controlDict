@@ -49,4 +49,9 @@ adjustTimeStep  yes;
 
 maxCo           5;
 
+functions
+{
+    #includeFunc patchAverage(name=inlet, fields=(p U))
+}
+
 // ************************************************************************* //

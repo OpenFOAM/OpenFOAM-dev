@@ -14,7 +14,7 @@ Description
 type            writeVTK;
 libs            ("libfoamToVTK.so");
 
-objects         (<object names>);
+objects         (<object_names>);
 
 writeControl    writeTime;
 
