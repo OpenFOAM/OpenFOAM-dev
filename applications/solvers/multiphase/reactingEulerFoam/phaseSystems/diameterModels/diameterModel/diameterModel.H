@@ -25,7 +25,7 @@ Class
     Foam::diameterModel
 
 Description
-    A2stract base-class for dispersed-phase particle diameter models.
+    Abstract base-class for dispersed-phase particle diameter models.
 
 SourceFiles
     diameterModel.C

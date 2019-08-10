@@ -208,14 +208,14 @@ public:
             return thermo_->alpha(patchi);
         }
 
-        //- Thermal diffusivity for temperature of mixture [W/m/K]
+        //- Thermal diffusivity for temperature of mixture
+        //  for patch [W/m/K]
         tmp<scalarField> kappa(const label patchi) const
         {
             return thermo_->kappa(patchi);
         }
 
-        //- Thermal diffusivity for temperature of mixture
-        //  for patch [W/m/K]
+        //- Thermal diffusivity for temperature of mixture [W/m/K]
         tmp<volScalarField> kappa() const
         {
             return thermo_->kappa();
