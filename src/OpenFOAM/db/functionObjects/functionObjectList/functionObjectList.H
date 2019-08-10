@@ -245,15 +245,28 @@ public:
             const word& region = word::null
         );
 
-        //- Read the specified functionObject configuration dictionary parsing
-        //  the optional arguments included in the name 'funcNameArgs0',
+        //- Read the specified functionObject configuration dictionary
+        //  parsing the optional arguments included in the string 'funcCall',
         //  inserting 'field' or 'fields' entries as required and merging the
-        //  resulting functionObject dictionary into 'functionsDict'.  Any
-        //  fields required to execute the functionObject are added to
+        //  resulting functionObject dictionary into 'functionsDict'.
+        //  Any fields required to execute the functionObject are added to
         //  'requiredFields'
+        //
+        //  Parses the optional functionObject arguments:
+        //      'Q(U)' -> funcName = Q; args = (U)
+        //             -> field U;
+        //
+        //  Supports named arguments:
+        //      'patchAverage(patch=inlet, p,U)'
+        //  or
+        //      'patchAverage(patch=inlet, field=(p U))'
+        //       -> funcName = patchAverage;
+        //          args = (patch=inlet, p,U)
+        //       -> patch inlet;
+        //          fields (p U);
         static bool readFunctionObject
         (
-            const string& funcNameArgs0,
+            const string& funcCall,
             dictionary& functionsDict,
             const string& context,
             HashSet<word>& requiredFields,

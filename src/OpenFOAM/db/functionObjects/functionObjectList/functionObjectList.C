@@ -233,13 +233,6 @@ bool Foam::functionObjectList::readFunctionObject
     const word& region
 )
 {
-    // Parse the optional functionObject arguments:
-    //     'Q(U)' -> funcName = Q; args = (U); field = U
-    //
-    // Supports named arguments:
-    //     'patchAverage(patch=inlet, p)' -> funcName = patchAverage;
-    //         args = (patch=inlet, p); field = p
-
     word funcName(funcCall);
 
     int argLevel = 0;
