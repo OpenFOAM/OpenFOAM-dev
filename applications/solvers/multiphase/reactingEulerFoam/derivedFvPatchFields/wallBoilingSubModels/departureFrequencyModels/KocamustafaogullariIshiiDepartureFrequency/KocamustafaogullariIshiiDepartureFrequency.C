@@ -90,7 +90,7 @@ KocamustafaogullariIshiiDepartureFrequency::fDeparture
         liquid.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
     const scalarField rhoLiquid(liquid.thermo().rho(patchi));
-    const scalarField rhoVapor(vapor.thermo().rho(patchi));
+    const scalarField rhoVapor(min(vapor.thermo().rho(patchi), rhoLiquid));
 
     const tmp<volScalarField> tsigma
     (
