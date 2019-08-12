@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,12 @@ Foam::wallDampingModels::sine::limiter() const
     return sin
     (
         constant::mathematical::piByTwo
-       *min(yWall()/(Cd_*pair_.dispersed().d()), scalar(1))
+       *min
+        (
+            max(yWall() - zeroWallDist_, dimensionedScalar(dimLength, 0))
+           /(Cd_*pair_.dispersed().d()),
+            scalar(1)
+        )
     );
 }
 
@@ -66,7 +71,17 @@ Foam::wallDampingModels::sine::sine
 )
 :
     interpolated(dict, pair),
-    Cd_("Cd", dimless, dict)
+    Cd_("Cd", dimless, dict),
+    zeroWallDist_
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "zeroWallDist",
+            dict,
+            dimLength,
+            0
+        )
+    )
 {}
 
 
