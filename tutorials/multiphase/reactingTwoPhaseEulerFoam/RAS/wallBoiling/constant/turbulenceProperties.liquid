@@ -11,7 +11,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      turbulenceProperties.water;
+    object      turbulenceProperties.liquid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -19,7 +19,7 @@ simulationType  RAS;
 
 RAS
 {
-    RASModel LaheyKEpsilon;
+    RASModel kOmegaSSTSato;
 
     turbulence      on;
     printCoeffs     on;

@@ -31,16 +31,7 @@ boundaryField
         type            calculated;
         value           uniform 1e-8;
     }
-    wall1
-    {
-        type            compressible::alphatPhaseChangeJayatillekeWallFunction;
-        Prt             0.85;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0;
-    }
-    wall2
+    wall
     {
         type            compressible::alphatWallBoilingWallFunction;
         otherPhase      liquid;
@@ -51,13 +42,18 @@ boundaryField
         E               9.8;
         partitioningModel
         {
-            type        phaseFraction;
+            type        Lavieville;
+            alphaCrit   0.2;
         }
         value           uniform 0;
     }
-    defaultFaces
+    front
     {
-        type            empty;
+        type            wedge;
+    }
+    back
+    {
+        type            wedge;
     }
 }
 

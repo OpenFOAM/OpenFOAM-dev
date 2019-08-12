@@ -37,19 +37,18 @@ boundaryField
         inletValue      uniform 3.75e-05;
         value           uniform 0.01;
     }
-    wall1
+    wall
     {
         type            kqRWallFunction;
         value           uniform 0.01;
     }
-    wall2
+    front
     {
-        type            kqRWallFunction;
-        value           uniform 0.01;
+        type            wedge;
     }
-    defaultFaces
+    back
     {
-        type            empty;
+        type            wedge;
     }
 }
 

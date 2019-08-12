@@ -31,25 +31,21 @@ boundaryField
         type            calculated;
         value           uniform 0.0001;
     }
-    wall1
+    wall
     {
         type            nutkWallFunction;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
-        value           uniform 0.0001;
+        value           uniform 0;
     }
-    wall2
+    front
     {
-        type            nutkWallFunction;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0.0001;
+        type            wedge;
     }
-    defaultFaces
+    back
     {
-        type            empty;
+        type            wedge;
     }
 }
 

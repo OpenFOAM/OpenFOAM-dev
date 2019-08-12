@@ -17,35 +17,35 @@ FoamFile
 
 dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 368;
+internalField   uniform 341.65;
 
 boundaryField
 {
     inlet
     {
         type            fixedValue;
-        value           uniform 368;
+        value           $internalField;
     }
     outlet
     {
         type            inletOutlet;
         phi             phi.gas;
-        inletValue      uniform 368;
-        value           uniform 368;
+        inletValue      $internalField;
+        value           $internalField;
     }
-    wall1
-    {
-        type            zeroGradient;
-    }
-    wall2
+    wall
     {
         type            copiedFixedValue;
         sourceFieldName T.liquid;
-        value           uniform 368;
+        value           $internalField;
     }
-    defaultFaces
+    front
     {
-        type            empty;
+        type            wedge;
+    }
+    back
+    {
+        type            wedge;
     }
 }
 

@@ -27,6 +27,7 @@ gas
 {
     type            purePhaseModel;
     diameterModel   velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance    bubbles;
@@ -35,24 +36,37 @@ gas
 
         sizeGroups
         (
-            f0  {d  1.0e-4; value 0    ;}
-            f1  {d  2.0e-4; value 0    ;}
-            f2  {d  3.0e-4; value 0    ;}
-            f3  {d  4.0e-4; value 0    ;}
-            f4  {d  5.0e-4; value 0    ;}
-            f5  {d  6.0e-4; value 0    ;}
-            f6  {d  7.0e-4; value 0    ;}
-            f7  {d  8.0e-4; value 1.0  ;}
-            f8  {d  9.0e-4; value 0    ;}
-            f9  {d  1.0e-3; value 0    ;}
-            f10 {d  1.1e-3; value 0    ;}
-            f11 {d  1.2e-3; value 0    ;}
-            f12 {d  1.3e-3; value 0    ;}
-            f13 {d  1.4e-3; value 0    ;}
+            f1  {d  1.0e-4; value 0    ;}
+            f2  {d  1.2e-4; value 0    ;}
+            f3  {d  1.44e-4; value 0    ;}
+            f4  {d  1.728e-4; value 0    ;}
+            f5  {d  2.074e-4; value 0    ;}
+            f6  {d  2.49e-4; value 0    ;}
+            f7 {d  2.99e-4; value 0    ;}
+            f8 {d  3.6e-4; value 1.0  ;}
+            f9 {d  4.3e-4; value 0    ;}
+            f10 {d  5.16e-4; value 0    ;}
+            f11 {d  6.19e-4; value 0    ;}
+            f12 {d  7.43e-4; value 0    ;}
+            f13 {d  8.92e-4; value 0    ;}
+            f14 {d  1.07e-3; value 0    ;}
+            f15 {d  1.28e-3; value 0    ;}
+            f16 {d  1.54e-3; value 0    ;}
+            f17 {d  1.85e-3; value 0    ;}
+            f18 {d  2.22e-3; value 0    ;}
+            f19 {d  2.67e-3; value 0    ;}
+            f20 {d  3.19e-3; value 0    ;}
+            f21 {d  3.85e-3; value 0    ;}
+            f22 {d  4.6e-3; value 0     ;}
+            f23 {d  5.52e-3; value 0    ;}
+            f24 {d  6.62e-3; value 0    ;}
+            f25 {d  7.95e-3; value 0    ;}
+            f26 {d  9.54e-3; value 0    ;}
+            f27 {d  1.14e-2; value 0    ;}
         );
     }
 
-    residualAlpha   1e-4;
+    residualAlpha   1e-6;
 }
 
 liquid
@@ -63,9 +77,9 @@ liquid
     {
         d               0.00045;
     }
-    Sct             0.7;
+    Sc              0.7;
 
-    residualAlpha   1e-4;
+    residualAlpha   1e-6;
 }
 
 populationBalanceCoeffs
@@ -76,7 +90,13 @@ populationBalanceCoeffs
 
         coalescenceModels
         (
-            LehrMilliesMewes{}
+            PrinceBlanch
+            {
+                turbulence on;
+                buoyancy   on;
+                laminarShear off;
+                C1  0.1;
+            }
         );
 
         binaryBreakupModels
@@ -91,7 +111,7 @@ populationBalanceCoeffs
         (
             phaseChange
             {
-                pairs    ((gas and liquid));
+                pairs ( (gas and liquid) );
             }
 
             densityChange{}
@@ -107,51 +127,12 @@ populationBalanceCoeffs
     }
 }
 
-blending
-{
-    default
-    {
-        type            none;
-        continuousPhase liquid;
-    }
-}
-
-surfaceTension
-(
-    (gas and liquid)
-    {
-        type            constant;
-        sigma           0.07;
-    }
-);
-
-saturationModel
-{
-    type function1;
-
-    function csvFile;
-    functionCoeffs
-    {
-        nHeaderLine         1;
-        refColumn           0;
-        componentColumns    (1);
-        separator           ",";
-        mergeSeparators     no;
-        file                "Tsat_water_1_2bar.csv";
-        outOfBounds         clamp;
-        interpolationScheme linear;
-    };
-};
-
-aspectRatio
-();
-
 drag
 (
     (gas in liquid)
     {
-        type            SchillerNaumann;
-        residualRe      1e-3;
+        type            IshiiZuber;
+
         swarmCorrection
         {
             type        none;
@@ -172,8 +153,9 @@ heatTransfer.gas
 (
     (gas in liquid)
     {
-        type spherical;
-        residualAlpha 1e-3;
+        type constantNu;
+        Nu  1e1;
+        residualAlpha 1e-4;
     }
 );
 
@@ -182,29 +164,98 @@ heatTransfer.liquid
     (gas in liquid)
     {
         type RanzMarshall;
-        residualAlpha 1e-3;
+        residualAlpha 1e-4;
     }
 );
 
-phaseTransfer
-();
-
 lift
-();
+(
+    (gas in liquid)
+    {
+        type wallDamped;
+
+        lift
+        {
+            type Tomiyama;
+            Cl 0.288;
+        }
+
+        wallDamping
+        {
+            type    cosine;
+            Cd      1.0;
+            y0      0.0002;
+        }
+    }
+);
 
 wallLubrication
-();
+(
+   (gas in liquid)
+    {
+        type            Antal;
+        Cw1             -0.01;
+        Cw2             0.05;
+    }
+);
 
 turbulentDispersion
 (
     (gas in liquid)
     {
-        type                Burns;
-        sigma               0.7;
+        type                LopezDeBertodano;
         Ctd                 1.0;
         residualAlpha       1e-3;
     }
 );
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase liquid;
+    }
+}
+
+aspectRatio
+();
+
+saturationModel
+{
+    type function1;
+
+    function scale;
+    functionCoeffs
+    {
+        xScale 1e-6;
+        scale   1;
+        value
+        {
+            type                csvFile;
+            nHeaderLine         1;
+            refColumn           1;
+            componentColumns    (0);
+            separator           ";";
+            mergeSeparators     no;
+            file                "R12.csv";
+            outOfBounds         clamp;
+            interpolationScheme linear;
+        }
+    };
+};
+
+surfaceTension
+(
+    (gas and liquid)
+    {
+        type            constant;
+        sigma           0.00176574;
+    }
+);
+
+phaseTransfer
+();
 
 // Minimum allowable pressure
 pMin            10000;

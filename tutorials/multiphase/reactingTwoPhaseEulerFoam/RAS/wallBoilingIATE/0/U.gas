@@ -17,7 +17,7 @@ FoamFile
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (0 1 0);
+internalField   uniform (1.96244 0 0);
 
 boundaryField
 {
@@ -25,28 +25,28 @@ boundaryField
     {
         type            mapped;
         field           U.gas;
-        setAverage      1;
-        average         (0 1 0);
+        setAverage      0;
+        average         (1.96244 0 0);
         interpolationScheme cell;
-        value           uniform (0 1 0);
+        value           uniform (1.96244 0 0);
     }
     outlet
     {
         type            pressureInletOutletVelocity;
         phi             phi.gas;
-        value           uniform (0 1 0);
+        value           uniform (1.96244 0 0);
     }
-    wall1
+    wall
     {
         type            slip;
     }
-    wall2
+    front
     {
-        type            slip;
+        type            wedge;
     }
-    defaultFaces
+    back
     {
-        type            empty;
+        type            wedge;
     }
 }
 
