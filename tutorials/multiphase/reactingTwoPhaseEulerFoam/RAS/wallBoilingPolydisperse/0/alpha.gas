@@ -33,17 +33,17 @@ boundaryField
         inletValue      uniform 0;
         value           uniform 0;
     }
-    wall1
+    wall
     {
         type            zeroGradient;
     }
-    wall2
+    front
     {
-        type            zeroGradient;
+        type            wedge;
     }
-    defaultFaces
+    back
     {
-        type            empty;
+        type            wedge;
     }
 }
 

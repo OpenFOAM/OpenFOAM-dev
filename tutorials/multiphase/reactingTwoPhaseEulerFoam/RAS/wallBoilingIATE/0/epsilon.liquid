@@ -37,7 +37,7 @@ boundaryField
         inletValue      uniform 0.00015;
         value           uniform 0.001;
     }
-    wall1
+    wall
     {
         type            epsilonWallFunction;
         Cmu             0.09;
@@ -45,17 +45,13 @@ boundaryField
         E               9.8;
         value           uniform 0.001;
     }
-    wall2
+    front
     {
-        type            epsilonWallFunction;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0.001;
+        type            wedge;
     }
-    defaultFaces
+    back
     {
-        type            empty;
+        type            wedge;
     }
 }
 

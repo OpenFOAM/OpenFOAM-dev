@@ -59,6 +59,8 @@ class sine
         //- Diameter coefficient
         const dimensionedScalar Cd_;
 
+        //- Distance from wall below which the field is damped to zero
+        const dimensionedScalar zeroWallDist_;
 
 protected:
 

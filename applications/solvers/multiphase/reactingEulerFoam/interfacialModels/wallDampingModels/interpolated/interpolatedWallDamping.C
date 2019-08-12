@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "interpolatedWallDamping.H"
 #include "phasePair.H"
 #include "surfaceInterpolate.H"
+#include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,6 +39,39 @@ namespace wallDampingModels
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::wallDampingModels::interpolated::zeroNearWallCells
+(
+    const tmp<volScalarField>& tlimiter
+) const
+{
+    if (zeroInNearWallCells_)
+    {
+        volScalarField& limiter = tlimiter.ref();
+
+        const fvMesh& mesh(limiter.mesh());
+
+        forAll(mesh.boundary(), patchi)
+        {
+            if (isA<wallFvPatch>(mesh.boundary()[patchi]))
+            {
+                const labelUList& faceCells =
+                    mesh.boundary()[patchi].faceCells();
+
+                forAll(faceCells,facei)
+                {
+                    limiter[faceCells[facei]] = 0;
+                }
+            }
+        }
+    }
+
+    return tlimiter;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::wallDampingModels::interpolated::interpolated
@@ -46,7 +80,11 @@ Foam::wallDampingModels::interpolated::interpolated
     const phasePair& pair
 )
 :
-    wallDampingModel(dict, pair)
+    wallDampingModel(dict, pair),
+    zeroInNearWallCells_
+    (
+        dict.lookupOrDefault<Switch>("zeroInNearWallCells", false)
+    )
 {}
 
 
@@ -64,7 +102,7 @@ Foam::wallDampingModels::interpolated::damp
     const tmp<volScalarField>& F
 ) const
 {
-    return limiter()*F;
+    return zeroNearWallCells(limiter())*F;
 }
 
 
@@ -74,7 +112,7 @@ Foam::wallDampingModels::interpolated::damp
     const tmp<volVectorField>& F
 ) const
 {
-    return limiter()*F;
+    return zeroNearWallCells(limiter())*F;
 }
 
 
@@ -84,7 +122,7 @@ Foam::wallDampingModels::interpolated::damp
     const tmp<surfaceScalarField>& Ff
 ) const
 {
-    return fvc::interpolate(limiter())*Ff;
+    return fvc::interpolate(zeroNearWallCells(limiter()))*Ff;
 }
 
 

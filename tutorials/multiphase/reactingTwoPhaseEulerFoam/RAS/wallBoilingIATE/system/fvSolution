@@ -20,7 +20,16 @@ solvers
     "alpha.*"
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 3;
+        nAlphaSubCycles 1;
+    }
+
+    bubbles
+    {
+        nCorr                   1;
+        tolerance               1e-4;
+        scale                   true;
+        solveOnFinalIterOnly    true;
+        sourceUpdateInterval    20;
     }
 
     p_rgh
@@ -29,7 +38,7 @@ solvers
         smoother        DIC;
         tolerance       1e-8;
         relTol          0.01;
-        maxIter         100;
+        maxIter         20;
         minIter         2;
     }
 
@@ -58,7 +67,7 @@ solvers
         maxIter         20;
     }
 
-    "(k|epsilon|Theta).*"
+    "(k|epsilon|omega|Theta).*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
@@ -67,16 +76,25 @@ solvers
         minIter         1;
     }
 
-    "kappai.gas.*"
+    "kappai.*"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
+        relTol          0;
+        maxIter         20;
+        minIter         1;
+    }
+
+    "f.*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-6;
         relTol          0;
-        minIter         1;
     }
 
-    "Yi.*"
+    Yi
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
@@ -89,10 +107,10 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors    6;
+    nOuterCorrectors    1;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;
-    nEnergyCorrectors   2;
+    nEnergyCorrectors   1;
     faceMomentum        yes;
 }
 
@@ -100,13 +118,13 @@ relaxationFactors
 {
     fields
     {
-        iDmdt           0.1;
+        iDmdt           0.8;
     }
 
     equations
     {
         ".*"            1;
-        "e\..*"         0.1;
+        "e\..*"         0.8;
     }
 }
 

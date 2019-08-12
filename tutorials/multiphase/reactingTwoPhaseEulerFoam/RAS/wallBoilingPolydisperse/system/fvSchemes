@@ -23,6 +23,7 @@ ddtSchemes
 gradSchemes
 {
     default         Gauss linear;
+    limited         cellLimited Gauss linear 1;
 }
 
 divSchemes
@@ -32,15 +33,16 @@ divSchemes
     "div\(phi,alpha.*\)"            Gauss vanLeer;
     "div\(phir,alpha.*\)"           Gauss vanLeer;
 
-    "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 1;
-    "div\(phi.*,U.*\)"              Gauss limitedLinearV 1;
+    "div\(alphaRhoPhi.*,U.*\)"      Gauss linearUpwind limited;
+    "div\(phi.*,U.*\)"              Gauss linearUpwind limited;
 
-    "div\(alphaRhoPhi.*,Yi\)"       Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,(h|e|f).*\)"  Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
-    "div\(alphaPhi.*,p\)"           Gauss limitedLinear 1;
-
-    "div\(alphaRhoPhi.*,(k|epsilon).*\)"  Gauss upwind;
+    "div\(alphaRhoPhi.*,Yi\)"       Gauss linearUpwind limited;
+    "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss linearUpwind limited;
+    "div\(alphaRhoPhi.*,f.*\)"      Gauss upwind;
+    "div\(alphaRhoPhi.*,K.*\)"      Gauss linearUpwind limited;
+    "div\(alphaPhi.*,p\)"           Gauss linearUpwind limited;
+    "div\(phi.*,kappai.*\)"         Gauss linearUpwind limited;
+    "div\(alphaRhoPhi.*,(k|epsilon|omega).*\)"  Gauss upwind;
     "div\(phim,(k|epsilon)m\)"      Gauss upwind;
 
     "div\(\(\(\(alpha.*\*thermo:rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
@@ -48,7 +50,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default         Gauss linear uncorrected;
+    default         Gauss linear corrected;
 }
 
 interpolationSchemes
@@ -58,7 +60,7 @@ interpolationSchemes
 
 snGradSchemes
 {
-    default         uncorrected;
+    default         corrected;
 }
 
 fluxRequired
