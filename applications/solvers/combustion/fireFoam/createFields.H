@@ -119,12 +119,6 @@ Switch solvePrimaryRegion
     additionalControlsDict.lookup("solvePrimaryRegion")
 );
 
-Switch solvePyrolysisRegion
-(
-    additionalControlsDict.lookupOrDefault<bool>("solvePyrolysisRegion", true)
-);
-
-
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt
 (
@@ -143,6 +137,5 @@ volScalarField K("K", 0.5*magSqr(U));
 
 #include "createClouds.H"
 #include "createSurfaceFilmModel.H"
-#include "createPyrolysisModel.H"
 #include "createRadiationModel.H"
 #include "createFvOptions.H"

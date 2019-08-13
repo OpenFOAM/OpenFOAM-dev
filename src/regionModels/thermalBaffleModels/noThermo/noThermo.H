@@ -25,7 +25,7 @@ Class
     Foam::regionModels::thermalBaffleModels::noThermo
 
 Description
-    Dummy surface pyrolysis model for 'none'
+    Dummy surface model for 'none'
 
 SourceFiles
     noThermo.C

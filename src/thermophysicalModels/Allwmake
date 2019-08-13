@@ -5,7 +5,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 wmake $targetType specie
-wmake $targetType solidSpecie
 wmake $targetType thermophysicalProperties
 
 wmake $targetType basic
@@ -16,6 +15,5 @@ wmake $targetType barotropicCompressibilityModel
 wmake $targetType SLGThermo
 
 wmake $targetType solidThermo
-wmake $targetType solidChemistryModel
 
 #------------------------------------------------------------------------------
