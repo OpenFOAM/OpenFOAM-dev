@@ -60,10 +60,10 @@ functions
         writeControl    runTime;
         writeInterval   0.5;
         log             yes;
-        functionType    volumeDensity;
-        abszissaType    diameter;
-        selectionMode   cellZone;
-        cellZone        x349;
+        functionType    volume;
+        coordinateType  diameter;
+        regionType      cellZone;
+        name            x349;
         populationBalance bubbles;
     }
     volumeDensity_bulk.diameter.bubbles
@@ -73,10 +73,10 @@ functions
         writeControl    runTime;
         writeInterval   0.5;
         log             yes;
-        functionType    volumeDensity;
-        abszissaType    diameter;
-        selectionMode   cellZone;
-        cellZone        x349_bulk;
+        functionType    volume;
+        coordinateType  diameter;
+        regionType      cellZone;
+        name            x349_bulk;
         populationBalance bubbles;
     }
     volumeDensity_wall.diameter.bubbles
@@ -86,10 +86,10 @@ functions
         writeControl    runTime;
         writeInterval   0.5;
         log             yes;
-        functionType    volumeDensity;
-        abszissaType    diameter;
-        selectionMode   cellZone;
-        cellZone        x349_wall;
+        functionType    volume;
+        coordinateType  diameter;
+        regionType      cellZone;
+        name            x349_wall;
         populationBalance bubbles;
     }
     outflow

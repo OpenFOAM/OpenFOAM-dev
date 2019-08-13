@@ -111,9 +111,14 @@ void Foam::diameterModels::driftModels::phaseChange::correct()
                     {
                         const sizeGroup& fi = vgj.sizeGroups()[i];
 
-                        W_[k] +=
-                            fi*max(fi.phase(), small)
-                           /(numberWeighted_ ? fi.x() : fi.d());
+                        if (numberWeighted_)
+                        {
+                            W_[k] += fi*max(fi.phase(), small)/fi.x();
+                        }
+                        else
+                        {
+                            W_[k] += fi*max(fi.phase(), small)/fi.x()*fi.a();
+                        }
                     }
                 }
             }
@@ -155,7 +160,7 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
 
             if (!numberWeighted_)
             {
-                dDriftRate.ref() *= fi.x()/fi.d();
+                dDriftRate.ref() *= fi.a();
             }
 
             driftRate += dDriftRate;

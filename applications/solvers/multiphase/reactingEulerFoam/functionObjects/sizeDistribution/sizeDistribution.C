@@ -24,8 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sizeDistribution.H"
-#include "sizeGroup.H"
+#include "Time.H"
+#include "fvMesh.H"
 #include "addToRunTimeSelectionTable.H"
+#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -42,197 +44,46 @@ template<>
 const char*
 Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::selectionModeTypes,
-    2
->::names[] = {"cellZone", "all"};
-
-template<>
-const char*
-Foam::NamedEnum
-<
-    Foam::functionObjects::sizeDistribution::functionTypes,
+    Foam::functionObjects::sizeDistribution::functionType,
     4
 >::names[] =
-    {
-        "numberDensity",
-        "volumeDensity",
-        "numberConcentration",
-        "moments"
-    };
-
-template<>
-const char*
-Foam::NamedEnum
-<
-    Foam::functionObjects::sizeDistribution::abszissaTypes,
-    2
->::names[] = {"diameter", "volume"};
+{
+    "moments",
+    "standardDeviation",
+    "number",
+    "volume"
+};
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::selectionModeTypes,
-    2
-> Foam::functionObjects::sizeDistribution::selectionModeTypeNames_;
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::sizeDistribution::functionTypes,
+    Foam::functionObjects::sizeDistribution::functionType,
     4
 > Foam::functionObjects::sizeDistribution::functionTypeNames_;
 
+template<>
+const char*
+Foam::NamedEnum
+<
+    Foam::functionObjects::sizeDistribution::coordinateType,
+    4
+>::names[] =
+{
+    "volume",
+    "area",
+    "diameter",
+    "projectedAreaDiameter"
+};
+
 const Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::abszissaTypes,
-    2
-> Foam::functionObjects::sizeDistribution::abszissaTypeNames_;
+    Foam::functionObjects::sizeDistribution::coordinateType,
+    4
+> Foam::functionObjects::sizeDistribution::coordinateTypeNames_;
+
+using Foam::constant::mathematical::pi;
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::functionObjects::sizeDistribution::initialise
-(
-    const dictionary& dict
-)
-{
-    switch (functionType_)
-    {
-        case ftNdf:
-        {
-            break;
-        }
-
-        case ftVdf:
-        {
-            break;
-        }
-
-        case ftNc:
-        {
-            break;
-        }
-
-        case ftMom:
-        {
-            break;
-        }
-
-        default:
-        {
-            FatalIOErrorInFunction(dict)
-               << "Unknown functionType. Valid types are:"
-                << functionTypeNames_ << nl << exit(FatalIOError);
-        }
-    }
-
-    switch (abszissaType_)
-    {
-        case atDiameter:
-        {
-            break;
-        }
-
-        case atVolume:
-        {
-            break;
-        }
-
-        default:
-        {
-            FatalIOErrorInFunction(dict)
-                << "Unknown abszissaType. Valid types are:"
-                << abszissaTypeNames_ << nl << exit(FatalIOError);
-        }
-    }
-
-    setCellZoneCells();
-
-    if (nCells_ == 0)
-    {
-        FatalIOErrorInFunction(dict)
-            << type() << " " << name() << ": "
-            << selectionModeTypeNames_[selectionModeType_]
-            << "(" << selectionModeTypeName_ << "):" << nl
-            << "    Selection has no cells" << exit(FatalIOError);
-    }
-
-    volume_ = volume();
-
-    Info<< type() << " " << name() << ":"
-        << selectionModeTypeNames_[selectionModeType_]
-        << "(" << selectionModeTypeName_ << "):" << nl
-        << "    total cells  = " << nCells_ << nl
-        << "    total volume = " << volume_
-        << nl << endl;
-}
-
-
-void Foam::functionObjects::sizeDistribution::setCellZoneCells()
-{
-    switch (selectionModeType_)
-    {
-        case rtCellZone:
-        {
-            dict().lookup("cellZone") >> selectionModeTypeName_;
-
-            label zoneId =
-                mesh().cellZones().findZoneID(selectionModeTypeName_);
-
-            if (zoneId < 0)
-            {
-                FatalIOErrorInFunction(dict_)
-                    << "Unknown cellZone name: " << selectionModeTypeName_
-                    << ". Valid cellZone names are: "
-                    << mesh().cellZones().names()
-                    << nl << exit(FatalIOError);
-            }
-
-            cellId_ = mesh().cellZones()[zoneId];
-            nCells_ = returnReduce(cellId_.size(), sumOp<label>());
-            break;
-        }
-
-        case rtAll:
-        {
-            cellId_ = identity(mesh().nCells());
-            nCells_ = returnReduce(cellId_.size(), sumOp<label>());
-            break;
-        }
-
-        default:
-        {
-            FatalIOErrorInFunction(dict_)
-               << "Unknown selectionMode type. Valid selectionMode types are:"
-                << selectionModeTypeNames_ << nl << exit(FatalIOError);
-        }
-    }
-}
-
-
-Foam::scalar Foam::functionObjects::sizeDistribution::volume() const
-{
-    return gSum(filterField(mesh().V()));
-}
-
-
-void Foam::functionObjects::sizeDistribution::combineFields(scalarField& field)
-{
-    List<scalarField> allValues(Pstream::nProcs());
-
-    allValues[Pstream::myProcNo()] = field;
-
-    Pstream::gatherList(allValues);
-
-    if (Pstream::master())
-    {
-        field =
-            ListListOps::combine<scalarField>
-            (
-                allValues,
-                accessOp<scalarField>()
-            );
-    }
-}
-
 
 Foam::tmp<Foam::scalarField>
 Foam::functionObjects::sizeDistribution::filterField
@@ -240,7 +91,212 @@ Foam::functionObjects::sizeDistribution::filterField
     const scalarField& field
 ) const
 {
-    return tmp<scalarField>(new scalarField(field, cellId_));
+    if (isNull(cellIDs()))
+    {
+        return field;
+    }
+    else
+    {
+        return tmp<scalarField>(new scalarField(field, cellIDs()));
+    }
+}
+
+
+void Foam::functionObjects::sizeDistribution::correctVolAverages()
+{
+    forAll(N_, i)
+    {
+        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
+
+        scalarField Ni(filterField(fi*fi.phase()/fi.x()));
+        scalarField V(filterField(mesh_.V()));
+        scalarField ai(filterField(fi.a()));
+        scalarField di(Ni.size());
+
+        switch (coordinateType_)
+        {
+            case ctProjectedAreaDiameter:
+            {
+                di = sqrt(ai/pi);
+
+                break;
+            }
+            default:
+            {
+                di = fi.d();
+
+                break;
+            }
+        }
+
+        N_[i] = gSum(V*Ni)/this->V();
+        a_[i] = gSum(V*ai)/this->V();
+        d_[i] = gSum(V*di)/this->V();
+    }
+
+    forAll(bins_, i)
+    {
+        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
+
+        bins_[i] = point(fi.x().value(), a_[i], d_[i]);
+    }
+}
+
+
+void Foam::functionObjects::sizeDistribution::writeMoments()
+{
+    logFiles::write();
+
+    Log << "    writing moments of size distribution." << endl;
+
+    if (Pstream::master())
+    {
+        writeTime(file());
+    }
+
+    for (label k = 0; k <= maxOrder_; k++)
+    {
+        scalar result = 0;
+
+        forAll(N_, i)
+        {
+            result += pow(bins_[i][binCmpt_], k)*N_[i];
+        }
+
+        if (Pstream::master())
+        {
+            file() << tab << result;
+        }
+    }
+
+    if (Pstream::master())
+    {
+        file() << endl;
+    }
+}
+
+
+void Foam::functionObjects::sizeDistribution::writeStdDev()
+{
+    logFiles::write();
+
+    Log << "    writing standard deviation of size distribution."
+        << endl;
+
+    if (Pstream::master())
+    {
+        writeTime(file());
+    }
+
+    scalar stdDev = 0;
+    scalar mean = 0;
+    scalar var = 0;
+
+    if(sum(N_) != 0)
+    {
+        if (geometric_)
+        {
+            mean = exp(sum(Foam::log(bins_.component(binCmpt_))*N_/sum(N_)));
+
+            var =
+                sum(sqr(Foam::log(bins_.component(binCmpt_)) - Foam::log(mean))
+               *N_/sum(N_));
+
+            stdDev = exp(sqrt(var));
+        }
+        else
+        {
+            mean = sum(bins_.component(binCmpt_)*N_/sum(N_));
+
+            var = sum(sqr(bins_.component(binCmpt_) - mean)*N_/sum(N_));
+
+            stdDev = sqrt(var);
+        }
+    }
+
+    if (Pstream::master())
+    {
+        file() << tab << stdDev << tab << mean << tab << var << endl;
+    }
+}
+
+
+void Foam::functionObjects::sizeDistribution::writeDistribution()
+{
+    scalarField result(N_);
+
+    switch (functionType_)
+    {
+        case ftNumber:
+        {
+            Log << "    writing number distribution. "
+                << endl;
+
+            break;
+        }
+        case ftVolume:
+        {
+            Log << "    writing volume distribution. "
+                << endl;
+
+            result *= bins_.component(0);
+
+            break;
+        }
+        default:
+        {
+            break;
+        }
+
+    }
+
+    if (normalize_)
+    {
+        if(sum(result) != 0)
+        {
+            result /= sum(result);
+        }
+
+    }
+
+    if (densityFunction_)
+    {
+        List<scalar> bndrs(N_.size() + 1);
+
+        bndrs.first() = bins_.first()[binCmpt_];
+        bndrs.last() = bins_.last()[binCmpt_];
+
+        for (label i = 1; i < N_.size(); i++)
+        {
+            bndrs[i] = (bins_[i][binCmpt_] + bins_[i-1][binCmpt_])/2.0;
+        }
+
+        forAll(result, i)
+        {
+            if (geometric_)
+            {
+                result[i] /=
+                    (Foam::log(bndrs[i+1]) - Foam::log(bndrs[i]));
+            }
+            else
+            {
+                result[i] /= (bndrs[i+1] - bndrs[i]);
+            }
+        }
+    }
+
+    if (Pstream::master())
+    {
+        const coordSet coords
+        (
+            "sizeDistribution",
+            "xyz",
+            bins_,
+            mag(bins_)
+        );
+
+        writeGraph(coords, functionTypeNames_[functionType_], result);
+    }
 }
 
 
@@ -249,91 +305,83 @@ void Foam::functionObjects::sizeDistribution::writeFileHeader
     const label i
 )
 {
-    OFstream& file = this->file();
+    volRegion::writeFileHeader(*this, file());
+
+    writeHeaderValue
+    (
+        file(),
+        "Coordinate",
+        word(coordinateTypeNames_[coordinateType_])
+    );
+
+    word str("Time");
 
     switch (functionType_)
     {
-        case ftNdf:
+        case ftMoments:
         {
-            writeHeader(file, "Number density function");
-            break;
-        }
-
-        case ftVdf:
-        {
-            writeHeader(file, "Volume density function");
-            break;
-        }
-
-        case ftNc:
-        {
-            writeHeader(file, "Number concentration");
-            break;
-        }
-
-        case ftMom:
-        {
-            writeHeader(file, "Moments");
-            break;
-        }
-    }
-
-    switch (abszissaType_)
-    {
-        case atVolume:
-        {
-            writeCommented(file, "Time/volume");
-            break;
-        }
-
-        case atDiameter:
-        {
-            writeCommented(file, "Time/diameter");
-            break;
-        }
-    }
-
-    switch (functionType_)
-    {
-        case ftMom:
-        {
-            for (label i = 0; i <= momentOrder_; i++)
+            for (label k = 0; k <= maxOrder_; k++)
             {
-                file() << tab << i;
+                str += (" k=" + std::to_string(k));
             }
 
             break;
         }
+
+        case ftStdDev:
+        {
+            str += " standardDeviation mean variance";
+
+            break;
+        }
+
         default:
         {
-            forAll(popBal_.sizeGroups(), sizeGroupi)
-            {
-                const diameterModels::sizeGroup& fi =
-                    popBal_.sizeGroups()[sizeGroupi];
-
-                switch (abszissaType_)
-                {
-                    case atDiameter:
-                    {
-                        file() << tab  << fi.d().value();
-
-                        break;
-                    }
-
-                    case atVolume:
-                    {
-                        file() << tab  << fi.x().value();
-
-                        break;
-                    }
-                }
-            }
-
             break;
         }
     }
 
-    file << endl;
+    writeCommented(file(), str);
+
+    file() << endl;
+}
+
+
+void Foam::functionObjects::sizeDistribution::writeGraph
+(
+    const coordSet& coords,
+    const word& functionTypeName,
+    const scalarField& values
+)
+{
+    const wordList functionTypeNames(1, functionTypeName);
+
+    fileName outputPath = file_.baseTimeDir();
+
+    mkDir(outputPath);
+    OFstream graphFile
+    (
+        outputPath/(this->name() + ".dat")
+    );
+
+    volRegion::writeFileHeader(file_, graphFile);
+
+    file_.writeCommented(graphFile, "Volume area diameter " + functionTypeName);
+
+    if (densityFunction_)
+    {
+        graphFile << "Density";
+    }
+    else
+    {
+        graphFile << "Concentration";
+    }
+
+    graphFile << endl;
+
+    List<const scalarField*> yPtrs(1);
+    yPtrs[0] = &values;
+    scalarFormatter_().write(coords, functionTypeNames, yPtrs, graphFile);
 }
 
 
@@ -347,19 +395,10 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
+    volRegion(fvMeshFunctionObject::mesh_, dict),
     logFiles(obr_, name),
-    dict_(dict),
-    selectionModeType_
-    (
-        selectionModeTypeNames_.read(dict.lookup("selectionMode"))
-    ),
-    selectionModeTypeName_(word::null),
-    functionType_(functionTypeNames_.read(dict.lookup("functionType"))),
-    abszissaType_(abszissaTypeNames_.read(dict.lookup("abszissaType"))),
-    nCells_(0),
-    cellId_(),
-    volume_(0.0),
-    writeVolume_(dict.lookupOrDefault("writeVolume", false)),
+    mesh_(fvMeshFunctionObject::mesh_),
+    file_(obr_, name),
     popBal_
     (
         obr_.lookupObject<Foam::diameterModels::populationBalanceModel>
@@ -367,14 +406,46 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
             dict.lookup("populationBalance")
         )
     ),
-    N_(popBal_.sizeGroups().size()),
-    momentOrder_(dict.lookupOrDefault<label>("momentOrder", 0)),
-    normalize_(dict.lookupOrDefault("normalize", false)),
-    sumN_(0.0),
-    sumV_(0.0)
+    functionType_(functionTypeNames_.read(dict.lookup("functionType"))),
+    coordinateType_(coordinateTypeNames_.read(dict.lookup("coordinateType"))),
+    N_(popBal_.sizeGroups().size(), 0),
+    a_(popBal_.sizeGroups().size(), 0),
+    d_(popBal_.sizeGroups().size(), 0),
+    bins_(N_.size()),
+    binCmpt_(0)
 {
     read(dict);
     resetName(name);
+
+    switch (coordinateType_)
+    {
+        case ctVolume:
+        {
+            binCmpt_ = 0;
+
+            break;
+        }
+        case ctArea:
+        {
+            binCmpt_ = 1;
+
+            break;
+        }
+        case ctDiameter:
+        {
+            binCmpt_ = 2;
+
+            break;
+        }
+        case ctProjectedAreaDiameter:
+        {
+            binCmpt_ = 2;
+
+            break;
+        }
+    }
+
+    scalarFormatter_ = writer<scalar>::New("raw");
 }
 
 
@@ -388,16 +459,14 @@ Foam::functionObjects::sizeDistribution::~sizeDistribution()
 
 bool Foam::functionObjects::sizeDistribution::read(const dictionary& dict)
 {
-    if (dict != dict_)
-    {
-        dict_ = dict;
-    }
-
     fvMeshFunctionObject::read(dict);
 
-    initialise(dict);
+    normalize_ = dict.lookupOrDefault<Switch>("normalize", false);
+    densityFunction_ = dict.lookupOrDefault<Switch>("densityFunction", false);
+    geometric_ = dict.lookupOrDefault<Switch>("geometric", false);
+    maxOrder_ = dict.lookupOrDefault("maxOrder", 3);
 
-    return true;
+    return false;
 }
 
 
@@ -407,189 +476,40 @@ bool Foam::functionObjects::sizeDistribution::execute()
 }
 
 
+bool Foam::functionObjects::sizeDistribution::end()
+{
+    return true;
+}
+
+
 bool Foam::functionObjects::sizeDistribution::write()
 {
-    logFiles::write();
+    Log << type() << " " << name() << " write:" << nl;
 
-    if (Pstream::master())
+    correctVolAverages();
+
+    switch (functionType_)
     {
-        writeTime(file());
-    }
-
-    Log << type() << " " << name() << " write" << nl;
-
-    scalarField V(filterField(mesh().V()));
-    combineFields(V);
-
-    sumN_ = 0;
-    sumV_ = 0;
-
-    forAll(N_, i)
-    {
-        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
-
-        const volScalarField& alpha = fi.VelocityGroup().phase();
-
-        scalarField Ni(fi*alpha/fi.x());
-        scalarField values(filterField(Ni));
-        scalarField V(filterField(mesh().V()));
-
-        // Combine onto master
-        combineFields(values);
-        combineFields(V);
-
-        if (Pstream::master())
+        case ftMoments:
         {
-            // Calculate volume-averaged number concentration
-            N_[i] = sum(V*values)/sum(V);
+            writeMoments();
+
+            break;
         }
 
-        sumN_ += N_[i];
-
-        sumV_ += N_[i]*fi.x().value();
-    }
-
-    if (Pstream::master())
-    {
-        switch (functionType_)
+        case ftStdDev:
         {
-            case ftMom:
-            {
-                for (label m = 0; m <= momentOrder_; m++)
-                {
-                    scalar result(0.0);
+            writeStdDev();
 
-                    forAll(N_, i)
-                    {
-                        const Foam::diameterModels::sizeGroup& fi =
-                            popBal_.sizeGroups()[i];
-
-                        switch (abszissaType_)
-                        {
-                            case atVolume:
-                            {
-                                result += pow(fi.x().value(), m)*N_[i];
-
-                                break;
-                            }
-
-                            case atDiameter:
-                            {
-                                result += pow(fi.d().value(), m)*N_[i];
-
-                                break;
-                            }
-                        }
-                    }
-
-                    file() << tab << result;
-                }
-
-                break;
-            }
-
-            default:
-            {
-                forAll(popBal_.sizeGroups(), i)
-                {
-                    const Foam::diameterModels::sizeGroup& fi =
-                        popBal_.sizeGroups()[i];
-
-                    scalar result(0.0);
-                    scalar delta(0.0);
-
-                    switch (abszissaType_)
-                    {
-                        case atVolume:
-                        {
-                            delta = popBal_.v()[i+1].value()
-                              - popBal_.v()[i].value();
-
-                            break;
-                        }
-
-                        case atDiameter:
-                        {
-                            const scalar& formFactor =
-                                fi.VelocityGroup().formFactor().value();
-
-                            delta =
-                                pow
-                                (
-                                    popBal_.v()[i+1].value()
-                                   /formFactor,
-                                    1.0/3.0
-                                )
-                              - pow
-                                (
-                                    popBal_.v()[i].value()
-                                   /formFactor,
-                                    1.0/3.0
-                                );
-
-                            break;
-                        }
-                    }
-
-                    switch (functionType_)
-                    {
-                        case ftNdf:
-                        {
-                            if (normalize_ == true)
-                            {
-                                result = N_[i]/delta/sumN_;
-                            }
-                            else
-                            {
-                                result = N_[i]/delta;
-                            }
-
-                            break;
-                        }
-
-                        case ftVdf:
-                        {
-                            if (normalize_ == true)
-                            {
-                                result = N_[i]*fi.x().value()/delta/sumV_;
-                            }
-                            else
-                            {
-                                result = N_[i]*fi.x().value()/delta;
-                            }
-
-                            break;
-                        }
-
-                        case ftNc:
-                        {
-                            if (normalize_ == true)
-                            {
-                                result = N_[i]/sumN_;
-                            }
-                            else
-                            {
-                                result = N_[i];
-                            }
-
-                            break;
-                        }
-
-                        default:
-                        {
-                            break;
-                        }
-                    }
-
-                    file()<< tab << result;
-                }
-            }
+            break;
         }
-    }
 
-    if (Pstream::master())
-    {
-        file()<< endl;
+        default:
+        {
+            writeDistribution();
+
+            break;
+        }
     }
 
     Log << endl;

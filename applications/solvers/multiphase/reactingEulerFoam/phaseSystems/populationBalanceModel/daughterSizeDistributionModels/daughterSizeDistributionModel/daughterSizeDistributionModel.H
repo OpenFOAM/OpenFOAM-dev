@@ -62,7 +62,7 @@ class daughterSizeDistributionModel
 {
 protected:
 
-    // Protected data
+    // Protected Data
 
         //- Reference to the breakupModel
         const breakupModel& breakup_;

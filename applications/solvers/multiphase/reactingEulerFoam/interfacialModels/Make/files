@@ -16,6 +16,8 @@ dragModels/TomiyamaKataokaZunSakaguchi/TomiyamaKataokaZunSakaguchi.C
 dragModels/WenYu/WenYu.C
 dragModels/IshiiZuber/IshiiZuber.C
 dragModels/AttouFerschneider/AttouFerschneider.C
+dragModels/aerosolDrag/aerosolDrag.C
+dragModels/timeScaleFilteredDrag/timeScaleFilteredDrag.C
 
 swarmCorrections/swarmCorrection/swarmCorrection.C
 swarmCorrections/swarmCorrection/newSwarmCorrection.C
@@ -36,6 +38,7 @@ heatTransferModels/heatTransferModel/newHeatTransferModel.C
 heatTransferModels/constantNu/constantNuHeatTransfer.C
 heatTransferModels/RanzMarshall/RanzMarshall.C
 heatTransferModels/sphericalHeatTransfer/sphericalHeatTransfer.C
+heatTransferModels/timeScaleFilteredHeatTransfer/timeScaleFilteredHeatTransfer.C
 
 virtualMassModels/virtualMassModel/virtualMassModel.C
 virtualMassModels/virtualMassModel/newVirtualMassModel.C

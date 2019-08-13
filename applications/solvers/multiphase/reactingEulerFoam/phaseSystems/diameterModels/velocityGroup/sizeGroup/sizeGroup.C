@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,13 @@ License
 #include "sizeGroup.H"
 #include "populationBalanceModel.H"
 #include "mixedFvPatchField.H"
+#include "shapeModel.H"
+#include "mathematicalConstants.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+using Foam::constant::mathematical::pi;
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -60,10 +67,11 @@ Foam::diameterModels::sizeGroup::sizeGroup
         dimensionedScalar(name, dimless, readScalar(dict.lookup("value"))),
         velocityGroup.f().boundaryField().types()
     ),
+    dict_(dict),
     phase_(phase),
     velocityGroup_(velocityGroup),
-    d_("d", dimLength, dict),
-    x_("x", velocityGroup.formFactor()*pow3(d_)),
+    dSph_("dSph", dimLength, dict),
+    x_("x", pi/6.0*pow3(dSph_)),
     value_(readScalar(dict.lookup("value")))
 {
     // Adjust refValue at mixedFvPatchField boundaries
@@ -85,6 +93,8 @@ Foam::diameterModels::sizeGroup::sizeGroup
             f.refValue() = value_;
         }
     }
+
+    shapeModel_ = shapeModel::New(velocityGroup_.diameterProperties(), *this);
 }
 
 
@@ -101,6 +111,49 @@ Foam::diameterModels::sizeGroup::clone() const
 {
     notImplemented("sizeGroup::clone() const");
     return autoPtr<sizeGroup>(nullptr);
+}
+
+
+const Foam::autoPtr<Foam::label>& Foam::diameterModels::sizeGroup::i() const
+{
+    if (!i_.valid())
+    {
+        const populationBalanceModel& popBal =
+            this->mesh().lookupObject<populationBalanceModel>
+            (
+                velocityGroup_.popBalName()
+            );
+
+        forAll(popBal.sizeGroups(), j)
+        {
+            if (&popBal.sizeGroups()[j] == &*this)
+            {
+                i_.set(new label(j));
+            }
+        }
+    }
+
+    return i_;
+}
+
+
+const Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::sizeGroup::a() const
+{
+    return shapeModel_->a();
+}
+
+
+const Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::sizeGroup::d() const
+{
+    return shapeModel_->d();
+}
+
+
+void Foam::diameterModels::sizeGroup::correct()
+{
+    shapeModel_->correct();
 }
 
 

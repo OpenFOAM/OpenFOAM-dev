@@ -39,13 +39,6 @@ Foam::diameterModels::velocityGroup::f() const
 }
 
 
-inline const Foam::dimensionedScalar&
-Foam::diameterModels::velocityGroup::formFactor() const
-{
-    return formFactor_;
-}
-
-
 inline const Foam::PtrList<Foam::diameterModels::sizeGroup>&
 Foam::diameterModels::velocityGroup::sizeGroups() const
 {

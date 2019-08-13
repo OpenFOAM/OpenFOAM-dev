@@ -49,6 +49,7 @@ namespace coalescenceModels
 
 using Foam::constant::mathematical::pi;
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::diameterModels::coalescenceModels::PrinceBlanch::
@@ -102,7 +103,7 @@ addToCoalescenceRate
     const uniformDimensionedVectorField& g =
         popBal_.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
-    const dimensionedScalar rij(1.0/(1.0/fi.d() + 1.0/fj.d()));
+    const dimensionedScalar rij(1.0/(1.0/fi.dSph() + 1.0/fj.dSph()));
 
     const volScalarField collisionEfficiency
     (
@@ -122,16 +123,16 @@ addToCoalescenceRate
     {
         coalescenceRate +=
             (
-                C1_*pi*sqr(fi.d() + fj.d())
+                C1_*pi*sqr(fi.dSph() + fj.dSph())
                *cbrt(popBal_.continuousTurbulence().epsilon())
-               *sqrt(pow(fi.d(), 2.0/3.0) + pow(fj.d(), 2.0/3.0))
+               *sqrt(pow(fi.dSph(), 2.0/3.0) + pow(fj.dSph(), 2.0/3.0))
             )
            *collisionEfficiency;
     }
 
     if (buoyancy_)
     {
-        const dimensionedScalar Sij(pi/4.0*sqr(fi.d() + fj.d()));
+        const dimensionedScalar Sij(pi/4.0*sqr(fi.dSph() + fj.dSph()));
 
         coalescenceRate +=
             (
@@ -141,12 +142,14 @@ addToCoalescenceRate
                     sqrt
                     (
                         2.14*popBal_.sigmaWithContinuousPhase(fi.phase())
-                       /(continuousPhase.rho()*fi.d()) + 0.505*mag(g)*fi.d()
+                       /(continuousPhase.rho()*fi.dSph())
+                      + 0.505*mag(g)*fi.dSph()
                     )
                   - sqrt
                     (
                         2.14*popBal_.sigmaWithContinuousPhase(fi.phase())
-                       /(continuousPhase.rho()*fj.d()) + 0.505*mag(g)*fj.d()
+                       /(continuousPhase.rho()*fj.dSph())
+                      + 0.505*mag(g)*fj.dSph()
                     )
                 )
             )

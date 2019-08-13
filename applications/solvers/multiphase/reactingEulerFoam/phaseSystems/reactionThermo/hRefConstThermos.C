@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ License
 
 #include "hRefConstThermo.H"
 #include "eRefConstThermo.H"
+#include "janafThermo.H"
 
 #include "constTransport.H"
 
@@ -133,6 +134,19 @@ constTransport
         sensibleEnthalpy
     >
 > constRefRhoConstHThermoPhysics;
+
+typedef
+constTransport
+<
+    species::thermo
+    <
+        janafThermo
+        <
+            rhoConst<specie>
+        >,
+        sensibleInternalEnergy
+    >
+> constJanafRhoConstEThermoPhysics;
 
 
 // pureMixture, sensibleEnthalpy:
@@ -240,6 +254,15 @@ makeThermoPhysicsReactionThermos
     heRhoThermo,
     multiComponentMixture,
     constRefRhoConstEThermoPhysics
+);
+
+makeThermoPhysicsReactionThermos
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    multiComponentMixture,
+    constJanafRhoConstEThermoPhysics
 );
 
 

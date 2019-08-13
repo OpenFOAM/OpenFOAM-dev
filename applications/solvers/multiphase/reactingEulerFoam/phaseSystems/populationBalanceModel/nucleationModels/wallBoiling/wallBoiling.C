@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,13 +108,13 @@ void Foam::diameterModels::nucleationModels::wallBoiling::correct()
 
             const scalarField& dDep = alphatw.dDeparture();
 
-            if (min(dDep) < velGroup_.sizeGroups().first().d().value())
+            if (min(dDep) < velGroup_.sizeGroups().first().dSph().value())
             {
                 Warning
                     << "Minimum departure diameter " << min(dDep)
                     << " m outside of range ["
-                    << velGroup_.sizeGroups().first().d().value() << ", "
-                    << velGroup_.sizeGroups().last().d().value() << "] m"
+                    << velGroup_.sizeGroups().first().dSph().value() << ", "
+                    << velGroup_.sizeGroups().last().dSph().value() << "] m"
                     << " at patch " << alphatw.patch().name()
                     << endl
                     << "    The nucleation rate in populationBalance "
@@ -123,13 +123,13 @@ void Foam::diameterModels::nucleationModels::wallBoiling::correct()
                     << " suppress this warning."
                     << endl;
             }
-            else if (max(dDep) > velGroup_.sizeGroups().last().d().value())
+            else if (max(dDep) > velGroup_.sizeGroups().last().dSph().value())
             {
                 Warning
                     << "Maximum departure diameter " << max(dDep)
                     << " m outside of range ["
-                    << velGroup_.sizeGroups().first().d().value() << ", "
-                    << velGroup_.sizeGroups().last().d().value() << "] m"
+                    << velGroup_.sizeGroups().first().dSph().value() << ", "
+                    << velGroup_.sizeGroups().last().dSph().value() << "] m"
                     << " at patch " << alphatw.patch().name()
                     << endl
                     << "    The nucleation rate in populationBalance "
@@ -183,10 +183,10 @@ Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
                     const label faceCelli = faceCells[facei];
 
                     nucleationRate[faceCelli] +=
-                        popBal_.gamma
+                        popBal_.eta
                         (
                             i,
-                            velGroup_.formFactor()*pow3(dDep[facei]*unitLength)
+                            fi.x()/pow3(fi.dSph())*pow3(dDep[facei]*unitLength)
                         ).value()
                        *dmdt[facei]/rho[faceCelli]/fi.x().value();
                 }

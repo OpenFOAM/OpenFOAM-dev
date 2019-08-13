@@ -26,28 +26,32 @@ Class
 
 Description
     This class represents a single sizeGroup belonging to a velocityGroup.
-    The main property of a sizeGroup is its representative diameter. The
-    corresponding volScalarField f<number>.<phaseName>.<populationBalanceName>
+    The main property of a sizeGroup is its representative volume. The
+    corresponding volScalarField f'number'.'phaseName'.'populationBalanceName'
     gives the volume fraction of the sizeGroup such that all sizeGroup fractions
     over a velocityGroup must sum to unity. The field is either read from the
     startTime directory if present or constructed from a reference field called
-    f.<phaseName>.<populationBalanceName> where the boundary condition types
+    f.'phaseName'.'populationBalanceName' where the boundary condition types
     must be specified. All field and boundary condition values are reset to
-    match the "value" given in the sizeGroup subdictionary.
+    match the 'value' given in the sizeGroup subdictionary.
+
+    The corresponding physical diameter that is representative for the class is
+    computed by a separate shapeModel, specified in the velocityGroupCoeffs
+    dictionary.
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        d            | Representative diameter | yes         |
-        value        | Field and BC value      | yes         |
+        Property     | Description                | Required    | Default value
+        dSph         | Sphere equivalent diameter | yes         | none
+        value        | Field and BC value         | yes         | none
     \endtable
 
     Example
     \verbatim
     f1
     {
-        d            3e-3;
-        value        1.0;
+        ds      3e-3;
+        value   1.0;
     }
     \endverbatim
 
@@ -73,6 +77,8 @@ namespace Foam
 namespace diameterModels
 {
 
+class shapeModel;
+
 /*---------------------------------------------------------------------------*\
                           Class sizeGroup Declaration
 \*---------------------------------------------------------------------------*/
@@ -81,7 +87,11 @@ class sizeGroup
 :
     public volScalarField
 {
+private:
+
     // Private Data
+
+        dictionary dict_;
 
         //- Phase this  sizeGroup belongs to
         const phaseModel& phase_;
@@ -89,14 +99,21 @@ class sizeGroup
         //- VelocityGroup this sizeGroup belongs to
         const velocityGroup& velocityGroup_;
 
-        //- Representative diameter of the sizeGroup
-        const dimensionedScalar d_;
+        //- Sphere equivalent diameter of the sizeGroup
+        const dimensionedScalar dSph_;
 
         //- Representative volume of the sizeGroup
         const dimensionedScalar x_;
 
         //- Initial value and value at boundaries
         const scalar value_;
+
+        //- Label of this sizeGroup within the corresponding populationBalance
+        mutable autoPtr<label> i_;
+
+        //- Model for describing the representative shape of the elements in the
+        //  sizeGroup
+        autoPtr<shapeModel> shapeModel_;
 
 
 public:
@@ -158,19 +175,38 @@ public:
 
     // Member Functions
 
-        inline const word& keyword() const;
+        //- Return const-reference to the dictionary
+        inline const dictionary& dict() const;
 
         //- Return const-reference to the phase
-        inline const phaseModel&  phase() const;
+        inline const phaseModel& phase() const;
 
         //- Return const-reference to the velocityGroup
         inline const velocityGroup& VelocityGroup() const;
 
-        //- Return representative diameter of the sizeGroup
-        inline const dimensionedScalar& d() const;
+        //- Return representative spherical diameter of the sizeGroup
+        inline const dimensionedScalar& dSph() const;
 
         //- Return representative volume of the sizeGroup
         inline const dimensionedScalar& x() const;
+
+        //- Return reference to diameterModel of the phase
+        inline autoPtr<shapeModel>& shapeModelPtr();
+
+        //- Return const-reference to diameterModel of the phase
+        inline const autoPtr<shapeModel>& shapeModelPtr() const;
+
+        //- Return label of the sizeGroup within the population balance
+        const autoPtr<label>& i() const;
+
+        //- Return representative surface area of the sizeGroup
+        const tmp<volScalarField> a() const;
+
+        //- Return representative diameter of the sizeGroup
+        const tmp<volScalarField> d() const;
+
+        //- Correct secondary properties
+        void correct();
 };
 
 

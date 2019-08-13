@@ -178,12 +178,12 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
     (
         12.0*cf*popBal_.sigmaWithContinuousPhase(fi.phase())
        /(
-            beta_*continuousPhase.rho()*pow(fj.d(), 5.0/3.0)
+            beta_*continuousPhase.rho()*pow(fj.dSph(), 5.0/3.0)
            *pow(popBal_.continuousTurbulence().epsilon(), 2.0/3.0)
         )
     );
 
-    const volScalarField xiMin(minEddyRatio_*kolmogorovLengthScale_/fj.d());
+    const volScalarField xiMin(minEddyRatio_*kolmogorovLengthScale_/fj.dSph());
 
     const volScalarField tMin(b/pow(xiMin, 11.0/3.0));
 
@@ -204,7 +204,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
        *cbrt
         (
             popBal_.continuousTurbulence().epsilon()
-           /sqr(fj.d())
+           /sqr(fj.dSph())
         )
        *integral;
 }

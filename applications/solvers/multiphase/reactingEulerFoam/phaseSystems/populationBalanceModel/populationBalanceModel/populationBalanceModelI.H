@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,10 +84,52 @@ Foam::diameterModels::populationBalanceModel::sizeGroups() const
 }
 
 
+inline const Foam::volScalarField&
+Foam::diameterModels::populationBalanceModel::SuSp(const label i) const
+{
+    return SuSp_[i];
+}
+
+
 inline const Foam::diameterModels::populationBalanceModel::phasePairTable&
 Foam::diameterModels::populationBalanceModel::phasePairs() const
 {
     return phasePairs_;
+}
+
+
+inline const Foam::HashPtrTable<Foam::volScalarField>&
+Foam::diameterModels::populationBalanceModel::speciesDmdt
+(
+    const phasePairKey& pair
+) const
+{
+    return *speciesDmdt_[pair];
+}
+
+
+inline bool Foam::diameterModels::populationBalanceModel::isVelocityGroupPair
+(
+    const phasePair& pair
+) const
+{
+    if
+    (
+        isA<velocityGroup>(pair.phase1().dPtr()())
+        &&
+        isA<velocityGroup>(pair.phase2().dPtr()())
+    )
+    {
+        const velocityGroup& velGroup1 =
+            refCast<const velocityGroup>(pair.phase1().dPtr()());
+
+        const velocityGroup& velGroup2 =
+            refCast<const velocityGroup>(pair.phase2().dPtr()());
+
+        return velGroup1.popBalName() == velGroup2.popBalName();
+    }
+
+    return false;
 }
 
 

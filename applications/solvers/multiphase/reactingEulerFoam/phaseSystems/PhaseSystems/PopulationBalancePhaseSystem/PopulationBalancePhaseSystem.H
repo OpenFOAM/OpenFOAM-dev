@@ -65,16 +65,16 @@ protected:
 
     // Protected data
 
-        //- populationBalanceModels
+        //- Population balances
         PtrList<diameterModels::populationBalanceModel> populationBalances_;
 
-        //- Interfacial Mass transfer rate
+        //- Mass transfer rates
         pDmdtTable pDmdt_;
 
 
     // Protected member functions
 
-        //- Return the population balance mass transfer rate
+        //- Return the population balance induced mass transfer rate
         virtual tmp<volScalarField> pDmdt(const phasePairKey& key) const;
 
 
@@ -97,6 +97,9 @@ public:
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;
+
+        //- Return the heat transfer matrices
+        virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;

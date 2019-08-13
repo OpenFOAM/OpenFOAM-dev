@@ -89,13 +89,13 @@ addToCoalescenceRate
         max
         (
             sqrt(2.0)*cbrt(popBal_.continuousTurbulence().epsilon())
-           *sqrt(cbrt(sqr(fi.d())) + cbrt(sqr(fj.d()))),
+           *sqrt(cbrt(sqr(fi.dSph())) + cbrt(sqr(fj.dSph()))),
             mag(fi.phase().U() - fj.phase().U())
         )
     );
 
     coalescenceRate +=
-        pi/4.0*sqr(fi.d() + fj.d())*min(uChar, uCrit_)
+        pi/4.0*sqr(fi.dSph() + fj.dSph())*min(uChar, uCrit_)
        *exp
         (
           - sqr(cbrt(alphaMax_)

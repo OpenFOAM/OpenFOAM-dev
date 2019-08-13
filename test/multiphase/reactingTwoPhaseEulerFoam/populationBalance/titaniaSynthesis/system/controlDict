@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     reactingTwoPhaseEulerFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1.0;
+
+deltaT          1e-3;
+
+writeControl    runTime;
+
+writeInterval   1.0;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  9;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   8;
+
+runTimeModifiable yes;
+
+adjustTimeStep  no;
+
+maxCo           0.8;
+
+maxDeltaT       0.01;
+
+functions
+{
+    #includeFunc        probes
+
+    numberConcentration
+    {
+        type                sizeDistribution;
+        functionObjectLibs  ("libreactingEulerFoamFunctionObjects.so");
+
+        writeControl        outputTime;
+        writeInterval       1;
+        log                 yes;
+
+        regionType          all;
+
+        populationBalance   aggregates;
+        functionType        number;
+        coordinateType      projectedAreaDiameter;
+        densityFunction     yes;
+        normalize           yes;
+        geometric           yes;
+    }
+}
+
+
+// ************************************************************************* //

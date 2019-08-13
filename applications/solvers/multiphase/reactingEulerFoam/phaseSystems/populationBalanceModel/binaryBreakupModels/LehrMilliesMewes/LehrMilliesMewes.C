@@ -100,11 +100,11 @@ addToBinaryBreakupRate
     );
 
     binaryBreakupRate +=
-        0.5*pow(fj.d()/L, 5.0/3.0)
-       *exp(-sqrt(2.0)/pow3(fj.d()/L))
-       *6.0/pow(pi, 1.5)/pow3(fi.d()/L)
-       *exp(-9.0/4.0*sqr(log(pow(2.0, 0.4)*fi.d()/L)))
-       /max(1.0 + erf(1.5*log(pow(2.0, 1.0/15.0)*fj.d()/L)), SMALL)
+        0.5*pow(fj.dSph()/L, 5.0/3.0)
+       *exp(-sqrt(2.0)/pow3(fj.dSph()/L))
+       *6.0/pow(pi, 1.5)/pow3(fi.dSph()/L)
+       *exp(-9.0/4.0*sqr(log(pow(2.0, 0.4)*fi.dSph()/L)))
+       /max(1.0 + erf(1.5*log(pow(2.0, 1.0/15.0)*fj.dSph()/L)), SMALL)
        /(T*pow3(L));
 }
 

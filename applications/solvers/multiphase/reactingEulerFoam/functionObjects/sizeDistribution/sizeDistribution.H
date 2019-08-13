@@ -25,70 +25,63 @@ Class
     Foam::functionObjects::sizeDistribution
 
 Description
-    This function object calculates and outputs information about the size
-    distribution of the dispersed phase, such as the number density function or
-    its moments. It is designed to be used exclusively with the population
-    balance modeling functionality of the reactingEulerFoam solvers. It can be
-    applied to a specific cellZone or the entire domain.
+    This function object calculates and outputs volume-averaged information
+    about the size distribution of the dispersed phase, such as the number
+    density function or its moments. It is designed to be used exclusively with
+    the population balance modeling functionality of the reactingEulerFoam
+    solvers. It can be applied to a specific cellZone or the entire domain. The
+    function type determines whether the density function and its moments are
+    based on the number of dispersed phase elements in a size group or their
+    total volume.
 
     Example of function object specification:
     \verbatim
-    box.all.numberDensity.volume.bubbles
+    numberDensity
     {
-        type sizeDistribution;
+        type           sizeDistribution;
         libs ("libreactingEulerFoamFunctionObjects.so");
-        writeControl    outputTime;
-        writeInterval   1;
-        log             true;
         ...
-        functionType        numberDensity;
-        abszissaType        volume;
-        selectionMode       all;
-        populationBalanceModel   bubbles;
-        normalize           true;
+        populationBalance   bubbles;
+        regionType          cellZone;
+        name                zone0;
+        functionType        number;
+        coordinateType      volume;
+        densityFunction     yes;
     }
     \endverbatim
 
 Usage
     \table
-        Property        | Description           | Required    | Default value
-        type            | type name: sizeDistribution | yes |
-        functionType    | numberDensity, volumeDensity, numberConcentration,
-                          moments | yes |
-        abszissaType    | volume, diameter | yes |
-        momentOrder     | Write moment up to given order | no | 0
-        selectionMode | Evaluate for cellZone or entire mesh | yes |
-        cellZone      | Required if selectionMode is cellZone |   |
-        populationBalanceModel    | Respective populationBalanceModel | yes |
-        normalize | Normalization | no |
+        Property     | Description               | Required | Default value
+        type         | type name: sizeDistribution | yes    |
+        populationBalance | corresponding populationBalance | yes |
+        functionType | number/volume/moments/stdDev | yes   |
+        coordinateType | used for density/moment calculation | yes |
+        normalize    | normalize concentrations  | no       | no
+        densityFunction | compute densityFunction | no      | no
+        logBased     | use log of coordinate for density | no | no
+        maxOrder     | maxim order of moment output | no    | 3
     \endtable
-
-See also
-    Foam::diameterModels::populationBalanceModel
-    Foam::functionObject
-    Foam::functionObjects::fvMeshFunctionObject
-    Foam::functionObjects::logFiles
 
 SourceFiles
     sizeDistribution.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_sizeDistribution_H
-#define functionObjects_sizeDistribution_H
+#ifndef sizeDistribution_H
+#define sizeDistribution_H
 
 #include "fvMeshFunctionObject.H"
+#include "volRegion.H"
 #include "logFiles.H"
 #include "populationBalanceModel.H"
+#include "writeFile.H"
+#include "writer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class fvMesh;
-
 namespace functionObjects
 {
 
@@ -99,117 +92,115 @@ namespace functionObjects
 class sizeDistribution
 :
     public fvMeshFunctionObject,
+    public volRegion,
     public logFiles
 {
-
 public:
 
-    // Public data types
-
-        //- Selection mode type enumeration
-        enum selectionModeTypes
-        {
-            rtCellZone,
-            rtAll
-        };
-
-        //- Selection mode type names
-        static const NamedEnum<selectionModeTypes, 2> selectionModeTypeNames_;
-
+    // Public Data Types
 
         //- Function type enumeration
-        enum functionTypes
+        enum functionType
         {
-            ftNdf,
-            ftVdf,
-            ftNc,
-            ftMom
+            ftMoments,
+            ftStdDev,
+            ftNumber,
+            ftVolume
         };
 
-        //- Function type names
-        static const NamedEnum<functionTypes, 4> functionTypeNames_;
+        //- Ordinate type names
+        static const NamedEnum<functionType, 4> functionTypeNames_;
 
-
-        //- abszissa type enumeration
-        enum abszissaTypes
+        //- Coordinate type enumeration
+        enum coordinateType
         {
-            atDiameter,
-            atVolume,
+            ctVolume,
+            ctArea,
+            ctDiameter,
+            ctProjectedAreaDiameter
         };
 
-        //- Abszissa type names
-        static const NamedEnum<abszissaTypes, 2> abszissaTypeNames_;
+        //- Coordinate type names
+        static const NamedEnum<coordinateType, 4> coordinateTypeNames_;
 
 
 protected:
 
-    // Protected data
+    // Protected Data
 
-        //- Construction dictionary
-        dictionary dict_;
+        //- Reference to fvMesh
+        const fvMesh& mesh_;
 
-        //- Selection mode type
-        selectionModeTypes selectionModeType_;
+        //- File containing data for all functionTypes except moments
+        writeFile file_;
 
-        //- Name of selection
-        word selectionModeTypeName_;
+        //- Output formatter, set to raw
+        autoPtr<writer<scalar>> scalarFormatter_;
 
-        //- Function type
-        functionTypes functionType_;
-
-        //- Abszissa type
-        abszissaTypes abszissaType_;
-
-        //- Global number of cells
-        label nCells_;
-
-        //- Local list of cell IDs
-        labelList cellId_;
-
-        //- Total volume of the evaluated selection
-        scalar volume_;
-
-        //- Optionally write the volume of the sizeDistribution
-        bool writeVolume_;
-
-        //- PopulationBalance
+        //- Reference to populationBalanceModel
         const Foam::diameterModels::populationBalanceModel& popBal_;
 
-        //- Number concentrations
-        List<scalar> N_;
+        //- Function to evaluate
+        functionType functionType_;
 
-        //- Write moments up to specified order with respect to abszissaType
-        label momentOrder_;
+        //- Abscissa type
+        coordinateType coordinateType_;
 
-        //- Normalization switch
-        const Switch normalize_;
+        //- List of volume-averaged number concentations
+        scalarField N_;
 
-        //- Sum of number concentrations
-        scalar sumN_;
+        //- List of volume-averaged surface areas
+        scalarField a_;
 
-        //- Volumertic sum
-        scalar sumV_;
+        //- List of volume-averaged diameters
+        scalarField d_;
+
+        //- Normalize number/volume concentrations
+        Switch normalize_;
+
+        //- Determines whether density function is calculated
+        Switch densityFunction_;
+
+        //- Geometric standard deviation/density function
+        Switch geometric_;
+
+        //- Highest moment order
+        label maxOrder_;
+
+        //- Bins (respresentative volume/area/diameter)
+        pointField bins_;
+
+        //- Bin component used according to chosen coordinate type
+        label binCmpt_;
 
 
     // Protected Member Functions
 
-        //- Initialise, e.g. cell addressing
-        void initialise(const dictionary& dict);
-
-        //- Set cells to evaluate based on a cell zone
-        void setCellZoneCells();
-
-        //- Calculate and return volume of the evaluated cell zone
-        scalar volume() const;
-
-        //- Combine fields from all processor domains into single field
-        void combineFields(scalarField& field);
-
         //- Filter field according to cellIds
         tmp<scalarField> filterField(const scalarField& field) const;
 
-        //- Output file header information
+        //- Correct volume averages
+        void correctVolAverages();
+
+        //- Write moments
+        void writeMoments();
+
+        //- Write standard deviation
+        void writeStdDev();
+
+        //- Write distribution
+        void writeDistribution();
+
+        //- Output file header information for functionType moments
         virtual void writeFileHeader(const label i);
+
+        //- Output function for all functionType number/volume
+        void writeGraph
+        (
+            const coordSet& coords,
+            const word& functionTypeName,
+            const scalarField& values
+        );
 
 
 public:
@@ -228,6 +219,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        sizeDistribution(const sizeDistribution&) = delete;
+
 
     //- Destructor
     virtual ~sizeDistribution();
@@ -235,32 +229,23 @@ public:
 
     // Member Functions
 
-        //- Return the reference to the construction dictionary
-        const dictionary& dict() const
-        {
-            return dict_;
-        }
+        //- Read the sizeDistribution data
+        virtual bool read(const dictionary&);
 
-        //- Return the local list of cell IDs
-        const labelList& cellId() const
-        {
-            return cellId_;
-        }
-
-        //- Helper function to return the reference to the mesh
-        const fvMesh& mesh() const
-        {
-            return refCast<const fvMesh>(obr_);
-        }
-
-        //- Read from dictionary
-        virtual bool read(const dictionary& dict);
-
-        //- Execute
+        //- Execute, currently does nothing
         virtual bool execute();
 
-        //- Write
+        //- Execute at the final time-loop, currently does nothing
+        virtual bool end();
+
+        //- Calculate and write the size distribution
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sizeDistribution&) = delete;
 };
 
 

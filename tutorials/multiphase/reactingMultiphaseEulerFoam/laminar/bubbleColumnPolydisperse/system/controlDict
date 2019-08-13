@@ -104,20 +104,21 @@ functions
         );
     }
 
-    numberDensity.diameter.bubbles
+
+    numberDensity
     {
         type                sizeDistribution;
         functionObjectLibs  ("libreactingEulerFoamFunctionObjects.so");
 
-        writeControl        runTime;
-        writeInterval       10;
-        log                 yes;
+        writeControl        outputTime;
+        writeInterval       1;
 
-        functionType        numberDensity;
-        abszissaType        diameter;
-        selectionMode       cellZone;
-        cellZone            zone;
         populationBalance   bubbles;
+        regionType          cellZone;
+        name                zone;
+        functionType        number;
+        coordinateType      diameter;
+        densityFunction     yes;
     }
 }
 

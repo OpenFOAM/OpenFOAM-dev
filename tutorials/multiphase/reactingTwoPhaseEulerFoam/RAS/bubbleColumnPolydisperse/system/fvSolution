@@ -28,6 +28,7 @@ solvers
         nCorr                1;
         tolerance            1e-4;
         scale                true;
+        sourceUpdateInterval 1;
         solveOnFinalIterOnly true;
     }
 

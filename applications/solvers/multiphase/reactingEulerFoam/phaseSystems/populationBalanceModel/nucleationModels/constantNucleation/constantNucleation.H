@@ -57,8 +57,8 @@ class constantNucleation
 {
     // Private Data
 
-        //- Departure diameter
-        dimensionedScalar d_;
+        //- Nucleation diameter
+        dimensionedScalar dNuc_;
 
         //- Velocity group in which the nucleation occurs
         const velocityGroup& velGroup_;
@@ -84,9 +84,6 @@ public:
 
 
     // Member Functions
-
-        //- Correct diameter independent expressions
-        virtual void correct();
 
         //- Add to nucleationRate
         virtual void addToNucleationRate

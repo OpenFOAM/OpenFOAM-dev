@@ -67,10 +67,33 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::dsm() const
     {
         const sizeGroup& fi = sizeGroups_[i];
 
-        invDsm += fi/fi.d();
+        invDsm += fi.a()*fi/fi.x();
     }
 
-    return 1.0/tInvDsm;
+    return 6.0/tInvDsm;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::N() const
+{
+    tmp<volScalarField> tN
+    (
+        volScalarField::New
+        (
+            "N",
+            phase_.mesh(),
+            dimensionedScalar(inv(dimVolume), 0)
+        )
+    );
+
+    volScalarField& N = tN.ref();
+
+    forAll(sizeGroups_, i)
+    {
+        N += phase_*sizeGroups_[i]/sizeGroups_[i].x();
+    }
+
+    return tN;
 }
 
 
@@ -167,7 +190,6 @@ Foam::diameterModels::velocityGroup::velocityGroup
         ),
         phase.mesh()
     ),
-    formFactor_("formFactor", dimless, diameterProperties),
     sizeGroups_
     (
         diameterProperties.lookup("sizeGroups"),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,10 +52,13 @@ class driftModel
 {
 protected:
 
-    // Protected data
+    // Protected Data
 
         //- Reference to the populationBalanceModel
         const populationBalanceModel& popBal_;
+
+        //- Model dictionary
+        const dictionary dict_;
 
 
 public:
@@ -137,6 +140,12 @@ public:
         const populationBalanceModel& popBal() const
         {
             return popBal_;
+        }
+
+        //- Return reference to model dictionary
+        const dictionary& dict() const
+        {
+            return dict_;
         }
 
         //- Correct diameter independent expressions

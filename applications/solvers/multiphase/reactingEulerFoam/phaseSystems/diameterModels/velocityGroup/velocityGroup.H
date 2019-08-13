@@ -36,7 +36,6 @@ Usage
     \table
         Property          | Description
         populationBalance | Name of the corresponding populationBalance
-        formFactor        | Form factor for converting diameter into volume
         sizeGroups        | List of sizeGroups
     \endtable
 
@@ -47,16 +46,16 @@ Usage
     {
         populationBalance    bubbles;
 
-        formFactor      0.5235987756;
+        shapeModel           constant;
 
         sizeGroups
         (
-            f0{d  1.00e-3; value 0;}
-            f1{d  1.08e-3; value 0;}
-            f2{d  1.16e-3; value 0.25;}
-            f3{d  1.25e-3; value 0.5;}
-            f4{d  1.36e-3; value 0.25;}
-            f5{d  1.46e-3; value 0;}
+            f0{dSph  1.00e-3; value 0;}
+            f1{dSph  1.08e-3; value 0;}
+            f2{dSph  1.16e-3; value 0.25;}
+            f3{dSph  1.25e-3; value 0.5;}
+            f4{dSph  1.36e-3; value 0.25;}
+            f5{dSph  1.46e-3; value 0;}
             ...
         );
     }
@@ -85,6 +84,7 @@ namespace Foam
 namespace diameterModels
 {
 
+// Forward declaration of classes
 class sizeGroup;
 
 /*---------------------------------------------------------------------------*\
@@ -104,13 +104,10 @@ class velocityGroup
         //  the sizeGroup fields are derived
         volScalarField f_;
 
-        //- Form factor relating diameter and volume
-        dimensionedScalar formFactor_;
-
         //- sizeGroups belonging to this velocityGroup
         PtrList<sizeGroup> sizeGroups_;
 
-        //- Number-based Sauter-mean diameter of the phase
+        //- Sauter-mean diameter of the phase
         volScalarField d_;
 
         //- Multivariate convection scheme
@@ -128,6 +125,8 @@ class velocityGroup
         tmp<volScalarField> dsm() const;
 
         tmp<volScalarField> fSum() const;
+
+        tmp<volScalarField> N() const;
 
         void scale();
 
@@ -161,9 +160,6 @@ public:
 
         //- Return reference field for sizeGroup's
         inline const volScalarField& f() const;
-
-        //- Return the form factor
-        inline const dimensionedScalar& formFactor() const;
 
         //- Return sizeGroups belonging to this velocityGroup
         inline const PtrList<sizeGroup>& sizeGroups() const;

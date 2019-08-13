@@ -82,16 +82,16 @@ Usage
         {
             populationBalance    bubbles;
 
-            formFactor      0.5235987756;
+            shapeModel           constant;
 
             sizeGroups
             (
-                f0{d  1.00e-3; value 0;}
-                f1{d  1.08e-3; value 0;}
-                f2{d  1.16e-3; value 0.25;}
-                f3{d  1.25e-3; value 0.5;}
-                f4{d  1.36e-3; value 0.25;}
-                f5{d  1.46e-3; value 0;}
+                f0{dSph  1.00e-3; value 0;}
+                f1{dSph  1.08e-3; value 0;}
+                f2{dSph  1.16e-3; value 0.25;}
+                f3{dSph  1.25e-3; value 0.5;}
+                f4{dSph  1.36e-3; value 0.25;}
+                f5{dSph  1.46e-3; value 0;}
                 ...
             );
         }
@@ -153,6 +153,7 @@ SourceFiles
 #include "phasePair.H"
 #include "pimpleControl.H"
 #include "phaseCompressibleTurbulenceModelFwd.H"
+#include "HashPtrTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -178,11 +179,30 @@ class populationBalanceModel
 :
     public regIOobject
 {
+public:
+
+    // Public Typedefs
+
+        typedef HashPtrTable
+        <
+            HashPtrTable<volScalarField>,
+            phasePairKey,
+            phasePairKey::hash
+        >
+        speciesDmdtTable;
+
+
+private:
+
     // Private Typedefs
 
         typedef
             HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
             phasePairTable;
+
+        typedef
+            HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
+            pDmdtTable;
 
 
     // Private Data
@@ -190,8 +210,8 @@ class populationBalanceModel
         //- Reference to the phaseSystem
         const phaseSystem& fluid_;
 
-        //- Interfacial Mass transfer rate between velocityGroups
-        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>& pDmdt_;
+        //- Interfacial mass transfer rates
+        pDmdtTable& pDmdt_;
 
         //- Reference to the mesh
         const fvMesh& mesh_;
@@ -216,6 +236,9 @@ class populationBalanceModel
 
         //- List of unordered phasePairs in this populationBalance
         phasePairTable phasePairs_;
+
+        //- Table of species dmdt terms involving this pobulationBalance
+        speciesDmdtTable speciesDmdt_;
 
         //- sizeGroup boundaries
         PtrList<dimensionedScalar> v_;
@@ -305,9 +328,9 @@ class populationBalanceModel
 
         void deathByBinaryBreakup(const label j, const label i);
 
-        void drift(const label i);
+        void drift(const label i, driftModel& model);
 
-        void nucleation(const label i);
+        void nucleation(const label i, nucleationModel& model);
 
         void sources();
 
@@ -330,8 +353,9 @@ class populationBalanceModel
 
 public:
 
-    friend class sizeGroup;
-    friend class velocityGroup;
+    //- Runtime type information
+    TypeName("populationBalanceModel");
+
 
     // Constructor
 
@@ -408,8 +432,21 @@ public:
         //- Return the sizeGroups belonging to this populationBalance
         inline const UPtrList<sizeGroup>& sizeGroups() const;
 
+        //- Return semi-implicit source terms
+        inline const volScalarField& SuSp(const label i) const;
+
         //- Return list of unordered phasePairs in this populationBalance
         inline const phasePairTable& phasePairs() const;
+
+        //- Return the list of species specific source terms for the given pair
+        inline const HashPtrTable<volScalarField>& speciesDmdt
+        (
+            const phasePairKey& pair
+        ) const;
+
+        //- Returns true if both phases are velocity groups and
+        //  belong to this populationBalance
+        inline bool isVelocityGroupPair(const phasePair& pair) const;
 
         //- Return the sizeGroup boundaries
         inline const PtrList<dimensionedScalar>& v() const;
@@ -421,7 +458,7 @@ public:
         inline const volVectorField& U() const;
 
         //- Return allocation coefficient
-        const dimensionedScalar gamma
+        const dimensionedScalar eta
         (
             const label i,
             const dimensionedScalar& v
