@@ -237,7 +237,7 @@ db/IOobjects/GlobalIOField/GlobalIOFields.C
 
 
 IOobject = db/IOobject
-$(IOobject)/IOobject.C
+/* $(IOobject)/IOobject.C in global.Cver */
 $(IOobject)/IOobjectIO.C
 $(IOobject)/IOobjectReadHeader.C
 $(IOobject)/IOobjectWriteHeader.C
