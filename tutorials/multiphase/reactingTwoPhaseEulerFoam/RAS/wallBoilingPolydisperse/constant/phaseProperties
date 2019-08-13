@@ -184,7 +184,7 @@ lift
         {
             type    cosine;
             Cd      1.0;
-            y0      0.0002;
+            zeroWallDist 0.0002;
         }
     }
 );
