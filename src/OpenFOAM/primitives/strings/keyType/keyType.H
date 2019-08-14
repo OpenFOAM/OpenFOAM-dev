@@ -119,6 +119,7 @@ public:
         //  Optionally force a literal match only
         bool match(const std::string&, bool literalMatch=false) const;
 
+
     // Member Operators
 
         // Assignment

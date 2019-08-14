@@ -57,6 +57,12 @@ bool Foam::entry::getKeyword(keyType& keyword, token& keywordToken, Istream& is)
         keyword = keywordToken.wordToken();
         return true;
     }
+    else if (keywordToken.isVariable())
+    {
+        // Disable wildcards for variables
+        keyword = keyType(keywordToken.stringToken(), false);
+        return true;
+    }
     else if (keywordToken.isString())
     {
         // Enable wildcards

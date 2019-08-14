@@ -27,7 +27,6 @@ License
 #include "IOobject.H"
 #include "inputSyntaxEntry.H"
 #include "inputModeEntry.H"
-#include "regExp.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
