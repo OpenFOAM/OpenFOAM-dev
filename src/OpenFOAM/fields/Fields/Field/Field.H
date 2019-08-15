@@ -145,7 +145,7 @@ public:
         //- Copy constructor or re-use as specified.
         Field(Field<Type>&, bool reuse);
 
-        //- Move Constructor transferring the Field contents
+        //- Move constructor transferring the Field contents
         Field(Field<Type>&&);
 
         //- Copy constructor of tmp<Field>

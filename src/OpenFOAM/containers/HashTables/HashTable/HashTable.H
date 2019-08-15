@@ -209,7 +209,7 @@ public:
         //- Copy constructor
         HashTable(const HashTable<T, Key, Hash>&);
 
-        //- More Constructor
+        //- More constructor
         HashTable(HashTable<T, Key, Hash>&&);
 
         //- Construct from an initializer list
