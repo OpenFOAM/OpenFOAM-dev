@@ -63,16 +63,17 @@ class ISstream
 
         char nextValid();
 
-        void readWordToken(token&);
-
-    // Private Member Functions
-
-
         //- Read a verbatim string (excluding block delimiters).
         Istream& readVerbatim(string&);
 
-        //- Read a variable name (includes '{')
+        //- Read a variable name
         Istream& readVariable(string&);
+
+        //- Read a work token
+        void readWordToken(token&);
+
+        //- Read a variable token
+        void readVariableToken(token&);
 
 
 public:

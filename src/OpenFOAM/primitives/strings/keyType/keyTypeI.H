@@ -27,53 +27,49 @@ License
 
 inline Foam::keyType::keyType()
 :
-    word(),
+    variable(),
     isPattern_(false)
 {}
 
 
-inline Foam::keyType::keyType(const keyType& s)
+inline Foam::keyType::keyType(const keyType& k)
 :
-    word(s, false),
-    isPattern_(s.isPattern())
+    variable(k),
+    isPattern_(k.isPattern())
 {}
 
 
-inline Foam::keyType::keyType(const word& s)
+inline Foam::keyType::keyType(const word& w)
 :
-    word(s, false),
+    variable(w),
     isPattern_(false)
 {}
 
 
 inline Foam::keyType::keyType(const variable& v)
 :
-    word(v, false),
+    variable(v),
     isPattern_(false)
 {}
 
 
 inline Foam::keyType::keyType(const string& s)
 :
-    word(s, false),
+    variable(s, false),
     isPattern_(true)
 {}
 
 
 inline Foam::keyType::keyType(const char* s)
 :
-    word(s, false),
+    variable(s, false),
     isPattern_(false)
 {}
 
 
-inline Foam::keyType::keyType
-(
-    const std::string& s,
-    const bool isPattern
-)
+inline Foam::keyType::keyType(const std::string& s, const bool isPattern)
 :
-    word(s, false),
+    variable(s, false),
     isPattern_(isPattern)
 {}
 
@@ -88,25 +84,23 @@ inline bool Foam::keyType::isPattern() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline void Foam::keyType::operator=(const keyType& s)
+inline void Foam::keyType::operator=(const keyType& k)
 {
-    // Bypass checking
-    string::operator=(s);
-    isPattern_ = s.isPattern_;
-}
-
-
-inline void Foam::keyType::operator=(const word& s)
-{
-    word::operator=(s);
-    isPattern_ = false;
+    variable::operator=(k);
+    isPattern_ = k.isPattern_;
 }
 
 
 inline void Foam::keyType::operator=(const variable& v)
 {
-    // Bypass checking
-    string::operator=(v);
+    variable::operator=(v);
+    isPattern_ = false;
+}
+
+
+inline void Foam::keyType::operator=(const word& w)
+{
+    variable::operator=(w);
     isPattern_ = false;
 }
 

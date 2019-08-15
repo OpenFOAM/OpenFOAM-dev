@@ -64,7 +64,7 @@ Ostream& operator<<(Ostream&, const keyType&);
 
 class keyType
 :
-    public word
+    public variable
 {
     // Private Data
 
@@ -94,11 +94,11 @@ public:
         //- Copy constructor
         inline keyType(const keyType&);
 
-        //- Copy constructor of word. Not treated as a regular expression
-        inline keyType(const word&);
-
         //- Copy constructor of variable. Not treated as a regular expression
         inline keyType(const variable&);
+
+        //- Copy constructor of word. Not treated as a regular expression
+        inline keyType(const word&);
 
         //- Copy constructor of string. Treat as regular expression.
         inline keyType(const string&);
@@ -132,11 +132,11 @@ public:
             //- Assignment operator
             inline void operator=(const keyType&);
 
-            //- Assign as word, not as non regular expression
-            inline void operator=(const word&);
-
             //- Assign as variable, not as non regular expression
             inline void operator=(const variable&);
+
+            //- Assign as word, not as non regular expression
+            inline void operator=(const word&);
 
             //- Assign as regular expression
             inline void operator=(const string&);
