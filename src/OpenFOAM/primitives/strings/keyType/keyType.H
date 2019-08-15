@@ -38,7 +38,7 @@ SourceFiles
 #ifndef keyType_H
 #define keyType_H
 
-#include "word.H"
+#include "variable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,10 +71,12 @@ class keyType
         //- Is the keyType a pattern (regular expression)
         bool isPattern_;
 
+
     // Private Member Functions
 
         //- Disallow assignments where we cannot determine string/word type
         void operator=(const std::string&);
+
 
 public:
 
@@ -94,6 +96,9 @@ public:
 
         //- Copy constructor of word. Not treated as a regular expression
         inline keyType(const word&);
+
+        //- Copy constructor of variable. Not treated as a regular expression
+        inline keyType(const variable&);
 
         //- Copy constructor of string. Treat as regular expression.
         inline keyType(const string&);
@@ -129,6 +134,9 @@ public:
 
             //- Assign as word, not as non regular expression
             inline void operator=(const word&);
+
+            //- Assign as variable, not as non regular expression
+            inline void operator=(const variable&);
 
             //- Assign as regular expression
             inline void operator=(const string&);

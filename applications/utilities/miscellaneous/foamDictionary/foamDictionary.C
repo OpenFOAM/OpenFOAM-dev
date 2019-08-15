@@ -450,7 +450,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        dictPtr = new dictionary;
+        dictPtr = new dictionary(dictPath);
         dictFormat = readDict(*dictPtr, dictPath);
     }
 

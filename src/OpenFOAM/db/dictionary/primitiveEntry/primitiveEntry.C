@@ -49,6 +49,7 @@ bool Foam::primitiveEntry::expandVariable
     {
         // Recursive substitution mode. Replace between {} with expansion.
         string s(w(2, w.size()-3));
+
         // Substitute dictionary and environment variables. Do not allow
         // empty substitutions.
         stringOps::inplaceExpand(s, dict, true, false);

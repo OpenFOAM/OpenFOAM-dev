@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,11 @@ inline void Foam::token::clear()
     {
         delete wordTokenPtr_;
     }
-    else if (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
+    else if (type_ == VARIABLE)
+    {
+        delete variableTokenPtr_;
+    }
+    else if (type_ == STRING || type_ == VERBATIMSTRING)
     {
         delete stringTokenPtr_;
     }
@@ -84,8 +88,11 @@ inline Foam::token::token(const token& t)
             wordTokenPtr_ = new word(*t.wordTokenPtr_);
         break;
 
-        case STRING:
         case VARIABLE:
+            variableTokenPtr_ = new variable(*t.variableTokenPtr_);
+        break;
+
+        case STRING:
         case VERBATIMSTRING:
             stringTokenPtr_ = new string(*t.stringTokenPtr_);
         break;
@@ -250,14 +257,27 @@ inline bool Foam::token::isVariable() const
     return (type_ == VARIABLE);
 }
 
+inline const Foam::variable& Foam::token::variableToken() const
+{
+    if (type_ == VARIABLE)
+    {
+        return *variableTokenPtr_;
+    }
+    else
+    {
+        parseError(variable::typeName);
+        return variable::null;
+    }
+}
+
 inline bool Foam::token::isString() const
 {
-    return (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING);
+    return (type_ == STRING || type_ == VERBATIMSTRING);
 }
 
 inline const Foam::string& Foam::token::stringToken() const
 {
-    if (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
+    if (type_ == STRING || type_ == VERBATIMSTRING)
     {
         return *stringTokenPtr_;
     }
@@ -453,8 +473,11 @@ inline void Foam::token::operator=(const token& t)
             wordTokenPtr_ = new word(*t.wordTokenPtr_);
         break;
 
-        case STRING:
         case VARIABLE:
+            variableTokenPtr_ = new variable(*t.variableTokenPtr_);
+        break;
+
+        case STRING:
         case VERBATIMSTRING:
             stringTokenPtr_ = new string(*t.stringTokenPtr_);
         break;
@@ -505,6 +528,18 @@ inline void Foam::token::operator=(word* wPtr)
 inline void Foam::token::operator=(const word& w)
 {
     operator=(new word(w));
+}
+
+inline void Foam::token::operator=(variable* vPtr)
+{
+    clear();
+    type_ = VARIABLE;
+    variableTokenPtr_ = vPtr;
+}
+
+inline void Foam::token::operator=(const variable& v)
+{
+    operator=(new variable(v));
 }
 
 inline void Foam::token::operator=(string* sPtr)
@@ -573,8 +608,10 @@ inline bool Foam::token::operator==(const token& t) const
         case WORD:
             return *wordTokenPtr_ == *t.wordTokenPtr_;
 
-        case STRING:
         case VARIABLE:
+            return *variableTokenPtr_ == *t.variableTokenPtr_;
+
+        case STRING:
         case VERBATIMSTRING:
             return *stringTokenPtr_ == *t.stringTokenPtr_;
 
@@ -614,11 +651,16 @@ inline bool Foam::token::operator==(const word& w) const
     return (type_ == WORD && wordToken() == w);
 }
 
+inline bool Foam::token::operator==(const variable& v) const
+{
+    return (type_ == VARIABLE && variableToken() == v);
+}
+
 inline bool Foam::token::operator==(const string& s) const
 {
     return
     (
-        (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
+        (type_ == STRING || type_ == VERBATIMSTRING)
      && stringToken() == s
     );
 }

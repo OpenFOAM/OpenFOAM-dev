@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,13 @@ inline Foam::keyType::keyType(const keyType& s)
 inline Foam::keyType::keyType(const word& s)
 :
     word(s, false),
+    isPattern_(false)
+{}
+
+
+inline Foam::keyType::keyType(const variable& v)
+:
+    word(v, false),
     isPattern_(false)
 {}
 
@@ -92,6 +99,14 @@ inline void Foam::keyType::operator=(const keyType& s)
 inline void Foam::keyType::operator=(const word& s)
 {
     word::operator=(s);
+    isPattern_ = false;
+}
+
+
+inline void Foam::keyType::operator=(const variable& v)
+{
+    // Bypass checking
+    string::operator=(v);
     isPattern_ = false;
 }
 

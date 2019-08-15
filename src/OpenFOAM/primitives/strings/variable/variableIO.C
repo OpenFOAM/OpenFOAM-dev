@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "word.H"
+#include "variable.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::word::word(Istream& is)
+Foam::variable::variable(Istream& is)
 :
-    string()
+    word()
 {
     is >> *this;
 }
 
 
-Foam::Istream& Foam::operator>>(Istream& is, word& w)
+Foam::Istream& Foam::operator>>(Istream& is, variable& v)
 {
     token t(is);
 
@@ -46,18 +46,22 @@ Foam::Istream& Foam::operator>>(Istream& is, word& w)
         return is;
     }
 
-    if (t.isWord())
+    if (t.isVariable())
     {
-        w = t.wordToken();
+        v = t.variableToken();
+    }
+    else if (t.isWord())
+    {
+        v = t.wordToken();
     }
     else if (t.isString())
     {
         // Convert string to word stripping invalid characters
-        w = t.stringToken();
-        string::stripInvalid<word>(w);
+        v = t.stringToken();
+        string::stripInvalid<variable>(v);
 
         // flag empty strings and bad chars as an error
-        if (w.empty() || w.size() != t.stringToken().size())
+        if (v.empty() || v.size() != t.stringToken().size())
         {
             is.setBad();
             FatalIOErrorInFunction(is)
@@ -86,10 +90,10 @@ Foam::Istream& Foam::operator>>(Istream& is, word& w)
 }
 
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const word& w)
+Foam::Ostream& Foam::operator<<(Ostream& os, const variable& w)
 {
     os.write(w);
-    os.check("Ostream& operator<<(Ostream&, const word&)");
+    os.check("Ostream& operator<<(Ostream&, const variable&)");
     return os;
 }
 

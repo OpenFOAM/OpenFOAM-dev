@@ -46,10 +46,7 @@ void Foam::primitiveEntry::append
         (
             disableFunctionEntries
          || w.size() == 1
-         || (
-                !(w[0] == '$' && expandVariable(w, dict))
-             && !(w[0] == '#' && expandFunction(w, dict, is))
-            )
+         || !(w[0] == '#' && expandFunction(w, dict, is))
         )
         {
             newElmt(tokenIndex()++) = currToken;
@@ -57,17 +54,13 @@ void Foam::primitiveEntry::append
     }
     else if (currToken.isVariable())
     {
-        const string& w = currToken.stringToken();
+        const variable& v = currToken.variableToken();
 
         if
         (
             disableFunctionEntries
-         || w.size() <= 3
-         || !(
-                w[0] == '$'
-             && w[1] == token::BEGIN_BLOCK
-             && expandVariable(w, dict)
-            )
+         || v.size() == 1
+         || !(v[0] == '$' && expandVariable(v, dict))
         )
         {
             newElmt(tokenIndex()++) = currToken;

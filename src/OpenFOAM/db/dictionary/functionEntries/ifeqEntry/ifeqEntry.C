@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,43 +73,31 @@ void Foam::functionEntries::ifeqEntry::readToken(token& t, Istream& is)
 Foam::token Foam::functionEntries::ifeqEntry::expand
 (
     const dictionary& dict,
-    const string& keyword,
+    const variable& var,
     const token& t
 )
 {
-    if (keyword[0] == '$')
-    {
-        word varName = keyword(1, keyword.size()-1);
+    word varName = var(1, var.size()-1);
 
-        // lookup the variable name in the given dictionary
-        const entry* ePtr = dict.lookupScopedEntryPtr
-        (
-            varName,
-            true,
-            true
-        );
-        if (ePtr)
-        {
-            return token(ePtr->stream());
-        }
-        else
-        {
-            // String expansion. Allow unset variables
-            string expanded(keyword);
-            stringOps::inplaceExpand(expanded, dict, true, true);
-
-            // Re-form as a string token so we can compare to string
-            return token(expanded, t.lineNumber());
-        }
-    }
-    else if (!t.isString())
+    // lookup the variable name in the given dictionary
+    const entry* ePtr = dict.lookupScopedEntryPtr
+    (
+        varName,
+        true,
+        true
+    );
+    if (ePtr)
     {
-        // Re-form as a string token so we can compare to string
-        return token(keyword, t.lineNumber());
+        return token(ePtr->stream());
     }
     else
     {
-        return t;
+        // String expansion. Allow unset variables
+        string expanded(var);
+        stringOps::inplaceExpand(expanded, dict, true, true);
+
+        // Re-form as a string token so we can compare to string
+        return token(expanded, t.lineNumber());
     }
 }
 
@@ -122,15 +110,12 @@ Foam::token Foam::functionEntries::ifeqEntry::expand
 {
     if (t.isWord())
     {
-        return expand(dict, t.wordToken(), t);
+        // Re-form as a string token so we can compare to string
+        return string(t.wordToken());
     }
     else if (t.isVariable())
     {
-        return expand(dict, t.stringToken(), t);
-    }
-    else if (t.isString())
-    {
-        return expand(dict, t.stringToken(), t);
+        return expand(dict, t.variableToken(), t);
     }
     else
     {

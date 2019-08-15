@@ -41,6 +41,7 @@ SourceFiles
 #include "uLabel.H"
 #include "scalar.H"
 #include "word.H"
+#include "variable.H"
 #include "InfoProxy.H"
 #include "refCount.H"
 #include "typeInfo.H"
@@ -246,6 +247,7 @@ private:
         {
             punctuationToken punctuationToken_;
             word* wordTokenPtr_;
+            variable* variableTokenPtr_;
             string* stringTokenPtr_;
             label labelToken_;
             floatScalar floatScalarToken_;
@@ -329,6 +331,7 @@ public:
             inline const word& wordToken() const;
 
             inline bool isVariable() const;
+            inline const variable& variableToken() const;
 
             inline bool isString() const;
             inline const string& stringToken() const;
@@ -386,6 +389,9 @@ public:
             inline void operator=(word*);
             inline void operator=(const word&);
 
+            inline void operator=(variable*);
+            inline void operator=(const variable&);
+
             inline void operator=(string*);
             inline void operator=(const string&);
 
@@ -402,6 +408,7 @@ public:
             inline bool operator==(const token&) const;
             inline bool operator==(const punctuationToken) const;
             inline bool operator==(const word&) const;
+            inline bool operator==(const variable&) const;
             inline bool operator==(const string&) const;
             inline bool operator==(const label) const;
             inline bool operator==(const floatScalar) const;
@@ -414,6 +421,7 @@ public:
             inline bool operator!=(const token&) const;
             inline bool operator!=(const punctuationToken) const;
             inline bool operator!=(const word&) const;
+            inline bool operator!=(const variable&) const;
             inline bool operator!=(const string&) const;
             inline bool operator!=(const label) const;
             inline bool operator!=(const floatScalar) const;

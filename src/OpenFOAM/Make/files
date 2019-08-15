@@ -108,6 +108,8 @@ $(strings)/word/wordIO.C
 $(strings)/word/wordIOList.C
 $(strings)/fileName/fileName.C
 $(strings)/fileName/fileNameIO.C
+$(strings)/variable/variable.C
+$(strings)/variable/variableIO.C
 $(strings)/keyType/keyType.C
 $(strings)/wordRe/wordRe.C
 $(strings)/lists/hashedWordList.C
@@ -237,13 +239,13 @@ db/IOobjects/GlobalIOField/GlobalIOFields.C
 
 
 IOobject = db/IOobject
-/* $(IOobject)/IOobject.C in global.Cver */
+$(IOobject)/IOobject.C
 $(IOobject)/IOobjectIO.C
 $(IOobject)/IOobjectReadHeader.C
 $(IOobject)/IOobjectWriteHeader.C
 
 regIOobject = db/regIOobject
-/* $(regIOobject)/regIOobject.C in global.Cver */
+$(regIOobject)/regIOobject.C
 $(regIOobject)/regIOobjectRead.C
 $(regIOobject)/regIOobjectWrite.C
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,14 +27,14 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-inline void Foam::word::stripInvalid()
+inline void Foam::variable::stripInvalid()
 {
     // skip stripping unless debug is active to avoid
     // costly operations
-    if (debug && string::stripInvalid<word>(*this))
+    if (debug && string::stripInvalid<variable>(*this))
     {
         std::cerr
-            << "word::stripInvalid() called for word "
+            << "variable::stripInvalid() called for variable "
             << this->c_str() << std::endl;
 
         if (debug > 1)
@@ -50,21 +50,27 @@ inline void Foam::word::stripInvalid()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline Foam::word::word(const word& w)
+inline Foam::variable::variable()
 :
-    string(w)
+    word()
 {}
 
 
-inline Foam::word::word()
+inline Foam::variable::variable(const variable& v)
 :
-    string()
+    word(v)
 {}
 
 
-inline Foam::word::word(const string& s, const bool doStripInvalid)
+inline Foam::variable::variable(const word& w)
 :
-    string(s)
+    word(w)
+{}
+
+
+inline Foam::variable::variable(const string& s, const bool doStripInvalid)
+:
+    word(s)
 {
     if (doStripInvalid)
     {
@@ -73,9 +79,9 @@ inline Foam::word::word(const string& s, const bool doStripInvalid)
 }
 
 
-inline Foam::word::word(const std::string& s, const bool doStripInvalid)
+inline Foam::variable::variable(const std::string& s, const bool doStripInvalid)
 :
-    string(s)
+    word(s)
 {
     if (doStripInvalid)
     {
@@ -84,24 +90,9 @@ inline Foam::word::word(const std::string& s, const bool doStripInvalid)
 }
 
 
-inline Foam::word::word(const char* s, const bool doStripInvalid)
+inline Foam::variable::variable(const char* s, const bool doStripInvalid)
 :
-    string(s)
-{
-    if (doStripInvalid)
-    {
-        stripInvalid();
-    }
-}
-
-inline Foam::word::word
-(
-    const char* s,
-    const size_type n,
-    const bool doStripInvalid
-)
-:
-    string(s, n)
+    word(s)
 {
     if (doStripInvalid)
     {
@@ -112,15 +103,13 @@ inline Foam::word::word
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline bool Foam::word::valid(char c)
+inline bool Foam::variable::valid(char c)
 {
     return
     (
         !isspace(c)
      && c != '"'   // string quote
      && c != '\''  // string quote
-     && c != '/'   // path separator
-     && c != '$'   // variable indicator
      && c != ';'   // end statement
      && c != '{'   // beg subdict
      && c != '}'   // end subdict
@@ -130,48 +119,36 @@ inline bool Foam::word::valid(char c)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline void Foam::word::operator=(const word& q)
+inline void Foam::variable::operator=(const variable& s)
 {
-    string::operator=(q);
+    string::operator=(s);
 }
 
 
-inline void Foam::word::operator=(const string& q)
+inline void Foam::variable::operator=(const word& s)
 {
-    string::operator=(q);
+    string::operator=(s);
+}
+
+
+inline void Foam::variable::operator=(const string& s)
+{
+    string::operator=(s);
     stripInvalid();
 }
 
 
-inline void Foam::word::operator=(const std::string& q)
+inline void Foam::variable::operator=(const std::string& s)
 {
-    string::operator=(q);
+    string::operator=(s);
     stripInvalid();
 }
 
 
-inline void Foam::word::operator=(const char* q)
+inline void Foam::variable::operator=(const char* s)
 {
-    string::operator=(q);
+    string::operator=(s);
     stripInvalid();
-}
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
-
-inline Foam::word Foam::operator&(const word& a, const word& b)
-{
-    if (b.size())
-    {
-        string ub = b;
-        ub.string::operator[](0) = char(toupper(ub.string::operator[](0)));
-
-        return a + ub;
-    }
-    else
-    {
-        return a;
-    }
 }
 
 

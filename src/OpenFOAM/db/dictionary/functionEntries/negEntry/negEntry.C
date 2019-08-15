@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,21 +62,21 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
 )
 {
     // Read variable name as a word including the '$'
-    const word varWord(is);
+    const variable var(is);
 
-    if (varWord[0] != '$')
+    if (var[0] != '$')
     {
         FatalIOErrorInFunction
         (
             parentDict
         )   << "Expected variable name beginning with a '$' but found '"
-            << varWord << "'" << exit(FatalIOError);
+            << var << "'" << exit(FatalIOError);
 
         return string::null;
     }
 
     // Strip the leading '$' from the variable name
-    const string varName = varWord(1, varWord.size()-1);
+    const string varName = var(1, var.size() - 1);
 
     // Lookup the variable name in the parent dictionary....
     const entry* ePtr = parentDict.lookupScopedEntryPtr(varName, true, false);

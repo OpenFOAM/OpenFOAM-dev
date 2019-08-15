@@ -97,11 +97,11 @@ protected:
         //- Read tokens. Skip dummy tokens
         static void readToken(token& t, Istream& is);
 
-        //- Expand a variable (string/word/var starting with '$')
+        //- Expand variable
         static token expand
         (
             const dictionary& dict,
-            const string& keyword,
+            const variable& var,
             const token& t
         );
 
