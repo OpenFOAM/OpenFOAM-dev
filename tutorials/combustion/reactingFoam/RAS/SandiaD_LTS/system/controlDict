@@ -7,12 +7,13 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version         10;
+    version         2;
     format          ascii;
     class           dictionary;
     location        "system";
     object          controlDict;
 }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 application     reactingFoam;
 
@@ -43,8 +44,6 @@ timeFormat      general;
 timePrecision   6;
 
 runTimeModifiable true;
-
-FoamFile/version 0;
 
 
 // ************************************************************************* //
