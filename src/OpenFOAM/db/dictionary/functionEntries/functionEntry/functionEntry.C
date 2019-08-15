@@ -173,7 +173,7 @@ void Foam::functionEntry::write(Ostream& os) const
         {
             // Bypass token output operator to avoid losing verbatimness.
             // Handle in Ostreams themselves
-            os.write(t);
+            os.writeVerbatim(t);
         }
         else
         {

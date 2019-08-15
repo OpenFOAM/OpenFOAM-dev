@@ -237,7 +237,7 @@ void Foam::primitiveEntry::write(Ostream& os, const bool contentsOnly) const
         {
             // Bypass token output operator to avoid losing verbatimness.
             // Handle in Ostreams themselves
-            os.write(t);
+            os.writeVerbatim(t);
         }
         else
         {

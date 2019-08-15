@@ -99,7 +99,7 @@ public:
         // Write functions
 
             //- Write next token to stream
-            virtual Ostream& write(const token&);
+            virtual Ostream& writeVerbatim(const token&);
 
             //- Write character
             virtual Ostream& write(const char);
@@ -110,14 +110,10 @@ public:
             //- Write word
             virtual Ostream& write(const word&);
 
-            //- Write string
-            //  In the rare case that the string contains a final trailing
-            //  backslash, it will be dropped to the appearance of an escaped
-            //  double-quote.
+            //- Write string with double quotes
             virtual Ostream& write(const string&);
 
-            //- Write std::string surrounded by quotes.
-            //  Optional write without quotes.
+            //- Write std::string with optional double quotes.
             virtual Ostream& writeQuoted
             (
                 const std::string&,

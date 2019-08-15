@@ -86,6 +86,7 @@ Foam::token Foam::functionEntries::ifeqEntry::expand
         true,
         true
     );
+
     if (ePtr)
     {
         return token(ePtr->stream());
@@ -154,8 +155,13 @@ bool Foam::functionEntries::ifeqEntry::equalToken
                 return false;
             }
 
-        case token::STRING:
         case token::VARIABLE:
+            FatalErrorInFunction
+                << "Attempt to compare unexpanded variable " << t1
+                << exit(FatalIOError);
+            return eqType;
+
+        case token::STRING:
         case token::VERBATIMSTRING:
             if (eqType)
             {

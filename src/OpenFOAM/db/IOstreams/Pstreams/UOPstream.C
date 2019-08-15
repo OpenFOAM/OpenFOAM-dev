@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,24 +150,15 @@ Foam::UOPstream::~UOPstream()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::UOPstream::write(const token& t)
+Foam::Ostream& Foam::UOPstream::writeVerbatim(const token& t)
 {
-    // Raw token output only supported for verbatim strings for now
-    if (t.type() == token::VERBATIMSTRING)
-    {
-        writeToBuffer(char(token::VERBATIMSTRING));
-        write(t.stringToken());
-    }
-    else if (t.type() == token::VARIABLE)
-    {
-        writeToBuffer(char(token::VARIABLE));
-        write(t.stringToken());
-    }
-    else
-    {
-        NotImplemented;
-        setBad();
-    }
+    writeToBuffer(char(token::VERBATIMSTRING));
+
+    const string& str = t.stringToken();
+    size_t len = str.size();
+    writeToBuffer(len);
+    writeToBuffer(str.c_str(), len + 1, 1);
+
     return *this;
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,21 +65,10 @@ void Foam::prefixOSstream::print(Ostream& os) const
 }
 
 
-Foam::Ostream& Foam::prefixOSstream::write(const token& t)
+Foam::Ostream& Foam::prefixOSstream::writeVerbatim(const token& t)
 {
-    if (t.type() == token::VERBATIMSTRING)
-    {
-        write(char(token::HASH));
-        write(char(token::BEGIN_BLOCK));
-        writeQuoted(t.stringToken(), false);
-        write(char(token::HASH));
-        write(char(token::END_BLOCK));
-    }
-    else if (t.type() == token::VARIABLE)
-    {
-        writeQuoted(t.stringToken(), false);
-    }
-    return *this;
+    checkWritePrefix();
+    return OSstream::writeVerbatim(t);
 }
 
 

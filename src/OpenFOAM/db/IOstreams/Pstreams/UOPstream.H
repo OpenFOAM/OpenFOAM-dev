@@ -134,7 +134,7 @@ public:
             );
 
             //- Write next token to stream
-            Ostream& write(const token&);
+            Ostream& writeVerbatim(const token&);
 
             //- Write character
             Ostream& write(const char);
