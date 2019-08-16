@@ -344,56 +344,40 @@ template<class Type>
 void Foam::codedFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fixedValueFvPatchField<Type>::write(os);
-    os.writeKeyword("name") << name_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "name", name_);
 
     if (dict_.found("codeInclude"))
     {
-        os.writeKeyword("codeInclude")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["codeInclude"]), false)
-            << token::HASH << token::END_BLOCK
+        os.writeKeyword("codeInclude");
+        os.write(verbatimString(dict_["codeInclude"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("localCode"))
     {
-        os.writeKeyword("localCode")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["localCode"]), false)
-            << token::HASH << token::END_BLOCK
+        os.writeKeyword("localCode");
+        os.write(verbatimString(dict_["localCode"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("code"))
     {
-        os.writeKeyword("code")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["code"]), false)
-            << token::HASH << token::END_BLOCK
+        os.writeKeyword("code");
+        os.write(verbatimString(dict_["code"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("codeOptions"))
     {
-        os.writeKeyword("codeOptions")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["codeOptions"]), false)
-            << token::HASH << token::END_BLOCK
+        os.writeKeyword("codeOptions");
+        os.write(verbatimString(dict_["codeOptions"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("codeLibs"))
     {
-        os.writeKeyword("codeLibs")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["codeLibs"]), false)
-            << token::HASH << token::END_BLOCK
+        os.writeKeyword("codeLibs");
+        os.write(verbatimString(dict_["codeLibs"]))
             << token::END_STATEMENT << nl;
     }
 }

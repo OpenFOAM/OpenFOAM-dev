@@ -155,14 +155,7 @@ bool Foam::functionEntries::ifeqEntry::equalToken
                 return false;
             }
 
-        case token::VARIABLE:
-            FatalErrorInFunction
-                << "Attempt to compare unexpanded variable " << t1
-                << exit(FatalIOError);
-            return eqType;
-
         case token::STRING:
-        case token::VERBATIMSTRING:
             if (eqType)
             {
                 return t1.stringToken() == t2.stringToken();
@@ -236,10 +229,11 @@ bool Foam::functionEntries::ifeqEntry::equalToken
                 return false;
             }
 
-        case token::COMPOUND:
-            return false;
-
-        case token::ERROR:
+        default:
+            FatalErrorInFunction
+                << "Attempt to compare the unsupported type "
+                << InfoProxy<token>(t1)
+                << exit(FatalIOError);
             return eqType;
     }
     return false;

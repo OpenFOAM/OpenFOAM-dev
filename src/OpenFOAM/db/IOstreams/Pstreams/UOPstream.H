@@ -133,9 +133,6 @@ public:
                 const label communicator = 0
             );
 
-            //- Write next token to stream
-            Ostream& writeVerbatim(const token&);
-
             //- Write character
             Ostream& write(const char);
 
@@ -147,6 +144,9 @@ public:
 
             //- Write string
             Ostream& write(const string&);
+
+            //- Write verbatimString
+            Ostream& write(const verbatimString&);
 
             //- Write std::string surrounded by quotes.
             //  Optional write without quotes.

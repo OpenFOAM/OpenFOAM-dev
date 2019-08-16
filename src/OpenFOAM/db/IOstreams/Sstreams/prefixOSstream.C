@@ -65,13 +65,6 @@ void Foam::prefixOSstream::print(Ostream& os) const
 }
 
 
-Foam::Ostream& Foam::prefixOSstream::writeVerbatim(const token& t)
-{
-    checkWritePrefix();
-    return OSstream::writeVerbatim(t);
-}
-
-
 Foam::Ostream& Foam::prefixOSstream::write(const char c)
 {
     checkWritePrefix();
@@ -112,6 +105,13 @@ Foam::Ostream& Foam::prefixOSstream::write(const string& val)
 {
     checkWritePrefix();
     return OSstream::write(val);
+}
+
+
+Foam::Ostream& Foam::prefixOSstream::write(const verbatimString& vs)
+{
+    checkWritePrefix();
+    return OSstream::write(vs);
 }
 
 

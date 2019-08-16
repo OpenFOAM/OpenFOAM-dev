@@ -165,8 +165,17 @@ Foam::Istream& Foam::UIPstream::read(token& t)
             return *this;
         }
 
-        // Verbatim string
-        case token::VERBATIMSTRING :
+        // Variable
+        case token::VARIABLE :
+        {
+            FatalErrorInFunction
+                << "Binary IO of variables not supported"
+                << Foam::abort(FatalError);
+            return *this;
+        }
+
+        // String
+        case token::STRING :
         {
             string* pval = new string;
             if (read(*pval))
@@ -181,19 +190,10 @@ Foam::Istream& Foam::UIPstream::read(token& t)
             return *this;
         }
 
-        // Variable
-        case token::VARIABLE :
+        // Verbatim string
+        case token::VERBATIMSTRING :
         {
-            FatalErrorInFunction
-                << "Binary IO of variables not supported"
-                << Foam::abort(FatalError);
-            return *this;
-        }
-
-        // String
-        case token::STRING :
-        {
-            string* pval = new string;
+            verbatimString* pval = new verbatimString;
             if (read(*pval))
             {
                 t = pval;

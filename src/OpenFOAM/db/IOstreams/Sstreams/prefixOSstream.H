@@ -98,9 +98,6 @@ public:
 
         // Write functions
 
-            //- Write next token to stream
-            virtual Ostream& writeVerbatim(const token&);
-
             //- Write character
             virtual Ostream& write(const char);
 
@@ -112,6 +109,9 @@ public:
 
             //- Write string
             virtual Ostream& write(const string&);
+
+            //- Write verbatimString
+            virtual Ostream& write(const verbatimString&);
 
             //- Write std::string surrounded by quotes.
             //  Optional write without quotes.

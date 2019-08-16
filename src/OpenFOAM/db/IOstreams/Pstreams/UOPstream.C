@@ -150,19 +150,6 @@ Foam::UOPstream::~UOPstream()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::UOPstream::writeVerbatim(const token& t)
-{
-    writeToBuffer(char(token::VERBATIMSTRING));
-
-    const string& str = t.stringToken();
-    size_t len = str.size();
-    writeToBuffer(len);
-    writeToBuffer(str.c_str(), len + 1, 1);
-
-    return *this;
-}
-
-
 Foam::Ostream& Foam::UOPstream::write(const char c)
 {
     if (!isspace(c))
@@ -212,6 +199,18 @@ Foam::Ostream& Foam::UOPstream::write(const string& str)
     size_t len = str.size();
     writeToBuffer(len);
     writeToBuffer(str.c_str(), len + 1, 1);
+
+    return *this;
+}
+
+
+Foam::Ostream& Foam::UOPstream::write(const verbatimString& vs)
+{
+    writeToBuffer(char(token::VERBATIMSTRING));
+
+    size_t len = vs.size();
+    writeToBuffer(len);
+    writeToBuffer(vs.c_str(), len + 1, 1);
 
     return *this;
 }

@@ -37,9 +37,13 @@ inline void Foam::token::clear()
     {
         delete variableTokenPtr_;
     }
-    else if (type_ == STRING || type_ == VERBATIMSTRING)
+    else if (type_ == STRING)
     {
         delete stringTokenPtr_;
+    }
+    else if (type_ == VERBATIMSTRING)
+    {
+        delete verbatimStringTokenPtr_;
     }
     else if (type_ == LONG_DOUBLE_SCALAR)
     {
@@ -93,8 +97,12 @@ inline Foam::token::token(const token& t)
         break;
 
         case STRING:
-        case VERBATIMSTRING:
             stringTokenPtr_ = new string(*t.stringTokenPtr_);
+        break;
+
+        case VERBATIMSTRING:
+            verbatimStringTokenPtr_ =
+                new verbatimString(*t.verbatimStringTokenPtr_);
         break;
 
         case LABEL:
@@ -145,6 +153,14 @@ inline Foam::token::token(const string& s, label lineNumber)
 :
     type_(STRING),
     stringTokenPtr_(new string(s)),
+    lineNumber_(lineNumber)
+{}
+
+
+inline Foam::token::token(const verbatimString& vs, label lineNumber)
+:
+    type_(VERBATIMSTRING),
+    verbatimStringTokenPtr_(new verbatimString(vs)),
     lineNumber_(lineNumber)
 {}
 
@@ -272,12 +288,12 @@ inline const Foam::variable& Foam::token::variableToken() const
 
 inline bool Foam::token::isString() const
 {
-    return (type_ == STRING || type_ == VERBATIMSTRING);
+    return (type_ == STRING);
 }
 
 inline const Foam::string& Foam::token::stringToken() const
 {
-    if (type_ == STRING || type_ == VERBATIMSTRING)
+    if (type_ == STRING)
     {
         return *stringTokenPtr_;
     }
@@ -285,6 +301,24 @@ inline const Foam::string& Foam::token::stringToken() const
     {
         parseError(string::typeName);
         return string::null;
+    }
+}
+
+inline bool Foam::token::isVerbatimString() const
+{
+    return (type_ == VERBATIMSTRING);
+}
+
+inline const Foam::verbatimString& Foam::token::verbatimStringToken() const
+{
+    if (type_ == VERBATIMSTRING)
+    {
+        return *verbatimStringTokenPtr_;
+    }
+    else
+    {
+        parseError(verbatimString::typeName);
+        return verbatimString::null;
     }
 }
 
@@ -478,8 +512,12 @@ inline void Foam::token::operator=(const token& t)
         break;
 
         case STRING:
-        case VERBATIMSTRING:
             stringTokenPtr_ = new string(*t.stringTokenPtr_);
+        break;
+
+        case VERBATIMSTRING:
+            verbatimStringTokenPtr_ =
+                new verbatimString(*t.verbatimStringTokenPtr_);
         break;
 
         case LABEL:
@@ -554,6 +592,18 @@ inline void Foam::token::operator=(const string& s)
     operator=(new string(s));
 }
 
+inline void Foam::token::operator=(verbatimString* vsPtr)
+{
+    clear();
+    type_ = VERBATIMSTRING;
+    verbatimStringTokenPtr_ = vsPtr;
+}
+
+inline void Foam::token::operator=(const verbatimString& vs)
+{
+    operator=(new verbatimString(vs));
+}
+
 inline void Foam::token::operator=(const label l)
 {
     clear();
@@ -612,8 +662,10 @@ inline bool Foam::token::operator==(const token& t) const
             return *variableTokenPtr_ == *t.variableTokenPtr_;
 
         case STRING:
-        case VERBATIMSTRING:
             return *stringTokenPtr_ == *t.stringTokenPtr_;
+
+        case VERBATIMSTRING:
+            return *verbatimStringTokenPtr_ == *t.verbatimStringTokenPtr_;
 
         case LABEL:
             return labelToken_ == t.labelToken_;
@@ -658,11 +710,12 @@ inline bool Foam::token::operator==(const variable& v) const
 
 inline bool Foam::token::operator==(const string& s) const
 {
-    return
-    (
-        (type_ == STRING || type_ == VERBATIMSTRING)
-     && stringToken() == s
-    );
+    return (type_ == STRING && stringToken() == s);
+}
+
+inline bool Foam::token::operator==(const verbatimString& vs) const
+{
+    return (type_ == VERBATIMSTRING && verbatimStringToken() == vs);
 }
 
 inline bool Foam::token::operator==(const label l) const
@@ -706,6 +759,11 @@ inline bool Foam::token::operator!=(const word& w) const
 inline bool Foam::token::operator!=(const string& s) const
 {
     return !operator==(s);
+}
+
+inline bool Foam::token::operator!=(const verbatimString& vs) const
+{
+    return !operator==(vs);
 }
 
 inline bool Foam::token::operator!=(const floatScalar s) const

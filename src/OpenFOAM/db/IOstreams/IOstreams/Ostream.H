@@ -38,6 +38,7 @@ SourceFiles
 
 #include "IOstream.H"
 #include "keyType.H"
+#include "verbatimString.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -96,9 +97,6 @@ public:
 
         // Write functions
 
-            //- Write next token to stream
-            virtual Ostream& writeVerbatim(const token&) = 0;
-
             //- Write character
             virtual Ostream& write(const char) = 0;
 
@@ -115,6 +113,9 @@ public:
 
             //- Write string
             virtual Ostream& write(const string&) = 0;
+
+            //- Write verbatimString
+            virtual Ostream& write(const verbatimString&) = 0;
 
             //- Write std::string surrounded by quotes.
             //  Optional write without quotes.

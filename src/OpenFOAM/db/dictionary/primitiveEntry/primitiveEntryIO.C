@@ -232,17 +232,7 @@ void Foam::primitiveEntry::write(Ostream& os, const bool contentsOnly) const
 
     for (label i=0; i<size(); ++i)
     {
-        const token& t = operator[](i);
-        if (t.type() == token::VERBATIMSTRING)
-        {
-            // Bypass token output operator to avoid losing verbatimness.
-            // Handle in Ostreams themselves
-            os.writeVerbatim(t);
-        }
-        else
-        {
-            os  << t;
-        }
+        os << operator[](i);;
 
         if (i < size()-1)
         {

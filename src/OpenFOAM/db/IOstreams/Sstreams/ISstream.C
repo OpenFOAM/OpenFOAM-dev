@@ -230,19 +230,17 @@ Foam::Istream& Foam::ISstream::read(token& t)
             else if (nextC == token::BEGIN_BLOCK)
             {
                 // Verbatim string
-                string* sPtr = new string;
+                verbatimString* vsPtr = new verbatimString;
 
-                if (readVerbatim(*sPtr).bad())
+                if (readVerbatim(*vsPtr).bad())
                 {
-                    delete sPtr;
+                    delete vsPtr;
                     t.setBad();
                 }
                 else
                 {
-                    t = sPtr;
-                    t.type() = token::VERBATIMSTRING;
+                    t = vsPtr;
                 }
-
                 return *this;
             }
             else
@@ -715,7 +713,7 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
 }
 
 
-Foam::Istream& Foam::ISstream::readVerbatim(string& str)
+Foam::Istream& Foam::ISstream::readVerbatim(verbatimString& str)
 {
     static const int maxLen = 8000;
     static const int errLen = 80; // truncate error message for readability

@@ -64,7 +64,7 @@ class ISstream
         char nextValid();
 
         //- Read a verbatim string (excluding block delimiters).
-        Istream& readVerbatim(string&);
+        Istream& readVerbatim(verbatimString&);
 
         //- Read a variable name
         Istream& readVariable(string&);

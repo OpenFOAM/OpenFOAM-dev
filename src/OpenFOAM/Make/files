@@ -110,6 +110,8 @@ $(strings)/fileName/fileName.C
 $(strings)/fileName/fileNameIO.C
 $(strings)/variable/variable.C
 $(strings)/variable/variableIO.C
+$(strings)/verbatimString/verbatimString.C
+$(strings)/verbatimString/verbatimStringIO.C
 $(strings)/keyType/keyType.C
 $(strings)/wordRe/wordRe.C
 $(strings)/lists/hashedWordList.C

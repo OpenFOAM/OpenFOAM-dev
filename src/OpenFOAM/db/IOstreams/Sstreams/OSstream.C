@@ -29,20 +29,6 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::OSstream::writeVerbatim(const token& t)
-{
-    if (t.type() == token::VERBATIMSTRING)
-    {
-        write(char(token::HASH));
-        write(char(token::BEGIN_BLOCK));
-        writeQuoted(t.stringToken(), false);
-        write(char(token::HASH));
-        write(char(token::END_BLOCK));
-    }
-    return *this;
-}
-
-
 Foam::Ostream& Foam::OSstream::write(const char c)
 {
     os_ << c;
@@ -75,6 +61,16 @@ Foam::Ostream& Foam::OSstream::write(const word& str)
 Foam::Ostream& Foam::OSstream::write(const string& str)
 {
     return writeQuoted(str);
+}
+
+
+Foam::Ostream& Foam::OSstream::write(const verbatimString& vs)
+{
+    os_ << token::HASH << token::BEGIN_BLOCK;
+    writeQuoted(vs, false);
+    os_ << token::HASH << token::END_BLOCK;
+    setState(os_.rdstate());
+    return *this;
 }
 
 
