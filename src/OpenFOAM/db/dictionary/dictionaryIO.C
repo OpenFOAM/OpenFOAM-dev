@@ -37,7 +37,12 @@ Foam::dictionary::dictionary
     Istream& is
 )
 :
-    dictionaryName(parentDict.name() + '/' + name),
+    dictionaryName
+    (
+        parentDict.name() != fileName::null
+      ? parentDict.name()/name
+      : name
+    ),
     parent_(parentDict)
 {
     read(is);

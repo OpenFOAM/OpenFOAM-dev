@@ -566,7 +566,10 @@ Foam::dictionary::dictionary
     patternEntries_(move(dict.patternEntries_)),
     patternRegexps_(move(dict.patternRegexps_))
 {
-    name() = parentDict.name() + '/' + name();
+    if (parentDict.name() != fileName::null)
+    {
+        name() = parentDict.name()/name();
+    }
 }
 
 
