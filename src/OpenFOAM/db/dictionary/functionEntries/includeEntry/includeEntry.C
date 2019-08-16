@@ -152,7 +152,7 @@ bool Foam::functionEntries::includeEntry::execute
         parentDict.read(ifs);
 
         // Reinstate original FoamFile entry
-        if (!foamFileDict.isNull())
+        if (foamFileDict.size() != 0)
         {
             dictionary parentDictTmp(parentDict);
             parentDict.clear();
