@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,6 @@ Foam::RASModels::phasePressureModel::phasePressureModel
         phase,
         propertiesName
     ),
-
-    phase_(phase),
 
     alphaMax_(readScalar(coeffDict_.lookup("alphaMax"))),
     preAlphaExp_(readScalar(coeffDict_.lookup("preAlphaExp"))),

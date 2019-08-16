@@ -54,14 +54,8 @@ class dimFieldDecomposer
 {
     // Private Data
 
-        //- Reference to complete mesh
-        const fvMesh& completeMesh_;
-
         //- Reference to processor mesh
         const fvMesh& procMesh_;
-
-        //- Reference to face addressing
-        const labelList& faceAddressing_;
 
         //- Reference to cell addressing
         const labelList& cellAddressing_;

@@ -60,9 +60,6 @@ class cv2DControls
 {
     // Private Data
 
-        //- Description of data_
-        const dictionary& dict_;
-
         const dictionary& motionControl_;
 
         const dictionary& conformationControl_;

@@ -66,10 +66,6 @@ class cellShapeControl
 {
     // Private Data
 
-        const Time& runTime_;
-
-        const searchableSurfaces& allGeometry_;
-
         const conformationSurfaces& geometryToConformTo_;
 
         const scalar defaultCellSize_;

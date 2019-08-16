@@ -151,7 +151,6 @@ Foam::shortEdgeFilter2D::shortEdgeFilter2D
     const dictionary& dict
 )
 :
-    cv2Dmesh_(cv2Dmesh),
     shortEdgeFilterFactor_(readScalar(dict.lookup("shortEdgeFilterFactor"))),
     edgeAttachedToBoundaryFactor_
     (

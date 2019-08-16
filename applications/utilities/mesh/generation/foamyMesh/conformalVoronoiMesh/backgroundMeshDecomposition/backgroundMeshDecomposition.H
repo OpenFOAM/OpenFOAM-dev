@@ -103,9 +103,6 @@ class backgroundMeshDecomposition
         //- Reference to surface
         const conformationSurfaces& geometryToConformTo_;
 
-        //- Random number generator
-        Random& rndGen_;
-
         //- Mesh stored on for this processor, specifying the domain that it
         //  is responsible for.
         fvMesh mesh_;

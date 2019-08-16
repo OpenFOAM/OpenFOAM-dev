@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,6 @@ Foam::cellShapeControl::cellShapeControl
     (
         foamyHexMeshControls.foamyHexMeshDict().subDict("motionControl")
     ),
-    runTime_(runTime),
-    allGeometry_(allGeometry),
     geometryToConformTo_(geometryToConformTo),
     defaultCellSize_(foamyHexMeshControls.defaultCellSize()),
     minimumCellSize_(foamyHexMeshControls.minimumCellSize()),

@@ -59,8 +59,6 @@ class conformationSurfaces
 
         const Time& runTime_;
 
-        Random& rndGen_;
-
         //- Reference to the searchableSurfaces object holding all geometry data
         const searchableSurfaces& allGeometry_;
 

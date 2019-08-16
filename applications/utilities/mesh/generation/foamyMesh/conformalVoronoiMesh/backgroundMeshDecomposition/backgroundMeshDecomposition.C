@@ -779,7 +779,6 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
 :
     runTime_(runTime),
     geometryToConformTo_(geometryToConformTo),
-    rndGen_(rndGen),
     mesh_
     (
         IOobject

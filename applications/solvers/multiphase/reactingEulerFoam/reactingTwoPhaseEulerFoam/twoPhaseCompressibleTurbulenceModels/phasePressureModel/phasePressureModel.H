@@ -77,11 +77,6 @@ class phasePressureModel
 {
     // Private Data
 
-        // Input Fields
-
-            const phaseModel& phase_;
-
-
         // Kinetic Theory Model coefficients
 
             //- Maximum packing phase-fraction

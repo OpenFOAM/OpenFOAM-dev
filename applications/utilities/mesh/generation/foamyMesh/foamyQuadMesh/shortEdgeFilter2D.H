@@ -51,8 +51,6 @@ class shortEdgeFilter2D
 {
     // Private Data
 
-        const CV2D& cv2Dmesh_;
-
         MeshedSurface<face> ms_;
 
         const scalar shortEdgeFilterFactor_;

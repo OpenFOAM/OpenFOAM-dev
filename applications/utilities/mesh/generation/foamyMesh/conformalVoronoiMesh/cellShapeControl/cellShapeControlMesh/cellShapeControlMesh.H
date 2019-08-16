@@ -78,8 +78,6 @@ private:
 
         mutable Cell_handle oldCellHandle_;
 
-        const scalar defaultCellSize_;
-
 
 public:
 
