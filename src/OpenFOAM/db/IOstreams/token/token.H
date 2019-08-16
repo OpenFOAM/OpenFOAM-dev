@@ -344,6 +344,9 @@ public:
             inline bool isVerbatimString() const;
             inline const verbatimString& verbatimStringToken() const;
 
+            inline bool isAnyString() const;
+            inline const string& anyStringToken() const;
+
             inline bool isLabel() const;
             inline label labelToken() const;
 

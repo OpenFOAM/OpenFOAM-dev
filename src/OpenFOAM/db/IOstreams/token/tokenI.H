@@ -322,6 +322,42 @@ inline const Foam::verbatimString& Foam::token::verbatimStringToken() const
     }
 }
 
+inline bool Foam::token::isAnyString() const
+{
+    return
+    (
+        type_ == WORD
+     || type_ == VARIABLE
+     || type_ == STRING
+     || type_ == VERBATIMSTRING
+    );
+}
+
+inline const Foam::string& Foam::token::anyStringToken() const
+{
+    if (type_ == WORD)
+    {
+        return *wordTokenPtr_;
+    }
+    else if (type_ == VARIABLE)
+    {
+        return *variableTokenPtr_;
+    }
+    else if (type_ == STRING)
+    {
+        return *stringTokenPtr_;
+    }
+    else if (type_ == VERBATIMSTRING)
+    {
+        return *verbatimStringTokenPtr_;
+    }
+    else
+    {
+        parseError(string::typeName);
+        return string::null;
+    }
+}
+
 inline bool Foam::token::isLabel() const
 {
     return (type_ == LABEL);

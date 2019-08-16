@@ -77,7 +77,7 @@ Foam::token Foam::functionEntries::ifeqEntry::expand
     const token& t
 )
 {
-    word varName = var(1, var.size()-1);
+    word varName = var(1, var.size() - 1);
 
     // lookup the variable name in the given dictionary
     const entry* ePtr = dict.lookupScopedEntryPtr
@@ -109,12 +109,7 @@ Foam::token Foam::functionEntries::ifeqEntry::expand
     const token& t
 )
 {
-    if (t.isWord())
-    {
-        // Re-form as a string token so we can compare to string
-        return string(t.wordToken());
-    }
-    else if (t.isVariable())
+    if (t.isVariable())
     {
         return expand(dict, t.variableToken(), t);
     }
@@ -142,32 +137,23 @@ bool Foam::functionEntries::ifeqEntry::equalToken
             return (eqType && t1.pToken() == t2.pToken());
 
         case token::WORD:
-            if (eqType)
+        case token::STRING:
+        case token::VERBATIMSTRING:
+            if (t2.isAnyString())
             {
-                return t1.wordToken() == t2.wordToken();
-            }
-            else if (t2.isString())
-            {
-                return t1.wordToken() == t2.stringToken();
+                return t1.anyStringToken() == t2.anyStringToken();
             }
             else
             {
                 return false;
             }
 
-        case token::STRING:
-            if (eqType)
-            {
-                return t1.stringToken() == t2.stringToken();
-            }
-            else if (t2.isWord())
-            {
-                return t1.stringToken() == t2.wordToken();
-            }
-            else
-            {
-                return false;
-            }
+        case token::VARIABLE:
+            FatalErrorInFunction
+                << "Attempt to compare an un-expanded variable"
+                << InfoProxy<token>(t1)
+                << exit(FatalIOError);
+            return false;
 
         case token::LABEL:
             if (eqType)
@@ -229,13 +215,13 @@ bool Foam::functionEntries::ifeqEntry::equalToken
                 return false;
             }
 
-        default:
-            FatalErrorInFunction
-                << "Attempt to compare the unsupported type "
-                << InfoProxy<token>(t1)
-                << exit(FatalIOError);
+        case token::COMPOUND:
+            return false;
+
+        case token::ERROR:
             return eqType;
     }
+
     return false;
 }
 
@@ -411,11 +397,11 @@ bool Foam::functionEntries::ifeqEntry::execute
 
     stack.append(filePos(is.name(), is.lineNumber()));
 
-    // Read first token and expand any string
+    // Read first token and expand if a variable
     token cond1(is);
     cond1 = expand(parentDict, cond1);
 
-    // Read second token and expand any string
+    // Read second token and expand if a variable
     token cond2(is);
     cond2 = expand(parentDict, cond2);
 
