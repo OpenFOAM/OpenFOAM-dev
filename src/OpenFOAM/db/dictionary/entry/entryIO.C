@@ -237,14 +237,6 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
 
             return true;
         }
-        else if
-        (
-           !disableFunctionEntries
-         && keyword == "include"
-        )                           // ... For backward compatibility
-        {
-            return functionEntries::includeEntry::execute(parentDict, is);
-        }
         else                        // ... Data entries
         {
             token nextToken(is);
