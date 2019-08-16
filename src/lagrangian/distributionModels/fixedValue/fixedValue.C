@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,9 @@ Foam::distributionModels::fixedValue::fixedValue
 :
     distributionModel(typeName, dict, rndGen),
     value_(readScalar(distributionModelDict_.lookup("value")))
-{}
+{
+    info();
+}
 
 
 Foam::distributionModels::fixedValue::fixedValue(const fixedValue& p)

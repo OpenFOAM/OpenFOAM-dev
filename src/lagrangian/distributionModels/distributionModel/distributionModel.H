@@ -80,6 +80,9 @@ protected:
         //- Check that the distribution model is valid
         virtual void check() const;
 
+        //- Print information about the distribution
+        void info() const;
+
 
 public:
 

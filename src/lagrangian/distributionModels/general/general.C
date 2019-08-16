@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,28 +51,78 @@ Foam::distributionModels::general::general
     minValue_(xy_[0][0]),
     maxValue_(xy_[nEntries_-1][0]),
     meanValue_(0.0),
-    integral_(nEntries_)
+    integral_(nEntries_),
+    cumulative_(distributionModelDict_.lookupOrDefault("cumulative", false))
 {
     check();
 
-    // normalize the cumulative distributionModel
+    // Additional sanity checks
+    if (cumulative_ && xy_[0][1] != 0)
+    {
+        FatalErrorInFunction
+            << type() << "distribution: "
+            << "The cumulative distribution must start from zero."
+            << abort(FatalError);
+    }
 
+    for (label i=0; i<nEntries_; i++)
+    {
+        if (i > 0 && xy_[i][0] <= xy_[i-1][0])
+        {
+            FatalErrorInFunction
+                << type() << "distribution: "
+                << "The points must be specified in ascending order."
+                << abort(FatalError);
+        }
+
+        if (xy_[i][1] < 0)
+        {
+            FatalErrorInFunction
+                << type() << "distribution: "
+                << "The distribution can't be negative."
+                << abort(FatalError);
+        }
+
+        if (i > 0 && cumulative_ && xy_[i][1] < xy_[i-1][1])
+        {
+            FatalErrorInFunction
+                << type() << "distribution: "
+                << "Cumulative distribution must be non-decreasing."
+                << abort(FatalError);
+        }
+    }
+
+    // Fill out the integral table (x, P(x<=0)) and calculate mean
+    // For density function: P(x<=0) = int f(x) and mean = int x*f(x)
+    // For cumulative function: mean = int 1-P(x<=0) = maxValue_ - int P(x<=0)
     integral_[0] = 0.0;
     for (label i=1; i<nEntries_; i++)
     {
-
+        // Integrating k*x+d
         scalar k = (xy_[i][1] - xy_[i-1][1])/(xy_[i][0] - xy_[i-1][0]);
         scalar d = xy_[i-1][1] - k*xy_[i-1][0];
+
         scalar y1 = xy_[i][0]*(0.5*k*xy_[i][0] + d);
         scalar y0 = xy_[i-1][0]*(0.5*k*xy_[i-1][0] + d);
         scalar area = y1 - y0;
 
-        integral_[i] = area + integral_[i-1];
+        if (cumulative_)
+        {
+            integral_[i] = xy_[i][1];
+            meanValue_ += area;
+        }
+        else
+        {
+            integral_[i] = area + integral_[i-1];
+
+            y1 = sqr(xy_[i][0])*(1.0/3.0*k*xy_[i][0] + 0.5*d);
+            y0 = sqr(xy_[i-1][0])*(1.0/3.0*k*xy_[i-1][0] + 0.5*d);
+            meanValue_ += y1 - y0;
+        }
     }
 
+    // normalize the distribution
     scalar sumArea = integral_.last();
-
-    meanValue_ = sumArea/(maxValue_ - minValue_);
 
     for (label i=0; i<nEntries_; i++)
     {
@@ -80,6 +130,10 @@ Foam::distributionModels::general::general
         integral_[i] /= sumArea;
     }
 
+    meanValue_ /= sumArea;
+    meanValue_ = cumulative_ ? (maxValue_ - meanValue_) : meanValue_;
+
+    info();
 }
 
 
@@ -115,6 +169,11 @@ Foam::scalar Foam::distributionModels::general::sample() const
 
     scalar k = (xy_[n][1] - xy_[n-1][1])/(xy_[n][0] - xy_[n-1][0]);
     scalar d = xy_[n-1][1] - k*xy_[n-1][0];
+
+    if (cumulative_)
+    {
+        return (y - d)/k;
+    }
 
     scalar alpha = y + xy_[n-1][0]*(0.5*k*xy_[n-1][0] + d) - integral_[n-1];
     scalar x = 0.0;

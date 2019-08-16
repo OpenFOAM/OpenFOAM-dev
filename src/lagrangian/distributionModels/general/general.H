@@ -25,7 +25,13 @@ Class
     Foam::distributionModels::general
 
 Description
-    general distribution model
+    A general distribution model where the distribution is specified as
+    (point, value) pairs. By default the values are assumed to represent
+    a probability density function, but the model also supports specifying a
+    cumulative distribution function. In both cases it is assumed that the
+    function is linear between the specified points.
+
+    In both modes of operation the values are automatically normalized.
 
 SourceFiles
     general.C
@@ -58,17 +64,26 @@ class general
 
         typedef VectorSpace<Vector<scalar>, scalar, 2> pair;
 
+        //- List of (x, y=f(x)) pairs
         List<pair> xy_;
 
+        //- Amount of entries in the xy_ list
         label nEntries_;
 
-        //- Min and max values of the distribution
+        //- Distribution minimum
         scalar minValue_;
+
+        //- Distribution maximum
         scalar maxValue_;
 
+        //- Distribution mean
         scalar meanValue_;
 
+        //- Values of cumulative distribution function
         List<scalar> integral_;
+
+        //- Is the distribution specified as cumulative or as density
+        Switch cumulative_;
 
 
 public:
