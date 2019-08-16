@@ -161,27 +161,34 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
 {
     IOstream::streamFormat dictFormat = IOstream::ASCII;
 
+    // Read the first entry and if it is FoamFile set the file format
+    {
+        IFstream dictFile(dictFileName);
+        if (!dictFile().good())
+        {
+            FatalErrorInFunction
+                << "Cannot open file " << dictFileName
+                << exit(FatalError, 1);
+        }
+
+        // Read the first entry from the dictionary without expansion
+        entry::disableFunctionEntries = true;
+        autoPtr<entry> firstEntry(entry::New(dictFile()));
+        entry::disableFunctionEntries = false;
+
+        // If the first entry is the "FoamFile" header dictionary
+        // read and set the stream format
+        if (firstEntry->isDict() && firstEntry->keyword() == IOobject::foamFile)
+        {
+            dictFormat = IOstream::formatEnum
+            (
+                firstEntry->dict().lookup("format")
+            );
+            dictFile().format(dictFormat);
+        }
+    }
+
     IFstream dictFile(dictFileName);
-    if (!dictFile().good())
-    {
-        FatalErrorInFunction
-            << "Cannot open file " << dictFileName
-            << exit(FatalError, 1);
-    }
-
-    // Read the first entry from the dictionary
-    autoPtr<entry> firstEntry(entry::New(dictFile()));
-
-    // If the first entry is the "FoamFile" header dictionary
-    // read and set the stream format
-    if (firstEntry->isDict() && firstEntry->keyword() == IOobject::foamFile)
-    {
-        dictFormat = IOstream::formatEnum(firstEntry->dict().lookup("format"));
-        dictFile().format(dictFormat);
-    }
-
-    // Add the first entry to the dictionary
-    dict.add(firstEntry);
 
     // Read and add the rest of the dictionary entries
     // preserving the IOobject::foamFile header dictionary if present
