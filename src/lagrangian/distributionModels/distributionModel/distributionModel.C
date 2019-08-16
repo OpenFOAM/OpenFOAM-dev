@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,13 @@ void Foam::distributionModel::check() const
             << ", minValue = " << minValue()
             << abort(FatalError);
     }
+}
+
+
+void Foam::distributionModel::info() const
+{
+    Info<< "    Distribution min: " << minValue() << " max: " << maxValue()
+        << " mean: " << meanValue() << endl;
 }
 
 
