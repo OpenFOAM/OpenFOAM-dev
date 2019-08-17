@@ -51,27 +51,9 @@ bool Foam::entry::getKeyword(keyType& keyword, token& keywordToken, Istream& is)
     }
     while (keywordToken == token::END_STATEMENT);
 
-    // If the token is a valid keyword set 'keyword' return true...
-    if (keywordToken.isWord())
-    {
-        keyword = keywordToken.wordToken();
-        return true;
-    }
-    else if (keywordToken.isVariable())
-    {
-        keyword = keywordToken.variableToken();
-        return true;
-    }
-    else if (keywordToken.isString())
-    {
-        // Enable wildcards
-        keyword = keywordToken.stringToken();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    keyword = keywordToken;
+
+    return !keyword.isUndefined();
 }
 
 
@@ -180,7 +162,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
         else if
         (
            !disableFunctionEntries
-         && keyword[0] == '$'
+         && keyword.isVariable()
         )                           // ... Substitution entry
         {
             token nextToken(is);

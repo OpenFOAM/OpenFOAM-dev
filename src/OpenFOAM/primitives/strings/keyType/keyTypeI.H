@@ -28,57 +28,62 @@ License
 inline Foam::keyType::keyType()
 :
     variable(),
-    isPattern_(false)
+    type_(UNDEFINED)
 {}
 
 
 inline Foam::keyType::keyType(const keyType& k)
 :
     variable(k),
-    isPattern_(k.isPattern())
+    type_(k.type_)
 {}
 
 
 inline Foam::keyType::keyType(const word& w)
 :
     variable(w),
-    isPattern_(false)
+    type_(WORD)
 {}
 
 
 inline Foam::keyType::keyType(const variable& v)
 :
     variable(v),
-    isPattern_(false)
+    type_(VARIABLE)
 {}
 
 
 inline Foam::keyType::keyType(const string& s)
 :
     variable(s, false),
-    isPattern_(true)
+    type_(PATTERN)
 {}
 
 
 inline Foam::keyType::keyType(const char* s)
 :
-    variable(s, false),
-    isPattern_(false)
-{}
-
-
-inline Foam::keyType::keyType(const std::string& s, const bool isPattern)
-:
-    variable(s, false),
-    isPattern_(isPattern)
+    variable(s, true),
+    type_(WORD)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+inline bool Foam::keyType::isUndefined() const
+{
+    return type_ == UNDEFINED;
+}
+
+
+inline bool Foam::keyType::isVariable() const
+{
+    return type_ == VARIABLE;
+}
+
+
 inline bool Foam::keyType::isPattern() const
 {
-    return isPattern_;
+    return type_ == PATTERN;
 }
 
 
@@ -87,37 +92,35 @@ inline bool Foam::keyType::isPattern() const
 inline void Foam::keyType::operator=(const keyType& k)
 {
     variable::operator=(k);
-    isPattern_ = k.isPattern_;
-}
-
-
-inline void Foam::keyType::operator=(const variable& v)
-{
-    variable::operator=(v);
-    isPattern_ = false;
+    type_ = k.type_;
 }
 
 
 inline void Foam::keyType::operator=(const word& w)
 {
     variable::operator=(w);
-    isPattern_ = false;
+    type_ = WORD;
+}
+
+
+inline void Foam::keyType::operator=(const variable& v)
+{
+    variable::operator=(v);
+    type_ = VARIABLE;
 }
 
 
 inline void Foam::keyType::operator=(const string& s)
 {
-    // Bypass checking
     string::operator=(s);
-    isPattern_ = true;
+    type_ = PATTERN;
 }
 
 
 inline void Foam::keyType::operator=(const char* s)
 {
-    // Bypass checking
-    string::operator=(s);
-    isPattern_ = false;
+    word::operator=(s);
+    type_ = WORD;
 }
 
 

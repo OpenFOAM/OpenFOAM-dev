@@ -64,17 +64,6 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
     // Read variable name as a word including the '$'
     const variable var(is);
 
-    if (var[0] != '$')
-    {
-        FatalIOErrorInFunction
-        (
-            parentDict
-        )   << "Expected variable name beginning with a '$' but found '"
-            << var << "'" << exit(FatalIOError);
-
-        return string::null;
-    }
-
     // Strip the leading '$' from the variable name
     const string varName = var(1, var.size() - 1);
 

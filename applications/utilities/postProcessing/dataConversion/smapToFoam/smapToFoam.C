@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     dictionary fieldNameDict;
     forAll(fieldNames, i)
     {
-        fieldNameDict.add(fieldNames[i], word(fieldNames[i]));
+        fieldNameDict.add(word(fieldNames[i]), word(fieldNames[i]));
     }
 
     dictionary nameMap;

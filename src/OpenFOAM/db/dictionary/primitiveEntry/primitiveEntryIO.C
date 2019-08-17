@@ -60,7 +60,7 @@ void Foam::primitiveEntry::append
         (
             disableFunctionEntries
          || v.size() == 1
-         || !(v[0] == '$' && expandVariable(v, dict))
+         || !expandVariable(v, dict)
         )
         {
             newElmt(tokenIndex()++) = currToken;

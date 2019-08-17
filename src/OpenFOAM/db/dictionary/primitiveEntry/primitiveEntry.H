@@ -71,23 +71,13 @@ class primitiveEntry
         void append(const UList<token>&);
 
         //- Append the given token to this entry
-        void append
-        (
-            const token& currToken,
-            const dictionary&,
-            Istream&
-        );
+        void append(const token& currToken, const dictionary&, Istream&);
 
-        //- Expand the given variable (keyword starts with $)
-        bool expandVariable(const string&, const dictionary&);
+        //- Expand the given variable
+        bool expandVariable(const variable&, const dictionary&);
 
         //- Expand the given function (keyword starts with #)
-        bool expandFunction
-        (
-            const word&,
-            const dictionary&,
-            Istream&
-        );
+        bool expandFunction(const word&, const dictionary&, Istream&);
 
         //- Read the complete entry from the given stream
         void readEntry(const dictionary&, Istream&);

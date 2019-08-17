@@ -86,20 +86,24 @@ public:
         inline variable(const variable&);
 
         //- Copy constructor of word
-        inline variable(const word&);
+        inline explicit variable(const word&);
 
         //- Copy constructor of string
-        inline variable(const string&, const bool doStripInvalid=true);
+        inline explicit variable(const string&, const bool doStripInvalid=true);
 
         //- Copy constructor of std::string
-        inline variable(const std::string&, const bool doStripInvalid=true);
+        inline explicit variable
+        (
+            const std::string&,
+            const bool doStripInvalid=true
+        );
 
         //- Copy constructor of character array
-        inline variable(const char*, const bool doStripInvalid=true);
+        inline explicit variable(const char*, const bool doStripInvalid=true);
 
         //- Construct from Istream
         //  Words are treated as literals, strings with an auto-test
-        variable(Istream&);
+        explicit variable(Istream&);
 
 
     // Member Functions

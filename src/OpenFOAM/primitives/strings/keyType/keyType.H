@@ -48,6 +48,7 @@ namespace Foam
 // Forward declaration of classes
 class Istream;
 class Ostream;
+class token;
 
 
 // Forward declaration of friend functions and operators
@@ -66,16 +67,20 @@ class keyType
 :
     public variable
 {
+    //- Enumeration of the keyword types
+    enum type
+    {
+        UNDEFINED,
+        WORD,
+        VARIABLE,
+        PATTERN
+    };
+
+
     // Private Data
 
-        //- Is the keyType a pattern (regular expression)
-        bool isPattern_;
-
-
-    // Private Member Functions
-
-        //- Disallow assignments where we cannot determine string/word type
-        void operator=(const std::string&);
+        //- The type of this keyword
+        type type_;
 
 
 public:
@@ -94,28 +99,32 @@ public:
         //- Copy constructor
         inline keyType(const keyType&);
 
-        //- Copy constructor of variable. Not treated as a regular expression
-        inline keyType(const variable&);
-
-        //- Copy constructor of word. Not treated as a regular expression
+        //- Construct as word
         inline keyType(const word&);
 
-        //- Copy constructor of string. Treat as regular expression.
-        inline keyType(const string&);
+        //- Construct as variable
+        inline explicit keyType(const variable&);
 
-        //- Copy constructor of character array.
-        //  Not treated as a regular expression
+        //- Construct as pattern
+        inline explicit keyType(const string&);
+
+        //- Construct as word from character array.
         inline keyType(const char*);
 
-        //- Copy constructor of std::string with specified treatment
-        inline keyType(const std::string&, const bool isPattern);
+        //- Construct from token
+        explicit keyType(const token&);
 
         //- Construct from Istream
-        //  Treat as regular expression if surrounded by quotation marks.
-        keyType(Istream&);
+        explicit keyType(Istream&);
 
 
     // Member Functions
+
+        //- Return true if the type has not been defined
+        inline bool isUndefined() const;
+
+        //- Return true if the keyword is a variable
+        inline bool isVariable() const;
 
         //- Should be treated as a match rather than a literal string
         inline bool isPattern() const;
@@ -132,17 +141,23 @@ public:
             //- Assignment operator
             inline void operator=(const keyType&);
 
-            //- Assign as variable, not as non regular expression
+            //- Assign as variable
             inline void operator=(const variable&);
 
-            //- Assign as word, not as non regular expression
+            //- Assign as word
             inline void operator=(const word&);
 
-            //- Assign as regular expression
+            //- Assign as pattern
             inline void operator=(const string&);
 
-            //- Assign as word, not as non regular expression
+            //- Assign as word
             inline void operator=(const char*);
+
+            //- Disallow assignments where we cannot determine string/word type
+            void operator=(const std::string&) = delete;
+
+            //- Assign from token setting the appropriate type
+            void operator=(const token&);
 
 
     // IOstream Operators

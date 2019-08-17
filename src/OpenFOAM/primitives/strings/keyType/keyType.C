@@ -21,9 +21,6 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Istream constructor and IOstream operators for keyType.
-
 \*---------------------------------------------------------------------------*/
 
 #include "keyType.H"
@@ -37,10 +34,19 @@ const Foam::keyType Foam::keyType::null;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
+Foam::keyType::keyType(const token& t)
+:
+    variable(),
+    type_(UNDEFINED)
+{
+    operator=(t);
+}
+
+
 Foam::keyType::keyType(Istream& is)
 :
     variable(),
-    isPattern_(false)
+    type_(UNDEFINED)
 {
     is  >> *this;
 }
@@ -54,15 +60,48 @@ bool Foam::keyType::match
     bool literalMatch
 ) const
 {
-    if (literalMatch || !isPattern_)
+    if (literalMatch || !isPattern())
     {
-        // check as string
+        // Check as string
         return (str == *this);
     }
     else
     {
-        // check as regex
+        // Check as regex
         return regExp(*this).match(str);
+    }
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void Foam::keyType::operator=(const token& t)
+{
+    if (t.isWord())
+    {
+        operator=(t.wordToken());
+    }
+    else if (t.isVariable())
+    {
+        operator=(t.variableToken());
+    }
+    else if (t.isString())
+    {
+        // Assign from string. Set as pattern.
+        operator=(t.stringToken());
+
+        // An empty pattern string is a fatal error
+        if (empty())
+        {
+            FatalErrorInFunction
+                << "Empty pattern string"
+                << exit(FatalIOError);
+        }
+    }
+    else
+    {
+        variable::clear();
+        type_ = UNDEFINED;
     }
 }
 
@@ -79,27 +118,9 @@ Foam::Istream& Foam::operator>>(Istream& is, keyType& kw)
         return is;
     }
 
-    if (t.isWord())
-    {
-        kw = t.wordToken();
-    }
-    else if (t.isString())
-    {
-        // Assign from string. Set as regular expression.
-        kw = t.stringToken();
-        kw.isPattern_ = true;
+    kw = t;
 
-        // flag empty strings as an error
-        if (kw.empty())
-        {
-            is.setBad();
-            FatalIOErrorInFunction(is)
-                << "empty word/expression "
-                << exit(FatalIOError);
-            return is;
-        }
-    }
-    else
+    if (kw.isUndefined())
     {
         is.setBad();
         FatalIOErrorInFunction(is)
