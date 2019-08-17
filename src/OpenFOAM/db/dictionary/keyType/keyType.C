@@ -140,8 +140,41 @@ Foam::Istream& Foam::operator>>(Istream& is, keyType& kw)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const keyType& kw)
 {
-    os.write(kw);
+    os.writeQuoted(kw, kw.isPattern());
     os.check("Ostream& operator<<(Ostream&, const keyType&)");
+    return os;
+}
+
+
+// * * * * * * * * * * * * * * * * Global Function * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::writeKeyword(Foam::Ostream& os, const keyType& kw)
+{
+    //- Indentation of the entry from the start of the keyword
+    static const unsigned short entryIndentation_ = 16;
+
+    os.indent();
+    os << kw;
+
+    label nSpaces = entryIndentation_ - label(kw.size());
+
+    // pattern is surrounded by quotes
+    if (kw.isPattern())
+    {
+        nSpaces -= 2;
+    }
+
+    // could also increment by indentSize_ ...
+    if (nSpaces < 1)
+    {
+        nSpaces = 1;
+    }
+
+    while (nSpaces--)
+    {
+        os.write(char(token::SPACE));
+    }
+
     return os;
 }
 

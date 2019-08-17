@@ -182,7 +182,7 @@ const
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntry(os, "fixTangentialInflow", fixTangentialInflow_);
-    os.writeKeyword("normalVelocity")
+    writeKeyword(os, "normalVelocity")
         << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
     normalVelocity_->write(os);
     os << decrIndent << indent << token::END_BLOCK << endl;

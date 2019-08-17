@@ -112,7 +112,6 @@ $(strings)/variable/variable.C
 $(strings)/variable/variableIO.C
 $(strings)/verbatimString/verbatimString.C
 $(strings)/verbatimString/verbatimStringIO.C
-$(strings)/keyType/keyType.C
 $(strings)/wordRe/wordRe.C
 $(strings)/lists/hashedWordList.C
 $(strings)/stringOps/stringOps.C
@@ -196,6 +195,8 @@ $(Pstreams)/PstreamBuffers.C
 dictionary = db/dictionary
 $(dictionary)/dictionary.C
 $(dictionary)/dictionaryIO.C
+
+$(dictionary)/keyType/keyType.C
 
 entry = $(dictionary)/entry
 $(entry)/entry.C

@@ -37,8 +37,8 @@ SourceFiles
 #define Ostream_H
 
 #include "IOstream.H"
-#include "keyType.H"
 #include "verbatimString.H"
+#include "keyType.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,9 +63,6 @@ protected:
 
         //- Number of spaces per indent level
         static const unsigned short indentSize_ = 4;
-
-        //- Indentation of the entry from the start of the keyword
-        static const unsigned short entryIndentation_ = 16;
 
         //- Current indent level
         unsigned short indentLevel_;
@@ -105,11 +102,6 @@ public:
 
             //- Write word
             virtual Ostream& write(const word&) = 0;
-
-            //- Write keyType
-            //  write regular expression as quoted string
-            //  write plain word as word (unquoted)
-            virtual Ostream& write(const keyType&);
 
             //- Write string
             virtual Ostream& write(const string&) = 0;
@@ -167,7 +159,9 @@ public:
             //- Decrememt the indent level
             void decrIndent();
 
-            //- Write the keyword followed by an appropriate indentation
+            //- Write the keyword followed by an appropriate indentation.
+            //  Here for backward compatibility, replaced by
+            //  writeKeyword(Foam::Ostream& os, const keyType& kw);
             Ostream& writeKeyword(const keyType&);
 
 

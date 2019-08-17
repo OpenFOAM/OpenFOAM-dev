@@ -97,7 +97,7 @@ template<class Type>
 bool Foam::UniformDimensionedField<Type>::writeData(Ostream& os) const
 {
     scalar multiplier;
-    os.writeKeyword("dimensions");
+    writeKeyword(os, "dimensions");
     this->dimensions().write(os, multiplier) << token::END_STATEMENT << nl;
     writeEntry(os, "value", this->value()/multiplier);
     os << nl;

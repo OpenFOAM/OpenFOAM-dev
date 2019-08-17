@@ -341,7 +341,7 @@ void Foam::regionCoupledBase::write(Ostream& os) const
 
     if (!surfDict_.empty())
     {
-        os.writeKeyword(surfDict_.dictName());
+        writeKeyword(os, surfDict_.dictName());
         os  << surfDict_;
     }
 }

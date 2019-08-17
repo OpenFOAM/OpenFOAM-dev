@@ -227,7 +227,7 @@ void Foam::primitiveEntry::write(Ostream& os, const bool contentsOnly) const
 {
     if (!contentsOnly && keyword().size())
     {
-        os.writeKeyword(keyword());
+        writeKeyword(os, keyword());
     }
 
     for (label i=0; i<size(); ++i)

@@ -348,35 +348,35 @@ void Foam::codedFixedValueFvPatchField<Type>::write(Ostream& os) const
 
     if (dict_.found("codeInclude"))
     {
-        os.writeKeyword("codeInclude");
+        writeKeyword(os, "codeInclude");
         os.write(verbatimString(dict_["codeInclude"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("localCode"))
     {
-        os.writeKeyword("localCode");
+        writeKeyword(os, "localCode");
         os.write(verbatimString(dict_["localCode"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("code"))
     {
-        os.writeKeyword("code");
+        writeKeyword(os, "code");
         os.write(verbatimString(dict_["code"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("codeOptions"))
     {
-        os.writeKeyword("codeOptions");
+        writeKeyword(os, "codeOptions");
         os.write(verbatimString(dict_["codeOptions"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("codeLibs"))
     {
-        os.writeKeyword("codeLibs");
+        writeKeyword(os, "codeLibs");
         os.write(verbatimString(dict_["codeLibs"]))
             << token::END_STATEMENT << nl;
     }

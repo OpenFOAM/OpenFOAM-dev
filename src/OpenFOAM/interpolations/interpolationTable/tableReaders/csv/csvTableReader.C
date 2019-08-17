@@ -180,7 +180,7 @@ void Foam::csvTableReader<Type>::write(Ostream& os) const
     writeEntry(os, "timeColumn", timeColumn_);
 
     // Force writing labelList in ascii
-    os.writeKeyword("valueColumns");
+    writeKeyword(os, "valueColumns");
     if (os.format() == IOstream::BINARY)
     {
         os.format(IOstream::ASCII);

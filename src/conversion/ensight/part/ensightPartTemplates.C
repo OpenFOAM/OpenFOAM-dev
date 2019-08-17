@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ void Foam::ensightPart::writeField
 
         if (perNode)
         {
-            os.writeKeyword("coordinates");
+            writeKeyword(os, "coordinates");
             for
             (
                 direction cmpt=0;
@@ -63,7 +63,7 @@ void Foam::ensightPart::writeField
 
                 if (idList.size())
                 {
-                    os.writeKeyword(elementTypes()[elemI]);
+                    writeKeyword(os, elementTypes()[elemI]);
 
                     for
                     (

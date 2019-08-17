@@ -110,7 +110,7 @@ void Foam::wallBoilingModels::nucleationSiteModels::
 KocamustafaogullariIshiiNucleationSite::write(Ostream& os) const
 {
     nucleationSiteModel::write(os);
-    os.writeKeyword("Cn") << Cn_ << token::END_STATEMENT << nl;
+    writeKeyword(os, "Cn") << Cn_ << token::END_STATEMENT << nl;
 }
 
 

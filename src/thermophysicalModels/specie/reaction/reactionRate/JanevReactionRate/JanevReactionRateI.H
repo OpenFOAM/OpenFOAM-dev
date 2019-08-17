@@ -164,10 +164,10 @@ inline Foam::scalar Foam::JanevReactionRate::dcidT
 
 inline void Foam::JanevReactionRate::write(Ostream& os) const
 {
-    os.writeKeyword("A") << A_ << nl;
-    os.writeKeyword("beta") << beta_ << nl;
-    os.writeKeyword("Ta") << Ta_ << nl;
-    os.writeKeyword("b") << b_ << nl;
+    writeKeyword(os, "A") << A_ << nl;
+    writeKeyword(os, "beta") << beta_ << nl;
+    writeKeyword(os, "Ta") << Ta_ << nl;
+    writeKeyword(os, "b") << b_ << nl;
 }
 
 

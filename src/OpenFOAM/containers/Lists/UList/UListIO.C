@@ -76,7 +76,7 @@ void Foam::writeListEntries(Ostream& os, const ListType& l)
 template<class ListType>
 void Foam::writeListEntries(Ostream& os, const word& keyword, const ListType& l)
 {
-    os.writeKeyword(keyword);
+    writeKeyword(os, keyword);
     writeListEntries(os, l);
     os << token::END_STATEMENT << endl;
 }

@@ -92,9 +92,9 @@ void Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::
     write(Ostream& os) const
 {
     nucleationSiteModel::write(os);
-    os.writeKeyword("Cn") << Cn_ << token::END_STATEMENT << nl;
-    os.writeKeyword("NRef") << NRef_ << token::END_STATEMENT << nl;
-    os.writeKeyword("deltaTRef") << deltaTRef_ << token::END_STATEMENT << nl;
+    writeKeyword(os, "Cn") << Cn_ << token::END_STATEMENT << nl;
+    writeKeyword(os, "NRef") << NRef_ << token::END_STATEMENT << nl;
+    writeKeyword(os, "deltaTRef") << deltaTRef_ << token::END_STATEMENT << nl;
 }
 
 

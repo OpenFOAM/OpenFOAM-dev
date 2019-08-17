@@ -149,7 +149,7 @@ Foam::FieldFunction1<Function1Type>::integrate
 template<class Type>
 void Foam::Function1<Type>::writeData(Ostream& os) const
 {
-    os.writeKeyword(name_) << type();
+    writeKeyword(os, name_) << type();
 }
 
 

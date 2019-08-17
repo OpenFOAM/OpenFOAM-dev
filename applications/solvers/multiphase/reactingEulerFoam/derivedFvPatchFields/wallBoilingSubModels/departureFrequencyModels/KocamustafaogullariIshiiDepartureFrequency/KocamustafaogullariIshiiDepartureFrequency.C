@@ -111,7 +111,7 @@ void Foam::wallBoilingModels::departureFrequencyModels::
 KocamustafaogullariIshiiDepartureFrequency::write(Ostream& os) const
 {
     departureFrequencyModel::write(os);
-    os.writeKeyword("Cf") << Cf_ << token::END_STATEMENT << nl;
+    writeKeyword(os, "Cf") << Cf_ << token::END_STATEMENT << nl;
 }
 
 

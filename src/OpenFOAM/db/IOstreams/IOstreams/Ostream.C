@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,11 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "word.H"
 #include "Ostream.H"
-#include "token.H"
-#include "keyType.H"
-#include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -45,37 +41,9 @@ void Foam::Ostream::decrIndent()
 }
 
 
-Foam::Ostream& Foam::Ostream::write(const keyType& kw)
-{
-    return writeQuoted(kw, kw.isPattern());
-}
-
-
 Foam::Ostream& Foam::Ostream::writeKeyword(const keyType& kw)
 {
-    indent();
-    write(kw);
-
-    label nSpaces = entryIndentation_ - label(kw.size());
-
-    // pattern is surrounded by quotes
-    if (kw.isPattern())
-    {
-        nSpaces -= 2;
-    }
-
-    // could also increment by indentSize_ ...
-    if (nSpaces < 1)
-    {
-        nSpaces = 1;
-    }
-
-    while (nSpaces--)
-    {
-        write(char(token::SPACE));
-    }
-
-    return *this;
+    return Foam::writeKeyword(*this, kw);
 }
 
 

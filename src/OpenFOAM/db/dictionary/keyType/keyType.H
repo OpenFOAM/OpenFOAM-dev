@@ -167,6 +167,10 @@ public:
 };
 
 
+//- Write the keyword to the Ostream with the current level of indentation
+Ostream& writeKeyword(Foam::Ostream& os, const keyType& kw);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

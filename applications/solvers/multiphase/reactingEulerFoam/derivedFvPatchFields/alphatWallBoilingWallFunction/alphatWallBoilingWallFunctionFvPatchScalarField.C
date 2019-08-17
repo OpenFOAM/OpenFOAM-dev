@@ -712,7 +712,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
     {
         case vaporPhase:
         {
-            os.writeKeyword("partitioningModel") << nl;
+            writeKeyword(os, "partitioningModel") << nl;
             os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
             partitioningModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
@@ -720,22 +720,22 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
         }
         case liquidPhase:
         {
-            os.writeKeyword("partitioningModel") << nl;
+            writeKeyword(os, "partitioningModel") << nl;
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             partitioningModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
 
-            os.writeKeyword("nucleationSiteModel") << nl;
+            writeKeyword(os, "nucleationSiteModel") << nl;
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             nucleationSiteModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
 
-            os.writeKeyword("departureDiamModel") << nl;
+            writeKeyword(os, "departureDiamModel") << nl;
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             departureDiamModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
 
-            os.writeKeyword("departureFreqModel") << nl;
+            writeKeyword(os, "departureFreqModel") << nl;
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             departureFreqModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;

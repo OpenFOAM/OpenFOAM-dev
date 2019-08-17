@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -272,41 +272,41 @@ void thermalBaffleFvPatchScalarField::write(Ostream& os) const
     if (thisMesh.name() == polyMesh::defaultRegion && owner_)
     {
 
-        os.writeKeyword("extrudeModel");
+        writeKeyword(os, "extrudeModel");
         os << word(dict_.lookup("extrudeModel"))
            << token::END_STATEMENT << nl;
 
-        os.writeKeyword("nLayers");
+        writeKeyword(os, "nLayers");
         os << readLabel(dict_.lookup("nLayers"))
            << token::END_STATEMENT << nl;
 
-        os.writeKeyword("expansionRatio");
+        writeKeyword(os, "expansionRatio");
         os << readScalar(dict_.lookup("expansionRatio"))
            << token::END_STATEMENT << nl;
 
-        os.writeKeyword("columnCells");
+        writeKeyword(os, "columnCells");
         os << readBool(dict_.lookup("columnCells"))
            << token::END_STATEMENT << nl;
 
         word extrudeModel(word(dict_.lookup("extrudeModel")) + "Coeffs");
-        os.writeKeyword(extrudeModel);
+        writeKeyword(os, extrudeModel);
         os << dict_.subDict(extrudeModel) << nl;
 
         word regionName = dict_.lookup("regionName");
-        os.writeKeyword("regionName") << regionName
+        writeKeyword(os, "regionName") << regionName
             << token::END_STATEMENT << nl;
 
         bool active = readBool(dict_.lookup("active"));
-        os.writeKeyword("active") <<  active
+        writeKeyword(os, "active") <<  active
             << token::END_STATEMENT << nl;
 
-        os.writeKeyword("thermoType");
+        writeKeyword(os, "thermoType");
         os << dict_.subDict("thermoType") << nl;
 
-        os.writeKeyword("mixture");
+        writeKeyword(os, "mixture");
         os << dict_.subDict("mixture") << nl;
 
-        os.writeKeyword("radiation");
+        writeKeyword(os, "radiation");
         os << dict_.subDict("radiation") << nl;
    }
 }

@@ -168,7 +168,7 @@ void Foam::writeEntry
     const EntryType& value
 )
 {
-    os.writeKeyword(entryName);
+    writeKeyword(os, entryName);
     writeEntry(os, value);
     os << token::END_STATEMENT << endl;
 }

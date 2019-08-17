@@ -211,7 +211,7 @@ void Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::write
 
     moment_.write(os);
 
-    os.writeKeyword("angleFormat");
+    writeKeyword(os, "angleFormat");
 
     if (convertToDegrees_)
     {
