@@ -50,33 +50,11 @@ Foam::Istream& Foam::operator>>(Istream& is, variable& v)
     {
         v = t.variableToken();
     }
-    else if (t.isWord())
-    {
-        v = t.wordToken();
-    }
-    else if (t.isString())
-    {
-        // Convert string to word stripping invalid characters
-        v = t.stringToken();
-        string::stripInvalid<variable>(v);
-
-        // flag empty strings and bad chars as an error
-        if (v.empty() || v.size() != t.stringToken().size())
-        {
-            is.setBad();
-            FatalIOErrorInFunction(is)
-                << "wrong token type - expected word, found "
-                   "non-word characters "
-                << t.info()
-                << exit(FatalIOError);
-            return is;
-        }
-    }
     else
     {
         is.setBad();
         FatalIOErrorInFunction(is)
-            << "wrong token type - expected word, found "
+            << "wrong token type - expected variable, found "
             << t.info()
             << exit(FatalIOError);
 
@@ -90,9 +68,9 @@ Foam::Istream& Foam::operator>>(Istream& is, variable& v)
 }
 
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const variable& w)
+Foam::Ostream& Foam::operator<<(Ostream& os, const variable& v)
 {
-    os.write(w);
+    os.write(v);
     os.check("Ostream& operator<<(Ostream&, const variable&)");
     return os;
 }
