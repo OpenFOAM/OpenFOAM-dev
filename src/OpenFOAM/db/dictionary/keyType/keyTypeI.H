@@ -46,6 +46,13 @@ inline Foam::keyType::keyType(const word& w)
 {}
 
 
+inline Foam::keyType::keyType(const functionName& fn)
+:
+    variable(fn),
+    type_(FUNCTIONNAME)
+{}
+
+
 inline Foam::keyType::keyType(const variable& v)
 :
     variable(v),
@@ -75,6 +82,12 @@ inline bool Foam::keyType::isUndefined() const
 }
 
 
+inline bool Foam::keyType::isFunctionName() const
+{
+    return type_ == FUNCTIONNAME;
+}
+
+
 inline bool Foam::keyType::isVariable() const
 {
     return type_ == VARIABLE;
@@ -100,6 +113,13 @@ inline void Foam::keyType::operator=(const word& w)
 {
     variable::operator=(w);
     type_ = WORD;
+}
+
+
+inline void Foam::keyType::operator=(const functionName& fn)
+{
+    word::operator=(fn);
+    type_ = FUNCTIONNAME;
 }
 
 

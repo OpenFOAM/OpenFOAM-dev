@@ -138,7 +138,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     }
     else  // Keyword starts entry ...
     {
-        if (keyword[0] == '#')      // ... Function entry
+        if (keyword.isFunctionName())      // ... Function entry
         {
             if (disableFunctionEntries)
             {
@@ -177,12 +177,12 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                 // Substitute dictionary and environment variables. Do not allow
                 // empty substitutions.
                 stringOps::inplaceExpand(s, parentDict, true, false);
-                keyword.std::string::replace(1, keyword.size()-1, s);
+                keyword.std::string::replace(1, keyword.size() - 1, s);
             }
 
             if (nextToken == token::BEGIN_BLOCK)
             {
-                word varName = keyword(1, keyword.size()-1);
+                word varName = keyword(1, keyword.size() - 1);
 
                 // lookup the variable name in the given dictionary
                 const entry* ePtr = parentDict.lookupScopedEntryPtr

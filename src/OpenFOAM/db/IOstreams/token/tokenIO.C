@@ -66,6 +66,10 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const token& t)
             os << *t.wordTokenPtr_;
         break;
 
+        case token::FUNCTIONNAME:
+            os << *t.functionNameTokenPtr_;
+        break;
+
         case token::VARIABLE:
             os << *t.variableTokenPtr_;
         break;
@@ -169,6 +173,10 @@ ostream& Foam::operator<<(ostream& os, const InfoProxy<token>& ip)
             os  << " the verbatim string " << t.verbatimStringToken();
         break;
 
+        case token::FUNCTIONNAME:
+            os  << " the functionName " << t.functionNameToken();
+        break;
+
         case token::VARIABLE:
             os  << " the variable " << t.variableToken();
         break;
@@ -243,6 +251,10 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<token>& ip)
 
         case token::VERBATIMSTRING:
             os  << " the verbatim string " << t.verbatimStringToken();
+        break;
+
+        case token::FUNCTIONNAME:
+            os  << " the functionName " << t.functionNameToken();
         break;
 
         case token::VARIABLE:

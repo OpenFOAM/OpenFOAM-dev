@@ -41,6 +41,7 @@ SourceFiles
 #include "uLabel.H"
 #include "scalar.H"
 #include "word.H"
+#include "functionName.H"
 #include "variable.H"
 #include "verbatimString.H"
 #include "InfoProxy.H"
@@ -81,6 +82,7 @@ public:
 
         PUNCTUATION    = char(128),
         WORD,
+        FUNCTIONNAME,
         VARIABLE,
         STRING,
         VERBATIMSTRING,
@@ -248,6 +250,7 @@ private:
         {
             punctuationToken punctuationToken_;
             word* wordTokenPtr_;
+            functionName* functionNameTokenPtr_;
             variable* variableTokenPtr_;
             string* stringTokenPtr_;
             verbatimString* verbatimStringTokenPtr_;
@@ -335,6 +338,9 @@ public:
             inline bool isWord() const;
             inline const word& wordToken() const;
 
+            inline bool isFunctionName() const;
+            inline const functionName& functionNameToken() const;
+
             inline bool isVariable() const;
             inline const variable& variableToken() const;
 
@@ -400,6 +406,9 @@ public:
             inline void operator=(word*);
             inline void operator=(const word&);
 
+            inline void operator=(functionName*);
+            inline void operator=(const functionName&);
+
             inline void operator=(variable*);
             inline void operator=(const variable&);
 
@@ -422,6 +431,7 @@ public:
             inline bool operator==(const token&) const;
             inline bool operator==(const punctuationToken) const;
             inline bool operator==(const word&) const;
+            inline bool operator==(const functionName&) const;
             inline bool operator==(const variable&) const;
             inline bool operator==(const string&) const;
             inline bool operator==(const verbatimString&) const;
@@ -436,6 +446,7 @@ public:
             inline bool operator!=(const token&) const;
             inline bool operator!=(const punctuationToken) const;
             inline bool operator!=(const word&) const;
+            inline bool operator!=(const functionName&) const;
             inline bool operator!=(const variable&) const;
             inline bool operator!=(const string&) const;
             inline bool operator!=(const verbatimString&) const;

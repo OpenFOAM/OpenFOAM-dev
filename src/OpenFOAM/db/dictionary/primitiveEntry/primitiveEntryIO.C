@@ -38,30 +38,20 @@ void Foam::primitiveEntry::append
     Istream& is
 )
 {
-    if (currToken.isWord())
+    if (disableFunctionEntries)
     {
-        const word& w = currToken.wordToken();
-
-        if
-        (
-            disableFunctionEntries
-         || w.size() == 1
-         || !(w[0] == '#' && expandFunction(w, dict, is))
-        )
+        newElmt(tokenIndex()++) = currToken;
+    }
+    else if (currToken.isFunctionName())
+    {
+        if (!expandFunction(currToken.functionNameToken(), dict, is))
         {
             newElmt(tokenIndex()++) = currToken;
         }
     }
     else if (currToken.isVariable())
     {
-        const variable& v = currToken.variableToken();
-
-        if
-        (
-            disableFunctionEntries
-         || v.size() == 1
-         || !expandVariable(v, dict)
-        )
+        if (!expandVariable(currToken.variableToken(), dict))
         {
             newElmt(tokenIndex()++) = currToken;
         }
@@ -75,13 +65,13 @@ void Foam::primitiveEntry::append
 
 bool Foam::primitiveEntry::expandFunction
 (
-    const word& keyword,
+    const functionName& hashFn,
     const dictionary& parentDict,
     Istream& is
 )
 {
-    word functionName = keyword(1, keyword.size()-1);
-    return functionEntry::execute(functionName, parentDict, *this, is);
+    const word fn = hashFn(1, hashFn.size() - 1);
+    return functionEntry::execute(fn, parentDict, *this, is);
 }
 
 

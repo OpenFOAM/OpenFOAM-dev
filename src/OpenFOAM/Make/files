@@ -103,6 +103,8 @@ strings = primitives/strings
 $(strings)/string/string.C
 $(strings)/string/stringIO.C
 $(strings)/string/stringIOList.C
+$(strings)/verbatimString/verbatimString.C
+$(strings)/verbatimString/verbatimStringIO.C
 $(strings)/word/word.C
 $(strings)/word/wordIO.C
 $(strings)/word/wordIOList.C
@@ -110,8 +112,8 @@ $(strings)/fileName/fileName.C
 $(strings)/fileName/fileNameIO.C
 $(strings)/variable/variable.C
 $(strings)/variable/variableIO.C
-$(strings)/verbatimString/verbatimString.C
-$(strings)/verbatimString/verbatimStringIO.C
+$(strings)/functionName/functionName.C
+$(strings)/functionName/functionNameIO.C
 $(strings)/wordRe/wordRe.C
 $(strings)/lists/hashedWordList.C
 $(strings)/stringOps/stringOps.C

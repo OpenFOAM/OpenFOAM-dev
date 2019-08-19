@@ -33,6 +33,10 @@ inline void Foam::token::clear()
     {
         delete wordTokenPtr_;
     }
+    else if (type_ == FUNCTIONNAME)
+    {
+        delete functionNameTokenPtr_;
+    }
     else if (type_ == VARIABLE)
     {
         delete variableTokenPtr_;
@@ -90,6 +94,10 @@ inline Foam::token::token(const token& t)
 
         case WORD:
             wordTokenPtr_ = new word(*t.wordTokenPtr_);
+        break;
+
+        case FUNCTIONNAME:
+            functionNameTokenPtr_ = new functionName(*t.functionNameTokenPtr_);
         break;
 
         case VARIABLE:
@@ -268,6 +276,24 @@ inline const Foam::word& Foam::token::wordToken() const
     }
 }
 
+inline bool Foam::token::isFunctionName() const
+{
+    return (type_ == FUNCTIONNAME);
+}
+
+inline const Foam::functionName& Foam::token::functionNameToken() const
+{
+    if (type_ == FUNCTIONNAME)
+    {
+        return *functionNameTokenPtr_;
+    }
+    else
+    {
+        parseError(functionName::typeName);
+        return functionName::null;
+    }
+}
+
 inline bool Foam::token::isVariable() const
 {
     return (type_ == VARIABLE);
@@ -327,6 +353,7 @@ inline bool Foam::token::isAnyString() const
     return
     (
         type_ == WORD
+     || type_ == FUNCTIONNAME
      || type_ == VARIABLE
      || type_ == STRING
      || type_ == VERBATIMSTRING
@@ -338,6 +365,10 @@ inline const Foam::string& Foam::token::anyStringToken() const
     if (type_ == WORD)
     {
         return *wordTokenPtr_;
+    }
+    else if (type_ == FUNCTIONNAME)
+    {
+        return *functionNameTokenPtr_;
     }
     else if (type_ == VARIABLE)
     {
@@ -543,6 +574,10 @@ inline void Foam::token::operator=(const token& t)
             wordTokenPtr_ = new word(*t.wordTokenPtr_);
         break;
 
+        case FUNCTIONNAME:
+            functionNameTokenPtr_ = new functionName(*t.functionNameTokenPtr_);
+        break;
+
         case VARIABLE:
             variableTokenPtr_ = new variable(*t.variableTokenPtr_);
         break;
@@ -602,6 +637,18 @@ inline void Foam::token::operator=(word* wPtr)
 inline void Foam::token::operator=(const word& w)
 {
     operator=(new word(w));
+}
+
+inline void Foam::token::operator=(functionName* fnPtr)
+{
+    clear();
+    type_ = FUNCTIONNAME;
+    functionNameTokenPtr_ = fnPtr;
+}
+
+inline void Foam::token::operator=(const functionName& fn)
+{
+    operator=(new functionName(fn));
 }
 
 inline void Foam::token::operator=(variable* vPtr)
@@ -694,6 +741,9 @@ inline bool Foam::token::operator==(const token& t) const
         case WORD:
             return *wordTokenPtr_ == *t.wordTokenPtr_;
 
+        case FUNCTIONNAME:
+            return *functionNameTokenPtr_ == *t.functionNameTokenPtr_;
+
         case VARIABLE:
             return *variableTokenPtr_ == *t.variableTokenPtr_;
 
@@ -737,6 +787,11 @@ inline bool Foam::token::operator==(const punctuationToken p) const
 inline bool Foam::token::operator==(const word& w) const
 {
     return (type_ == WORD && wordToken() == w);
+}
+
+inline bool Foam::token::operator==(const functionName& fn) const
+{
+    return (type_ == FUNCTIONNAME && functionNameToken() == fn);
 }
 
 inline bool Foam::token::operator==(const variable& v) const
@@ -790,6 +845,16 @@ inline bool Foam::token::operator!=(const punctuationToken p) const
 inline bool Foam::token::operator!=(const word& w) const
 {
     return !operator==(w);
+}
+
+inline bool Foam::token::operator!=(const functionName& fn) const
+{
+    return !operator==(fn);
+}
+
+inline bool Foam::token::operator!=(const variable& v) const
+{
+    return !operator==(v);
 }
 
 inline bool Foam::token::operator!=(const string& s) const

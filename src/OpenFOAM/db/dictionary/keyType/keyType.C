@@ -81,6 +81,10 @@ void Foam::keyType::operator=(const token& t)
     {
         operator=(t.wordToken());
     }
+    else if (t.isFunctionName())
+    {
+        operator=(t.functionNameToken());
+    }
     else if (t.isVariable())
     {
         operator=(t.variableToken());
@@ -158,17 +162,13 @@ Foam::Ostream& Foam::writeKeyword(Foam::Ostream& os, const keyType& kw)
 
     label nSpaces = entryIndentation_ - label(kw.size());
 
-    // pattern is surrounded by quotes
+    // Pattern is surrounded by quotes
     if (kw.isPattern())
     {
         nSpaces -= 2;
     }
 
-    // could also increment by indentSize_ ...
-    if (nSpaces < 1)
-    {
-        nSpaces = 1;
-    }
+    nSpaces = max(nSpaces, 1);
 
     while (nSpaces--)
     {

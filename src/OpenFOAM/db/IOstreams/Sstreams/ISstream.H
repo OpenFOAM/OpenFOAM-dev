@@ -72,9 +72,6 @@ class ISstream
         //- Read a work token
         void readWordToken(token&);
 
-        //- Read a variable token
-        void readVariableToken(token&);
-
 
 public:
 

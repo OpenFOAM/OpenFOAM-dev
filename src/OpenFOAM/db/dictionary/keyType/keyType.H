@@ -38,6 +38,7 @@ SourceFiles
 #ifndef keyType_H
 #define keyType_H
 
+#include "functionName.H"
 #include "variable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,6 +73,7 @@ class keyType
     {
         UNDEFINED,
         WORD,
+        FUNCTIONNAME,
         VARIABLE,
         PATTERN
     };
@@ -102,6 +104,9 @@ public:
         //- Construct as word
         inline keyType(const word&);
 
+        //- Construct as functionName
+        inline explicit keyType(const functionName&);
+
         //- Construct as variable
         inline explicit keyType(const variable&);
 
@@ -123,6 +128,9 @@ public:
         //- Return true if the type has not been defined
         inline bool isUndefined() const;
 
+        //- Return true if the keyword is a functionName
+        inline bool isFunctionName() const;
+
         //- Return true if the keyword is a variable
         inline bool isVariable() const;
 
@@ -140,6 +148,9 @@ public:
 
             //- Assignment operator
             inline void operator=(const keyType&);
+
+            //- Assign as functionName
+            inline void operator=(const functionName&);
 
             //- Assign as variable
             inline void operator=(const variable&);

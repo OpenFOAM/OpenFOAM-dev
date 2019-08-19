@@ -77,7 +77,7 @@ class primitiveEntry
         bool expandVariable(const variable&, const dictionary&);
 
         //- Expand the given function (keyword starts with #)
-        bool expandFunction(const word&, const dictionary&, Istream&);
+        bool expandFunction(const functionName&, const dictionary&, Istream&);
 
         //- Read the complete entry from the given stream
         void readEntry(const dictionary&, Istream&);

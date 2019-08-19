@@ -129,22 +129,6 @@ void Foam::ISstream::readWordToken(token& t)
 }
 
 
-void Foam::ISstream::readVariableToken(token& t)
-{
-    variable* vPtr = new variable;
-
-    if (readVariable(*vPtr).bad())
-    {
-        delete vPtr;
-        t.setBad();
-    }
-    else
-    {
-        t = vPtr;
-    }
-}
-
-
 Foam::Istream& Foam::ISstream::read(token& t)
 {
     static const int maxLen = 128;
@@ -245,12 +229,21 @@ Foam::Istream& Foam::ISstream::read(token& t)
             }
             else
             {
-                // Word beginning with #
+                // Function name beginning with a #
                 putback(nextC);
                 putback(c);
 
-                readWordToken(t);
+                functionName* fnPtr = new functionName;
 
+                if (read(*fnPtr).bad())
+                {
+                    delete fnPtr;
+                    t.setBad();
+                }
+                else
+                {
+                    t = fnPtr;
+                }
                 return *this;
             }
         }
@@ -261,8 +254,8 @@ Foam::Istream& Foam::ISstream::read(token& t)
             char nextC;
             if (read(nextC).bad())
             {
-                // Return $ as a variable
-                t = token(variable(c));
+                // Return $ as a word
+                t = token(word(c));
                 return *this;
             }
             else
@@ -270,7 +263,17 @@ Foam::Istream& Foam::ISstream::read(token& t)
                 putback(nextC);
                 putback(c);
 
-                readVariableToken(t);
+                variable* vPtr = new variable;
+
+                if (readVariable(*vPtr).bad())
+                {
+                    delete vPtr;
+                    t.setBad();
+                }
+                else
+                {
+                    t = vPtr;
+                }
 
                 return *this;
             }

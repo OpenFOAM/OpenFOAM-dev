@@ -87,43 +87,29 @@ class ifeqEntry
 :
     public functionEntry
 {
-
 protected:
 
     typedef Tuple2<fileName, label> filePos;
 
-    // Protected Member Functions
+
+private:
+
+    // Private Member Functions
 
         //- Read tokens. Skip dummy tokens
         static void readToken(token& t, Istream& is);
 
-        //- Expand variable
-        static token expand
-        (
-            const dictionary& dict,
-            const variable& var,
-            const token& t
-        );
+        //- Expand token if it is a variable
+        static token expand(const dictionary& dict, const token& t);
 
-        //- Expand a string/word/var token
-        static token expand
-        (
-            const dictionary& dict,
-            const token& t
-        );
-
-        static bool equalToken
-        (
-            const token& t1,
-            const token& t2
-        );
+        static bool equalToken(const token& t1, const token& t2);
 
         //- Consume tokens until reached a specific word
         static void skipUntil
         (
             DynamicList<filePos>& stack,
             const dictionary& parentDict,
-            const word& endWord,
+            const functionName& endWord,
             Istream& is
         );
 
@@ -139,16 +125,21 @@ protected:
         //  skips forward to #else
         static bool execute
         (
-            const bool equal,
             DynamicList<filePos>& stack,
             dictionary& parentDict,
             Istream& is
         );
 
+
+protected:
+
+    // Protected Member Functions
+
         //- Main driver: depending on 'equal' starts evaluating or
         //  skips forward to #else
         static bool execute
         (
+            const bool equal,
             DynamicList<filePos>& stack,
             dictionary& parentDict,
             Istream& is
@@ -159,6 +150,13 @@ public:
 
     //- Runtime type information
     ClassName("ifeq");
+
+    // Function names for the individual elements of the conditional
+    static const functionName ifName;
+    static const functionName ifeqName;
+    static const functionName elifName;
+    static const functionName elseName;
+    static const functionName endifName;
 
 
     // Constructors

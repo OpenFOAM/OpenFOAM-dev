@@ -165,6 +165,15 @@ Foam::Istream& Foam::UIPstream::read(token& t)
             return *this;
         }
 
+        // FunctionName
+        case token::FUNCTIONNAME :
+        {
+            FatalErrorInFunction
+                << "Binary IO of function names not supported"
+                << Foam::abort(FatalError);
+            return *this;
+        }
+
         // Variable
         case token::VARIABLE :
         {
