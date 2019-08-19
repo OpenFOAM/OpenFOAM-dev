@@ -171,20 +171,28 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
                 << exit(FatalError, 1);
         }
 
-        // Read the first entry from the dictionary without expansion
-        entry::disableFunctionEntries = true;
-        autoPtr<entry> firstEntry(entry::New(dictFile()));
-        entry::disableFunctionEntries = false;
-
-        // If the first entry is the "FoamFile" header dictionary
-        // read and set the stream format
-        if (firstEntry->isDict() && firstEntry->keyword() == IOobject::foamFile)
+        // Check if the first character in the file is the first character
+        // of "FoamFile" to avoid problems if the first entry is a variable
+        // or function
+        if (dictFile.peek() == IOobject::foamFile[0])
         {
-            dictFormat = IOstream::formatEnum
+            // Read the first entry from the dictionary
+            autoPtr<entry> firstEntry(entry::New(dictFile()));
+
+            // If the first entry is the "FoamFile" header
+            // read and set the stream format
+            if
             (
-                firstEntry->dict().lookup("format")
-            );
-            dictFile().format(dictFormat);
+                firstEntry->isDict()
+             && firstEntry->keyword() == IOobject::foamFile
+            )
+            {
+                dictFormat = IOstream::formatEnum
+                (
+                    firstEntry->dict().lookup("format")
+                );
+                dictFile().format(dictFormat);
+            }
         }
     }
 
