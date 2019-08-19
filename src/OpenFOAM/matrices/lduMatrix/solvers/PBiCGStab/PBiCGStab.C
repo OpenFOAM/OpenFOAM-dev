@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,14 +204,15 @@ Foam::solverPerformance Foam::PBiCGStab::solve
             solverPerf.finalResidual() =
                 gSumMag(sA, matrix().mesh().comm())/normFactor;
 
-            if (solverPerf.checkConvergence(tolerance_, relTol_))
+            if
+            (
+                ++solverPerf.nIterations() >= maxIter_
+             && solverPerf.checkConvergence(tolerance_, relTol_))
             {
                 for (label cell=0; cell<nCells; cell++)
                 {
                     psiPtr[cell] += alpha*yAPtr[cell];
                 }
-
-                solverPerf.nIterations()++;
 
                 return solverPerf;
             }
@@ -240,11 +241,8 @@ Foam::solverPerformance Foam::PBiCGStab::solve
                /normFactor;
         } while
         (
-            (
-              ++solverPerf.nIterations() < maxIter_
-            && !solverPerf.checkConvergence(tolerance_, relTol_)
-            )
-         || solverPerf.nIterations() < minIter_
+            solverPerf.nIterations() < minIter_
+         || !solverPerf.checkConvergence(tolerance_, relTol_)
         );
     }
 
