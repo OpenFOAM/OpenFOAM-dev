@@ -1123,13 +1123,24 @@ bool Foam::dictionary::add(entry* entryPtr, bool mergeEntry)
     }
     else
     {
-        IOWarningInFunction((*this))
-            << "attempt to add entry "<< entryPtr->keyword()
-            << " which already exists in dictionary " << name()
-            << endl;
+        // If function entries are disabled allow duplicate entries
+        if (entry::disableFunctionEntries)
+        {
+            entryPtr->name() = name() + '/' + entryPtr->keyword();
+            IDLList<entry>::append(entryPtr);
 
-        delete entryPtr;
-        return false;
+            return true;
+        }
+        else
+        {
+            IOWarningInFunction((*this))
+                << "attempt to add entry "<< entryPtr->keyword()
+                << " which already exists in dictionary " << name()
+                << endl;
+
+            delete entryPtr;
+            return false;
+        }
     }
 }
 

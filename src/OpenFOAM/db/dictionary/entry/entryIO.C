@@ -173,7 +173,8 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                 // Recursive substitution mode. Replace between {} with
                 // expansion and then let standard variable expansion deal
                 // with rest.
-                string s(keyword(2, keyword.size()-3));
+                string s(keyword(2, keyword.size() - 3));
+
                 // Substitute dictionary and environment variables. Do not allow
                 // empty substitutions.
                 stringOps::inplaceExpand(s, parentDict, true, false);
@@ -184,7 +185,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             {
                 word varName = keyword(1, keyword.size() - 1);
 
-                // lookup the variable name in the given dictionary
+                // Lookup the variable name in the given dictionary
                 const entry* ePtr = parentDict.lookupScopedEntryPtr
                 (
                     varName,
@@ -227,49 +228,56 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             // Deal with duplicate entries
             bool mergeEntry = false;
 
-            // See (using exact match) if entry already present
-            entry* existingPtr = parentDict.lookupEntryPtr
-            (
-                keyword,
-                false,
-                false
-            );
-
-            if (existingPtr)
+            // If function entries are disabled allow duplicate entries
+            if (disableFunctionEntries)
             {
-                if (functionEntries::inputModeEntry::merge())
-                {
-                    mergeEntry = true;
-                }
-                else if (functionEntries::inputModeEntry::overwrite())
-                {
-                    // clear dictionary so merge acts like overwrite
-                    if (existingPtr->isDict())
-                    {
-                        existingPtr->dict().clear();
-                    }
-                    mergeEntry = true;
-                }
-                else if (functionEntries::inputModeEntry::protect())
-                {
-                    // read and discard the entry
-                    if (nextToken == token::BEGIN_BLOCK)
-                    {
-                        dictionaryEntry dummy(keyword, parentDict, is);
-                    }
-                    else
-                    {
-                        primitiveEntry  dummy(keyword, parentDict, is);
-                    }
-                    return true;
-                }
-                else if (functionEntries::inputModeEntry::error())
-                {
-                    FatalIOErrorInFunction(is)
-                        << "ERROR! duplicate entry: " << keyword
-                        << exit(FatalIOError);
+                mergeEntry = false;
+            }
+            else
+            {
+                // See (using exact match) if entry already present
+                entry* existingPtr = parentDict.lookupEntryPtr
+                (
+                    keyword,
+                    false,
+                    false
+                );
 
-                    return false;
+                if (existingPtr)
+                {
+                    if (functionEntries::inputModeEntry::merge())
+                    {
+                        mergeEntry = true;
+                    }
+                    else if (functionEntries::inputModeEntry::overwrite())
+                    {
+                        // Clear dictionary so merge acts like overwrite
+                        if (existingPtr->isDict())
+                        {
+                            existingPtr->dict().clear();
+                        }
+                        mergeEntry = true;
+                    }
+                    else if (functionEntries::inputModeEntry::protect())
+                    {
+                        // Read and discard the entry
+                        if (nextToken == token::BEGIN_BLOCK)
+                        {
+                            dictionaryEntry dummy(keyword, parentDict, is);
+                        }
+                        else
+                        {
+                            primitiveEntry  dummy(keyword, parentDict, is);
+                        }
+                        return true;
+                    }
+                    else if (functionEntries::inputModeEntry::error())
+                    {
+                        FatalIOErrorInFunction(is)
+                            << "ERROR! duplicate entry: " << keyword
+                            << exit(FatalIOError);
+                        return false;
+                    }
                 }
             }
 
