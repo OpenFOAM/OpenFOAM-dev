@@ -49,14 +49,12 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::string Foam::functionEntry::readLine(const word& key, Istream& is)
+Foam::word Foam::functionEntry::readLine(Istream& is)
 {
-    string s;
+    word s;
     dynamic_cast<ISstream&>(is).getLine(s);
-
-    return key + s;
+    return s;
 }
-
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
@@ -95,8 +93,8 @@ Foam::functionEntry::functionEntry
 :
     primitiveEntry
     (
-        word(key + dict.name() + Foam::name(is.lineNumber())),
-        token(word(readLine(key, is)), is.lineNumber())
+        key,
+        token(readLine(is), is.lineNumber())
     )
 {}
 
@@ -191,6 +189,8 @@ bool Foam::functionEntry::execute
 void Foam::functionEntry::write(Ostream& os) const
 {
     os.indent();
+
+    writeKeyword(os, keyword());
 
     for (label i=0; i<size(); ++i)
     {

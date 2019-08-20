@@ -373,7 +373,6 @@ bool Foam::functionObjectList::readFunctionObject
         funcDict.set("region", region);
     }
 
-    // Merge this functionObject dictionary into functionsDict
     const word funcCallKeyword = string::validate<word>(funcCall);
     dictionary funcArgsDict;
     funcArgsDict.add(funcCallKeyword, funcDict);
@@ -400,6 +399,7 @@ bool Foam::functionObjectList::readFunctionObject
         requiredFields.insert(wordList(expandedFuncDict.lookup("fields")));
     }
 
+    // Merge this functionObject dictionary into functionsDict
     functionsDict.merge(funcArgsDict);
     functionsDict.subDict(funcCallKeyword).name() = funcDict.name();
 
