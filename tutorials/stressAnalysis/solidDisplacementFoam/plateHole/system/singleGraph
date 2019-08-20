@@ -6,21 +6,18 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 
-singleGraph
+start   (0 0.5 0.25);
+end     (0   2 0.25);
+fields  (sigmaxx);
+
+#includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
+
+setConfig
 {
-    start   (0 0.5 0.25);
-    end     (0   2 0.25);
-    fields  (sigmaxx);
-
-    #includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
-
-    setConfig
-    {
-        axis    y;
-    }
-
-    // Must be last entry
-    #includeEtc "caseDicts/postProcessing/graphs/graph.cfg"
+    axis    y;
 }
+
+// Must be last entry
+#includeEtc "caseDicts/postProcessing/graphs/graph.cfg"
 
 // ************************************************************************* //
