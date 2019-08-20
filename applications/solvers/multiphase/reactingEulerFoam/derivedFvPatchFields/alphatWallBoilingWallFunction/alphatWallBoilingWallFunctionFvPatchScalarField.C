@@ -605,7 +605,11 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 // Quenching heat transfer coefficient
                 const scalarField hQ
                 (
-                    2*(alphaw*Cpw)*fDep*sqrt((0.8/fDep)/(pi*alphaw/rhoLiquidw))
+                    2*(alphaw*Cpw)*fDep
+                   *sqrt
+                    (
+                        (0.8/max(fDep, small))/(pi*alphaw/rhoLiquidw)
+                    )
                 );
 
                 // Quenching heat flux
