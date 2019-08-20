@@ -71,6 +71,15 @@ class calcEntry
 :
     public functionEntry
 {
+    // Private Member Functions
+
+        //- Perform the calculation and return the resulting string
+        static string calc
+        (
+            const dictionary& parentDict,
+            Istream& is
+        );
+
 
 public:
 

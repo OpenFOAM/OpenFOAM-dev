@@ -70,6 +70,23 @@ class functionEntry
         //- Read line as string token
         static string readLine(const word& key, Istream& is);
 
+protected:
+
+        //- Insert the given string in a sub-dict context
+        static bool insert
+        (
+            dictionary& parentDict,
+            const string&
+        );
+
+        //- Insert the given string in a primitiveEntry context
+        static bool insert
+        (
+            const dictionary& parentDict,
+            primitiveEntry& thisEntry,
+            const string&
+        );
+
 
 public:
 

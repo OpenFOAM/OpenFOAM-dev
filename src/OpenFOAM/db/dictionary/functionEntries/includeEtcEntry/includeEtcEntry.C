@@ -166,7 +166,6 @@ bool Foam::functionEntries::includeEtcEntry::execute
         includeEtcFileName(rawFName, parentDict)
     );
 
-    // IFstream ifs(fName);
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
     ISstream& ifs = ifsPtr();
 

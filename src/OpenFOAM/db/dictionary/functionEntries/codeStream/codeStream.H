@@ -114,9 +114,9 @@ class codeStream
 :
     public functionEntry
 {
+    //- Interpreter function type
+    typedef void (*streamingFunctionType)(Ostream&, const dictionary&);
 
-        //- Interpreter function type
-        typedef void (*streamingFunctionType)(Ostream&, const dictionary&);
 
     // Private Member Functions
 
@@ -135,6 +135,13 @@ class codeStream
         (
             const dictionary& parentDict,
             const dictionary& codeDict
+        );
+
+        //- Compile and execute the code and return the resulting string
+        static string run
+        (
+            const dictionary& parentDict,
+            Istream& is
         );
 
 

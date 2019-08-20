@@ -130,7 +130,6 @@ bool Foam::functionEntries::includeEntry::execute
         includeFileName(is.name().path(), rawFName, parentDict)
     );
 
-    // IFstream ifs(fName);
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
     ISstream& ifs = ifsPtr();
 
@@ -190,7 +189,6 @@ bool Foam::functionEntries::includeEntry::execute
         includeFileName(is.name().path(), rawFName, parentDict)
     );
 
-    // IFstream ifs(fName);
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
     ISstream& ifs = ifsPtr();
 
@@ -216,5 +214,6 @@ bool Foam::functionEntries::includeEntry::execute
         return false;
     }
 }
+
 
 // ************************************************************************* //

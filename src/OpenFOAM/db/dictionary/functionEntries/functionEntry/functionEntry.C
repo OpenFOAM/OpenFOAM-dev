@@ -58,6 +58,32 @@ Foam::string Foam::functionEntry::readLine(const word& key, Istream& is)
 }
 
 
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::functionEntry::insert
+(
+    dictionary& parentDict,
+    const string& str
+)
+{
+    parentDict.read(IStringStream(str)());
+    return true;
+}
+
+
+bool Foam::functionEntry::insert
+(
+    const dictionary& parentDict,
+    primitiveEntry& thisEntry,
+    const string& str
+)
+{
+    thisEntry.read(parentDict, IStringStream(str)());
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionEntry::functionEntry

@@ -53,7 +53,7 @@ namespace functionEntries
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::string Foam::functionEntries::negEntry::negateVariable
 (
@@ -103,20 +103,7 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
 }
 
 
-bool Foam::functionEntries::negEntry::execute
-(
-    const dictionary& parentDict,
-    primitiveEntry& thisEntry,
-    Istream& is
-)
-{
-    // Reinsert negated variable into entry
-    IStringStream resultStream(negateVariable(parentDict, is));
-    thisEntry.read(parentDict, resultStream);
-
-    return true;
-}
-
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::functionEntries::negEntry::execute
 (
@@ -124,11 +111,18 @@ bool Foam::functionEntries::negEntry::execute
     Istream& is
 )
 {
-    // Reinsert negated variable into dictionary
-    IStringStream resultStream(negateVariable(parentDict, is));
-    parentDict.read(resultStream);
+    return insert(parentDict, negateVariable(parentDict, is));
+}
 
-    return true;
+
+bool Foam::functionEntries::negEntry::execute
+(
+    const dictionary& parentDict,
+    primitiveEntry& thisEntry,
+    Istream& is
+)
+{
+    return insert(parentDict, thisEntry, negateVariable(parentDict, is));
 }
 
 
