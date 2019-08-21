@@ -37,13 +37,12 @@ namespace functionEntries
 {
     defineTypeNameAndDebug(ifeqEntry, 0);
 
-    addNamedToMemberFunctionSelectionTable
+    addToMemberFunctionSelectionTable
     (
         functionEntry,
         ifeqEntry,
         execute,
-        dictionaryIstream,
-        ifeq
+        dictionaryIstream
     );
 }
 }
