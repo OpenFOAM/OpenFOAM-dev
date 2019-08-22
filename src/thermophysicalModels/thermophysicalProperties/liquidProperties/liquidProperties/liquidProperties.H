@@ -161,7 +161,7 @@ public:
 
         // Physical constants which define the specie
 
-            //- No of moles of this species in mixture
+            //- Mass fraction of this specie in mixture
             //  Note Mixing of liquidProperties is not currently supported
             //  so Y = 1
             inline scalar Y() const;

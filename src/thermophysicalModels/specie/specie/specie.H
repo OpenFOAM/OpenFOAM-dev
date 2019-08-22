@@ -70,7 +70,7 @@ class specie
         //- Name of specie
         word name_;
 
-        //- Number of moles of this component in the mixture
+        //- Mass fraction of this specie in mixture
         scalar Y_;
 
         //- Molecular weight of specie [kg/kmol]
@@ -116,7 +116,7 @@ public:
             //- Molecular weight [kg/kmol]
             inline scalar W() const;
 
-            //- No of moles of this species in mixture
+            //- Mass fraction of this specie in mixture
             inline scalar Y() const;
 
             //- Gas constant [J/kg/K]
