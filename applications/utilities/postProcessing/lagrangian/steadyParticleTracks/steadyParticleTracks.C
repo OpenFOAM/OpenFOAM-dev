@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    fileName vtkPath(runTime.path()/"VTK");
+    const fileName vtkPath(runTime.rootPath()/runTime.globalCaseName()/"VTK");
     mkDir(vtkPath);
 
     typedef HashTable<label, labelPair, labelPair::Hash<>> trackTableType;
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
         runTime.setTime(timeDirs[timeI], timeI);
         Info<< "Time = " << runTime.timeName() << endl;
 
-        fileName vtkTimePath(runTime.path()/"VTK"/runTime.timeName());
+        const fileName vtkTimePath(vtkPath/runTime.timeName());
         mkDir(vtkTimePath);
 
         Info<< "    Reading particle positions" << endl;
@@ -328,7 +328,6 @@ int main(int argc, char *argv[])
                 processFields<symmTensor>
                     (os, particleMap, userFields, cloudObjs);
                 processFields<tensor>(os, particleMap, userFields, cloudObjs);
-
             }
         }
         Info<< endl;
