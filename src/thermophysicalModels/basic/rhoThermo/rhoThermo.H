@@ -57,7 +57,7 @@ protected:
     // Protected data
 
         //- Density field [kg/m^3]
-        //  Named 'rhoThermo' to avoid (potential) conflict with solver density
+        //  Named 'thermo:rho' to avoid (potential) conflict with solver density
         volScalarField rho_;
 
         //- Compressibility [s^2/m^2]
