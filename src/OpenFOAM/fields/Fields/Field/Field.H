@@ -83,12 +83,13 @@ class Field
 {
     // Private Member Functions
 
-        void doMap
+        //- Return reference to copy of this field if mapF is the same field
+        //  otherwise return mapF
+        const UList<Type>& copySelf
         (
             const UList<Type>& mapF,
-            const labelListList& mapAddressing,
-            const scalarListList& mapWeights
-        );
+            tmp<Field<Type>>& tmapFcpy
+        ) const;
 
 
 public:

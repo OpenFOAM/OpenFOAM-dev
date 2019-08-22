@@ -265,13 +265,31 @@ Foam::tmp<Foam::Field<Type>> Foam::Field<Type>::clone() const
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Field<Type>::map
+const Foam::UList<Type>& Foam::Field<Type>::copySelf
 (
     const UList<Type>& mapF,
+    tmp<Field<Type>>& tmapF
+) const
+{
+    if (static_cast<const UList<Type>*>(this) == &mapF)
+    {
+        tmapF = clone();
+    }
+    return tmapF.valid() ? tmapF() : mapF;
+}
+
+
+template<class Type>
+void Foam::Field<Type>::map
+(
+    const UList<Type>& mapF0,
     const labelUList& mapAddressing
 )
 {
     Field<Type>& f = *this;
+
+    tmp<Field<Type>> tmapF;
+    const UList<Type>& mapF = copySelf(mapF0, tmapF);
 
     if (f.size() != mapAddressing.size())
     {
@@ -282,11 +300,11 @@ void Foam::Field<Type>::map
     {
         forAll(f, i)
         {
-            label mapI = mapAddressing[i];
+            const label mapi = mapAddressing[i];
 
-            if (mapI >= 0)
+            if (mapi >= 0)
             {
-                f[i] = mapF[mapI];
+                f[i] = mapF[mapi];
             }
         }
     }
@@ -306,14 +324,29 @@ void Foam::Field<Type>::map
 
 
 template<class Type>
-void Foam::Field<Type>::doMap
+void Foam::Field<Type>::map
 (
-    const UList<Type>& mapF,
+    const UList<Type>& mapF0,
     const labelListList& mapAddressing,
     const scalarListList& mapWeights
 )
 {
+    if (mapWeights.size() != mapAddressing.size())
+    {
+        FatalErrorInFunction
+            << mapWeights.size() << " map size: " << mapAddressing.size()
+            << abort(FatalError);
+    }
+
     Field<Type>& f = *this;
+
+    tmp<Field<Type>> tmapF;
+    const UList<Type>& mapF = copySelf(mapF0, tmapF);
+
+    if (this->size() != mapAddressing.size())
+    {
+        this->setSize(mapAddressing.size());
+    }
 
     forAll(f, i)
     {
@@ -326,44 +359,6 @@ void Foam::Field<Type>::doMap
         {
             f[i] += localWeights[j]*mapF[localAddrs[j]];
         }
-    }
-}
-
-
-template<class Type>
-void Foam::Field<Type>::map
-(
-    const UList<Type>& mapF,
-    const labelListList& mapAddressing,
-    const scalarListList& mapWeights
-)
-{
-    if (mapWeights.size() != mapAddressing.size())
-    {
-        FatalErrorInFunction
-            << mapWeights.size() << " map size: " << mapAddressing.size()
-            << abort(FatalError);
-    }
-
-    if (static_cast<UList<Type>*>(this) == &mapF)
-    {
-        Field<Type> mapFcpy(mapF);
-
-        if (this->size() != mapAddressing.size())
-        {
-            this->setSize(mapAddressing.size());
-        }
-
-        doMap(mapFcpy, mapAddressing, mapWeights);
-    }
-    else
-    {
-        if (this->size() != mapAddressing.size())
-        {
-            this->setSize(mapAddressing.size());
-        }
-
-        doMap(mapF, mapAddressing, mapWeights);
     }
 }
 
@@ -384,19 +379,22 @@ void Foam::Field<Type>::map
 template<class Type>
 void Foam::Field<Type>::rmap
 (
-    const UList<Type>& mapF,
+    const UList<Type>& mapF0,
     const labelUList& mapAddressing
 )
 {
     Field<Type>& f = *this;
 
+    tmp<Field<Type>> tmapF;
+    const UList<Type>& mapF = copySelf(mapF0, tmapF);
+
     forAll(mapF, i)
     {
-        label mapI = mapAddressing[i];
+        const label mapi = mapAddressing[i];
 
-        if (mapI >= 0)
+        if (mapi >= 0)
         {
-            f[mapI] = mapF[i];
+            f[mapi] = mapF[i];
         }
     }
 }
@@ -417,12 +415,15 @@ void Foam::Field<Type>::rmap
 template<class Type>
 void Foam::Field<Type>::rmap
 (
-    const UList<Type>& mapF,
+    const UList<Type>& mapF0,
     const labelUList& mapAddressing,
     const UList<scalar>& mapWeights
 )
 {
     Field<Type>& f = *this;
+
+    tmp<Field<Type>> tmapF;
+    const UList<Type>& mapF = copySelf(mapF0, tmapF);
 
     f = Zero;
 
