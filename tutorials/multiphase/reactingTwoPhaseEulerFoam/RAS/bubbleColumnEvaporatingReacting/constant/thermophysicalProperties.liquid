@@ -26,15 +26,7 @@ thermoType
     energy          sensibleInternalEnergy;
 }
 
-species
-(
-    AIR
-    H2O
-);
-
-inertSpecie H2O;
-
-"(mixture|H2O)"
+mixture
 {
     specie
     {
@@ -56,29 +48,5 @@ inertSpecie H2O;
         Pr          2.289;
     }
 }
-
-AIR
-{
-    specie
-    {
-        molWeight   28.9;
-    }
-    equationOfState
-    {
-        R           3000;
-        rho0        1027;
-    }
-    thermodynamics
-    {
-        Hf          0;
-        Cv          4195;
-    }
-    transport
-    {
-        mu          3.645e-4;
-        Pr          2.289;
-    }
-}
-
 
 // ************************************************************************* //
