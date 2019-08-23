@@ -161,38 +161,42 @@ fluxLimitedLangmuirHinshelwoodReactionRate
     if (A_.size() != nCoeffs)
     {
         FatalIOErrorInFunction(dict)
-           << "Number of A coefficents != " << nCoeffs << exit(FatalIOError);
+           << "Number of A coefficients != " << nCoeffs
+           << exit(FatalIOError);
     }
 
     if (Ta_.size() != nCoeffs)
     {
         FatalIOErrorInFunction(dict)
-           << "Number of Ta coefficents != " << nCoeffs << exit(FatalIOError);
+           << "Number of Ta coefficients != " << nCoeffs
+           << exit(FatalIOError);
     }
 
     if (beta_.size() != nCoeffs)
     {
         FatalIOErrorInFunction(dict)
-           << "Number of beta coefficents != " << nCoeffs << exit(FatalIOError);
+           << "Number of beta coefficients != " << nCoeffs
+           << exit(FatalIOError);
     }
 
     if (m_.size() != nCoeffs)
     {
         FatalIOErrorInFunction(dict)
-           << "Number of m coefficents != " << nCoeffs << exit(FatalIOError);
+           << "Number of m coefficients != " << nCoeffs
+           << exit(FatalIOError);
     }
 
     if (s_.size() != nReactants_)
     {
         FatalIOErrorInFunction(dict)
-           << "Number of s coefficents != "
+           << "Number of s coefficients != "
            << nReactants_ << exit(FatalIOError);
     }
 
     if (W_.size() != nReactants_)
     {
         FatalIOErrorInFunction(dict)
-           << "Number of W coefficents != "
+           << "Number of W coefficients != "
            << nReactants_ << exit(FatalIOError);
     }
 }

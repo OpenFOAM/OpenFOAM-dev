@@ -25,7 +25,7 @@ Class
     Foam::pressureControl
 
 Description
-    Provides controls for the pressure reference is closed-volume simulations
+    Provides controls for the pressure reference in closed-volume simulations
     and a general method for limiting the pressure during the startup of
     steady-state simulations.
 
