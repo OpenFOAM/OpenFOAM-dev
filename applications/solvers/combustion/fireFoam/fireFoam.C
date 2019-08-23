@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting time loop\n" << endl;
 
-    while (runTime.run())
+    while (pimple.run(runTime))
     {
         #include "readTimeControls.H"
         #include "compressibleCourantNo.H"
