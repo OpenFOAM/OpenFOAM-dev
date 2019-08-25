@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,16 +39,18 @@ namespace Foam
 
 void Foam::porosityModel::adjustNegativeResistance(dimensionedVector& resist)
 {
-    scalar maxCmpt = max(0, cmptMax(resist.value()));
+    scalar maxCmpt = cmptMax(resist.value());
 
     if (maxCmpt < 0)
     {
         FatalErrorInFunction
-            << "Negative resistances are invalid, resistance = " << resist
+            << "Cannot have all resistances set to negative, resistance = "
+            << resist
             << exit(FatalError);
     }
     else
     {
+        maxCmpt = max(0, maxCmpt);
         vector& val = resist.value();
         for (label cmpt = 0; cmpt < vector::nComponents; cmpt++)
         {
