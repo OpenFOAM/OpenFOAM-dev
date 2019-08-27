@@ -25,6 +25,30 @@ Class
     Foam::wallDampingModel
 
 Description
+    Wall damping models can be used to filter interfacial models near the walls.
+    This is particularly useful for the lift force because of its dependence on
+    the velocity gradient.
+
+    All damping functions accept the following parameters:
+
+      - Cd: A coefficient for filtering the distance from the wall based on the
+        dispersed phase diameter. This can be useful to correct gradient
+        sampling error when the dispersed phase diameter is significantly
+        larger than near wall mesh resolution.
+      - zeroWallDist: A constant offset from the wall for the zero point of
+        the damping function. Below this distance, the damping will reduce the
+        value to zero.
+      - zeroInNearWallCells: A switch which sets the value to zero in near wall
+        cells regardless of the other parameters. This is recommended to be set
+        if a lift force is applied together with turbulent wall functions.
+
+Usage
+    \table
+        Property     | Description                 | Required | Default value
+        Cd           | Diameter coefficient        | yes      | none
+        zeroWallDist | Offset from wall            | no       | 0
+        zeroInNearWallCells | Zero near wall cells | no       | no
+    \endtable
 
 SourceFiles
     wallDampingModel.C
