@@ -19,14 +19,16 @@ thermoType
 {
     type            heRhoThermo;
     mixture         multiComponentMixture;
-    transport       polynomial;
-    thermo          hPolynomial;
-    energy          sensibleInternalEnergy;
-    equationOfState icoPolynomial;
+    transport       sutherland;
+    thermo          janaf;
+    energy          sensibleEnthalpy;
+    equationOfState perfectGas;
     specie          specie;
 }
 
-#include "thermo.incompressiblePoly"
+#include "speciesThermo"
+
+inertSpecie     N2;
 
 liquids
 {
@@ -35,8 +37,6 @@ liquids
 
 solids
 {}
-
-inertSpecie     N2;
 
 
 // ************************************************************************* //

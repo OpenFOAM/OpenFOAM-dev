@@ -19,35 +19,32 @@ thermoType
 {
     type            heRhoThermo;
     mixture         pureMixture;
-    transport       polynomial;
-    thermo          hPolynomial;
-    equationOfState icoPolynomial;
+    transport       sutherland;
+    thermo          janaf;
+    equationOfState perfectGas;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
 
 mixture
 {
-    // coefficients for air
-
     specie
     {
-        molWeight       28.85;
-    }
-    equationOfState
-    {
-        rhoCoeffs<8>    ( 4.0097 -0.016954 3.3057e-05 -3.0042e-08 1.0286e-11 0 0 0 );
+        nMoles          1;
+        molWeight       28.9596;
     }
     thermodynamics
     {
-        Hf              0;
-        Sf              0;
-        CpCoeffs<8>     ( 948.76 0.39171 -0.00095999 1.393e-06 -6.2029e-10 0 0 0 );
+        Tlow            200;
+        Thigh           3500;
+        Tcommon         1000;
+        highCpCoeffs    ( 3.57304 -7.24383e-04 1.67022e-06 -1.26501e-10 -4.20580e-13 -1047.41 3.12431 );
+        lowCpCoeffs     ( 3.09589 1.22835e-03 -4.14267e-07 6.56910e-11 -3.87021e-15 -983.191 5.34161 );
     }
     transport
     {
-        muCoeffs<8>     ( 1.5061e-06 6.16e-08 -1.819e-11 0 0 0 0 0 );
-        kappaCoeffs<8>  ( 0.0025219 8.506e-05 -1.312e-08 0 0 0 0 0 );
+        As              1.67212e-06;
+        Ts              170.672;
     }
 }
 

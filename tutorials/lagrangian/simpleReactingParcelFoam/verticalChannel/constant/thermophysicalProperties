@@ -19,14 +19,14 @@ thermoType
 {
     type            heRhoThermo;
     mixture         multiComponentMixture;
-    transport       polynomial;
-    thermo          hPolynomial;
+    transport       sutherland;
+    thermo          janaf;
     energy          sensibleEnthalpy;
-    equationOfState icoPolynomial;
+    equationOfState perfectGas;
     specie          specie;
 }
 
-#include "thermo.incompressiblePoly"
+#include "speciesThermo"
 
 inertSpecie     air;
 
