@@ -128,7 +128,8 @@ inline Foam::scalar Foam::sutherlandTransport<Thermo>::mu
 template<class Thermo>
 inline Foam::scalar Foam::sutherlandTransport<Thermo>::kappa
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     scalar Cv_ = this->Cv(p, T);

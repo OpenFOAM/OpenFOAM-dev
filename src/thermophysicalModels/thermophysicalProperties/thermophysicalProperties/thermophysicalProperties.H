@@ -145,7 +145,7 @@ public:
             //- Chemical enthalpy [J/kg]
             virtual scalar Hc() const = 0;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             virtual scalar Ha(const scalar p, const scalar T) const = 0;
 
             // Entropy [J/kg/K]

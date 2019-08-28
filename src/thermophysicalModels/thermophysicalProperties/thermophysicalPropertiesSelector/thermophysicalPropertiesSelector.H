@@ -128,7 +128,7 @@ public:
             //- Chemical enthalpy [J/kg]
             inline scalar Hc() const;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
 
             //- Heat capacity at constant volume [J/kg/K]

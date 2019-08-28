@@ -84,7 +84,8 @@ inline Foam::scalar Foam::WLFTransport<Thermo>::mu
 template<class Thermo>
 inline Foam::scalar Foam::WLFTransport<Thermo>::kappa
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return this->Cp(p, T)*mu(p, T)*rPr_;

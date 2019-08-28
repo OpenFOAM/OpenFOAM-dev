@@ -103,7 +103,8 @@ inline Foam::scalar Foam::polynomialTransport<Thermo, PolySize>::kappa
 template<class Thermo, int PolySize>
 inline Foam::scalar Foam::polynomialTransport<Thermo, PolySize>::alphah
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return kappa(p, T)/this->Cp(p, T);

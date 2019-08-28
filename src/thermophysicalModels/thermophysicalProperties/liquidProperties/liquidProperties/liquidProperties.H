@@ -220,7 +220,7 @@ public:
             //- Chemical enthalpy [J/kg]
             inline scalar Hc() const;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
 
             // Entropy [J/kg/K]

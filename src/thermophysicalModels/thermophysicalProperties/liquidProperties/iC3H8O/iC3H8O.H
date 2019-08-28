@@ -131,7 +131,7 @@ public:
         //- Liquid heat capacity [J/kg/K]
         inline scalar Cp(scalar p, scalar T) const;
 
-        //- Liquid Enthalpy [J/kg]
+        //- Liquid enthalpy [J/kg]
         inline scalar h(scalar p, scalar T) const;
 
         //- Ideal gas heat capacity [J/kg/K]
