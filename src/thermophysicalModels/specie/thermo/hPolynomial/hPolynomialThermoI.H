@@ -80,7 +80,8 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::limit
 template<class EquationOfState, int PolySize>
 inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Cp
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return CpCoeffs_.value(T) + EquationOfState::Cp(p, T);
@@ -90,7 +91,8 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Cp
 template<class EquationOfState, int PolySize>
 inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Ha
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return hCoeffs_.value(T) + EquationOfState::H(p, T);
@@ -100,7 +102,8 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Ha
 template<class EquationOfState, int PolySize>
 inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Hs
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return Ha(p, T) - Hc();
@@ -123,6 +126,16 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::S
 ) const
 {
     return sCoeffs_.value(T) + EquationOfState::S(p, T);
+}
+
+
+template<class EquationOfState, int PolySize>
+inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Gstd
+(
+    const scalar T
+) const
+{
+    return hCoeffs_.value(T) - sCoeffs_.value(T)*T;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,8 @@ inline Foam::scalar Foam::hConstThermo<EquationOfState>::Cp
 template<class EquationOfState>
 inline Foam::scalar Foam::hConstThermo<EquationOfState>::Hs
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return Cp_*T + EquationOfState::H(p, T);
@@ -119,7 +120,8 @@ inline Foam::scalar Foam::hConstThermo<EquationOfState>::Hc() const
 template<class EquationOfState>
 inline Foam::scalar Foam::hConstThermo<EquationOfState>::Ha
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return Hs(p, T) + Hc();
@@ -129,7 +131,8 @@ inline Foam::scalar Foam::hConstThermo<EquationOfState>::Ha
 template<class EquationOfState>
 inline Foam::scalar Foam::hConstThermo<EquationOfState>::S
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return Cp_*log(T/Tstd) + EquationOfState::S(p, T);
@@ -137,9 +140,20 @@ inline Foam::scalar Foam::hConstThermo<EquationOfState>::S
 
 
 template<class EquationOfState>
+inline Foam::scalar Foam::hConstThermo<EquationOfState>::Gstd
+(
+    const scalar T
+) const
+{
+    return Cp_*T + Hc() - Cp_*T*log(T/Tstd);
+}
+
+
+template<class EquationOfState>
 inline Foam::scalar Foam::hConstThermo<EquationOfState>::dGdT
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return 0;
@@ -149,7 +163,8 @@ inline Foam::scalar Foam::hConstThermo<EquationOfState>::dGdT
 template<class EquationOfState>
 inline Foam::scalar Foam::hConstThermo<EquationOfState>::dCpdT
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return 0;

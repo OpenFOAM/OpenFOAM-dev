@@ -282,7 +282,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::K(const scalar p, const scalar T) const
 {
-    scalar arg = -this->Y()*this->G(Pstd, T)/(RR*T);
+    scalar arg = -this->Y()*this->Gstd(T)/(RR*T);
 
     if (arg < 600)
     {

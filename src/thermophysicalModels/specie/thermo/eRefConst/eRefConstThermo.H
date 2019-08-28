@@ -151,6 +151,9 @@ public:
             //- Entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
+            //- Gibbs free energy of the mixture in the standard state [J/kg]
+            inline scalar Gstd(const scalar T) const;
+
             #include "EtoHthermo.H"
 
 
