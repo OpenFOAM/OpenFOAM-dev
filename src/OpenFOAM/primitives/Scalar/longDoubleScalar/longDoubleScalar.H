@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,12 +53,12 @@ typedef long double longDoubleScalar;
 
 // Largest and smallest scalar values allowed in certain parts of the code.
 static const longDoubleScalar longDoubleScalarVGreat
-    = numeric_limits<long double>::max()/10;
+    = numeric_limits<longDoubleScalar>::max()/10;
 static const longDoubleScalar longDoubleScalarVSmall
-    = numeric_limits<double>::min();
+    = numeric_limits<longDoubleScalar>::min();
 
 static const longDoubleScalar longDoubleScalarSmall
-    = 1e3*numeric_limits<long double>::epsilon();
+    = 1e3*numeric_limits<longDoubleScalar>::epsilon();
 static const longDoubleScalar longDoubleScalarGreat
     = 1.0/longDoubleScalarSmall;
 
@@ -71,6 +71,9 @@ static const longDoubleScalar longDoubleScalarRootGreat
     = ::sqrtl(longDoubleScalarGreat);
 static const longDoubleScalar longDoubleScalarRootSmall
     = ::sqrtl(longDoubleScalarSmall);
+
+static const longDoubleScalar longDoubleScalarNaN
+    = numeric_limits<longDoubleScalar>::signaling_NaN();
 
 //- Read whole of buf as a scalar. Return true if successful.
 inline bool readScalar(const char* buf, longDoubleScalar& s)

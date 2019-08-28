@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,17 +52,24 @@ namespace Foam
 typedef double doubleScalar;
 
 // Largest and smallest scalar values allowed in certain parts of the code.
-static const doubleScalar doubleScalarVGreat = numeric_limits<double>::max()/10;
-static const doubleScalar doubleScalarVSmall = numeric_limits<double>::min();
+static const doubleScalar doubleScalarVGreat
+    = numeric_limits<doubleScalar>::max()/10;
+static const doubleScalar doubleScalarVSmall
+    = numeric_limits<doubleScalar>::min();
 
-static const doubleScalar doubleScalarSmall = numeric_limits<double>::epsilon();
-static const doubleScalar doubleScalarGreat = 1.0/doubleScalarSmall;
+static const doubleScalar doubleScalarSmall
+    = numeric_limits<doubleScalar>::epsilon();
+static const doubleScalar doubleScalarGreat
+    = 1.0/doubleScalarSmall;
 
 static const doubleScalar doubleScalarRootVGreat = ::sqrt(doubleScalarVGreat);
 static const doubleScalar doubleScalarRootVSmall = ::sqrt(doubleScalarVSmall);
 
 static const doubleScalar doubleScalarRootGreat = ::sqrt(doubleScalarGreat);
 static const doubleScalar doubleScalarRootSmall = ::sqrt(doubleScalarSmall);
+
+static const doubleScalar doubleScalarNaN
+    = numeric_limits<doubleScalar>::signaling_NaN();
 
 //- Read whole of buf as a scalar. Return true if successful.
 inline bool readScalar(const char* buf, doubleScalar& s)

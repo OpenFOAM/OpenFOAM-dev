@@ -58,6 +58,7 @@ namespace Foam
     static const scalar rootSmall = floatScalarRootSmall;
     static const scalar vSmall = floatScalarVSmall;
     static const scalar rootVSmall = floatScalarRootVSmall;
+    static const scalar NaN = floatScalarNaN;
 }
 
 #elif defined(WM_DP)
@@ -76,6 +77,7 @@ namespace Foam
     static const scalar rootSmall = doubleScalarRootSmall;
     static const scalar vSmall = doubleScalarVSmall;
     static const scalar rootVSmall = doubleScalarRootVSmall;
+    static const scalar NaN = doubleScalarNaN;
 }
 
 #elif defined(WM_LP)
@@ -94,6 +96,7 @@ namespace Foam
     static const scalar rootSmall = longDoubleScalarRootSmall;
     static const scalar vSmall = longDoubleScalarVSmall;
     static const scalar rootVSmall = longDoubleScalarRootVSmall;
+    static const scalar NaN = longDoubleScalarNaN;
 }
 
 #else

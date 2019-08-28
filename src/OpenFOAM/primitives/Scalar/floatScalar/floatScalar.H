@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,17 +52,24 @@ namespace Foam
 typedef float floatScalar;
 
 // Largest and smallest scalar values allowed in certain parts of the code
-static const floatScalar floatScalarVGreat = numeric_limits<float>::max()/10;
-static const floatScalar floatScalarVSmall = numeric_limits<float>::min();
+static const floatScalar floatScalarVGreat
+    = numeric_limits<floatScalar>::max()/10;
+static const floatScalar floatScalarVSmall
+    = numeric_limits<floatScalar>::min();
 
-static const floatScalar floatScalarSmall = numeric_limits<float>::epsilon();
-static const floatScalar floatScalarGreat = 1.0/floatScalarSmall;
+static const floatScalar floatScalarSmall
+    = numeric_limits<floatScalar>::epsilon();
+static const floatScalar floatScalarGreat
+    = 1.0/floatScalarSmall;
 
 static const floatScalar floatScalarRootVGreat = ::sqrt(floatScalarVGreat);
 static const floatScalar floatScalarRootVSmall = ::sqrt(floatScalarVSmall);
 
 static const floatScalar floatScalarRootGreat = ::sqrt(floatScalarGreat);
 static const floatScalar floatScalarRootSmall = ::sqrt(floatScalarSmall);
+
+static const floatScalar floatScalarNaN
+    = numeric_limits<floatScalar>::signaling_NaN();
 
 //- Read whole of buf as a scalar. Return true if successful.
 inline bool readScalar(const char* buf, floatScalar& s)
