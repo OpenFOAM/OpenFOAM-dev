@@ -96,8 +96,7 @@ class IOobject
 public:
 
     //- Keyword for the FoamFile header sub-dictionary
-    static const word foamFile;
-
+    static constexpr const char* foamFile = "FoamFile";
 
     // Public data types
 

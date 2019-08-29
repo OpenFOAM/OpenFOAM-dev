@@ -39,7 +39,7 @@ Foam::dictionary::dictionary
 :
     dictionaryName
     (
-        parentDict.name() != fileName::null
+        parentDict.name().size()
       ? parentDict.name()/name
       : name
     ),

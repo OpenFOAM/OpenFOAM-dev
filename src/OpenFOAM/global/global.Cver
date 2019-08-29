@@ -48,13 +48,6 @@ const char* const Foam::FOAMbuild = "BUILD_STRING";
 #include "nullObject.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-//  Set foamFile identifier
-
-#include "IOobject.H"
-
-const Foam::word Foam::IOobject::foamFile("FoamFile");
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Global IO streams
 
 #include "IOstreams.C"
