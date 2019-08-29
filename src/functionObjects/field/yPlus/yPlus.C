@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::yPlus::calcYPlus
     (
         volScalarField::New
         (
-            type(),
+            IOobject::groupName(type(), phaseName_),
             mesh_,
             dimensionedScalar(dimless, 0)
         )
@@ -133,11 +133,12 @@ Foam::functionObjects::yPlus::yPlus
 :
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
-    writeLocalObjects(obr_, log)
+    writeLocalObjects(obr_, log),
+    phaseName_(dict.lookupOrDefault<word>("phase", word::null))
 {
     read(dict);
-    resetName(typeName);
-    resetLocalObjectName(typeName);
+    resetName(IOobject::groupName(typeName, phaseName_));
+    resetLocalObjectName(IOobject::groupName(typeName, phaseName_));
 }
 
 
@@ -160,14 +161,17 @@ bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 
 bool Foam::functionObjects::yPlus::execute()
 {
-    if (mesh_.foundObject<turbulenceModel>(turbulenceModel::propertiesName))
+    if (mesh_.foundObject<turbulenceModel>
+    (
+        IOobject::groupName(turbulenceModel::propertiesName, phaseName_))
+    )
     {
         const turbulenceModel& model = mesh_.lookupObject<turbulenceModel>
         (
-            turbulenceModel::propertiesName
+            IOobject::groupName(turbulenceModel::propertiesName, phaseName_)
         );
 
-        word name(type());
+        word name(IOobject::groupName(type(), phaseName_));
 
         return store(name, calcYPlus(model));
     }
@@ -191,7 +195,10 @@ bool Foam::functionObjects::yPlus::write()
     logFiles::write();
 
     const volScalarField& yPlus =
-        mesh_.lookupObject<volScalarField>(type());
+        mesh_.lookupObject<volScalarField>
+        (
+            IOobject::groupName(type(), phaseName_)
+        );
 
     const volScalarField::Boundary& yPlusBf = yPlus.boundaryField();
     const fvPatchList& patches = mesh_.boundary();

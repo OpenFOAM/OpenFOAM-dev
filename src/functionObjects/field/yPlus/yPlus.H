@@ -26,7 +26,7 @@ Class
 
 Description
     Evaluates and outputs turbulence y+ for models. Values written to
-    time directories as field 'yPlus'.
+    time directories as field 'yPlus' or 'yPlus.phase'.
 
     Example of function object specification:
     \verbatim
@@ -42,6 +42,7 @@ Usage
     \table
         Property | Description                | Required   | Default value
         type     | type name: yPlus           | yes        |
+        phase    | phase name                 | no         | none
     \endtable
 
 Note
@@ -89,6 +90,16 @@ class yPlus
     public logFiles,
     public writeLocalObjects
 {
+protected:
+
+    // Protected data
+
+        //- Optional phase name [K]
+        word phaseName_;
+
+
+private:
+
     // Private Member Functions
 
         //- File header information
