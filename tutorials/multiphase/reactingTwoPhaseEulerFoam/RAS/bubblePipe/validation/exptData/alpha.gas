@@ -3,6 +3,10 @@
 #     Experimental investigation and numerical simulations of void profile
 #     development in a vertical cylindrical pipe (No. EDF--96-NB-00120).
 #     Electricite de France (EDF).
+#
+# Notes:
+#     See experiment 11-01 for Z/D = 55 on page 225 of the reference
+#
 0 0.035
 0.105 0.037
 0.21 0.04
