@@ -29,6 +29,14 @@ Description
     when using wall functions for rough walls, based on velocity.  The
     condition manipulates the E parameter to account for roughness effects.
 
+    Reference:
+    \verbatim
+        Cebeci, T., & Bradshaw, P. (1977).
+        Momentum transfer in boundary layers.
+        Washington, DC, Hemisphere Publishing Corp.; New York,
+        McGraw-Hill Book Co., 1977. 407 p.
+    \endverbatim
+
 Usage
     \table
         Property     | Description             | Required    | Default value
