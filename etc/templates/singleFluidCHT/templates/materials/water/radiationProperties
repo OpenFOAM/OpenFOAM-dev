@@ -19,9 +19,9 @@ radiationModel  none; // P1;
 
 solverFreq 1;
 
-absorptionEmissionModel constantAbsorptionEmission;
+absorptionEmissionModel constant;
 
-constantAbsorptionEmissionCoeffs
+constantCoeffs
 {
     absorptivity    absorptivity    [0 -1 0 0 0 0 0] 0.5;
     emissivity      emissivity      [0 -1 0 0 0 0 0] 0.5;
