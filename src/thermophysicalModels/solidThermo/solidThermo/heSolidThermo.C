@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,7 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
         const typename MixtureType::thermoType& mixture_ =
             this->cellMixture(celli);
 
-        const typename MixtureType::thermoType& volMixture_ =
-            this->cellVolMixture(pCells[celli], TCells[celli], celli);
+        rhoCells[celli] = mixture_.rho(pCells[celli], TCells[celli]);
 
         TCells[celli] = mixture_.THE
         (
@@ -53,12 +52,12 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
             TCells[celli]
         );
 
-        rhoCells[celli] = volMixture_.rho(pCells[celli], TCells[celli]);
+        const typename MixtureType::thermoType& volMixture_ =
+            this->cellVolMixture(pCells[celli], TCells[celli], celli);
 
         alphaCells[celli] =
             volMixture_.kappa(pCells[celli], TCells[celli])
-            /
-            mixture_.Cpv(pCells[celli], TCells[celli]);
+           /mixture_.Cpv(pCells[celli], TCells[celli]);
     }
 
     volScalarField::Boundary& pBf =
