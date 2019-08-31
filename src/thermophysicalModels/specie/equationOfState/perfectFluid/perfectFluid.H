@@ -25,7 +25,14 @@ Class
     Foam::perfectFluid
 
 Description
-    Perfect gas equation of state.
+    Simple extension of the perfect gas equation of state to liquids by
+    the addition of a constant density off-set.
+
+    Coefficient mixing is very inaccurate and not supported,
+    so this equation of state is not applicable to mixtures.
+
+    This equation of state is rather inaccurate and has been superseded by
+    rPolynomial which is much more accurate and supports mixtures.
 
 SourceFiles
     perfectFluidI.H
@@ -157,7 +164,7 @@ public:
             //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
-            //- Return compressibility rho/p [s^2/m^2]
+            //- Return compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 
             //- Return compression factor []

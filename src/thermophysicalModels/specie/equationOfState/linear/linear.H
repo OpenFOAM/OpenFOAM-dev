@@ -31,6 +31,9 @@ Description
         rho = rho0 + psi*p
     \endverbatim
 
+    Coefficient mixing is very inaccurate and not supported,
+    so this equation of state is not applicable to mixtures.
+
 SourceFiles
     linearI.H
     linear.C
@@ -158,7 +161,7 @@ public:
             //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
-            //- Return compressibility rho/p [s^2/m^2]
+            //- Return compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 
             //- Return compression factor []

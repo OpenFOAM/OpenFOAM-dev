@@ -107,7 +107,7 @@ public:
             //- Liquid density [kg/m^3]
             inline scalar rho(scalar p, scalar T) const;
 
-            //- Liquid compressibility rho/p [s^2/m^2]
+            //- Liquid compressibility [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
             inline scalar psi(scalar p, scalar T) const;
 

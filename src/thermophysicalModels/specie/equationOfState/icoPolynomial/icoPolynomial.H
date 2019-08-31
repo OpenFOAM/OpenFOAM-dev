@@ -28,6 +28,9 @@ Description
     Incompressible, polynomial form of equation of state, using a polynomial
     function for density.
 
+    Coefficient mixing is very inaccurate and not supported,
+    so this equation of state is not applicable to mixtures.
+
 Usage
     \table
         Property     | Description
@@ -176,7 +179,7 @@ public:
             //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
-            //- Return compressibility rho/p [s^2/m^2]
+            //- Return compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 
             //- Return compression factor []
