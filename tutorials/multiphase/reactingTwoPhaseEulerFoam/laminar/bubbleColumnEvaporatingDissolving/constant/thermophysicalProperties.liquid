@@ -21,7 +21,7 @@ thermoType
     mixture         multiComponentMixture;
     transport       const;
     thermo          eConst;
-    equationOfState perfectFluid;
+    equationOfState rPolynomial;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -42,8 +42,7 @@ inertSpecie water;
     }
     equationOfState
     {
-        R           3000;
-        rho0        1027;
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);
     }
     thermodynamics
     {
@@ -65,13 +64,12 @@ air
     }
     equationOfState
     {
-        R           3000;
-        rho0        1027;
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);
     }
     thermodynamics
     {
-        Hf          0;
         Cv          4195;
+        Hf          0;
     }
     transport
     {

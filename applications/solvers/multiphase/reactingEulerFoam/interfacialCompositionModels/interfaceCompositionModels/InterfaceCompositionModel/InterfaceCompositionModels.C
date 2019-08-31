@@ -41,7 +41,7 @@ License
 #include "thermoPhysicsTypes.H"
 
 #include "rhoConst.H"
-#include "perfectFluid.H"
+#include "rPolynomial.H"
 
 #include "pureMixture.H"
 #include "multiComponentMixture.H"

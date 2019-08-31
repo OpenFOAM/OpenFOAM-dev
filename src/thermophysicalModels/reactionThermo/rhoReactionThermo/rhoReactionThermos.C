@@ -36,7 +36,7 @@ License
 #include "sensibleEnthalpy.H"
 #include "thermo.H"
 #include "rhoConst.H"
-#include "perfectFluid.H"
+#include "rPolynomial.H"
 #include "adiabaticPerfectFluid.H"
 #include "Boussinesq.H"
 

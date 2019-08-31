@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
 #include "specie.H"
 #include "perfectGas.H"
 #include "incompressiblePerfectGas.H"
-#include "perfectFluid.H"
+#include "rPolynomial.H"
 #include "adiabaticPerfectFluid.H"
 #include "rhoConst.H"
 #include "hConstThermo.H"
@@ -131,7 +131,7 @@ namespace Foam
         <
             hConstThermo
             <
-                perfectFluid<specie>
+                rPolynomial<specie>
             >,
             sensibleEnthalpy
         >
@@ -242,7 +242,7 @@ namespace Foam
         <
             eConstThermo
             <
-                perfectFluid<specie>
+                rPolynomial<specie>
             >,
             sensibleInternalEnergy
         >

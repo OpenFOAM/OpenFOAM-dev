@@ -31,7 +31,7 @@ License
 #include "incompressiblePerfectGas.H"
 #include "Boussinesq.H"
 #include "rhoConst.H"
-#include "perfectFluid.H"
+#include "rPolynomial.H"
 #include "PengRobinsonGas.H"
 #include "adiabaticPerfectFluid.H"
 
@@ -116,7 +116,7 @@ makeThermos
     constTransport,
     sensibleEnthalpy,
     hConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
@@ -322,7 +322,7 @@ makeThermos
     constTransport,
     sensibleInternalEnergy,
     hConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
@@ -334,7 +334,7 @@ makeThermos
     constTransport,
     sensibleInternalEnergy,
     eConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 

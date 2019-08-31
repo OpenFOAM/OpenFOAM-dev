@@ -15,26 +15,13 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType0
-{
-    type            heRhoThermo;
-    mixture         pureMixture;
-    properties      liquid;
-    energy          sensibleInternalEnergy;
-}
-
-mixture0
-{
-    H2O;
-}
-
 thermoType
 {
     type            heRhoThermo;
     mixture         pureMixture;
     transport       const;
     thermo          eConst;
-    equationOfState perfectFluid;
+    equationOfState rPolynomial;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -47,8 +34,7 @@ mixture
     }
     equationOfState
     {
-        R               7342;
-        rho0            1000;
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);
     }
     thermodynamics
     {

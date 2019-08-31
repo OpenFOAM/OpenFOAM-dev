@@ -31,7 +31,7 @@ License
 
 #include "specie.H"
 #include "perfectGas.H"
-#include "perfectFluid.H"
+#include "rPolynomial.H"
 #include "rhoConst.H"
 
 #include "sensibleEnthalpy.H"
@@ -77,7 +77,7 @@ constTransport
     <
         hRefConstThermo
         <
-            perfectFluid<specie>
+            rPolynomial<specie>
         >,
         sensibleEnthalpy
     >
@@ -103,7 +103,7 @@ constTransport
     <
         eRefConstThermo
         <
-            perfectFluid<specie>
+            rPolynomial<specie>
         >,
         sensibleInternalEnergy
     >
@@ -171,7 +171,7 @@ makeThermos
     constTransport,
     sensibleEnthalpy,
     hRefConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
@@ -210,7 +210,7 @@ makeThermos
     constTransport,
     sensibleInternalEnergy,
     eRefConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
