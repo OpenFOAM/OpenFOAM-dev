@@ -349,17 +349,37 @@ bool Foam::functionObjectList::readFunctionObject
     // fields to requiredFields
     if (args.size() == 1)
     {
-        funcDict.set("field", args[0]);
-        funcDict.set("fields", args);
+        if (funcDict.found("objects"))
+        {
+            funcDict.set("objects", args);
+        }
+        else
+        {
+            funcDict.set("field", args[0]);
+            funcDict.set("fields", args);
+        }
     }
     else if (args.size() > 1)
     {
-        funcDict.set("fields", args);
+        if (funcDict.found("objects"))
+        {
+            funcDict.set("objects", args);
+        }
+        else
+        {
+            funcDict.set("fields", args);
+        }
     }
 
     // Insert named arguments
     forAll(namedArgs, i)
     {
+        if (!funcDict.found(namedArgs[i].first()))
+        {
+            IOWarningInFunction(funcDict)
+                << "Keyword " << namedArgs[i].first() << " not found" << endl;
+        }
+
         IStringStream entryStream
         (
             namedArgs[i].first() + ' ' + namedArgs[i].second() + ';'

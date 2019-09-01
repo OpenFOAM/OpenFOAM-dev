@@ -57,7 +57,7 @@ cacheTemporaryObjects
 
 functions
 {
-    #includeFunc writeObjects(objects = (kEpsilon:G))
+    #includeFunc writeObjects(kEpsilon:G)
 }
 
 // ************************************************************************* //
