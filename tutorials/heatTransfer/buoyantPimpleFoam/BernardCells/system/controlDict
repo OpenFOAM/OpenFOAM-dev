@@ -47,7 +47,7 @@ runTimeModifiable true;
 
 functions
 {
-    #includeFunc residuals
+    #includeFunc residuals(p_rgh)
     #includeFunc streamlines
 }
 

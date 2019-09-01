@@ -374,12 +374,6 @@ bool Foam::functionObjectList::readFunctionObject
     // Insert named arguments
     forAll(namedArgs, i)
     {
-        if (!funcDict.found(namedArgs[i].first()))
-        {
-            IOWarningInFunction(funcDict)
-                << "Keyword " << namedArgs[i].first() << " not found" << endl;
-        }
-
         IStringStream entryStream
         (
             namedArgs[i].first() + ' ' + namedArgs[i].second() + ';'

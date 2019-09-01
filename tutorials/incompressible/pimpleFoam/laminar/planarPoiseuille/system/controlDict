@@ -46,7 +46,7 @@ runTimeModifiable true;
 
 functions
 {
-    #includeFunc residuals
+    #includeFunc residuals(p, sigma)
     #includeFunc singleGraph
     #includeFunc probes
 }
