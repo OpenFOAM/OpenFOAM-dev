@@ -50,4 +50,14 @@ functions
     #includeFunc streamlines
 }
 
+cacheTemporaryObjects
+(
+    kEpsilon:G
+);
+
+functions
+{
+    #includeFunc writeObjects(objects = (kEpsilon:G))
+}
+
 // ************************************************************************* //

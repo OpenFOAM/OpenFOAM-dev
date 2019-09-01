@@ -87,7 +87,11 @@ class objectRegistry
         //  Used to terminate searching within the ancestors
         bool parentNotTime() const;
 
+        //- Read the cacheTemporaryObjects list from controlDict
         void readCacheTemporaryObjects() const;
+
+        //- Delete the current cached object before caching a new object
+        void deleteCachedObject(regIOobject& cachedOb) const;
 
 
 public:

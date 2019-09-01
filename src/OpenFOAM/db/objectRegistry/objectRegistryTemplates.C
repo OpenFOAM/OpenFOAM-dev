@@ -240,10 +240,7 @@ bool Foam::objectRegistry::cacheTemporaryObject(Object& ob) const
                 // If the object is already cached in the database delete it
                 if (&cachedOb != &ob && cachedOb.ownedByRegistry())
                 {
-                    cachedOb.release();
-                    cachedOb.checkOut();
-                    cachedOb.rename(cachedOb.name() + "Cached");
-                    delete &cachedOb;
+                    deleteCachedObject(cachedOb);
                 }
             }
 

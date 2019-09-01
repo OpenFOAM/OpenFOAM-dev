@@ -82,6 +82,15 @@ void Foam::objectRegistry::readCacheTemporaryObjects() const
 }
 
 
+void Foam::objectRegistry::deleteCachedObject(regIOobject& cachedOb) const
+{
+    cachedOb.release();
+    cachedOb.checkOut();
+    cachedOb.rename(cachedOb.name() + "Cached");
+    delete &cachedOb;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors *  * * * * * * * * * * * * * //
 
 Foam::objectRegistry::objectRegistry
@@ -253,6 +262,34 @@ bool Foam::objectRegistry::checkIn(regIOobject& io) const
             << name() << " : checking in " << io.name()
             << " of type " << io.type()
             << endl;
+    }
+
+    // Delete cached object with the same name as io and if it is in the
+    // cacheTemporaryObjects list
+    if (cacheTemporaryObjects_.size())
+    {
+        HashTable<Pair<bool>>::iterator cacheIter
+        (
+            cacheTemporaryObjects_.find(io.name())
+        );
+
+        if (cacheIter != cacheTemporaryObjects_.end())
+        {
+            iterator iter = const_cast<objectRegistry&>(*this).find(io.name());
+
+            if (iter != end() && iter() != &io && iter()->ownedByRegistry())
+            {
+                if (objectRegistry::debug)
+                {
+                    Pout<< "objectRegistry::checkIn(regIOobject&) : "
+                        << name() << " : deleting cached object " << iter.key()
+                        << endl;
+                }
+
+                cacheIter().first() = false;
+                deleteCachedObject(*iter());
+            }
+        }
     }
 
     return const_cast<objectRegistry&>(*this).insert(io.name(), &io);
