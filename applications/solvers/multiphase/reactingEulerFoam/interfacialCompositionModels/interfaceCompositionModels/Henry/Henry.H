@@ -40,7 +40,7 @@ SourceFiles
 #ifndef Henry_H
 #define Henry_H
 
-#include "InterfaceCompositionModel.H"
+#include "interfaceCompositionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,10 +56,9 @@ namespace interfaceCompositionModels
                          Class Henry Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Thermo, class OtherThermo>
 class Henry
 :
-    public InterfaceCompositionModel<Thermo, OtherThermo>
+    public interfaceCompositionModel
 {
     // Private Data
 
@@ -114,12 +113,6 @@ public:
 
 } // End namespace interfaceCompositionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "Henry.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

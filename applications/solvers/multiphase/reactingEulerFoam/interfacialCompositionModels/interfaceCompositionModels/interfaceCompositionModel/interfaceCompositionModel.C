@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "interfaceCompositionModel.H"
 #include "phaseModel.H"
 #include "phasePair.H"
+#include "rhoReactionThermo.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -45,7 +46,22 @@ Foam::interfaceCompositionModel::interfaceCompositionModel
 )
 :
     pair_(pair),
-    speciesNames_(dict.lookup("species"))
+    species_(dict.lookup("species")),
+    Le_("Le", dimless, dict),
+    thermo_
+    (
+        pair.phase1().mesh().lookupObject<rhoReactionThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, pair.phase1().name())
+        )
+    ),
+    otherThermo_
+    (
+        pair.phase2().mesh().lookupObject<rhoThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, pair.phase2().name())
+        )
+    )
 {}
 
 
@@ -57,23 +73,82 @@ Foam::interfaceCompositionModel::~interfaceCompositionModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::hashedWordList& Foam::interfaceCompositionModel::species() const
+Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::dY
+(
+    const word& speciesName,
+    const volScalarField& Tf
+) const
 {
-    return speciesNames_;
+    const label speciei = composition().species()[speciesName];
+
+    return Yf(speciesName, Tf) - composition().Y()[speciei];
 }
 
 
-bool Foam::interfaceCompositionModel::transports
+Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::D
 (
-    word& speciesName
+    const word& speciesName
 ) const
 {
-    if (this->speciesNames_.contains(speciesName))
+    const label speciei = composition().species()[speciesName];
+    const volScalarField& p(thermo_.p());
+    const volScalarField& T(thermo_.T());
+
+    return volScalarField::New
+    (
+        IOobject::groupName("D", pair_.name()),
+        composition().alphah(speciei, p, T)
+       /composition().rho(speciei, p, T)
+    );
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::L
+(
+    const word& speciesName,
+    const volScalarField& Tf
+) const
+{
+    const label speciei = composition().species()[speciesName];
+    const volScalarField& p(thermo_.p());
+    volScalarField Ha(composition().Ha(speciei, p, Tf));
+
+    const volScalarField& otherP(otherThermo_.p());
+    tmp<volScalarField> otherHa(nullptr);
+    if (otherHasComposition())
     {
-        return true;
+        const label otherSpeciei = otherComposition().species()[speciesName];
+        otherHa = otherComposition().Ha(otherSpeciei, otherP, Tf);
+    }
+    else
+    {
+        otherHa = otherThermo_.ha(otherP, Tf);
     }
 
-    return false;
+    return
+        volScalarField::New
+        (
+            IOobject::groupName("L", pair_.name()),
+            Ha - otherHa
+        );
+}
+
+
+void Foam::interfaceCompositionModel::addMDotL
+(
+    const volScalarField& K,
+    const volScalarField& Tf,
+    volScalarField& mDotL,
+    volScalarField& mDotLPrime
+) const
+{
+    forAllConstIter(hashedWordList, species_, iter)
+    {
+        const volScalarField rhoKDL(thermo_.rho()*K*D(*iter)*L(*iter, Tf));
+
+        mDotL += rhoKDL*dY(*iter, Tf);
+        mDotLPrime += rhoKDL*YfPrime(*iter, Tf);
+    }
 }
 
 

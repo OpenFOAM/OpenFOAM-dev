@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::interfaceCompositionModels::Saturated
+    Foam::interfaceCompositionModels::saturated
 
 Description
     Model which uses a saturation pressure model for a single species to
     calculate the interface composition.
 
 SourceFiles
-    Saturated.C
+    saturated.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Saturated_H
-#define Saturated_H
+#ifndef saturated_H
+#define saturated_H
 
-#include "InterfaceCompositionModel.H"
+#include "interfaceCompositionModel.H"
 #include "saturationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,22 +50,21 @@ namespace interfaceCompositionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Saturated Declaration
+                         Class saturated Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Thermo, class OtherThermo>
-class Saturated
+class saturated
 :
-    public InterfaceCompositionModel<Thermo, OtherThermo>
+    public interfaceCompositionModel
 {
 protected:
 
     // Private Data
 
-        //- Saturated species name
+        //- saturated species name
         word saturatedName_;
 
-        //- Saturated species index
+        //- saturated species index
         label saturatedIndex_;
 
         //- Saturation pressure model
@@ -87,7 +86,7 @@ public:
     // Constructors
 
         //- Construct from components
-        Saturated
+        saturated
         (
             const dictionary& dict,
             const phasePair& pair
@@ -95,7 +94,7 @@ public:
 
 
     //- Destructor
-    virtual ~Saturated();
+    virtual ~saturated();
 
 
     // Member Functions
@@ -123,12 +122,6 @@ public:
 
 } // End namespace interfaceCompositionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "Saturated.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

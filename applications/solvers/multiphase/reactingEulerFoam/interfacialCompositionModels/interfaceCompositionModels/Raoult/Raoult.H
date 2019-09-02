@@ -37,7 +37,7 @@ SourceFiles
 #ifndef Raoult_H
 #define Raoult_H
 
-#include "InterfaceCompositionModel.H"
+#include "interfaceCompositionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,10 +53,9 @@ namespace interfaceCompositionModels
                          Class Raoult Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Thermo, class OtherThermo>
 class Raoult
 :
-    public InterfaceCompositionModel<Thermo, OtherThermo>
+    public interfaceCompositionModel
 {
     // Private Data
 
@@ -114,12 +113,6 @@ public:
 
 } // End namespace interfaceCompositionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "Raoult.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
