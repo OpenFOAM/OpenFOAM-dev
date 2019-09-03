@@ -21,41 +21,36 @@ internalField   uniform 2;
 
 boundaryField
 {
-    atmosphere
-    {
-        type            inletOutlet;
-        inletValue      uniform 2;
-        value           uniform 2;
-    }
+    //- Set patchGroups for constraint patches
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            fixedValue;
-        value           uniform 2;
+        value           $internalField;
     }
+
     outlet
     {
+       type            inletOutlet;
+       inletValue      $internalField;
+       value           $internalField;
+    }
+
+    atmosphere
+    {
         type            inletOutlet;
-        inletValue      uniform 2;
-        value           uniform 2;
+        inletValue      $internalField;
+        value           $internalField;
     }
-    bottom
-    {
-        type            symmetryPlane;
-    }
-    side
-    {
-        type            symmetryPlane;
-    }
-    midPlane
-    {
-        type            symmetryPlane;
-    }
+
     hull
     {
         type            omegaWallFunction;
-        value           uniform 2;
+        value           $internalField;
     }
 }
+
 
 
 // ************************************************************************* //

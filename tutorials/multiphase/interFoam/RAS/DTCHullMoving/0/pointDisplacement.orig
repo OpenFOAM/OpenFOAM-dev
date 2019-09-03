@@ -21,33 +21,27 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    atmosphere
-    {
-        type            fixedValue;
-        value           uniform (0 0 0);
-    }
+    //- Set patchGroups for constraint patches
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            fixedValue;
         value           uniform (0 0 0);
     }
+
     outlet
     {
         type            fixedValue;
         value           uniform (0 0 0);
     }
-    bottom
+
+    atmosphere
     {
-        type            symmetryPlane;
+        type            fixedValue;
+        value           uniform (0 0 0);
     }
-    side
-    {
-        type            symmetryPlane;
-    }
-    midPlane
-    {
-        type            symmetryPlane;
-    }
+
     hull
     {
         type            calculated;

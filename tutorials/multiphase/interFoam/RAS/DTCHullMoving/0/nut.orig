@@ -21,37 +21,31 @@ internalField   uniform 5e-07;
 
 boundaryField
 {
-    atmosphere
-    {
-        type            zeroGradient;
-    }
+    //- Set patchGroups for constraint patches
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            fixedValue;
-        value           uniform 5e-07;
+        value           $internalField;
     }
+
     outlet
     {
         type            zeroGradient;
     }
-    bottom
+
+    atmosphere
     {
-        type            symmetryPlane;
+        type            zeroGradient;
     }
-    side
-    {
-        type            symmetryPlane;
-    }
-    midPlane
-    {
-        type            symmetryPlane;
-    }
+
     hull
     {
         type            nutkRoughWallFunction;
-        Ks              uniform 0.0001;
+        Ks              uniform 100e-6;
         Cs              uniform 0.5;
-        value           uniform 5e-07;
+        value           $internalField;
     }
 }
 

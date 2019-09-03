@@ -15,42 +15,38 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+UMean 1.668;
+
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (-1.668 0 0);
+internalField   uniform (#neg $UMean 0 0);
 
 boundaryField
 {
-    atmosphere
-    {
-        type            pressureInletOutletVelocity;
-        tangentialVelocity uniform (-1.668 0 0);
-        value           uniform (0 0 0);
-    }
+    //- Set patchGroups for constraint patches
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            fixedValue;
-        value           uniform (-1.668 0 0);
+        value           $internalField;
     }
+
     outlet
     {
         type            outletPhaseMeanVelocity;
-        UnMean          constant 1.668;
         alpha           alpha.water;
-        value           uniform (-1.668 0 0);
+        UnMean          $UMean;
+        value           $internalField;
     }
-    bottom
+
+    atmosphere
     {
-        type            symmetryPlane;
+        type            pressureInletOutletVelocity;
+        tangentialVelocity $internalField;
+        value           uniform (0 0 0);
     }
-    side
-    {
-        type            symmetryPlane;
-    }
-    midPlane
-    {
-        type            symmetryPlane;
-    }
+
     hull
     {
         type            movingWallVelocity;
