@@ -50,25 +50,6 @@ pressureInletOutletVelocityFvPatchVectorField
 Foam::pressureInletOutletVelocityFvPatchVectorField::
 pressureInletOutletVelocityFvPatchVectorField
 (
-    const pressureInletOutletVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    directionMixedFvPatchVectorField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_)
-{
-    if (ptf.tangentialVelocity_.size())
-    {
-        tangentialVelocity_ = mapper(ptf.tangentialVelocity_);
-    }
-}
-
-
-Foam::pressureInletOutletVelocityFvPatchVectorField::
-pressureInletOutletVelocityFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -81,19 +62,29 @@ pressureInletOutletVelocityFvPatchVectorField
 
     if (dict.found("tangentialVelocity"))
     {
-        setTangentialVelocity
-        (
-            vectorField("tangentialVelocity", dict, p.size())
-        );
-    }
-    else
-    {
-        refValue() = Zero;
+        tangentialVelocity_ =
+            Function1<vector>::New("tangentialVelocity", dict);
     }
 
+    refValue() = Zero;
     refGrad() = Zero;
     valueFraction() = Zero;
 }
+
+
+Foam::pressureInletOutletVelocityFvPatchVectorField::
+pressureInletOutletVelocityFvPatchVectorField
+(
+    const pressureInletOutletVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    directionMixedFvPatchVectorField(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_),
+    tangentialVelocity_(ptf.tangentialVelocity_, false)
+{}
 
 
 Foam::pressureInletOutletVelocityFvPatchVectorField::
@@ -104,7 +95,7 @@ pressureInletOutletVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(pivpvf),
     phiName_(pivpvf.phiName_),
-    tangentialVelocity_(pivpvf.tangentialVelocity_)
+    tangentialVelocity_(pivpvf.tangentialVelocity_, false)
 {}
 
 
@@ -117,57 +108,25 @@ pressureInletOutletVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(pivpvf, iF),
     phiName_(pivpvf.phiName_),
-    tangentialVelocity_(pivpvf.tangentialVelocity_)
+    tangentialVelocity_(pivpvf.tangentialVelocity_, false)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::pressureInletOutletVelocityFvPatchVectorField::
-setTangentialVelocity(const vectorField& tangentialVelocity)
-{
-    tangentialVelocity_ = tangentialVelocity;
-    const vectorField n(patch().nf());
-    refValue() = tangentialVelocity_ - n*(n & tangentialVelocity_);
-}
-
-
-void Foam::pressureInletOutletVelocityFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    directionMixedFvPatchVectorField::autoMap(m);
-    if (tangentialVelocity_.size())
-    {
-        m(tangentialVelocity_, tangentialVelocity_);
-    }
-}
-
-
-void Foam::pressureInletOutletVelocityFvPatchVectorField::rmap
-(
-    const fvPatchVectorField& ptf,
-    const labelList& addr
-)
-{
-    directionMixedFvPatchVectorField::rmap(ptf, addr);
-
-    if (tangentialVelocity_.size())
-    {
-        const pressureInletOutletVelocityFvPatchVectorField& tiptf =
-            refCast<const pressureInletOutletVelocityFvPatchVectorField>(ptf);
-
-        tangentialVelocity_.rmap(tiptf.tangentialVelocity_, addr);
-    }
-}
-
 
 void Foam::pressureInletOutletVelocityFvPatchVectorField::updateCoeffs()
 {
     if (updated())
     {
         return;
+    }
+
+    if (tangentialVelocity_.valid())
+    {
+        const scalar t = this->db().time().timeOutputValue();
+        const vector tangentialVelocity = tangentialVelocity_->value(t);
+        const vectorField n(patch().nf());
+        refValue() = tangentialVelocity - n*(n & tangentialVelocity);
     }
 
     const fvsPatchField<scalar>& phip =
@@ -188,9 +147,9 @@ const
 {
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
-    if (tangentialVelocity_.size())
+    if (tangentialVelocity_.valid())
     {
-        writeEntry(os, "tangentialVelocity", tangentialVelocity_);
+        writeEntry(os, tangentialVelocity_());
     }
     writeEntry(os, "value", *this);
 }

@@ -36,7 +36,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
-        tangentialVelocity | tangential velocity field | no  |
+        tangentialVelocity | tangential velocity | no  |
     \endtable
 
     Example of the boundary condition specification:
@@ -45,10 +45,13 @@ Usage
     {
         type            pressureInletOutletVelocity;
         phi             phi;
-        tangentialVelocity uniform (0 0 0);
+        tangentialVelocity (0 0 0);
         value           uniform 0;
     }
     \endverbatim
+
+    The \c tangentialVelocity entry is a Function1 of time, see
+    Foam::Function1Types.
 
 Note
     Sign conventions:
@@ -66,6 +69,7 @@ SourceFiles
 
 #include "fvPatchFields.H"
 #include "directionMixedFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,7 +90,7 @@ class pressureInletOutletVelocityFvPatchVectorField
         word phiName_;
 
         //- Optional tangential velocity component
-        vectorField tangentialVelocity_;
+        autoPtr<Function1<vector>> tangentialVelocity_;
 
 
 public:
@@ -181,26 +185,6 @@ public:
             {
                 return phiName_;
             }
-
-            //- Return the tangential velocity
-            const vectorField& tangentialVelocity() const
-            {
-                return tangentialVelocity_;
-            }
-
-            //- Reset the tangential velocity
-            void setTangentialVelocity(const vectorField& tangentialVelocity);
-
-
-        // Mapping functions
-
-            //- Map (and resize as needed) from self given a mapping object
-            //  Used to update fields following mesh topology change
-            virtual void autoMap(const fvPatchFieldMapper&);
-
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            //  Used to reconstruct fields
-            virtual void rmap(const fvPatchVectorField&, const labelList&);
 
 
         //- Update the coefficients associated with the patch field
