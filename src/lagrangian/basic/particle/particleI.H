@@ -234,7 +234,7 @@ inline Foam::tetIndices Foam::particle::currentTetIndices() const
 
 inline Foam::barycentricTensor Foam::particle::currentTetTransform() const
 {
-    if (mesh_.moving())
+    if (mesh_.moving() && stepFraction_ != 1)
     {
         return movingTetTransform(0)[0];
     }
@@ -298,7 +298,7 @@ void Foam::particle::patchData(vector& normal, vector& displacement) const
             << exit(FatalError);
     }
 
-    if (mesh_.moving())
+    if (mesh_.moving() && stepFraction_ != 1)
     {
         Pair<vector> centre, base, vertex1, vertex2;
         movingTetGeometry(1, centre, base, vertex1, vertex2);
