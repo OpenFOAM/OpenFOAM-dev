@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,41 +23,54 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Saturated.H"
+#include "saturated.H"
+#include "phasePair.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace interfaceCompositionModels
+{
+    defineTypeNameAndDebug(saturated, 0);
+    addToRunTimeSelectionTable
+    (
+        interfaceCompositionModel,
+        saturated,
+        dictionary
+    );
+}
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::
-wRatioByP() const
+Foam::interfaceCompositionModels::saturated::wRatioByP() const
 {
     const dimensionedScalar Wi
     (
         "W",
         dimMass/dimMoles,
-        this->thermo_.composition().Wi(saturatedIndex_)
+        composition().Wi(saturatedIndex_)
     );
 
-    return Wi/this->thermo_.W()/this->thermo_.p();
+    return Wi/thermo().W()/thermo().p();
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Saturated
+Foam::interfaceCompositionModels::saturated::saturated
 (
     const dictionary& dict,
     const phasePair& pair
 )
 :
-    InterfaceCompositionModel<Thermo, OtherThermo>(dict, pair),
-    saturatedName_(this->speciesNames_[0]),
-    saturatedIndex_
-    (
-        this->thermo_.composition().species()[saturatedName_]
-    ),
+    interfaceCompositionModel(dict, pair),
+    saturatedName_(species()[0]),
+    saturatedIndex_(composition().species()[saturatedName_]),
     saturationModel_
     (
         saturationModel::New
@@ -67,10 +80,10 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Saturated
         )
     )
 {
-    if (this->speciesNames_.size() != 1)
+    if (species().size() != 1)
     {
         FatalErrorInFunction
-            << "Saturated model is suitable for one species only."
+            << "saturated model is suitable for one species only."
             << exit(FatalError);
     }
 }
@@ -78,25 +91,20 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Saturated
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::~Saturated()
+Foam::interfaceCompositionModels::saturated::~saturated()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-void
-Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::update
+void Foam::interfaceCompositionModels::saturated::update
 (
     const volScalarField& Tf
 )
 {}
 
 
-template<class Thermo, class OtherThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Yf
+Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::saturated::Yf
 (
     const word& speciesName,
     const volScalarField& Tf
@@ -108,22 +116,18 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Yf
     }
     else
     {
-        const label speciesIndex
-        (
-            this->thermo_.composition().species()[speciesName]
-        );
+        const label speciesIndex = composition().species()[speciesName];
 
         return
-            this->thermo_.Y()[speciesIndex]
+            composition().Y()[speciesIndex]
            *(scalar(1) - wRatioByP()*saturationModel_->pSat(Tf))
-           /max(scalar(1) - this->thermo_.Y()[saturatedIndex_], small);
+           /max(scalar(1) - composition().Y()[saturatedIndex_], small);
     }
 }
 
 
-template<class Thermo, class OtherThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::YfPrime
+Foam::interfaceCompositionModels::saturated::YfPrime
 (
     const word& speciesName,
     const volScalarField& Tf
@@ -135,15 +139,12 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::YfPrime
     }
     else
     {
-        const label speciesIndex
-        (
-            this->thermo_.composition().species()[speciesName]
-        );
+        const label speciesIndex = composition().species()[speciesName];
 
         return
-          - this->thermo_.Y()[speciesIndex]
+          - composition().Y()[speciesIndex]
            *wRatioByP()*saturationModel_->pSatPrime(Tf)
-           /max(scalar(1) - this->thermo_.Y()[saturatedIndex_], small);
+           /max(scalar(1) - composition().Y()[saturatedIndex_], small);
     }
 }
 

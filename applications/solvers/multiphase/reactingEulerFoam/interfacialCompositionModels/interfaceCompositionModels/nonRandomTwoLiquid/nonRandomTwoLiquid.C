@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "NonRandomTwoLiquid.H"
+#include "nonRandomTwoLiquid.H"
+#include "phasePair.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace interfaceCompositionModels
+{
+    defineTypeNameAndDebug(nonRandomTwoLiquid, 0);
+    addToRunTimeSelectionTable
+    (
+        interfaceCompositionModel,
+        nonRandomTwoLiquid,
+        dictionary
+    );
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-Foam::interfaceCompositionModels::NonRandomTwoLiquid<Thermo, OtherThermo>::
-NonRandomTwoLiquid
+Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
 (
     const dictionary& dict,
     const phasePair& pair
 )
 :
-    InterfaceCompositionModel<Thermo, OtherThermo>(dict, pair),
+    interfaceCompositionModel(dict, pair),
     gamma1_
     (
         IOobject
@@ -61,18 +78,18 @@ NonRandomTwoLiquid
     beta12_("", dimless/dimTemperature, 0),
     beta21_("", dimless/dimTemperature, 0)
 {
-    if (this->speciesNames_.size() != 2)
+    if (species().size() != 2)
     {
         FatalErrorInFunction
-            << "NonRandomTwoLiquid model is suitable for two species only."
+            << "nonRandomTwoLiquid model is suitable for two species only."
             << exit(FatalError);
     }
 
-    species1Name_ = this->speciesNames_[0];
-    species2Name_ = this->speciesNames_[1];
+    species1Name_ = species()[0];
+    species2Name_ = species()[1];
 
-    species1Index_ = this->thermo_.composition().species()[species1Name_];
-    species2Index_ = this->thermo_.composition().species()[species2Name_];
+    species1Index_ = composition().species()[species1Name_];
+    species2Index_ = composition().species()[species2Name_];
 
     alpha12_ = dimensionedScalar
     (
@@ -125,7 +142,6 @@ NonRandomTwoLiquid
             pair
         ).ptr()
     );
-
     speciesModel2_.reset
     (
         interfaceCompositionModel::New
@@ -139,56 +155,51 @@ NonRandomTwoLiquid
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-Foam::interfaceCompositionModels::NonRandomTwoLiquid<Thermo, OtherThermo>::
-~NonRandomTwoLiquid()
+Foam::interfaceCompositionModels::nonRandomTwoLiquid::~nonRandomTwoLiquid()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-void
-Foam::interfaceCompositionModels::NonRandomTwoLiquid<Thermo, OtherThermo>::
-update
+void Foam::interfaceCompositionModels::nonRandomTwoLiquid::update
 (
     const volScalarField& Tf
 )
 {
-    volScalarField W(this->thermo_.W());
+    const volScalarField W(thermo().W());
 
-    volScalarField X1
+    const volScalarField X1
     (
-        this->thermo_.composition().Y(species1Index_)
+        composition().Y(species1Index_)
        *W
        /dimensionedScalar
         (
             "W",
             dimMass/dimMoles,
-            this->thermo_.composition().Wi(species1Index_)
+            composition().Wi(species1Index_)
         )
     );
 
-    volScalarField X2
+    const volScalarField X2
     (
-        this->thermo_.composition().Y(species2Index_)
+        composition().Y(species2Index_)
        *W
        /dimensionedScalar
         (
             "W",
             dimMass/dimMoles,
-            this->thermo_.composition().Wi(species2Index_)
+            composition().Wi(species2Index_)
         )
     );
 
-    volScalarField alpha12(alpha12_ + Tf*beta12_);
-    volScalarField alpha21(alpha21_ + Tf*beta21_);
+    const volScalarField alpha12(alpha12_ + Tf*beta12_);
+    const volScalarField alpha21(alpha21_ + Tf*beta21_);
 
-    volScalarField tau12(saturationModel12_->lnPSat(Tf));
-    volScalarField tau21(saturationModel21_->lnPSat(Tf));
+    const volScalarField tau12(saturationModel12_->lnPSat(Tf));
+    const volScalarField tau21(saturationModel21_->lnPSat(Tf));
 
-    volScalarField G12(exp(- alpha12*tau12));
-    volScalarField G21(exp(- alpha21*tau21));
+    const volScalarField G12(exp(- alpha12*tau12));
+    const volScalarField G21(exp(- alpha21*tau21));
 
     gamma1_ =
         exp
@@ -211,9 +222,8 @@ update
 }
 
 
-template<class Thermo, class OtherThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::interfaceCompositionModels::NonRandomTwoLiquid<Thermo, OtherThermo>::Yf
+Foam::interfaceCompositionModels::nonRandomTwoLiquid::Yf
 (
     const word& speciesName,
     const volScalarField& Tf
@@ -222,30 +232,28 @@ Foam::interfaceCompositionModels::NonRandomTwoLiquid<Thermo, OtherThermo>::Yf
     if (speciesName == species1Name_)
     {
         return
-            this->otherThermo_.composition().Y(speciesName)
+            otherComposition().Y(speciesName)
            *speciesModel1_->Yf(speciesName, Tf)
            *gamma1_;
     }
     else if (speciesName == species2Name_)
     {
         return
-            this->otherThermo_.composition().Y(speciesName)
+            otherComposition().Y(speciesName)
            *speciesModel2_->Yf(speciesName, Tf)
            *gamma2_;
     }
     else
     {
         return
-            this->thermo_.composition().Y(speciesName)
+            composition().Y(speciesName)
            *(scalar(1) - Yf(species1Name_, Tf) - Yf(species2Name_, Tf));
     }
 }
 
 
-template<class Thermo, class OtherThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::interfaceCompositionModels::NonRandomTwoLiquid<Thermo, OtherThermo>::
-YfPrime
+Foam::interfaceCompositionModels::nonRandomTwoLiquid::YfPrime
 (
     const word& speciesName,
     const volScalarField& Tf
@@ -254,21 +262,21 @@ YfPrime
     if (speciesName == species1Name_)
     {
         return
-            this->otherThermo_.composition().Y(speciesName)
+            otherComposition().Y(speciesName)
            *speciesModel1_->YfPrime(speciesName, Tf)
            *gamma1_;
     }
     else if (speciesName == species2Name_)
     {
         return
-            this->otherThermo_.composition().Y(speciesName)
+            otherComposition().Y(speciesName)
            *speciesModel2_->YfPrime(speciesName, Tf)
            *gamma2_;
     }
     else
     {
         return
-          - this->thermo_.composition().Y(speciesName)
+          - composition().Y(speciesName)
            *(YfPrime(species1Name_, Tf) + YfPrime(species2Name_, Tf));
     }
 }

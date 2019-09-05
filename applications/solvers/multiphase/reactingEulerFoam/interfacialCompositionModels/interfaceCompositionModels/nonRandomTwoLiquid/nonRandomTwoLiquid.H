@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::interfaceCompositionModels::NonRandomTwoLiquid
+    Foam::interfaceCompositionModels::nonRandomTwoLiquid
 
 Description
     Non ideal law for the mixing of two species. A separate composition model
@@ -33,14 +33,14 @@ Description
     as equal to 1.
 
 SourceFiles
-    NonRandomTwoLiquid.C
+    nonRandomTwoLiquid.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef NonRandomTwoLiquid_H
-#define NonRandomTwoLiquid_H
+#ifndef nonRandomTwoLiquid_H
+#define nonRandomTwoLiquid_H
 
-#include "InterfaceCompositionModel.H"
+#include "interfaceCompositionModel.H"
 #include "saturationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,13 +54,12 @@ namespace interfaceCompositionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class NonRandomTwoLiquid Declaration
+                         Class nonRandomTwoLiquid Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Thermo, class OtherThermo>
-class NonRandomTwoLiquid
+class nonRandomTwoLiquid
 :
-    public InterfaceCompositionModel<Thermo, OtherThermo>
+    public interfaceCompositionModel
 {
     // Private Data
 
@@ -115,7 +114,7 @@ public:
     // Constructors
 
         //- Construct from components
-        NonRandomTwoLiquid
+        nonRandomTwoLiquid
         (
             const dictionary& dict,
             const phasePair& pair
@@ -123,7 +122,7 @@ public:
 
 
     //- Destructor
-    virtual ~NonRandomTwoLiquid();
+    virtual ~nonRandomTwoLiquid();
 
 
     // Member Functions
@@ -151,12 +150,6 @@ public:
 
 } // End namespace interfaceCompositionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "NonRandomTwoLiquid.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

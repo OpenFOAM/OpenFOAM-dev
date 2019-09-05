@@ -523,7 +523,7 @@ Foam::particle::particle
     tetFacei_(tetFacei),
     tetPti_(tetPti),
     facei_(-1),
-    stepFraction_(0.0),
+    stepFraction_(1.0),
     behind_(0.0),
     nBehind_(0),
     origProc_(Pstream::myProcNo()),
@@ -544,7 +544,7 @@ Foam::particle::particle
     tetFacei_(-1),
     tetPti_(-1),
     facei_(-1),
-    stepFraction_(0.0),
+    stepFraction_(1.0),
     behind_(0.0),
     nBehind_(0),
     origProc_(Pstream::myProcNo()),
@@ -1017,7 +1017,7 @@ Foam::scalar Foam::particle::trackToTri
     label& tetTriI
 )
 {
-    if (mesh_.moving())
+    if (mesh_.moving() && (stepFraction_ != 1 || fraction != 0))
     {
         return trackToMovingTri(displacement, fraction, tetTriI);
     }
@@ -1151,7 +1151,7 @@ void Foam::particle::correctAfterInteractionListReferral(const label celli)
     // so this approximate topology is good enough. By using the nearby cell we
     // minimize the error associated with the incorrect topology.
     coordinates_ = barycentric(1, 0, 0, 0);
-    if (mesh_.moving())
+    if (mesh_.moving() && stepFraction_ != 1)
     {
         Pair<vector> centre;
         FixedList<scalar, 4> detA;

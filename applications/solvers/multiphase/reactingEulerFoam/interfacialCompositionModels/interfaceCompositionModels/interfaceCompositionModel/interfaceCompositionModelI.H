@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,38 +23,50 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "interfaceCompositionModel.H"
-#include "phasePair.H"
-#include "rhoThermo.H"
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::interfaceCompositionModel>
-Foam::interfaceCompositionModel::New
-(
-    const dictionary& dict,
-    const phasePair& pair
-)
+const Foam::phasePair& Foam::interfaceCompositionModel::pair() const
 {
-    const word interfaceCompositionModelType = word(dict.lookup("type"));
+    return pair_;
+}
 
-    Info<< "Selecting interfaceCompositionModel for "
-        << pair << ": " << interfaceCompositionModelType << endl;
 
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(interfaceCompositionModelType);
+const Foam::hashedWordList& Foam::interfaceCompositionModel::species() const
+{
+    return species_;
+}
 
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown interfaceCompositionModelType type "
-            << interfaceCompositionModelType << endl << endl
-            << "Valid interfaceCompositionModel types are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
 
-    return cstrIter()(dict, pair);
+const Foam::rhoReactionThermo&
+Foam::interfaceCompositionModel::thermo() const
+{
+    return thermo_;
+}
+
+
+const Foam::basicSpecieMixture&
+Foam::interfaceCompositionModel::composition() const
+{
+    return thermo_.composition();
+}
+
+
+const Foam::rhoThermo& Foam::interfaceCompositionModel::otherThermo() const
+{
+    return otherThermo_;
+}
+
+
+bool Foam::interfaceCompositionModel::otherHasComposition() const
+{
+    return isA<rhoReactionThermo>(otherThermo_);
+}
+
+
+const Foam::basicSpecieMixture&
+Foam::interfaceCompositionModel::otherComposition() const
+{
+    return refCast<const rhoReactionThermo>(otherThermo_).composition();
 }
 
 
