@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,6 +112,15 @@ mixtureKEpsilon<BasicTurbulenceModel>::mixtureKEpsilon
             "Cp",
             this->coeffDict_,
             0.25
+        )
+    ),
+    alphap_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "alphap",
+            this->coeffDict_,
+            1
         )
     ),
     sigmak_
@@ -500,7 +509,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicTurbulenceModel>::bubbleG() const
     tmp<volScalarField> bubbleG
     (
         Cp_
-       *liquid*liquid.rho()
+       *pos(alphap_ - gas)*liquid*liquid.rho()
        *(
             pow3(magUr)
           + pow(drag.CdRe()*liquid.nu()/gas.d(), 4.0/3.0)

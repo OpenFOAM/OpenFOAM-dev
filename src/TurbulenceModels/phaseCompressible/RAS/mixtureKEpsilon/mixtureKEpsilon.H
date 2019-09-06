@@ -51,6 +51,8 @@ Description
             C2          1.92;
             C3          C2;
             Cp          0.25; // Bubble generated turbulence
+            alphap      0.3;  // Gas phase fraction below which
+                              // bubble generated turbulence is included
             sigmak      1.0;
             sigmaEps    1.3;
         }
@@ -105,6 +107,7 @@ protected:
             dimensionedScalar C2_;
             dimensionedScalar C3_;
             dimensionedScalar Cp_;
+            dimensionedScalar alphap_;
             dimensionedScalar sigmak_;
             dimensionedScalar sigmaEps_;
 
