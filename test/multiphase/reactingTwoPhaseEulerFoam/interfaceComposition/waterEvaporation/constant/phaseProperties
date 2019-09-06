@@ -122,11 +122,6 @@ massTransfer.gas
 
 massTransfer.liquid
 (
-    (liquid in gas)
-    {
-        type spherical;
-        Le 1.0;
-    }
 );
 
 phaseTransfer

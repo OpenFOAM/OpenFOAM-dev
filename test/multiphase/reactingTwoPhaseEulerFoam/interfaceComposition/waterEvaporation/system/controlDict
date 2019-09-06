@@ -53,25 +53,8 @@ maxDeltaT       1;
 
 functions
 {
-    plot
-    {
-        lib             ("libsampling.so");
-        type            probes;
-        writeControl    timeStep;
-        writeInterval   1;
-        fields
-        (
-            air.gas
-            alpha.gas
-            alpha.liquid
-            H2O.gas
-            p
-            T.gas
-            T.liquid
-        );
-        probeLocations  ((0 0 0));
-    }
+    #includeFunc continuity
+    #includeFunc plot
 }
-
 
 // ************************************************************************* //
