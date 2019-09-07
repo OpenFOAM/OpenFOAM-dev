@@ -171,11 +171,14 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
                 << exit(FatalError, 1);
         }
 
-        // Check if the first character in the file is the first character
-        // of "FoamFile" to avoid problems if the first entry is a variable
-        // or function
-        if (dictFile.peek() == IOobject::foamFile[0])
+        // Check if the first token in the file is "FoamFile"
+        // to avoid problems if the first entry is a variable or function
+        token firstToken;
+        dictFile.read(firstToken);
+        if (firstToken.isWord() && firstToken.wordToken() == IOobject::foamFile)
         {
+            dictFile.putBack(firstToken);
+
             // Read the first entry from the dictionary
             autoPtr<entry> firstEntry(entry::New(dictFile()));
 
@@ -191,12 +194,11 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
                 (
                     firstEntry->dict().lookup("format")
                 );
-                dictFile().format(dictFormat);
             }
         }
     }
 
-    IFstream dictFile(dictFileName);
+    IFstream dictFile(dictFileName, dictFormat);
 
     // Read and add the rest of the dictionary entries
     // preserving the IOobject::foamFile header dictionary if present
