@@ -101,6 +101,7 @@ class pointPatchField
 
 public:
 
+    typedef Type value_type;
     typedef pointPatch Patch;
     typedef calculatedPointPatchField<Type> Calculated;
 
