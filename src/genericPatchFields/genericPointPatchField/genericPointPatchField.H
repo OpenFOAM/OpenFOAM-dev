@@ -36,6 +36,7 @@ SourceFiles
 #ifndef genericPointPatchField_H
 #define genericPointPatchField_H
 
+#include "genericPatchField.H"
 #include "calculatedPointPatchField.H"
 #include "HashPtrTable.H"
 
@@ -51,11 +52,11 @@ namespace Foam
 template<class Type>
 class genericPointPatchField
 :
+    public genericPatchField,
     public calculatedPointPatchField<Type>
 {
     // Private Data
 
-        word actualTypeName_;
         dictionary dict_;
 
         HashPtrTable<scalarField> scalarFields_;

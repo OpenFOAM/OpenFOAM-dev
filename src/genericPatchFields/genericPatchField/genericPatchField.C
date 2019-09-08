@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,53 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchSummaryTemplates_H
-#define patchSummaryTemplates_H
-
-#include "fvCFD.H"
-#include "volFields.H"
+#include "genericPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    template<class PatchField>
-    word patchFieldType(const PatchField& pf);
-
-    template<class GeoField>
-    void addToFieldList
-    (
-        PtrList<GeoField>& fieldList,
-        const IOobject& obj,
-        const label fieldi,
-        const typename GeoField::Mesh& mesh
-    );
-
-    template<class GeoField>
-    void outputFieldList
-    (
-        const PtrList<GeoField>& fieldList,
-        const label patchi
-    );
-
-    template<class GeoField>
-    void collectFieldList
-    (
-        const PtrList<GeoField>& fieldList,
-        const label patchi,
-        HashTable<word>& fieldToType
-    );
-} // End namespace Foam
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "patchSummaryTemplates.C"
-#endif
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
+    defineTypeNameAndDebug(genericPatchField, 0);
+}
 
 // ************************************************************************* //

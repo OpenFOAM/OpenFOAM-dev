@@ -53,8 +53,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
     const dictionary& dict
 )
 :
+    genericPatchField(dict.lookup("type")),
     calculatedFvPatchField<Type>(p, iF, dict),
-    actualTypeName_(dict.lookup("type")),
     dict_(dict)
 {
     if (!dict.found("value"))
@@ -69,7 +69,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
             << nl
             << "    which is required to set the"
                " values of the generic patch field." << nl
-            << "    (Actual type " << actualTypeName_ << ")" << nl
+            << "    (Actual type " << actualTypeName() << ")" << nl
             << "\n    Please add the 'value' entry to the write function "
                "of the user-defined boundary-condition\n"
             << exit(FatalIOError);
@@ -420,8 +420,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
     const fvPatchFieldMapper& mapper
 )
 :
+    genericPatchField(ptf),
     calculatedFvPatchField<Type>(ptf, p, iF, mapper),
-    actualTypeName_(ptf.actualTypeName_),
     dict_(ptf.dict_)
 {
     forAllConstIter
@@ -502,8 +502,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
     const genericFvPatchField<Type>& ptf
 )
 :
+    genericPatchField(ptf),
     calculatedFvPatchField<Type>(ptf),
-    actualTypeName_(ptf.actualTypeName_),
     dict_(ptf.dict_),
     scalarFields_(ptf.scalarFields_),
     vectorFields_(ptf.vectorFields_),
@@ -520,8 +520,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
+    genericPatchField(ptf),
     calculatedFvPatchField<Type>(ptf, iF),
-    actualTypeName_(ptf.actualTypeName_),
     dict_(ptf.dict_),
     scalarFields_(ptf.scalarFields_),
     vectorFields_(ptf.vectorFields_),
@@ -696,7 +696,7 @@ Foam::genericFvPatchField<Type>::valueInternalCoeffs
 {
     FatalErrorInFunction
         << "cannot be called for a genericFvPatchField"
-           " (actual type " << actualTypeName_ << ")"
+           " (actual type " << actualTypeName() << ")"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->internalField().name()
         << " in file " << this->internalField().objectPath()
@@ -717,7 +717,7 @@ Foam::genericFvPatchField<Type>::valueBoundaryCoeffs
 {
     FatalErrorInFunction
         << "cannot be called for a genericFvPatchField"
-           " (actual type " << actualTypeName_ << ")"
+           " (actual type " << actualTypeName() << ")"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->internalField().name()
         << " in file " << this->internalField().objectPath()
@@ -735,7 +735,7 @@ Foam::genericFvPatchField<Type>::gradientInternalCoeffs() const
 {
     FatalErrorInFunction
         << "cannot be called for a genericFvPatchField"
-           " (actual type " << actualTypeName_ << ")"
+           " (actual type " << actualTypeName() << ")"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->internalField().name()
         << " in file " << this->internalField().objectPath()
@@ -752,7 +752,7 @@ Foam::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     FatalErrorInFunction
         << "cannot be called for a genericFvPatchField"
-           " (actual type " << actualTypeName_ << ")"
+           " (actual type " << actualTypeName() << ")"
         << "\n    on patch " << this->patch().name()
         << " of field " << this->internalField().name()
         << " in file " << this->internalField().objectPath()
@@ -767,7 +767,7 @@ Foam::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 template<class Type>
 void Foam::genericFvPatchField<Type>::write(Ostream& os) const
 {
-    writeEntry(os, "type", actualTypeName_);
+    writeEntry(os, "type", actualTypeName());
 
     forAllConstIter(dictionary, dict_, iter)
     {

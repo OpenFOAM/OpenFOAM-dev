@@ -40,6 +40,7 @@ SourceFiles
 #ifndef genericFvPatchField_H
 #define genericFvPatchField_H
 
+#include "genericPatchField.H"
 #include "calculatedFvPatchField.H"
 #include "HashPtrTable.H"
 
@@ -55,11 +56,11 @@ namespace Foam
 template<class Type>
 class genericFvPatchField
 :
+    public genericPatchField,
     public calculatedFvPatchField<Type>
 {
     // Private Data
 
-        word actualTypeName_;
         dictionary dict_;
 
         HashPtrTable<scalarField> scalarFields_;

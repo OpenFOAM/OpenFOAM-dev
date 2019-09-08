@@ -49,8 +49,8 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
     const dictionary& dict
 )
 :
+    genericPatchField(dict.lookup("type")),
     calculatedPointPatchField<Type>(p, iF, dict),
-    actualTypeName_(dict.lookup("type")),
     dict_(dict)
 {
     forAllConstIter(dictionary, dict_, iter)
@@ -311,8 +311,8 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
     const pointPatchFieldMapper& mapper
 )
 :
+    genericPatchField(ptf),
     calculatedPointPatchField<Type>(ptf, p, iF, mapper),
-    actualTypeName_(ptf.actualTypeName_),
     dict_(ptf.dict_)
 {
     forAllConstIter
@@ -394,8 +394,8 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
     const DimensionedField<Type, pointMesh>& iF
 )
 :
+    genericPatchField(ptf),
     calculatedPointPatchField<Type>(ptf, iF),
-    actualTypeName_(ptf.actualTypeName_),
     dict_(ptf.dict_),
     scalarFields_(ptf.scalarFields_),
     vectorFields_(ptf.vectorFields_),
@@ -560,7 +560,7 @@ void Foam::genericPointPatchField<Type>::rmap
 template<class Type>
 void Foam::genericPointPatchField<Type>::write(Ostream& os) const
 {
-    writeEntry(os, "type", actualTypeName_);
+    writeEntry(os, "type", actualTypeName());
 
     forAllConstIter(dictionary, dict_, iter)
     {

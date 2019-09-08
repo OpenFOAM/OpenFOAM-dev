@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,52 +21,71 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::genericPatchField
+
+Description
+
+SourceFiles
+    genericPatchField.C
+
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchSummaryTemplates_H
-#define patchSummaryTemplates_H
+#ifndef genericPatchField_H
+#define genericPatchField_H
 
-#include "fvCFD.H"
-#include "volFields.H"
+#include "typeInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    template<class PatchField>
-    word patchFieldType(const PatchField& pf);
 
-    template<class GeoField>
-    void addToFieldList
-    (
-        PtrList<GeoField>& fieldList,
-        const IOobject& obj,
-        const label fieldi,
-        const typename GeoField::Mesh& mesh
-    );
+/*---------------------------------------------------------------------------*\
+                      Class genericFvPatch Declaration
+\*---------------------------------------------------------------------------*/
 
-    template<class GeoField>
-    void outputFieldList
-    (
-        const PtrList<GeoField>& fieldList,
-        const label patchi
-    );
+class genericPatchField
+{
+    // Private Data
 
-    template<class GeoField>
-    void collectFieldList
-    (
-        const PtrList<GeoField>& fieldList,
-        const label patchi,
-        HashTable<word>& fieldToType
-    );
-} // End namespace Foam
+        word actualTypeName_;
+
+public:
+
+    //- Runtime type information
+    TypeName("generic");
+
+
+    // Constructors
+
+        genericPatchField()
+        {}
+
+        genericPatchField(const word& atn)
+        :
+            actualTypeName_(atn)
+        {}
+
+
+    //- Destructor
+    virtual ~genericPatchField()
+    {}
+
+
+    // Member Functions
+
+        //- Return the actual type name
+        word actualTypeName() const
+        {
+            return actualTypeName_;
+        }
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#ifdef NoRepository
-    #include "patchSummaryTemplates.C"
-#endif
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
