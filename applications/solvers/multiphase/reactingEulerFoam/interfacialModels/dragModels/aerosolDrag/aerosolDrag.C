@@ -80,7 +80,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::aerosolDrag::CdRe() const
        /sqr(dm_)
     );
 
-    const volScalarField& dp = pair_.dispersed().d();
+    const volScalarField dp(pair_.dispersed().d());
 
     const volScalarField Cc
     (
