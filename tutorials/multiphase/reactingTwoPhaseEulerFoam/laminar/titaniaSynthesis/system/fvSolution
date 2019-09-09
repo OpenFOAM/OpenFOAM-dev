@@ -38,6 +38,7 @@ solvers
         preconditioner  DIC;
         tolerance       1e-7;
         relTol          0;
+        minIter         1;
         maxIter         20;
     }
 
@@ -73,6 +74,7 @@ solvers
         tolerance       1e-7;
         relTol          0;
         residualAlpha   1e-5;
+        minIter         1;
     }
 }
 
