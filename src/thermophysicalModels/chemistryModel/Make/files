@@ -6,6 +6,9 @@ chemistryModel/TDACChemistryModel/tabulation/makeChemistryTabulationMethods.C
 
 chemistrySolver/chemistrySolver/makeChemistrySolvers.C
 
+reactions/makeReactions.C
+reactions/makeLangmuirHinshelwoodReactions.C
+reactions/makeMichaelisMentenReactions.C
 reactions/fluxLimitedLangmuirHinshelwood/makefluxLimitedLangmuirHinshelwoodReactions.C
 
 functionObjects/specieReactionRates/specieReactionRates.C
