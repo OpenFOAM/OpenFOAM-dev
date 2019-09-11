@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,9 @@ Foam::turbulentDispersionModel::F() const
 Foam::tmp<Foam::surfaceScalarField>
 Foam::turbulentDispersionModel::Ff() const
 {
-    return fvc::interpolate(D())*fvc::snGrad(pair_.dispersed());
+    return
+        fvc::interpolate(D())*fvc::snGrad(pair_.dispersed())
+       *pair_.phase1().mesh().magSf();
 }
 
 
