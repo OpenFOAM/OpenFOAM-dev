@@ -7,4 +7,4 @@ EXE_LIBS = \
     -lreactionThermophysicalModels \
     -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
-    -lspecie
+    -lchemistryModel
