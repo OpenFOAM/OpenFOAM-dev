@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,128 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "OneResistanceHeatTransferPhaseSystem.H"
+#include "BlendedInterfacialModel.H"
+#include "heatTransferModel.H"
 #include "fvmSup.H"
+#include "rhoReactionThermo.H"
+
+// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
+
+template<class BasePhaseSystem>
+void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHe
+(
+    const phaseSystem::dmdtTable& dmdts,
+    phaseSystem::heatTransferTable& eqns
+) const
+{
+    forAllConstIter(phaseSystem::dmdtTable, dmdts, dmdtIter)
+    {
+        const phasePairKey& key = dmdtIter.key();
+        const phasePair& pair(this->phasePairs_[key]);
+
+        const volScalarField dmdt(Pair<word>::compare(pair, key)**dmdtIter());
+        const volScalarField dmdt21(posPart(dmdt));
+        const volScalarField dmdt12(negPart(dmdt));
+
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
+        const rhoThermo& thermo1 = phase1.thermo();
+        const rhoThermo& thermo2 = phase2.thermo();
+        const volScalarField& he1(thermo1.he());
+        const volScalarField& he2(thermo2.he());
+        const volScalarField K1(phase1.K());
+        const volScalarField K2(phase2.K());
+
+        // Note that the phase EEqn contains a continuity error term. See
+        // MomentumTransferPhaseSystem::addDmdtU for an explanation of the
+        // fvm::Sp terms below.
+
+        // Transfer of energy from bulk to bulk
+        *eqns[phase1.name()] += dmdt21*he2 - fvm::Sp(dmdt21, he1);
+        *eqns[phase2.name()] -= dmdt12*he1 - fvm::Sp(dmdt12, he2);
+
+        // Transfer of kinetic energy
+        *eqns[phase1.name()] += dmdt21*(K2 - K1);
+        *eqns[phase2.name()] -= dmdt12*(K1 - K2);
+    }
+}
+
+
+template<class BasePhaseSystem>
+void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
+(
+    const phaseSystem::dmidtTable& dmidts,
+    phaseSystem::heatTransferTable& eqns
+) const
+{
+    forAllConstIter(phaseSystem::dmidtTable, dmidts, dmidtIter)
+    {
+        const phasePairKey& key = dmidtIter.key();
+        const phasePair& pair(this->phasePairs_[key]);
+
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
+        const rhoThermo& thermo1 = phase1.thermo();
+        const rhoThermo& thermo2 = phase2.thermo();
+        const volScalarField& he1(thermo1.he());
+        const volScalarField& he2(thermo2.he());
+        const volScalarField K1(phase1.K());
+        const volScalarField K2(phase2.K());
+
+        // Note that the phase EEqn contains a continuity error term. See
+        // MomentumTransferPhaseSystem::addDmdtU for an explanation of the
+        // fvm::Sp terms below.
+
+        forAllConstIter(HashPtrTable<volScalarField>, *dmidtIter(), dmidtJter)
+        {
+            const word& member = dmidtJter.key();
+
+            const volScalarField dmidt
+            (
+                Pair<word>::compare(pair, key)**dmidtJter()
+            );
+            const volScalarField dmidt21(posPart(dmidt));
+            const volScalarField dmidt12(negPart(dmidt));
+
+            // Create the energies for the transferring specie
+            volScalarField hei1(he1);
+            if (isA<rhoReactionThermo>(thermo1))
+            {
+                const basicSpecieMixture& composition1 =
+                    refCast<const rhoReactionThermo>(thermo1).composition();
+                hei1 =
+                    composition1.HE
+                    (
+                        composition1.species()[member],
+                        thermo1.p(),
+                        thermo1.T()
+                    );
+            }
+            volScalarField hei2(he2);
+            if (isA<rhoReactionThermo>(thermo2))
+            {
+                const basicSpecieMixture& composition2 =
+                    refCast<const rhoReactionThermo>(thermo2).composition();
+                hei2 =
+                    composition2.HE
+                    (
+                        composition2.species()[member],
+                        thermo2.p(),
+                        thermo2.T()
+                    );
+            }
+
+            // Transfer of energy from bulk to bulk
+            *eqns[phase1.name()] += dmidt21*hei2 - fvm::Sp(dmidt21, he1);
+            *eqns[phase2.name()] -= dmidt12*hei1 - fvm::Sp(dmidt12, he2);
+
+            // Transfer of kinetic energy
+            *eqns[phase1.name()] += dmidt21*(K2 - K1);
+            *eqns[phase2.name()] -= dmidt12*(K1 - K2);
+        }
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -103,45 +224,6 @@ heatTransfer() const
                 K*(otherPhase.thermo().T() - phase.thermo().T() + he/Cpv)
               - fvm::Sp(K/Cpv, he);
         }
-    }
-
-    // Source term due to mass transfer
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
-
-        const volScalarField& he1(phase1.thermo().he());
-        const volScalarField& he2(phase2.thermo().he());
-
-        const volScalarField K1(phase1.K());
-        const volScalarField K2(phase2.K());
-
-        // Note that the phase heEqn contains a continuity error term, which
-        // implicitly adds a mass transfer term of fvm::Sp(dmdt, he). These
-        // additions do not include this term.
-
-        const volScalarField dmdt(this->dmdt(pair));
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
-
-        *eqns[phase1.name()] +=
-            dmdt21*he2 - fvm::Sp(dmdt21, he1) + dmdt21*(K2 - K1);
-
-        *eqns[phase2.name()] -=
-            dmdt12*he1 - fvm::Sp(dmdt12, he2) + dmdt12*(K1 - K2);
     }
 
     return eqnsPtr;

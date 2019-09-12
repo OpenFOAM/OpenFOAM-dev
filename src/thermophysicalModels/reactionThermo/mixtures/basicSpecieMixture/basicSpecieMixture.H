@@ -123,6 +123,22 @@ public:
                 const volScalarField& T
             ) const = 0;
 
+            //- Enthalpy/Internal energy [J/kg]
+            virtual scalar HE
+            (
+                const label speciei,
+                const scalar p,
+                const scalar T
+            ) const = 0;
+
+            //- Enthalpy/Internal energy [J/kg]
+            virtual tmp<volScalarField> HE
+            (
+                const label speciei,
+                const volScalarField& p,
+                const volScalarField& T
+            ) const = 0;
+
             //- Absolute enthalpy [J/kg]
             virtual scalar Ha
             (

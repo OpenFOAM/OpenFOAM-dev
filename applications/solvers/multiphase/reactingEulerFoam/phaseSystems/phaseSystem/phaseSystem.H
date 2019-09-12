@@ -87,6 +87,20 @@ public:
             HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
             phasePairTable;
 
+        typedef
+            HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
+            dmdtTable;
+
+        typedef
+            HashPtrTable
+            <
+                HashPtrTable<volScalarField>,
+                phasePairKey,
+                phasePairKey::hash
+            >
+            dmidtTable;
+
+
 
 protected:
 

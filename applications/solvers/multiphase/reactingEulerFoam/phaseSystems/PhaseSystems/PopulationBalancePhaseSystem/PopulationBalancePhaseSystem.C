@@ -132,7 +132,9 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdt
     const phasePairKey& key
 ) const
 {
-    return BasePhaseSystem::dmdt(key) + this->pDmdt(key);
+    NotImplemented;
+
+    return phaseSystem::dmdt(key);
 }
 
 
@@ -142,7 +144,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
 
-    forAllConstIter(pDmdtTable, pDmdt_, pDmdtIter)
+    forAllConstIter(phaseSystem::dmdtTable, pDmdt_, pDmdtIter)
     {
         const phasePair& pair = this->phasePairs_[pDmdtIter.key()];
         const volScalarField& pDmdt = *pDmdtIter();
@@ -156,6 +158,36 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 
 
 template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransfer()
+{
+    autoPtr<phaseSystem::momentumTransferTable> eqnsPtr =
+        BasePhaseSystem::momentumTransfer();
+
+    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
+
+    this->addDmdtU(pDmdt_, eqns);
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransferf()
+{
+    autoPtr<phaseSystem::momentumTransferTable> eqnsPtr =
+        BasePhaseSystem::momentumTransferf();
+
+    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
+
+    this->addDmdtU(pDmdt_, eqns);
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
 Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::heatTransfer() const
 {
@@ -164,90 +196,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
     phaseSystem::heatTransferTable& eqns = eqnsPtr();
 
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered() || !pDmdt_.found(pair))
-        {
-            continue;
-        }
-
-        forAll(populationBalances_, i)
-        {
-            const Foam::diameterModels::populationBalanceModel& popBal =
-                populationBalances_[i];
-
-            if (!popBal.phasePairs().found(pair))
-            {
-                continue;
-            }
-
-            // No correction needed for velocity group pairs
-            if (popBal.isVelocityGroupPair(pair))
-            {
-                break;
-            }
-
-            const phaseModel& phase1 = pair.phase1();
-            const phaseModel& phase2 = pair.phase2();
-
-            const HashPtrTable<volScalarField>& sDmdt =
-                popBal.speciesDmdt(pair);
-
-            const rhoReactionThermo& thermo1 =
-                refCast<const rhoReactionThermo>
-                (
-                    phase1.thermo()
-                );
-
-             const rhoReactionThermo& thermo2 =
-                refCast<const rhoReactionThermo>
-                (
-                    phase2.thermo()
-                );
-
-            const volScalarField& p(thermo1.p());
-            const volScalarField& T1(thermo1.T());
-            const volScalarField& T2(thermo2.T());
-
-            forAllConstIter
-            (
-                HashPtrTable<volScalarField>,
-                sDmdt,
-                sDmdtIter
-            )
-            {
-                const label I1 =
-                    thermo1.composition().species()[sDmdtIter.key()];
-
-                const label I2 =
-                    thermo2.composition().species()[sDmdtIter.key()];
-
-                const volScalarField sDmdt12(negPart(**sDmdtIter));
-                const volScalarField sDmdt21(posPart(**sDmdtIter));
-
-                const volScalarField T
-                (
-                    neg0(**sDmdtIter)*T1 + pos(**sDmdtIter)*T2
-                );
-
-                const volScalarField L
-                (
-                    thermo1.composition().Ha(I1, p, T)
-                  - thermo2.composition().Ha(I2, p, T)
-                );
-
-                *eqns[phase1.name()] -= sDmdt21*L;
-                *eqns[phase2.name()] -= sDmdt12*L;
-            }
-        }
-    }
+    this->addDmdtHe(pDmdt_, eqns);
 
     return eqnsPtr;
 }

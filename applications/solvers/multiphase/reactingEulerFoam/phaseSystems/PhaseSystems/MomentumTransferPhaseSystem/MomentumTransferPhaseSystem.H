@@ -66,9 +66,9 @@ class MomentumTransferPhaseSystem
 :
     public BasePhaseSystem
 {
-protected:
+private:
 
-    // Protected typedefs
+    // Private typedefs
 
         typedef HashPtrTable
         <
@@ -134,8 +134,6 @@ protected:
         > turbulentDispersionModelTable;
 
 
-private:
-
     // Private Data
 
         //- Drag coefficients
@@ -187,6 +185,19 @@ private:
         (
             phaseSystem::momentumTransferTable& eqns
         ) const;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Add momentum transfer terms which result from bulk mass transfers
+        void addDmdtU
+        (
+            const phaseSystem::dmdtTable& dmdts,
+            phaseSystem::momentumTransferTable& eqns
+        );
+
 
 public:
 

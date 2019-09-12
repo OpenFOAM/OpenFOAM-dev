@@ -130,7 +130,7 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::L
         volScalarField::New
         (
             IOobject::groupName("L", pair_.name()),
-            Ha - otherHa
+            otherHa - Ha
         );
 }
 

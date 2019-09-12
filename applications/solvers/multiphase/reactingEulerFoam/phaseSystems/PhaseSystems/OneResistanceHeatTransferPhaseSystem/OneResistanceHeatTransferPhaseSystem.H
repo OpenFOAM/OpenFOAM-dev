@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,6 +77,23 @@ protected:
 
             //- Heat transfer models
             heatTransferModelTable heatTransferModels_;
+
+
+    // Protected Member Functions
+
+        //- Add energy transfer terms which result from bulk mass transfers
+        void addDmdtHe
+        (
+            const phaseSystem::dmdtTable& dmdts,
+            phaseSystem::heatTransferTable& eqns
+        ) const;
+
+        //- Add energy transfer terms which result from specie mass transfers
+        void addDmidtHe
+        (
+            const phaseSystem::dmidtTable& dmidts,
+            phaseSystem::heatTransferTable& eqns
+        ) const;
 
 
 public:

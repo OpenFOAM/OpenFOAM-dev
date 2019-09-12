@@ -116,44 +116,52 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Vm
 }
 
 
-template<class BasePhaseSystem>
-void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::
-addMassTransferMomentumTransfer(phaseSystem::momentumTransferTable& eqns) const
-{
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
+// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
-        if (pair.ordered())
-        {
-            continue;
-        }
+template<class BasePhaseSystem>
+void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::addDmdtU
+(
+    const phaseSystem::dmdtTable& dmdts,
+    phaseSystem::momentumTransferTable& eqns
+)
+{
+    forAllConstIter(phaseSystem::dmdtTable, dmdts, dmdtIter)
+    {
+        const phasePairKey& key = dmdtIter.key();
+        const phasePair& pair(this->phasePairs_[key]);
+
+        const volScalarField dmdt(Pair<word>::compare(pair, key)**dmdtIter());
+
+        phaseModel& phase1 = this->phases()[pair.phase1().name()];
+        phaseModel& phase2 = this->phases()[pair.phase2().name()];
 
         // Note that the phase UEqn contains a continuity error term, which
         // implicitly adds a mass transfer term of fvm::Sp(dmdt, U). These
-        // additions do not include this term.
+        // additions remove the part of this term corresponding to the supplied
+        // mass transfer rate; I.e.:
+        //
+        // DDt(alpha1*rho1*U1) + ... = dmdt21*U2 + dmdt12*U1
+        // DDt(alpha1*rho1*U1) - contErr + ... = dmdt21*U2 + dmdt12*U1 - contErr
+        // DDt(alpha1*rho1*U1) - contErr + ... = dmdt21*U2 + dmdt12*U1 - dmdt*U1
+        // DDt(alpha1*rho1*U1) - contErr + ... = dmdt21*U2 - dmdt21*U1
+        //
+        // Where contErr is the continuity error associated with this mass
+        // transfer rate, dmdt.
 
-        const volScalarField dmdt(this->dmdt(pair));
-
-        if (!pair.phase1().stationary())
+        if (!phase1.stationary())
         {
-            fvVectorMatrix& eqn = *eqns[pair.phase1().name()];
             const volScalarField dmdt21(posPart(dmdt));
 
-            eqn += dmdt21*pair.phase2().U() - fvm::Sp(dmdt21, eqn.psi());
+            *eqns[phase1.name()] +=
+                dmdt21*phase2.U() - fvm::Sp(dmdt21, phase1.URef());
         }
 
-        if (!pair.phase2().stationary())
+        if (!phase2.stationary())
         {
-            fvVectorMatrix& eqn = *eqns[pair.phase2().name()];
             const volScalarField dmdt12(negPart(dmdt));
 
-            eqn -= dmdt12*pair.phase1().U() - fvm::Sp(dmdt12, eqn.psi());
+            *eqns[phase2.name()] -=
+                dmdt12*phase1.U() - fvm::Sp(dmdt12, phase2.URef());
         }
     }
 }
@@ -367,9 +375,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
         }
     }
 
-    // Add the source term due to mass transfer
-    addMassTransferMomentumTransfer(eqns);
-
     return eqnsPtr;
 }
 
@@ -442,9 +447,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransferf()
             }
         }
     }
-
-    // Add the source term due to mass transfer
-    addMassTransferMomentumTransfer(eqns);
 
     return eqnsPtr;
 }

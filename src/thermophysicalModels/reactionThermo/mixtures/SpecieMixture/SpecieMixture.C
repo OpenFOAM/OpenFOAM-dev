@@ -177,6 +177,38 @@ Foam::tmp<Foam::volScalarField> Foam::SpecieMixture<MixtureType>::Cp
 
 
 template<class MixtureType>
+Foam::scalar Foam::SpecieMixture<MixtureType>::HE
+(
+    const label speciei,
+    const scalar p,
+    const scalar T
+) const
+{
+    return this->getLocalThermo(speciei).HE(p, T);
+}
+
+
+template<class MixtureType>
+Foam::tmp<Foam::volScalarField> Foam::SpecieMixture<MixtureType>::HE
+(
+    const label speciei,
+    const volScalarField& p,
+    const volScalarField& T
+) const
+{
+    return volScalarFieldProperty
+    (
+        "HE",
+        dimEnergy/dimMass,
+        &MixtureType::thermoType::HE,
+        speciei,
+        p,
+        T
+    );
+}
+
+
+template<class MixtureType>
 Foam::scalar Foam::SpecieMixture<MixtureType>::Ha
 (
     const label speciei,

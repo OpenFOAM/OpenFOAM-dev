@@ -123,6 +123,12 @@ public:
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;
 
+        //- Return the momentum transfer matrices for the cell-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
+
+        //- Return the momentum transfer matrices for the face-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransferf();
+
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 

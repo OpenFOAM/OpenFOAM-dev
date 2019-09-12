@@ -56,9 +56,9 @@ class PhaseTransferPhaseSystem
 :
     public BasePhaseSystem
 {
-protected:
+private:
 
-    // Protected typedefs
+    // Private typedefs
 
         typedef HashTable
         <
@@ -67,11 +67,8 @@ protected:
             phasePairKey::hash
         > phaseTransferModelTable;
 
-        typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            rDmdtTable;
 
-
-    // Protected data
+    // Private data
 
         // Sub Models
 
@@ -79,12 +76,26 @@ protected:
             phaseTransferModelTable phaseTransferModels_;
 
             //- Mass transfer rates
-            rDmdtTable rDmdt_;
+            phaseSystem::dmdtTable rDmdt_;
+
+
+protected:
 
     // Protected member functions
 
-        //- Return the representation mass transfer rate
-        virtual tmp<volScalarField> rDmdt(const phasePairKey& key) const;
+        //- Add specie transfer terms which result from bulk mass transfers
+        void addDmdtY
+        (
+            const phaseSystem::dmdtTable& dmdts,
+            phaseSystem::massTransferTable& eqns
+        ) const;
+
+        //- Add specie transfer terms which result from specie mass transfers
+        void addDmidtY
+        (
+            const phaseSystem::dmidtTable& dmidts,
+            phaseSystem::massTransferTable& eqns
+        ) const;
 
 
 public:
@@ -106,6 +117,15 @@ public:
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;
+
+        //- Return the momentum transfer matrices for the cell-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
+
+        //- Return the momentum transfer matrices for the face-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransferf();
+
+        //- Return the heat transfer matrices
+        virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
