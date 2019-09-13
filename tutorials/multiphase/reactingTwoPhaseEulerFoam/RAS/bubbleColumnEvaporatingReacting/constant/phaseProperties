@@ -133,9 +133,9 @@ virtualMass
     }
 );
 
-interfaceComposition
+interfaceComposition.gas
 (
-    (gas in liquid)
+    (gas and liquid)
     {
         type saturated;
         species ( H2O );
@@ -145,6 +145,10 @@ interfaceComposition
             type ArdenBuck;
         }
     }
+);
+
+interfaceComposition.liquid
+(
 );
 
 heatTransfer.gas

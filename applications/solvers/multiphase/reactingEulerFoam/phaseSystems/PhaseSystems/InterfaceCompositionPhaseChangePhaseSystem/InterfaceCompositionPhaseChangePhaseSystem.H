@@ -65,7 +65,7 @@ private:
 
         typedef HashTable
         <
-            autoPtr<interfaceCompositionModel>,
+            Pair<autoPtr<interfaceCompositionModel>>,
             phasePairKey,
             phasePairKey::hash
         > interfaceCompositionModelTable;

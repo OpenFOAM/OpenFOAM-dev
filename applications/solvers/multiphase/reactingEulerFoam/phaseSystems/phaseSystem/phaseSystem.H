@@ -215,7 +215,8 @@ protected:
                 autoPtr<modelType>,
                 phasePairKey,
                 phasePairKey::hash
-            >& models
+            >& models,
+            const bool correctFixedFluxBCs = true
         );
 
         //- Generate pairs and blended sub-model tables

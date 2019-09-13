@@ -80,9 +80,9 @@ virtualMass
 (
 );
 
-interfaceComposition
+interfaceComposition.gas
 (
-    (gas in liquid)
+    (gas and liquid)
     {
         type nonRandomTwoLiquid;
         species (H2O C3H8O);
@@ -129,6 +129,10 @@ interfaceComposition
              }
         }
     }
+);
+
+interfaceComposition.liquid
+(
 );
 
 heatTransfer.gas

@@ -65,7 +65,8 @@ void Foam::phaseSystem::generatePairsAndSubModels
         autoPtr<modelType>,
         phasePairKey,
         phasePairKey::hash
-    >& models
+    >& models,
+    const bool correctFixedFluxBCs
 )
 {
     dictTable modelDicts(lookup(modelName));

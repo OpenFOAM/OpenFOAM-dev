@@ -25,8 +25,8 @@ License
 
 #include "InterfaceCompositionPhaseChangePhaseSystem.H"
 #include "interfaceCompositionModel.H"
-#include "diffusiveMassTransferModel.H"
 #include "heatTransferModel.H"
+#include "diffusiveMassTransferModel.H"
 #include "fvmSup.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
@@ -47,36 +47,46 @@ iDmdts() const
         interfaceCompositionModelIter
     )
     {
-        const interfaceCompositionModel& compositionModel =
-            interfaceCompositionModelIter();
-
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
-        const phasePair& unorderedPair =
-            this->phasePairs_[phasePair(phase, otherPhase)];
 
-        forAllConstIter(hashedWordList, compositionModel.species(), memberIter)
+        forAllConstIter(phasePair, pair, pairIter)
         {
-            const word& member = *memberIter;
+            const autoPtr<interfaceCompositionModel>& compositionModelPtr =
+                interfaceCompositionModelIter()[pairIter.index()];
 
-            tmp<volScalarField> dmidt
+            if (!compositionModelPtr.valid()) continue;
+
+            const interfaceCompositionModel& compositionModel =
+                compositionModelPtr();
+
+            const phaseModel& phase = *pairIter;
+
+            forAllConstIter
             (
-                Pair<word>::compare(pair, unorderedPair)
-               *(
+                hashedWordList,
+                compositionModel.species(),
+                memberIter
+            )
+            {
+                const word& member = *memberIter;
+
+                const label dmidtSign = pairIter.index() == 0 ? +1 : -1;
+
+                tmp<volScalarField> dmidt
+                (
                     *(*iDmdtSu_[pair])[member]
                   + *(*iDmdtSp_[pair])[member]*phase.Y(member)
-                )
-            );
+                );
 
-            if (iDmdts.found(unorderedPair))
-            {
-                *iDmdts[unorderedPair] += dmidt;
-            }
-            else
-            {
-                iDmdts.insert(unorderedPair, dmidt.ptr());
+                if (iDmdts.found(pair))
+                {
+                    *iDmdts[pair] += dmidtSign*dmidt;
+                }
+                else
+                {
+                    iDmdts.insert(pair, (dmidtSign*dmidt).ptr());
+                }
             }
         }
     }
@@ -101,41 +111,51 @@ iDmidts() const
         interfaceCompositionModelIter
     )
     {
-        const interfaceCompositionModel& compositionModel =
-            interfaceCompositionModelIter();
-
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
-        const phasePair& unorderedPair =
-            this->phasePairs_[phasePair(phase, otherPhase)];
 
-        if (!iDmidts.found(unorderedPair))
+        if (!iDmidts.found(pair))
         {
-            iDmidts.insert(unorderedPair, new HashPtrTable<volScalarField>());
+            iDmidts.insert(pair, new HashPtrTable<volScalarField>());
         }
 
-        forAllConstIter(hashedWordList, compositionModel.species(), memberIter)
+        forAllConstIter(phasePair, pair, pairIter)
         {
-            const word& member = *memberIter;
+            const autoPtr<interfaceCompositionModel>& compositionModelPtr =
+                interfaceCompositionModelIter()[pairIter.index()];
 
-            tmp<volScalarField> dmidt
+            if (!compositionModelPtr.valid()) continue;
+
+            const interfaceCompositionModel& compositionModel =
+                compositionModelPtr();
+
+            const phaseModel& phase = *pairIter;
+
+            forAllConstIter
             (
-                Pair<word>::compare(pair, unorderedPair)
-               *(
+                hashedWordList,
+                compositionModel.species(),
+                memberIter
+            )
+            {
+                const word& member = *memberIter;
+
+                const label dmidtSign = pairIter.index() == 0 ? +1 : -1;
+
+                tmp<volScalarField> dmidt
+                (
                     *(*iDmdtSu_[pair])[member]
                   + *(*iDmdtSp_[pair])[member]*phase.Y(member)
-                )
-            );
+                );
 
-            if (iDmidts[unorderedPair]->found(member))
-            {
-                *(*iDmidts[unorderedPair])[member] += dmidt;
-            }
-            else
-            {
-                iDmidts[unorderedPair]->insert(member, dmidt.ptr());
+                if (iDmidts[pair]->found(member))
+                {
+                    *(*iDmidts[pair])[member] += dmidtSign*dmidt;
+                }
+                else
+                {
+                    iDmidts[pair]->insert(member, (dmidtSign*dmidt).ptr());
+                }
             }
         }
     }
@@ -182,61 +202,44 @@ InterfaceCompositionPhaseChangePhaseSystem
     {
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
 
-        if (!pair.ordered())
+        if (!this->diffusiveMassTransferModels_.found(pair))
         {
             FatalErrorInFunction
-                << "An interfacial composition model is specified for the "
-                << "unordered " << pair << " pair. Composition models only "
-                << "apply to ordered pairs. An entry for a "
-                << phasePairKey("A", "B", true) << " pair means a model for "
-                << "the A side of the A-B interface; i.e., \"A in the presence "
-                << "of B\""
-                << exit(FatalError);
-        }
-
-
-        const phasePairKey key(phase.name(), otherPhase.name());
-
-        if (!this->phasePairs_.found(key))
-        {
-            FatalErrorInFunction
-                << "A diffusive mass transfer model the " << key
+                << "A diffusive mass transfer model the " << pair
                 << " pair is not specified. This is required by the "
                 << "corresponding interface composition model."
                 << exit(FatalError);
         }
 
-        const phasePair& uoPair = this->phasePairs_[key];
-
-        if (!diffusiveMassTransferModels_[uoPair][uoPair.index(phase)].valid())
+        forAllConstIter(phasePair, pair, pairIter)
         {
-            FatalErrorInFunction
-                << "A diffusive mass transfer model for the "
-                << pair.phase1().name() << " side of the " << uoPair
-                << " pair is not specified. This is required by the "
-                << "corresponding interface composition model."
-                << exit(FatalError);
+            if
+            (
+                interfaceCompositionModelIter()[pairIter.index()].valid()
+             && !diffusiveMassTransferModels_[pair][pairIter.index()].valid()
+            )
+            {
+                FatalErrorInFunction
+                    << "A mass transfer model for the " << (*pairIter).name()
+                    << " side of the " << pair << " pair is not "
+                    << "specified. This is required by the corresponding "
+                    << "interface composition model."
+                    << exit(FatalError);
+            }
         }
-    }
-    forAllConstIter
-    (
-        diffusiveMassTransferModelTable,
-        diffusiveMassTransferModels_,
-        diffusiveMassTransferModelIter
-    )
-    {
-        const phasePair& pair =
-            this->phasePairs_[diffusiveMassTransferModelIter.key()];
 
-        if (!this->heatTransferModels_.found(pair))
+        if
+        (
+            !this->heatTransferModels_.found(pair)
+         || !this->heatTransferModels_[pair].first().valid()
+         || !this->heatTransferModels_[pair].second().valid()
+        )
         {
              FatalErrorInFunction
-                 << "A heat transfer model for " << pair << " pair is not "
-                 << "specified. This is required by the corresponding species "
-                 << "transfer model"
+                 << "A heat transfer model for both sides of the " << pair
+                 << "pair is not specified. This is required by the "
+                 << "corresponding interface composition model"
                  << exit(FatalError);
         }
     }
@@ -249,30 +252,45 @@ InterfaceCompositionPhaseChangePhaseSystem
         interfaceCompositionModelIter
     )
     {
-        const interfaceCompositionModel& compositionModel =
-            interfaceCompositionModelIter();
-
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
 
         iDmdtSu_.insert(pair, new HashPtrTable<volScalarField>());
         iDmdtSp_.insert(pair, new HashPtrTable<volScalarField>());
 
-        forAllConstIter(hashedWordList, compositionModel.species(), memberIter)
+        forAllConstIter(phasePair, pair, pairIter)
         {
-            const word& member = *memberIter;
+            const autoPtr<interfaceCompositionModel>& compositionModelPtr =
+                interfaceCompositionModelIter()[pairIter.index()];
 
-            iDmdtSu_[pair]->insert
-            (
-                member,
-                zeroVolField<scalar>(pair, "iDmdtSu", dimDensity/dimTime).ptr()
-            );
+            if (!compositionModelPtr.valid()) continue;
 
-            iDmdtSp_[pair]->insert
+            const interfaceCompositionModel& compositionModel =
+                compositionModelPtr();
+
+            forAllConstIter
             (
-                member,
-                zeroVolField<scalar>(pair, "iDmdtSp", dimDensity/dimTime).ptr()
-            );
+                hashedWordList,
+                compositionModel.species(),
+                memberIter
+            )
+            {
+                const word& member = *memberIter;
+
+                iDmdtSu_[pair]->insert
+                (
+                    member,
+                    zeroVolField<scalar>(pair, "iDmdtSu", dimDensity/dimTime)
+                   .ptr()
+                );
+
+                iDmdtSp_[pair]->insert
+                (
+                    member,
+                    zeroVolField<scalar>(pair, "iDmdtSp", dimDensity/dimTime)
+                   .ptr()
+                );
+            }
         }
     }
 }
@@ -372,7 +390,7 @@ specieTransfer() const
 
     // Explicit
     /*
-    this->addDmidtY(iDmidts(), eqnsPtr());
+    this->addDmidtY(iDmidts(), eqns);
     */
 
     // Semi-implicit
@@ -383,32 +401,43 @@ specieTransfer() const
         interfaceCompositionModelIter
     )
     {
-        const interfaceCompositionModel& compositionModel =
-            interfaceCompositionModelIter();
-
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
 
-        forAllConstIter(hashedWordList, compositionModel.species(), memberIter)
+        forAllConstIter(phasePair, pair, pairIter)
         {
-            const word& member = *memberIter;
-            const word name = IOobject::groupName(member, phase.name());
-            const word otherName =
-                IOobject::groupName(member, otherPhase.name());
+            const autoPtr<interfaceCompositionModel>& compositionModelPtr =
+                interfaceCompositionModelIter()[pairIter.index()];
 
-            // Implicit transport through this phase
-            *eqns[name] +=
-                *(*iDmdtSu_[pair])[member]
-              + fvm::Sp(*(*iDmdtSp_[pair])[member], phase.Y(member));
+            if (!compositionModelPtr.valid()) continue;
 
-            // Explicit transport out of the other phase
-            if (eqns.found(otherName))
+            const interfaceCompositionModel& compositionModel =
+                compositionModelPtr();
+
+            const phaseModel& phase = *pairIter;
+            const phaseModel& otherPhase = pairIter.otherPhase();
+
+            forAllConstIter
+            (
+                hashedWordList,
+                compositionModel.species(),
+                memberIter
+            )
             {
-                *eqns[otherName] -=
+                const word& member = *memberIter;
+
+                // Implicit transport through this phase
+                *eqns[phase.Y(member).name()] +=
                     *(*iDmdtSu_[pair])[member]
-                  + *(*iDmdtSp_[pair])[member]*phase.Y(member);
+                  + fvm::Sp(*(*iDmdtSp_[pair])[member], phase.Y(member));
+
+                // Explicit transport out of the other phase
+                if (eqns.found(IOobject::groupName(member, otherPhase.name())))
+                {
+                    *eqns[otherPhase.Y(member).name()] -=
+                        *(*iDmdtSu_[pair])[member]
+                      + *(*iDmdtSp_[pair])[member]*phase.Y(member);
+                }
             }
         }
     }
@@ -431,33 +460,43 @@ correct()
         interfaceCompositionModelIter
     )
     {
-        const interfaceCompositionModel& compositionModel =
-            interfaceCompositionModelIter();
-
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
-        const phasePair& unorderedPair =
-            this->phasePairs_[phasePair(phase, otherPhase)];
 
-        const volScalarField& Tf(*this->Tf_[unorderedPair]);
+        const volScalarField& Tf(*this->Tf_[pair]);
 
-        const volScalarField K
-        (
-            diffusiveMassTransferModels_
-            [unorderedPair][unorderedPair.index(phase)]->K()
-        );
-
-        forAllConstIter(hashedWordList, compositionModel.species(), memberIter)
+        forAllConstIter(phasePair, pair, pairIter)
         {
-            const word& member = *memberIter;
+            const autoPtr<interfaceCompositionModel>& compositionModelPtr =
+                interfaceCompositionModelIter()[pairIter.index()];
 
-            const volScalarField KD(K*compositionModel.D(member));
-            const volScalarField Yf(compositionModel.Yf(member, Tf));
+            if (!compositionModelPtr.valid()) continue;
 
-            *(*iDmdtSu_[pair])[member] = phase.rho()*KD*Yf;
-            *(*iDmdtSp_[pair])[member] = - phase.rho()*KD;
+            const interfaceCompositionModel& compositionModel =
+                compositionModelPtr();
+
+            const phaseModel& phase = *pairIter;
+
+            const volScalarField K
+            (
+                diffusiveMassTransferModels_[pair][pairIter.index()]->K()
+            );
+
+            forAllConstIter
+            (
+                hashedWordList,
+                compositionModel.species(),
+                memberIter
+            )
+            {
+                const word& member = *memberIter;
+
+                const volScalarField KD(K*compositionModel.D(member));
+                const volScalarField Yf(compositionModel.Yf(member, Tf));
+
+                *(*iDmdtSu_[pair])[member] = phase.rho()*KD*Yf;
+                *(*iDmdtSp_[pair])[member] = - phase.rho()*KD;
+            }
         }
     }
 }
@@ -491,19 +530,16 @@ correctInterfaceThermo()
 
     forAllConstIter
     (
-        typename BasePhaseSystem::heatTransferModelTable,
-        this->heatTransferModels_,
-        heatTransferModelIter
+        interfaceCompositionModelTable,
+        interfaceCompositionModels_,
+        interfaceCompositionModelIter
     )
     {
         const phasePair& pair =
-            this->phasePairs_[heatTransferModelIter.key()];
+            this->phasePairs_[interfaceCompositionModelIter.key()];
 
-        const phasePairKey key12(pair.first(), pair.second(), true);
-        const phasePairKey key21(pair.second(), pair.first(), true);
-
-        const volScalarField H1(heatTransferModelIter().first()->K());
-        const volScalarField H2(heatTransferModelIter().second()->K());
+        const volScalarField H1(this->heatTransferModels_[pair].first()->K());
+        const volScalarField H2(this->heatTransferModels_[pair].second()->K());
         const dimensionedScalar HSmall("small", heatTransferModel::dimK, small);
 
         volScalarField& Tf = *this->Tf_[pair];
@@ -526,9 +562,9 @@ correctInterfaceThermo()
                 );
 
             // Add latent heats from forward and backward models
-            if (this->interfaceCompositionModels_.found(key12))
+            if (this->interfaceCompositionModels_[pair].first().valid())
             {
-                this->interfaceCompositionModels_[key12]->addMDotL
+                this->interfaceCompositionModels_[pair].first()->addMDotL
                 (
                     diffusiveMassTransferModels_[pair].first()->K(),
                     Tf,
@@ -536,11 +572,11 @@ correctInterfaceThermo()
                     mDotLPrime.ref()
                 );
             }
-            if (this->interfaceCompositionModels_.found(key21))
+            if (this->interfaceCompositionModels_[pair].second().valid())
             {
-                this->interfaceCompositionModels_[key21]->addMDotL
+                this->interfaceCompositionModels_[pair].second()->addMDotL
                 (
-                    diffusiveMassTransferModels_[pair].second()->K(),
+                  - diffusiveMassTransferModels_[pair].second()->K(),
                     Tf,
                     mDotL.ref(),
                     mDotLPrime.ref()
@@ -568,13 +604,13 @@ correctInterfaceThermo()
                 << endl;
 
             // Update the interface compositions
-            if (this->interfaceCompositionModels_.found(key12))
+            if (this->interfaceCompositionModels_[pair].first().valid())
             {
-                this->interfaceCompositionModels_[key12]->update(Tf);
+                this->interfaceCompositionModels_[pair].first()->update(Tf);
             }
-            if (this->interfaceCompositionModels_.found(key21))
+            if (this->interfaceCompositionModels_[pair].second().valid())
             {
-                this->interfaceCompositionModels_[key21]->update(Tf);
+                this->interfaceCompositionModels_[pair].second()->update(Tf);
             }
         }
     }

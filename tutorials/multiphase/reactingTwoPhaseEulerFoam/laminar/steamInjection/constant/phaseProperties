@@ -105,9 +105,6 @@ virtualMass
     }
 );
 
-interfaceComposition
-();
-
 heatTransfer.steam
 (
     (steam in water)

@@ -163,7 +163,7 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
             // Transfer coefficients
             const volScalarField H1(heatTransferModels_[key].first()->K());
             const volScalarField H2(heatTransferModels_[key].second()->K());
-            const volScalarField HFac(H1/(H1 + H2));
+            const volScalarField H1Fac(H1/(H1 + H2));
 
             // Interface properties
             const volScalarField& Tf(*Tf_[key]);
@@ -237,8 +237,8 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
                 *eqns[phase2.name()] -= dmidt*hefi2 - fvm::Sp(dmidt, he2);
 
                 // Latent heat contribution
-                *eqns[phase1.name()] += HFac*dmidt*Li;
-                *eqns[phase2.name()] += (1 - HFac)*dmidt*Li;
+                *eqns[phase1.name()] += H1Fac*dmidt*Li;
+                *eqns[phase2.name()] += (1 - H1Fac)*dmidt*Li;
 
                 // Transfer of kinetic energy
                 *eqns[phase1.name()] += dmidt21*(K2 - K1);

@@ -134,9 +134,9 @@ virtualMass
     }
 );
 
-interfaceComposition
+interfaceComposition.gas
 (
-    (gas in liquid)
+    (gas and liquid)
     {
         type saturated;
         species ( water );
@@ -146,8 +146,11 @@ interfaceComposition
             type ArdenBuck;
         }
     }
+);
 
-    (liquid in gas)
+interfaceComposition.liquid
+(
+    (liquid and gas)
     {
         type Henry;
         species ( air );
