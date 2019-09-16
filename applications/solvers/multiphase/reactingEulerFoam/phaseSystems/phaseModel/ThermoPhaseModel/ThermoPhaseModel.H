@@ -85,8 +85,11 @@ public:
 
         // Thermo
 
-            //- Return whether the phase is compressible
-            virtual bool compressible() const;
+            //- Return whether the phase is incompressible
+            virtual bool incompressible() const;
+
+            //- Return whether the phase is constant density
+            virtual bool isochoric() const;
 
             //- Return the thermophysical model
             virtual const rhoThermo& thermo() const;

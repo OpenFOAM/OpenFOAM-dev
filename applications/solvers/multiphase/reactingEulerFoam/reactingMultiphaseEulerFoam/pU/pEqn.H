@@ -253,96 +253,61 @@ while (pimple.correct())
         const volScalarField& alpha = phase;
         volScalarField& rho = phase.thermoRef().rho();
 
-        if (phase.compressible())
+        pEqnComps.set(phasei, new fvScalarMatrix(p_rgh, dimVolume/dimTime));
+        fvScalarMatrix& pEqnComp = pEqnComps[phasei];
+
+        // Density variation
+        if (!phase.isochoric() || !phase.pure())
+        {
+            pEqnComp +=
+                (
+                    fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
+                  - fvc::Sp(fvc::ddt(alpha) + fvc::div(phase.alphaPhi()), rho)
+                )/rho;
+        }
+
+        // Compressibility
+        if (!phase.incompressible())
         {
             if (pimple.transonic())
             {
-                surfaceScalarField phid
+                const surfaceScalarField phid
                 (
                     IOobject::groupName("phid", phase.name()),
                     fvc::interpolate(phase.thermo().psi())*phase.phi()
                 );
 
-                pEqnComps.set
-                (
-                    phasei,
+                pEqnComp +=
+                    correction
                     (
+                        (alpha/rho)*
                         (
-                            fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
-                          - fvc::Sp
-                            (
-                                fvc::ddt(alpha) + fvc::div(phase.alphaPhi()),
-                                rho
-                            )
-                        )/rho
-                      + correction
-                        (
-                            (alpha/rho)*
-                            (
-                                phase.thermo().psi()*fvm::ddt(p_rgh)
-                              + fvm::div(phid, p_rgh)
-                              - fvm::Sp(fvc::div(phid), p_rgh)
-                            )
+                            phase.thermo().psi()*fvm::ddt(p_rgh)
+                          + fvm::div(phid, p_rgh)
+                          - fvm::Sp(fvc::div(phid), p_rgh)
                         )
-                    ).ptr()
-                );
+                    );
 
                 pEqnComps[phasei].relax();
             }
             else
             {
-                pEqnComps.set
-                (
-                    phasei,
-                    (
-                        (
-                            fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
-                          - fvc::Sp
-                            (
-                                (fvc::ddt(alpha) + fvc::div(phase.alphaPhi())),
-                                rho
-                            )
-                        )/rho
-                      + (alpha*phase.thermo().psi()/rho)
-                       *correction(fvm::ddt(p_rgh))
-                    ).ptr()
-                );
+                pEqnComp +=
+                    (alpha*phase.thermo().psi()/rho)
+                   *correction(fvm::ddt(p_rgh));
             }
         }
 
-        // Add option sources
+        // Option sources
         if (fvOptions.appliesToField(rho.name()))
         {
-            tmp<fvScalarMatrix> optEqn = fvOptions(alpha, rho);
-            if (pEqnComps.set(phasei))
-            {
-                pEqnComps[phasei] -= (optEqn&rho)/rho;
-            }
-            else
-            {
-                pEqnComps.set
-                (
-                    phasei,
-                    fvm::Su(- (optEqn&rho)/rho, p_rgh).ptr()
-                );
-            }
+            pEqnComp -= (fvOptions(alpha, rho) & rho)/rho;
         }
 
-        // Add mass transfer
+        // Mass transfer
         if (dmdts.set(phasei))
         {
-            if (pEqnComps.set(phasei))
-            {
-                pEqnComps[phasei] -= dmdts[phasei]/rho;
-            }
-            else
-            {
-                pEqnComps.set
-                (
-                    phasei,
-                    fvm::Su(- dmdts[phasei]/rho, p_rgh)
-                );
-            }
+            pEqnComp -= dmdts[phasei]/rho;
         }
     }
 
@@ -359,15 +324,13 @@ while (pimple.correct())
           - fvm::laplacian(rAUf, p_rgh)
         );
 
+        // Solve
         {
             fvScalarMatrix pEqn(pEqnIncomp);
 
             forAll(phases, phasei)
             {
-                if (pEqnComps.set(phasei))
-                {
-                    pEqn += pEqnComps[phasei];
-                }
+                pEqn += pEqnComps[phasei];
             }
 
             pEqn.solve();
@@ -388,11 +351,8 @@ while (pimple.correct())
                     phiHbyAs[phase.index()]
                   + alpharAUfs[phase.index()]*mSfGradp;
 
-                // Set the phase dilatation rates
-                if (pEqnComps.set(phase.index()))
-                {
-                    phase.divU(-pEqnComps[phase.index()] & p_rgh);
-                }
+                // Set the phase dilatation rate
+                phase.divU(-pEqnComps[phase.index()] & p_rgh);
             }
 
             // Optionally relax pressure for velocity correction

@@ -205,10 +205,13 @@ public:
         virtual bool read();
 
 
-        // Compressibility (variable density)
+        // Density variation and compressibility
 
-            //- Return true if the phase is compressible otherwise false
-            virtual bool compressible() const = 0;
+            //- Return true if the phase is incompressible otherwise false
+            virtual bool incompressible() const = 0;
+
+            //- Return true if the phase is constant density otherwise false
+            virtual bool isochoric() const = 0;
 
             //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
             virtual tmp<volScalarField> divU() const = 0;
