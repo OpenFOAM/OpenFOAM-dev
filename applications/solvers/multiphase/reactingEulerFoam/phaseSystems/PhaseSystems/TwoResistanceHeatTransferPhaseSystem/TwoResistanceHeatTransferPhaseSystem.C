@@ -479,10 +479,10 @@ heatTransfer() const
         const volScalarField HEff(H1*H2/(H1 + H2));
         *eqns[phase1.name()] +=
             HEff*(phase2.thermo().T() - phase1.thermo().T())
-          + HEff/Cpv1*he1 - fvm::Sp(HEff/Cpv1, he1);
+          + H1/Cpv1*he1 - fvm::Sp(H1/Cpv1, he1);
         *eqns[phase2.name()] +=
             HEff*(phase1.thermo().T() - phase2.thermo().T())
-          + HEff/Cpv2*he2 - fvm::Sp(HEff/Cpv2, he2);
+          + H2/Cpv2*he2 - fvm::Sp(H2/Cpv2, he2);
     }
 
     return eqnsPtr;
