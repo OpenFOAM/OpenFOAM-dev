@@ -342,6 +342,12 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     const word& regionName
 )
 {
+    checkBlockFaceOrientation = meshDescription.lookupOrDefault<Switch>
+    (
+        "checkBlockFaceOrientation",
+        true
+    );
+
     blockList& blocks = *this;
 
     word defaultPatchName = "defaultFaces";

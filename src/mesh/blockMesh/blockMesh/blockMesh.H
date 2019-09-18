@@ -201,6 +201,12 @@ public:
 
         ClassName("blockMesh");
 
+        //- Switch checking block face orientation
+        //  to ensure that all faces are outward-pointing.
+        //  This check may fail if the block is intentionally very twisted
+        //  for curved edges to be applied and can be switched off.
+        static Switch checkBlockFaceOrientation;
+
 
     // Constructors
 

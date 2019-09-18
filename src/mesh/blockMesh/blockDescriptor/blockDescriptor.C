@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blockDescriptor.H"
+#include "blockMesh.H"
 #include "blockMeshTools.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -49,7 +50,6 @@ void Foam::blockDescriptor::check(const Istream& is)
         }
     }
 
-    const point blockCentre(blockShape_.centre(vertices_));
     const faceList faces(blockShape_.faces());
 
     // Check each face is outward-pointing with respect to the block centre
@@ -58,11 +58,28 @@ void Foam::blockDescriptor::check(const Istream& is)
 
     forAll(faces, i)
     {
-        point faceCentre(faces[i].centre(vertices_));
-        vector faceArea(faces[i].area(vertices_));
+        const point faceCentre(faces[i].centre(vertices_));
+        const vector faceArea(faces[i].area(vertices_));
+
         if (mag(faceArea) > small)
         {
-            if (((faceCentre - blockCentre) & faceArea) > 0)
+            bool outwardFace = false;
+            forAll(faces, j)
+            {
+                if (j != i)
+                {
+                    if
+                    (
+                        ((faceCentre - faces[j].centre(vertices_)) & faceArea)
+                      > 0
+                    )
+                    {
+                        outwardFace = true;
+                    }
+                }
+            }
+
+            if (outwardFace)
             {
                 outwardFaceCount++;
             }
@@ -276,7 +293,10 @@ Foam::blockDescriptor::blockDescriptor
             << exit(FatalIOError);
     }
 
-    check(is);
+    if (blockMesh::checkBlockFaceOrientation)
+    {
+        check(is);
+    }
 
     findCurvedFaces();
 }
