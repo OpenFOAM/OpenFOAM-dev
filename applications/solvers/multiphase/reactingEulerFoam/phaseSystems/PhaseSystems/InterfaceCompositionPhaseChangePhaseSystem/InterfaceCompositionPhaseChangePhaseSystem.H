@@ -48,7 +48,7 @@ namespace Foam
 {
 
 class interfaceCompositionModel;
-class massTransferModel;
+class diffusiveMassTransferModel;
 
 /*---------------------------------------------------------------------------*\
                  Class InterfaceCompositionPhaseChangePhaseSystem Declaration
@@ -72,10 +72,10 @@ private:
 
         typedef HashTable
         <
-            Pair<autoPtr<BlendedInterfacialModel<massTransferModel>>>,
+            Pair<autoPtr<BlendedInterfacialModel<diffusiveMassTransferModel>>>,
             phasePairKey,
             phasePairKey::hash
-        > massTransferModelTable;
+        > diffusiveMassTransferModelTable;
 
 
     // Private data
@@ -86,7 +86,7 @@ private:
             const label nInterfaceCorrectors_;
 
             //- Mass transfer models
-            massTransferModelTable massTransferModels_;
+            diffusiveMassTransferModelTable diffusiveMassTransferModels_;
 
             //- Interface composition models
             interfaceCompositionModelTable interfaceCompositionModels_;

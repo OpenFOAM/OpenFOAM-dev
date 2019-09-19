@@ -149,7 +149,7 @@ heatTransfer.liquid
     }
 );
 
-massTransfer.gas
+diffusiveMassTransfer.gas
 (
     (liquid in gas)
     {
@@ -158,7 +158,7 @@ massTransfer.gas
     }
 );
 
-massTransfer.liquid
+diffusiveMassTransfer.liquid
 (
     (liquid in gas)
     {

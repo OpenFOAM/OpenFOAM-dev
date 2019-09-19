@@ -22,56 +22,74 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::massTransferModels::Frossling
+    Foam::diffusiveMassTransferModel
 
 Description
-    Frossling correlation for turbulent mass transfer from the surface of a
-    sphere to the surrounding fluid.
 
 SourceFiles
-    Frossling.C
+    diffusiveMassTransferModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Frossling_H
-#define Frossling_H
-
-#include "massTransferModel.H"
+#ifndef diffusiveMassTransferModel_H
+#define diffusiveMassTransferModel_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "volFields.H"
+#include "dictionary.H"
+#include "runTimeSelectionTables.H"
 
 namespace Foam
 {
 
 class phasePair;
 
-namespace massTransferModels
-{
-
 /*---------------------------------------------------------------------------*\
-                          Class Frossling Declaration
+                 Class diffusiveMassTransferModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class Frossling
-:
-    public massTransferModel
+class diffusiveMassTransferModel
 {
-    // Private Data
+protected:
 
-        //- Lewis number
-        const dimensionedScalar Le_;
+    // Protected data
+
+        //- Phase pair
+        const phasePair& pair_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("Frossling");
+    TypeName("diffusiveMassTransferModel");
+
+
+    // Declare runtime construction
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            diffusiveMassTransferModel,
+            dictionary,
+            (
+                const dictionary& dict,
+                const phasePair& pair
+            ),
+            (dict, pair)
+        );
+
+
+    // Static Data Members
+
+        //- Coefficient dimensions
+        static const dimensionSet dimK;
 
 
     // Constructors
 
-        //- Construct from components
-        Frossling
+        //- Construct from a dictionary and a phase pair
+        diffusiveMassTransferModel
         (
             const dictionary& dict,
             const phasePair& pair
@@ -79,19 +97,28 @@ public:
 
 
     //- Destructor
-    virtual ~Frossling();
+    virtual ~diffusiveMassTransferModel();
+
+
+    // Selectors
+
+        static autoPtr<diffusiveMassTransferModel> New
+        (
+            const dictionary& dict,
+            const phasePair& pair
+        );
 
 
     // Member Functions
 
         //- The implicit mass transfer coefficient
-        virtual tmp<volScalarField> K() const;
+        //  Note: this has had the species mass diffusivity factored out
+        virtual tmp<volScalarField> K() const = 0;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace massTransferModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

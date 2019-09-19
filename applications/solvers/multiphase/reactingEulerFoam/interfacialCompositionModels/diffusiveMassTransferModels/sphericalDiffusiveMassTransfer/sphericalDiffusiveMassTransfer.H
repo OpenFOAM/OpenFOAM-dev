@@ -22,74 +22,56 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::massTransferModel
+    Foam::diffusiveMassTransferModels::sphericalDiffusiveMassTransfer
 
 Description
+    Model which applies an analytical solution for mass transfer from the
+    surface of a sphere to the fluid within the sphere.
 
 SourceFiles
-    massTransferModel.C
+    sphericalDiffusiveMassTransfer.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef massTransferModel_H
-#define massTransferModel_H
+#ifndef sphericalDiffusiveMassTransfer_H
+#define sphericalDiffusiveMassTransfer_H
+
+#include "diffusiveMassTransferModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "volFields.H"
-#include "dictionary.H"
-#include "runTimeSelectionTables.H"
 
 namespace Foam
 {
 
 class phasePair;
 
+namespace diffusiveMassTransferModels
+{
+
 /*---------------------------------------------------------------------------*\
-                        Class massTransferModel Declaration
+                          Class sphericalDiffusiveMassTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
-class massTransferModel
+class sphericalDiffusiveMassTransfer
+:
+    public diffusiveMassTransferModel
 {
-protected:
+    // Private Data
 
-    // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
+        //- Lewis number
+        const dimensionedScalar Le_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("massTransferModel");
-
-
-    // Declare runtime construction
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            massTransferModel,
-            dictionary,
-            (
-                const dictionary& dict,
-                const phasePair& pair
-            ),
-            (dict, pair)
-        );
-
-
-    // Static Data Members
-
-        //- Coefficient dimensions
-        static const dimensionSet dimK;
+    TypeName("spherical");
 
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
-        massTransferModel
+        //- Construct from components
+        sphericalDiffusiveMassTransfer
         (
             const dictionary& dict,
             const phasePair& pair
@@ -97,28 +79,19 @@ public:
 
 
     //- Destructor
-    virtual ~massTransferModel();
-
-
-    // Selectors
-
-        static autoPtr<massTransferModel> New
-        (
-            const dictionary& dict,
-            const phasePair& pair
-        );
+    virtual ~sphericalDiffusiveMassTransfer();
 
 
     // Member Functions
 
         //- The implicit mass transfer coefficient
-        //  Note: this has had the species mass diffusivity factored out
-        virtual tmp<volScalarField> K() const = 0;
+        virtual tmp<volScalarField> K() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace diffusiveMassTransferModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -65,7 +65,7 @@ blending
         minPartlyContinuousAlpha.liquid 0;
     }
 
-    massTransfer
+    diffusiveMassTransfer
     {
         $heatTransfer;
     }
@@ -177,7 +177,7 @@ heatTransfer.liquid
     }
 );
 
-massTransfer.gas
+diffusiveMassTransfer.gas
 (
     (gas in liquid)
     {
@@ -192,7 +192,7 @@ massTransfer.gas
     }
 );
 
-massTransfer.liquid
+diffusiveMassTransfer.liquid
 (
 );
 

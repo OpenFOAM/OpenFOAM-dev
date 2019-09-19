@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,31 +23,32 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "massTransferModel.H"
+#include "diffusiveMassTransferModel.H"
 #include "phasePair.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::massTransferModel> Foam::massTransferModel::New
+Foam::autoPtr<Foam::diffusiveMassTransferModel>
+Foam::diffusiveMassTransferModel::New
 (
     const dictionary& dict,
     const phasePair& pair
 )
 {
-    word massTransferModelType(dict.lookup("type"));
+    word diffusiveMassTransferModelType(dict.lookup("type"));
 
-    Info<< "Selecting massTransferModel for "
-        << pair << ": " << massTransferModelType << endl;
+    Info<< "Selecting diffusiveMassTransferModel for "
+        << pair << ": " << diffusiveMassTransferModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(massTransferModelType);
+        dictionaryConstructorTablePtr_->find(diffusiveMassTransferModelType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown massTransferModelType type "
-            << massTransferModelType << endl << endl
-            << "Valid massTransferModel types are : " << endl
+            << "Unknown diffusiveMassTransferModelType type "
+            << diffusiveMassTransferModelType << endl << endl
+            << "Valid diffusiveMassTransferModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }

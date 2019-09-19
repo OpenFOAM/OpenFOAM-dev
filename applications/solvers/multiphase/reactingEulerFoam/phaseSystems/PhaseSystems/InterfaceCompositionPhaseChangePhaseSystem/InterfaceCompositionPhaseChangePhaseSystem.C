@@ -25,7 +25,8 @@ License
 
 #include "InterfaceCompositionPhaseChangePhaseSystem.H"
 #include "interfaceCompositionModel.H"
-#include "massTransferModel.H"
+#include "diffusiveMassTransferModel.H"
+#include "heatTransferModel.H"
 #include "fvmSup.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
@@ -166,8 +167,8 @@ InterfaceCompositionPhaseChangePhaseSystem
 
     this->generatePairsAndSubModels
     (
-        "massTransfer",
-        massTransferModels_,
+        "diffusiveMassTransfer",
+        diffusiveMassTransferModels_,
         false
     );
 
@@ -202,33 +203,33 @@ InterfaceCompositionPhaseChangePhaseSystem
         if (!this->phasePairs_.found(key))
         {
             FatalErrorInFunction
-                << "A mass transfer model the " << key << " pair is not "
-                << "specified. This is required by the corresponding interface "
-                << "composition model."
+                << "A diffusive mass transfer model the " << key
+                << " pair is not specified. This is required by the "
+                << "corresponding interface composition model."
                 << exit(FatalError);
         }
 
         const phasePair& uoPair = this->phasePairs_[key];
 
-        if (!massTransferModels_[uoPair][uoPair.index(phase)].valid())
+        if (!diffusiveMassTransferModels_[uoPair][uoPair.index(phase)].valid())
         {
             FatalErrorInFunction
-                << "A mass transfer model for the " << pair.phase1().name()
-                << " side of the " << uoPair << " pair is not "
-                << "specified. This is required by the corresponding interface "
-                << "composition model."
+                << "A diffusive mass transfer model for the "
+                << pair.phase1().name() << " side of the " << uoPair
+                << " pair is not specified. This is required by the "
+                << "corresponding interface composition model."
                 << exit(FatalError);
         }
     }
     forAllConstIter
     (
-        massTransferModelTable,
-        massTransferModels_,
-        massTransferModelIter
+        diffusiveMassTransferModelTable,
+        diffusiveMassTransferModels_,
+        diffusiveMassTransferModelIter
     )
     {
         const phasePair& pair =
-            this->phasePairs_[massTransferModelIter.key()];
+            this->phasePairs_[diffusiveMassTransferModelIter.key()];
 
         if (!this->heatTransferModels_.found(pair))
         {
@@ -444,7 +445,8 @@ correct()
 
         const volScalarField K
         (
-            massTransferModels_[unorderedPair][unorderedPair.index(phase)]->K()
+            diffusiveMassTransferModels_
+            [unorderedPair][unorderedPair.index(phase)]->K()
         );
 
         forAllConstIter(hashedWordList, compositionModel.species(), memberIter)
@@ -528,7 +530,7 @@ correctInterfaceThermo()
             {
                 this->interfaceCompositionModels_[key12]->addMDotL
                 (
-                    massTransferModels_[pair].first()->K(),
+                    diffusiveMassTransferModels_[pair].first()->K(),
                     Tf,
                     mDotL.ref(),
                     mDotLPrime.ref()
@@ -538,7 +540,7 @@ correctInterfaceThermo()
             {
                 this->interfaceCompositionModels_[key21]->addMDotL
                 (
-                    massTransferModels_[pair].second()->K(),
+                    diffusiveMassTransferModels_[pair].second()->K(),
                     Tf,
                     mDotL.ref(),
                     mDotLPrime.ref()

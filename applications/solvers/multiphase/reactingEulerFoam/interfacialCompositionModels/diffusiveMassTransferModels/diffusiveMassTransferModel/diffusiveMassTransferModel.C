@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "massTransferModel.H"
+#include "diffusiveMassTransferModel.H"
 #include "phasePair.H"
 #include "BlendedInterfacialModel.H"
 
@@ -31,17 +31,21 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(massTransferModel, 0);
-    defineBlendedInterfacialModelTypeNameAndDebug(massTransferModel, 0);
-    defineRunTimeSelectionTable(massTransferModel, dictionary);
+    defineTypeNameAndDebug(diffusiveMassTransferModel, 0);
+    defineBlendedInterfacialModelTypeNameAndDebug
+    (
+        diffusiveMassTransferModel,
+        0
+    );
+    defineRunTimeSelectionTable(diffusiveMassTransferModel, dictionary);
 }
 
-const Foam::dimensionSet Foam::massTransferModel::dimK(0, -2, 0, 0, 0);
+const Foam::dimensionSet Foam::diffusiveMassTransferModel::dimK(0, -2, 0, 0, 0);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::massTransferModel::massTransferModel
+Foam::diffusiveMassTransferModel::diffusiveMassTransferModel
 (
     const dictionary& dict,
     const phasePair& pair
@@ -53,7 +57,7 @@ Foam::massTransferModel::massTransferModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::massTransferModel::~massTransferModel()
+Foam::diffusiveMassTransferModel::~diffusiveMassTransferModel()
 {}
 
 

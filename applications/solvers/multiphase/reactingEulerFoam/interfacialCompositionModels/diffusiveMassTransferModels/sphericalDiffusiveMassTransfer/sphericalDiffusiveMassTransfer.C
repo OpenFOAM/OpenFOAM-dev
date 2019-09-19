@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Frossling.H"
+#include "sphericalDiffusiveMassTransfer.H"
 #include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -31,41 +31,46 @@ License
 
 namespace Foam
 {
-namespace massTransferModels
+namespace diffusiveMassTransferModels
 {
-    defineTypeNameAndDebug(Frossling, 0);
-    addToRunTimeSelectionTable(massTransferModel, Frossling, dictionary);
+    defineTypeNameAndDebug(sphericalDiffusiveMassTransfer, 0);
+    addToRunTimeSelectionTable
+    (
+        diffusiveMassTransferModel,
+        sphericalDiffusiveMassTransfer,
+        dictionary
+    );
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::massTransferModels::Frossling::Frossling
+Foam::diffusiveMassTransferModels::sphericalDiffusiveMassTransfer::
+sphericalDiffusiveMassTransfer
 (
     const dictionary& dict,
     const phasePair& pair
 )
 :
-    massTransferModel(dict, pair),
+    diffusiveMassTransferModel(dict, pair),
     Le_("Le", dimless, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::massTransferModels::Frossling::~Frossling()
+Foam::diffusiveMassTransferModels::sphericalDiffusiveMassTransfer::
+~sphericalDiffusiveMassTransfer()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::massTransferModels::Frossling::K() const
+Foam::diffusiveMassTransferModels::sphericalDiffusiveMassTransfer::K() const
 {
-    volScalarField Sh(2 + 0.552*sqrt(pair_.Re())*cbrt(Le_*pair_.Pr()));
-
-    return 6*pair_.dispersed()*Sh/sqr(pair_.dispersed().d());
+    return 60*pair_.dispersed()/sqr(pair_.dispersed().d());
 }
 
 

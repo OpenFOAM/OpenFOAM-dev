@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::massTransferModels::sphericalMassTransfer
+    Foam::diffusiveMassTransferModels::Frossling
 
 Description
-    Model which applies an analytical solution for mass transfer from the
-    surface of a sphere to the fluid within the sphere.
+    Frossling correlation for turbulent mass transfer from the surface of a
+    sphere to the surrounding fluid.
 
 SourceFiles
-    sphericalMassTransfer.C
+    Frossling.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sphericalMassTransfer_H
-#define sphericalMassTransfer_H
+#ifndef Frossling_H
+#define Frossling_H
 
-#include "massTransferModel.H"
+#include "diffusiveMassTransferModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,16 +45,16 @@ namespace Foam
 
 class phasePair;
 
-namespace massTransferModels
+namespace diffusiveMassTransferModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class sphericalMassTransfer Declaration
+                          Class Frossling Declaration
 \*---------------------------------------------------------------------------*/
 
-class sphericalMassTransfer
+class Frossling
 :
-    public massTransferModel
+    public diffusiveMassTransferModel
 {
     // Private Data
 
@@ -65,13 +65,13 @@ class sphericalMassTransfer
 public:
 
     //- Runtime type information
-    TypeName("spherical");
+    TypeName("Frossling");
 
 
     // Constructors
 
         //- Construct from components
-        sphericalMassTransfer
+        Frossling
         (
             const dictionary& dict,
             const phasePair& pair
@@ -79,7 +79,7 @@ public:
 
 
     //- Destructor
-    virtual ~sphericalMassTransfer();
+    virtual ~Frossling();
 
 
     // Member Functions
@@ -91,7 +91,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace massTransferModels
+} // End namespace diffusiveMassTransferModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
