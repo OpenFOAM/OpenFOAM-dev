@@ -611,9 +611,13 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFs
         (
             fvc::snGrad(pair.phase1())*this->mesh_.magSf()
         );
+        const surfaceScalarField snGradAlpha2
+        (
+            fvc::snGrad(pair.phase2())*this->mesh_.magSf()
+        );
 
         this->addField(pair.phase1(), "phiF", DByA1f*snGradAlpha1, phiFs);
-        this->addField(pair.phase2(), "phiF", -DByA2f*snGradAlpha1, phiFs);
+        this->addField(pair.phase2(), "phiF", DByA2f*snGradAlpha2, phiFs);
 
         if (DByAfs_.found(pair.phase1().name()))
         {
