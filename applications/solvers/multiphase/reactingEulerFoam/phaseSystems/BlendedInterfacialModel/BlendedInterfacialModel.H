@@ -162,15 +162,6 @@ public:
 
     // Member Functions
 
-        //- Return true if a model is specified for the supplied phase
-        bool hasModel(const phaseModel& phase) const;
-
-        //- Return the model for the supplied phase
-        const ModelType& model(const phaseModel& phase) const;
-
-        //- Return the sign of the explicit value for the supplied phase
-        scalar sign(const phaseModel& phase) const;
-
         //- Return the blended force coefficient
         tmp<volScalarField> K() const;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -289,29 +289,6 @@ Foam::BlendedInterfacialModel<ModelType>::~BlendedInterfacialModel()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-template<class ModelType>
-bool Foam::BlendedInterfacialModel<ModelType>::hasModel
-(
-    const class phaseModel& phase
-) const
-{
-    return
-       &phase == &(phase1_)
-      ? model1In2_.valid()
-      : model2In1_.valid();
-}
-
-
-template<class ModelType>
-const ModelType& Foam::BlendedInterfacialModel<ModelType>::model
-(
-    const class phaseModel& phase
-) const
-{
-    return &phase == &(phase1_) ? model1In2_ : model2In1_;
-}
-
 
 template<class ModelType>
 Foam::tmp<Foam::volScalarField>
