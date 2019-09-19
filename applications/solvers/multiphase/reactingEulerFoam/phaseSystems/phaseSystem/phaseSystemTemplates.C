@@ -115,26 +115,6 @@ void Foam::phaseSystem::generatePairsAndSubModels
         }
 
         const phasePairKey key(iter.key().first(), iter.key().second());
-        const phasePairKey key1In2(key.first(), key.second(), true);
-        const phasePairKey key2In1(key.second(), key.first(), true);
-
-        models.insert
-        (
-            key,
-            autoPtr<BlendedInterfacialModel<modelType>>
-            (
-                new BlendedInterfacialModel<modelType>
-                (
-                    phaseModels_[key.first()],
-                    phaseModels_[key.second()],
-                    blending,
-                    tempModels.found(key    ) ? tempModels[key    ] : noModel,
-                    tempModels.found(key1In2) ? tempModels[key1In2] : noModel,
-                    tempModels.found(key2In1) ? tempModels[key2In1] : noModel,
-                    correctFixedFluxBCs
-                )
-            )
-        );
 
         if (!phasePairs_.found(key))
         {
@@ -151,6 +131,30 @@ void Foam::phaseSystem::generatePairsAndSubModels
                 )
             );
         }
+
+        const phasePair& pair = phasePairs_[key];
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
+        const phasePairKey key1In2(phase1.name(), phase2.name(), true);
+        const phasePairKey key2In1(phase2.name(), phase1.name(), true);
+
+        models.insert
+        (
+            key,
+            autoPtr<BlendedInterfacialModel<modelType>>
+            (
+                new BlendedInterfacialModel<modelType>
+                (
+                    phase1,
+                    phase2,
+                    blending,
+                    tempModels.found(key) ? tempModels[key] : noModel,
+                    tempModels.found(key1In2) ? tempModels[key1In2] : noModel,
+                    tempModels.found(key2In1) ? tempModels[key2In1] : noModel,
+                    correctFixedFluxBCs
+                )
+            )
+        );
     }
 }
 
