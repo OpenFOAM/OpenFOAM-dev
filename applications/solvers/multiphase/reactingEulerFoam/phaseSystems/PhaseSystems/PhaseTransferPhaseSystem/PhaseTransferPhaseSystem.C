@@ -130,10 +130,12 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
         phaseTransferModelIter
     )
     {
+        const phasePair& pair = this->phasePairs_[phaseTransferModelIter.key()];
+
         this->rDmdt_.insert
         (
             phaseTransferModelIter.key(),
-            phaseSystem::dmdt(phaseTransferModelIter.key()).ptr()
+            zeroVolField<scalar>(pair, "rDmdt", dimDensity/dimTime).ptr()
         );
     }
 }
@@ -150,19 +152,6 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdt
-(
-    const phasePairKey& key
-) const
-{
-    NotImplemented;
-
-    return phaseSystem::dmdt(key);
-}
-
-
-template<class BasePhaseSystem>
 Foam::PtrList<Foam::volScalarField>
 Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdts() const
 {
@@ -173,8 +162,8 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdts() const
         const phasePair& pair = this->phasePairs_[rDmdtIter.key()];
         const volScalarField& rDmdt = *rDmdtIter();
 
-        this->addField(pair.phase1(), "dmdt", rDmdt, dmdts);
-        this->addField(pair.phase2(), "dmdt", - rDmdt, dmdts);
+        addField(pair.phase1(), "dmdt", rDmdt, dmdts);
+        addField(pair.phase2(), "dmdt", - rDmdt, dmdts);
     }
 
     return dmdts;

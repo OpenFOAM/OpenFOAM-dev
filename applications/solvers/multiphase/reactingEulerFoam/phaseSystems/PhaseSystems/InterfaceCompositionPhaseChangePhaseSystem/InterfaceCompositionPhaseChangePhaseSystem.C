@@ -264,33 +264,13 @@ InterfaceCompositionPhaseChangePhaseSystem
             iDmdtSu_[pair]->insert
             (
                 member,
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        IOobject::groupName("iDmdtSu", pair.name()),
-                        this->mesh().time().timeName(),
-                        this->mesh()
-                    ),
-                    this->mesh(),
-                    dimensionedScalar(dimDensity/dimTime, 0)
-                )
+                zeroVolField<scalar>(pair, "iDmdtSu", dimDensity/dimTime).ptr()
             );
 
             iDmdtSp_[pair]->insert
             (
                 member,
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        IOobject::groupName("iDmdtSp", pair.name()),
-                        this->mesh().time().timeName(),
-                        this->mesh()
-                    ),
-                    this->mesh(),
-                    dimensionedScalar(dimDensity/dimTime, 0)
-                )
+                zeroVolField<scalar>(pair, "iDmdtSp", dimDensity/dimTime).ptr()
             );
         }
     }
@@ -308,19 +288,6 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdt
-(
-    const phasePairKey& key
-) const
-{
-    NotImplemented;
-
-    return phaseSystem::dmdt(key);
-}
-
-
-template<class BasePhaseSystem>
 Foam::PtrList<Foam::volScalarField>
 Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
 {
@@ -336,8 +303,8 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
         const phaseModel& phase = pair.phase1();
         const phaseModel& otherPhase = pair.phase2();
 
-        this->addField(phase, "dmdt", *iDmdtIter(), dmdts);
-        this->addField(otherPhase, "dmdt", - *iDmdtIter(), dmdts);
+        addField(phase, "dmdt", *iDmdtIter(), dmdts);
+        addField(otherPhase, "dmdt", - *iDmdtIter(), dmdts);
     }
 
     return dmdts;
@@ -541,28 +508,20 @@ correctInterfaceThermo()
 
         for (label i = 0; i < nInterfaceCorrectors_; ++ i)
         {
-            volScalarField mDotL
-            (
-                IOobject
+            tmp<volScalarField> mDotL =
+                zeroVolField<scalar>
                 (
+                    pair,
                     "mDotL",
-                    this->mesh().time().timeName(),
-                    this->mesh()
-                ),
-                this->mesh(),
-                dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
-            );
-            volScalarField mDotLPrime
-            (
-                IOobject
+                    dimEnergy/dimVolume/dimTime
+                );
+            tmp<volScalarField> mDotLPrime =
+                zeroVolField<scalar>
                 (
+                    pair,
                     "mDotLPrime",
-                    this->mesh().time().timeName(),
-                    this->mesh()
-                ),
-                this->mesh(),
-                dimensionedScalar(mDotL.dimensions()/dimTemperature, 0)
-            );
+                    mDotL().dimensions()/dimTemperature
+                );
 
             // Add latent heats from forward and backward models
             if (this->interfaceCompositionModels_.found(key12))
@@ -571,8 +530,8 @@ correctInterfaceThermo()
                 (
                     massTransferModels_[pair].first()->K(),
                     Tf,
-                    mDotL,
-                    mDotLPrime
+                    mDotL.ref(),
+                    mDotLPrime.ref()
                 );
             }
             if (this->interfaceCompositionModels_.found(key21))
@@ -581,8 +540,8 @@ correctInterfaceThermo()
                 (
                     massTransferModels_[pair].second()->K(),
                     Tf,
-                    mDotL,
-                    mDotLPrime
+                    mDotL.ref(),
+                    mDotLPrime.ref()
                 );
             }
 

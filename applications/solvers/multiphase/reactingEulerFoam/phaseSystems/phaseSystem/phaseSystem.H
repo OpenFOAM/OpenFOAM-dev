@@ -246,50 +246,6 @@ protected:
             const bool correctFixedFluxBCs = true
         );
 
-        //- Add the field to a phase-indexed list, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            tmp<GeoField> field,
-            PtrList<GeoField>& fieldList
-        ) const;
-
-        //- Add the field to a phase-indexed list, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            const GeoField& field,
-            PtrList<GeoField>& fieldList
-        ) const;
-
-        //- Add the field to a phase-indexed table, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            tmp<GeoField> field,
-            HashPtrTable<GeoField>& fieldTable
-        ) const;
-
-        //- Add the field to a phase-indexed table, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            const GeoField& field,
-            HashPtrTable<GeoField>& fieldTable
-        ) const;
-
 
 public:
 
@@ -457,9 +413,6 @@ public:
                 const phasePairKey& key,
                 label patchi
             ) const;
-
-            //- Return the mass transfer rate for a pair
-            virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
 
             //- Return the mass transfer rates for each phase
             virtual PtrList<volScalarField> dmdts() const;

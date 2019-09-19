@@ -39,7 +39,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
 {
     if (!iDmdt_.found(key))
     {
-        return phaseSystem::dmdt(key);
+        const phasePair& pair = this->phasePairs_[key];
+        return zeroVolField<scalar>(pair, "iDmdt", dimDensity/dimTime);
     }
 
     const scalar dmdtSign(Pair<word>::compare(iDmdt_.find(key).key(), key));
@@ -57,7 +58,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::wDmdt
 {
     if (!wDmdt_.found(key))
     {
-        return phaseSystem::dmdt(key);
+        const phasePair& pair = this->phasePairs_[key];
+        return zeroVolField<scalar>(pair, "wDmdt", dimDensity/dimTime);
     }
 
     const scalar dmdtSign(Pair<word>::compare(wDmdt_.find(key).key(), key));
@@ -177,19 +179,6 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::saturation() const
 
 
 template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdt
-(
-    const phasePairKey& key
-) const
-{
-    NotImplemented;
-
-    return phaseSystem::dmdt(key);
-}
-
-
-template<class BasePhaseSystem>
 Foam::PtrList<Foam::volScalarField>
 Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
 {
@@ -200,8 +189,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
         const phasePair& pair = this->phasePairs_[iDmdtIter.key()];
         const volScalarField& iDmdt = *iDmdtIter();
 
-        this->addField(pair.phase1(), "dmdt", iDmdt, dmdts);
-        this->addField(pair.phase2(), "dmdt", - iDmdt, dmdts);
+        addField(pair.phase1(), "dmdt", iDmdt, dmdts);
+        addField(pair.phase2(), "dmdt", - iDmdt, dmdts);
     }
 
     forAllConstIter(wDmdtTable, wDmdt_, wDmdtIter)
@@ -209,8 +198,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
         const phasePair& pair = this->phasePairs_[wDmdtIter.key()];
         const volScalarField& wDmdt = *wDmdtIter();
 
-        this->addField(pair.phase1(), "dmdt", wDmdt, dmdts);
-        this->addField(pair.phase2(), "dmdt", - wDmdt, dmdts);
+        addField(pair.phase1(), "dmdt", wDmdt, dmdts);
+        addField(pair.phase2(), "dmdt", - wDmdt, dmdts);
     }
 
     return dmdts;

@@ -218,88 +218,6 @@ void Foam::phaseSystem::generatePairsAndSubModels
 }
 
 
-template<class GeoField>
-void Foam::phaseSystem::addField
-(
-    const phaseModel& phase,
-    const word& fieldName,
-    tmp<GeoField> field,
-    PtrList<GeoField>& fieldList
-) const
-{
-    if (fieldList.set(phase.index()))
-    {
-        fieldList[phase.index()] += field;
-    }
-    else
-    {
-        fieldList.set
-        (
-            phase.index(),
-            new GeoField
-            (
-                IOobject::groupName(fieldName, phase.name()),
-                field
-            )
-        );
-    }
-}
-
-
-template<class GeoField>
-void Foam::phaseSystem::addField
-(
-    const phaseModel& phase,
-    const word& fieldName,
-    const GeoField& field,
-    PtrList<GeoField>& fieldList
-) const
-{
-    addField(phase, fieldName, tmp<GeoField>(field), fieldList);
-}
-
-
-template<class GeoField>
-void Foam::phaseSystem::addField
-(
-    const phaseModel& phase,
-    const word& fieldName,
-    tmp<GeoField> field,
-    HashPtrTable<GeoField>& fieldTable
-) const
-{
-    if (fieldTable.found(phase.name()))
-    {
-        *fieldTable[phase.name()] += field;
-    }
-    else
-    {
-        fieldTable.set
-        (
-            phase.name(),
-            new GeoField
-            (
-                IOobject::groupName(fieldName, phase.name()),
-                field
-            )
-        );
-    }
-}
-
-
-template<class GeoField>
-void Foam::phaseSystem::addField
-(
-    const phaseModel& phase,
-    const word& fieldName,
-    const GeoField& field,
-    HashPtrTable<GeoField>& fieldTable
-) const
-{
-    addField(phase, fieldName, tmp<GeoField>(field), fieldTable);
-}
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -517,5 +435,132 @@ Foam::phaseSystem::lookupBlendedSubModel(const phasePair& key) const
     }
 }
 
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type, class Group>
+inline tmp<GeometricField<Type, fvPatchField, volMesh>> zeroVolField
+(
+    const Group& group,
+    const word& name,
+    const dimensionSet& dims
+)
+{
+    return GeometricField<Type, fvPatchField, volMesh>::New
+    (
+        IOobject::groupName(name, group.name()),
+        group.mesh(),
+        dimensioned<Type>(dims, pTraits<Type>::zero)
+    );
+}
+
+
+template<class Type, class Group>
+inline tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> zeroSurfaceField
+(
+    const Group& group,
+    const word& name,
+    const dimensionSet& dims
+)
+{
+    return GeometricField<Type, fvsPatchField, surfaceMesh>::New
+    (
+        IOobject::groupName(name, group.name()),
+        group.mesh(),
+        dimensioned<Type>(dims, pTraits<Type>::zero)
+    );
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    tmp<GeoField> field,
+    PtrList<GeoField>& fieldList
+)
+{
+    if (fieldList.set(group.index()))
+    {
+        fieldList[group.index()] += field;
+    }
+    else
+    {
+        fieldList.set
+        (
+            group.index(),
+            new GeoField
+            (
+                IOobject::groupName(name, group.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    const GeoField& field,
+    PtrList<GeoField>& fieldList
+)
+{
+    addField(group, name, tmp<GeoField>(field), fieldList);
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    tmp<GeoField> field,
+    HashPtrTable<GeoField>& fieldTable
+)
+{
+    if (fieldTable.found(group.name()))
+    {
+        *fieldTable[group.name()] += field;
+    }
+    else
+    {
+        fieldTable.set
+        (
+            group.name(),
+            new GeoField
+            (
+                IOobject::groupName(name, group.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    const GeoField& field,
+    HashPtrTable<GeoField>& fieldTable
+)
+{
+    addField(group, name, tmp<GeoField>(field), fieldTable);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // ************************************************************************* //

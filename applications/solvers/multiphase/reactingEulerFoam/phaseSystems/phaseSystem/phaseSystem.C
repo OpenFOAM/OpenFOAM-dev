@@ -345,20 +345,6 @@ Foam::phaseSystem::sigma(const phasePairKey& key, label patchi) const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdt
-(
-    const phasePairKey& key
-) const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("dmdt", phasePairs_[key]->name()),
-        this->mesh_,
-        dimensionedScalar(dimDensity/dimTime, 0)
-    );
-}
-
-
 Foam::PtrList<Foam::volScalarField> Foam::phaseSystem::dmdts() const
 {
     PtrList<volScalarField> dmdts(this->phaseModels_.size());

@@ -86,9 +86,6 @@ public:
 
     // Member Functions
 
-        //- Return the mass transfer rate for a pair
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
-
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;
 

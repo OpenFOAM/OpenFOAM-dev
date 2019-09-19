@@ -55,7 +55,6 @@ class ThermalPhaseChangePhaseSystem
 :
     public BasePhaseSystem
 {
-
 protected:
 
     // Protected typedefs
@@ -116,9 +115,6 @@ public:
 
         //- Return the saturationModel
         const saturationModel& saturation() const;
-
-        //- Return the mass transfer rate for a pair
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

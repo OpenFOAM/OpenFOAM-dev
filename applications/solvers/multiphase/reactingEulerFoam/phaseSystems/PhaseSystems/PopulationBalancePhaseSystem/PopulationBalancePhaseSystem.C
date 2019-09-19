@@ -26,7 +26,6 @@ License
 #include "PopulationBalancePhaseSystem.H"
 #include "rhoReactionThermo.H"
 
-
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
@@ -38,7 +37,8 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::pDmdt
 {
     if (!pDmdt_.found(key))
     {
-        return phaseSystem::dmdt(key);
+        const phasePair& pair = this->phasePairs_[key];
+        return zeroVolField<scalar>(pair, "pDmdt", dimDensity/dimTime);
     }
 
     const scalar pDmdtSign(Pair<word>::compare(pDmdt_.find(key).key(), key));
@@ -126,19 +126,6 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdt
-(
-    const phasePairKey& key
-) const
-{
-    NotImplemented;
-
-    return phaseSystem::dmdt(key);
-}
-
-
-template<class BasePhaseSystem>
 Foam::PtrList<Foam::volScalarField>
 Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 {
@@ -149,8 +136,8 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
         const phasePair& pair = this->phasePairs_[pDmdtIter.key()];
         const volScalarField& pDmdt = *pDmdtIter();
 
-        this->addField(pair.phase1(), "dmdt", pDmdt, dmdts);
-        this->addField(pair.phase2(), "dmdt", - pDmdt, dmdts);
+        addField(pair.phase1(), "dmdt", pDmdt, dmdts);
+        addField(pair.phase2(), "dmdt", - pDmdt, dmdts);
     }
 
     return dmdts;

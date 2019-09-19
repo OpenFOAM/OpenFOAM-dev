@@ -58,38 +58,6 @@ class StationaryPhaseModel
 :
     public BasePhaseModel
 {
-private:
-
-    // Private Member Functions
-
-        //- Create a zero geometric field
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        tmp<GeometricField<Type, PatchField, GeoMesh>> zeroField
-        (
-            const word& name,
-            const dimensionSet& dims,
-            const bool cache = false
-        ) const;
-
-        //- Create a zero vol field
-        template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> zeroVolField
-        (
-            const word& name,
-            const dimensionSet& dims,
-            const bool cache = false
-        ) const;
-
-        //- Create a zero surface field
-        template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> zeroSurfaceField
-        (
-            const word& name,
-            const dimensionSet& dims,
-            const bool cache = false
-        ) const;
-
-
 public:
 
     // Constructors

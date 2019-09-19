@@ -174,6 +174,9 @@ public:
             //- Return gravitation acceleration
             inline const uniformDimensionedVectorField& g() const;
 
+            //- Return the mesh
+            inline const fvMesh& mesh() const;
+
 
         //- STL const_iterator
         class const_iterator
