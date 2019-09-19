@@ -33,7 +33,7 @@ template<class BasePhaseSystem>
 void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmdtY
 (
     const phaseSystem::dmdtTable& dmdts,
-    phaseSystem::massTransferTable& eqns
+    phaseSystem::specieTransferTable& eqns
 ) const
 {
     forAllConstIter(phaseSystem::dmdtTable, dmdts, dmdtIter)
@@ -67,7 +67,7 @@ template<class BasePhaseSystem>
 void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmidtY
 (
     const phaseSystem::dmidtTable& dmidts,
-    phaseSystem::massTransferTable& eqns
+    phaseSystem::specieTransferTable& eqns
 ) const
 {
     forAllConstIter(phaseSystem::dmidtTable, dmidts, dmidtIter)
@@ -216,15 +216,15 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::massTransferTable>
-Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::massTransfer() const
+Foam::autoPtr<Foam::phaseSystem::specieTransferTable>
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::specieTransfer() const
 {
-    autoPtr<phaseSystem::massTransferTable> eqnsPtr
+    autoPtr<phaseSystem::specieTransferTable> eqnsPtr
     (
-        new phaseSystem::massTransferTable()
+        new phaseSystem::specieTransferTable()
     );
 
-    phaseSystem::massTransferTable& eqns = eqnsPtr();
+    phaseSystem::specieTransferTable& eqns = eqnsPtr();
 
     // Create a mass transfer matrix for each species of each phase
     forAll(this->phaseModels_, phasei)

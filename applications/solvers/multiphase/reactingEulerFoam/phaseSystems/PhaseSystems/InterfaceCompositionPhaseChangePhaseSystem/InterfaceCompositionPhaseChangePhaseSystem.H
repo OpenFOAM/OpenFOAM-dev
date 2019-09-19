@@ -133,8 +133,9 @@ public:
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
-        //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
+        //- Return the specie transfer matrices
+        virtual autoPtr<phaseSystem::specieTransferTable>
+            specieTransfer() const;
 
         //- Correct the fluid properties other than those listed below
         virtual void correct();

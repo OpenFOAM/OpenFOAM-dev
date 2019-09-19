@@ -360,14 +360,14 @@ heatTransfer() const
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::massTransferTable>
+Foam::autoPtr<Foam::phaseSystem::specieTransferTable>
 Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
-massTransfer() const
+specieTransfer() const
 {
-    autoPtr<phaseSystem::massTransferTable> eqnsPtr =
-        BasePhaseSystem::massTransfer();
+    autoPtr<phaseSystem::specieTransferTable> eqnsPtr =
+        BasePhaseSystem::specieTransfer();
 
-    phaseSystem::massTransferTable& eqns = eqnsPtr();
+    phaseSystem::specieTransferTable& eqns = eqnsPtr();
 
     // Explicit
     /*

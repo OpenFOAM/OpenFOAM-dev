@@ -87,14 +87,14 @@ protected:
         void addDmdtY
         (
             const phaseSystem::dmdtTable& dmdts,
-            phaseSystem::massTransferTable& eqns
+            phaseSystem::specieTransferTable& eqns
         ) const;
 
         //- Add specie transfer terms which result from specie mass transfers
         void addDmidtY
         (
             const phaseSystem::dmidtTable& dmidts,
-            phaseSystem::massTransferTable& eqns
+            phaseSystem::specieTransferTable& eqns
         ) const;
 
 
@@ -124,8 +124,9 @@ public:
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
-        //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
+        //- Return the specie transfer matrices
+        virtual autoPtr<phaseSystem::specieTransferTable>
+            specieTransfer() const;
 
         //- Correct the mass transfer rates
         virtual void correct();

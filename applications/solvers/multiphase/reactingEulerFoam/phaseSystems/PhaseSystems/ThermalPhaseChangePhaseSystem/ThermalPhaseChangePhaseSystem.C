@@ -358,13 +358,13 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::massTransferTable>
-Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::massTransfer() const
+Foam::autoPtr<Foam::phaseSystem::specieTransferTable>
+Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::specieTransfer() const
 {
-    autoPtr<phaseSystem::massTransferTable> eqnsPtr =
-        BasePhaseSystem::massTransfer();
+    autoPtr<phaseSystem::specieTransferTable> eqnsPtr =
+        BasePhaseSystem::specieTransfer();
 
-    phaseSystem::massTransferTable& eqns = eqnsPtr();
+    phaseSystem::specieTransferTable& eqns = eqnsPtr();
 
     forAllConstIter
     (

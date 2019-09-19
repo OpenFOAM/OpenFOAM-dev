@@ -1,9 +1,9 @@
 {
-    autoPtr<phaseSystem::massTransferTable>
-        massTransferPtr(fluid.massTransfer());
+    autoPtr<phaseSystem::specieTransferTable>
+        specieTransferPtr(fluid.specieTransfer());
 
-    phaseSystem::massTransferTable&
-        massTransfer(massTransferPtr());
+    phaseSystem::specieTransferTable&
+        specieTransfer(specieTransferPtr());
 
     if (!phase1.pure())
     {
@@ -15,7 +15,7 @@
             (
                 phase1.YiEqn(Y1[i])
              ==
-               *massTransfer[Y1[i].name()]
+               *specieTransfer[Y1[i].name()]
               + fvOptions(alpha1, rho1, Y1[i])
             );
 
@@ -34,7 +34,7 @@
             (
                 phase2.YiEqn(Y2[i])
              ==
-               *massTransfer[Y2[i].name()]
+               *specieTransfer[Y2[i].name()]
               + fvOptions(alpha2, rho2, Y2[i])
             );
 

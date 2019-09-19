@@ -77,7 +77,7 @@ public:
 
         typedef HashPtrTable<fvScalarMatrix> heatTransferTable;
 
-        typedef HashPtrTable<fvScalarMatrix> massTransferTable;
+        typedef HashPtrTable<fvScalarMatrix> specieTransferTable;
 
         typedef PtrListDictionary<phaseModel> phaseModelList;
 
@@ -488,8 +488,8 @@ public:
             //- Return the heat transfer matrices
             virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
 
-            //- Return the mass transfer matrices
-            virtual autoPtr<massTransferTable> massTransfer() const = 0;
+            //- Return the specie transfer matrices
+            virtual autoPtr<specieTransferTable> specieTransfer() const = 0;
 
 
         // Evolution
