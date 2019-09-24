@@ -28,7 +28,33 @@ Description
     Calculates the natural logarithm of the specified scalar field.
 
     Performs \f$ln(max(x, a))\f$ where \f$x\f$ is the field and \f$a\f$ an
-    optional clip to handle 0 or negative \f$x\f$.
+    optional clip to handle 0 or negative \f$x\f$.  Dimension checking can
+    optionally be suspended for this operation if \f$x\f$ is dimensioned.
+
+    Example of function object specification:
+    \verbatim
+    log1
+    {
+        type            log;
+        libs            ("libfieldFunctionObjects.so");
+        field           p;
+        clip            1e-3;
+        checkDimensions no;
+    }
+    \endverbatim
+
+    or using \c postProcess
+    \verbatim
+    postProcess -func 'log(p, clip=1e-3, checkDimensions=no)'
+    \endverbatim
+
+Usage
+    \table
+        Property        | Description               | Required | Default value
+        type            | Type name: log            | yes      |
+        clip            | Clip value                | no       |
+        checkDimensions | Dimension checking switch | no       |
+    \endtable
 
 See also
     Foam::functionObjects::fieldExpression
@@ -61,8 +87,14 @@ class log
 {
     // Private Data
 
-        //- Optional clip (default is 0)
-        scalar clip_;
+        //- Optional clip, default = false
+        bool clip_;
+
+        //- Optional clip value
+        scalar clipValue_;
+
+        //- Optional dimension checking override
+        Switch checkDimensions_;
 
 
     // Private Member Functions
