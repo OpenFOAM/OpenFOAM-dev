@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-planeType           pointAndNormal;
+planeType           pointAndNormal; // planeEquation // embeddedPoints
 
 pointAndNormalDict
 {
@@ -22,6 +22,22 @@ pointAndNormalDict
     normalVector    (0 1 0);
 }
 
-planeTolerance      1e-3;
+// Plane equation: ax + by + cz + d = 0
+planeEquationDict
+{
+    a   0;
+    b   1;
+    c   0;
+    d   0;
+}
+
+embeddedPointsDict
+{
+    point1  (0 0 0);
+    point2  (1 0 0);
+    point3  (0 0 1);
+}
+
+planeTolerance  1e-3;
 
 // ************************************************************************* //
