@@ -1,4 +1,0 @@
-derivedFvPatchFields/semiPermeableBaffleMassFraction/semiPermeableBaffleMassFractionFvPatchScalarField.C
-derivedFvPatchFields/semiPermeableBaffleVelocity/semiPermeableBaffleVelocityFvPatchVectorField.C
-
-LIB = $(FOAM_LIBBIN)/libsemiPermeableBaffle

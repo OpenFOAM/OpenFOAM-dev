@@ -28,45 +28,54 @@ Description
     This is a mass-fraction boundary condition for a semi-permeable baffle.
 
     This condition models a baffle which is permeable to a some species and
-    impermeable to others. It must be used in conjunction with the
-    corresponding velocity condition,
-    semiPermeableBaffleVelocityFvPatchVectorField.
+    impermeable to others. It must be used in conjunction with a
+    specieTransferVelocityFvPatchVectorField velocity condition, and a
+    specieTransferTemperatureFvPatchScalarField  temperature condition.
 
     The mass flux of a species is calculated as a coefficient multiplied by the
-    difference in an input variable across the baffle.
+    difference in a property across the baffle.
         \f[
             \phi_{Yi} = c A (\psi_i - \psi_{i,n})
         \f]
         where
         \vartable
-            \phi_{Yi}  | flux of the permeable species [kg/s]
-            c          | transfer coefficient [kg/m^2/s/<input-dimensions>]
-            A          | patch face area [m^2]
-            \psi_i     | input variable on the patch []
-            \psi_{i,n} | input variable on the neighbour patch []
+            \phi_{Yi}  | Flux of the permeable specie [kg/s]
+            c          | Transfer coefficient [kg/m^2/s/<property-dimensions>]
+            A          | Patch face area [m^2]
+            \psi_i     | Property on the patch [<property-dimensions>]
+            \psi_{i,n} | Property on the neighbour patch [<property-dimensions>]
         \endvartable
 
     A species that the baffle is permeable to will, therefore, have a
     coefficient greater than zero, whilst a species that does not transfer will
     have a coefficient equal to zero.
 
-    This condition calculates the species flux. The fluxes are summed up by the
-    velocity condition to generate the net mass transfer across the baffle.
-    This mass-fraction condition then generates a corrective diffusive flux to
-    ensure that the correct amounts of the permeable species are transferred.
-
 Usage
     \table
         Property | Description                | Req'd? | Default
         c        | Transfer coefficient       | no     | 0
-        input    | Input variable used to drive the transfer; massFraction, \\
-        moleFraction or partialPressure | if c is non-zero | none
+        property | Property used to drive the transfer; massFraction, \\
+        moleFraction, molarConcentration, or partialPressure | if c is \\
+        non-zero |
         phi      | Name of the flux field     | no     | phi
-        p        | Name of the pressure field | no     | p
+        U        | Name of the velocity field | no     | U
     \endtable
 
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            semiPermeableBaffleMassFraction;
+        property        molarConcentration;
+        c               1e-3;
+        value           $internalField;
+    }
+    \endverbatim
+
 See also
-    Foam::semiPermeableBaffleVelocityFvPatchVectorField
+    Foam::specieTransferMassFractionFvPatchScalarField
+    Foam::specieTransferVelocityFvPatchVectorField
+    Foam::specieTransferTemperatureFvPatchScalarField
 
 SourceFiles
     semiPermeableBaffleMassFractionFvPatchScalarField.C
@@ -77,7 +86,7 @@ SourceFiles
 #define semiPermeableBaffleMassFractionFvPatchScalarField_H
 
 #include "mappedPatchBase.H"
-#include "mixedFvPatchFields.H"
+#include "specieTransferMassFractionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -93,40 +102,8 @@ class basicSpecieMixture;
 class semiPermeableBaffleMassFractionFvPatchScalarField
 :
     public mappedPatchBase,
-    public mixedFvPatchScalarField
+    public specieTransferMassFractionFvPatchScalarField
 {
-public:
-
-        //- Enumeration for the input variable driving the transfer
-        enum input
-        {
-            none,
-            massFraction,
-            moleFraction,
-            partialPressure,
-        };
-
-        //- Input variable type names
-        static const NamedEnum<input, 4> inputNames_;
-
-
-private:
-
-    // Private Data
-
-        //- Transfer coefficient
-        const scalar c_;
-
-        //- Input variable driving the transfer
-        const input input_;
-
-        //- Name of the flux field
-        const word phiName_;
-
-        //- Name of the pressure field. Only needed if mode is pressure.
-        const word pName_;
-
-
 public:
 
     //- Runtime type information
@@ -210,10 +187,7 @@ public:
         // Evaluation functions
 
             //- Return the flux of this species through the baffle
-            tmp<scalarField> phiY() const;
-
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
+            virtual tmp<scalarField> calcPhiYp() const;
 
 
         //- Write

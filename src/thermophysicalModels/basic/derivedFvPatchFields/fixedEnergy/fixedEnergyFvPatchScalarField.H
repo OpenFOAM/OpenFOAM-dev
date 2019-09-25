@@ -25,17 +25,8 @@ Class
     Foam::fixedEnergyFvPatchScalarField
 
 Description
-    This boundary condition provides a fixed condition for internal energy
-
-Usage
-    Example of the boundary condition specification:
-    \verbatim
-    <patchName>
-    {
-        type            fixedEnergy;
-        value           uniform 100;
-    }
-    \endverbatim
+    This boundary condition provides a fixed condition for energy. This is
+    selected when the corresponding temperature condition is fixedValue.
 
 See also
     Foam::fixedValueFvPatchField

@@ -75,7 +75,7 @@ wmake $targetType sixDoFRigidBodyState
 wmake $targetType rigidBodyDynamics
 wmake $targetType rigidBodyMeshMotion
 wmake $targetType rigidBodyState
-wmake $targetType semiPermeableBaffle
+wmake $targetType specieTransfer
 wmake $targetType atmosphericModels
 wmake $targetType waves
 

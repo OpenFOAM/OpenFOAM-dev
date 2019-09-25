@@ -82,6 +82,35 @@ Foam::SpecieMixture<MixtureType>::volScalarFieldProperty
 }
 
 
+template<class MixtureType>
+Foam::tmp<Foam::scalarField> Foam::SpecieMixture<MixtureType>::fieldProperty
+(
+    scalar (MixtureType::thermoType::*psiMethod)
+    (
+        const scalar,
+        const scalar
+    ) const,
+    const label speciei,
+    const scalarField& p,
+    const scalarField& T
+) const
+{
+    const typename MixtureType::thermoType& thermo =
+        this->getLocalThermo(speciei);
+
+    tmp<scalarField> tPsi(new scalarField(p.size()));
+
+    scalarField& psi = tPsi.ref();
+
+    forAll(p, facei)
+    {
+        psi[facei] = (thermo.*psiMethod)(p[facei], T[facei]);
+    }
+
+    return tPsi;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class MixtureType>
@@ -185,6 +214,18 @@ Foam::scalar Foam::SpecieMixture<MixtureType>::HE
 ) const
 {
     return this->getLocalThermo(speciei).HE(p, T);
+}
+
+
+template<class MixtureType>
+Foam::tmp<Foam::scalarField> Foam::SpecieMixture<MixtureType>::HE
+(
+    const label speciei,
+    const scalarField& p,
+    const scalarField& T
+) const
+{
+    return fieldProperty(&MixtureType::thermoType::HE, speciei, p, T);
 }
 
 

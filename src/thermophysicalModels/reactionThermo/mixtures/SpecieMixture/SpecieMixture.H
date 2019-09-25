@@ -75,6 +75,19 @@ class SpecieMixture
             const volScalarField& T
         ) const;
 
+        //- Return a field of the given property
+        tmp<scalarField> fieldProperty
+        (
+            scalar (MixtureType::thermoType::*psiMethod)
+            (
+                const scalar,
+                const scalar
+            ) const,
+            const label speciei,
+            const scalarField& p,
+            const scalarField& T
+        ) const;
+
 
 public:
 
@@ -140,6 +153,14 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
+            ) const;
+
+            //- Enthalpy/Internal energy [J/kg]
+            virtual tmp<scalarField> HE
+            (
+                const label speciei,
+                const scalarField& p,
+                const scalarField& T
             ) const;
 
             //- Enthalpy/Internal energy [J/kg]

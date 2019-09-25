@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,34 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mixedEnergyFvPatchScalarField
+    Foam::gradientEnergyCalculatedTemperatureFvPatchScalarField
 
 Description
-    This boundary condition provides a mixed condition for energy. This is
-    selected when the corresponding temperature condition is mixed, or
-    mixedEnergyCalculatedTemperature.
-
-    If the temperature condition is mixed, the parameters of the energy
-    condition are obtained from a linearisation of the corresponding parameters
-    of the temperature condition.
-
-    If the temperature condition is mixedEnergyCalculatedTemperature, then the
-    temperature condition explicitly provides energy
-    refValue/refGrad/valueFraction fields, so no linearisation is needed.
-
-See also
-    Foam::mixedFvPatchField
-    Foam::mixedEnergyCalculatedTemperatureFvPatchField
+    Base class for temperature boundary conditions in which the parameters of
+    the gradient energy condition can be set directly
 
 SourceFiles
-    mixedEnergyFvPatchScalarField.C
+    gradientEnergyCalculatedTemperatureFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mixedEnergyFvPatchScalarField_H
-#define mixedEnergyFvPatchScalarField_H
+#ifndef gradientEnergyCalculatedTemperatureFvPatchScalarField_H
+#define gradientEnergyCalculatedTemperatureFvPatchScalarField_H
 
-#include "mixedFvPatchFields.H"
+#include "calculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,51 +44,58 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class mixedEnergyFvPatchScalarField Declaration
+     Class gradientEnergyCalculatedTemperatureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class mixedEnergyFvPatchScalarField
+class gradientEnergyCalculatedTemperatureFvPatchScalarField
 :
-    public mixedFvPatchScalarField
+    public calculatedFvPatchScalarField
 {
+    // Private Data
+
+        //- Energy normal gradient field
+        scalarField heGradient_;
+
 
 public:
 
-    //- Runtime type information
-    TypeName("mixedEnergy");
+    // Static Data Members
+
+        //- Run-time type information
+        TypeName("gradientEnergyCalculatedTemperature");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        mixedEnergyFvPatchScalarField
+        gradientEnergyCalculatedTemperatureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        mixedEnergyFvPatchScalarField
+        gradientEnergyCalculatedTemperatureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given mixedEnergyFvPatchScalarField
-        // onto a new patch
-        mixedEnergyFvPatchScalarField
+        //- Construct by mapping given fixedValueTypeFvPatchField
+        //  onto a new patch
+        gradientEnergyCalculatedTemperatureFvPatchScalarField
         (
-            const mixedEnergyFvPatchScalarField&,
+            const gradientEnergyCalculatedTemperatureFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Copy constructor
-        mixedEnergyFvPatchScalarField
+        gradientEnergyCalculatedTemperatureFvPatchScalarField
         (
-            const mixedEnergyFvPatchScalarField&
+            const gradientEnergyCalculatedTemperatureFvPatchScalarField&
         );
 
         //- Construct and return a clone
@@ -109,14 +103,14 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new mixedEnergyFvPatchScalarField(*this)
+                new gradientEnergyCalculatedTemperatureFvPatchScalarField(*this)
             );
         }
 
         //- Copy constructor setting internal field reference
-        mixedEnergyFvPatchScalarField
+        gradientEnergyCalculatedTemperatureFvPatchScalarField
         (
-            const mixedEnergyFvPatchScalarField&,
+            const gradientEnergyCalculatedTemperatureFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -128,7 +122,11 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new mixedEnergyFvPatchScalarField(*this, iF)
+                new gradientEnergyCalculatedTemperatureFvPatchScalarField
+                (
+                    *this,
+                    iF
+                )
             );
         }
 
@@ -137,17 +135,34 @@ public:
 
         // Access
 
-            //- Allow manipulation of the boundary values
+            //- Return true if this patch field fixes a value
             virtual bool fixesValue() const
             {
                 return false;
             }
 
+            //- Access the energy gradient
+            inline scalarField& heGradient()
+            {
+                return heGradient_;
+            }
 
-        // Evaluation functions
+            //- Access the energy gradient
+            inline const scalarField& heGradient() const
+            {
+                return heGradient_;
+            }
 
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
+
+        // Mapping functions
+
+            //- Map (and resize as needed) from self given a mapping object
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
+
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchScalarField&, const labelList&);
 };
 
 

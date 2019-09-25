@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "semiPermeableBaffleVelocityFvPatchVectorField.H"
-#include "semiPermeableBaffleMassFractionFvPatchScalarField.H"
+#include "specieTransferVelocityFvPatchVectorField.H"
+#include "specieTransferMassFractionFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
+#include "basicSpecieMixture.H"
+#include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::semiPermeableBaffleVelocityFvPatchVectorField::
-semiPermeableBaffleVelocityFvPatchVectorField
+Foam::specieTransferVelocityFvPatchVectorField::
+specieTransferVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF
@@ -46,25 +45,29 @@ semiPermeableBaffleVelocityFvPatchVectorField
 {}
 
 
-Foam::semiPermeableBaffleVelocityFvPatchVectorField::
-semiPermeableBaffleVelocityFvPatchVectorField
+Foam::specieTransferVelocityFvPatchVectorField::
+specieTransferVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool readValue
 )
 :
     fixedValueFvPatchVectorField(p, iF),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {
-    fvPatchVectorField::operator==(vectorField("value", dict, p.size()));
+    if (readValue)
+    {
+        fvPatchVectorField::operator==(vectorField("value", dict, p.size()));
+    }
 }
 
 
-Foam::semiPermeableBaffleVelocityFvPatchVectorField::
-semiPermeableBaffleVelocityFvPatchVectorField
+Foam::specieTransferVelocityFvPatchVectorField::
+specieTransferVelocityFvPatchVectorField
 (
-    const semiPermeableBaffleVelocityFvPatchVectorField& ptf,
+    const specieTransferVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const fvPatchFieldMapper& mapper
@@ -75,10 +78,10 @@ semiPermeableBaffleVelocityFvPatchVectorField
 {}
 
 
-Foam::semiPermeableBaffleVelocityFvPatchVectorField::
-semiPermeableBaffleVelocityFvPatchVectorField
+Foam::specieTransferVelocityFvPatchVectorField::
+specieTransferVelocityFvPatchVectorField
 (
-    const semiPermeableBaffleVelocityFvPatchVectorField& ptf
+    const specieTransferVelocityFvPatchVectorField& ptf
 )
 :
     fixedValueFvPatchVectorField(ptf),
@@ -86,10 +89,10 @@ semiPermeableBaffleVelocityFvPatchVectorField
 {}
 
 
-Foam::semiPermeableBaffleVelocityFvPatchVectorField::
-semiPermeableBaffleVelocityFvPatchVectorField
+Foam::specieTransferVelocityFvPatchVectorField::
+specieTransferVelocityFvPatchVectorField
 (
-    const semiPermeableBaffleVelocityFvPatchVectorField& ptf,
+    const specieTransferVelocityFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF
 )
 :
@@ -100,21 +103,15 @@ semiPermeableBaffleVelocityFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::semiPermeableBaffleVelocityFvPatchVectorField::updateCoeffs()
+const Foam::tmp<Foam::scalarField>
+Foam::specieTransferVelocityFvPatchVectorField::phip() const
 {
-    if (updated())
-    {
-        return;
-    }
-
-    typedef semiPermeableBaffleMassFractionFvPatchScalarField YBCType;
-
-    const scalarField& rhop =
-        patch().lookupPatchField<volScalarField, scalar>(rhoName_);
-
+    typedef specieTransferMassFractionFvPatchScalarField YBCType;
     const PtrList<volScalarField>& Y = YBCType::composition(db()).Y();
 
-    scalarField phip(patch().size(), Zero);
+    // Sum up the phiYp-s from all the species
+    tmp<scalarField> tPhip(new scalarField(this->size(), 0));
+    scalarField& phip = tPhip.ref();
     forAll(Y, i)
     {
         const fvPatchScalarField& Yp = Y[i].boundaryField()[patch().index()];
@@ -127,16 +124,34 @@ void Foam::semiPermeableBaffleVelocityFvPatchVectorField::updateCoeffs()
                 << exit(FatalError);
         }
 
-        phip += refCast<const YBCType>(Yp).phiY();
+        phip += refCast<const YBCType>(Yp).phiYp();
     }
 
-    this->operator==(patch().nf()*phip/(rhop*patch().magSf()));
+    return tPhip;
+}
+
+
+void Foam::specieTransferVelocityFvPatchVectorField::updateCoeffs()
+{
+    if (updated())
+    {
+        return;
+    }
+
+    // Get the density
+    const scalarField& rhop =
+        patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+
+    // Set the normal component of the velocity to match the computed flux
+    const vectorField nf(patch().nf());
+    const tensorField Tau(tensor::I - sqr(nf));
+    this->operator==((Tau & *this) + nf*phip()/(rhop*patch().magSf()));
 
     fixedValueFvPatchVectorField::updateCoeffs();
 }
 
 
-void Foam::semiPermeableBaffleVelocityFvPatchVectorField::write
+void Foam::specieTransferVelocityFvPatchVectorField::write
 (
     Ostream& os
 ) const
@@ -154,7 +169,7 @@ namespace Foam
     makePatchTypeField
     (
         fvPatchVectorField,
-        semiPermeableBaffleVelocityFvPatchVectorField
+        specieTransferVelocityFvPatchVectorField
     );
 }
 

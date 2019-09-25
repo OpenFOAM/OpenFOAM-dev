@@ -54,7 +54,7 @@ boundaryField
         type            semiPermeableBaffleMassFraction;
         samplePatch     membranePipe;
         c               0.1;
-        input           massFraction;
+        property        massFraction;
         value           uniform $!sleeve/CH4;
     }
     membranePipe
@@ -62,7 +62,7 @@ boundaryField
         type            semiPermeableBaffleMassFraction;
         samplePatch     membraneSleeve;
         c               0.1;
-        input           massFraction;
+        property        massFraction;
         value           uniform $!pipe/CH4;
     }
 }

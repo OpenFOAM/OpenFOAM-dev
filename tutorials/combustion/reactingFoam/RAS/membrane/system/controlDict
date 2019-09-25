@@ -49,7 +49,7 @@ adjustTimeStep  yes;
 
 maxCo           1;
 
-libs            ( "libsemiPermeableBaffle.so" );
+libs            ( "libspecieTransfer.so" );
 
 
 // ************************************************************************* //
