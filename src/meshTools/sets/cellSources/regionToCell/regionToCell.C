@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,11 +86,7 @@ void Foam::regionToCell::markRegionFaces
         {
             label facei = pp.start()+i;
             label bFacei = facei-mesh_.nInternalFaces();
-            if
-            (
-                selectedCell[faceCells[i]]
-             != selectedCell[nbrSelected[bFacei]]
-            )
+            if (selectedCell[faceCells[i]] != nbrSelected[bFacei])
             {
                 regionFace[facei] = true;
             }
