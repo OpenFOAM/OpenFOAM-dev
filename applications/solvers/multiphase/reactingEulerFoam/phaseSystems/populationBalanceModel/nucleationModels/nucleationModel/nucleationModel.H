@@ -148,22 +148,6 @@ public:
             return dict_;
         }
 
-        //- Switch which determines, whether the nucleation model introduce mass
-        //  into the domain through the populationBalanceModel class, i.e. pDmdt
-        virtual bool pDmDt() const
-        {
-            return false;
-        };
-
-        //- If the nucleation model uses pDmdt, it has to ensure that the
-        //  relevant phasePair exists in the speciesDmdt-table
-        virtual void registerPair
-        (
-            populationBalanceModel::speciesDmdtTable& speciesDmdt
-        ) const
-        {
-            return;
-        };
 
         //- Correct diameter independent expressions
         virtual void correct();
@@ -174,18 +158,6 @@ public:
             volScalarField& nucleationRate,
             const label i
         ) = 0;
-
-        //- If the nucleation model uses pDmdt and is aware of species,
-        //  it should add the corresponding  mass transfer rates
-        //  to the speciesDmdt table.
-        virtual void addToSpeciesDmDt
-        (
-            populationBalanceModel::speciesDmdtTable& speciesDmdt
-        ) const
-        {
-            return;
-        }
-
 };
 
 

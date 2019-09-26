@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,98 +22,103 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::driftModels::phaseChange
+    Foam::phaseTransferModels::reactionDriven
 
 Description
-    Drift induced by phase change. By default phase change mass
-    flux is distributed between sizeGroups of each velocityGroup with phase
-    change based on interfacial area of each size group.
+    Phase transfer model representing change from one phase to another due
+    to reactions. Intended for irreversible reactions.
 
 SourceFiles
-    phaseChange.C
+    reactionDriven.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef phaseChange_H
-#define phaseChange_H
+#ifndef reactionDriven_H
+#define reactionDriven_H
 
-#include "driftModel.H"
+#include "phaseTransferModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace diameterModels
-{
-namespace driftModels
+
+class phasePair;
+class phaseModel;
+
+namespace phaseTransferModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class phaseChange Declaration
+                       Class reactionDriven Declaration
 \*---------------------------------------------------------------------------*/
 
-class phaseChange
+class reactionDriven
 :
-    public driftModel
+    public phaseTransferModel
 {
+private:
+
     // Private Data
 
-        //- PhasePairs between which phaseChange occurs, e.g.,
-        //  "((gasI and liquid) (gasII and liquid))"
-        List<phasePairKey> pairKeys_;
+        //- The name of the phase where the reactions occur
+        const word reactingName_;
 
-        //- Distribute phase change mass flux between sizeGroups based on the
-        //  number concentration, rather than the interfacial area
-        Switch numberWeighted_;
+        //- Const reference to the reacting phase
+        const phaseModel& reactingPhase_;
 
-        //- Weighting with which the phase change mass flux is distributed
-        PtrList<volScalarField> W_;
+        //- Const reference to the other phase
+        const phaseModel& otherPhase_;
 
-        //- Name of the specie which changes phase, empty by default
-        const word specieName_;
+        //- Sign used to multiply the source terms
+        const scalar sign_;
 
-        //- The name of the relevant dmdt term for lookup
-        const word dmdtName_;
+        //- List of species changing phase
+        wordList species_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("phaseChange");
+    TypeName("reactionDriven");
 
-    // Constructor
 
-        //- Construct from a population balance model and a dictionary
-        phaseChange
+    // Constructors
+
+        //- Construct from components
+        reactionDriven
         (
-            const populationBalanceModel& popBal,
-            const dictionary& dict
+            const dictionary& dict,
+            const phasePair& pair
         );
 
 
     //- Destructor
-    virtual ~phaseChange()
-    {}
+    virtual ~reactionDriven();
 
 
     // Member Functions
 
-        //- Correct diameter independent expressions
-        virtual void correct();
+        //- Return the active species for the current pair
+        virtual const wordList activeSpecies() const
+        {
+            return species_;
+        };
 
-        //- Add to driftRate
-        virtual void addToDriftRate
+        //- The mass transfer rate
+        virtual tmp<volScalarField> dmdt() const;
+
+        //- The mass transfer rate for the given species
+        virtual tmp<volScalarField> speciesDmdt
         (
-            volScalarField& driftRate,
-            const label i
-        );
+            const word speciesName
+        ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace driftModels
-} // End namespace diameterModels
+} // End namespace phaseTransferModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

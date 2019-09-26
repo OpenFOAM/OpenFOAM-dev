@@ -2,42 +2,28 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  dev
+    \\  /    A nd           | Version:  hzdr
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      O2.vapor;
+    class       dictionary;
+    location    "0/uniform";
+    object      time;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+value           0;
 
-internalField   uniform 0;
+name            "0";
 
-boundaryField
-{
-    #includeEtc "caseDicts/setConstraintTypes"
+index           0;
 
-    inlet
-    {
-        type            fixedValue;
-        value           uniform 1.551577E-02;
-    }
+deltaT          0.0001;
 
-    outlet
-    {
-        type            zeroGradient;
-    }
-
-    wall
-    {
-        type            zeroGradient;
-    }
-}
+deltaT0         0.0001;
 
 
 // ************************************************************************* //

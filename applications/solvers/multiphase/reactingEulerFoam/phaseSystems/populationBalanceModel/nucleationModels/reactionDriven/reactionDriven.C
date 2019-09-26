@@ -79,27 +79,24 @@ reactionDriven
     ),
     reactingPhase_
     (
-        popBal_.mesh().lookupObjectRef<reactingPhaseModel>
+        popBal_.mesh().lookupObject<phaseModel>
         (
             IOobject::groupName("alpha", dict.lookup("reactingPhase"))
         )
     ),
-    specie_
+    pair_
     (
-        popBal_.mesh().lookupObjectRef<volScalarField>
-        (
-            IOobject::groupName
-            (
-                word(dict.lookup("specie")),
-                reactingPhase_.name()
-            )
-        )
+        popBal_.fluid().phasePairs()
+        [
+            phasePair(velGroup_.phase(), reactingPhase_)
+        ]
     ),
+    specie_(dict.lookup("specie")),
     nDmdt_
     (
         IOobject
         (
-            "massChange",
+            IOobject::groupName(type() + ":N", pair_.name()),
             popBal.time().timeName(),
             popBal.mesh()
         ),
@@ -124,53 +121,17 @@ reactionDriven
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//- Add the corresponding species sources
-void
-Foam::diameterModels::nucleationModels::reactionDriven::registerPair
-(
-    populationBalanceModel::speciesDmdtTable& speciesDmdt
-) const
-{
-    const phasePairKey key
-    (
-        velGroup_.phase().name(),
-        reactingPhase_.name(),
-        false
-    );
-
-    if (!speciesDmdt.found(key))
-    {
-        speciesDmdt.insert(key, new HashPtrTable<volScalarField>());
-    }
-
-    word specieName = IOobject::member(specie_.name());
-
-    if (!speciesDmdt[key]->found(specieName))
-    {
-        speciesDmdt[key]->insert
-        (
-            specieName,
-            new volScalarField
-            (
-                IOobject
-                (
-                    specieName+"NucleationSource",
-                    popBal_.mesh().time().timeName(),
-                    popBal_.mesh(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                nDmdt_
-            )
-        );
-    }
-}
-
-
 void Foam::diameterModels::nucleationModels::reactionDriven::correct()
 {
-    nDmdt_ = reactingPhase_*reactingPhase_.R(specie_) & specie_;
+    const volScalarField& speciesDmdt =
+        popBal_.mesh().lookupObject<volScalarField>
+        (
+            IOobject::groupName(specie_+":dmdt", pair_.name())
+        );
+
+    const scalar sign = velGroup_.phase().name() == pair_.first() ? +1 : -1;
+
+    nDmdt_ = sign*speciesDmdt;
 }
 
 
@@ -186,25 +147,6 @@ Foam::diameterModels::nucleationModels::reactionDriven::addToNucleationRate
 
     nucleationRate +=
         popBal_.eta(i, pi/6.0*pow3(dNuc_))*nDmdt_/rho/fi.x();
-}
-
-
-void
-Foam::diameterModels::nucleationModels::reactionDriven::addToSpeciesDmDt
-(
-    populationBalanceModel::speciesDmdtTable& speciesDmdt
-) const
-{
-    const phasePairKey key
-    (
-        velGroup_.phase().name(),
-        reactingPhase_.name(),
-        false
-    );
-
-    word specieName = IOobject::member(specie_.name());
-
-    *(*speciesDmdt[key])[specieName] += nDmdt_;
 }
 
 

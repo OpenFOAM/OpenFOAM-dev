@@ -111,8 +111,29 @@ public:
 
     // Member Functions
 
+        //- Return the active species for the current pair,
+        //  by default returns empty list
+        virtual const wordList activeSpecies() const
+        {
+            return wordList();
+        };
+
+        //- Do possible corrections before dmdt calculations
+        virtual void correct() {};
+
         //- The mass transfer rate
         virtual tmp<volScalarField> dmdt() const = 0;
+
+        //- The mass transfer rate for the given species, this needs to be
+        //  implemented only if the model uses non uniform species transfer
+        virtual tmp<volScalarField> speciesDmdt
+        (
+            const word speciesName
+        ) const
+        {
+            NotImplemented;
+            return dmdt();
+        };
 };
 
 

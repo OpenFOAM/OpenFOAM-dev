@@ -10,13 +10,13 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      O2.vapor;
+    object      TiO2.particles;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 1.0;
 
 boundaryField
 {
@@ -25,7 +25,7 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           uniform 1.551577E-02;
+        value           uniform 1.0;
     }
 
     outlet

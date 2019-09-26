@@ -25,10 +25,11 @@ Class
     Foam::diameterModels::nucleationModels::constantNucleation
 
 Description
-    Applicable for irreversible reactions only.
+    Nucleation source due to reactions. Applicable for irreversible
+    reactions only.
 
 SourceFiles
-    constant.C
+    reactionDriven.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -36,27 +37,11 @@ SourceFiles
 #define reactionDriven_H
 
 #include "nucleationModel.H"
-#include "rhoReactionThermo.H"
-#include "CombustionModel.H"
-#include "ReactingPhaseModel.H"
-#include "MovingPhaseModel.H"
-#include "ThermoPhaseModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef
-        ReactingPhaseModel
-        <
-            MovingPhaseModel
-            <
-                ThermoPhaseModel<phaseModel, rhoReactionThermo>
-            >,
-            CombustionModel<rhoReactionThermo>
-        >
-        reactingPhaseModel;
-
 namespace diameterModels
 {
 namespace nucleationModels
@@ -72,17 +57,20 @@ class reactionDriven
 {
     // Private Data
 
-        //- Sphere-eqivalent nucleation diameter
+        //- Sphere-equivalent nucleation diameter
         dimensionedScalar dNuc_;
 
         //- Velocity group in which the nucleation occurs
         const velocityGroup& velGroup_;
 
         //- Phase in which the reaction occurs
-        const reactingPhaseModel& reactingPhase_;
+        const phaseModel& reactingPhase_;
 
-        //- Product species of the reaction
-        volScalarField& specie_;
+        //- PhasePair between which the nucleation occurs
+        phasePair pair_;
+
+        //- Names of the specie which nucleates
+        word specie_;
 
         //- Nucleation mass transfer rate
         volScalarField nDmdt_;
@@ -109,20 +97,6 @@ public:
 
     // Member Functions
 
-        //- Switch which determines, whether the nucleation model introduce mass
-        //  into the domain through the populationBalanceModel class, i.e. pDmdt
-        virtual bool pDmDt() const
-        {
-            return true;
-        };
-
-        //- If the nucleation model uses pDmdt, it has to ensure that the
-        //  relevant phasePair exists in the speciesDmdt-table
-        virtual void registerPair
-        (
-            populationBalanceModel::speciesDmdtTable& speciesDmdt
-        ) const;
-
         //- Correct diameter independent expressions
         virtual void correct();
 
@@ -132,12 +106,6 @@ public:
             volScalarField& nucleationRate,
             const label i
         );
-
-        //- Add the corresponding species sources
-        virtual void addToSpeciesDmDt
-        (
-            populationBalanceModel::speciesDmdtTable& speciesDmdt
-        ) const;
 };
 
 

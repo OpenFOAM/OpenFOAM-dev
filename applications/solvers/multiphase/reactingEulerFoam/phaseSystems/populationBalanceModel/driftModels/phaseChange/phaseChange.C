@@ -54,7 +54,9 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
     driftModel(popBal, dict),
     pairKeys_(dict.lookup("pairs")),
     numberWeighted_(dict.lookupOrDefault<Switch>("numberWeighted", false)),
-    W_(pairKeys_.size())
+    W_(pairKeys_.size()),
+    specieName_(dict.lookupOrDefault("specie", word())),
+    dmdtName_(specieName_ == word::null ? "iDmdt" : specieName_+":dmdt")
 {
     const phaseSystem& fluid = popBal_.fluid();
 
@@ -145,17 +147,17 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
             const volScalarField& iDmdt =
                 popBal_.mesh().lookupObject<volScalarField>
                 (
-                    IOobject::groupName("iDmdt", pair.name())
+                    IOobject::groupName(dmdtName_, pair.name())
                 );
 
-            const scalar iDmdtSign =
+            const scalar dmdtSign =
                 vg.phase().name() == pair.first() ? +1 : -1;
 
             const sizeGroup& fi = popBal_.sizeGroups()[i];
 
             tmp<volScalarField> dDriftRate
             (
-                iDmdtSign*iDmdt/(fi.phase().rho()*W_[k])
+                dmdtSign*iDmdt/(fi.phase().rho()*W_[k])
             );
 
             if (!numberWeighted_)

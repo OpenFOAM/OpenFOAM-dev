@@ -25,8 +25,8 @@ Class
     Foam::PhaseTransferPhaseSystem
 
 Description
-    Class which models non-thermally-coupled mass transfers; i.e.,
-    representation changes, rather than phase changes.
+   Class which models non-thermally-coupled or weakly thermally coupled
+   mass transfers.
 
 SourceFiles
     PhaseTransferPhaseSystem.C
@@ -75,8 +75,23 @@ private:
             //- Mass transfer models
             phaseTransferModelTable phaseTransferModels_;
 
-            //- Mass transfer rates
+            //- Bulk mass transfer rates
             phaseSystem::dmdtTable rDmdt_;
+
+            //- Specie mass transfer rates
+            phaseSystem::dmidtTable specieDmdt_;
+
+    // Private member functions
+
+        //- Add given species to the speciesDmdt for the given pair
+        virtual void addToSpeciesDmdt
+        (
+            const phasePair& key,
+            const wordList species
+        );
+
+        //- Return the sum of specie transfers across each interface
+        autoPtr<phaseSystem::dmdtTable> sumDmdts() const;
 
 
 protected:

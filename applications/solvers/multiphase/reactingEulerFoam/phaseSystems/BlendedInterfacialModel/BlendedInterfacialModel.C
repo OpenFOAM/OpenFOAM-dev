@@ -291,6 +291,46 @@ Foam::BlendedInterfacialModel<ModelType>::~BlendedInterfacialModel()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class ModelType>
+void Foam::BlendedInterfacialModel<ModelType>::correct()
+{
+    if (model1In2_.valid())
+    {
+        model1In2_->correct();
+    }
+    if (model2In1_.valid())
+    {
+        model2In1_->correct();
+    }
+    if (model_.valid())
+    {
+        model_->correct();
+    }
+}
+
+
+template<class ModelType>
+const Foam::wordList Foam::BlendedInterfacialModel<ModelType>::
+activeSpecies() const
+{
+    wordList activeSpeciesList;
+    if (model1In2_.valid())
+    {
+        activeSpeciesList.append(model1In2_->activeSpecies());
+    }
+    if (model2In1_.valid())
+    {
+        activeSpeciesList.append(model2In1_->activeSpecies());
+    }
+    if (model_.valid())
+    {
+        activeSpeciesList.append(model_->activeSpecies());
+    }
+
+    return activeSpeciesList;
+}
+
+
+template<class ModelType>
 Foam::tmp<Foam::volScalarField>
 Foam::BlendedInterfacialModel<ModelType>::K() const
 {
@@ -348,6 +388,25 @@ Foam::tmp<Foam::volScalarField>
 Foam::BlendedInterfacialModel<ModelType>::dmdt() const
 {
     return evaluate(&ModelType::dmdt, "dmdt", ModelType::dimDmdt, false);
+}
+
+
+template<class ModelType>
+Foam::tmp<Foam::volScalarField>
+Foam::BlendedInterfacialModel<ModelType>::speciesDmdt
+(
+    const word speciesName
+) const
+{
+    return
+        evaluate
+        (
+            &ModelType::speciesDmdt,
+            "speciesDmdt",
+            ModelType::dimDmdt,
+            false,
+            speciesName
+        );
 }
 
 

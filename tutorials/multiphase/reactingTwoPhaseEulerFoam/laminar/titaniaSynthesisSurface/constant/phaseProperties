@@ -78,7 +78,11 @@ particles
             f28{dSph 7.873E-06; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
             f29{dSph 1.136E-05; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
         );
+
+        storeA              on;
     }
+
+    Sct             1.0;
 
     residualAlpha   1e-15;
 }
@@ -92,6 +96,8 @@ vapor
     {
         d           1;
     }
+
+    Sct             1.0;
 
     residualAlpha   1e-5;
 }
@@ -114,7 +120,14 @@ populationBalanceCoeffs
         ();
 
         driftModels
-        ();
+        (
+            phaseChange
+            {
+                pairs ( (particles and vapor) );
+                specie TiO2_s;
+                surfaceGrowthType ParkRogak;
+            }
+        );
 
         nucleationModels
         (
@@ -191,7 +204,7 @@ phaseTransfer
         type reactionDriven;
         reactingPhase vapor;
         targetPhase particles;
-        species (TiO2);
+        species (TiO2 TiO2_s);
     }
 );
 

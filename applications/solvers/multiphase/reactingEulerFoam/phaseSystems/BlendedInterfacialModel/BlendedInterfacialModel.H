@@ -162,6 +162,12 @@ public:
 
     // Member Functions
 
+        //- Correct the underlying models
+        void correct();
+
+        //- Return the list of active species
+        const wordList activeSpecies() const;
+
         //- Return the blended force coefficient
         tmp<volScalarField> K() const;
 
@@ -183,6 +189,9 @@ public:
 
         //- Return the blended mass transfer rate
         tmp<volScalarField> dmdt() const;
+
+        //- Return the blended species transfer rate
+        tmp<volScalarField> speciesDmdt(const word speciesName) const;
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;

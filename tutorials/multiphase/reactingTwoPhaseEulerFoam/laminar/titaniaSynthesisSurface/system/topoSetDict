@@ -9,35 +9,36 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      O2.vapor;
+    class       dictionary;
+    object      topoSetDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    inlet
+actions
+(
     {
-        type            fixedValue;
-        value           uniform 1.551577E-02;
+        name    outlet;
+        type    cellSet;
+        action  new;
+        source  cylinderToCell;
+        sourceInfo
+        {
+            p1           (0.435 0 0);
+            p2           (0.44 0 0);
+            radius       0.015875;
+        }
     }
 
-    outlet
     {
-        type            zeroGradient;
+        name    outlet;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+            set  outlet;
+        }
     }
-
-    wall
-    {
-        type            zeroGradient;
-    }
-}
-
+);
 
 // ************************************************************************* //

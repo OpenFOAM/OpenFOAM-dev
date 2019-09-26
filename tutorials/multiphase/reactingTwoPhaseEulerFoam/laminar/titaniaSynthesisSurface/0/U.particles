@@ -9,14 +9,14 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      O2.vapor;
+    class       volVectorField;
+    object      U.particles;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform (0 0 0);
 
 boundaryField
 {
@@ -24,8 +24,7 @@ boundaryField
 
     inlet
     {
-        type            fixedValue;
-        value           uniform 1.551577E-02;
+        type            zeroGradient;
     }
 
     outlet
@@ -35,9 +34,8 @@ boundaryField
 
     wall
     {
-        type            zeroGradient;
+        type            slip;
     }
 }
-
 
 // ************************************************************************* //

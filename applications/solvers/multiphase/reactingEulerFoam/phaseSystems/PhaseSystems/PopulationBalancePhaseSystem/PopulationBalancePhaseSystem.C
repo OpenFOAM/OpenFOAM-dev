@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PopulationBalancePhaseSystem.H"
-#include "rhoReactionThermo.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
@@ -198,118 +197,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::specieTransfer() const
 
     phaseSystem::specieTransferTable& eqns = eqnsPtr();
 
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered() || !pDmdt_.found(pair))
-        {
-            continue;
-        }
-
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
-
-        forAll(populationBalances_, i)
-        {
-            const Foam::diameterModels::populationBalanceModel& popBal =
-                populationBalances_[i];
-
-            if (popBal.phasePairs().found(pair))
-            {
-                // Both phases are velocity groups and belong to same population
-                // balance -> transfer all species proportionally
-                if (popBal.isVelocityGroupPair(pair))
-                {
-                    // Note that the phase YiEqn does not contain
-                    // a continuity error term,
-                    // so these additions represent the entire mass transfer
-
-                    const volScalarField dmdt(this->pDmdt(pair));
-                    const volScalarField dmdt12(negPart(dmdt));
-                    const volScalarField dmdt21(posPart(dmdt));
-                    const PtrList<volScalarField>& Yi = phase.Y();
-
-                    forAll(Yi, i)
-                    {
-                        const word name
-                        (
-                            IOobject::groupName(Yi[i].member(), phase.name())
-                        );
-
-                        const word otherName
-                        (
-                            IOobject::groupName
-                            (
-                                Yi[i].member(),
-                                otherPhase.name()
-                            )
-                        );
-
-                        *eqns[name] +=
-                            dmdt21*eqns[otherName]->psi()
-                          + fvm::Sp(dmdt12, eqns[name]->psi());
-
-                        *eqns[otherName] -=
-                            dmdt12*eqns[name]->psi()
-                          + fvm::Sp(dmdt21, eqns[otherName]->psi());
-                    }
-                }
-                // The phases do not belong to the same population balance,
-                // transfer each specie separately
-                else
-                {
-
-                    const HashPtrTable<volScalarField>& sDmdt =
-                        popBal.speciesDmdt(pair);
-
-                    forAllConstIter
-                    (
-                        HashPtrTable<volScalarField>,
-                        sDmdt,
-                        sDmdtIter
-                    )
-                    {
-                        const word name
-                        (
-                            IOobject::groupName(sDmdtIter.key(), phase.name())
-                        );
-
-                        const word otherName
-                        (
-                            IOobject::groupName
-                            (
-                                sDmdtIter.key(),
-                                otherPhase.name()
-                            )
-                        );
-
-                        const dimensionedScalar Yismall(dimless, rootVSmall);
-
-                        const volScalarField& Y1 = eqns[name]->psi();
-                        const volScalarField& Y2 = eqns[otherName]->psi();
-
-                        const volScalarField sDmdt12(negPart(**sDmdtIter));
-                        const volScalarField sDmdt21(posPart(**sDmdtIter));
-
-                        *eqns[name] +=
-                            sDmdt21
-                          + fvm::Sp(sDmdt12/(Y1 + Yismall), Y1);
-
-                        *eqns[otherName] -=
-                            sDmdt12
-                          + fvm::Sp(sDmdt21/(Y2 + Yismall), Y2);
-                    }
-
-                }
-            }
-        }
-    }
+    this->addDmdtY(pDmdt_, eqns);
 
     return eqnsPtr;
 }

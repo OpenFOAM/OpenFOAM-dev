@@ -179,19 +179,6 @@ class populationBalanceModel
 :
     public regIOobject
 {
-public:
-
-    // Public Typedefs
-
-        typedef HashPtrTable
-        <
-            HashPtrTable<volScalarField>,
-            phasePairKey,
-            phasePairKey::hash
-        >
-        speciesDmdtTable;
-
-
 private:
 
     // Private Typedefs
@@ -236,9 +223,6 @@ private:
 
         //- List of unordered phasePairs in this populationBalance
         phasePairTable phasePairs_;
-
-        //- Table of species dmdt terms involving this pobulationBalance
-        speciesDmdtTable speciesDmdt_;
 
         //- sizeGroup boundaries
         PtrList<dimensionedScalar> v_;
@@ -437,12 +421,6 @@ public:
 
         //- Return list of unordered phasePairs in this populationBalance
         inline const phasePairTable& phasePairs() const;
-
-        //- Return the list of species specific source terms for the given pair
-        inline const HashPtrTable<volScalarField>& speciesDmdt
-        (
-            const phasePairKey& pair
-        ) const;
 
         //- Returns true if both phases are velocity groups and
         //  belong to this populationBalance

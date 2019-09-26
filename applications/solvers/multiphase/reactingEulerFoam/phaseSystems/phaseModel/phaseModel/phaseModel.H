@@ -261,6 +261,9 @@ public:
             //- Access the active species mass fractions
             virtual UPtrList<volScalarField>& YActiveRef() = 0;
 
+            //- Return the fuel consumption rate matrix
+            virtual tmp<fvScalarMatrix> R(volScalarField& Yi) const = 0;
+
 
         // Momentum
 

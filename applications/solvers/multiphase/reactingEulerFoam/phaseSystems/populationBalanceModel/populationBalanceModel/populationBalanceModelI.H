@@ -98,16 +98,6 @@ Foam::diameterModels::populationBalanceModel::phasePairs() const
 }
 
 
-inline const Foam::HashPtrTable<Foam::volScalarField>&
-Foam::diameterModels::populationBalanceModel::speciesDmdt
-(
-    const phasePairKey& pair
-) const
-{
-    return *speciesDmdt_[pair];
-}
-
-
 inline bool Foam::diameterModels::populationBalanceModel::isVelocityGroupPair
 (
     const phasePair& pair
