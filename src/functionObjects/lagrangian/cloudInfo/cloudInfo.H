@@ -36,7 +36,7 @@ Description
     cloudInfo1
     {
         type        cloudInfo;
-        libs        ("libcloudFunctionObjects.so");
+        libs        ("liblagrangianFunctionObjects.so");
         ...
         clouds
         (

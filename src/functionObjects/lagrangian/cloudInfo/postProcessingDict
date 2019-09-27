@@ -19,7 +19,7 @@ functions
     cloudInfo1
     {
         type            cloudInfo;
-        libs            ("libcloudFunctionObjects.so");
+        libs            ("liblagrangianFunctionObjects.so");
         enabled         true;
         writeControl    timeStep;
         writeInterval   1;
