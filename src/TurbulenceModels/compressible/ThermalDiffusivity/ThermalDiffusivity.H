@@ -142,7 +142,11 @@ public:
         //  of mixture [W/m/K]
         virtual tmp<volScalarField> kappaEff() const
         {
-            return kappa();
+            return volScalarField::New
+            (
+                "kappaEff",
+                this->transport_.kappa()
+            );
         }
 
         //- Effective thermal turbulent diffusivity for temperature
@@ -155,7 +159,11 @@ public:
         //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
         virtual tmp<volScalarField> alphaEff() const
         {
-            return this->transport_.alphahe();
+            return volScalarField::New
+            (
+                "alphaEff",
+                this->transport_.alphahe()
+            );
         }
 
         //- Effective thermal turbulent diffusivity of mixture

@@ -172,7 +172,7 @@ bool Foam::functionObjects::scalarTransport::execute()
         mesh_.lookupObject<surfaceScalarField>(phiName_);
 
     // Calculate the diffusivity
-    volScalarField D(this->D(phi));
+    volScalarField D("D" + s_.name(), this->D(phi));
 
     word divScheme("div(phi," + schemesField_ + ")");
     word laplacianScheme("laplacian(" + D.name() + "," + schemesField_ + ")");

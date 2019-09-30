@@ -808,13 +808,13 @@ bool Foam::Time::run() const
     {
         if (!running && timeIndex_ != startTimeIndex_)
         {
+            functionObjects_.execute();
+            functionObjects_.end();
+
             if (cacheTemporaryObjects_)
             {
                 cacheTemporaryObjects_ = checkCacheTemporaryObjects();
             }
-
-            functionObjects_.execute();
-            functionObjects_.end();
         }
     }
 
@@ -830,12 +830,12 @@ bool Foam::Time::run() const
             }
             else
             {
+                functionObjects_.execute();
+
                 if (cacheTemporaryObjects_)
                 {
                     cacheTemporaryObjects_ = checkCacheTemporaryObjects();
                 }
-
-                functionObjects_.execute();
             }
         }
 

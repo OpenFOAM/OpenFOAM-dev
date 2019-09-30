@@ -763,7 +763,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 diField.mesh().thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                diField.mesh().thisDb().cacheTemporaryObject(name)
             ),
             diField,
             ptfl
@@ -793,7 +793,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                mesh.thisDb().cacheTemporaryObject(name)
             ),
             mesh,
             ds,
@@ -824,7 +824,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                mesh.thisDb().cacheTemporaryObject(name)
             ),
             mesh,
             dt,
@@ -857,7 +857,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                mesh.thisDb().cacheTemporaryObject(name)
             ),
             mesh,
             dt,
@@ -888,7 +888,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 tgf().db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                tgf().db().cacheTemporaryObject(newName)
             ),
             tgf
         )
@@ -918,7 +918,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 tgf().db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                tgf().db().cacheTemporaryObject(newName)
             ),
             tgf,
             patchFieldTypes,

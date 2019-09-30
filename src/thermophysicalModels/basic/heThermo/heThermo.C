@@ -633,9 +633,11 @@ template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::volScalarField>
 Foam::heThermo<BasicThermo, MixtureType>::kappa() const
 {
-    tmp<Foam::volScalarField> kappa(Cp()*this->alpha_);
-    kappa.ref().rename("kappa");
-    return kappa;
+    return volScalarField::New
+    (
+        "kappa",
+        Cp()*this->alpha_
+    );
 }
 
 
@@ -659,9 +661,11 @@ template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::volScalarField>
 Foam::heThermo<BasicThermo, MixtureType>::alphahe() const
 {
-    tmp<Foam::volScalarField> alphaEff(this->CpByCpv()*this->alpha_);
-    alphaEff.ref().rename("alphahe");
-    return alphaEff;
+    return volScalarField::New
+    (
+        "alphahe",
+        this->CpByCpv()*this->alpha_
+    );
 }
 
 
@@ -687,9 +691,11 @@ Foam::heThermo<BasicThermo, MixtureType>::kappaEff
     const volScalarField& alphat
 ) const
 {
-    tmp<Foam::volScalarField> kappaEff(Cp()*(this->alpha_ + alphat));
-    kappaEff.ref().rename("kappaEff");
-    return kappaEff;
+    return volScalarField::New
+    (
+        "kappaEff",
+        Cp()*(this->alpha_ + alphat)
+    );
 }
 
 
@@ -719,9 +725,11 @@ Foam::heThermo<BasicThermo, MixtureType>::alphaEff
     const volScalarField& alphat
 ) const
 {
-    tmp<Foam::volScalarField> alphaEff(this->CpByCpv()*(this->alpha_ + alphat));
-    alphaEff.ref().rename("alphaEff");
-    return alphaEff;
+    return volScalarField::New
+    (
+        "alphaEff",
+        this->CpByCpv()*(this->alpha_ + alphat)
+    );
 }
 
 

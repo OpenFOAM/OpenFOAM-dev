@@ -196,7 +196,19 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
             << " " << name << " from objectRegistry " << this->name()
             << " failed\n    available objects of type " << Type::typeName
             << " are" << nl
-            << names<Type>()
+            << names<Type>();
+
+        if (cacheTemporaryObject(name))
+        {
+            FatalErrorInFunction
+                << nl
+                << "    request for " << name << " from objectRegistry "
+                << this->name() << " to be cached failed" << nl
+                << "    available temporary objects are" << nl
+                << temporaryObjects_;
+        }
+
+        FatalErrorInFunction
             << abort(FatalError);
     }
 
