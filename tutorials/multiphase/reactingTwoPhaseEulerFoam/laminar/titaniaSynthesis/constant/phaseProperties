@@ -80,8 +80,6 @@ particles
         );
     }
 
-    Sct             1.0;
-
     residualAlpha   1e-15;
 }
 
@@ -94,8 +92,6 @@ vapor
     {
         d           1;
     }
-
-    Sct             1.0;
 
     residualAlpha   1e-5;
 }

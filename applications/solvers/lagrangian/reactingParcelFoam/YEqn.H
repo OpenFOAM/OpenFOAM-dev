@@ -24,7 +24,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             (
                 fvm::ddt(rho, Yi)
               + mvConvection->fvmDiv(phi, Yi)
-              - fvm::laplacian(turbulence->muEff(), Yi)
+              - fvm::laplacian(turbulence->alphaEff(), Yi)
               ==
                 parcels.SYi(i, Yi)
               + fvOptions(rho, Yi)

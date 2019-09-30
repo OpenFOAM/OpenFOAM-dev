@@ -28,7 +28,7 @@ License
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "turbulenceModel.H"
+#include "turbulentFluidThermoModel.H"
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
 
@@ -265,16 +265,16 @@ void Foam::semiPermeableBaffleMassFractionFvPatchScalarField::updateCoeffs()
     const scalarField& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    const turbulenceModel& turbModel =
-        db().lookupObject<turbulenceModel>
+    const compressible::turbulenceModel& turbModel =
+        db().lookupObject<compressible::turbulenceModel>
         (
             turbulenceModel::propertiesName
         );
-    const scalarField muEffp(turbModel.muEff(patch().index()));
-    const scalarField AMuEffp(patch().magSf()*muEffp);
+    const scalarField alphaEffp(turbModel.alphaEff(patch().index()));
+    const scalarField AAlphaEffp(patch().magSf()*alphaEffp);
 
-    valueFraction() = phip/(phip - patch().deltaCoeffs()*AMuEffp);
-    refGrad() = - phiY()/AMuEffp;
+    valueFraction() = phip/(phip - patch().deltaCoeffs()*AAlphaEffp);
+    refGrad() = - phiY()/AAlphaEffp;
 
     mixedFvPatchScalarField::updateCoeffs();
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,6 @@ class MultiComponentPhaseModel
 protected:
 
     // Protected data
-
-        //- Turbulent Schmidt number
-        dimensionedScalar Sct_;
 
         //- Residual phase fraction
         dimensionedScalar residualAlpha_;
