@@ -36,6 +36,7 @@ SourceFiles
 #define RBD_restraints_linearSpring_H
 
 #include "rigidBodyRestraint.H"
+#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,6 +72,9 @@ class linearSpring
 
         //- Rest length - length of spring when no forces are applied to it
         scalar restLength_;
+
+        //- Switch to allow no restraint when line is shorter than restLength
+        Switch allowSlack_;
 
 
 public:
