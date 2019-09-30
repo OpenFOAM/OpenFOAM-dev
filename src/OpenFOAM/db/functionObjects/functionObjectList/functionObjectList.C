@@ -565,11 +565,11 @@ void Foam::functionObjectList::clear()
 
 Foam::label Foam::functionObjectList::findObjectID(const word& name) const
 {
-    forAll(*this, objectI)
+    forAll(*this, oi)
     {
-        if (operator[](objectI).name() == name)
+        if (operator[](oi).name() == name)
         {
-            return objectI;
+            return oi;
         }
     }
 
@@ -598,7 +598,21 @@ bool Foam::functionObjectList::status() const
 
 bool Foam::functionObjectList::start()
 {
-    return read();
+    bool ok = read();
+
+    if (execution_)
+    {
+        forAll(*this, oi)
+        {
+            if (operator[](oi).executeAtStart())
+            {
+                ok = operator[](oi).execute() && ok;
+                ok = operator[](oi).write() && ok;
+            }
+        }
+    }
+
+    return ok;
 }
 
 
@@ -613,10 +627,10 @@ bool Foam::functionObjectList::execute()
             read();
         }
 
-        forAll(*this, objectI)
+        forAll(*this, oi)
         {
-            ok = operator[](objectI).execute() && ok;
-            ok = operator[](objectI).write() && ok;
+            ok = operator[](oi).execute() && ok;
+            ok = operator[](oi).write() && ok;
         }
     }
 
@@ -635,9 +649,9 @@ bool Foam::functionObjectList::end()
             read();
         }
 
-        forAll(*this, objectI)
+        forAll(*this, oi)
         {
-            ok = operator[](objectI).end() && ok;
+            ok = operator[](oi).end() && ok;
         }
     }
 
@@ -658,11 +672,11 @@ bool Foam::functionObjectList::setTimeStep()
 
         wordList names;
 
-        forAll(*this, objectI)
+        forAll(*this, oi)
         {
-            if (operator[](objectI).setTimeStep())
+            if (operator[](oi).setTimeStep())
             {
-                names.append(operator[](objectI).name());
+                names.append(operator[](oi).name());
                 set = true;
             }
         }
@@ -693,9 +707,9 @@ Foam::scalar Foam::functionObjectList::timeToNextWrite()
             read();
         }
 
-        forAll(*this, objectI)
+        forAll(*this, oi)
         {
-            result = min(result, operator[](objectI).timeToNextWrite());
+            result = min(result, operator[](oi).timeToNextWrite());
         }
     }
 
@@ -870,9 +884,9 @@ void Foam::functionObjectList::updateMesh(const mapPolyMesh& mpm)
 {
     if (execution_)
     {
-        forAll(*this, objectI)
+        forAll(*this, oi)
         {
-            operator[](objectI).updateMesh(mpm);
+            operator[](oi).updateMesh(mpm);
         }
     }
 }
@@ -882,9 +896,9 @@ void Foam::functionObjectList::movePoints(const polyMesh& mesh)
 {
     if (execution_)
     {
-        forAll(*this, objectI)
+        forAll(*this, oi)
         {
-            operator[](objectI).movePoints(mesh);
+            operator[](oi).movePoints(mesh);
         }
     }
 }

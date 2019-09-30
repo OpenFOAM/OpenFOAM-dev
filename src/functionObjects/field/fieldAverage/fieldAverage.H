@@ -286,6 +286,12 @@ public:
         //- Read the field average data
         virtual bool read(const dictionary&);
 
+        //- Do not average at the start of the run
+        virtual bool executeAtStart() const
+        {
+            return false;
+        }
+
         //- Calculate the field averages
         virtual bool execute();
 

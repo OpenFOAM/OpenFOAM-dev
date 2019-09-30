@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,8 @@ bool Foam::functionObject::postProcess(false);
 Foam::functionObject::functionObject(const word& name)
 :
     name_(name),
-    log(postProcess)
+    log(false),
+    executeAtStart_(true)
 {}
 
 
@@ -128,9 +129,16 @@ bool Foam::functionObject::read(const dictionary& dict)
     if (!postProcess)
     {
         log = dict.lookupOrDefault<Switch>("log", true);
+        executeAtStart_ = dict.lookupOrDefault<Switch>("executeAtStart", true);
     }
 
     return true;
+}
+
+
+bool Foam::functionObject::executeAtStart() const
+{
+    return executeAtStart_;
 }
 
 

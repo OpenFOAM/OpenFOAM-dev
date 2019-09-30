@@ -93,9 +93,23 @@ Foam::functionObjects::timeControl::timeControl
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::functionObjects::timeControl::executeAtStart() const
+{
+    return foPtr_->executeAtStart();
+}
+
+
 bool Foam::functionObjects::timeControl::execute()
 {
-    if (active() && (postProcess || executeControl_.execute()))
+    if
+    (
+        active()
+     && (
+            postProcess
+         || executeControl_.execute()
+         || (executeAtStart() && time_.timeIndex() == time_.startTimeIndex())
+        )
+    )
     {
         foPtr_->execute();
     }
@@ -106,7 +120,15 @@ bool Foam::functionObjects::timeControl::execute()
 
 bool Foam::functionObjects::timeControl::write()
 {
-    if (active() && (postProcess || writeControl_.execute()))
+    if
+    (
+        active()
+     && (
+            postProcess
+         || writeControl_.execute()
+         || (executeAtStart() && time_.timeIndex() == time_.startTimeIndex())
+        )
+    )
     {
         foPtr_->write();
     }

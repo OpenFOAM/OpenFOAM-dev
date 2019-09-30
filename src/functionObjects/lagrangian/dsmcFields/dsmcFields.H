@@ -89,6 +89,12 @@ public:
         //- Read the dsmcFields data
         virtual bool read(const dictionary&);
 
+        //- Do not evaluate the state at the start of the run
+        virtual bool executeAtStart() const
+        {
+            return false;
+        }
+
         //- Do nothing
         virtual bool execute();
 

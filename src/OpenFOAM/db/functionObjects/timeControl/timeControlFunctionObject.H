@@ -142,6 +142,10 @@ public:
 
         // Function object control
 
+            //- Return true if the functionObject should be executed
+            //  at the start
+            virtual bool executeAtStart() const;
+
             //- Called at each ++ or += of the time-loop.
             //  postProcess overrides the usual executeControl behaviour and
             //  forces execution (used in post-processing mode)

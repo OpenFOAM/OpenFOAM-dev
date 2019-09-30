@@ -32,7 +32,7 @@ Description
     field and derived quantities.  Alternatively, the same actions can be
     executed after the simulation using the \c -postProcess command-line option.
 
-    \subsection secFunctionObjects Using function objects
+    \subsection secFunctionObjects Using functionObjects
 
     FunctionObjects are selected by additional entries in the
     $FOAM_CASE/system/controlDict dictionary.  Each object is listed in the \c
@@ -60,7 +60,7 @@ Description
     Where:
     \table
         Property | Description                       | Required | Default value
-        type     | Type of function object               | yes      |
+        type     | Type of functionObject                | yes      |
         libs     | Libraries containing implementation   | yes      |
         region   | Name of region for multi-region cases | no       |
         enabled  | On/off switch                         | no       | yes
@@ -92,7 +92,7 @@ Description
     libraries and the \c libs entry is used to specify which library should be
     loaded.
 
-    Each function object has two separate run phases:
+    Each functionObject has two separate run phases:
 
       - The \c execute phase is meant to be used for updating calculations
         or for management tasks.
@@ -104,7 +104,7 @@ Class
     Foam::functionObject
 
 Description
-    Abstract base-class for Time/database function objects.
+    Abstract base-class for Time/database functionObjects.
 
 See also
     Foam::functionObjectList
@@ -158,6 +158,9 @@ public:
     //- Switch write log to Info
     Switch log;
 
+    //- Switch write log to Info
+    Switch executeAtStart_;
+
 
     // Declare run-time constructor selection tables
 
@@ -207,8 +210,11 @@ public:
         //- Return the name of this functionObject
         const word& name() const;
 
-        //- Read and set the function object if its data have changed
+        //- Read and set the functionObject if its data have changed
         virtual bool read(const dictionary&);
+
+        //- Return true if the functionObject should be executed at the start
+        virtual bool executeAtStart() const;
 
         //- Called at each ++ or += of the time-loop.
         //  postProcess overrides the usual executeControl behaviour and
@@ -224,12 +230,12 @@ public:
         //  By default it simply calls execute().
         virtual bool end();
 
-        //- Called by Time::setDeltaT(). Allows the function object to override
+        //- Called by Time::setDeltaT(). Allows the functionObject to override
         //  the time-step value.
         //  Returns whether or not the value was overridden.
         virtual bool setTimeStep();
 
-        //- Called by Time::adjustTimeStep(). Allows the function object to
+        //- Called by Time::adjustTimeStep(). Allows the functionObject to
         //  insert a write time earlier than that already in use by the run
         //  time. Returns the write time, or vGreat.
         virtual scalar timeToNextWrite();
