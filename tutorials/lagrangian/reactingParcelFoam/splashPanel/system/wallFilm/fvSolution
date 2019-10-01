@@ -10,33 +10,48 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    location    "system/wallFilm";
+    object      fvSolution;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
+solvers
+{
+    "(Uf|hf|deltaf\*rhof)"
     {
-        name    wallFilmFaceSet;
-        type    faceSet;
-        action  new;
-        source  patchToFace;
-        sourceInfo
-        {
-            name filmWalls;
-        }
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-10;
+        relTol          0;
     }
+    deltaf
     {
-        name    wallFilmFaces;
-        type    faceZoneSet;
-        action  new;
-        source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet wallFilmFaceSet;
-        }
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-10;
+        relTol          0;
     }
-);
+}
+
+
+PISO
+{
+    momentumPredictor yes;
+    nCorr           1;
+    nNonOrthCorr    0;
+}
+
+
+relaxationFactors
+{
+    fields
+    {
+        ".*"            1;
+    }
+    equations
+    {
+        ".*"            1;
+    }
+}
 
 // ************************************************************************* //

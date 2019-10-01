@@ -21,11 +21,14 @@ internalField   uniform 100000;
 
 boundaryField
 {
-    sides
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    top
     {
-        type            fixedFluxPressure;
+        type            totalPressure;
+        p0              $internalField;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+    region0_to_wallFilm_walls
     {
         type            fixedFluxPressure;
     }

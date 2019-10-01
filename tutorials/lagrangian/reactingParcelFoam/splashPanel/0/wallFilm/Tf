@@ -9,49 +9,30 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "system/wallFilmRegion";
-    object      fvSolution;
+    class       volScalarField;
+    location    "0/wallFilm";
+    object      Tf;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform  300;
+
+boundaryField
 {
-    "(Uf|hf|deltaf\*rhof)"
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    walls_top
     {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-        tolerance       1e-10;
-        relTol          0;
+        type            zeroGradient;
     }
-    deltaf
+
+    region0_to_wallFilm_walls
     {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-        tolerance       1e-10;
-        relTol          0;
+        type            zeroGradient;
     }
 }
 
-
-PISO
-{
-    momentumPredictor yes;
-    nCorr           1;
-    nNonOrthCorr    0;
-}
-
-
-relaxationFactors
-{
-    fields
-    {
-        ".*"            1;
-    }
-    equations
-    {
-        ".*"            1;
-    }
-}
 
 // ************************************************************************* //
