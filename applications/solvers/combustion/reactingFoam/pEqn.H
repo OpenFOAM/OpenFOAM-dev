@@ -51,7 +51,7 @@ else
     (
         "phiHbyA",
         (
-            fvc::flux(rho*HbyA)
+            fvc::interpolate(rho)*fvc::flux(HbyA)
           + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi))
         )
     );
