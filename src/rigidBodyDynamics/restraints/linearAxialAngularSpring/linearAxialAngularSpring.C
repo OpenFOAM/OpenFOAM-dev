@@ -74,7 +74,8 @@ Foam::RBD::restraints::linearAxialAngularSpring::~linearAxialAngularSpring()
 void Foam::RBD::restraints::linearAxialAngularSpring::restrain
 (
     scalarField& tau,
-    Field<spatialVector>& fx
+    Field<spatialVector>& fx,
+    const rigidBodyModelState& state
 ) const
 {
     vector refDir = rotationTensor(vector(1, 0, 0), axis_) & vector(0, 1, 0);

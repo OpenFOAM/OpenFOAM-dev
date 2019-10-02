@@ -74,7 +74,8 @@ Foam::RBD::restraints::linearDamper::~linearDamper()
 void Foam::RBD::restraints::linearDamper::restrain
 (
     scalarField& tau,
-    Field<spatialVector>& fx
+    Field<spatialVector>& fx,
+    const rigidBodyModelState& state
 ) const
 {
     vector force = -coeff_*model_.v(model_.master(bodyID_)).l();

@@ -327,7 +327,12 @@ public:
 
         //- Apply the restraints and accumulate the internal joint forces
         //  into the tau field and external forces into the fx field
-        void applyRestraints(scalarField& tau, Field<spatialVector>& fx) const;
+        void applyRestraints
+        (
+            scalarField& tau,
+            Field<spatialVector>& fx,
+            const rigidBodyModelState& state
+        ) const;
 
         //- Calculate the joint acceleration qDdot from the joint state q,
         //  velocity qDot, internal force tau (in the joint frame) and

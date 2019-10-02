@@ -74,7 +74,8 @@ Foam::RBD::restraints::linearSpring::~linearSpring()
 void Foam::RBD::restraints::linearSpring::restrain
 (
     scalarField& tau,
-    Field<spatialVector>& fx
+    Field<spatialVector>& fx,
+    const rigidBodyModelState& state
 ) const
 {
     point attachmentPt = bodyPoint(refAttachmentPt_);

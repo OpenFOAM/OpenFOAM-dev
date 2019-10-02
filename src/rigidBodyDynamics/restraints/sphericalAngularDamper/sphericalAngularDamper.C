@@ -74,7 +74,8 @@ Foam::RBD::restraints::sphericalAngularDamper::~sphericalAngularDamper()
 void Foam::RBD::restraints::sphericalAngularDamper::restrain
 (
     scalarField& tau,
-    Field<spatialVector>& fx
+    Field<spatialVector>& fx,
+    const rigidBodyModelState& state
 ) const
 {
     vector moment = -coeff_*model_.v(model_.master(bodyID_)).w();

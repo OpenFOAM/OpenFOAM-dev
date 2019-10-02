@@ -106,7 +106,8 @@ public:
         virtual void restrain
         (
             scalarField& tau,
-            Field<spatialVector>& fx
+            Field<spatialVector>& fx,
+            const rigidBodyModelState& state
         ) const;
 
         //- Update properties from given dictionary
