@@ -307,20 +307,6 @@ void nextFile(const char* fileName)
         return;   /* Already existed (did not insert) */
     }
 
-    /* Check if the file has same path as the last file read */
-    if (currentPath != NULL)
-    {
-        char* pathName = addDirectoryName(currentPath, fileName);
-
-        if (access(pathName, R_OK ) != -1)
-        {
-            addFile(pathName);
-            return;
-        }
-
-        free(pathName);
-    }
-
     if (access(fileName, R_OK ) != -1)
     {
         addFile(strdup(fileName));
