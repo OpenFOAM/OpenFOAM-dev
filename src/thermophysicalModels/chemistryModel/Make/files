@@ -10,6 +10,7 @@ reactions/makeReactions.C
 reactions/makeLangmuirHinshelwoodReactions.C
 reactions/makeMichaelisMentenReactions.C
 reactions/fluxLimitedLangmuirHinshelwood/makefluxLimitedLangmuirHinshelwoodReactions.C
+reactions/surfaceArrheniusReactionRate/makesurfaceArrheniusReactions.C
 
 functionObjects/specieReactionRates/specieReactionRates.C
 
