@@ -22,20 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::constant
+    Foam::diameterModels::spherical
 
 Description
-    Constant dispersed-phase particle diameter model.
+    Base class for models which represent spherical diameter models, providing
+    a common implementation of surface area per unit volume
 
 SourceFiles
-    constant.C
+    sphericalDiameter.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constantDiameter_H
-#define constantDiameter_H
+#ifndef sphericalDiameter_H
+#define sphericalDiameter_H
 
-#include "sphericalDiameter.H"
+#include "diameterModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,37 +46,30 @@ namespace diameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class constant Declaration
+                       Class spherical Declaration
 \*---------------------------------------------------------------------------*/
 
-class constant
+class spherical
 :
-    public spherical
+    public diameterModel
 {
-    // Private Data
-
-        //- The constant diameter of the phase
-        dimensionedScalar d_;
-
-
 protected:
 
     // Protected Member Functions
 
         //- Get the diameter field
-        virtual tmp<volScalarField> calcD() const;
+        virtual tmp<volScalarField> calcA() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("constant");
+    TypeName("spherical");
 
 
     // Constructors
 
-        //- Construct from components
-        constant
+        spherical
         (
             const dictionary& diameterProperties,
             const phaseModel& phase
@@ -83,13 +77,7 @@ public:
 
 
     //- Destructor
-    virtual ~constant();
-
-
-    // Member Functions
-
-        //- Read diameterProperties dictionary
-        virtual bool read(const dictionary& diameterProperties);
+    virtual ~spherical();
 };
 
 

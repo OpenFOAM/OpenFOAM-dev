@@ -33,14 +33,16 @@ namespace Foam
 namespace diameterModels
 {
     defineTypeNameAndDebug(isothermal, 0);
-
-    addToRunTimeSelectionTable
-    (
-        diameterModel,
-        isothermal,
-        dictionary
-    );
+    addToRunTimeSelectionTable(diameterModel, isothermal, dictionary);
 }
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::isothermal::calcD() const
+{
+    return d_;
 }
 
 
@@ -52,23 +54,13 @@ Foam::diameterModels::isothermal::isothermal
     const phaseModel& phase
 )
 :
-    diameterModel(diameterProperties, phase),
-    d0_("d0", dimLength, diameterProperties_),
-    p0_("p0", dimPressure, diameterProperties_),
-    d_
-    (
-        IOobject
-        (
-            IOobject::groupName("d", phase.name()),
-            phase_.time().timeName(),
-            phase_.mesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        phase_.mesh(),
-        d0_
-    )
-{}
+    spherical(diameterProperties, phase),
+    d0_("d0", dimLength, diameterProperties),
+    p0_("p0", dimPressure, diameterProperties),
+    d_(dRef())
+{
+    d_ = d0_;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -79,15 +71,9 @@ Foam::diameterModels::isothermal::~isothermal()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::isothermal::d() const
-{
-    return d_;
-}
-
-
 void Foam::diameterModels::isothermal::correct()
 {
-    const volScalarField& p = phase_.db().lookupObject<volScalarField>("p");
+    const volScalarField& p = phase().db().lookupObject<volScalarField>("p");
 
     d_ = d0_*pow(p0_/p, 1.0/3.0);
 }
@@ -95,10 +81,10 @@ void Foam::diameterModels::isothermal::correct()
 
 bool Foam::diameterModels::isothermal::read(const dictionary& phaseProperties)
 {
-    diameterModel::read(phaseProperties);
+    spherical::read(phaseProperties);
 
-    diameterProperties_.lookup("d0") >> d0_;
-    diameterProperties_.lookup("p0") >> p0_;
+    diameterProperties().lookup("d0") >> d0_;
+    diameterProperties().lookup("p0") >> p0_;
 
     return true;
 }

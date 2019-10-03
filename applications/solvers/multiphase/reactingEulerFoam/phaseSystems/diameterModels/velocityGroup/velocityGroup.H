@@ -108,7 +108,7 @@ class velocityGroup
         PtrList<sizeGroup> sizeGroups_;
 
         //- Sauter-mean diameter of the phase
-        volScalarField d_;
+        volScalarField& d_;
 
         //- Multivariate convection scheme
         tmp<fv::convectionScheme<scalar>> mvConvection_;
@@ -131,6 +131,17 @@ class velocityGroup
         void scale();
 
         tmp<Foam::fv::convectionScheme<Foam::scalar>> mvconvection() const;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const;
+
+        //- Get the surface area per unit volume field
+        virtual tmp<volScalarField> calcA() const;
 
 
 public:
@@ -181,9 +192,6 @@ public:
 
         //- Read diameterProperties dictionary
         virtual bool read(const dictionary& diameterProperties);
-
-        //- Return the Sauter-mean diameter
-        virtual tmp<volScalarField> d() const;
 };
 
 

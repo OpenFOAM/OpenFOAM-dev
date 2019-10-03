@@ -35,7 +35,7 @@ SourceFiles
 #ifndef isothermalDiameter_H
 #define isothermalDiameter_H
 
-#include "diameterModel.H"
+#include "sphericalDiameter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,7 +50,7 @@ namespace diameterModels
 
 class isothermal
 :
-    public diameterModel
+    public spherical
 {
     // Private Data
 
@@ -60,8 +60,16 @@ class isothermal
         //- Reference pressure for the isothermal expansion
         dimensionedScalar p0_;
 
-        //- Actual diameter field
-        volScalarField d_;
+        //- Diameter field
+        volScalarField& d_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const;
 
 
 public:
@@ -85,9 +93,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the diameter field
-        virtual tmp<volScalarField> d() const;
 
         //- Correct the diameter field
         virtual void correct();

@@ -36,13 +36,7 @@ namespace Foam
 namespace diameterModels
 {
     defineTypeNameAndDebug(velocityGroup, 0);
-
-    addToRunTimeSelectionTable
-    (
-        diameterModel,
-        velocityGroup,
-        dictionary
-    );
+    addToRunTimeSelectionTable(diameterModel, velocityGroup, dictionary);
 }
 }
 
@@ -56,7 +50,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::dsm() const
         volScalarField::New
         (
             "invDsm",
-            phase_.mesh(),
+            phase().mesh(),
             dimensionedScalar(inv(dimLength), Zero)
         )
     );
@@ -81,7 +75,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::N() const
         volScalarField::New
         (
             "N",
-            phase_.mesh(),
+            phase().mesh(),
             dimensionedScalar(inv(dimVolume), 0)
         )
     );
@@ -90,7 +84,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::N() const
 
     forAll(sizeGroups_, i)
     {
-        N += phase_*sizeGroups_[i]/sizeGroups_[i].x();
+        N += phase()*sizeGroups_[i]/sizeGroups_[i].x();
     }
 
     return tN;
@@ -105,7 +99,7 @@ Foam::diameterModels::velocityGroup::fSum() const
         volScalarField::New
         (
             "sumSizeGroups",
-            phase_.mesh(),
+            phase().mesh(),
             dimensionedScalar(dimless, 0)
         )
     );
@@ -123,7 +117,7 @@ Foam::diameterModels::velocityGroup::fSum() const
 
 void Foam::diameterModels::velocityGroup::scale()
 {
-    Info<< "Scaling sizeGroups for velocityGroup " << phase_.name() << endl;
+    Info<< "Scaling sizeGroups for velocityGroup " << phase().name() << endl;
 
     forAll(sizeGroups_, i)
     {
@@ -146,17 +140,52 @@ Foam::diameterModels::velocityGroup::mvconvection() const
     (
         fv::convectionScheme<Foam::scalar>::New
         (
-            phase_.mesh(),
+            phase().mesh(),
             fields_,
-            phase_.alphaRhoPhi(),
-            phase_.mesh().divScheme
+            phase().alphaRhoPhi(),
+            phase().mesh().divScheme
             (
-                "div(" + phase_.alphaRhoPhi()().name() + ",f)"
+                "div(" + phase().alphaRhoPhi()().name() + ",f)"
             )
         )
     );
 
     return mvConvection;
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::velocityGroup::calcD() const
+{
+    return d_;
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::velocityGroup::calcA() const
+{
+    tmp<volScalarField> tA
+    (
+        volScalarField::New
+        (
+            "a",
+            phase().mesh(),
+            dimensionedScalar(inv(dimLength), Zero)
+        )
+    );
+
+    volScalarField& a = tA.ref();
+
+    forAll(sizeGroups_, i)
+    {
+        const sizeGroup& fi = sizeGroups_[i];
+
+        a += fi.a()*fi/fi.x();
+    }
+
+    return phase()*a;
 }
 
 
@@ -195,19 +224,7 @@ Foam::diameterModels::velocityGroup::velocityGroup
         diameterProperties.lookup("sizeGroups"),
         sizeGroup::iNew(phase, *this)
     ),
-    d_
-    (
-        IOobject
-        (
-            IOobject::groupName("d", phase.name()),
-            phase.time().timeName(),
-            phase.mesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        phase.mesh(),
-        dimensionedScalar(dimLength, Zero)
-    ),
+    d_(dRef()),
     dmdt_
     (
         IOobject
@@ -237,7 +254,6 @@ Foam::diameterModels::velocityGroup::~velocityGroup()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-
 void Foam::diameterModels::velocityGroup::preSolve()
 {
     mvConvection_ = mvconvection();
@@ -248,7 +264,7 @@ void Foam::diameterModels::velocityGroup::postSolve()
 {
     if
     (
-        phase_.mesh().solverDict(popBalName_).lookupOrDefault<Switch>
+        phase().mesh().solverDict(popBalName_).lookupOrDefault<Switch>
         (
             "scale",
             true
@@ -262,8 +278,8 @@ void Foam::diameterModels::velocityGroup::postSolve()
 
     f_.correctBoundaryConditions();
 
-    Info<< phase_.name() << " sizeGroups-sum volume fraction, min, max = "
-        << f_.weightedAverage(phase_.mesh().V()).value()
+    Info<< phase().name() << " sizeGroups-sum volume fraction, min, max = "
+        << f_.weightedAverage(phase().mesh().V()).value()
         << ' ' << min(f_).value()
         << ' ' << max(f_).value()
         << endl;
@@ -278,19 +294,15 @@ void Foam::diameterModels::velocityGroup::postSolve()
 }
 
 
-bool Foam::diameterModels::velocityGroup::
-read(const dictionary& phaseProperties)
+bool Foam::diameterModels::velocityGroup::read
+(
+    const dictionary& phaseProperties
+)
 {
     diameterModel::read(phaseProperties);
 
     return true;
 }
 
-
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::velocityGroup::d() const
-{
-    return d_;
-}
 
 // ************************************************************************* //

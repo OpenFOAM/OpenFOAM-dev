@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constantDiameter.H"
+#include "sphericalDiameter.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,54 +32,36 @@ namespace Foam
 {
 namespace diameterModels
 {
-    defineTypeNameAndDebug(constant, 0);
-    addToRunTimeSelectionTable(diameterModel, constant, dictionary);
+    defineTypeNameAndDebug(spherical, 0);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::constant::calcD() const
+Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::spherical::calcA() const
 {
-    return volScalarField::New
-    (
-        IOobject::groupName("d", phase().name()),
-        phase().mesh(),
-        d_
-    );
+    return 6*phase()/d();
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::constant::constant
+Foam::diameterModels::spherical::spherical
 (
     const dictionary& diameterProperties,
     const phaseModel& phase
 )
 :
-    spherical(diameterProperties, phase),
-    d_("d", dimLength, diameterProperties)
+    diameterModel(diameterProperties, phase)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::diameterModels::constant::~constant()
+Foam::diameterModels::spherical::~spherical()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::diameterModels::constant::read(const dictionary& phaseProperties)
-{
-    spherical::read(phaseProperties);
-
-    diameterProperties().lookup("d") >> d_;
-
-    return true;
-}
 
 
 // ************************************************************************* //

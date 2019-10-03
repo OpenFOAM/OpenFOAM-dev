@@ -83,7 +83,7 @@ class IATE
         dimensionedScalar residualAlpha_;
 
         //- The Sauter-mean diameter of the phase
-        volScalarField d_;
+        volScalarField& d_;
 
         //- IATE sources
         PtrList<IATEsource> sources_;
@@ -92,6 +92,17 @@ class IATE
     // Private Member Functions
 
         tmp<volScalarField> dsm() const;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const;
+
+        //- Get the surface area per unit volume field
+        virtual tmp<volScalarField> calcA() const;
 
 
 public:
@@ -119,21 +130,9 @@ public:
     // Member Functions
 
         //- Return the interfacial curvature
-        const volScalarField& kappai() const
+        inline const volScalarField& kappai() const
         {
             return kappai_;
-        }
-
-        //- Return the interfacial area
-        tmp<volScalarField> a() const
-        {
-            return phase_*kappai_;
-        }
-
-        //- Return the Sauter-mean diameter
-        virtual tmp<volScalarField> d() const
-        {
-            return d_;
         }
 
         //- Correct the diameter field

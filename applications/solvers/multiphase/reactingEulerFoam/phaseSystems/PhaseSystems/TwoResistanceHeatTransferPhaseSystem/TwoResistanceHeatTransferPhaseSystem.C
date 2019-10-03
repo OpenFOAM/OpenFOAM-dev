@@ -353,7 +353,7 @@ TwoResistanceHeatTransferPhaseSystem
         }
     }
 
-    // Calculate initial Tf-s as if there is no mass transfer
+    // Calculate initial Tf-s as the mean between the two phases
     forAllConstIter
     (
         heatTransferModelTable,
@@ -363,15 +363,8 @@ TwoResistanceHeatTransferPhaseSystem
     {
         const phasePair& pair = this->phasePairs_[heatTransferModelIter.key()];
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
-
-        const volScalarField& T1(phase1.thermo().T());
-        const volScalarField& T2(phase2.thermo().T());
-
-        volScalarField H1(heatTransferModels_[pair].first()->K());
-        volScalarField H2(heatTransferModels_[pair].second()->K());
-        dimensionedScalar HSmall("small", heatTransferModel::dimK, small);
+        const volScalarField& T1(pair.phase1().thermo().T());
+        const volScalarField& T2(pair.phase2().thermo().T());
 
         Tf_.insert
         (
@@ -386,7 +379,7 @@ TwoResistanceHeatTransferPhaseSystem
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
                 ),
-                (H1*T1 + H2*T2)/max(H1 + H2, HSmall)
+                (T1 + T2)/2
             )
         );
     }

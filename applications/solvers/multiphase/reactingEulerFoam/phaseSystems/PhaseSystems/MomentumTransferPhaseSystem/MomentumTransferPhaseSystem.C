@@ -220,21 +220,13 @@ MomentumTransferPhaseSystem
         Kds_.insert
         (
             pair,
-            new volScalarField
-            (
-                IOobject::groupName("Kd", pair.name()),
-                dragModelIter()->K()
-            )
+            zeroVolField<scalar>(pair, "Kd", dragModel::dimK).ptr()
         );
 
         Kdfs_.insert
         (
             pair,
-            new surfaceScalarField
-            (
-                IOobject::groupName("Kdf", pair.name()),
-                dragModelIter()->Kf()
-            )
+            zeroSurfaceField<scalar>(pair, "Kdf", dragModel::dimK).ptr()
         );
     }
 
@@ -250,21 +242,13 @@ MomentumTransferPhaseSystem
         Vms_.insert
         (
             pair,
-            new volScalarField
-            (
-                IOobject::groupName("Vm", pair.name()),
-                virtualMassModelIter()->K()
-            )
+            zeroVolField<scalar>(pair, "Vm", virtualMassModel::dimK).ptr()
         );
 
         Vmfs_.insert
         (
             pair,
-            new surfaceScalarField
-            (
-                IOobject::groupName("Vmf", pair.name()),
-                virtualMassModelIter()->Kf()
-            )
+            zeroSurfaceField<scalar>(pair, "Vmf", virtualMassModel::dimK).ptr()
         );
     }
 }
