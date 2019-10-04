@@ -91,6 +91,7 @@ primitives/triad/triad.C
 /* Run-time selectable functions */
 primitives/functions/Function1/makeFunction1s.C
 primitives/functions/Function1/ramp/ramp.C
+primitives/functions/Function1/reverseRamp/reverseRamp.C
 primitives/functions/Function1/linearRamp/linearRamp.C
 primitives/functions/Function1/quadraticRamp/quadraticRamp.C
 primitives/functions/Function1/quarterSineRamp/quarterSineRamp.C
