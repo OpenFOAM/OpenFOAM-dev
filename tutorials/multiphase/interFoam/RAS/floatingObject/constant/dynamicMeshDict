@@ -71,17 +71,6 @@ rigidBodyMotionCoeffs
             outerDistance   0.35;
         }
     }
-
-    restraints
-    {
-        force
-        {
-            type externalForce;
-            body floatingObject;
-            location (0 0 0);
-            force    (100 0 0);
-        }
-    }
 }
 
 
