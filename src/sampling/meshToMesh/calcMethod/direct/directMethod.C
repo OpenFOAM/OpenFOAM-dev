@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,10 +75,10 @@ bool Foam::directMethod::findInitialSeeds
             const point srcCtr(srcCells[srcI].centre(srcPts, srcFaces));
             label tgtI = tgt_.cellTree().findInside(srcCtr);
 
-                if (tgtI != -1 && intersect(srcI, tgtI))
-                {
-                    srcSeedI = srcI;
-                    tgtSeedI = tgtI;
+            if (tgtI != -1 && intersect(srcI, tgtI))
+            {
+                srcSeedI = srcI;
+                tgtSeedI = tgtI;
 
                 return true;
             }
