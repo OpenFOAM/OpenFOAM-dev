@@ -21,7 +21,7 @@ internalField   uniform 1;
 
 boundaryField
 {
-    Default_Boundary_Region
+    walls
     {
         type            kqRWallFunction;
         value           uniform 1;

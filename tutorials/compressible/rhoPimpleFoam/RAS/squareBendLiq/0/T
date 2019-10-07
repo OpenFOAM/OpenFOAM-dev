@@ -20,7 +20,7 @@ internalField   uniform 300;
 
 boundaryField
 {
-    Default_Boundary_Region
+    walls
     {
         type            fixedValue;
         value           uniform 350;

@@ -21,7 +21,7 @@ internalField   uniform 200;
 
 boundaryField
 {
-    Default_Boundary_Region
+    walls
     {
         type            epsilonWallFunction;
         Cmu             0.09;

@@ -21,31 +21,24 @@ internalField   uniform 0;
 
 boundaryField
 {
-    front
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-    back
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
     walls
     {
         type            nutkWallFunction;
         value           uniform 0;
     }
+
     porosityWall
     {
         type            nutkWallFunction;
         value           uniform 0;
     }
+
     inlet
     {
         type            calculated;
         value           uniform 0;
     }
+
     outlet
     {
         type            calculated;

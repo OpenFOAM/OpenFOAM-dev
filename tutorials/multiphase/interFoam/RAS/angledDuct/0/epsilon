@@ -21,32 +21,25 @@ internalField   uniform 200;
 
 boundaryField
 {
-    front
-    {
-        type            epsilonWallFunction;
-        value           uniform 200;
-    }
-    back
-    {
-        type            epsilonWallFunction;
-        value           uniform 200;
-    }
     walls
     {
         type            epsilonWallFunction;
         value           uniform 200;
     }
+
     porosityWall
     {
         type            epsilonWallFunction;
         value           uniform 200;
     }
+
     inlet
     {
         type            turbulentMixingLengthDissipationRateInlet;
         mixingLength    0.005;
         value           uniform 200;
     }
+
     outlet
     {
         type            inletOutlet;

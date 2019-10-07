@@ -21,18 +21,6 @@ internalField   uniform 1;
 
 boundaryField
 {
-    front
-    {
-        type            kqRWallFunction;
-        value           uniform 1;
-    }
-
-    back
-    {
-        type            kqRWallFunction;
-        value           uniform 1;
-    }
-
     walls
     {
         type            kqRWallFunction;

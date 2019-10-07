@@ -20,7 +20,7 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    Default_Boundary_Region
+    walls
     {
         type            noSlip;
     }

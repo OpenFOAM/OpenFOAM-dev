@@ -21,18 +21,6 @@ internalField   uniform 200;
 
 boundaryField
 {
-    front
-    {
-        type            epsilonWallFunction;
-        value           uniform 200;
-    }
-
-    back
-    {
-        type            epsilonWallFunction;
-        value           uniform 200;
-    }
-
     walls
     {
         type            epsilonWallFunction;

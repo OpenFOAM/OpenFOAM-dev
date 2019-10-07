@@ -20,31 +20,24 @@ internalField   uniform 0;
 
 boundaryField
 {
-    front
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-    back
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
     walls
     {
         type            fixedFluxPressure;
         value           $internalField;
     }
+
     porosityWall
     {
         type            fixedFluxPressure;
         value           $internalField;
     }
+
     inlet
     {
         type            fixedFluxPressure;
         value           $internalField;
     }
+
     outlet
     {
         type            fixedValue;

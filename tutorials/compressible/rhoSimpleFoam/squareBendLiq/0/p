@@ -20,7 +20,7 @@ internalField   uniform 1e5;
 
 boundaryField
 {
-    Default_Boundary_Region
+    walls
     {
         type            zeroGradient;
     }
