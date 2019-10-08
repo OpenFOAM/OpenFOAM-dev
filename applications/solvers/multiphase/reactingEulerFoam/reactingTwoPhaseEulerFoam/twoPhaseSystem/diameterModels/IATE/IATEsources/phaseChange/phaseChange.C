@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,9 @@ Foam::diameterModels::IATEsources::phaseChange::phaseChange
 )
 :
     IATEsource(iate),
-    pairName_(dict.lookup("pairName")),
-    iDmdtPtr_(nullptr)
+    otherPhaseName_(dict.lookup("otherPhase")),
+    dmdtfName_(dict.lookup("dmdtf")),
+    specieName_(dict.lookupOrDefault<word>("specie", word::null))
 {}
 
 
@@ -69,23 +70,26 @@ Foam::diameterModels::IATEsources::phaseChange::R
     volScalarField& kappai
 ) const
 {
-    if (!iDmdtPtr_)
-    {
-        iDmdtPtr_ = &alphai.mesh().lookupObject<volScalarField>
+    const phasePair& pair =
+        phase().fluid().phasePairs()
+        [
+            phasePairKey(phase().name(), otherPhaseName_)
+        ];
+
+    const volScalarField& dmdtf =
+        alphai.mesh().lookupObject<volScalarField>
         (
-            IOobject::groupName("iDmdt", pairName_)
+            IOobject::groupName
+            (
+                IOobject::groupName(dmdtfName_, specieName_),
+                pair.name()
+            )
         );
-    }
 
-    const volScalarField& iDmdt = *iDmdtPtr_;
+    const label dmdtfSign =
+        phase().name() == pair.first() ? +1 : -1;
 
-    return -fvm::SuSp
-    (
-        (1.0/3.0)
-       *iDmdt()
-       /(alphai()*phase().rho()()),
-        kappai
-    );
+    return -fvm::SuSp(dmdtfSign*dmdtf/(3*alphai*phase().rho()), kappai);
 }
 
 

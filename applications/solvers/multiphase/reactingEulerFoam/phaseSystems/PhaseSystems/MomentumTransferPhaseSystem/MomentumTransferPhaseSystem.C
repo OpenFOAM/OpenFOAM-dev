@@ -119,18 +119,18 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Vm
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::addDmdtU
+void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::addDmdtUfs
 (
-    const phaseSystem::dmdtTable& dmdts,
+    const phaseSystem::dmdtfTable& dmdtfs,
     phaseSystem::momentumTransferTable& eqns
 )
 {
-    forAllConstIter(phaseSystem::dmdtTable, dmdts, dmdtIter)
+    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        const phasePairKey& key = dmdtIter.key();
+        const phasePairKey& key = dmdtfIter.key();
         const phasePair& pair(this->phasePairs_[key]);
 
-        const volScalarField dmdt(Pair<word>::compare(pair, key)**dmdtIter());
+        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
 
         phaseModel& phase1 = this->phases()[pair.phase1().name()];
         phaseModel& phase2 = this->phases()[pair.phase2().name()];
@@ -150,18 +150,18 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::addDmdtU
 
         if (!phase1.stationary())
         {
-            const volScalarField dmdt21(posPart(dmdt));
+            const volScalarField dmdtf21(posPart(dmdtf));
 
             *eqns[phase1.name()] +=
-                dmdt21*phase2.U() - fvm::Sp(dmdt21, phase1.URef());
+                dmdtf21*phase2.U() - fvm::Sp(dmdtf21, phase1.URef());
         }
 
         if (!phase2.stationary())
         {
-            const volScalarField dmdt12(negPart(dmdt));
+            const volScalarField dmdtf12(negPart(dmdtf));
 
             *eqns[phase2.name()] -=
-                dmdt12*phase1.U() - fvm::Sp(dmdt12, phase2.URef());
+                dmdtf12*phase1.U() - fvm::Sp(dmdtf12, phase2.URef());
         }
     }
 }
@@ -220,13 +220,33 @@ MomentumTransferPhaseSystem
         Kds_.insert
         (
             pair,
-            zeroVolField<scalar>(pair, "Kd", dragModel::dimK).ptr()
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("Kd", pair.name()),
+                    this->mesh().time().timeName(),
+                    this->mesh()
+                ),
+                this->mesh(),
+                dimensionedScalar(dragModel::dimK, 0)
+            )
         );
 
         Kdfs_.insert
         (
             pair,
-            zeroSurfaceField<scalar>(pair, "Kdf", dragModel::dimK).ptr()
+            new surfaceScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("Kdf", pair.name()),
+                    this->mesh().time().timeName(),
+                    this->mesh()
+                ),
+                this->mesh(),
+                dimensionedScalar(dragModel::dimK, 0)
+            )
         );
     }
 
@@ -242,13 +262,33 @@ MomentumTransferPhaseSystem
         Vms_.insert
         (
             pair,
-            zeroVolField<scalar>(pair, "Vm", virtualMassModel::dimK).ptr()
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("Vm", pair.name()),
+                    this->mesh().time().timeName(),
+                    this->mesh()
+                ),
+                this->mesh(),
+                dimensionedScalar(virtualMassModel::dimK, 0)
+            )
         );
 
         Vmfs_.insert
         (
             pair,
-            zeroSurfaceField<scalar>(pair, "Vmf", virtualMassModel::dimK).ptr()
+            new surfaceScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("Vmf", pair.name()),
+                    this->mesh().time().timeName(),
+                    this->mesh()
+                ),
+                this->mesh(),
+                dimensionedScalar(virtualMassModel::dimK, 0)
+            )
         );
     }
 }

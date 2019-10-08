@@ -73,10 +73,8 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField(p, iF),
-    otherPhaseName_("vapor"),
+    alphatPhaseChangeWallFunctionFvPatchScalarField(p, iF),
     phaseType_(liquidPhase),
-    relax_(0.1),
     AbyV_(p.size(), 0),
     alphatConv_(p.size(), 0),
     dDep_(p.size(), 1e-5),
@@ -103,10 +101,8 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField(p, iF, dict),
-    otherPhaseName_(dict.lookup("otherPhase")),
+    alphatPhaseChangeWallFunctionFvPatchScalarField(p, iF, dict),
     phaseType_(phaseTypeNames_.read(dict.lookup("phaseType"))),
-    relax_(dict.lookupOrDefault<scalar>("relax", 0.1)),
     AbyV_(p.size(), 0),
     alphatConv_(p.size(), 0),
     dDep_(p.size(), 1e-5),
@@ -116,18 +112,6 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     departureDiamModel_(nullptr),
     departureFreqModel_(nullptr)
 {
-
-    // Check that otherPhaseName != this phase
-    if (internalField().group() == otherPhaseName_)
-    {
-        FatalErrorInFunction
-            << "otherPhase should be the name of the vapor phase that "
-            << "corresponds to the liquid base of vice versa" << nl
-            << "This phase: " << internalField().group() << nl
-            << "otherPhase: " << otherPhaseName_
-            << abort(FatalError);
-    }
-
     switch (phaseType_)
     {
         case vaporPhase:
@@ -138,7 +122,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
                     dict.subDict("partitioningModel")
                 );
 
-            dmdt_ = 0;
+            dmdtf_ = 0;
 
             break;
         }
@@ -205,16 +189,14 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+    alphatPhaseChangeWallFunctionFvPatchScalarField
     (
         psf,
         p,
         iF,
         mapper
     ),
-    otherPhaseName_(psf.otherPhaseName_),
     phaseType_(psf.phaseType_),
-    relax_(psf.relax_),
     AbyV_(psf.AbyV_),
     alphatConv_(mapper(psf.alphatConv_)),
     dDep_(mapper(psf.dDep_)),
@@ -232,10 +214,8 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     const alphatWallBoilingWallFunctionFvPatchScalarField& psf
 )
 :
-    alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField(psf),
-    otherPhaseName_(psf.otherPhaseName_),
+    alphatPhaseChangeWallFunctionFvPatchScalarField(psf),
     phaseType_(psf.phaseType_),
-    relax_(psf.relax_),
     AbyV_(psf.AbyV_),
     alphatConv_(psf.alphatConv_),
     dDep_(psf.dDep_),
@@ -254,10 +234,8 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField(psf, iF),
-    otherPhaseName_(psf.otherPhaseName_),
+    alphatPhaseChangeWallFunctionFvPatchScalarField(psf, iF),
     phaseType_(psf.phaseType_),
-    relax_(psf.relax_),
     AbyV_(psf.AbyV_),
     alphatConv_(psf.alphatConv_),
     dDep_(psf.dDep_),
@@ -270,53 +248,6 @@ alphatWallBoilingWallFunctionFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool alphatWallBoilingWallFunctionFvPatchScalarField::
-activePhasePair(const phasePairKey& phasePair) const
-{
-    if (phasePair == phasePairKey(otherPhaseName_, internalField().group()))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-const scalarField& alphatWallBoilingWallFunctionFvPatchScalarField::
-dmdt(const phasePairKey& phasePair) const
-{
-    if (activePhasePair(phasePair))
-    {
-        return dmdt_;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << " dmdt requested for invalid phasePair!"
-            << abort(FatalError);
-
-        return dmdt_;
-    }
-}
-
-const scalarField& alphatWallBoilingWallFunctionFvPatchScalarField::
-mDotL(const phasePairKey& phasePair) const
-{
-    if (activePhasePair(phasePair))
-    {
-        return mDotL_;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << " mDotL requested for invalid phasePair!"
-            << abort(FatalError);
-
-        return mDotL_;
-    }
-}
 
 void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 {
@@ -594,13 +525,13 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 // Volumetric mass source in the near wall cell due to the
                 // wall boiling
-                dmdt_ =
-                    (1 - relax_)*dmdt_
+                dmdtf_ =
+                    (1 - relax_)*dmdtf_
                   + relax_*(1.0/6.0)*A2E*dDep_*rhoVaporw*fDep*AbyV_;
 
                 // Volumetric source in the near wall cell due to the wall
                 // boiling
-                mDotL_ = dmdt_*L;
+                dmdtLf_ = dmdtf_*L;
 
                 // Quenching heat transfer coefficient
                 const scalarField hQ
@@ -657,8 +588,8 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     Info<< "  A2: " << gMin(A2) << " - " << gMax(A2) << endl;
                     Info<< "  A2E: " << gMin(A2E) << " - "
                         << gMax(A2E) << endl;
-                    Info<< "  dmdtW: " << gMin(dmdt_) << " - "
-                        << gMax(dmdt_) << endl;
+                    Info<< "  dmdtW: " << gMin(dmdtf_) << " - "
+                        << gMax(dmdtf_) << endl;
                     Info<< "  qc: " << gMin(qc) << " - " << gMax(qc) << endl;
                     Info<< "  qq: " << gMin(fLiquid*qq()) << " - "
                         << gMax(fLiquid*qq()) << endl;
@@ -706,11 +637,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
 void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
-    fvPatchField<scalar>::write(os);
+    alphatPhaseChangeWallFunctionFvPatchScalarField::write(os);
 
     writeEntry(os, "phaseType", phaseTypeNames_[phaseType_]);
-
-    writeEntry(os, "relax", relax_);
+    writeEntry(os, "alphatConv", alphatConv_);
+    writeEntry(os, "dDep", dDep_);
+    writeEntry(os, "qQuenching", qq_);
 
     switch (phaseType_)
     {
@@ -747,13 +679,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
             break;
         }
     }
-
-    writeEntry(os, "otherPhase", otherPhaseName_);
-    writeEntry(os, "dmdt", dmdt_);
-    writeEntry(os, "dDep", dDep_);
-    writeEntry(os, "qQuenching", qq_);
-    writeEntry(os, "alphatConv", alphatConv_);
-    writeEntry(os, "value", *this);
 }
 
 

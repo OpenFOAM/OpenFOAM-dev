@@ -56,11 +56,15 @@ class phaseChange
 {
     // Private Data
 
-        //- Phase pair name
-        word pairName_;
+        //- Name of the other phase
+        const word otherPhaseName_;
 
-        //- Pointer to the corresponding iDmdt field
-        mutable const volScalarField* iDmdtPtr_;
+        //- Name of the interfacial mass transfer rate
+        const word dmdtfName_;
+
+        //- Name of the specie which is transferring (optional)
+        const word specieName_;
+
 
 public:
 

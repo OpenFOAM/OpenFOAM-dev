@@ -444,40 +444,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type, class Group>
-inline tmp<GeometricField<Type, fvPatchField, volMesh>> zeroVolField
-(
-    const Group& group,
-    const word& name,
-    const dimensionSet& dims
-)
-{
-    return GeometricField<Type, fvPatchField, volMesh>::New
-    (
-        IOobject::groupName(name, group.name()),
-        group.mesh(),
-        dimensioned<Type>(dims, pTraits<Type>::zero)
-    );
-}
-
-
-template<class Type, class Group>
-inline tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> zeroSurfaceField
-(
-    const Group& group,
-    const word& name,
-    const dimensionSet& dims
-)
-{
-    return GeometricField<Type, fvsPatchField, surfaceMesh>::New
-    (
-        IOobject::groupName(name, group.name()),
-        group.mesh(),
-        dimensioned<Type>(dims, pTraits<Type>::zero)
-    );
-}
-
-
 template<class GeoField, class Group>
 inline void addField
 (

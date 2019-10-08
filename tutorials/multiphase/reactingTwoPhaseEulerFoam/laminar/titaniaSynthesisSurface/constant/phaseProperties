@@ -123,9 +123,10 @@ populationBalanceCoeffs
         (
             phaseChange
             {
-                pairs ( (particles and vapor) );
-                specie TiO2_s;
-                surfaceGrowthType ParkRogak;
+                pairs               ((particles and vapor));
+                dmdtf               phaseTransfer:dmidtf;
+                specie              TiO2_s;
+                surfaceGrowthType   ParkRogak;
             }
         );
 
@@ -136,6 +137,7 @@ populationBalanceCoeffs
                 nucleationDiameter  4E-10;
                 velocityGroup       particles;
                 reactingPhase       vapor;
+                dmdtf               phaseTransfer:dmidtf;
                 specie              TiO2;
             }
         );

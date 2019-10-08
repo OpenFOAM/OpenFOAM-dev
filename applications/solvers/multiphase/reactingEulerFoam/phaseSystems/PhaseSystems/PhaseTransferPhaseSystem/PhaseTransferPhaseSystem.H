@@ -76,22 +76,16 @@ private:
             phaseTransferModelTable phaseTransferModels_;
 
             //- Bulk mass transfer rates
-            phaseSystem::dmdtTable rDmdt_;
+            phaseSystem::dmdtfTable dmdtfs_;
 
             //- Specie mass transfer rates
-            phaseSystem::dmidtTable specieDmdt_;
+            phaseSystem::dmidtfTable dmidtfs_;
+
 
     // Private member functions
 
-        //- Add given species to the speciesDmdt for the given pair
-        virtual void addToSpeciesDmdt
-        (
-            const phasePair& key,
-            const wordList species
-        );
-
-        //- Return the sum of specie transfers across each interface
-        autoPtr<phaseSystem::dmdtTable> sumDmdts() const;
+        //- Return the summed mass transfers across each interface
+        autoPtr<phaseSystem::dmdtfTable> totalDmdtfs() const;
 
 
 protected:
@@ -99,16 +93,16 @@ protected:
     // Protected member functions
 
         //- Add specie transfer terms which result from bulk mass transfers
-        void addDmdtY
+        void addDmdtYfs
         (
-            const phaseSystem::dmdtTable& dmdts,
+            const phaseSystem::dmdtfTable& dmdtfs,
             phaseSystem::specieTransferTable& eqns
         ) const;
 
         //- Add specie transfer terms which result from specie mass transfers
-        void addDmidtY
+        void addDmidtYf
         (
-            const phaseSystem::dmidtTable& dmidts,
+            const phaseSystem::dmidtfTable& dmidtfs,
             phaseSystem::specieTransferTable& eqns
         ) const;
 
@@ -126,6 +120,9 @@ public:
 
 
     // Member Functions
+
+        //- Return the mass transfer rate for an interface
+        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

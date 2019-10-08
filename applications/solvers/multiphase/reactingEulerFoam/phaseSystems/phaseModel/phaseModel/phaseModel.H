@@ -222,12 +222,6 @@ public:
 
         // Thermo
 
-            //- Return whether the phase is isothermal
-            virtual bool isothermal() const = 0;
-
-            //- Return the enthalpy equation
-            virtual tmp<fvScalarMatrix> heEqn() = 0;
-
             //- Return the thermophysical model
             virtual const rhoThermo& thermo() const = 0;
 
@@ -236,6 +230,12 @@ public:
 
             //- Return the density field
             virtual tmp<volScalarField> rho() const = 0;
+
+            //- Return whether the phase is isothermal
+            virtual bool isothermal() const = 0;
+
+            //- Return the enthalpy equation
+            virtual tmp<fvScalarMatrix> heEqn() = 0;
 
 
         // Species

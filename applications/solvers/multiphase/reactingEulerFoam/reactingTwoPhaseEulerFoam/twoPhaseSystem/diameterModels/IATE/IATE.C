@@ -106,6 +106,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::dsm() const
     return max(6/max(kappai_, 6/dMax_), dMin_);
 }
 
+
 void Foam::diameterModels::IATE::correct()
 {
     volScalarField alphaAv

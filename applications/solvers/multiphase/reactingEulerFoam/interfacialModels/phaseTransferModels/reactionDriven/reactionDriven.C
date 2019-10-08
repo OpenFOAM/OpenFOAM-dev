@@ -74,44 +74,33 @@ Foam::phaseTransferModels::reactionDriven::~reactionDriven()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::phaseTransferModels::reactionDriven::dmdt() const
+const Foam::hashedWordList&
+Foam::phaseTransferModels::reactionDriven::species() const
 {
-    volScalarField dmdt
-    (
-        volScalarField::New
-        (
-            "reactionDrivendmdt",
-            pair_.phase1().mesh(),
-            dimensionedScalar(Foam::phaseTransferModel::dimDmdt, 0)
-        )
-    );
-
-    forAllConstIter
-    (
-        wordList,
-        species_,
-        sIter
-    )
-    {
-        dmdt += speciesDmdt(*sIter);
-    }
-
-    return dmdt;
+    return species_;
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::phaseTransferModels::reactionDriven::speciesDmdt
-(
-    const word speciesName
-) const
+Foam::HashPtrTable<Foam::volScalarField>
+Foam::phaseTransferModels::reactionDriven::dmidtf() const
 {
-    // Reaction rate query requires non const Y
-    volScalarField& Y =
-        const_cast<volScalarField&>(reactingPhase_.Y(speciesName));
+    HashPtrTable<volScalarField> result;
 
-    return sign_*reactingPhase_*reactingPhase_.R(Y) & Y;
+    forAll(species_, i)
+    {
+        const word name = species_[i];
+
+        volScalarField& Y =
+            const_cast<volScalarField&>(reactingPhase_.Y(name));
+
+        result.set
+        (
+            species_[i],
+            (sign_*reactingPhase_*reactingPhase_.R(Y) & Y).ptr()
+        );
+    }
+
+    return result;
 };
 
 

@@ -32,20 +32,19 @@ License
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHe
+void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
 (
-    const phaseSystem::dmdtTable& dmdts,
+    const phaseSystem::dmdtfTable& dmdtfs,
     phaseSystem::heatTransferTable& eqns
 ) const
 {
-    forAllConstIter(phaseSystem::dmdtTable, dmdts, dmdtIter)
+    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        const phasePairKey& key = dmdtIter.key();
+        const phasePairKey& key = dmdtfIter.key();
         const phasePair& pair(this->phasePairs_[key]);
-
-        const volScalarField dmdt(Pair<word>::compare(pair, key)**dmdtIter());
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
+        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
+        const volScalarField dmdtf21(posPart(dmdtf));
+        const volScalarField dmdtf12(negPart(dmdtf));
 
         const phaseModel& phase1 = pair.phase1();
         const phaseModel& phase2 = pair.phase2();
@@ -57,30 +56,30 @@ void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHe
         const volScalarField K2(phase2.K());
 
         // Note that the phase EEqn contains a continuity error term. See
-        // MomentumTransferPhaseSystem::addDmdtU for an explanation of the
+        // MomentumTransferPhaseSystem::addDmdtUfs for an explanation of the
         // fvm::Sp terms below.
 
         // Transfer of energy from bulk to bulk
-        *eqns[phase1.name()] += dmdt21*he2 - fvm::Sp(dmdt21, he1);
-        *eqns[phase2.name()] -= dmdt12*he1 - fvm::Sp(dmdt12, he2);
+        *eqns[phase1.name()] += dmdtf21*he2 - fvm::Sp(dmdtf21, he1);
+        *eqns[phase2.name()] -= dmdtf12*he1 - fvm::Sp(dmdtf12, he2);
 
         // Transfer of kinetic energy
-        *eqns[phase1.name()] += dmdt21*(K2 - K1);
-        *eqns[phase2.name()] -= dmdt12*(K1 - K2);
+        *eqns[phase1.name()] += dmdtf21*(K2 - K1);
+        *eqns[phase2.name()] -= dmdtf12*(K1 - K2);
     }
 }
 
 
 template<class BasePhaseSystem>
-void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
+void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
 (
-    const phaseSystem::dmidtTable& dmidts,
+    const phaseSystem::dmidtfTable& dmidtfs,
     phaseSystem::heatTransferTable& eqns
 ) const
 {
-    forAllConstIter(phaseSystem::dmidtTable, dmidts, dmidtIter)
+    forAllConstIter(phaseSystem::dmidtfTable, dmidtfs, dmidtfIter)
     {
-        const phasePairKey& key = dmidtIter.key();
+        const phasePairKey& key = dmidtfIter.key();
         const phasePair& pair(this->phasePairs_[key]);
 
         const phaseModel& phase1 = pair.phase1();
@@ -93,19 +92,19 @@ void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
         const volScalarField K2(phase2.K());
 
         // Note that the phase EEqn contains a continuity error term. See
-        // MomentumTransferPhaseSystem::addDmdtU for an explanation of the
+        // MomentumTransferPhaseSystem::addDmdtUfs for an explanation of the
         // fvm::Sp terms below.
 
-        forAllConstIter(HashPtrTable<volScalarField>, *dmidtIter(), dmidtJter)
+        forAllConstIter(HashPtrTable<volScalarField>, *dmidtfIter(), dmidtfJter)
         {
-            const word& member = dmidtJter.key();
+            const word& member = dmidtfJter.key();
 
-            const volScalarField dmidt
+            const volScalarField dmidtf
             (
-                Pair<word>::compare(pair, key)**dmidtJter()
+                Pair<word>::compare(pair, key)**dmidtfJter()
             );
-            const volScalarField dmidt21(posPart(dmidt));
-            const volScalarField dmidt12(negPart(dmidt));
+            const volScalarField dmidtf21(posPart(dmidtf));
+            const volScalarField dmidtf12(negPart(dmidtf));
 
             // Create the energies for the transferring specie
             volScalarField hei1(he1);
@@ -136,12 +135,12 @@ void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
             }
 
             // Transfer of energy from bulk to bulk
-            *eqns[phase1.name()] += dmidt21*hei2 - fvm::Sp(dmidt21, he1);
-            *eqns[phase2.name()] -= dmidt12*hei1 - fvm::Sp(dmidt12, he2);
+            *eqns[phase1.name()] += dmidtf21*hei2 - fvm::Sp(dmidtf21, he1);
+            *eqns[phase2.name()] -= dmidtf12*hei1 - fvm::Sp(dmidtf12, he2);
 
             // Transfer of kinetic energy
-            *eqns[phase1.name()] += dmidt21*(K2 - K1);
-            *eqns[phase2.name()] -= dmidt12*(K1 - K2);
+            *eqns[phase1.name()] += dmidtf21*(K2 - K1);
+            *eqns[phase2.name()] -= dmidtf12*(K1 - K2);
         }
     }
 }

@@ -89,7 +89,7 @@ public:
 
         typedef
             HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            dmdtTable;
+            dmdtfTable;
 
         typedef
             HashPtrTable
@@ -98,7 +98,7 @@ public:
                 phasePairKey,
                 phasePairKey::hash
             >
-            dmidtTable;
+            dmidtfTable;
 
 
 
@@ -414,6 +414,9 @@ public:
                 const phasePairKey& key,
                 label patchi
             ) const;
+
+            //- Return the mass transfer rate for an interface
+            virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
             //- Return the mass transfer rates for each phase
             virtual PtrList<volScalarField> dmdts() const;

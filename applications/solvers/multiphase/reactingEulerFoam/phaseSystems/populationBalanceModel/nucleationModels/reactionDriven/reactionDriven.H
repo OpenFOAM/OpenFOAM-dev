@@ -58,7 +58,7 @@ class reactionDriven
     // Private Data
 
         //- Sphere-equivalent nucleation diameter
-        dimensionedScalar dNuc_;
+        const dimensionedScalar dNuc_;
 
         //- Velocity group in which the nucleation occurs
         const velocityGroup& velGroup_;
@@ -67,13 +67,13 @@ class reactionDriven
         const phaseModel& reactingPhase_;
 
         //- PhasePair between which the nucleation occurs
-        phasePair pair_;
+        const phasePair pair_;
 
-        //- Names of the specie which nucleates
-        word specie_;
+        //- Name of the mass transfer rate
+        const word dmdtfName_;
 
-        //- Nucleation mass transfer rate
-        volScalarField nDmdt_;
+        //- Name of the specie which nucleates
+        const word specieName_;
 
 
 public:
@@ -96,9 +96,6 @@ public:
 
 
     // Member Functions
-
-        //- Correct diameter independent expressions
-        virtual void correct();
 
         //- Add to nucleationRate
         virtual void addToNucleationRate

@@ -23,47 +23,24 @@ License
 
 Class
     Foam::compressible::
-        alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+        alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
 
 Description
-    This boundary condition provides a thermal wall function for turbulent
-    thermal diffusivity (usually\c alphat) based on the Jayatilleke model for
-    the Eulerian multiphase solvers.
-
-Usage
-    \table
-        Property     | Description             | Required    | Default value
-        Prt          | Turbulent Prandtl number | no         | 0.85
-        Cmu          | Model coefficient       | no          | 0.09
-        kappa        | von Karman constant     | no          | 0.41
-        E            | Model coefficient       | no          | 9.8
-    \endtable
-
-    Example of the boundary condition specification:
-    \verbatim
-    <patchName>
-    {
-        type            alphatPhaseChangeJayatillekeWallFunction;
-        Prt             0.85;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0; // optional value entry
-    }
-    \endverbatim
+    A simple alphatPhaseChangeWallFunctionFvPatchScalarField with
+    a fixed volumetric phase-change mass flux.
 
 See also
     Foam::compressible::alphatPhaseChangeWallFunctionFvPatchScalarField
 
 SourceFiles
-    alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField.C
+    alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressible_alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
-#define compressible_alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField_H
+#ifndef alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField_H
+#define alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField_H
 
 #include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
-#include "nutWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,65 +50,39 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
- Class alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField Declaration
+   Class alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+class alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
 :
     public alphatPhaseChangeWallFunctionFvPatchScalarField
 {
+    // Private Data
 
-protected:
+        //- Volumetric phase-change mass flux in near wall cells
+        scalar fixedDmdtf_;
 
-    // Protected data
-
-        //- Turbulent Prandtl number
-        scalar Prt_;
-
-        // Solution parameters
-
-            static scalar maxExp_;
-            static scalar tolerance_;
-            static label maxIters_;
-
-
-    // Protected Member Functions
-
-        //- 'P' function
-        tmp<scalarField> Psmooth(const scalarField& Prat) const;
-
-        //- Calculate y+ at the edge of the thermal laminar sublayer
-        tmp<scalarField> yPlusTherm
-        (
-            const nutWallFunctionFvPatchScalarField& nutw,
-            const scalarField& P,
-            const scalarField& Prat
-        ) const;
-
-        //- Update turbulent thermal diffusivity
-        tmp<scalarField> calcAlphat
-        (
-            const scalarField& prevAlphat
-        ) const;
+        //- Latent heat
+        scalar L_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("compressible::alphatPhaseChangeJayatillekeWallFunction");
+    TypeName("compressible::alphatFixedDmdtfWallBoilingWallFunction");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+        alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+        alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -139,20 +90,20 @@ public:
         );
 
         //- Construct by mapping given
-        //  alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+        //  alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
         //  onto a new patch
-        alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+        alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
         (
-            const alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField&,
+            const alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Copy constructor
-        alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+        alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
         (
-            const alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField&
+            const alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField&
         );
 
         //- Construct and return a clone
@@ -160,7 +111,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+                new alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
                 (
                     *this
                 )
@@ -168,9 +119,9 @@ public:
         }
 
         //- Copy constructor setting internal field reference
-        alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+        alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
         (
-            const alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField&,
+            const alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -182,7 +133,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+                new alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
                 (
                     *this,
                     iF

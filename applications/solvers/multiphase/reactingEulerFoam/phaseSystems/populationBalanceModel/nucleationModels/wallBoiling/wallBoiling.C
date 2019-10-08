@@ -169,7 +169,7 @@ Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
             const alphatWallBoilingWallFunction& alphatw =
                 refCast<const alphatWallBoilingWallFunction>(alphatBf[patchi]);
 
-            const scalarField& dmdt = alphatw.dmdt();
+            const scalarField& dmdt = alphatw.dmdtf();
             const scalarField& dDep = alphatw.dDeparture();
 
             const labelList& faceCells = alphatw.patch().faceCells();

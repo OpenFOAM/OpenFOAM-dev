@@ -30,66 +30,14 @@ License
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addToSpeciesDmdt
-(
-    const phasePair& pair,
-    const wordList species
-)
+Foam::autoPtr<Foam::phaseSystem::dmdtfTable>
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::totalDmdtfs() const
 {
-    if (species.empty())
-    {
-        return;
-    }
-
-    if (!specieDmdt_.found(pair))
-    {
-        specieDmdt_.insert(pair, new HashPtrTable<volScalarField>());
-    }
-
-    forAllConstIter
+    autoPtr<phaseSystem::dmdtfTable> totalDmdtfsPtr
     (
-        wordList,
-        species,
-        sIter
-    )
-    {
-        const word specieName(*sIter);
-        if (!specieDmdt_[pair]->found(specieName))
-        {
-            specieDmdt_[pair]->insert
-            (
-                specieName,
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        IOobject::groupName
-                        (
-                            specieName+":dmdt",
-                            pair.name()
-                        ),
-                        this->mesh().time().timeName(),
-                        this->mesh(),
-                        IOobject::NO_READ,
-                        IOobject::AUTO_WRITE
-                    ),
-                    this->mesh(),
-                    dimensionedScalar(Foam::phaseTransferModel::dimDmdt, 0)
-                )
-            );
-        }
-    }
-}
-
-
-template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::dmdtTable>
-Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::
-sumDmdts() const
-{
-    autoPtr<phaseSystem::dmdtTable> sumDmdtsPtr(new phaseSystem::dmdtTable);
-
-    phaseSystem::dmdtTable& sumDmdts = sumDmdtsPtr();
+        new phaseSystem::dmdtfTable
+    );
+    phaseSystem::dmdtfTable& totalDmdtfs = totalDmdtfsPtr();
 
     forAllConstIter
     (
@@ -101,52 +49,45 @@ sumDmdts() const
         const phasePair& pair =
             this->phasePairs_[phaseTransferModelIter.key()];
 
-        sumDmdts.insert
-        (
-            pair,
-            zeroVolField<scalar>(pair, "dmdt", dimDensity/dimTime).ptr()
-        );
+        totalDmdtfs.insert(pair, phaseSystem::dmdtf(pair).ptr());
 
-        if (specieDmdt_.found(pair))
+        if (phaseTransferModelIter()->mixture())
         {
-            forAllConstIter
-            (
-                HashPtrTable<volScalarField>,
-                *specieDmdt_[pair],
-                sDmdtIter
-            )
-            {
-                *sumDmdts[pair] +=
-                    phaseTransferModelIter()->speciesDmdt(sDmdtIter.key());
-            }
+            *totalDmdtfs[pair] += *dmdtfs_[pair];
         }
-        else
+
+        forAllConstIter
+        (
+            HashPtrTable<volScalarField>,
+            *dmidtfs_[pair],
+            dmidtfIter
+        )
         {
-            *sumDmdts[pair] += *rDmdt_[pair];
+            *totalDmdtfs[pair] += *dmidtfIter();
         }
     }
 
-    return sumDmdtsPtr;
+    return totalDmdtfsPtr;
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmdtY
+void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmdtYfs
 (
-    const phaseSystem::dmdtTable& dmdts,
+    const phaseSystem::dmdtfTable& dmdtfs,
     phaseSystem::specieTransferTable& eqns
 ) const
 {
-    forAllConstIter(phaseSystem::dmdtTable, dmdts, dmdtIter)
+    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        const phasePairKey& key = dmdtIter.key();
+        const phasePairKey& key = dmdtfIter.key();
         const phasePair& pair(this->phasePairs_[key]);
 
-        const volScalarField dmdt(Pair<word>::compare(pair, key)**dmdtIter());
-        const volScalarField dmdt12(negPart(dmdt));
-        const volScalarField dmdt21(posPart(dmdt));
+        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
+        const volScalarField dmdtf12(negPart(dmdtf));
+        const volScalarField dmdtf21(posPart(dmdtf));
 
         const phaseModel& phase1 = pair.phase1();
         const phaseModel& phase2 = pair.phase2();
@@ -159,23 +100,23 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmdtY
             const volScalarField& Y1 = phase1.Y()[Yi1];
             const volScalarField& Y2 = phase2.Y(Y1.member());
 
-            *eqns[Y1.name()] += dmdt21*Y2 + fvm::Sp(dmdt12, Y1);
-            *eqns[Y2.name()] -= dmdt12*Y1 + fvm::Sp(dmdt21, Y2);
+            *eqns[Y1.name()] += dmdtf21*Y2 + fvm::Sp(dmdtf12, Y1);
+            *eqns[Y2.name()] -= dmdtf12*Y1 + fvm::Sp(dmdtf21, Y2);
         }
     }
 }
 
 
 template<class BasePhaseSystem>
-void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmidtY
+void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmidtYf
 (
-    const phaseSystem::dmidtTable& dmidts,
+    const phaseSystem::dmidtfTable& dmidtfs,
     phaseSystem::specieTransferTable& eqns
 ) const
 {
-    forAllConstIter(phaseSystem::dmidtTable, dmidts, dmidtIter)
+    forAllConstIter(phaseSystem::dmidtfTable, dmidtfs, dmidtfIter)
     {
-        const phasePairKey& key = dmidtIter.key();
+        const phasePairKey& key = dmidtfIter.key();
         const phasePair& pair(this->phasePairs_[key]);
 
         const phaseModel& phase1 = pair.phase1();
@@ -184,25 +125,25 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmidtY
         // Note that the phase YiEqn does not contain a continuity error term,
         // so the transfers below are complete.
 
-        forAllConstIter(HashPtrTable<volScalarField>, *dmidtIter(), dmidtJter)
+        forAllConstIter(HashPtrTable<volScalarField>, *dmidtfIter(), dmidtfJter)
         {
-            const word& member = dmidtJter.key();
+            const word& member = dmidtfJter.key();
 
-            const volScalarField dmidt
+            const volScalarField dmidtf
             (
-                Pair<word>::compare(pair, key)**dmidtJter()
+                Pair<word>::compare(pair, key)**dmidtfJter()
             );
 
             if (!phase1.pure())
             {
                 const volScalarField& Y1 = phase1.Y(member);
-                *eqns[Y1.name()] += dmidt;
+                *eqns[Y1.name()] += dmidtf;
             }
 
             if (!phase2.pure())
             {
                 const volScalarField& Y2 = phase2.Y(member);
-                *eqns[Y2.name()] -= dmidt;
+                *eqns[Y2.name()] -= dmidtf;
             }
         }
     }
@@ -235,14 +176,59 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
     {
         const phasePair& pair = this->phasePairs_[phaseTransferModelIter.key()];
 
-        addToSpeciesDmdt(pair, phaseTransferModelIter()->activeSpecies());
-
-        if (!specieDmdt_.found(pair))
+        if (phaseTransferModelIter()->mixture())
         {
-            this->rDmdt_.insert
+            dmdtfs_.insert
             (
-                phaseTransferModelIter.key(),
-                zeroVolField<scalar>(pair, "rDmdt", dimDensity/dimTime).ptr()
+                pair,
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName
+                        (
+                            "phaseTransfer:dmdtf",
+                            pair.name()
+                        ),
+                        this->mesh().time().timeName(),
+                        this->mesh()
+                    ),
+                    this->mesh(),
+                    dimensionedScalar(dimDensity/dimTime, 0)
+                )
+            );
+        }
+
+        dmidtfs_.insert(pair, new HashPtrTable<volScalarField>());
+
+        const hashedWordList species(phaseTransferModelIter()->species());
+
+        forAllConstIter(hashedWordList, species, specieIter)
+        {
+            const word& specie = *specieIter;
+
+            dmidtfs_[pair]->insert
+            (
+                specie,
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName
+                        (
+                            IOobject::groupName
+                            (
+                                "phaseTransfer:dmidtf",
+                                specie
+                            ),
+                            pair.name()
+                        ),
+                        this->mesh().time().timeName(),
+                        this->mesh()
+                    ),
+                    this->mesh(),
+                    dimensionedScalar(dimDensity/dimTime, 0)
+                )
             );
         }
     }
@@ -252,12 +238,44 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::
-~PhaseTransferPhaseSystem()
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::~PhaseTransferPhaseSystem()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdtf
+(
+    const phasePairKey& key
+) const
+{
+    tmp<volScalarField> tDmdtf = BasePhaseSystem::dmdtf(key);
+
+    if (phaseTransferModels_.found(key))
+    {
+        const label dmdtfSign(Pair<word>::compare(this->phasePairs_[key], key));
+
+        if (phaseTransferModels_[key]->mixture())
+        {
+            tDmdtf.ref() += dmdtfSign**dmdtfs_[key];
+        }
+
+        forAllConstIter
+        (
+            HashPtrTable<volScalarField>,
+            *dmidtfs_[key],
+            dmidtfIter
+        )
+        {
+            tDmdtf.ref() += dmdtfSign**dmidtfIter();
+        }
+    }
+
+    return tDmdtf;
+}
+
 
 template<class BasePhaseSystem>
 Foam::PtrList<Foam::volScalarField>
@@ -265,17 +283,15 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
 
-    autoPtr<phaseSystem::dmdtTable> sumDmdtsPtr = this->sumDmdts();
+    autoPtr<phaseSystem::dmdtfTable> totalDmdtfsPtr = this->totalDmdtfs();
+    const phaseSystem::dmdtfTable& totalDmdtfs = totalDmdtfsPtr();
 
-    const phaseSystem::dmdtTable& sumDmdts = sumDmdtsPtr();
-
-    forAllConstIter(phaseSystem::dmdtTable, sumDmdts, sumDmdtIter)
+    forAllConstIter(phaseSystem::dmdtfTable, totalDmdtfs, totalDmdtfIter)
     {
-        const phasePair& pair = this->phasePairs_[sumDmdtIter.key()];
+        const phasePair& pair = this->phasePairs_[totalDmdtfIter.key()];
 
-        addField(pair.phase1(), "dmdt", *sumDmdtIter(), dmdts);
-        addField(pair.phase2(), "dmdt", - *sumDmdtIter(), dmdts);
-
+        addField(pair.phase1(), "dmdt", *totalDmdtfIter(), dmdts);
+        addField(pair.phase2(), "dmdt", - *totalDmdtfIter(), dmdts);
     }
 
     return dmdts;
@@ -291,7 +307,7 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtU(sumDmdts(), eqns);
+    this->addDmdtUfs(totalDmdtfs(), eqns);
 
     return eqnsPtr;
 }
@@ -306,7 +322,7 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::momentumTransferf()
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtU(sumDmdts(), eqns);
+    this->addDmdtUfs(totalDmdtfs(), eqns);
 
     return eqnsPtr;
 }
@@ -321,9 +337,8 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
 
     phaseSystem::heatTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtHe(rDmdt_, eqns);
-    this->addDmidtHe(specieDmdt_, eqns);
-
+    this->addDmdtHefs(dmdtfs_, eqns);
+    this->addDmidtHef(dmidtfs_, eqns);
 
     return eqnsPtr;
 }
@@ -357,8 +372,8 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::specieTransfer() const
         }
     }
 
-    this->addDmdtY(rDmdt_, eqns);
-    this->addDmidtY(specieDmdt_, eqns);
+    this->addDmdtYfs(dmdtfs_, eqns);
+    this->addDmidtYf(dmidtfs_, eqns);
 
     return eqnsPtr;
 }
@@ -369,6 +384,7 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::correct()
 {
     BasePhaseSystem::correct();
 
+    // Reset all the mass transfer rates to zero
     forAllConstIter
     (
         phaseTransferModelTable,
@@ -376,25 +392,24 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::correct()
         phaseTransferModelIter
     )
     {
-        if (specieDmdt_.found(phaseTransferModelIter.key()))
+        const phasePair& pair = this->phasePairs_[phaseTransferModelIter.key()];
+
+        if (phaseTransferModelIter()->mixture())
         {
-            forAllIter
-            (
-                HashPtrTable<volScalarField>,
-                *specieDmdt_(phaseTransferModelIter.key()),
-                sDmdtIter
-            )
-            {
-                (*sDmdtIter)->ref() = Zero;
-            }
+            *dmdtfs_[pair] = Zero;
         }
-        else
+
+        const hashedWordList species(phaseTransferModelIter()->species());
+
+        forAllConstIter(hashedWordList, species, specieIter)
         {
-            *rDmdt_[phaseTransferModelIter.key()] =
-                dimensionedScalar(dimDensity/dimTime, 0);
+            const word& specie = *specieIter;
+
+            *(*dmidtfs_[pair])[specie] = Zero;
         }
     }
 
+    // Evaluate the models and sum the results into the mass transfer tables
     forAllIter
     (
         phaseTransferModelTable,
@@ -402,25 +417,21 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::correct()
         phaseTransferModelIter
     )
     {
-        phaseTransferModelIter()->correct();
+        const phasePair& pair = this->phasePairs_[phaseTransferModelIter.key()];
 
-        if (specieDmdt_.found(phaseTransferModelIter.key()))
+        if (phaseTransferModelIter()->mixture())
         {
-            forAllIter
-            (
-                HashPtrTable<volScalarField>,
-                *specieDmdt_(phaseTransferModelIter.key()),
-                sDmdtIter
-            )
-            {
-                (*sDmdtIter)->ref() +=
-                    phaseTransferModelIter()->speciesDmdt(sDmdtIter.key());
-            }
+            *dmdtfs_[pair] += phaseTransferModelIter()->dmdtf();
         }
-        else
+
+        const HashPtrTable<volScalarField> dmidtf
+        (
+            phaseTransferModelIter()->dmidtf()
+        );
+
+        forAllConstIter(HashPtrTable<volScalarField>, dmidtf, dmidtfIter)
         {
-            *rDmdt_[phaseTransferModelIter.key()] +=
-                phaseTransferModelIter()->dmdt();
+            *(*dmidtfs_[pair])[dmidtfIter.key()] += *dmidtfIter();
         }
     }
 }

@@ -135,20 +135,20 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::L
 }
 
 
-void Foam::interfaceCompositionModel::addMDotL
+void Foam::interfaceCompositionModel::addDmdtL
 (
     const volScalarField& K,
     const volScalarField& Tf,
-    volScalarField& mDotL,
-    volScalarField& mDotLPrime
+    volScalarField& dmdtL,
+    volScalarField& dmdtLPrime
 ) const
 {
     forAllConstIter(hashedWordList, species_, iter)
     {
         const volScalarField rhoKDL(thermo_.rho()*K*D(*iter)*L(*iter, Tf));
 
-        mDotL += rhoKDL*dY(*iter, Tf);
-        mDotLPrime += rhoKDL*YfPrime(*iter, Tf);
+        dmdtL += rhoKDL*dY(*iter, Tf);
+        dmdtLPrime += rhoKDL*YfPrime(*iter, Tf);
     }
 }
 

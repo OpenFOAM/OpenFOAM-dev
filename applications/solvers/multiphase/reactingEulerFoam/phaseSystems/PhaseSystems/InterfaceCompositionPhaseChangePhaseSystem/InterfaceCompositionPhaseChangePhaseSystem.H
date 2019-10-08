@@ -59,8 +59,6 @@ class InterfaceCompositionPhaseChangePhaseSystem
 :
     public BasePhaseSystem
 {
-private:
-
     // Private typedefs
 
         typedef HashTable
@@ -92,19 +90,19 @@ private:
             interfaceCompositionModelTable interfaceCompositionModels_;
 
             //- The explicit part of the interfacial mass transfer rates
-            phaseSystem::dmidtTable iDmdtSu_;
+            phaseSystem::dmidtfTable dmidtfSus_;
 
             //- The implicit part of the interfacial mass transfer rates
-            phaseSystem::dmidtTable iDmdtSp_;
+            phaseSystem::dmidtfTable dmidtfSps_;
 
 
     // Private member functions
 
-        //- Return the bulk mass transfers across each interface
-        autoPtr<phaseSystem::dmdtTable> iDmdts() const;
+        //- Return mass transfers across each interface
+        autoPtr<phaseSystem::dmdtfTable> dmdtfs() const;
 
-        //- Return the species mass transfers across each interface
-        autoPtr<phaseSystem::dmidtTable> iDmidts() const;
+        //- Return species mass transfers across each interface
+        autoPtr<phaseSystem::dmidtfTable> dmidtfs() const;
 
 
 public:
@@ -120,6 +118,9 @@ public:
 
 
     // Member Functions
+
+        //- Return the mass transfer rate for an interface
+        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

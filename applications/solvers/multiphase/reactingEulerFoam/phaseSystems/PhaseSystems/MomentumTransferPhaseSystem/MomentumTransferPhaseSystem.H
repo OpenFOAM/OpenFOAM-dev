@@ -192,9 +192,9 @@ protected:
     // Protected Member Functions
 
         //- Add momentum transfer terms which result from bulk mass transfers
-        void addDmdtU
+        void addDmdtUfs
         (
-            const phaseSystem::dmdtTable& dmdts,
+            const phaseSystem::dmdtfTable& dmdtfs,
             phaseSystem::momentumTransferTable& eqns
         );
 

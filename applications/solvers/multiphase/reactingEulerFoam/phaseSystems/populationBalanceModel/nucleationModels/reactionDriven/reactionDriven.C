@@ -91,18 +91,8 @@ reactionDriven
             phasePair(velGroup_.phase(), reactingPhase_)
         ]
     ),
-    specie_(dict.lookup("specie")),
-    nDmdt_
-    (
-        IOobject
-        (
-            IOobject::groupName(type() + ":N", pair_.name()),
-            popBal.time().timeName(),
-            popBal.mesh()
-        ),
-        popBal.mesh(),
-        dimensionedScalar(dimDensity/dimTime, Zero)
-    )
+    dmdtfName_(dict.lookup("dmdtf")),
+    specieName_(dict.lookup("specie"))
 {
     if
     (
@@ -121,20 +111,6 @@ reactionDriven
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::nucleationModels::reactionDriven::correct()
-{
-    const volScalarField& speciesDmdt =
-        popBal_.mesh().lookupObject<volScalarField>
-        (
-            IOobject::groupName(specie_+":dmdt", pair_.name())
-        );
-
-    const scalar sign = velGroup_.phase().name() == pair_.first() ? +1 : -1;
-
-    nDmdt_ = sign*speciesDmdt;
-}
-
-
 void
 Foam::diameterModels::nucleationModels::reactionDriven::addToNucleationRate
 (
@@ -145,8 +121,25 @@ Foam::diameterModels::nucleationModels::reactionDriven::addToNucleationRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const volScalarField& rho = fi.phase().rho();
 
+    const volScalarField& dmidtf =
+        popBal_.mesh().lookupObject<volScalarField>
+        (
+            IOobject::groupName
+            (
+                IOobject::groupName
+                (
+                    dmdtfName_,
+                    specieName_
+                ),
+                pair_.name()
+            )
+        );
+
+    const scalar dmidtfSign =
+        velGroup_.phase().name() == pair_.first() ? +1 : -1;
+
     nucleationRate +=
-        popBal_.eta(i, pi/6.0*pow3(dNuc_))*nDmdt_/rho/fi.x();
+        popBal_.eta(i, pi/6.0*pow3(dNuc_))*dmidtfSign*dmidtf/rho/fi.x();
 }
 
 

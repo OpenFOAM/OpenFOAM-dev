@@ -74,7 +74,7 @@ private:
         const scalar sign_;
 
         //- List of species changing phase
-        wordList species_;
+        const hashedWordList species_;
 
 
 public:
@@ -99,20 +99,11 @@ public:
 
     // Member Functions
 
-        //- Return the active species for the current pair
-        virtual const wordList activeSpecies() const
-        {
-            return species_;
-        };
+        //- The list of individual species that are transferred
+        virtual const hashedWordList& species() const;
 
-        //- The mass transfer rate
-        virtual tmp<volScalarField> dmdt() const;
-
-        //- The mass transfer rate for the given species
-        virtual tmp<volScalarField> speciesDmdt
-        (
-            const word speciesName
-        ) const;
+        //- The mass transfer rate for individual species
+        virtual HashPtrTable<volScalarField> dmidtf() const;
 };
 
 

@@ -82,16 +82,16 @@ protected:
     // Protected Member Functions
 
         //- Add energy transfer terms which result from bulk mass transfers
-        void addDmdtHe
+        void addDmdtHefs
         (
-            const phaseSystem::dmdtTable& dmdts,
+            const phaseSystem::dmdtfTable& dmdtfs,
             phaseSystem::heatTransferTable& eqns
         ) const;
 
         //- Add energy transfer terms which result from specie mass transfers
-        void addDmidtHe
+        void addDmidtHef
         (
-            const phaseSystem::dmidtTable& dmidts,
+            const phaseSystem::dmidtfTable& dmidtfs,
             phaseSystem::heatTransferTable& eqns
         ) const;
 

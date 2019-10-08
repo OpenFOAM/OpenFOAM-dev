@@ -38,6 +38,8 @@ SourceFiles
 
 #include "volFields.H"
 #include "dictionary.H"
+#include "HashPtrTable.H"
+#include "hashedWordList.H"
 #include "runTimeSelectionTables.H"
 
 namespace Foam
@@ -50,6 +52,8 @@ class phasePair;
 \*---------------------------------------------------------------------------*/
 
 class phaseTransferModel
+:
+    public regIOobject
 {
 protected:
 
@@ -85,6 +89,9 @@ public:
         //- Mass transfer rate dimensions
         static const dimensionSet dimDmdt;
 
+        //- Empty species list
+        static const hashedWordList noSpecies_;
+
 
     // Constructors
 
@@ -111,29 +118,20 @@ public:
 
     // Member Functions
 
-        //- Return the active species for the current pair,
-        //  by default returns empty list
-        virtual const wordList activeSpecies() const
-        {
-            return wordList();
-        };
+        //- Whether or not there is a mass transfer rate for the mixture
+        virtual bool mixture() const;
 
-        //- Do possible corrections before dmdt calculations
-        virtual void correct() {};
+        //- The mass transfer rate for the mixture
+        virtual tmp<volScalarField> dmdtf() const;
 
-        //- The mass transfer rate
-        virtual tmp<volScalarField> dmdt() const = 0;
+        //- The list of individual species that are transferred
+        virtual const hashedWordList& species() const;
 
-        //- The mass transfer rate for the given species, this needs to be
-        //  implemented only if the model uses non uniform species transfer
-        virtual tmp<volScalarField> speciesDmdt
-        (
-            const word speciesName
-        ) const
-        {
-            NotImplemented;
-            return dmdt();
-        };
+        //- The mass transfer rate for individual species
+        virtual HashPtrTable<volScalarField> dmidtf() const;
+
+        //- Dummy write for regIOobject
+        bool writeData(Ostream& os) const;
 };
 
 

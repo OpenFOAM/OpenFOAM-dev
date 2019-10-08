@@ -131,7 +131,7 @@ SourceFiles
 #ifndef compressible_alphatWallBoilingWallFunctionFvPatchScalarField_H
 #define compressible_alphatWallBoilingWallFunctionFvPatchScalarField_H
 
-#include "alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField.H"
+#include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 #include "partitioningModel.H"
 #include "nucleationSiteModel.H"
 #include "departureDiameterModel.H"
@@ -150,7 +150,7 @@ namespace compressible
 
 class alphatWallBoilingWallFunctionFvPatchScalarField
 :
-    public alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+    public alphatPhaseChangeWallFunctionFvPatchScalarField
 {
 public:
 
@@ -163,22 +163,16 @@ public:
             liquidPhase
         };
 
+        //- Heat source type names
+        static const NamedEnum<phaseType, 2> phaseTypeNames_;
+
 
 private:
 
     // Private Data
 
-        //- name of the other phase (vapor/liquid phase)
-        word otherPhaseName_;
-
-        //- Heat source type names
-        static const NamedEnum<phaseType, 2> phaseTypeNames_;
-
         //- Heat source type
         phaseType phaseType_;
-
-        //- dmdt relaxationFactor
-        scalar relax_;
 
         //- Patch face area by cell volume
         scalarField AbyV_;
@@ -280,17 +274,6 @@ public:
 
     // Member Functions
 
-        using alphatPhaseChangeWallFunctionFvPatchScalarField::dmdt;
-
-        //- Is there phase change mass transfer for this phasePair
-        virtual bool activePhasePair(const phasePairKey&) const;
-
-        //- Return the rate of phase-change for specific phase pair
-        virtual const scalarField& dmdt(const phasePairKey&) const;
-
-        //- Return the rate of phase-change for specific phase pair
-        virtual const scalarField& mDotL(const phasePairKey&) const;
-
         //- Return the departure diameter field
         const scalarField& dDeparture() const
         {
@@ -306,8 +289,9 @@ public:
         //- Return the evaporation surface heat flux [W/m^2]
         tmp<scalarField> qe() const
         {
-            return mDotL_/AbyV_;
+            return dmdtLf_/AbyV_;
         }
+
 
         // Evaluation functions
 

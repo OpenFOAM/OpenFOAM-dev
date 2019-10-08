@@ -92,8 +92,11 @@ public:
 
     // Member Functions
 
-        //- The mass transfer rate
-        virtual tmp<volScalarField> dmdt() const;
+        //- Whether or not there is a mass transfer rate for the mixture
+        virtual bool mixture() const;
+
+        //- The mass transfer rate for the mixture
+        virtual tmp<volScalarField> dmdtf() const;
 };
 
 

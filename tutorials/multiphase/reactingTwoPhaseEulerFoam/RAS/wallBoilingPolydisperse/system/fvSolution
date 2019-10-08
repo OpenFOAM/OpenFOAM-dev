@@ -108,7 +108,7 @@ relaxationFactors
 {
     fields
     {
-        iDmdt           0.8;
+        thermalPhaseChange:dmdtf 1.0;
     }
 
     equations

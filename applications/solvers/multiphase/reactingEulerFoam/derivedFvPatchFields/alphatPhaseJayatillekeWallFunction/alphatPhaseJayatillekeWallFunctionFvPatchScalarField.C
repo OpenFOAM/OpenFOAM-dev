@@ -23,11 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField.H"
+#include "alphatPhaseJayatillekeWallFunctionFvPatchScalarField.H"
 #include "phaseSystem.H"
-#include "compressibleTurbulenceModel.H"
-#include "ThermalDiffusivity.H"
-#include "PhaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleTurbulenceModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -39,27 +37,23 @@ namespace compressible
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-scalar alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::maxExp_
-    = 50.0;
-scalar alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::tolerance_
-    = 0.01;
-label alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::maxIters_
-    = 10;
+scalar alphatPhaseJayatillekeWallFunctionFvPatchScalarField::maxExp_  = 50.0;
+scalar alphatPhaseJayatillekeWallFunctionFvPatchScalarField::tolerance_ = 0.01;
+label alphatPhaseJayatillekeWallFunctionFvPatchScalarField::maxIters_ = 10;
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-tmp<scalarField>
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::Psmooth
+tmp<scalarField> alphatPhaseJayatillekeWallFunctionFvPatchScalarField::Psmooth
 (
     const scalarField& Prat
 ) const
 {
-    return 9.24*(pow(Prat, 0.75) - 1)*(1 + 0.28*exp(-0.007*Prat));
+    return 9.24*(pow(Prat, 0.75) - 1.0)*(1.0 + 0.28*exp(-0.007*Prat));
 }
 
 
 tmp<scalarField>
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
 (
     const nutWallFunctionFvPatchScalarField& nutw,
     const scalarField& P,
@@ -83,6 +77,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
             if (yptNew < vSmall)
             {
                 ypsf[facei] = 0;
+                break;
             }
             else if (mag(yptNew - ypt) < tolerance_)
             {
@@ -100,8 +95,76 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
     return typsf;
 }
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField
+(
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF
+)
+:
+    fixedValueFvPatchScalarField(p, iF),
+    Prt_(0.85)
+{}
+
+
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField
+(
+    const alphatPhaseJayatillekeWallFunctionFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
+    Prt_(ptf.Prt_)
+{}
+
+
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField
+(
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchScalarField(p, iF, dict),
+    Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85))
+{}
+
+
+
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField
+(
+    const alphatPhaseJayatillekeWallFunctionFvPatchScalarField& awfpsf
+)
+:
+    fixedValueFvPatchScalarField(awfpsf),
+    Prt_(awfpsf.Prt_)
+{}
+
+
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField
+(
+    const alphatPhaseJayatillekeWallFunctionFvPatchScalarField& awfpsf,
+    const DimensionedField<scalar, volMesh>& iF
+)
+:
+    fixedValueFvPatchScalarField(awfpsf, iF),
+    Prt_(awfpsf.Prt_)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 tmp<scalarField>
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::calcAlphat
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
 (
     const scalarField& prevAlphat
 ) const
@@ -221,73 +284,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::calcAlphat
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    alphatPhaseChangeWallFunctionFvPatchScalarField(p, iF),
-    Prt_(0.85)
-{}
-
-
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    alphatPhaseChangeWallFunctionFvPatchScalarField(p, iF, dict),
-    Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85))
-{}
-
-
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
-(
-    const alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    alphatPhaseChangeWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
-    Prt_(ptf.Prt_)
-{}
-
-
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
-(
-    const alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField& awfpsf
-)
-:
-    alphatPhaseChangeWallFunctionFvPatchScalarField(awfpsf),
-    Prt_(awfpsf.Prt_)
-{}
-
-
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::
-alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
-(
-    const alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField& awfpsf,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    alphatPhaseChangeWallFunctionFvPatchScalarField(awfpsf, iF),
-    Prt_(awfpsf.Prt_)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
+void alphatPhaseJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
 {
     if (updated())
     {
@@ -300,14 +297,13 @@ void alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
 }
 
 
-void alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::write
+void alphatPhaseJayatillekeWallFunctionFvPatchScalarField::write
 (
     Ostream& os
 ) const
 {
     fvPatchField<scalar>::write(os);
     writeEntry(os, "Prt", Prt_);
-    writeEntry(os, "dmdt", dmdt_);
     writeEntry(os, "value", *this);
 }
 
@@ -317,9 +313,8 @@ void alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::write
 makePatchTypeField
 (
     fvPatchScalarField,
-    alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField
 );
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
