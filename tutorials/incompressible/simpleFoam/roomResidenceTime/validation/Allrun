@@ -1,0 +1,37 @@
+#!/bin/bash
+./Allclean
+
+# ------ Pos 1 Evaluation
+tail -n 1 ../postProcessing/probes1/*/age | xargs | sed 's/ /\n/g' | tail -n 30 > ageValues
+head -n 30 ../postProcessing/probes1/*/age | cut -d' ' -f6 | cut -d')' -f1 > positionsZ
+
+# Build dimless age value
+V=45.36
+Vdot=`cat ../postProcessing/flowRatePatch/0/surfaceFieldValue.dat | tail -n 1 | xargs | cut -d' ' -f2`
+Vdot=`echo $Vdot | sed 's/e/*10^/'`
+
+while IFS= read -r line
+do
+    echo "scale=5; $line/($V/($Vdot*-1.))" | bc >> ageDimless1
+done < "ageValues"
+
+paste positionsZ ageDimless1 > Pos1_OF
+
+
+# ------ Pos 2 Evaluation
+tail -n 1 ../postProcessing/probes2/*/age | xargs | sed 's/ /\n/g' | tail -n 30 > ageValues
+head -n 30 ../postProcessing/probes2/*/age | cut -d' ' -f6 | cut -d')' -f1 > positionsZ
+
+# Build dimless age value
+
+while IFS= read -r line
+do
+    echo "scale=5; $line/($V/($Vdot*-1.))" | bc >> ageDimless2
+done < "ageValues"
+
+paste positionsZ ageDimless2 > Pos2_OF
+
+# ------ Plot the results
+gnuplot plot*
+
+#------------------------------------------------------------------------------
