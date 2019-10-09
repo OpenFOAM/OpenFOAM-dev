@@ -94,10 +94,7 @@ int main(int argc, char *argv[])
 
         if (solvePrimaryRegion)
         {
-            if (pimple.nCorrPimple() <= 1)
-            {
-                #include "rhoEqn.H"
-            }
+            #include "rhoEqn.H"
 
             // --- PIMPLE loop
             while (pimple.loop())
