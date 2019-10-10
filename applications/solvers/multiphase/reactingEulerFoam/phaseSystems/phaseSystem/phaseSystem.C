@@ -302,7 +302,7 @@ Foam::phaseSystem::E(const phasePairKey& key) const
         return volScalarField::New
         (
             aspectRatioModel::typeName + ":E",
-            this->mesh_,
+            mesh_,
             dimensionedScalar(dimless, 1)
         );
     }
@@ -321,7 +321,7 @@ Foam::phaseSystem::sigma(const phasePairKey& key) const
         return volScalarField::New
         (
             surfaceTensionModel::typeName + ":sigma",
-            this->mesh_,
+            mesh_,
             dimensionedScalar(surfaceTensionModel::dimSigma, 0)
         );
     }
@@ -339,17 +339,36 @@ Foam::phaseSystem::sigma(const phasePairKey& key, label patchi) const
     {
         return tmp<scalarField>
         (
-            new scalarField(this->mesh_.boundary()[patchi].size(), 0)
+            new scalarField(mesh_.boundary()[patchi].size(), 0)
         );
     }
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdtf
+(
+    const phasePairKey& key
+) const
+{
+    const phasePair pair
+    (
+        phaseModels_[key.first()],
+        phaseModels_[key.second()]
+    );
+
+    return volScalarField::New
+    (
+        IOobject::groupName("dmdtf", pair.name()),
+        mesh(),
+        dimensionedScalar(dimDensity/dimTime, 0)
+    );
+}
+
+
+
 Foam::PtrList<Foam::volScalarField> Foam::phaseSystem::dmdts() const
 {
-    PtrList<volScalarField> dmdts(this->phaseModels_.size());
-
-    return dmdts;
+    return PtrList<volScalarField>(phaseModels_.size());
 }
 
 

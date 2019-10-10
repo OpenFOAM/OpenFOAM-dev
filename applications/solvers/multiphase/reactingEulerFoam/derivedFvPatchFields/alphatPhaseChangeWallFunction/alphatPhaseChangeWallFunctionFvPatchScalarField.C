@@ -48,9 +48,11 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
-    dmdt_(p.size(), 0),
-    mDotL_(p.size(), 0)
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(p, iF),
+    otherPhaseName_(word::null),
+    relax_(1),
+    dmdtf_(p.size(), 0),
+    dmdtLf_(p.size(), 0)
 {}
 
 
@@ -62,18 +64,31 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF, dict),
-    dmdt_(p.size(), 0),
-    mDotL_(p.size(), 0)
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(p, iF, dict),
+    otherPhaseName_(dict.lookup("otherPhase")),
+    relax_(dict.lookupOrDefault<scalar>("relax", 1)),
+    dmdtf_(p.size(), 0),
+    dmdtLf_(p.size(), 0)
 {
-    if (dict.found("dmdt"))
+    // Check that otherPhaseName != this phase
+    if (internalField().group() == otherPhaseName_)
     {
-        dmdt_ = scalarField("dmdt", dict, p.size());
+        FatalErrorInFunction
+            << "otherPhase should be the name of the vapor phase that "
+            << "corresponds to the liquid base or vice versa" << nl
+            << "This phase: " << internalField().group() << nl
+            << "otherPhase: " << otherPhaseName_
+            << abort(FatalError);
     }
 
-    if (dict.found("mDotL"))
+    if (dict.found("dmdtf"))
     {
-        dmdt_ = scalarField("mDotL", dict, p.size());
+        dmdtf_ = scalarField("dmdtf", dict, p.size());
+    }
+
+    if (dict.found("dmdtLf"))
+    {
+        dmdtf_ = scalarField("dmdtLf", dict, p.size());
     }
 }
 
@@ -87,9 +102,11 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    dmdt_(mapper(ptf.dmdt_)),
-    mDotL_(mapper(ptf.mDotL_))
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
+    otherPhaseName_(ptf.otherPhaseName_),
+    relax_(ptf.relax_),
+    dmdtf_(mapper(ptf.dmdtf_)),
+    dmdtLf_(mapper(ptf.dmdtLf_))
 {}
 
 
@@ -99,9 +116,11 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const alphatPhaseChangeWallFunctionFvPatchScalarField& awfpsf
 )
 :
-    fixedValueFvPatchScalarField(awfpsf),
-    dmdt_(awfpsf.dmdt_),
-    mDotL_(awfpsf.mDotL_)
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(awfpsf),
+    otherPhaseName_(awfpsf.otherPhaseName_),
+    relax_(awfpsf.relax_),
+    dmdtf_(awfpsf.dmdtf_),
+    dmdtLf_(awfpsf.dmdtLf_)
 {}
 
 
@@ -112,21 +131,88 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(awfpsf, iF),
-    dmdt_(awfpsf.dmdt_),
-    mDotL_(awfpsf.mDotL_)
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(awfpsf, iF),
+    otherPhaseName_(awfpsf.otherPhaseName_),
+    relax_(awfpsf.relax_),
+    dmdtf_(awfpsf.dmdtf_),
+    dmdtLf_(awfpsf.dmdtLf_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void alphatPhaseChangeWallFunctionFvPatchScalarField::
-write(Ostream& os) const
+bool alphatPhaseChangeWallFunctionFvPatchScalarField::
+activePhasePair(const phasePairKey& phasePair) const
 {
-    fvPatchField<scalar>::write(os);
-    writeEntry(os, "dmdt", dmdt_);
-    writeEntry(os, "mDotL", mDotL_);
-    writeEntry(os, "value", *this);
+    if (phasePair == phasePairKey(otherPhaseName_, internalField().group()))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+const scalarField&
+alphatPhaseChangeWallFunctionFvPatchScalarField::dmdtf() const
+{
+    return dmdtf_;
+}
+
+
+const scalarField& alphatPhaseChangeWallFunctionFvPatchScalarField::
+dmdtf(const phasePairKey& phasePair) const
+{
+    if (activePhasePair(phasePair))
+    {
+        return dmdtf_;
+    }
+    else
+    {
+        FatalErrorInFunction
+            << " dmdtf requested for invalid phasePair!"
+            << abort(FatalError);
+
+        return dmdtLf_;
+    }
+}
+
+
+const scalarField&
+alphatPhaseChangeWallFunctionFvPatchScalarField::dmdtLf() const
+{
+    return dmdtLf_;
+}
+
+
+const scalarField& alphatPhaseChangeWallFunctionFvPatchScalarField::
+dmdtLf(const phasePairKey& phasePair) const
+{
+    if (activePhasePair(phasePair))
+    {
+        return dmdtLf_;
+    }
+    else
+    {
+        FatalErrorInFunction
+            << " dmdtLf requested for invalid phasePair!"
+            << abort(FatalError);
+
+        return dmdtLf_;
+    }
+}
+
+
+void alphatPhaseChangeWallFunctionFvPatchScalarField::write(Ostream& os) const
+{
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField::write(os);
+
+    writeEntry(os, "otherPhase", otherPhaseName_);
+    writeEntry(os, "relax", relax_);
+    writeEntry(os, "dmdtf", dmdtf_);
+    writeEntry(os, "dmdtLf", dmdtLf_);
 }
 
 

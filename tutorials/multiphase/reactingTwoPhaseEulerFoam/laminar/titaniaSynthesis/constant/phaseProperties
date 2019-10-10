@@ -123,6 +123,7 @@ populationBalanceCoeffs
                 nucleationDiameter  4E-10;
                 velocityGroup       particles;
                 reactingPhase       vapor;
+                dmdtf               phaseTransfer:dmidtf;
                 specie              TiO2;
             }
         );
@@ -185,7 +186,15 @@ heatTransfer
 );
 
 phaseTransfer
-();
+(
+    (particles in vapor)
+    {
+        type reactionDriven;
+        reactingPhase vapor;
+        targetPhase particles;
+        species (TiO2);
+    }
+);
 
 lift
 ();

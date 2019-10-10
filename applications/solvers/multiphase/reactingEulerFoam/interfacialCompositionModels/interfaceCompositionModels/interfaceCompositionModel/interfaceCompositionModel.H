@@ -182,12 +182,12 @@ public:
             ) const;
 
             //- Add latent heat flow rate to total
-            virtual void addMDotL
+            virtual void addDmdtL
             (
                 const volScalarField& K,
                 const volScalarField& Tf,
-                volScalarField& mDotL,
-                volScalarField& mDotLPrime
+                volScalarField& dmdtL,
+                volScalarField& dmdtLPrime
             ) const;
 
 

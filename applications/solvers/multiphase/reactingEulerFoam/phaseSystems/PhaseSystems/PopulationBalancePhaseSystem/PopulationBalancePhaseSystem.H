@@ -55,21 +55,13 @@ class PopulationBalancePhaseSystem
 :
     public BasePhaseSystem
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Population balances
         PtrList<diameterModels::populationBalanceModel> populationBalances_;
 
         //- Mass transfer rates
-        phaseSystem::dmdtTable pDmdt_;
-
-
-    // Protected member functions
-
-        //- Return the population balance induced mass transfer rate
-        virtual tmp<volScalarField> pDmdt(const phasePairKey& key) const;
+        phaseSystem::dmdtfTable dmdtfs_;
 
 
 public:
@@ -85,6 +77,9 @@ public:
 
 
     // Member Functions
+
+        //- Return the mass transfer rate for an interface
+        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

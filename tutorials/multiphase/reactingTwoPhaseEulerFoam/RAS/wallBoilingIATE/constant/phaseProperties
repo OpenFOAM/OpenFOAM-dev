@@ -54,7 +54,8 @@ gas
 
             phaseChange
             {
-                pairName gasAndLiquid;
+                otherPhase  liquid;
+                dmdtf       thermalPhaseChange:dmdtf;
             }
 
             wallBoiling

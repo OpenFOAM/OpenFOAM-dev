@@ -32,9 +32,9 @@ License
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHe
+void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
 (
-    const phaseSystem::dmdtTable& dmdts,
+    const phaseSystem::dmdtfTable& dmdtfs,
     phaseSystem::heatTransferTable& eqns
 ) const
 {
@@ -62,14 +62,14 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHe
     // latent heat mDot*L terms are added below (as well as other standard
     // terms representing sensible energy and kinetic energy differences).
 
-    forAllConstIter(phaseSystem::dmdtTable, dmdts, dmdtIter)
+    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        const phasePairKey& key = dmdtIter.key();
+        const phasePairKey& key = dmdtfIter.key();
         const phasePair& pair(this->phasePairs_[key]);
 
-        const volScalarField dmdt(Pair<word>::compare(pair, key)**dmdtIter());
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
+        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
+        const volScalarField dmdtf21(posPart(dmdtf));
+        const volScalarField dmdtf12(negPart(dmdtf));
 
         const phaseModel& phase1 = pair.phase1();
         const phaseModel& phase2 = pair.phase2();
@@ -94,20 +94,20 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHe
             const volScalarField& Tf(*Tf_[key]);
             const volScalarField hef1(thermo1.he(thermo1.p(), Tf));
             const volScalarField hef2(thermo2.he(thermo2.p(), Tf));
-            *eqns[phase1.name()] += dmdt*hef1 - fvm::Sp(dmdt, he1);
-            *eqns[phase2.name()] -= dmdt*hef2 - fvm::Sp(dmdt, he2);
+            *eqns[phase1.name()] += dmdtf*hef1 - fvm::Sp(dmdtf, he1);
+            *eqns[phase2.name()] -= dmdtf*hef2 - fvm::Sp(dmdtf, he2);
 
             // Latent heat contribution
             const volScalarField L(hef2 + thermo2.hc() - hef1 - thermo1.hc());
             const volScalarField H1(heatTransferModels_[key].first()->K());
             const volScalarField H2(heatTransferModels_[key].second()->K());
             const volScalarField H1Fac(H1/(H1 + H2));
-            *eqns[phase1.name()] += H1Fac*dmdt*L;
-            *eqns[phase2.name()] += (1 - H1Fac)*dmdt*L;
+            *eqns[phase1.name()] += H1Fac*dmdtf*L;
+            *eqns[phase2.name()] += (1 - H1Fac)*dmdtf*L;
 
             // Transfer of kinetic energy
-            *eqns[phase1.name()] += dmdt21*(K2 - K1);
-            *eqns[phase2.name()] -= dmdt12*(K1 - K2);
+            *eqns[phase1.name()] += dmdtf21*(K2 - K1);
+            *eqns[phase2.name()] -= dmdtf12*(K1 - K2);
         }
         else
         {
@@ -116,29 +116,29 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHe
             // change and therefore no interface state or latent heat...
 
             // Transfer of energy from bulk to bulk
-            *eqns[phase1.name()] += dmdt21*he2 - fvm::Sp(dmdt21, he1);
-            *eqns[phase2.name()] -= dmdt12*he1 - fvm::Sp(dmdt12, he2);
+            *eqns[phase1.name()] += dmdtf21*he2 - fvm::Sp(dmdtf21, he1);
+            *eqns[phase2.name()] -= dmdtf12*he1 - fvm::Sp(dmdtf12, he2);
 
             // Transfer of kinetic energy
-            *eqns[phase1.name()] += dmdt21*(K2 - K1);
-            *eqns[phase2.name()] -= dmdt12*(K1 - K2);
+            *eqns[phase1.name()] += dmdtf21*(K2 - K1);
+            *eqns[phase2.name()] -= dmdtf12*(K1 - K2);
         }
     }
 }
 
 
 template<class BasePhaseSystem>
-void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
+void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
 (
-    const phaseSystem::dmidtTable& dmidts,
+    const phaseSystem::dmidtfTable& dmidtfs,
     phaseSystem::heatTransferTable& eqns
 ) const
 {
     // See the addDmdtHe method for a description of the latent heat terms
 
-    forAllConstIter(phaseSystem::dmidtTable, dmidts, dmidtIter)
+    forAllConstIter(phaseSystem::dmidtfTable, dmidtfs, dmidtfIter)
     {
-        const phasePairKey& key = dmidtIter.key();
+        const phasePairKey& key = dmidtfIter.key();
         const phasePair& pair(this->phasePairs_[key]);
 
         const phaseModel& phase1 = pair.phase1();
@@ -176,18 +176,18 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
             forAllConstIter
             (
                 HashPtrTable<volScalarField>,
-                *dmidtIter(),
-                dmidtJter
+                *dmidtfIter(),
+                dmidtfJter
             )
             {
-                const word& member = dmidtJter.key();
+                const word& member = dmidtfJter.key();
 
-                const volScalarField dmidt
+                const volScalarField dmidtf
                 (
-                    Pair<word>::compare(pair, key)**dmidtJter()
+                    Pair<word>::compare(pair, key)**dmidtfJter()
                 );
-                const volScalarField dmidt21(posPart(dmidt));
-                const volScalarField dmidt12(negPart(dmidt));
+                const volScalarField dmidtf21(posPart(dmidtf));
+                const volScalarField dmidtf12(negPart(dmidtf));
 
                 // Create the interface energies for the transferring specie
                 volScalarField hefi1(hef1), hci1(hc1);
@@ -233,16 +233,16 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
                 const volScalarField Li(hefi2 + hci2 - hefi1 - hci1);
 
                 // Transfer of energy from the interface into the bulk
-                *eqns[phase1.name()] += dmidt*hefi1 - fvm::Sp(dmidt, he1);
-                *eqns[phase2.name()] -= dmidt*hefi2 - fvm::Sp(dmidt, he2);
+                *eqns[phase1.name()] += dmidtf*hefi1 - fvm::Sp(dmidtf, he1);
+                *eqns[phase2.name()] -= dmidtf*hefi2 - fvm::Sp(dmidtf, he2);
 
                 // Latent heat contribution
-                *eqns[phase1.name()] += H1Fac*dmidt*Li;
-                *eqns[phase2.name()] += (1 - H1Fac)*dmidt*Li;
+                *eqns[phase1.name()] += H1Fac*dmidtf*Li;
+                *eqns[phase2.name()] += (1 - H1Fac)*dmidtf*Li;
 
                 // Transfer of kinetic energy
-                *eqns[phase1.name()] += dmidt21*(K2 - K1);
-                *eqns[phase2.name()] -= dmidt12*(K1 - K2);
+                *eqns[phase1.name()] += dmidtf21*(K2 - K1);
+                *eqns[phase2.name()] -= dmidtf12*(K1 - K2);
             }
         }
         else
@@ -255,18 +255,18 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
             forAllConstIter
             (
                 HashPtrTable<volScalarField>,
-                *dmidtIter(),
-                dmidtJter
+                *dmidtfIter(),
+                dmidtfJter
             )
             {
-                const word& member = dmidtJter.key();
+                const word& member = dmidtfJter.key();
 
-                const volScalarField dmidt
+                const volScalarField dmidtf
                 (
-                    Pair<word>::compare(pair, key)**dmidtJter()
+                    Pair<word>::compare(pair, key)**dmidtfJter()
                 );
-                const volScalarField dmidt21(posPart(dmidt));
-                const volScalarField dmidt12(negPart(dmidt));
+                const volScalarField dmidtf21(posPart(dmidtf));
+                const volScalarField dmidtf12(negPart(dmidtf));
 
                 // Create the energies for the transferring specie
                 volScalarField hei1(he1);
@@ -297,12 +297,12 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHe
                 }
 
                 // Transfer of energy from bulk to bulk
-                *eqns[phase1.name()] += dmidt21*hei2 - fvm::Sp(dmidt21, he1);
-                *eqns[phase2.name()] -= dmidt12*hei1 - fvm::Sp(dmidt12, he2);
+                *eqns[phase1.name()] += dmidtf21*hei2 - fvm::Sp(dmidtf21, he1);
+                *eqns[phase2.name()] -= dmidtf12*hei1 - fvm::Sp(dmidtf12, he2);
 
                 // Transfer of kinetic energy
-                *eqns[phase1.name()] += dmidt21*(K2 - K1);
-                *eqns[phase2.name()] -= dmidt12*(K1 - K2);
+                *eqns[phase1.name()] += dmidtf21*(K2 - K1);
+                *eqns[phase2.name()] -= dmidtf12*(K1 - K2);
             }
         }
     }
@@ -353,7 +353,7 @@ TwoResistanceHeatTransferPhaseSystem
         }
     }
 
-    // Calculate initial Tf-s as if there is no mass transfer
+    // Calculate initial Tf-s as the mean between the two phases
     forAllConstIter
     (
         heatTransferModelTable,
@@ -363,15 +363,8 @@ TwoResistanceHeatTransferPhaseSystem
     {
         const phasePair& pair = this->phasePairs_[heatTransferModelIter.key()];
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
-
-        const volScalarField& T1(phase1.thermo().T());
-        const volScalarField& T2(phase2.thermo().T());
-
-        volScalarField H1(heatTransferModels_[pair].first()->K());
-        volScalarField H2(heatTransferModels_[pair].second()->K());
-        dimensionedScalar HSmall("small", heatTransferModel::dimK, small);
+        const volScalarField& T1(pair.phase1().thermo().T());
+        const volScalarField& T2(pair.phase2().thermo().T());
 
         Tf_.insert
         (
@@ -386,7 +379,7 @@ TwoResistanceHeatTransferPhaseSystem
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
                 ),
-                (H1*T1 + H2*T2)/max(H1 + H2, HSmall)
+                (T1 + T2)/2
             )
         );
     }

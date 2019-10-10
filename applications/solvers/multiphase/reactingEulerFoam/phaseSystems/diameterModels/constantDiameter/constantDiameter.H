@@ -35,7 +35,7 @@ SourceFiles
 #ifndef constantDiameter_H
 #define constantDiameter_H
 
-#include "diameterModel.H"
+#include "sphericalDiameter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,12 +50,20 @@ namespace diameterModels
 
 class constant
 :
-    public diameterModel
+    public spherical
 {
     // Private Data
 
         //- The constant diameter of the phase
         dimensionedScalar d_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const;
 
 
 public:
@@ -79,9 +87,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the diameter as a field
-        virtual tmp<volScalarField> d() const;
 
         //- Read diameterProperties dictionary
         virtual bool read(const dictionary& diameterProperties);

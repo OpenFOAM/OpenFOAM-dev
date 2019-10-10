@@ -224,49 +224,6 @@ void Foam::diameterModels::populationBalanceModel::createPhasePairs()
             }
         }
     }
-
-    forAll(nucleation_, model)
-    {
-        nucleation_[model].registerPair(speciesDmdt_);
-    }
-
-    forAllConstIter
-    (
-        speciesDmdtTable,
-        speciesDmdt_,
-        sDmdtIter
-    )
-    {
-        const phasePairKey& key = sDmdtIter.key();
-
-        if (!phasePairs_.found(key))
-        {
-            const phaseModel& phasei =
-                mesh_.lookupObject<phaseModel>
-                (
-                    IOobject::groupName("alpha", key.first())
-                );
-
-            const phaseModel& phasej =
-                mesh_.lookupObject<phaseModel>
-                (
-                    IOobject::groupName("alpha", key.second())
-                );
-
-            phasePairs_.insert
-            (
-                key,
-                autoPtr<phasePair>
-                (
-                    new phasePair
-                    (
-                        phasei,
-                        phasej
-                    )
-                )
-            );
-        }
-    }
 }
 
 
@@ -728,24 +685,6 @@ nucleation
 
     Su_[i] += Sui_;
 
-    const phasePairKey pair
-    (
-        fi.phase().name(),
-        continuousPhase_.name()
-    );
-
-    if (pDmdt_.found(pair) && model.pDmDt())
-    {
-        const scalar dmdtSign
-        (
-            Pair<word>::compare(pDmdt_.find(pair).key(), pair)
-        );
-
-        pDmdt_[pair]->ref() += dmdtSign*Sui_*fi.phase().rho();
-
-        model.addToSpeciesDmDt(speciesDmdt_);
-    }
-
     sizeGroups_[i].shapeModelPtr()->addNucleation(Sui_, fi, model);
 }
 
@@ -767,19 +706,6 @@ void Foam::diameterModels::populationBalanceModel::sources()
     )
     {
         pDmdt_(phasePairIter())->ref() = Zero;
-
-        if (speciesDmdt_.found(phasePairIter()))
-        {
-            forAllIter
-            (
-                HashPtrTable<volScalarField>,
-                *speciesDmdt_(phasePairIter()),
-                sDmdtIter
-            )
-            {
-                (sDmdtIter())->ref() = Zero;
-            }
-        }
     }
 
     // Since the calculation of the rates is computationally expensive,

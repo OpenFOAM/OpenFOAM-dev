@@ -24,28 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PopulationBalancePhaseSystem.H"
-#include "rhoReactionThermo.H"
-
-// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::pDmdt
-(
-    const phasePairKey& key
-) const
-{
-    if (!pDmdt_.found(key))
-    {
-        const phasePair& pair = this->phasePairs_[key];
-        return zeroVolField<scalar>(pair, "pDmdt", dimDensity/dimTime);
-    }
-
-    const scalar pDmdtSign(Pair<word>::compare(pDmdt_.find(key).key(), key));
-
-    return pDmdtSign**pDmdt_[key];
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -61,7 +39,7 @@ PopulationBalancePhaseSystem
     populationBalances_
     (
         this->lookup("populationBalances"),
-        diameterModels::populationBalanceModel::iNew(*this, pDmdt_)
+        diameterModels::populationBalanceModel::iNew(*this, dmdtfs_)
     )
 {
     forAll(populationBalances_, i)
@@ -89,7 +67,7 @@ PopulationBalancePhaseSystem
                 );
             }
 
-            pDmdt_.insert
+            dmdtfs_.insert
             (
                 key,
                 new volScalarField
@@ -98,7 +76,7 @@ PopulationBalancePhaseSystem
                     (
                         IOobject::groupName
                         (
-                            "pDmdt",
+                            "populationBalance:dmdtf",
                             this->phasePairs_[key]->name()
                         ),
                         this->mesh().time().timeName(),
@@ -126,15 +104,35 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdtf
+(
+    const phasePairKey& key
+) const
+{
+    tmp<volScalarField> tDmdt = BasePhaseSystem::dmdtf(key);
+
+    if (!dmdtfs_.found(key))
+    {
+        const label dmdtSign(Pair<word>::compare(this->phasePairs_[key], key));
+
+        tDmdt.ref() += dmdtSign**dmdtfs_[key];
+    }
+
+    return tDmdt;
+}
+
+
+template<class BasePhaseSystem>
 Foam::PtrList<Foam::volScalarField>
 Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
 
-    forAllConstIter(phaseSystem::dmdtTable, pDmdt_, pDmdtIter)
+    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfIter)
     {
-        const phasePair& pair = this->phasePairs_[pDmdtIter.key()];
-        const volScalarField& pDmdt = *pDmdtIter();
+        const phasePair& pair = this->phasePairs_[dmdtfIter.key()];
+        const volScalarField& pDmdt = *dmdtfIter();
 
         addField(pair.phase1(), "dmdt", pDmdt, dmdts);
         addField(pair.phase2(), "dmdt", - pDmdt, dmdts);
@@ -153,7 +151,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransfer()
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtU(pDmdt_, eqns);
+    this->addDmdtUfs(dmdtfs_, eqns);
 
     return eqnsPtr;
 }
@@ -168,7 +166,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransferf()
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtU(pDmdt_, eqns);
+    this->addDmdtUfs(dmdtfs_, eqns);
 
     return eqnsPtr;
 }
@@ -183,7 +181,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
     phaseSystem::heatTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtHe(pDmdt_, eqns);
+    this->addDmdtHefs(dmdtfs_, eqns);
 
     return eqnsPtr;
 }
@@ -198,118 +196,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::specieTransfer() const
 
     phaseSystem::specieTransferTable& eqns = eqnsPtr();
 
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered() || !pDmdt_.found(pair))
-        {
-            continue;
-        }
-
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
-
-        forAll(populationBalances_, i)
-        {
-            const Foam::diameterModels::populationBalanceModel& popBal =
-                populationBalances_[i];
-
-            if (popBal.phasePairs().found(pair))
-            {
-                // Both phases are velocity groups and belong to same population
-                // balance -> transfer all species proportionally
-                if (popBal.isVelocityGroupPair(pair))
-                {
-                    // Note that the phase YiEqn does not contain
-                    // a continuity error term,
-                    // so these additions represent the entire mass transfer
-
-                    const volScalarField dmdt(this->pDmdt(pair));
-                    const volScalarField dmdt12(negPart(dmdt));
-                    const volScalarField dmdt21(posPart(dmdt));
-                    const PtrList<volScalarField>& Yi = phase.Y();
-
-                    forAll(Yi, i)
-                    {
-                        const word name
-                        (
-                            IOobject::groupName(Yi[i].member(), phase.name())
-                        );
-
-                        const word otherName
-                        (
-                            IOobject::groupName
-                            (
-                                Yi[i].member(),
-                                otherPhase.name()
-                            )
-                        );
-
-                        *eqns[name] +=
-                            dmdt21*eqns[otherName]->psi()
-                          + fvm::Sp(dmdt12, eqns[name]->psi());
-
-                        *eqns[otherName] -=
-                            dmdt12*eqns[name]->psi()
-                          + fvm::Sp(dmdt21, eqns[otherName]->psi());
-                    }
-                }
-                // The phases do not belong to the same population balance,
-                // transfer each specie separately
-                else
-                {
-
-                    const HashPtrTable<volScalarField>& sDmdt =
-                        popBal.speciesDmdt(pair);
-
-                    forAllConstIter
-                    (
-                        HashPtrTable<volScalarField>,
-                        sDmdt,
-                        sDmdtIter
-                    )
-                    {
-                        const word name
-                        (
-                            IOobject::groupName(sDmdtIter.key(), phase.name())
-                        );
-
-                        const word otherName
-                        (
-                            IOobject::groupName
-                            (
-                                sDmdtIter.key(),
-                                otherPhase.name()
-                            )
-                        );
-
-                        const dimensionedScalar Yismall(dimless, rootVSmall);
-
-                        const volScalarField& Y1 = eqns[name]->psi();
-                        const volScalarField& Y2 = eqns[otherName]->psi();
-
-                        const volScalarField sDmdt12(negPart(**sDmdtIter));
-                        const volScalarField sDmdt21(posPart(**sDmdtIter));
-
-                        *eqns[name] +=
-                            sDmdt21
-                          + fvm::Sp(sDmdt12/(Y1 + Yismall), Y1);
-
-                        *eqns[otherName] -=
-                            sDmdt12
-                          + fvm::Sp(sDmdt21/(Y2 + Yismall), Y2);
-                    }
-
-                }
-            }
-        }
-    }
+    this->addDmdtYfs(dmdtfs_, eqns);
 
     return eqnsPtr;
 }

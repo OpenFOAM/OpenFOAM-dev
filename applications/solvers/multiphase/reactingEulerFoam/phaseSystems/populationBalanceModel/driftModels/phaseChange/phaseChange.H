@@ -25,7 +25,7 @@ Class
     Foam::diameterModels::driftModels::phaseChange
 
 Description
-    Drift induced by interfacial phase change. By default phase change mass
+    Drift induced by phase change. By default phase change mass
     flux is distributed between sizeGroups of each velocityGroup with phase
     change based on interfacial area of each size group.
 
@@ -64,10 +64,16 @@ class phaseChange
 
         //- Distribute phase change mass flux between sizeGroups based on the
         //  number concentration, rather than the interfacial area
-        Switch numberWeighted_;
+        const Switch numberWeighted_;
 
         //- Weighting with which the phase change mass flux is distributed
         PtrList<volScalarField> W_;
+
+        //- Name of the mass transfer rate
+        const word dmdtfName_;
+
+        //- Name of the specie which changes phase, empty by default
+        const word specieName_;
 
 
 public:

@@ -25,8 +25,8 @@ Class
     Foam::PhaseTransferPhaseSystem
 
 Description
-    Class which models non-thermally-coupled mass transfers; i.e.,
-    representation changes, rather than phase changes.
+   Class which models non-thermally-coupled or weakly thermally coupled
+   mass transfers.
 
 SourceFiles
     PhaseTransferPhaseSystem.C
@@ -75,8 +75,17 @@ private:
             //- Mass transfer models
             phaseTransferModelTable phaseTransferModels_;
 
-            //- Mass transfer rates
-            phaseSystem::dmdtTable rDmdt_;
+            //- Bulk mass transfer rates
+            phaseSystem::dmdtfTable dmdtfs_;
+
+            //- Specie mass transfer rates
+            phaseSystem::dmidtfTable dmidtfs_;
+
+
+    // Private member functions
+
+        //- Return the summed mass transfers across each interface
+        autoPtr<phaseSystem::dmdtfTable> totalDmdtfs() const;
 
 
 protected:
@@ -84,16 +93,16 @@ protected:
     // Protected member functions
 
         //- Add specie transfer terms which result from bulk mass transfers
-        void addDmdtY
+        void addDmdtYfs
         (
-            const phaseSystem::dmdtTable& dmdts,
+            const phaseSystem::dmdtfTable& dmdtfs,
             phaseSystem::specieTransferTable& eqns
         ) const;
 
         //- Add specie transfer terms which result from specie mass transfers
-        void addDmidtY
+        void addDmidtYf
         (
-            const phaseSystem::dmidtTable& dmidts,
+            const phaseSystem::dmidtfTable& dmidtfs,
             phaseSystem::specieTransferTable& eqns
         ) const;
 
@@ -111,6 +120,9 @@ public:
 
 
     // Member Functions
+
+        //- Return the mass transfer rate for an interface
+        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

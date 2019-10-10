@@ -10,6 +10,7 @@ phaseSystem/phaseSystem.C
 
 diameterModels/diameterModel/diameterModel.C
 diameterModels/diameterModel/newDiameterModel.C
+diameterModels/sphericalDiameter/sphericalDiameter.C
 diameterModels/constantDiameter/constantDiameter.C
 diameterModels/isothermalDiameter/isothermalDiameter.C
 diameterModels/linearTsubDiameter/linearTsubDiameter.C

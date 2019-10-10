@@ -111,10 +111,13 @@ populationBalanceCoeffs
         (
             phaseChange
             {
-                pairs ( (gas and liquid) );
+                pairs   ((gas and liquid));
+                dmdtf   thermalPhaseChange:dmdtf;
             }
 
-            densityChange{}
+            densityChange
+            {
+            }
         );
 
         nucleationModels

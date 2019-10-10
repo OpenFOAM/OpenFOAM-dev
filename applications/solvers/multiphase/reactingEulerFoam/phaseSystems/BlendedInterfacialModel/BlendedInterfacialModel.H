@@ -37,27 +37,14 @@ SourceFiles
 #include "blendingMethod.H"
 #include "phasePair.H"
 #include "orderedPhasePair.H"
+#include "HashPtrTable.H"
+#include "hashedWordList.H"
 #include "geometricZeroField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-/*---------------------------------------------------------------------------*\
-                    Class blendedInterfacialModel Declaration
-\*---------------------------------------------------------------------------*/
-
-class blendedInterfacialModel
-{
-    public:
-
-        //- Convenience function to interpolate blending values. Needs to be
-        //  specialised, so can't sit in the templated class.
-        template<class GeoField>
-        static inline tmp<GeoField> interpolate(tmp<volScalarField> f);
-};
-
 
 /*---------------------------------------------------------------------------*\
                     Class BlendedInterfacialModel Declaration
@@ -94,9 +81,21 @@ class BlendedInterfacialModel
 
     // Private Member Functions
 
+        //- Calculate the blending coefficients
+        template<template<class> class PatchField, class GeoMesh>
+        void calculateBlendingCoeffs
+        (
+            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1,
+            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2,
+            const bool subtract
+        ) const;
+
         //- Correct coeff/value on fixed flux boundary conditions
-        template<class GeoField>
-        void correctFixedFluxBCs(GeoField& field) const;
+        template<class Type, template<class> class PatchField, class GeoMesh>
+        void correctFixedFluxBCs
+        (
+            GeometricField<Type, PatchField, GeoMesh>& field
+        ) const;
 
         //- Return the blended coeff/value
         template
@@ -109,6 +108,24 @@ class BlendedInterfacialModel
         tmp<GeometricField<Type, PatchField, GeoMesh>> evaluate
         (
             tmp<GeometricField<Type, PatchField, GeoMesh>>
+            (ModelType::*method)(Args ...) const,
+            const word& name,
+            const dimensionSet& dims,
+            const bool subtract,
+            Args ... args
+        ) const;
+
+        //- Return the blended coeff/value
+        template
+        <
+            class Type,
+            template<class> class PatchField,
+            class GeoMesh,
+            class ... Args
+        >
+        HashPtrTable<GeometricField<Type, PatchField, GeoMesh>> evaluate
+        (
+            HashPtrTable<GeometricField<Type, PatchField, GeoMesh>>
             (ModelType::*method)(Args ...) const,
             const word& name,
             const dimensionSet& dims,
@@ -181,8 +198,17 @@ public:
         //- Return the blended diffusivity
         tmp<volScalarField> D() const;
 
+        //- Return the list of individual species that are transferred
+        bool mixture() const;
+
         //- Return the blended mass transfer rate
-        tmp<volScalarField> dmdt() const;
+        tmp<volScalarField> dmdtf() const;
+
+        //- Return the list of individual species that are transferred
+        hashedWordList species() const;
+
+        //- Return the blended mass transfer rates for individual species
+        HashPtrTable<volScalarField> dmidtf() const;
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;

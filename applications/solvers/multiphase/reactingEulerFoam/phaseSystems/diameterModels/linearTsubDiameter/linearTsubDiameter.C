@@ -35,14 +35,16 @@ namespace Foam
 namespace diameterModels
 {
     defineTypeNameAndDebug(linearTsub, 0);
-
-    addToRunTimeSelectionTable
-    (
-        diameterModel,
-        linearTsub,
-        dictionary
-    );
+    addToRunTimeSelectionTable(diameterModel, linearTsub, dictionary);
 }
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::calcD() const
+{
+    return d_;
 }
 
 
@@ -54,7 +56,7 @@ Foam::diameterModels::linearTsub::linearTsub
     const phaseModel& phase
 )
 :
-    diameterModel(diameterProperties, phase),
+    spherical(diameterProperties, phase),
     liquidPhaseName_(diameterProperties.lookup("liquidPhase")),
     d2_("d2", dimLength, diameterProperties.lookupOrDefault("d2", 0.0015)),
     Tsub2_
@@ -75,20 +77,10 @@ Foam::diameterModels::linearTsub::linearTsub
         dimTemperature,
         diameterProperties.lookupOrDefault("Tsub1", 13.5)
     ),
-    d_
-    (
-        IOobject
-        (
-            IOobject::groupName("d", phase.name()),
-            phase_.time().timeName(),
-            phase_.mesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        phase_.mesh(),
-        d1_
-    )
-{}
+    d_(dRef())
+{
+    d_ = d1_;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -99,27 +91,21 @@ Foam::diameterModels::linearTsub::~linearTsub()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::d() const
-{
-    return d_;
-}
-
-
 void Foam::diameterModels::linearTsub::correct()
 {
     // Lookup the fluid model
     const phaseSystem& fluid =
         refCast<const phaseSystem>
         (
-            phase_.mesh().lookupObject<phaseSystem>("phaseProperties")
+            phase().mesh().lookupObject<phaseSystem>("phaseProperties")
         );
 
     const phaseModel& liquid(fluid.phases()[liquidPhaseName_]);
 
-    if (phase_.mesh().foundObject<saturationModel>("saturationModel"))
+    if (phase().mesh().foundObject<saturationModel>("saturationModel"))
     {
         const saturationModel& satModel =
-            phase_.mesh().lookupObject<saturationModel>("saturationModel");
+            phase().mesh().lookupObject<saturationModel>("saturationModel");
 
         const volScalarField Tsub
         (
@@ -141,12 +127,13 @@ void Foam::diameterModels::linearTsub::correct()
 
 bool Foam::diameterModels::linearTsub::read(const dictionary& phaseProperties)
 {
-    diameterModel::read(phaseProperties);
-    diameterProperties_.lookup("liquidPhase") >> liquidPhaseName_;
-    diameterProperties_.lookup("d2") >> d2_;
-    diameterProperties_.lookup("Tsub2") >> Tsub2_;
-    diameterProperties_.lookup("d1") >> d1_;
-    diameterProperties_.lookup("Tsub1") >> Tsub1_;
+    spherical::read(phaseProperties);
+
+    diameterProperties().lookup("liquidPhase") >> liquidPhaseName_;
+    diameterProperties().lookup("d2") >> d2_;
+    diameterProperties().lookup("Tsub2") >> Tsub2_;
+    diameterProperties().lookup("d1") >> d1_;
+    diameterProperties().lookup("Tsub1") >> Tsub1_;
 
     return true;
 }

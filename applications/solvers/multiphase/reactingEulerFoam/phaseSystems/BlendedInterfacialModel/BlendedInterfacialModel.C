@@ -31,46 +31,97 @@ License
 
 namespace Foam
 {
+namespace blendedInterfacialModel
+{
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+template<class GeoField>
+inline tmp<GeoField> interpolate(tmp<volScalarField> f);
 
 template<>
-inline tmp<Foam::volScalarField>
-blendedInterfacialModel::interpolate(tmp<volScalarField> f)
+inline tmp<Foam::volScalarField> interpolate(tmp<volScalarField> f)
 {
     return f;
 }
 
-
 template<>
-inline tmp<Foam::surfaceScalarField>
-blendedInterfacialModel::interpolate(tmp<volScalarField> f)
+inline tmp<Foam::surfaceScalarField> interpolate(tmp<volScalarField> f)
 {
     return fvc::interpolate(f);
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
+} // End namespace blendedInterfacialModel
 } // End namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ModelType>
-template<class GeoField>
-void Foam::BlendedInterfacialModel<ModelType>::correctFixedFluxBCs
+template<template<class> class PatchField, class GeoMesh>
+void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
 (
-    GeoField& field
+    tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1,
+    tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2,
+    const bool subtract
 ) const
 {
-    typename GeoField::Boundary& fieldBf = field.boundaryFieldRef();
+    typedef GeometricField<scalar, PatchField, GeoMesh> scalarGeoField;
 
-    forAll(phase1_.phi()().boundaryField(), patchi)
+    if (model_.valid() && subtract)
+    {
+        FatalErrorInFunction
+            << "Cannot treat an interfacial model with no distinction between "
+            << "continuous and dispersed phases as signed"
+            << exit(FatalError);
+    }
+
+    if (model_.valid() || model1In2_.valid())
+    {
+        f1 =
+            blendedInterfacialModel::interpolate<scalarGeoField>
+            (
+                blending_.f1(phase1_, phase2_)
+            );
+    }
+
+    if (model_.valid() || model2In1_.valid())
+    {
+        f2 =
+            (subtract ? -1 : +1)
+           *blendedInterfacialModel::interpolate<scalarGeoField>
+            (
+                blending_.f2(phase1_, phase2_)
+            );
+    }
+}
+
+
+template<class ModelType>
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::BlendedInterfacialModel<ModelType>::correctFixedFluxBCs
+(
+    GeometricField<Type, PatchField, GeoMesh>& field
+) const
+{
+    typedef GeometricField<Type, PatchField, GeoMesh> typeGeoField;
+
+    typename typeGeoField::Boundary& fieldBf = field.boundaryFieldRef();
+
+    forAll(fieldBf, patchi)
     {
         if
         (
-            isA<fixedValueFvsPatchScalarField>
             (
-                phase1_.phi()().boundaryField()[patchi]
+                !phase1_.stationary()
+             && isA<fixedValueFvsPatchScalarField>
+                (
+                    phase1_.phi()().boundaryField()[patchi]
+                )
+            )
+         || (
+                !phase2_.stationary()
+             && isA<fixedValueFvsPatchScalarField>
+                (
+                    phase2_.phi()().boundaryField()[patchi]
+                )
             )
         )
         {
@@ -103,73 +154,30 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     typedef GeometricField<Type, PatchField, GeoMesh> typeGeoField;
 
     tmp<scalarGeoField> f1, f2;
+    calculateBlendingCoeffs(f1, f2, subtract);
 
-    if (model_.valid() || model1In2_.valid())
-    {
-        f1 =
-            blendedInterfacialModel::interpolate<scalarGeoField>
-            (
-                blending_.f1(phase1_, phase2_)
-            );
-    }
-
-    if (model_.valid() || model2In1_.valid())
-    {
-        f2 =
-            blendedInterfacialModel::interpolate<scalarGeoField>
-            (
-                blending_.f2(phase1_, phase2_)
-            );
-    }
-
-    tmp<typeGeoField> x
-    (
-        new typeGeoField
+    tmp<typeGeoField> x =
+        typeGeoField::New
         (
-            IOobject
-            (
-                ModelType::typeName + ":" + name,
-                phase1_.mesh().time().timeName(),
-                phase1_.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            ModelType::typeName + ":"
+          + IOobject::groupName(name, phasePair(phase1_, phase2_).name()),
             phase1_.mesh(),
-            dimensioned<Type>("zero", dims, Zero)
-        )
-    );
+            dimensioned<Type>(dims, Zero)
+        );
 
     if (model_.valid())
     {
-        if (subtract)
-        {
-            FatalErrorInFunction
-                << "Cannot treat an interfacial model with no distinction "
-                << "between continuous and dispersed phases as signed"
-                << exit(FatalError);
-        }
-
-        x.ref() += (model_().*method)(args ...)*(scalar(1) - f1() - f2());
+        x.ref() += (scalar(1) - f1() - f2())*(model_().*method)(args ...);
     }
 
     if (model1In2_.valid())
     {
-        x.ref() += (model1In2_().*method)(args ...)*f1;
+        x.ref() += f1*(model1In2_().*method)(args ...);
     }
 
     if (model2In1_.valid())
     {
-        tmp<typeGeoField> dx = (model2In1_().*method)(args ...)*f2;
-
-        if (subtract)
-        {
-            x.ref() -= dx;
-        }
-        else
-        {
-            x.ref() += dx;
-        }
+        x.ref() += f2*(model2In1_().*method)(args ...);
     }
 
     if
@@ -182,6 +190,96 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     }
 
     return x;
+}
+
+
+template<class ModelType>
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    class ... Args
+>
+Foam::HashPtrTable<Foam::GeometricField<Type, PatchField, GeoMesh>>
+Foam::BlendedInterfacialModel<ModelType>::evaluate
+(
+    HashPtrTable<GeometricField<Type, PatchField, GeoMesh>>
+    (ModelType::*method)(Args ...) const,
+    const word& name,
+    const dimensionSet& dims,
+    const bool subtract,
+    Args ... args
+) const
+{
+    typedef GeometricField<scalar, PatchField, GeoMesh> scalarGeoField;
+    typedef GeometricField<Type, PatchField, GeoMesh> typeGeoField;
+
+    tmp<scalarGeoField> f1, f2;
+    calculateBlendingCoeffs(f1, f2, subtract);
+
+    HashPtrTable<typeGeoField> xs;
+
+    auto addToXs = [&]
+    (
+        const scalarGeoField& f,
+        const HashPtrTable<typeGeoField>& dxs
+    )
+    {
+        forAllConstIter(typename HashPtrTable<typeGeoField>, dxs, dxIter)
+        {
+            if (xs.found(dxIter.key()))
+            {
+                *xs[dxIter.key()] += f**dxIter();
+            }
+            else
+            {
+                xs.insert
+                (
+                    dxIter.key(),
+                    typeGeoField::New
+                    (
+                        ModelType::typeName + ':'
+                      + IOobject::groupName
+                        (
+                            IOobject::groupName(name, dxIter.key()),
+                            phasePair(phase1_, phase2_).name()
+                        ),
+                        f**dxIter()
+                    ).ptr()
+                );
+            }
+        }
+    };
+
+    if (model_.valid())
+    {
+        addToXs(scalar(1) - f1() - f2(), (model_().*method)(args ...));
+    }
+
+    if (model1In2_.valid())
+    {
+        addToXs(f1, (model1In2_().*method)(args ...));
+    }
+
+    if (model2In1_.valid())
+    {
+        addToXs(f2, (model1In2_().*method)(args ...));
+    }
+
+    if
+    (
+        correctFixedFluxBCs_
+     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+    )
+    {
+        forAllIter(typename HashPtrTable<typeGeoField>, xs, xIter)
+        {
+            correctFixedFluxBCs(*xIter());
+        }
+    }
+
+    return xs;
 }
 
 
@@ -344,10 +442,50 @@ Foam::BlendedInterfacialModel<ModelType>::D() const
 
 
 template<class ModelType>
-Foam::tmp<Foam::volScalarField>
-Foam::BlendedInterfacialModel<ModelType>::dmdt() const
+bool Foam::BlendedInterfacialModel<ModelType>::mixture() const
 {
-    return evaluate(&ModelType::dmdt, "dmdt", ModelType::dimDmdt, false);
+    return
+        (model1In2_.valid() && model1In2_->mixture())
+     || (model2In1_.valid() && model2In1_->mixture())
+     || (model_.valid() && model_->mixture());
+}
+
+
+template<class ModelType>
+Foam::tmp<Foam::volScalarField>
+Foam::BlendedInterfacialModel<ModelType>::dmdtf() const
+{
+    return evaluate(&ModelType::dmdtf, "dmdtf", ModelType::dimDmdt, true);
+}
+
+
+template<class ModelType>
+Foam::hashedWordList Foam::BlendedInterfacialModel<ModelType>::species() const
+{
+    wordList species;
+
+    if (model1In2_.valid())
+    {
+        species.append(model1In2_->species());
+    }
+    if (model2In1_.valid())
+    {
+        species.append(model2In1_->species());
+    }
+    if (model_.valid())
+    {
+        species.append(model_->species());
+    }
+
+    return hashedWordList(move(species));
+}
+
+
+template<class ModelType>
+Foam::HashPtrTable<Foam::volScalarField>
+Foam::BlendedInterfacialModel<ModelType>::dmidtf() const
+{
+    return evaluate(&ModelType::dmidtf, "dmidtf", ModelType::dimDmdt, true);
 }
 
 

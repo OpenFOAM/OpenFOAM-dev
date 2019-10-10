@@ -45,7 +45,7 @@ SourceFiles
 #ifndef linearTsubDiameter_H
 #define linearTsubDiameter_H
 
-#include "diameterModel.H"
+#include "sphericalDiameter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,7 +60,7 @@ namespace diameterModels
 
 class linearTsub
 :
-    public diameterModel
+    public spherical
 {
     // Private Data
 
@@ -80,8 +80,16 @@ class linearTsub
         //- Subcooling temperature where high subcooling diamter is reached
         dimensionedScalar Tsub1_;
 
-        //- Actual diameter field
-        mutable volScalarField d_;
+        //- Diameter field
+        volScalarField& d_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const;
 
 
 public:
@@ -105,9 +113,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the diameter field
-        virtual tmp<volScalarField> d() const;
 
         //- Correct the diameter field
         virtual void correct();

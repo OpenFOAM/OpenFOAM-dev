@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,8 @@ namespace Foam
 const Foam::dimensionSet Foam::phaseTransferModel::dimDmdt =
     Foam::dimDensity/Foam::dimTime;
 
+const Foam::hashedWordList Foam::phaseTransferModel::noSpecies_ =
+    Foam::hashedWordList();
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -48,6 +50,15 @@ Foam::phaseTransferModel::phaseTransferModel
     const phasePair& pair
 )
 :
+    regIOobject
+    (
+        IOobject
+        (
+            IOobject::groupName(typeName, pair.name()),
+            pair.phase1().mesh().time().timeName(),
+            pair.phase1().mesh()
+        )
+    ),
     pair_(pair)
 {}
 
@@ -56,6 +67,39 @@ Foam::phaseTransferModel::phaseTransferModel
 
 Foam::phaseTransferModel::~phaseTransferModel()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::phaseTransferModel::mixture() const
+{
+    return false;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::phaseTransferModel::dmdtf() const
+{
+    return tmp<volScalarField>(nullptr);
+}
+
+
+const Foam::hashedWordList& Foam::phaseTransferModel::species() const
+{
+    return noSpecies_;
+}
+
+
+Foam::HashPtrTable<Foam::volScalarField>
+Foam::phaseTransferModel::dmidtf() const
+{
+    return HashPtrTable<volScalarField>();
+}
+
+
+bool Foam::phaseTransferModel::writeData(Ostream& os) const
+{
+    return os.good();
+}
 
 
 // ************************************************************************* //
