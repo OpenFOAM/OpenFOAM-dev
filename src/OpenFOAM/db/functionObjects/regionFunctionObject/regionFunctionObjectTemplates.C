@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,38 @@ ObjectType& Foam::functionObjects::regionFunctionObject::lookupObjectRef
 template<class ObjectType>
 bool Foam::functionObjects::regionFunctionObject::store
 (
-    word& fieldName,
+    const tmp<ObjectType>& tfield
+)
+{
+    if (obr_.foundObject<ObjectType>(tfield->name()))
+    {
+        ObjectType& field = obr_.lookupObjectRef<ObjectType>(tfield->name());
+
+        // If there is a result field already registered assign to the new
+        // result field otherwise transfer ownership of the new result field to
+        // the object registry
+        if (&field != &tfield())
+        {
+            field = tfield;
+        }
+        else
+        {
+            obr_.objectRegistry::store(tfield.ptr());
+        }
+    }
+    else
+    {
+        obr_.objectRegistry::store(tfield.ptr());
+    }
+
+    return true;
+}
+
+
+template<class ObjectType>
+bool Foam::functionObjects::regionFunctionObject::store
+(
+    const word& fieldName,
     const tmp<ObjectType>& tfield,
     bool cacheable
 )
@@ -103,10 +134,6 @@ bool Foam::functionObjects::regionFunctionObject::store
         if (fieldName.size() && fieldName != tfield().name())
         {
             tfield.ref().rename(fieldName);
-        }
-        else
-        {
-            fieldName = tfield().name();
         }
 
         obr_.objectRegistry::store(tfield.ptr());

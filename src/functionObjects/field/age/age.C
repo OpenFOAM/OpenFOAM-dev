@@ -124,26 +124,25 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
 
 bool Foam::functionObjects::age::execute()
 {
-    return true;
-}
-
-
-bool Foam::functionObjects::age::write()
-{
-    volScalarField age
+    tmp<volScalarField> tage
     (
-        IOobject
+        new volScalarField
         (
-            typeName,
-            mesh_.time().timeName(),
+            IOobject
+            (
+                typeName,
+                mesh_.time().timeName(),
+                mesh_,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE,
+                false
+            ),
             mesh_,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh_,
-        dimensionedScalar(dimTime, 0),
-        patchTypes()
+            dimensionedScalar(dimTime, 0),
+            patchTypes()
+        )
     );
+    volScalarField& age = tage.ref();
 
     const word divScheme("div(phi," + schemesField_ + ")");
 
@@ -244,9 +243,15 @@ bool Foam::functionObjects::age::write()
     Info<< "Min/max age:" << min(age).value()
         << ' ' << max(age).value() << endl;
 
-    age.write();
+    store(tage);
 
     return true;
+}
+
+
+bool Foam::functionObjects::age::write()
+{
+    return writeObject(typeName);
 }
 
 

@@ -25,4 +25,7 @@ libs            ("libfieldFunctionObjects.so");
 
 diffusion       true;
 
+executeControl  writeTime;
+writeControl    writeTime;
+
 // ************************************************************************* //

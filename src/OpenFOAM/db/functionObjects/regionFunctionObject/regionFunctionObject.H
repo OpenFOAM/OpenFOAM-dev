@@ -86,11 +86,15 @@ protected:
         template<class ObjectType>
         ObjectType& lookupObjectRef(const word& fieldName);
 
+        //- Store the given field in the objectRegistry
+        template<class ObjectType>
+        bool store(const tmp<ObjectType>& tfield);
+
         //- Store the given field in the objectRegistry under the given name
         template<class ObjectType>
         bool store
         (
-            word& fieldName,
+            const word& fieldName,
             const tmp<ObjectType>& tfield,
             bool cacheable = false
         );

@@ -56,8 +56,8 @@ Usage
         type            age;
         libs            ("libsolverFunctionObjects.so");
 
+        executeControl  writeTime;
         writeControl    writeTime;
-        writeInterval   1;
 
         schemesField    k;
     }
