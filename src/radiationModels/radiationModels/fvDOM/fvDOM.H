@@ -25,29 +25,8 @@ Class
     Foam::radiationModels::fvDOM
 
 Description
-
     Finite Volume Discrete Ordinates Method. Solves the RTE equation for n
     directions in a participating media, not including scatter.
-
-    Available absorption models:
-        constantAbsorptionEmission
-        greyMeanAbsorptionEmission
-        wideBandAbsorptionEmission
-
-    i.e. dictionary
-    \verbatim
-        fvDOMCoeffs
-        {
-            nPhi        4;          // azimuthal angles in PI/2 on X-Y.
-                                    //(from Y to X)
-            nTheta      0;          // polar angles in PI (from Z to X-Y plane)
-            convergence 1e-3;       // convergence criteria for radiation
-                                    // iteration
-            maxIter     4;          // maximum number of iterations
-        }
-
-        solverFreq   1; // Number of flow iterations per radiation iteration
-    \endverbatim
 
     In 1-D the ray directions are bound to one of the X, Y or Z directions. The
     total number of solid angles is 2. nPhi and nTheta are ignored.
@@ -57,6 +36,18 @@ Description
 
     In 3D the rays span all directions. The total number of solid angles is
     4*nPhi*nTheta.
+
+Usage
+    \verbatim
+        fvDOMCoeffs
+        {
+            nPhi        4;      // azimuthal angles in PI/2 on X-Y (from Y to X)
+            nTheta      0;      // polar angles in PI (from Z to X-Y plane)
+            convergence 1e-3;   // convergence criteria for radiation iteration
+            maxIter     4;      // maximum number of iterations
+        }
+        solverFreq   1;     // Number of flow iterations per radiation iteration
+    \endverbatim
 
 SourceFiles
     fvDOM.C
