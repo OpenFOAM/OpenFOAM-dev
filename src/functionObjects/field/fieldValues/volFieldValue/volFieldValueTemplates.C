@@ -104,7 +104,7 @@ Type Foam::functionObjects::fieldValues::volFieldValue::processValues
         }
         case operationType::weightedAverage:
         {
-            result = gSum(weightField*values)/gSum(weightField);
+            result = gSum(weightField*values)/max(gSum(weightField), vSmall);
             break;
         }
         case operationType::volAverage:
@@ -114,7 +114,8 @@ Type Foam::functionObjects::fieldValues::volFieldValue::processValues
         }
         case operationType::weightedVolAverage:
         {
-            result = gSum(weightField*V*values)/gSum(weightField*V);
+            result =
+                gSum(weightField*V*values)/max(gSum(weightField*V), vSmall);
             break;
         }
         case operationType::volIntegrate:
