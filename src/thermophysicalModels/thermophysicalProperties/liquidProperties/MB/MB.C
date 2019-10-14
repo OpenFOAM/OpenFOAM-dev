@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ Foam::MB::MB
     const NSRDSfunc0& thermalConductivity,
     const NSRDSfunc2& vapourThermalConductivity,
     const NSRDSfunc6& surfaceTension,
-    const APIdiffCoefFunc& vapourDiffussivity
+    const APIdiffCoefFunc& vapourDiffusivity
 )
 :
     liquidProperties(l),
@@ -107,7 +107,7 @@ Foam::MB::MB
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffussivity)
+    D_(vapourDiffusivity)
 {}
 
 

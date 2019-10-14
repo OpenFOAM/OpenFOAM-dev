@@ -153,7 +153,7 @@ public:
                 //- Return the film specific heat capacity [J/kg/K]
                 virtual const tmp<volScalarField> Cp() const;
 
-                //- Return solid absortivity [1/m]
+                //- Return solid absorptivity [1/m]
                 virtual const volScalarField& kappaRad() const;
 
                 //- Return temperature [K]

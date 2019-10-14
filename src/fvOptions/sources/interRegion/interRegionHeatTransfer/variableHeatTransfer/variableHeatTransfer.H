@@ -74,7 +74,7 @@ class variableHeatTransfer
         //- Strut diameter
         scalar ds_;
 
-        //- Fluid Prandt number
+        //- Fluid Prandtl number
         scalar Pr_;
 
         //- Area per unit volume of heat exchanger

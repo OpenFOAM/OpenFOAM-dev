@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::iC3H8O::iC3H8O
     const NSRDSfunc0& thermalConductivity,
     const NSRDSfunc2& vapourThermalConductivity,
     const NSRDSfunc0& surfaceTension,
-    const NSRDSfunc1& vapourDiffussivity
+    const NSRDSfunc1& vapourDiffusivity
 )
 :
     liquidProperties(l),
@@ -123,7 +123,7 @@ Foam::iC3H8O::iC3H8O
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffussivity)
+    D_(vapourDiffusivity)
 {}
 
 

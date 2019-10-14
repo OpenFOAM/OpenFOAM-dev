@@ -55,7 +55,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         p            | pressure field name     | no          | p
-        cyclicPatch  | cylclic patch name      | yes         |
+        cyclicPatch  | cyclic patch name      | yes         |
         orientation  | 1 or -1 used to switch flow direction | yes|
         openFraction | current opatch open fraction [0-1]| yes |
         openingTime  | time taken to open the baffle | yes |

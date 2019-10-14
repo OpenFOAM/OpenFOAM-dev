@@ -225,7 +225,7 @@ public:
             const scalarField& X
         ) const;
 
-        //- Vapour diffussivity [m^2/s]
+        //- Vapour diffusivity [m^2/s]
         scalar D
         (
             const scalar p,

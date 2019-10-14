@@ -102,7 +102,7 @@ protected:
             wordReList fieldSelection_;
 
             //- Fixed locations, default = yes
-            //  Note: set to false for moving mesh calations where locations
+            //  Note: set to false for moving mesh calculations where locations
             //        should move with the mesh
             bool fixedLocations_;
 

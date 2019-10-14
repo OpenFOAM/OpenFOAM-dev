@@ -59,8 +59,8 @@ Description
     Where:
 
         alpha = user-input conversion coefficient (default = 1)
-        rho   = desity
-        omega = rotor angulr velocity
+        rho   = density
+        omega = rotor angular velocity
         pi    = mathematical pi
 
 

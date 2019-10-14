@@ -62,7 +62,7 @@ Usage
         patches      | patches included in the forces calculation | yes |
         liftDir      | lift direction          | yes         |
         dragDir      | drag direction          | yes         |
-        pitchAxis    | picth axis              | yes         |
+        pitchAxis    | pitch axis              | yes         |
         magUInf      | free stream velocity magnitude | yes  |
         lRef         | reference length scale for moment calculations | yes |
         Aref         | reference area          | yes |
@@ -73,7 +73,7 @@ Usage
     \table
         nBin         | number of data bins     | yes         |
         direction    | direction along which bins are defined | yes |
-        cumulative   | bin data accumulated with incresing distance | yes |
+        cumulative   | bin data accumulated with increasing distance | yes |
     \endtable
 
 See also

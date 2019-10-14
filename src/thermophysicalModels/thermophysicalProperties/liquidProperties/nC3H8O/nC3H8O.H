@@ -104,7 +104,7 @@ public:
             const NSRDSfunc0& thermalConductivity,
             const NSRDSfunc2& vapourThermalConductivity,
             const NSRDSfunc0& surfaceTension,
-            const NSRDSfunc1& vapourDiffussivity
+            const NSRDSfunc1& vapourDiffusivity
         );
 
         //- Construct from dictionary
@@ -155,10 +155,10 @@ public:
         //- Surface tension [N/m]
         inline scalar sigma(scalar p, scalar T) const;
 
-        //- Vapour diffussivity [m^2/s]
+        //- Vapour diffusivity [m^2/s]
         inline scalar D(scalar p, scalar T) const;
 
-        //- Vapour diffussivity [m^2/s] with specified binary pair
+        //- Vapour diffusivity [m^2/s] with specified binary pair
         // Note: behaves the same as D(p, T)
         inline scalar D(scalar p, scalar T, scalar Wb) const;
 

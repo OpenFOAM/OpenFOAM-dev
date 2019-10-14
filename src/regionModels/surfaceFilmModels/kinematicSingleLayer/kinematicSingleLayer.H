@@ -150,7 +150,7 @@ protected:
             // Note: need boundary value mapped from primary region, and then
             // pushed into the patch internal field
 
-                //- Momementum [kg/m/s^2]
+                //- Momentum [kg/m/s^2]
                 volVectorField USp_;
 
                 //- Pressure [Pa]
@@ -163,7 +163,7 @@ protected:
             // Primary region - registered to the primary region mesh
             // Internal use only - not read-in
 
-                //- Momementum [kg/m/s^2]
+                //- Momentum [kg/m/s^2]
                 volVectorField USpPrimary_;
 
                 //- Pressure [Pa]
@@ -415,7 +415,7 @@ public:
 
             // Primary region
 
-                //- Momementum [kg/m/s^2]
+                //- Momentum [kg/m/s^2]
                 inline volVectorField& USpPrimary();
 
                 //- Pressure [Pa]

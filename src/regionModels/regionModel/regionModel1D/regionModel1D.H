@@ -81,7 +81,7 @@ protected:
             //- Global cell IDs
             labelListList boundaryFaceCells_;
 
-            //- Global boundary face IDs oppossite coupled patch
+            //- Global boundary face IDs opposite coupled patch
             labelList boundaryFaceOppositeFace_;
 
             //- Number of layers in the region
@@ -166,7 +166,7 @@ public:
                 //- Return the global cell IDs
                 inline const labelListList& boundaryFaceCells() const;
 
-                //- Return the global boundary face IDs oppossite coupled patch
+                //- Return the global boundary face IDs opposite coupled patch
                 inline const labelList& boundaryFaceOppositeFace() const;
 
 

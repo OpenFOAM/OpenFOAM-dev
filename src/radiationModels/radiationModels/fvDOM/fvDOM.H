@@ -31,7 +31,7 @@ Description
 
     Available absorption models:
         constantAbsorptionEmission
-        greyMeanAbsoprtionEmission
+        greyMeanAbsorptionEmission
         wideBandAbsorptionEmission
 
     i.e. dictionary
@@ -97,7 +97,7 @@ class fvDOM
          //- Emitted radiative heat flux [W/m^2]
         volScalarField qem_;
 
-        //- Incidet radiative heat flux [W/m^2]
+        //- Incident radiative heat flux [W/m^2]
         volScalarField qin_;
 
         //- Total absorption coefficient [1/m]
@@ -139,7 +139,7 @@ class fvDOM
         //- Initialise
         void initialise();
 
-        //- Update nlack body emission
+        //- Update black body emission
         void updateBlackBodyEmission();
 
 

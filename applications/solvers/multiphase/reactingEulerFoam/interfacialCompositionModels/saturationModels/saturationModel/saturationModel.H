@@ -103,7 +103,7 @@ public:
             const volScalarField& T
         ) const = 0;
 
-        //- Saturation pressure derivetive w.r.t. temperature
+        //- Saturation pressure derivative w.r.t. temperature
         virtual tmp<volScalarField> pSatPrime
         (
             const volScalarField& T

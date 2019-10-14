@@ -26,7 +26,7 @@ Class
 
 Description
     Secondary Breakup Model to take account of the different breakup regimes,
-    bag, molutimode, shear....
+    bag, solutionmode, shear....
 
     Accurate description in
     @verbatim

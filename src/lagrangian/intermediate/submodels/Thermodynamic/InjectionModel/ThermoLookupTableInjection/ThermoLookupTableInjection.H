@@ -86,13 +86,13 @@ class ThermoLookupTableInjection
         //- List of injectors
         kinematicParcelInjectionDataIOList injectors_;
 
-        //- List of cell labels corresoponding to injector positions
+        //- List of cell labels corresponding to injector positions
         labelList injectorCells_;
 
-        //- List of tetFace labels corresoponding to injector positions
+        //- List of tetFace labels corresponding to injector positions
         labelList injectorTetFaces_;
 
-        //- List of tetPt labels corresoponding to injector positions
+        //- List of tetPt labels corresponding to injector positions
         labelList injectorTetPts_;
 
 

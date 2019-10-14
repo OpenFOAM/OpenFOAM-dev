@@ -112,7 +112,7 @@ public:
 
             void checkSiteListSizes() const;
 
-            void setInteracionSiteBools
+            void setInteractionSiteBools
             (
                 const List<word>& siteIds,
                 const List<word>& pairPotSiteIds

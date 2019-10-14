@@ -441,7 +441,7 @@ private:
         ) const;
 
         //- Check to see if dual cell specified by given vertex iterator
-        //  intersects the boundary and hence reqires a point-pair
+        //  intersects the boundary and hence requires a point-pair
         bool dualCellSurfaceAnyIntersection
         (
             const Delaunay::Finite_vertices_iterator& vit

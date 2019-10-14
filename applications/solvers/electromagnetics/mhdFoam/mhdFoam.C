@@ -34,7 +34,7 @@ Description
     conductivity sigma and permeability mu are read in as uniform
     constants.
 
-    A fictitous magnetic flux pressure pB is introduced in order to
+    A fictitious magnetic flux pressure pB is introduced in order to
     compensate for discretisation errors and create a magnetic face flux
     field which is divergence free as required by Maxwell's equations.
 

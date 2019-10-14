@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidEqulibriumEnergySource.H"
+#include "solidEquilibriumEnergySource.H"
 #include "fvmDdt.H"
 #include "fvmLaplacian.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,11 +34,11 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(solidEqulibriumEnergySource, 0);
+    defineTypeNameAndDebug(solidEquilibriumEnergySource, 0);
     addToRunTimeSelectionTable
     (
         option,
-        solidEqulibriumEnergySource,
+        solidEquilibriumEnergySource,
         dictionary
     );
 }
@@ -47,7 +47,8 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-const Foam::volScalarField& Foam::fv::solidEqulibriumEnergySource::alpha() const
+const Foam::volScalarField&
+Foam::fv::solidEquilibriumEnergySource::alpha() const
 {
     const word alphaName = IOobject::groupName("alpha", phaseName_);
 
@@ -74,7 +75,7 @@ const Foam::volScalarField& Foam::fv::solidEqulibriumEnergySource::alpha() const
 }
 
 
-const Foam::solidThermo& Foam::fv::solidEqulibriumEnergySource::thermo() const
+const Foam::solidThermo& Foam::fv::solidEquilibriumEnergySource::thermo() const
 {
     const word thermoName =
         IOobject::groupName(basicThermo::dictName, phaseName_);
@@ -92,7 +93,7 @@ const Foam::solidThermo& Foam::fv::solidEqulibriumEnergySource::thermo() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::solidEqulibriumEnergySource::solidEqulibriumEnergySource
+Foam::fv::solidEquilibriumEnergySource::solidEquilibriumEnergySource
 (
     const word& name,
     const word& modelType,
@@ -111,13 +112,13 @@ Foam::fv::solidEqulibriumEnergySource::solidEqulibriumEnergySource
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fv::solidEqulibriumEnergySource::~solidEqulibriumEnergySource()
+Foam::fv::solidEquilibriumEnergySource::~solidEquilibriumEnergySource()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::fv::solidEqulibriumEnergySource::addSup
+void Foam::fv::solidEquilibriumEnergySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
@@ -140,7 +141,7 @@ void Foam::fv::solidEqulibriumEnergySource::addSup
 }
 
 
-void Foam::fv::solidEqulibriumEnergySource::addSup
+void Foam::fv::solidEquilibriumEnergySource::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -164,7 +165,7 @@ void Foam::fv::solidEqulibriumEnergySource::addSup
 }
 
 
-bool Foam::fv::solidEqulibriumEnergySource::read(const dictionary& dict)
+bool Foam::fv::solidEquilibriumEnergySource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {

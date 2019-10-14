@@ -36,7 +36,7 @@ Description
     where:
     \vartable
         Q_t       | total heat source
-        e(\phi,\dot{m}_2) | effectivenes table
+        e(\phi,\dot{m}_2) | effectiveness table
         \phi      | net mass flux entering heat exchanger [kg/s]
         \dot{m}_2 | secondary mass flow rate [kg/s]
         T_1       | primary inlet temperature [K]

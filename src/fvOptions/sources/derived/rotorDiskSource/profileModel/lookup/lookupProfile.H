@@ -25,7 +25,7 @@ Class
     Foam::lookupProfile
 
 Description
-    Look-up based profile data - drag and lift coefficients are lineraly
+    Look-up based profile data - drag and lift coefficients are linearly
     interpolated based on the supplied angle of attack
 
     Input in list format:

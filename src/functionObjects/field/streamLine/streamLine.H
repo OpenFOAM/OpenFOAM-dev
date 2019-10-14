@@ -190,7 +190,7 @@ private:
 
         // Demand driven
 
-            //- Mesh searching enigne
+            //- Mesh searching engine
             autoPtr<meshSearch> meshSearchPtr_;
 
             //- Seed set engine
@@ -257,7 +257,7 @@ public:
         //- Do nothing
         virtual bool execute();
 
-        //- Calculate and write the steamlines
+        //- Calculate and write the streamlines
         virtual bool write();
 
         //- Update for changes of mesh

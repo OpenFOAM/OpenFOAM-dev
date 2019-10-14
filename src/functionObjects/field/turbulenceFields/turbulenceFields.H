@@ -28,7 +28,7 @@ Description
     Stores turbulence fields on the mesh database for further manipulation.
 
     Fields are stored as copies of the original, with the prefix
-    "tubulenceModel:", e.g.:
+    "turbulenceModel:", e.g.:
 
     \verbatim
     turbulenceModel:R

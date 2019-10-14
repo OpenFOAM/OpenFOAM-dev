@@ -29,7 +29,7 @@ Description
 
     Point values are summed using the tetrahedral decomposition of the
     computational cells. Summation is done in the cells, and also in the
-    terahedrons surrounding each point. The latter forms a type of dual mesh.
+    tetrahedrons surrounding each point. The latter forms a type of dual mesh.
     The interpolation is weighted by proximity to the cell centre or point, as
     calculated by the barycentric coordinate within the tethrahedron.
 

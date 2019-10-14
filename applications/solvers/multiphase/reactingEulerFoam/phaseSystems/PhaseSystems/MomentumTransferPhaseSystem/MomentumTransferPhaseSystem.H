@@ -25,7 +25,7 @@ Class
     Foam::MomentumTransferPhaseSystem
 
 Description
-    Class which models interfacial momenum transfer between a number of phases.
+    Class which models interfacial momentum transfer between a number of phases.
     Drag, virtual mass, lift, wall lubrication and turbulent dispersion are all
     modelled. The explicit contribution from the drag is omitted from the
     transfer matrices, as this forms part of the solution of the pressure

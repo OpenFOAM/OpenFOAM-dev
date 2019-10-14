@@ -107,7 +107,7 @@ Foam::N2::N2
     const NSRDSfunc0& thermalConductivity,
     const NSRDSfunc2& vapourThermalConductivity,
     const NSRDSfunc6& surfaceTension,
-    const APIdiffCoefFunc& vapourDiffussivity
+    const APIdiffCoefFunc& vapourDiffusivity
 )
 :
     liquidProperties(l),
@@ -123,7 +123,7 @@ Foam::N2::N2
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffussivity)
+    D_(vapourDiffusivity)
 {}
 
 

@@ -71,7 +71,7 @@ protected:
             //- Temperature [K]
             volScalarField T_;
 
-            //- Laminar thermal diffusuvity [kg/m/s]
+            //- Laminar thermal diffusivity [kg/m/s]
             volScalarField alpha_;
 
         //- Should the dpdt term be included in the enthalpy equation

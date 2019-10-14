@@ -131,14 +131,14 @@ public:
 
     // Member Functions
 
-        //- Return the compostion of the mixture
+        //- Return the composition of the mixture
         virtual typename MixtureType::basicMixtureType&
         composition()
         {
             return *this;
         }
 
-        //- Return the compostion of the mixture
+        //- Return the composition of the mixture
         virtual const typename MixtureType::basicMixtureType&
         composition() const
         {

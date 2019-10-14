@@ -115,7 +115,7 @@ class seulex
             const scalarField& scale
         ) const;
 
-        //- Polynomial extrpolation
+        //- Polynomial extrapolation
         void extrapolate
         (
             const label k,

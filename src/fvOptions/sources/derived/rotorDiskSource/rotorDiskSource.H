@@ -27,7 +27,7 @@ Class
 Description
     Rotor disk source
 
-    Cell based momemtum source which approximates the mean effects of
+    Cell based momentum source which approximates the mean effects of
     rotor forces on a cylindrical region within the domain.
 
 Usage

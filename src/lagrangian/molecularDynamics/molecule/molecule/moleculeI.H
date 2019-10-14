@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ inline Foam::molecule::constantProperties::constantProperties
 {
     checkSiteListSizes();
 
-    setInteracionSiteBools
+    setInteractionSiteBools
     (
         List<word>(dict.lookup("siteIds")),
         List<word>(dict.lookup("pairPotentialSiteIds"))
@@ -307,7 +307,7 @@ inline void Foam::molecule::constantProperties::checkSiteListSizes() const
 }
 
 
-inline void Foam::molecule::constantProperties::setInteracionSiteBools
+inline void Foam::molecule::constantProperties::setInteractionSiteBools
 (
     const List<word>& siteIds,
     const List<word>& pairPotSiteIds

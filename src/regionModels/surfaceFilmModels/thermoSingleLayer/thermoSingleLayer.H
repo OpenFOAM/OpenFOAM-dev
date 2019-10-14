@@ -114,7 +114,7 @@ protected:
         scalar deltaWet_;
 
 
-        // Hyprophilic/phobic properties
+        // Hydrophilic/phobic properties
 
             //- Activation flag
             bool hydrophilic_;

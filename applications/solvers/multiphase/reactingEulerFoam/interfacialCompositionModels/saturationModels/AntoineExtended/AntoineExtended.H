@@ -93,7 +93,7 @@ public:
         //- Saturation pressure
         virtual tmp<volScalarField> pSat(const volScalarField& T) const;
 
-        //- Saturation pressure derivetive w.r.t. temperature
+        //- Saturation pressure derivative w.r.t. temperature
         virtual tmp<volScalarField> pSatPrime(const volScalarField& T) const;
 
         //- Natural log of the saturation pressure

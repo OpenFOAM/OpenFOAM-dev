@@ -65,7 +65,7 @@ protected:
         //- Mesh reference
         const fvMesh& mesh_;
 
-        //- Combstion model owner
+        //- Combustion model owner
         const combustionModel& combModel_;
 
         //- Fuel name

@@ -155,7 +155,7 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
     // Particle surface area [m^2]
     const scalar Ap = constant::mathematical::pi*sqr(d);
 
-    // Calculate diffision constant at continuous phase temperature
+    // Calculate diffusion constant at continuous phase temperature
     // and density [m^2/s]
     const scalar D = D0_*(rho0_/rhoc)*pow(Tc/T0_, Dn_);
 

@@ -87,7 +87,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& trasport,
+            const transportModel& transport,
             const word& propertiesName
         );
 

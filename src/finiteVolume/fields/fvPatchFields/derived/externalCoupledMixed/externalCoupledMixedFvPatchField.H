@@ -42,11 +42,11 @@ Description
 
     \verbatim
         # Patch: <patch name>
-        <value1> <gradient1> <valueFracion1>
-        <value2> <gradient2> <valueFracion2>
-        <value3> <gradient3> <valueFracion3>
+        <value1> <gradient1> <valueFraction1>
+        <value2> <gradient2> <valueFraction2>
+        <value3> <gradient3> <valueFraction3>
         ...
-        <valueN> <gradientN> <valueFracionN>
+        <valueN> <gradientN> <valueFractionN>
     \endverbatim
 
     Data is sent/received as a single file for all patches from the directory

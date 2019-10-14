@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::solidEqulibriumEnergySource
+    Foam::fv::solidEquilibriumEnergySource
 
 Description
     This option adds the thermal inertia of a solid phase into the energy
@@ -45,7 +45,7 @@ Usage
     \verbatim
     <fvOptionName>
     {
-        type        solidEqulibriumEnergySource;
+        type        solidEquilibriumEnergySource;
         phase       solid;
         field       e;
     }
@@ -53,8 +53,8 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidEqulibriumEnergySource_H
-#define solidEqulibriumEnergySource_H
+#ifndef solidEquilibriumEnergySource_H
+#define solidEquilibriumEnergySource_H
 
 #include "fvOption.H"
 #include "volFields.H"
@@ -68,10 +68,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class solidEqulibriumEnergySource Declaration
+                        Class solidEquilibriumEnergySource Declaration
 \*---------------------------------------------------------------------------*/
 
-class solidEqulibriumEnergySource
+class solidEquilibriumEnergySource
 :
     public option
 {
@@ -90,13 +90,13 @@ class solidEqulibriumEnergySource
 public:
 
     //- Runtime type information
-    TypeName("solidEqulibriumEnergySource");
+    TypeName("solidEquilibriumEnergySource");
 
 
     // Constructors
 
         //- Construct from components
-        solidEqulibriumEnergySource
+        solidEquilibriumEnergySource
         (
             const word& name,
             const word& modelType,
@@ -105,14 +105,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        solidEqulibriumEnergySource
+        solidEquilibriumEnergySource
         (
-            const solidEqulibriumEnergySource&
+            const solidEquilibriumEnergySource&
         ) = delete;
 
 
     //- Destructor
-    virtual ~solidEqulibriumEnergySource();
+    virtual ~solidEquilibriumEnergySource();
 
 
     // Member Functions
@@ -146,7 +146,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const solidEqulibriumEnergySource&) = delete;
+        void operator=(const solidEquilibriumEnergySource&) = delete;
 };
 
 

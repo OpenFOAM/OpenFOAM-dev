@@ -26,7 +26,7 @@ Class
 
 Description
 
-    Flame Surface Dennsity (FDS) combustion model.
+    Flame Surface Density (FDS) combustion model.
 
     The fuel source term is given by mgft*pc*omegaFuelBar.
 

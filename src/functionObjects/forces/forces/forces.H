@@ -70,7 +70,7 @@ Usage
     \table
         nBin         | number of data bins     | yes         |
         direction    | direction along which bins are defined | yes |
-        cumulative   | bin data accumulated with incresing distance | yes |
+        cumulative   | bin data accumulated with increasing distance | yes |
     \endtable
 
 Note

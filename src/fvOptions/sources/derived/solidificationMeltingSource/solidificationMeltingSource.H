@@ -26,7 +26,7 @@ Class
 
 Description
     This source is designed to model the effect of solidification and melting
-    processes, e.g. windhield defrosting.
+    processes, e.g. windshield defrosting.
 
     The isotherm phase change occurs at the melting temperature, \c Tsol (= \c
     Tliq). The not isotherm phase change occurs between solidus and liquidus

@@ -25,9 +25,9 @@ volumeFraction
     fields          (rho U e);
 }
 
-solidEqulibriumEnergy
+solidEquilibriumEnergy
 {
-    type            solidEqulibriumEnergySource;
+    type            solidEquilibriumEnergySource;
     phase           solid;
     field           e;
 }

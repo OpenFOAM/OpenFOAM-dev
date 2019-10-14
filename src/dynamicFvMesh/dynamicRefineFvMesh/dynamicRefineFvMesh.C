@@ -58,7 +58,7 @@ Foam::label Foam::dynamicRefineFvMesh::count
             n++;
         }
 
-        // debug also serves to get-around Clang compiler trying to optimsie
+        // debug also serves to get-around Clang compiler trying to optimise
         // out this forAll loop under O3 optimisation
         if (debug)
         {

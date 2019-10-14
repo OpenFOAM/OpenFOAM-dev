@@ -162,7 +162,7 @@ public:
 
 
         //- Return the reaction rate for iReaction and the reference
-        //  species and charateristic times
+        //  species and characteristic times
         virtual scalar omegaI
         (
             label iReaction,
