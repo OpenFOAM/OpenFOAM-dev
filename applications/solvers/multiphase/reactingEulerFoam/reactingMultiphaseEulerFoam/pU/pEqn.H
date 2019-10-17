@@ -10,7 +10,9 @@ forAll(phases, phasei)
 }
 
 // Diagonal coefficients
-PtrList<volScalarField> rAUs(phases.size());
+rAUs.clear();
+rAUs.setSize(phases.size());
+
 forAll(fluid.movingPhases(), movingPhasei)
 {
     phaseModel& phase = fluid.movingPhases()[movingPhasei];
@@ -405,4 +407,9 @@ while (pimple.correct())
     rho = fluid.rho();
     p_rgh = p - rho*gh;
     p_rgh.correctBoundaryConditions();
+}
+
+if (!fluid.implicitPhasePressure())
+{
+    rAUs.clear();
 }

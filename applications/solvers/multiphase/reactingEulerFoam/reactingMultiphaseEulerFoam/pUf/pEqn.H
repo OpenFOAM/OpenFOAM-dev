@@ -23,7 +23,8 @@ forAll(phases, phasei)
 }
 
 // Diagonal coefficients
-PtrList<surfaceScalarField> rAUfs(phases.size());
+rAUfs.clear();
+rAUfs.setSize(phases.size());
 {
     PtrList<surfaceScalarField> AFfs(fluid.AFfs());
 
@@ -383,4 +384,9 @@ while (pimple.correct())
     rho = fluid.rho();
     p_rgh = p - rho*gh;
     p_rgh.correctBoundaryConditions();
+}
+
+if (!fluid.implicitPhasePressure())
+{
+    rAUfs.clear();
 }

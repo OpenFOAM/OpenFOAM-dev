@@ -580,7 +580,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFs
     }
 
     // Add the phase pressure
-    DByAfs_.clear();
     forAll(this->phaseModels_, phasei)
     {
         const phaseModel& phase = this->phaseModels_[phasei];
@@ -596,19 +595,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFs
         );
 
         addField(phase, "phiF", pPrimeByAf*snGradAlpha1, phiFs);
-
-        const bool implicitPhasePressure =
-            this->mesh_.solverDict(phase.volScalarField::name()).
-            template lookupOrDefault<Switch>
-            (
-                "implicitPhasePressure",
-                false
-            );
-
-        if (implicitPhasePressure)
-        {
-            addField(phase, "DByAf", pPrimeByAf, DByAfs_);
-        }
     }
 
     // Add the turbulent dispersion force
@@ -644,11 +630,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFs
 
         addField(pair.phase1(), "phiF", DByA1f*snGradAlpha1, phiFs);
         addField(pair.phase2(), "phiF", DByA2f*snGradAlpha2, phiFs);
-
-        if (DByAfs_.found(pair.phase1().name()))
-        {
-            addField(pair.phase1(), "DByAf", DByA1f, DByAfs_);
-        }
     }
 
     if (this->fillFields_)
@@ -747,7 +728,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
     }
 
     // Add the phase pressure
-    DByAfs_.clear();
     forAll(this->phaseModels_, phasei)
     {
         const phaseModel& phase = this->phaseModels_[phasei];
@@ -763,19 +743,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
         );
 
         addField(phase, "phiFf", pPrimeByAf*snGradAlpha1, phiFfs);
-
-        const bool implicitPhasePressure =
-            this->mesh_.solverDict(phase.volScalarField::name()).
-            template lookupOrDefault<Switch>
-            (
-                "implicitPhasePressure",
-                false
-            );
-
-        if (implicitPhasePressure)
-        {
-            addField(phase, "DByAf", pPrimeByAf, DByAfs_);
-        }
     }
 
     // Add the turbulent dispersion force and phase pressure
@@ -806,17 +773,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
            -rAUfs[pair.phase2().index()]*Ff,
             phiFfs
         );
-
-        if (DByAfs_.found(pair.phase1().name()))
-        {
-            addField
-            (
-                pair.phase1(),
-                "DByAf",
-                rAUfs[pair.phase1().index()]*fvc::interpolate(D),
-                DByAfs_
-            );
-        }
     }
 
     if (this->fillFields_)
@@ -945,6 +901,107 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::KdUByAs
     }
 
     return KdUByAs;
+}
+
+
+template<class BasePhaseSystem>
+bool Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::
+implicitPhasePressure(const phaseModel& phase) const
+{
+    return
+        this->mesh_.solverDict(phase.volScalarField::name()).
+        template lookupOrDefault<Switch>
+        (
+            "implicitPhasePressure",
+            false
+        );
+}
+
+
+template<class BasePhaseSystem>
+bool Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::
+implicitPhasePressure() const
+{
+    bool implicitPressure = false;
+
+    forAll(this->phaseModels_, phasei)
+    {
+        const phaseModel& phase = this->phaseModels_[phasei];
+
+        implicitPressure = implicitPressure || implicitPhasePressure(phase);
+    }
+
+    return implicitPressure;
+}
+
+
+template<class BasePhaseSystem>
+Foam::tmp<Foam::surfaceScalarField>
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::DByAf
+(
+    const phaseModel& phase,
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+) const
+{
+    if (rAUfs.size())
+    {
+        tmp<surfaceScalarField> tDByAf
+        (
+            rAUfs[phase.index()]*fvc::interpolate(phase.pPrime())
+        );
+
+        // Add the turbulent dispersion
+        forAllConstIter
+        (
+            turbulentDispersionModelTable,
+            turbulentDispersionModels_,
+            turbulentDispersionModelIter
+        )
+        {
+            const phasePair&
+                pair(this->phasePairs_[turbulentDispersionModelIter.key()]);
+
+            if (pair.contains(phase))
+            {
+                tDByAf.ref() +=
+                    rAUfs[phase.index()]
+                   *fvc::interpolate(turbulentDispersionModelIter()->D());
+            }
+        }
+
+        return tDByAf;
+    }
+    else
+    {
+        tmp<surfaceScalarField> tDByAf
+        (
+            fvc::interpolate(rAUs[phase.index()]*phase.pPrime())
+        );
+
+        // Add the turbulent dispersion
+        forAllConstIter
+        (
+            turbulentDispersionModelTable,
+            turbulentDispersionModels_,
+            turbulentDispersionModelIter
+        )
+        {
+            const phasePair&
+                pair(this->phasePairs_[turbulentDispersionModelIter.key()]);
+
+            if (pair.contains(phase))
+            {
+                tDByAf.ref() +=
+                    fvc::interpolate
+                    (
+                        rAUs[phase.index()]*turbulentDispersionModelIter()->D()
+                    );
+            }
+        }
+
+        return tDByAf;
+    }
 }
 
 
@@ -1275,14 +1332,6 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialEliminationf
             phases[i].phiRef() /= phiKdfs[i][i];
         }
     }
-}
-
-
-template<class BasePhaseSystem>
-const Foam::HashPtrTable<Foam::surfaceScalarField>&
-Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::DByAfs() const
-{
-    return DByAfs_;
 }
 
 

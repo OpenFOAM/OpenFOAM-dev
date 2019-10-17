@@ -1,7 +1,8 @@
 const surfaceScalarField alphaf1("alphaf1", fvc::interpolate(alpha1));
 const surfaceScalarField alphaf2("alphaf2", scalar(1) - alphaf1);
 
-PtrList<volScalarField> rAUs;
+rAUs.clear();
+
 rAUs.append
 (
     new volScalarField
@@ -375,4 +376,9 @@ while (pimple.correct())
     rho = fluid.rho();
     p_rgh = p - rho*gh;
     p_rgh.correctBoundaryConditions();
+}
+
+if (!fluid.implicitPhasePressure())
+{
+    rAUs.clear();
 }

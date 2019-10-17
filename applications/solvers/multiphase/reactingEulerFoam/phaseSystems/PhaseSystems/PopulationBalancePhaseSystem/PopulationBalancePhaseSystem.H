@@ -101,7 +101,11 @@ public:
         virtual bool read();
 
         //- Solve all population balance equations
-        virtual void solve();
+        virtual void solve
+        (
+            const PtrList<volScalarField>& rAUs,
+            const PtrList<surfaceScalarField>& rAUfs
+        );
 };
 
 

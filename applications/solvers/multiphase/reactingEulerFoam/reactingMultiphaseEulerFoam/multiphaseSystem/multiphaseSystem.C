@@ -613,7 +613,11 @@ Foam::multiphaseSystem::nearInterface() const
 }
 
 
-void Foam::multiphaseSystem::solve()
+void Foam::multiphaseSystem::solve
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {
     const Time& runTime = mesh_.time();
 

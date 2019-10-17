@@ -466,6 +466,23 @@ public:
                 const PtrList<volScalarField>& rAUs
             ) const = 0;
 
+            //- Returns true if the phase pressure is treated implicitly
+            //  in the phase fraction equation
+            virtual bool implicitPhasePressure(const phaseModel& phase) const;
+
+            //- Returns true if the phase pressure is treated implicitly
+            //  in the phase fraction equation for any phase
+            virtual bool implicitPhasePressure() const;
+
+            //- Return the phase diffusivity
+            //  divided by the momentum central coefficient
+            virtual tmp<surfaceScalarField> DByAf
+            (
+                const phaseModel& phase,
+                const PtrList<volScalarField>& rAUs,
+                const PtrList<surfaceScalarField>& rAUfs
+            ) const = 0;
+
             //- Solve the drag system for the new velocities and fluxes
             virtual void partialElimination
             (
@@ -485,10 +502,6 @@ public:
                 const bool includeVirtualMass = false
             ) const = 0;
 
-            //- Return the phase diffusivities divided by the momentum
-            //  coefficients
-            virtual const HashPtrTable<surfaceScalarField>& DByAfs() const = 0;
-
             //- Return the heat transfer matrices
             virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
 
@@ -499,7 +512,11 @@ public:
         // Evolution
 
             //- Solve for the phase fractions
-            virtual void solve();
+            virtual void solve
+            (
+                const PtrList<volScalarField>& rAUs,
+                const PtrList<surfaceScalarField>& rAUfs
+            );
 
             //- Correct the fluid properties other than those listed below
             virtual void correct();

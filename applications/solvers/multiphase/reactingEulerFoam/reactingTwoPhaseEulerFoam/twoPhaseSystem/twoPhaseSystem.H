@@ -153,7 +153,11 @@ public:
         tmp<volScalarField> Vm() const;
 
         //- Solve for the phase fractions
-        virtual void solve();
+        virtual void solve
+        (
+            const PtrList<volScalarField>& rAUs,
+            const PtrList<surfaceScalarField>& rAUfs
+        );
 };
 
 

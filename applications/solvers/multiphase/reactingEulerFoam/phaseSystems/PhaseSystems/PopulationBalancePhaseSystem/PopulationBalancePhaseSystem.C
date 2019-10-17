@@ -221,9 +221,13 @@ bool Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::read()
 
 
 template<class BasePhaseSystem>
-void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve()
+void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {
-    BasePhaseSystem::solve();
+    BasePhaseSystem::solve(rAUs, rAUfs);
 
     forAll(populationBalances_, i)
     {

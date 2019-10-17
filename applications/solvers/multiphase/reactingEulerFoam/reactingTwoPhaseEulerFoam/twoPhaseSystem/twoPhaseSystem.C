@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,11 @@ Foam::twoPhaseSystem::Vm() const
 }
 
 
-void Foam::twoPhaseSystem::solve()
+void Foam::twoPhaseSystem::solve
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {
     const Time& runTime = mesh_.time();
 
@@ -171,12 +175,17 @@ void Foam::twoPhaseSystem::solve()
     surfaceScalarField phir("phir", phi1 - phi2);
 
     tmp<surfaceScalarField> alphaDbyA;
-    if (DByAfs().found(phase1_.name()) && DByAfs().found(phase2_.name()))
+    if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
     {
         surfaceScalarField DbyA
         (
-            *DByAfs()[phase1_.name()] + *DByAfs()[phase2_.name()]
+            DByAf(phase1_, rAUs, rAUfs) + DByAf(phase2_, rAUs, rAUfs)
         );
+
+        // surfaceScalarField DbyA
+        // (
+        //     *DByAfs()[phase1_.name()] + *DByAfs()[phase2_.name()]
+        // );
 
         alphaDbyA =
             fvc::interpolate(max(alpha1, scalar(0)))

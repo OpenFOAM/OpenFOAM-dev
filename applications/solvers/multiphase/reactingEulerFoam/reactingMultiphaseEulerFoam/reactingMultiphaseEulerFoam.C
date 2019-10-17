@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fluid.solve();
+            fluid.solve(rAUs, rAUfs);
             fluid.correct();
 
             #include "YEqns.H"

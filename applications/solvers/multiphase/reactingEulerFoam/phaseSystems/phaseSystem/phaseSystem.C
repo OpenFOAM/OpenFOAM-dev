@@ -365,14 +365,29 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdtf
 }
 
 
-
 Foam::PtrList<Foam::volScalarField> Foam::phaseSystem::dmdts() const
 {
     return PtrList<volScalarField>(phaseModels_.size());
 }
 
 
-void Foam::phaseSystem::solve()
+bool Foam::phaseSystem::implicitPhasePressure(const phaseModel& phase) const
+{
+    return false;
+}
+
+
+bool Foam::phaseSystem::implicitPhasePressure() const
+{
+    return false;
+}
+
+
+void Foam::phaseSystem::solve
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {}
 
 

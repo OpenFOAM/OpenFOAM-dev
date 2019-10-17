@@ -27,7 +27,8 @@ const surfaceScalarField Kdf("Kdf", fluid.Kdf());
 // Diagonal coefficients
 PtrList<surfaceScalarField> AFfs(fluid.AFfs());
 
-PtrList<surfaceScalarField> rAUfs;
+rAUfs.clear();
+
 rAUfs.append
 (
     new surfaceScalarField
@@ -357,4 +358,9 @@ while (pimple.correct())
     rho = fluid.rho();
     p_rgh = p - rho*gh;
     p_rgh.correctBoundaryConditions();
+}
+
+if (!fluid.implicitPhasePressure())
+{
+    rAUfs.clear();
 }

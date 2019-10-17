@@ -148,8 +148,6 @@ private:
         //- Face virtual mass coefficients
         VmfTable Vmfs_;
 
-        //- The phase diffusivities divided by the momentum coefficients
-        HashPtrTable<surfaceScalarField> DByAfs_;
 
         // Sub Models
 
@@ -285,8 +283,22 @@ public:
             const bool includeVirtualMass = false
         ) const;
 
-        //- Return the phase diffusivities divided by the momentum coefficients
-        virtual const HashPtrTable<surfaceScalarField>& DByAfs() const;
+        //- Returns true if the phase pressure is treated implicitly
+        //  in the phase fraction equation
+        virtual bool implicitPhasePressure(const phaseModel& phase) const;
+
+        //- Returns true if the phase pressure is treated implicitly
+        //  in the phase fraction equation for any phase
+        virtual bool implicitPhasePressure() const;
+
+        //- Return the phase diffusivity
+        //  divided by the momentum central coefficient
+        virtual tmp<surfaceScalarField> DByAf
+        (
+            const phaseModel& phase,
+            const PtrList<volScalarField>& rAUs,
+            const PtrList<surfaceScalarField>& rAUfs
+        ) const;
 
         //- Read base phaseProperties dictionary
         virtual bool read();
