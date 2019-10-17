@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,28 +23,46 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tableReaders.H"
+#include "FoamTableReader.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-namespace Foam
+template<class Type>
+void Foam::TableReaders::Foam<Type>::read
+(
+    ISstream& is,
+    List<Tuple2<scalar, Type>>& data
+) const
 {
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-#define defineTableReaderType(dataType)                                        \
-    defineNamedTemplateTypeNameAndDebug(tableReader<dataType >, 0);            \
-    defineTemplatedRunTimeSelectionTable(tableReader, dictionary, dataType);
-
-defineTableReaderType(scalar);
-defineTableReaderType(vector);
-defineTableReaderType(sphericalTensor);
-defineTableReaderType(symmTensor);
-defineTableReaderType(tensor);
+    is  >> data;
+}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type>
+void Foam::TableReaders::Foam<Type>::read
+(
+    ISstream& is,
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& data
+) const
+{
+    is  >> data;
+}
 
-} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::TableReaders::Foam<Type>::Foam(const dictionary& dict)
+:
+    TableReader<Type>(dict)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::TableReaders::Foam<Type>::~Foam()
+{}
+
 
 // ************************************************************************* //

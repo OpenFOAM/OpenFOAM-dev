@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::halfCosineRamp
+    Foam::Function1s::halfCosineRamp
 
 Description
     Half-cosine ramp function starting from 0 and increasing to 1 from \c start
     over the \c duration and remaining at 1 thereafter.
 
 See also
-    Foam::Function1Types::ramp
+    Foam::Function1s::Ramp
 
 SourceFiles
     halfCosineRamp.C
@@ -39,13 +39,13 @@ SourceFiles
 #ifndef halfCosineRamp_H
 #define halfCosineRamp_H
 
-#include "ramp.H"
+#include "Ramp.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -54,7 +54,7 @@ namespace Function1Types
 
 class halfCosineRamp
 :
-    public ramp
+    public Ramp<halfCosineRamp>
 {
 
 public:
@@ -99,7 +99,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

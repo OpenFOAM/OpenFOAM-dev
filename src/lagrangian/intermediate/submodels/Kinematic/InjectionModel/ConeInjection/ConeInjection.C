@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
             this->coeffDict()
         )
     ),
-    positionIsConstant_(isA<Function1Types::Constant<vector>>(position_)),
+    positionIsConstant_(isA<Function1s::Constant<vector>>(position_)),
     direction_
     (
         TimeFunction1<vector>

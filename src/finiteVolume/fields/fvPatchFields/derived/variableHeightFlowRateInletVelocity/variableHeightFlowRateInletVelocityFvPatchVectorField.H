@@ -49,7 +49,7 @@ Usage
     }
     \endverbatim
 
-    The \c flowRate entry is a \c Function1 of time, see Foam::Function1Types.
+    The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
 
 Note
     - the value is positive into the domain
@@ -59,7 +59,7 @@ Note
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     variableHeightFlowRateInletVelocityFvPatchVectorField.C

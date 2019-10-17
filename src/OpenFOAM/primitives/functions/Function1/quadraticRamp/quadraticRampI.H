@@ -27,7 +27,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::Function1Types::quadraticRamp::value
+inline Foam::scalar Foam::Function1s::quadraticRamp::value
 (
     const scalar t
 ) const
@@ -36,7 +36,7 @@ inline Foam::scalar Foam::Function1Types::quadraticRamp::value
 }
 
 
-inline Foam::scalar Foam::Function1Types::quadraticRamp::integrate
+inline Foam::scalar Foam::Function1s::quadraticRamp::integrate
 (
     const scalar t1,
     const scalar t2

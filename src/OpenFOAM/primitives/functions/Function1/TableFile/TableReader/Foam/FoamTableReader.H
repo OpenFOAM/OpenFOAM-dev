@@ -22,109 +22,92 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::tableReader
+    Foam::TableReaders::Foam
 
 Description
-    Base class to read table data for the interpolationTable
+    Reads an interpolation table from a file in OpenFOAM-format. This is a list
+    of Tuple2's where the first (x) column is scalar, and the second (y) column
+    is the type to be interpolated.
+
+    Usage:
+    \verbatim
+        (
+            (0.0 (1 2 3))
+            (1.0 (4 5 6))
+        );
+    \endverbatim
 
 SourceFiles
-    tableReader.C
+    FoamTableReader.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tableReader_H
-#define tableReader_H
+#ifndef FoamTableReader_H
+#define FoamTableReader_H
 
-#include "fileName.H"
-#include "wordList.H"
-#include "vector.H"
-#include "tensor.H"
-#include "typeInfo.H"
-#include "runTimeSelectionTables.H"
-#include "autoPtr.H"
-#include "dictionary.H"
-#include "Tuple2.H"
+#include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace TableReaders
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class tableReader Declaration
+                             Class Foam Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class tableReader
+class Foam
+:
+    public TableReader<Type>
 {
+    // Private Member Functions
+
+        //- Read a 1D table
+        virtual void read(ISstream&, List<Tuple2<scalar, Type>> &) const;
+
+        //- Read a 2D table
+        virtual void read
+        (
+            ISstream&,
+            List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>&
+        ) const;
 
 public:
 
     //- Runtime type information
-    TypeName("tableReader");
-
-    // Declare run-time constructor selection table
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            tableReader,
-            dictionary,
-            (const dictionary& dict),
-            (dict)
-        );
+    TypeName("foam");
 
 
     // Constructors
 
         //- Construct from dictionary
-        tableReader(const dictionary& dict);
+        Foam(const dictionary &dict);
 
-        //- Construct and return a clone
-        virtual autoPtr<tableReader<Type>> clone() const = 0;
-
-
-    // Selectors
-
-        //- Return a reference to the selected tableReader
-        static autoPtr<tableReader> New(const dictionary& spec);
+        //- Construct and return a copy
+        virtual autoPtr<TableReader<Type>> clone() const
+        {
+            return autoPtr<TableReader<Type>>(new Foam<Type>(*this));
+        }
 
 
     //- Destructor
-    virtual ~tableReader();
-
-
-    // Member Functions
-
-        //- Read the table
-        virtual void operator()
-        (
-            const fileName&,
-            List<Tuple2<scalar, Type>>&
-        ) = 0;
-
-        //- Read the 2D table
-        virtual void operator()
-        (
-            const fileName&,
-            List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>&
-        ) = 0;
-
-        //- Write additional information
-        virtual void write(Ostream& os) const;
+    virtual ~Foam();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace TableReaders
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "tableReader.C"
+    #include "FoamTableReader.C"
 #endif
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

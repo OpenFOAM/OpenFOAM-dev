@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::reverseRamp
+    Foam::Function1s::reverseRamp
 
 Description
     A wrapper class to reverse any ramp function such that the result starts
@@ -56,7 +56,7 @@ Description
     \endverbatim
 
 See also
-    Foam::Function1Types::ramp
+    Foam::Function1s::Ramp
 
 SourceFiles
     reverseRamp.C
@@ -66,13 +66,13 @@ SourceFiles
 #ifndef reverseRamp_H
 #define reverseRamp_H
 
-#include "ramp.H"
+#include "Ramp.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -81,7 +81,7 @@ namespace Function1Types
 
 class reverseRamp
 :
-    public ramp
+    public Ramp<reverseRamp>
 {
     //- Standard ramp function to reverse
     autoPtr<Function1<scalar>> ramp_;
@@ -135,7 +135,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

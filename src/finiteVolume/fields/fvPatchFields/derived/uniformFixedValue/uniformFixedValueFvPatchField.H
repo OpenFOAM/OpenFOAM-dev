@@ -48,7 +48,7 @@ Note
     constant value.
 
 See also
-    Foam::Function1Types
+    Foam::Function1s
     Foam::fixedValueFvPatchField
 
 SourceFiles

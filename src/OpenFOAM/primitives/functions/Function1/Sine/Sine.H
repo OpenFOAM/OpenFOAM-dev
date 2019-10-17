@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Sine
+    Foam::Function1s::Sine
 
 Description
     Templated sine function with support for an offset level.
@@ -79,7 +79,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -89,7 +89,7 @@ namespace Function1Types
 template<class Type>
 class Sine
 :
-    public Function1<Type>
+    public FieldFunction1<Type, Sine<Type>>
 {
     // Private Data
 
@@ -159,7 +159,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

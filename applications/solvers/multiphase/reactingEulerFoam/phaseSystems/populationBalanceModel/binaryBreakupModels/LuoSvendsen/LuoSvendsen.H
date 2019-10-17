@@ -135,7 +135,7 @@ SourceFiles
 #define LuoSvendsen_H
 
 #include "binaryBreakupModel.H"
-#include "interpolationTable.H"
+#include "Table.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -159,13 +159,13 @@ private:
     // Private Data
 
         //- Interpolation table of Q(a,z) for a=2/11
-        autoPtr<interpolationTable<scalar>> gammaUpperReg2by11_;
+        autoPtr<Function1s::Table<scalar>> gammaUpperReg2by11_;
 
         //- Interpolation table of Q(a,z) for a=5/11
-        autoPtr<interpolationTable<scalar>> gammaUpperReg5by11_;
+        autoPtr<Function1s::Table<scalar>> gammaUpperReg5by11_;
 
         //- Interpolation table of Q(a,z) for a=8/11
-        autoPtr<interpolationTable<scalar>> gammaUpperReg8by11_;
+        autoPtr<Function1s::Table<scalar>> gammaUpperReg8by11_;
 
         //- Empirical constant, defaults to 0.923
         dimensionedScalar C4_;

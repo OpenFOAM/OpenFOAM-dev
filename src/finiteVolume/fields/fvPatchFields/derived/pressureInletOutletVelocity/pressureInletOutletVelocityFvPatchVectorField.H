@@ -51,7 +51,7 @@ Usage
     \endverbatim
 
     The \c tangentialVelocity entry is a Function1 of time, see
-    Foam::Function1Types.
+    Foam::Function1s.
 
 Note
     Sign conventions:

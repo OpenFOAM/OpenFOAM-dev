@@ -55,7 +55,7 @@ Note
 
 See also
     Foam::inletOutletFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     uniformInletOutletFvPatchField.C

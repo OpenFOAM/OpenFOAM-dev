@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Scale<Type>::read(const dictionary& coeffs)
+void Foam::Function1s::Scale<Type>::read(const dictionary& coeffs)
 {
     scale_ = Function1<scalar>::New("scale", coeffs);
     xScale_ =
@@ -50,22 +50,22 @@ void Foam::Function1Types::Scale<Type>::read(const dictionary& coeffs)
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Scale<Type>::Scale
+Foam::Function1s::Scale<Type>::Scale
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    Function1<Type>(entryName)
+    FieldFunction1<Type, Scale<Type>>(entryName)
 {
     read(dict);
 }
 
 
 template<class Type>
-Foam::Function1Types::Scale<Type>::Scale(const Scale<Type>& se)
+Foam::Function1s::Scale<Type>::Scale(const Scale<Type>& se)
 :
-    Function1<Type>(se),
+    FieldFunction1<Type, Scale<Type>>(se),
     scale_(se.scale_, false),
     xScale_(se.xScale_, false),
     value_(se.value_, false),
@@ -77,14 +77,14 @@ Foam::Function1Types::Scale<Type>::Scale(const Scale<Type>& se)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Scale<Type>::~Scale()
+Foam::Function1s::Scale<Type>::~Scale()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Scale<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Scale<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;

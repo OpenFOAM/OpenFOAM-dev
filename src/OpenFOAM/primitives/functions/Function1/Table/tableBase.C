@@ -31,23 +31,23 @@ namespace Foam
 {
     template<>
     const char*
-        NamedEnum<Function1Types::tableBase::boundsHandling, 4>::names[] =
+        NamedEnum<Function1s::tableBase::boundsHandling, 4>::names[] =
         {"error", "warn", "clamp", "repeat"};
 }
 
-const Foam::NamedEnum<Foam::Function1Types::tableBase::boundsHandling, 4>
-    Foam::Function1Types::tableBase::boundsHandlingNames_;
+const Foam::NamedEnum<Foam::Function1s::tableBase::boundsHandling, 4>
+    Foam::Function1s::tableBase::boundsHandlingNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1Types::tableBase::tableBase()
+Foam::Function1s::tableBase::tableBase()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Function1Types::tableBase::~tableBase()
+Foam::Function1s::tableBase::~tableBase()
 {}
 
 

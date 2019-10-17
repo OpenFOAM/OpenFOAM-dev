@@ -40,7 +40,7 @@ SourceFiles
 
 #include "displacementMotionSolver.H"
 #include "rigidBodyMotion.H"
-#include "ramp.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -90,7 +90,7 @@ Usage
 See also
     Foam::fixedValueFvPatchField
     Foam::timeVaryingMappedFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     timeVaryingMappedFixedValueFvPatchField.C

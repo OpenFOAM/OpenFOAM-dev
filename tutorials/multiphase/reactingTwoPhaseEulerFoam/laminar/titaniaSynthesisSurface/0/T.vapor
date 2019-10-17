@@ -36,10 +36,11 @@ boundaryField
     wall
     {
         type            fixedProfile;
-        profile         csvFile;
+        profile         tableFile;
 
         profileCoeffs
         {
+            format              csv;        // Input format
             nHeaderLine         0;          // Number of header lines
             refColumn           0;          // Reference column index
             componentColumns    (1);        // Component column indices

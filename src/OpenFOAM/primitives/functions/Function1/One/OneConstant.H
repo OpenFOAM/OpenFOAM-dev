@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::OneConstant
+    Foam::Function1s::OneConstant
 
 Description
     Templated function that returns the corresponding 1 (one).
@@ -46,7 +46,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -56,7 +56,7 @@ namespace Function1Types
 template<class Type>
 class OneConstant
 :
-    public Function1<Type>
+    public FieldFunction1<Type, OneConstant<Type>>
 {
 
 public:
@@ -73,12 +73,6 @@ public:
         //- Construct from entry name and dictionary
         OneConstant(const word& entryName, const dictionary& dict);
 
-        //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const
-        {
-            return tmp<Function1<Type>>(new OneConstant<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~OneConstant();
@@ -91,16 +85,6 @@ public:
 
         //- Integrate between two values
         virtual inline Type integrate(const scalar x1, const scalar x2) const;
-
-        //- Return value as a function of (scalar) independent variable
-        virtual tmp<Field<Type>> value(const scalarField& x) const;
-
-        //- Integrate between two (scalar) values
-        virtual tmp<Field<Type>> integrate
-        (
-            const scalarField& x1,
-            const scalarField& x2
-        ) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -115,7 +99,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

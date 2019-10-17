@@ -52,7 +52,7 @@ Usage
     time varying functions.
 
 See also
-    Foam::Function1Types
+    Foam::Function1s
     Foam::uniformFixedValueFvPatchField
     Foam::totalPressureFvPatchField
 

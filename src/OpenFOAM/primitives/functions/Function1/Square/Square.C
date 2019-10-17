@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Square<Type>::read(const dictionary& coeffs)
+void Foam::Function1s::Square<Type>::read(const dictionary& coeffs)
 {
     amplitude_ = Function1<Type>::New("amplitude", coeffs);
     frequency_ = readScalar(coeffs.lookup("frequency"));
@@ -45,22 +45,22 @@ void Foam::Function1Types::Square<Type>::read(const dictionary& coeffs)
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Square<Type>::Square
+Foam::Function1s::Square<Type>::Square
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    Function1<Type>(entryName)
+    FieldFunction1<Type, Square<Type>>(entryName)
 {
     read(dict);
 }
 
 
 template<class Type>
-Foam::Function1Types::Square<Type>::Square(const Square<Type>& se)
+Foam::Function1s::Square<Type>::Square(const Square<Type>& se)
 :
-    Function1<Type>(se),
+    FieldFunction1<Type, Square<Type>>(se),
     amplitude_(se.amplitude_, false),
     frequency_(se.frequency_),
     start_(se.start_),
@@ -73,14 +73,14 @@ Foam::Function1Types::Square<Type>::Square(const Square<Type>& se)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Square<Type>::~Square()
+Foam::Function1s::Square<Type>::~Square()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Square<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Square<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;

@@ -28,7 +28,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::Function1Types::quarterCosineRamp::value
+inline Foam::scalar Foam::Function1s::quarterCosineRamp::value
 (
     const scalar t
 ) const
@@ -37,7 +37,7 @@ inline Foam::scalar Foam::Function1Types::quarterCosineRamp::value
 }
 
 
-inline Foam::scalar Foam::Function1Types::quarterCosineRamp::integrate
+inline Foam::scalar Foam::Function1s::quarterCosineRamp::integrate
 (
     const scalar t1,
     const scalar t2

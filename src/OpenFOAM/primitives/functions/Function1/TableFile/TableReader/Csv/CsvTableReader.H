@@ -22,52 +22,83 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::csvTableReader
+    Foam::TableReaders::Csv
 
 Description
-    Reads an interpolation table from a file - CSV-format
+    Reads an interpolation table from a file in CSV-format. Entries govern the
+    layout of the CSV file. The index of the first (x) column of the table is
+    given by the refColumn entry, and is always scalar. The indices of the
+    components of the second (y) column are given by the componentColumns
+    entry.
+
+    Usage:
+    \verbatim
+        nHeaderLine         4;          // number of header lines
+        refColumn           0;          // reference column index
+        componentColumns    (1 2 3);    // component column indices
+        separator           ",";        // optional (defaults to ",")
+        mergeSeparators     no;         // merge multiple separators
+    \endverbatim
 
 SourceFiles
-    tableReader.C
+    CsvTableReader.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef csvTableReader_H
-#define csvTableReader_H
+#ifndef CsvTableReader_H
+#define CsvTableReader_H
 
-#include "tableReader.H"
+#include "TableReader.H"
 #include "labelList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace TableReaders
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class csvTableReader Declaration
+                        Class Csv Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class csvTableReader
+class Csv
 :
-    public tableReader<Type>
+    public TableReader<Type>
 {
     // Private Data
 
-        //- Does the file have a header line?
-        const bool headerLine_;
+        //- Number of header lines
+        const label nHeaderLine_;
 
-        //- Column of the time
-        const label timeColumn_;
+        //- Reference column
+        const label refColumn_;
 
         //- Labels of the components
         const labelList componentColumns_;
 
-        //- Read the next value from the split string
-        Type readValue(const List<string>&);
-
         //- Separator character
         const char separator_;
+
+        //- Merge separators flag; e.g. ',,,' becomes ','
+        bool mergeSeparators_;
+
+
+    // Private Member functions
+
+        //- Read the next value from the split string
+        Type readValue(const List<string>&) const;
+
+        //- Read a 1D table
+        virtual void read(ISstream&, List<Tuple2<scalar, Type>>&) const;
+
+        //- Read a 2D table
+        virtual void read
+        (
+            ISstream&,
+            List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>&
+        ) const;
 
 
 public:
@@ -79,36 +110,20 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        csvTableReader(const dictionary& dict);
+        Csv(const dictionary& dict);
 
         //- Construct and return a copy
-        virtual autoPtr<tableReader<Type>> clone() const
+        virtual autoPtr<TableReader<Type>> clone() const
         {
-            return autoPtr<tableReader<Type>>
-            (
-                new csvTableReader<Type>
-                (
-                    *this
-                )
-            );
+            return autoPtr<TableReader<Type>>(new Csv<Type>(*this));
         }
 
 
     //- Destructor
-    virtual ~csvTableReader();
+    virtual ~Csv();
 
 
     // Member Functions
-
-        //- Read the table
-        virtual void operator()(const fileName&, List<Tuple2<scalar, Type>>&);
-
-        //- Read 2D table
-        virtual void operator()
-        (
-            const fileName&,
-            List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>&
-        );
 
         //- Write the remaining parameters
         virtual void write(Ostream& os) const;
@@ -117,12 +132,13 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace TableReaders
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "csvTableReader.C"
+    #include "CsvTableReader.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

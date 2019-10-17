@@ -64,7 +64,7 @@ waveDisplacementPointPatchVectorField
       ? Function1<scalar>::New("startRamp", dict)
       : autoPtr<Function1<scalar>>
         (
-            new Function1Types::OneConstant<scalar>("startRamp")
+            new Function1s::OneConstant<scalar>("startRamp")
         )
     ),
     endRamp_
@@ -73,7 +73,7 @@ waveDisplacementPointPatchVectorField
       ? Function1<scalar>::New("endRamp", dict)
       : autoPtr<Function1<scalar>>
         (
-            new Function1Types::OneConstant<scalar>("endRamp")
+            new Function1s::OneConstant<scalar>("endRamp")
         )
     ),
     timeRamp_
@@ -82,7 +82,7 @@ waveDisplacementPointPatchVectorField
       ? Function1<scalar>::New("timeRamp", dict)
       : autoPtr<Function1<scalar>>
         (
-            new Function1Types::OneConstant<scalar>("timeRamp")
+            new Function1s::OneConstant<scalar>("timeRamp")
         )
     )
 {
@@ -162,17 +162,17 @@ void Foam::waveDisplacementPointPatchVectorField::write(Ostream& os) const
     writeEntry(os, "omega", omega_);
     writeEntry(os, "waveNumber", waveNumber_);
 
-    if (!isType<Function1Types::OneConstant<scalar>>(startRamp_()))
+    if (!isType<Function1s::OneConstant<scalar>>(startRamp_()))
     {
         writeEntry(os, startRamp_());
     }
 
-    if (!isType<Function1Types::OneConstant<scalar>>(endRamp_()))
+    if (!isType<Function1s::OneConstant<scalar>>(endRamp_()))
     {
         writeEntry(os, endRamp_());
     }
 
-    if (!isType<Function1Types::OneConstant<scalar>>(timeRamp_()))
+    if (!isType<Function1s::OneConstant<scalar>>(timeRamp_()))
     {
         writeEntry(os, timeRamp_());
     }

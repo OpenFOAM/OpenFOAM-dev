@@ -39,10 +39,10 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        patchType    | underlying patch type should be \c cyclic| yes |
-        fanCurve     | fan curve, e.g. \c csvFile | yes      |
-        jumpTable    | jump data (backward compatibility mode) | no       |
-        reverse      | reverse jump direction  | no | false
+        patchType    | underlying patch type (should be \c cyclic) | yes |
+        fanCurve     | fan curve function      | yes         |
+        jumpTable    | jump table function (backward compatibility mode) | no |
+        reverse      | reverse jump direction  | no          | false
         phi          | flux field name         | no          | phi
         rho          | density field name      | no          | rho
     \endtable
@@ -51,16 +51,20 @@ Usage
     \verbatim
     <patchName>
     {
-        type            fan;
+        type            fanPressureJump;
         patchType       cyclic;
-        fanCurve       csvFile;
-        csvFileCoeffs
+        fanCurve        tableFile;
+        tableFileCoeffs
         {
-            hasHeaderLine   1;
+            file            "$FOAM_CASE/constant/pressureVsQ";
+            format          csv;
+            nHeaderLine     1;
             refColumn       0;
             componentColumns 1(1);
             separator       ",";
-            file           "$FOAM_CASE/constant/pressureVsQ";
+            mergeSeparators no;
+            outOfBounds     clamp;
+            interpolationScheme linear;
         }
         value           uniform 0;
     }
@@ -73,7 +77,7 @@ Note
      The underlying \c patchType should be set to \c cyclic
 
 See also
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     fanPressureJumpFvPatchScalarField.C

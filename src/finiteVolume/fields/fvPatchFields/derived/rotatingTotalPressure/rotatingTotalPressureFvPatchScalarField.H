@@ -60,7 +60,7 @@ Usage
 
 See also
     Foam::totalPressureFvPatchScalarField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     rotatingTotalPressureFvPatchScalarField.C

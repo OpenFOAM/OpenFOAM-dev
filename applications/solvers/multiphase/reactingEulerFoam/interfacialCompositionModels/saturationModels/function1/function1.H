@@ -52,16 +52,16 @@ Description
 
     \verbatim
         type function1;
-
-        function csvFile;
+        function tableFile;
         functionCoeffs
         {
+            file                "filename.csv";
+            format              csv;
             nHeaderLine         1;
             refColumn           0;
             componentColumns    (1);
             separator           ",";
             mergeSeparators     no;
-            file                "filename.csv";
             outOfBounds         clamp;
             interpolationScheme linear;
         };

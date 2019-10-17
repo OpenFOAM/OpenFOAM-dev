@@ -54,7 +54,7 @@ Usage
 See also
     Foam::fixedMeanFvPatchField
     Foam::outletInletFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     fixedMeanOutletInletFvPatchField.C

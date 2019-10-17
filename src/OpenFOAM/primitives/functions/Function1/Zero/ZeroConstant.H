@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::ZeroConstant
+    Foam::Function1s::ZeroConstant
 
 Description
     Templated function that returns the corresponding 0 (zero).
@@ -46,7 +46,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -56,7 +56,7 @@ namespace Function1Types
 template<class Type>
 class ZeroConstant
 :
-    public Function1<Type>
+    public FieldFunction1<Type, ZeroConstant<Type>>
 {
 
 public:
@@ -96,7 +96,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -40,15 +40,14 @@ SourceFiles
 #define Function1_H
 
 #include "dictionary.H"
+#include "tmp.H"
+#include "typeInfo.H"
 #include "Field.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declarations
-class Time;
 
 // Forward declaration of friend functions and operators
 template<class Type> class Function1;
@@ -128,13 +127,13 @@ public:
         // Evaluation
 
             //- Return value as a function of (scalar) independent variable
-            virtual Type value(const scalar x) const;
+            virtual Type value(const scalar x) const = 0;
 
             //- Return value as a function of (scalar) independent variable
             virtual tmp<Field<Type>> value(const scalarField& x) const = 0;
 
             //- Integrate between two (scalar) values
-            virtual Type integrate(const scalar x1, const scalar x2) const;
+            virtual Type integrate(const scalar x1, const scalar x2) const = 0;
 
             //- Integrate between two (scalar) values
             virtual tmp<Field<Type>> integrate
@@ -172,40 +171,42 @@ void writeEntry(Ostream& os, const Function1<Type>& f1);
                         Class FieldFunction1 Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Function1Type>
+template<class Type, class Function1Type>
 class FieldFunction1
 :
-    public Function1Type
+    public Function1<Type>
 {
 
 public:
 
-    typedef typename Function1Type::returnType Type;
-
-
     // Constructors
 
-        //- Construct from entry name and dictionary
-        FieldFunction1(const word& entryName, const dictionary& dict);
+        //- Construct from entry name
+        FieldFunction1(const word& entryName);
+
+        //- Copy constructor
+        FieldFunction1(const FieldFunction1<Type, Function1Type>& ff1);
 
         //- Construct and return a clone
         virtual tmp<Function1<Type>> clone() const;
 
 
     //- Destructor
-    virtual ~FieldFunction1()
-    {}
+    virtual ~FieldFunction1();
 
 
     // Member Functions
 
         // Evaluation
 
-            using Function1Type::value;
-            using Function1Type::integrate;
+            //- Return value as a function of (scalar) independent variable
+            virtual Type value(const scalar x) const = 0;
 
             //- Return value as a function of (scalar) independent variable
             virtual tmp<Field<Type>> value(const scalarField& x) const;
+
+            //- Integrate between two (scalar) values
+            virtual Type integrate(const scalar x1, const scalar x2) const = 0;
 
             //- Integrate between two (scalar) values
             virtual tmp<Field<Type>> integrate
@@ -226,19 +227,14 @@ public:
                                                                                \
     defineNamedTemplateTypeNameAndDebug(Function1<Type>, 0);                   \
                                                                                \
-    defineTemplateRunTimeSelectionTable                                        \
-    (                                                                          \
-        Function1<Type>,                                                       \
-        dictionary                                                             \
-    );
+    defineTemplateRunTimeSelectionTable(Function1<Type>, dictionary);
 
 
 #define makeFunction1Type(SS, Type)                                            \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(Function1Types::SS<Type>, 0);          \
+    defineNamedTemplateTypeNameAndDebug(Function1s::SS<Type>, 0);              \
                                                                                \
-    Function1<Type>::adddictionaryConstructorToTable                           \
-        <FieldFunction1<Function1Types::SS<Type>>>                             \
+    Function1<Type>::adddictionaryConstructorToTable<Function1s::SS<Type>>     \
         add##SS##Type##ConstructorToTable_;
 
 
@@ -246,7 +242,7 @@ public:
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
                                                                                \
-    Function1<scalar>::adddictionaryConstructorToTable<FieldFunction1<SS>>     \
+    Function1<scalar>::adddictionaryConstructorToTable<SS>                     \
         add##SS##ConstructorToTable_;
 
 

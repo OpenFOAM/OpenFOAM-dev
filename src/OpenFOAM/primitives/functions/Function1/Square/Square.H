@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Square
+    Foam::Function1s::Square
 
 Description
     Templated square-wave function with support for an offset level.
@@ -85,7 +85,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -95,7 +95,7 @@ namespace Function1Types
 template<class Type>
 class Square
 :
-    public Function1<Type>
+    public FieldFunction1<Type, Square<Type>>
 {
     // Private Data
 
@@ -170,7 +170,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

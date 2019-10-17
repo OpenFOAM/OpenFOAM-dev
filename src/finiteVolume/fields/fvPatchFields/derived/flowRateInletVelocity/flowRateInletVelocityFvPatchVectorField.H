@@ -73,7 +73,7 @@ Usage
     }
     \endverbatim
 
-    The \c flowRate entry is a \c Function1 of time, see Foam::Function1Types.
+    The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
 
 Note
     - \c rhoInlet is required for the case of a mass flow rate, where the
@@ -84,7 +84,7 @@ Note
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
     Foam::flowRateOutletVelocityFvPatchVectorField
 
 SourceFiles

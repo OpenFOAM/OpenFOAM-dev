@@ -839,10 +839,7 @@ DebugSwitches
     thermophysicalFunction 0;
     time                0;
     timeVaryingAlphaContactAngle 0;
-    timeVaryingFlowRateInletVelocity 0;
     timeVaryingMappedFixedValue 0;
-    timeVaryingTotalPressure 0;
-    timeVaryingUniformFixedValue 0;
     timer               0;
     topoAction          0;
     topoCellLooper      0;

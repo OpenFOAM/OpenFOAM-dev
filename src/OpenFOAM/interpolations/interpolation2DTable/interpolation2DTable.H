@@ -38,7 +38,7 @@ SourceFiles
 
 #include "List.H"
 #include "Tuple2.H"
-#include "tableReader.H"
+#include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,14 +80,11 @@ private:
         //- File name
         fileName fileName_;
 
-        //- The actual reader
-        autoPtr<tableReader<Type>> reader_;
+        //- The reader
+        autoPtr<TableReader<Type>> reader_;
 
 
     // Private Member Functions
-
-        //- Read the table of data from file
-        void readTable();
 
         //- Return interpolated value in List
         Type interpolateValue

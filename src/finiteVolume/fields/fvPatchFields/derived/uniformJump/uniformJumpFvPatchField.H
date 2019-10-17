@@ -57,7 +57,7 @@ Note
 
 See also
     Foam::fixedJumpFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     uniformJumpFvPatchField.C

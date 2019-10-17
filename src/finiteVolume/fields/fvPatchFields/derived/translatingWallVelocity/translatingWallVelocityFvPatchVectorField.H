@@ -43,12 +43,12 @@ Usage
     }
     \endverbatim
 
-    The \c U entry is a Function1 of time, see Foam::Function1Types.
+    The \c U entry is a Function1 of time, see Foam::Function1s.
 
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     translatingWallVelocityFvPatchVectorField.C

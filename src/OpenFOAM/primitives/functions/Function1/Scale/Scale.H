@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Scale
+    Foam::Function1s::Scale
 
 Description
     Function1 which scales a given 'value' function by a 'scale' scalar function
@@ -108,8 +108,8 @@ Description
     \endtable
 
 See also
-    Foam::Function1Types::ramp
-    Foam::Function1Types::reverseRamp
+    Foam::Function1s::ramp
+    Foam::Function1s::reverseRamp
 
 SourceFiles
     Scale.C
@@ -125,7 +125,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -135,7 +135,7 @@ namespace Function1Types
 template<class Type>
 class Scale
 :
-    public Function1<Type>
+    public FieldFunction1<Type, Scale<Type>>
 {
     // Private Data
 
@@ -205,7 +205,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

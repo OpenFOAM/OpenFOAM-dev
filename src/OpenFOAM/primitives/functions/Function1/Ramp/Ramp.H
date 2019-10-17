@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,116 +22,127 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::CSV
+    Foam::Function1s::Ramp
 
 Description
-    Templated CSV function.
-
-    Reference column is always a scalar, e.g. time.
+    Ramp function base class for the set of scalar functions starting from 0 and
+    increasing monotonically to 1 from \c start over the \c duration and
+    remaining at 1 thereafter.
 
     Usage:
     \verbatim
-        <entryName> csvFile;
+        <entryName> <rampFunction>;
         <entryName>Coeffs
         {
-            nHeaderLine         4;          // number of header lines
-            refColumn           0;          // reference column index
-            componentColumns    (1 2 3);    // component column indices
-            separator           ",";        // optional (defaults to ",")
-            mergeSeparators     no;         // merge multiple separators
-            file                "fileXYZ";  // name of csv data file
-            outOfBounds         clamp;      // optional out-of-bounds handling
-            interpolationScheme linear;     // optional interpolation scheme
+            start     10;
+            duration  20;
+        }
+    \endverbatim
+    or
+    \verbatim
+        <entryName>
+        {
+            type      <rampFunction>;
+            start     10;
+            duration  20;
         }
     \endverbatim
 
+    Where:
+    \table
+        Property | Description  | Required | Default value
+        start    | Start time   | no       | 0
+        duration | Duration     | yes      |
+    \endtable
+
+See also
+    Foam::Function1
+
 SourceFiles
-    CSV.C
+    Ramp.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef CSV_H
-#define CSV_H
+#ifndef Ramp_H
+#define Ramp_H
 
 #include "Function1.H"
-#include "TableBase.H"
-#include "Tuple2.H"
-#include "labelList.H"
-#include "ISstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class CSV Declaration
+                           Class Ramp Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class CSV
+template <class Function1Type>
+class Ramp
 :
-    public TableBase<Type>
+    public FieldFunction1<scalar, Function1Type>
 {
-    // Private Data
+protected:
 
-        //- Number header lines
-        label nHeaderLine_;
+    // Protected data
 
-        //- Column of the time
-        label refColumn_;
+        //- Start-time of the ramp function
+        scalar start_;
 
-        //- Labels of the components
-        labelList componentColumns_;
+        //- Duration of the ramp function
+        scalar duration_;
 
-        //- Separator character
-        char separator_;
+        //- Return the end-time of the ramp function
+        inline scalar end() const
+        {
+            return start_ + duration_;
+        }
 
-        //- Merge separators flag, e.g. ',,,' becomes ','
-        bool mergeSeparators_;
+        //- Simple linear ramp function which form the basis of many more
+        //  complex ramp functions
+        inline scalar linearRamp(const scalar t) const
+        {
+            return max(min((t - start_)/duration_, 1), 0);
+        }
 
-        //- File name for csv table
-        fileName fName_;
+        //- The gradient of the linear ramp within the bounds of the ramp
+        //  duration
+        inline scalar dLinearRampDt() const
+        {
+            return 1/duration_;
+        }
 
+
+private:
 
     // Private Member Functions
 
-        //- Read csv data table
-        void read();
-
-        //- Read the next value from the split string
-        Type readValue(const List<string>&);
+        //- Read the coefficients from the given dictionary
+        void read(const dictionary& coeffs);
 
 
 public:
 
-    //- Runtime type information
-    TypeName("csvFile");
-
-
     // Constructors
 
         //- Construct from entry name and dictionary
-        CSV
+        Ramp
         (
             const word& entryName,
             const dictionary& dict
         );
 
-        //- Copy constructor
-        CSV(const CSV<Type>& tbl);
-
 
     //- Destructor
-    virtual ~CSV();
+    virtual ~Ramp();
 
 
     // Member Functions
 
-        //- Return const access to the file name
-        virtual const fileName& fName() const;
+        //- Return value for time t
+        virtual scalar value(const scalar t) const = 0;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -140,26 +151,19 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const CSV<Type>&) = delete;
+        void operator=(const Ramp<Function1Type>&) = delete;
 };
-
-
-template<>
-label CSV<label>::readValue(const List<string>& split);
-
-template<>
-Foam::scalar CSV<scalar>::readValue(const List<string>& split);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "CSV.C"
+    #include "Ramp.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

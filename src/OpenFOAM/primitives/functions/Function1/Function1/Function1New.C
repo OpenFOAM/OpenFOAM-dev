@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
             is.putBack(firstToken);
             return autoPtr<Function1<Type>>
             (
-                new Function1Types::Constant<Type>(entryName, is)
+                new Function1s::Constant<Type>(entryName, is)
             );
         }
         else

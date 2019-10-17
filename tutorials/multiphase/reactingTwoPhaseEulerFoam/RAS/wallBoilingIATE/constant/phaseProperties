@@ -189,7 +189,8 @@ saturationModel
         scale   1;
         value
         {
-            type                csvFile;
+            type                tableFile;
+            format              csv;
             nHeaderLine         1;
             refColumn           1;
             componentColumns    (0);

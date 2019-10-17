@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Table
+    Foam::Function1s::Table
 
 Description
     Templated table container function.
@@ -47,14 +47,13 @@ SourceFiles
 #ifndef Table_H
 #define Table_H
 
-#include "Function1.H"
-#include "Tuple2.H"
+#include "TableBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -64,7 +63,7 @@ namespace Function1Types
 template<class Type>
 class Table
 :
-    public TableBase<Type>
+    public TableBase<Type, Table<Type>>
 {
 
 public:
@@ -78,12 +77,27 @@ public:
         //- Construct from entry name and Istream
         Table(const word& entryName, const dictionary& dict);
 
+        //- Construct from components
+        Table
+        (
+            const word& name,
+            const tableBase::boundsHandling boundsHandling,
+            const word& interpolationScheme,
+            const List<Tuple2<scalar, Type>>& table
+        );
+
         //- Copy constructor
         Table(const Table<Type>& tbl);
 
 
     //- Destructor
     virtual ~Table();
+
+
+    // Member Functions
+
+        //- Write all table data in dictionary format
+        virtual void writeData(Ostream& os) const;
 
 
     // Member Operators
@@ -95,7 +109,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

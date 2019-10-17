@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::quadraticRamp
+    Foam::Function1s::quadraticRamp
 
 Description
     Quadratic ramp function starting from 0 and increasing quadraticRampally
     to 1 from \c t_0 over the \c duration and remaining at 1 thereafter.
 
 See also
-    Foam::Function1Types::ramp
+    Foam::Function1s::Ramp
 
 SourceFiles
     quadraticRamp.C
@@ -39,13 +39,13 @@ SourceFiles
 #ifndef quadraticRamp_H
 #define quadraticRamp_H
 
-#include "ramp.H"
+#include "Ramp.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -54,7 +54,7 @@ namespace Function1Types
 
 class quadraticRamp
 :
-    public ramp
+    public Ramp<quadraticRamp>
 {
 
 public:
@@ -99,7 +99,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

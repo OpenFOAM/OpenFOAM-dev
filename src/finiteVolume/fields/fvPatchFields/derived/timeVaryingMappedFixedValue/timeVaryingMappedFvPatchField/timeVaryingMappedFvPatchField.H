@@ -72,7 +72,7 @@ Usage
 
 See also
     Foam::timeVaryingMappedFixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     timeVaryingMappedFvPatchField.C

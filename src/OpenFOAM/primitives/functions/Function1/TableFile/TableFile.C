@@ -28,68 +28,58 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::TableFile<Type>::TableFile
+Foam::Function1s::TableFile<Type>::TableFile
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    TableBase<Type>(entryName, dict),
-    fName_("none")
-{
-    dict.lookup("file") >> fName_;
-
-    fileName expandedFile(fName_);
-    // IFstream is(expandedFile.expand());
-    autoPtr<ISstream> isPtr(fileHandler().NewIFstream(expandedFile.expand()));
-    ISstream& is = isPtr();
-
-    if (!is.good())
-    {
-        FatalIOErrorInFunction
+    TableBase<Type, TableFile<Type>>(entryName, dict),
+    fName_(dict.lookup("file")),
+    reader_
+    (
+        TableReader<Type>::New
         (
-            is
-        )   << "Cannot open file." << exit(FatalIOError);
-    }
+            dict.lookupOrDefault<word>
+            (
+                "format",
+                TableReaders::Foam<Type>::typeName
+            ),
+            dict
+        )
+    )
+{
+    reader_()(fName_, this->table_);
 
-    is  >> this->table_;
-
-    TableBase<Type>::check();
+    TableBase<Type, TableFile<Type>>::check();
 }
 
 
 template<class Type>
-Foam::Function1Types::TableFile<Type>::TableFile(const TableFile<Type>& tbl)
+Foam::Function1s::TableFile<Type>::TableFile(const TableFile<Type>& tbl)
 :
-    TableBase<Type>(tbl),
-    fName_(tbl.fName_)
+    TableBase<Type, TableFile<Type>>(tbl),
+    fName_(tbl.fName_),
+    reader_(tbl.reader_, false)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::TableFile<Type>::~TableFile()
+Foam::Function1s::TableFile<Type>::~TableFile()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::TableFile<Type>::writeData(Ostream& os) const
+void Foam::Function1s::TableFile<Type>::writeEntries(Ostream& os) const
 {
-    Function1<Type>::writeData(os);
-
-    os  << token::END_STATEMENT << nl
-        << indent << word(this->name() + "Coeffs") << nl
-        << indent << token::BEGIN_BLOCK << nl << incrIndent;
-
-    // Note: for TableBase write the dictionary entries it needs but not
-    // the values themselves
-    TableBase<Type>::writeEntries(os);
-
+    TableBase<Type, TableFile<Type>>::writeEntries(os);
     writeEntry(os, "file", fName_);
-    os  << decrIndent << indent << token::END_BLOCK << endl;
+    writeEntry(os, "format", reader_->type());
+    reader_->write(os);
 }
 
 

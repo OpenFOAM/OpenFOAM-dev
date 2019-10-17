@@ -23,16 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CSV.H"
+#include "CsvTableReader.H"
 #include "DynamicList.H"
+#include "Field.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 template<>
-Foam::label Foam::Function1Types::CSV<Foam::label>::readValue
-(
-    const List<string>& split
-)
+label TableReaders::Csv<label>::readValue(const List<string>& split) const
 {
     if (componentColumns_[0] >= split.size())
     {
@@ -47,10 +50,7 @@ Foam::label Foam::Function1Types::CSV<Foam::label>::readValue
 
 
 template<>
-Foam::scalar Foam::Function1Types::CSV<Foam::scalar>::readValue
-(
-    const List<string>& split
-)
+scalar TableReaders::Csv<scalar>::readValue(const List<string>& split) const
 {
     if (componentColumns_[0] >= split.size())
     {
@@ -65,11 +65,11 @@ Foam::scalar Foam::Function1Types::CSV<Foam::scalar>::readValue
 
 
 template<class Type>
-Type Foam::Function1Types::CSV<Type>::readValue(const List<string>& split)
+Type TableReaders::Csv<Type>::readValue(const List<string>& split) const
 {
     Type result;
 
-    for (label i = 0; i < pTraits<Type>::nComponents; i++)
+    for(label i = 0;i < pTraits<Type>::nComponents; i++)
     {
         if (componentColumns_[i] >= split.size())
         {
@@ -79,28 +79,28 @@ Type Foam::Function1Types::CSV<Type>::readValue(const List<string>& split)
                 << exit(FatalError);
         }
 
-        result[i] =
-        readScalar(IStringStream(split[componentColumns_[i]])());
+        result[i] = readScalar
+        (
+            IStringStream(split[componentColumns_[i]])()
+        );
     }
 
     return result;
 }
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::CSV<Type>::read()
+void Foam::TableReaders::Csv<Type>::read
+(
+    ISstream& is,
+    List<Tuple2<scalar, Type>>& data
+) const
 {
-    fileName expandedFile(fName_);
-    autoPtr<ISstream> isPtr(fileHandler().NewIFstream(expandedFile.expand()));
-    ISstream& is = isPtr();
-
-    if (!is.good())
-    {
-        FatalIOErrorInFunction(is)
-            << "Cannot open CSV file for reading."
-            << exit(FatalIOError);
-    }
-
     DynamicList<Tuple2<scalar, Type>> values;
 
     // Skip header
@@ -117,7 +117,6 @@ void Foam::Function1Types::CSV<Type>::read()
     {
         string line;
         is.getLine(line);
-
 
         label n = 0;
         std::size_t pos = 0;
@@ -181,7 +180,6 @@ void Foam::Function1Types::CSV<Type>::read()
             }
         }
 
-
         if (split.size() <= 1)
         {
             break;
@@ -193,90 +191,69 @@ void Foam::Function1Types::CSV<Type>::read()
         values.append(Tuple2<scalar,Type>(x, value));
     }
 
-    this->table_.transfer(values);
+    data.transfer(values);
+}
+
+
+template<class Type>
+void Foam::TableReaders::Csv<Type>::read
+(
+    ISstream&,
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& data
+) const
+{
+    NotImplemented;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::CSV<Type>::CSV
-(
-    const word& entryName,
-    const dictionary& dict
-)
+Foam::TableReaders::Csv<Type>::Csv(const dictionary& dict)
 :
-    TableBase<Type>(entryName, dict),
+    TableReader<Type>(dict),
     nHeaderLine_(readLabel(dict.lookup("nHeaderLine"))),
     refColumn_(readLabel(dict.lookup("refColumn"))),
     componentColumns_(dict.lookup("componentColumns")),
     separator_(dict.lookupOrDefault<string>("separator", string(","))[0]),
-    mergeSeparators_(readBool(dict.lookup("mergeSeparators"))),
-    fName_(dict.lookup("file"))
+    mergeSeparators_(readBool(dict.lookup("mergeSeparators")))
 {
     if (componentColumns_.size() != pTraits<Type>::nComponents)
     {
         FatalErrorInFunction
-            << componentColumns_ << " does not have the expected length of "
+            << componentColumns_ << " does not have the expected length "
             << pTraits<Type>::nComponents << endl
             << exit(FatalError);
     }
-
-    read();
-
-    TableBase<Type>::check();
 }
-
-
-template<class Type>
-Foam::Function1Types::CSV<Type>::CSV(const CSV<Type>& tbl)
-:
-    TableBase<Type>(tbl),
-    nHeaderLine_(tbl.nHeaderLine_),
-    refColumn_(tbl.refColumn_),
-    componentColumns_(tbl.componentColumns_),
-    separator_(tbl.separator_),
-    mergeSeparators_(tbl.mergeSeparators_),
-    fName_(tbl.fName_)
-{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::CSV<Type>::~CSV()
+Foam::TableReaders::Csv<Type>::~Csv()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 template<class Type>
-const Foam::fileName& Foam::Function1Types::CSV<Type>::fName() const
+void Foam::TableReaders::Csv<Type>::write(Ostream& os) const
 {
-    return fName_;
-}
-
-
-template<class Type>
-void Foam::Function1Types::CSV<Type>::writeData(Ostream& os) const
-{
-    Function1<Type>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-    os  << indent << word(this->name() + "Coeffs") << nl;
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-
-    // Note: for TableBase write the dictionary entries it needs but not
-    // the values themselves
-    TableBase<Type>::writeEntries(os);
+    TableReader<Type>::write(os);
 
     writeEntry(os, "nHeaderLine", nHeaderLine_);
     writeEntry(os, "refColumn", refColumn_);
-    writeEntry(os, "componentColumns", componentColumns_);
+    if (os.format() == IOstream::BINARY)
+    {
+        os.format(IOstream::ASCII);
+        writeEntry(os, "componentColumns", componentColumns_);
+        os.format(IOstream::BINARY);
+    }
+    else
+    {
+        writeEntry(os, "componentColumns", componentColumns_);
+    }
     writeEntry(os, "separator", string(separator_));
     writeEntry(os, "mergeSeparators", mergeSeparators_);
-    writeEntry(os, "file", fName_);
-
-    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 

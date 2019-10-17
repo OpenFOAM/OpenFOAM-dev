@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Type Foam::Function1Types::Scale<Type>::value(const scalar x) const
+inline Type Foam::Function1s::Scale<Type>::value(const scalar x) const
 {
     const scalar sx = xScale_->value(x)*x;
     return scale_->value(sx)*value_->value(sx);
@@ -36,7 +36,7 @@ inline Type Foam::Function1Types::Scale<Type>::value(const scalar x) const
 
 
 template<class Type>
-inline Type Foam::Function1Types::Scale<Type>::integrate
+inline Type Foam::Function1s::Scale<Type>::integrate
 (
     const scalar x1,
     const scalar x2

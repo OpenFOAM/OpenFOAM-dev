@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,47 +23,25 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ramp.H"
+#include "FoamTableReader.H"
+#include "CsvTableReader.H"
+#include "fieldTypes.H"
+#include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::Function1Types::ramp::read(const dictionary& coeffs)
+#define makeTableReaders(Type)                                                 \
+    defineTableReader(Type);                                                   \
+    makeTableReader(Foam, Type);                                               \
+    makeTableReader(Csv, Type)
+
+namespace Foam
 {
-    start_ = coeffs.lookupOrDefault<scalar>("start", 0);
-    duration_ = coeffs.lookupType<scalar>("duration");
+    makeTableReaders(scalar);
+    makeTableReaders(vector);
+    makeTableReaders(sphericalTensor);
+    makeTableReaders(symmTensor);
+    makeTableReaders(tensor);
 }
-
-
-Foam::Function1Types::ramp::ramp
-(
-    const word& entryName,
-    const dictionary& dict
-)
-:
-    Function1<scalar>(entryName)
-{
-    read(dict);
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::Function1Types::ramp::~ramp()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::Function1Types::ramp::writeData(Ostream& os) const
-{
-    Function1<scalar>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-    os  << indent << word(this->name() + "Coeffs") << nl;
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    writeEntry(os, "start", start_);
-    writeEntry(os, "duration", duration_);
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
-
 
 // ************************************************************************* //

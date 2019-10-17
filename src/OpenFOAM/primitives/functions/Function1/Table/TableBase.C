@@ -25,13 +25,13 @@ License
 
 #include "TableBase.H"
 #include "Time.H"
-#include "interpolationWeights.H"
+#include "linearInterpolationWeights.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class Type>
+template<class Type, class Function1Type>
 const Foam::interpolationWeights&
-Foam::Function1Types::TableBase<Type>::interpolator() const
+Foam::Function1s::TableBase<Type, Function1Type>::interpolator() const
 {
     if (interpolatorPtr_.empty())
     {
@@ -53,8 +53,8 @@ Foam::Function1Types::TableBase<Type>::interpolator() const
 }
 
 
-template<class Type>
-void Foam::Function1Types::TableBase<Type>::check() const
+template<class Type, class Function1Type>
+void Foam::Function1s::TableBase<Type, Function1Type>::check() const
 {
     if (!table_.size())
     {
@@ -82,8 +82,11 @@ void Foam::Function1Types::TableBase<Type>::check() const
 }
 
 
-template<class Type>
-Foam::scalar Foam::Function1Types::TableBase<Type>::bound(const scalar x) const
+template<class Type, class Function1Type>
+Foam::scalar Foam::Function1s::TableBase<Type, Function1Type>::bound
+(
+    const scalar x
+) const
 {
     const bool under = x < table_.first().first();
     const bool over = x > table_.last().first();
@@ -130,15 +133,15 @@ Foam::scalar Foam::Function1Types::TableBase<Type>::bound(const scalar x) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::Function1Types::TableBase<Type>::TableBase
+template<class Type, class Function1Type>
+Foam::Function1s::TableBase<Type, Function1Type>::TableBase
 (
     const word& name,
     const dictionary& dict
 )
 :
     tableBase(),
-    Function1<Type>(name),
+    FieldFunction1<Type, Function1Type>(name),
     name_(name),
     boundsHandling_
     (
@@ -148,17 +151,42 @@ Foam::Function1Types::TableBase<Type>::TableBase
     ),
     interpolationScheme_
     (
-        dict.lookupOrDefault<word>("interpolationScheme", "linear")
+        dict.lookupOrDefault<word>
+        (
+            "interpolationScheme",
+            linearInterpolationWeights::typeName
+        )
     ),
     table_()
 {}
 
 
-template<class Type>
-Foam::Function1Types::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
+template<class Type, class Function1Type>
+Foam::Function1s::TableBase<Type, Function1Type>::TableBase
+(
+    const word& name,
+    const tableBase::boundsHandling boundsHandling,
+    const word& interpolationScheme,
+    const List<Tuple2<scalar, Type>>& table
+)
 :
     tableBase(),
-    Function1<Type>(tbl),
+    FieldFunction1<Type, Function1Type>(name),
+    name_(name),
+    boundsHandling_(boundsHandling),
+    interpolationScheme_(interpolationScheme),
+    table_(table)
+{}
+
+
+template<class Type, class Function1Type>
+Foam::Function1s::TableBase<Type, Function1Type>::TableBase
+(
+    const TableBase<Type, Function1Type>& tbl
+)
+:
+    tableBase(),
+    FieldFunction1<Type, Function1Type>(tbl),
     name_(tbl.name_),
     boundsHandling_(tbl.boundsHandling_),
     interpolationScheme_(tbl.interpolationScheme_),
@@ -170,15 +198,18 @@ Foam::Function1Types::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::Function1Types::TableBase<Type>::~TableBase()
+template<class Type, class Function1Type>
+Foam::Function1s::TableBase<Type, Function1Type>::~TableBase()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-Type Foam::Function1Types::TableBase<Type>::value(const scalar x) const
+template<class Type, class Function1Type>
+Type Foam::Function1s::TableBase<Type, Function1Type>::value
+(
+    const scalar x
+) const
 {
     const scalar bx = bound(x);
 
@@ -194,8 +225,8 @@ Type Foam::Function1Types::TableBase<Type>::value(const scalar x) const
 }
 
 
-template<class Type>
-Type Foam::Function1Types::TableBase<Type>::integrate
+template<class Type, class Function1Type>
+Type Foam::Function1s::TableBase<Type, Function1Type>::integrate
 (
     const scalar x1,
     const scalar x2
@@ -236,8 +267,9 @@ Type Foam::Function1Types::TableBase<Type>::integrate
 }
 
 
-template<class Type>
-Foam::tmp<Foam::scalarField> Foam::Function1Types::TableBase<Type>::x() const
+template<class Type, class Function1Type>
+Foam::tmp<Foam::scalarField>
+Foam::Function1s::TableBase<Type, Function1Type>::x() const
 {
     tmp<scalarField> tfld(new scalarField(table_.size(), 0.0));
     scalarField& fld = tfld.ref();
@@ -251,8 +283,9 @@ Foam::tmp<Foam::scalarField> Foam::Function1Types::TableBase<Type>::x() const
 }
 
 
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Function1Types::TableBase<Type>::y() const
+template<class Type, class Function1Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::Function1s::TableBase<Type, Function1Type>::y() const
 {
     tmp<Field<Type>> tfld(new Field<Type>(table_.size(), Zero));
     Field<Type>& fld = tfld.ref();
@@ -266,31 +299,58 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1Types::TableBase<Type>::y() const
 }
 
 
-template<class Type>
-void Foam::Function1Types::TableBase<Type>::writeEntries(Ostream& os) const
+template<class Type, class Function1Type>
+void Foam::Function1s::TableBase<Type, Function1Type>::writeEntries
+(
+    Ostream& os
+) const
 {
-    if (boundsHandling_ != tableBase::boundsHandling::clamp)
+    writeEntryIfDifferent
+    (
+        os,
+        "outOfBounds",
+        tableBase::boundsHandlingNames_[tableBase::boundsHandling::clamp],
+        tableBase::boundsHandlingNames_[boundsHandling_]
+    );
+
+    writeEntryIfDifferent
+    (
+        os,
+        "interpolationScheme",
+        linearInterpolationWeights::typeName,
+        interpolationScheme_
+    );
+}
+
+
+template<class Type, class Function1Type>
+void Foam::Function1s::TableBase<Type, Function1Type>::writeCoeffDict
+(
+    Ostream& os
+) const
+{
+    OStringStream oss;
+    writeEntries(oss);
+
+    if (oss.str().size())
     {
-        writeEntry
-        (
-            os,
-            "outOfBounds",
-            tableBase::boundsHandlingNames_[boundsHandling_]
-        );
-    }
-    if (interpolationScheme_ != "linear")
-    {
-        writeEntry(os, "interpolationScheme", interpolationScheme_);
+        os  << indent << word(this->name() + "Coeffs") << nl;
+        os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
+        writeEntries(os);
+        os  << decrIndent << indent << token::END_BLOCK << endl;
     }
 }
 
 
-template<class Type>
-void Foam::Function1Types::TableBase<Type>::writeData(Ostream& os) const
+template<class Type, class Function1Type>
+void Foam::Function1s::TableBase<Type, Function1Type>::writeData
+(
+    Ostream& os
+) const
 {
     Function1<Type>::writeData(os);
-    os  << nl << indent << table_ << token::END_STATEMENT << nl;
-    writeEntries(os);
+    os  << token::END_STATEMENT << nl;
+    writeCoeffDict(os);
 }
 
 

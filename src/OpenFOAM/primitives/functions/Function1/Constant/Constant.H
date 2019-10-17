@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Constant
+    Foam::Function1s::Constant
 
 Description
     Templated function that returns a constant value.
@@ -46,7 +46,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -56,7 +56,7 @@ namespace Function1Types
 template<class Type>
 class Constant
 :
-    public Function1<Type>
+    public FieldFunction1<Type, Constant<Type>>
 {
     // Private Data
 
@@ -105,16 +105,6 @@ public:
         //- Integrate between two values
         virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
-        //- Return value as a function of (scalar) independent variable
-        virtual tmp<Field<Type>> value(const scalarField& x) const;
-
-        //- Integrate between two (scalar) values
-        virtual tmp<Field<Type>> integrate
-        (
-            const scalarField& x1,
-            const scalarField& x2
-        ) const;
-
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
 
@@ -126,17 +116,9 @@ public:
 };
 
 
-template<>
-tmp<Field<label>> Function1Types::Constant<label>::integrate
-(
-    const scalarField& x1,
-    const scalarField& x2
-) const;
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

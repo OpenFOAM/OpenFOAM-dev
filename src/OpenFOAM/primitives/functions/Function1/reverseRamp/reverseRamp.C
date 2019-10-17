@@ -29,7 +29,7 @@ License
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
     makeScalarFunction1(reverseRamp);
 }
@@ -38,38 +38,38 @@ namespace Function1Types
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1Types::reverseRamp::reverseRamp
+Foam::Function1s::reverseRamp::reverseRamp
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    ramp(entryName, dict),
+    Ramp<reverseRamp>(entryName, dict),
     ramp_(Function1<scalar>::New("ramp", dict))
 {}
 
 
-Foam::Function1Types::reverseRamp::reverseRamp
+Foam::Function1s::reverseRamp::reverseRamp
 (
     const reverseRamp& rr
 )
 :
-    ramp(rr),
+    Ramp<reverseRamp>(rr),
     ramp_(rr.ramp_, false)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Function1Types::reverseRamp::~reverseRamp()
+Foam::Function1s::reverseRamp::~reverseRamp()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Function1Types::reverseRamp::writeData(Ostream& os) const
+void Foam::Function1s::reverseRamp::writeData(Ostream& os) const
 {
-    ramp::writeData(os);
+    Ramp<reverseRamp>::writeData(os);
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;

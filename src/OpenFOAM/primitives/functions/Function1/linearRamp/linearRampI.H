@@ -27,22 +27,23 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::Function1Types::linearRamp::value
+inline Foam::scalar Foam::Function1s::linearRamp::value
 (
     const scalar t
 ) const
 {
-    return ramp::linearRamp(t);
+    return Ramp<linearRamp>::linearRamp(t);
 }
 
 
-inline Foam::scalar Foam::Function1Types::linearRamp::integrate
+inline Foam::scalar Foam::Function1s::linearRamp::integrate
 (
     const scalar t1,
     const scalar t2
 ) const
 {
-    const scalar l1 = ramp::linearRamp(t1), l2 = ramp::linearRamp(t2);
+    const scalar l1 = Ramp<linearRamp>::linearRamp(t1);
+    const scalar l2 = Ramp<linearRamp>::linearRamp(t2);
 
     return
         (sqr(l2) - sqr(l1))/2/dLinearRampDt()

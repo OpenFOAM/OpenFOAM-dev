@@ -23,25 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tableReader.H"
+#include "TableReader.H"
+#include "fileOperation.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 template<class Type>
-Foam::autoPtr<Foam::tableReader<Type>> Foam::tableReader<Type>::New
+Foam::autoPtr<Foam::TableReader<Type>> Foam::TableReader<Type>::New
 (
-    const dictionary& spec
+    const word& readerType,
+    const dictionary& dict
 )
 {
-    const word readerType = spec.lookupOrDefault<word>
-    (
-        "readerType",
-        "openFoam"
-    );
-
     typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_
-            ->find(readerType);
+        dictionaryConstructorTablePtr_->find(readerType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
@@ -53,32 +48,64 @@ Foam::autoPtr<Foam::tableReader<Type>> Foam::tableReader<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<tableReader<Type>>(cstrIter()(spec));
+    return autoPtr<TableReader<Type>>(cstrIter()(dict));
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tableReader<Type>::tableReader(const dictionary&)
+Foam::TableReader<Type>::TableReader(const dictionary&)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tableReader<Type>::~tableReader()
+Foam::TableReader<Type>::~TableReader()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::tableReader<Type>::write(Ostream& os) const
+void Foam::TableReader<Type>::write(Ostream& os) const
+{}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Type>
+template<class TableType>
+void Foam::TableReader<Type>::operator()
+(
+    const fileName& fName,
+    TableType& data
+) const
 {
-    if (this->type() != "openFoam")
+    // Expand the file
+    fileName fNameExpanded(fName);
+    fNameExpanded.expand();
+
+    // Open a stream and check it
+    autoPtr<ISstream> isPtr(fileHandler().NewIFstream(fNameExpanded));
+    ISstream& is = isPtr();
+    if (!is.good())
     {
-        writeEntry(os, "readerType", this->type());
+        FatalIOErrorInFunction(is)
+            << "Cannot open file" << fName << nl
+            << exit(FatalIOError);
+    }
+
+    // Read data from the stream
+    read(is, data);
+
+    // Check something was read
+    if (data.empty())
+    {
+        FatalIOErrorInFunction(is)
+            << "Table read from " << fName << " is empty" << nl
+            << exit(FatalIOError);
     }
 }
 

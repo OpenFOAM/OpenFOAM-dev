@@ -26,6 +26,7 @@ License
 #include "LuoSvendsen.H"
 #include "addToRunTimeSelectionTable.H"
 #include "phaseCompressibleTurbulenceModel.H"
+#include "linearInterpolationWeights.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -116,27 +117,30 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
     }
 
     gammaUpperReg2by11_ =
-        new interpolationTable<scalar>
+        new Function1s::Table<scalar>
         (
-            gammaUpperReg2by11Table,
-            interpolationTable<scalar>::CLAMP,
-            "gamma2by11"
+            "gamma2by11",
+            Function1s::tableBase::boundsHandling::clamp,
+            linearInterpolationWeights::typeName,
+            gammaUpperReg2by11Table
         );
 
     gammaUpperReg5by11_ =
-        new interpolationTable<scalar>
+        new Function1s::Table<scalar>
         (
-            gammaUpperReg5by11Table,
-            interpolationTable<scalar>::CLAMP,
-            "gamma5by11"
+            "gamma5by11",
+            Function1s::tableBase::boundsHandling::clamp,
+            linearInterpolationWeights::typeName,
+            gammaUpperReg5by11Table
         );
 
     gammaUpperReg8by11_ =
-        new interpolationTable<scalar>
+        new Function1s::Table<scalar>
         (
-            gammaUpperReg8by11Table,
-            interpolationTable<scalar>::CLAMP,
-            "gamma8by11"
+            "gamma8by11",
+            Function1s::tableBase::boundsHandling::clamp,
+            linearInterpolationWeights::typeName,
+            gammaUpperReg8by11Table
         );
 }
 
@@ -194,8 +198,8 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
         integral[celli] *=
             2.0*pow(b[celli], 3.0/11.0)*tgamma(5.0/11.0)
            *(
-                gammaUpperReg5by11_()(b[celli])
-              - gammaUpperReg5by11_()(tMin[celli])
+                gammaUpperReg5by11_->value(b[celli])
+              - gammaUpperReg5by11_->value(tMin[celli])
             );
     }
 

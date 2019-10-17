@@ -29,7 +29,7 @@ License
 #include "pointFields.H"
 #include "PointEdgeWave.H"
 #include "syncTools.H"
-#include "interpolationTable.H"
+#include "TableFile.H"
 #include "pointConstraints.H"
 #include "mapPolyMesh.H"
 
@@ -233,9 +233,9 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
     }
     else if (type == "timeVaryingUniformFixedValue")
     {
-        interpolationTable<vector> timeSeries(dict);
+        Function1s::TableFile<vector> timeSeries(word::null, dict);
 
-        fld = timeSeries(mesh().time().timeOutputValue());
+        fld = timeSeries.value(mesh().time().timeOutputValue());
     }
     else if (type == "slip")
     {

@@ -37,7 +37,7 @@ See also
     Foam::regionModels::surfaceFilmModels::contactAngleForce
     Foam::regionModels::surfaceFilmModels::temperatureDependentContactAngleForce
     Foam::regionModels::surfaceFilmModels::distributionContactAngleForce
-    Foam::Function1Types
+    Foam::Function1s
     Foam::distributionModel
 
 SourceFiles

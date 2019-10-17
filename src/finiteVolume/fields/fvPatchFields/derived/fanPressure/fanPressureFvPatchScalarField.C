@@ -74,7 +74,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 )
 :
     totalPressureFvPatchScalarField(ptf, p, iF, mapper),
-    fanCurve_(ptf.fanCurve_),
+    fanCurve_(ptf.fanCurve_, false),
     direction_(ptf.direction_)
 {}
 
@@ -87,7 +87,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 )
 :
     totalPressureFvPatchScalarField(p, iF, dict),
-    fanCurve_(dict),
+    fanCurve_(Function1<scalar>::New("fanCurve", dict)),
     direction_(fanFlowDirectionNames_.read(dict.lookup("direction")))
 {}
 
@@ -98,7 +98,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 )
 :
     totalPressureFvPatchScalarField(pfopsf),
-    fanCurve_(pfopsf.fanCurve_),
+    fanCurve_(pfopsf.fanCurve_, false),
     direction_(pfopsf.direction_)
 {}
 
@@ -110,7 +110,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 )
 :
     totalPressureFvPatchScalarField(pfopsf, iF),
-    fanCurve_(pfopsf.fanCurve_),
+    fanCurve_(pfopsf.fanCurve_, false),
     direction_(pfopsf.direction_)
 {}
 
@@ -157,7 +157,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
     }
 
     // Pressure drop for this flow rate
-    const scalar pdFan = fanCurve_(max(volFlowRate, 0.0));
+    const scalar pdFan = fanCurve_->value(max(volFlowRate, 0.0));
 
     totalPressureFvPatchScalarField::updateCoeffs
     (
@@ -170,7 +170,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
 void Foam::fanPressureFvPatchScalarField::write(Ostream& os) const
 {
     totalPressureFvPatchScalarField::write(os);
-    fanCurve_.write(os);
+    writeEntry(os, fanCurve_());
     writeEntry(os, "direction", fanFlowDirectionNames_[direction_]);
 }
 

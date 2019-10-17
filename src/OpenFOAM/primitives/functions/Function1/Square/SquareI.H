@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Type Foam::Function1Types::Square<Type>::value(const scalar x) const
+inline Type Foam::Function1s::Square<Type>::value(const scalar x) const
 {
     const scalar markFraction = markSpace_/(1 + markSpace_);
 
@@ -43,7 +43,7 @@ inline Type Foam::Function1Types::Square<Type>::value(const scalar x) const
 
 
 template<class Type>
-inline Type Foam::Function1Types::Square<Type>::integrate
+inline Type Foam::Function1s::Square<Type>::integrate
 (
     const scalar x1,
     const scalar x2

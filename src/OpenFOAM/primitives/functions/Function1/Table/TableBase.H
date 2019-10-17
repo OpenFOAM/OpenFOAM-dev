@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::TableBase
+    Foam::Function1s::TableBase
 
 Description
     Base class for table with bounds handling, interpolation and integration
@@ -46,18 +46,18 @@ namespace Foam
 
 class interpolationWeights;
 
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
                         Class TableBase Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class Type, class Function1Type>
 class TableBase
 :
     public tableBase,
-    public Function1<Type>
+    public FieldFunction1<Type, Function1Type>
 {
 protected:
 
@@ -102,21 +102,24 @@ protected:
         scalar bound(const scalar x) const;
 
 
-private:
-
-        //- Disallow default bitwise assignment
-        void operator=(const TableBase<Type>&) = delete;
-
-
 public:
 
     // Constructors
 
-        //- Construct from dictionary - note table is not populated
+        //- Construct from dictionary. Table is not populated.
         TableBase(const word& name, const dictionary& dict);
 
-        //- Copy constructor. Note: steals interpolator, tableSamples
-        TableBase(const TableBase<Type>& tbl);
+        //- Construct from components
+        TableBase
+        (
+            const word& name,
+            const tableBase::boundsHandling boundsHandling,
+            const word& interpolationScheme,
+            const List<Tuple2<scalar, Type>>& table
+        );
+
+        //- Copy constructor. Note: Steals interpolator and tableSamples.
+        TableBase(const TableBase<Type, Function1Type>& tbl);
 
 
     //- Destructor
@@ -137,18 +140,26 @@ public:
         //- Return the dependent values
         virtual tmp<Field<Type>> y() const;
 
+        //- Write entries only in dictionary format
+        virtual void writeEntries(Ostream& os) const;
+
+        //- Write the coeff dict in dictionary format
+        virtual void writeCoeffDict(Ostream& os) const;
+
         //- Write all table data in dictionary format
         virtual void writeData(Ostream& os) const;
 
-        //- Write keywords only in dictionary format. Used for non-inline
-        //  table types
-        virtual void writeEntries(Ostream& os) const;
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TableBase<Type, Function1Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

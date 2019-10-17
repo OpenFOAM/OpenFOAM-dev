@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Type Foam::Function1Types::Sine<Type>::value(const scalar x) const
+inline Type Foam::Function1s::Sine<Type>::value(const scalar x) const
 {
     const scalar phi = constant::mathematical::twoPi*frequency_*(x - start_);
 
@@ -38,7 +38,7 @@ inline Type Foam::Function1Types::Sine<Type>::value(const scalar x) const
 
 
 template<class Type>
-inline Type Foam::Function1Types::Sine<Type>::integrate
+inline Type Foam::Function1s::Sine<Type>::integrate
 (
     const scalar x1,
     const scalar x2

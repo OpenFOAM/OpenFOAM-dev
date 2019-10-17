@@ -28,7 +28,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::Function1Types::halfCosineRamp::value
+inline Foam::scalar Foam::Function1s::halfCosineRamp::value
 (
     const scalar t
 ) const
@@ -37,7 +37,7 @@ inline Foam::scalar Foam::Function1Types::halfCosineRamp::value
 }
 
 
-inline Foam::scalar Foam::Function1Types::halfCosineRamp::integrate
+inline Foam::scalar Foam::Function1s::halfCosineRamp::integrate
 (
     const scalar t1,
     const scalar t2

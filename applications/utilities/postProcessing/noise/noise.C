@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 
     Control settings are read from the $FOAM_CASE/system/noiseDict dictionary,
     or user-specified dictionary using the -dict option.  Pressure data is
-    read using a CSV reader:
+    read using a TableFile Function1:
 
 Usage
     \verbatim
@@ -72,7 +72,7 @@ Usage
     - one-third-octave-band pressure spectrum
 
 See also
-    CSV.H
+    TableFile.H
     noiseFFT.H
 
 \*---------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ See also
 #include "noiseFFT.H"
 #include "argList.H"
 #include "Time.H"
-#include "CSV.H"
+#include "TableFile.H"
 #include "IOdictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     #include "createFields.H"
 
     Info<< "Reading data file" << endl;
-    FieldFunction1<Function1Types::CSV<scalar>> pData
+    Function1s::TableFile<scalar> pData
     (
         "pressure",
         dict.subDict("pressureData")

@@ -117,11 +117,11 @@ Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::restrain
 
     if (convertToDegrees_)
     {
-        moment = moment_(radToDeg(theta));
+        moment = moment_->value(radToDeg(theta));
     }
     else
     {
-        moment = moment_(theta);
+        moment = moment_->value(theta);
     }
 
     // Damping of along axis angular velocity only
@@ -175,7 +175,10 @@ bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
             << abort(FatalError);
     }
 
-    moment_ = interpolationTable<scalar>(sDoFRBMRCoeffs_);
+    moment_.reset
+    (
+        new Function1s::TableFile<scalar>("moment", sDoFRBMRCoeffs_)
+    );
 
     const word angleFormat = sDoFRBMRCoeffs_.lookup("angleFormat");
 
@@ -209,7 +212,7 @@ void Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::write
 
     writeEntry(os, "axis", axis_);
 
-    moment_.write(os);
+    moment_->writeEntries(os);
 
     writeKeyword(os, "angleFormat");
 

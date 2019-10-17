@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "waveSuperposition.H"
+#include "Time.H"
 #include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
 

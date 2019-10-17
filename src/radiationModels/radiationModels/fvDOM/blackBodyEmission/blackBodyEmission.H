@@ -40,7 +40,7 @@ SourceFiles
 
 #include "volFields.H"
 #include "dimensionedScalar.H"
-#include "interpolationTable.H"
+#include "Table.H"
 #include "Vector2D.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -67,7 +67,7 @@ private:
     // Private Data
 
         //- Interpolation table of black body emissive power
-        mutable interpolationTable<scalar> table_;
+        mutable Function1s::Table<scalar> table_;
 
         //- Constant C1
         const dimensionedScalar C1_;

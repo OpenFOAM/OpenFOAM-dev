@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Polynomial
+    Foam::Function1s::Polynomial
 
 Description
     PolynomialEntry container data entry for scalars. Items are stored in a
@@ -53,7 +53,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -63,7 +63,7 @@ namespace Function1Types
 template<class Type>
 class Polynomial
 :
-    public Function1<Type>
+    public FieldFunction1<Type, Polynomial<Type>>
 {
     // Private Data
 
@@ -123,7 +123,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

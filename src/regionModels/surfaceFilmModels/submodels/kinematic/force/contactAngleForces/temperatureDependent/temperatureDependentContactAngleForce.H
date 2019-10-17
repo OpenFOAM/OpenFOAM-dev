@@ -32,7 +32,7 @@ Description
 
 See also
     Foam::regionModels::surfaceFilmModels::contactAngleForce
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     temperatureDependentContactAngleForce.C

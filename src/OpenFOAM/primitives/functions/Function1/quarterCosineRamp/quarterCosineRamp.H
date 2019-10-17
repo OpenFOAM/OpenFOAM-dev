@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::quarterCosineRamp
+    Foam::Function1s::quarterCosineRamp
 
 Description
     Quarter-cosine ramp function starting from 0 and increasing to 1 from \c
     start over the \c duration and remaining at 1 thereafter.
 
 See also
-    Foam::Function1Types::ramp
+    Foam::Function1s::Ramp
 
 SourceFiles
     quarterCosineRamp.C
@@ -39,13 +39,13 @@ SourceFiles
 #ifndef quarterCosineRamp_H
 #define quarterCosineRamp_H
 
-#include "ramp.H"
+#include "Ramp.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -54,7 +54,7 @@ namespace Function1Types
 
 class quarterCosineRamp
 :
-    public ramp
+    public Ramp<quarterCosineRamp>
 {
 
 public:
@@ -99,7 +99,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

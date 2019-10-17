@@ -36,8 +36,8 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF),
     profile_(),
-    dir_(Zero),
-    origin_(0)
+    origin_(0),
+    direction_(Zero)
 {}
 
 
@@ -51,8 +51,8 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF, fld),
     profile_(),
-    dir_(Zero),
-    origin_(0)
+    origin_(0),
+    direction_(Zero)
 {}
 
 
@@ -66,18 +66,18 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF, dict, false),
     profile_(Function1<Type>::New("profile", dict)),
-    dir_(dict.lookup("direction")),
-    origin_(readScalar(dict.lookup("origin")))
+    origin_(readScalar(dict.lookup("origin"))),
+    direction_(dict.lookup("direction"))
 {
-    if (mag(dir_) < small)
+    if (mag(direction_) == 0)
     {
         FatalErrorInFunction
-            << "magnitude Direction must be greater than zero"
+            << "The direction must be non-zero"
             << abort(FatalError);
     }
 
-    // Ensure direction vector is normalized
-    dir_ /= mag(dir_);
+    // Normalise the direction
+    direction_ /= mag(direction_);
 
     // Evaluate profile
     this->evaluate();
@@ -93,10 +93,10 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),  // Don't map
+    fixedValueFvPatchField<Type>(p, iF), // Don't map
     profile_(ptf.profile_, false),
-    dir_(ptf.dir_),
-    origin_(ptf.origin_)
+    origin_(ptf.origin_),
+    direction_(ptf.direction_)
 {
     // Evaluate profile since value not mapped
     this->evaluate();
@@ -111,8 +111,8 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 :
     fixedValueFvPatchField<Type>(ptf),
     profile_(ptf.profile_, false),
-    dir_(ptf.dir_),
-    origin_(ptf.origin_)
+    origin_(ptf.origin_),
+    direction_(ptf.direction_)
 {}
 
 
@@ -125,8 +125,8 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 :
     fixedValueFvPatchField<Type>(ptf, iF),
     profile_(ptf.profile_, false),
-    dir_(ptf.dir_),
-    origin_(ptf.origin_)
+    origin_(ptf.origin_),
+    direction_(ptf.direction_)
 {
     // Evaluate the profile if defined
     if (ptf.profile_.valid())
@@ -146,7 +146,8 @@ void Foam::fixedProfileFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalarField dirCmpt((dir_ & this->patch().Cf()) - origin_);
+    const scalarField dirCmpt((direction_ & this->patch().Cf()) - origin_);
+
     fvPatchField<Type>::operator==(profile_->value(dirCmpt));
 
     fixedValueFvPatchField<Type>::updateCoeffs();
@@ -158,7 +159,7 @@ void Foam::fixedProfileFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     writeEntry(os, profile_());
-    writeEntry(os, "direction", dir_);
+    writeEntry(os, "direction", direction_);
     writeEntry(os, "origin", origin_);
     writeEntry(os, "value", *this);
 }
