@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,10 +70,11 @@ int main(int argc, char *argv[])
             }
         }
     }
+    Info<< endl;
 
     // Set up motion fields
     const label nDoF = motion.nDoF();
-    Info << nDoF << " degrees of freedom" << endl;
+    Info<< nDoF << " degrees of freedom" << nl << endl;
     scalarField tau(nDoF, Zero);
     Field<spatialVector> fx(motion.nBodies(), Zero);
 
@@ -142,7 +143,7 @@ int main(int argc, char *argv[])
             animationFile<< endl;
         }
     }
-    Info << endl;
+    Info<< nl << endl;
 
     // Expand the bound box
     {
@@ -178,6 +179,8 @@ int main(int argc, char *argv[])
             << "t '" << motion.bodies()[bodyID].name() << '\'';
     }
     animationFile<< endl << "    pause " << deltaT << endl << "}" << endl;
+
+    Info<< "End" << nl << endl;
 
     return 0;
 }

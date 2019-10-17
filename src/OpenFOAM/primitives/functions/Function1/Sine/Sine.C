@@ -25,18 +25,23 @@ License
 
 #include "Sine.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 void Foam::Function1Types::Sine<Type>::read(const dictionary& coeffs)
 {
-    t0_ = coeffs.lookupOrDefault<scalar>("t0", 0);
-    amplitude_ = Function1<scalar>::New("amplitude", coeffs);
-    frequency_ = Function1<scalar>::New("frequency", coeffs);
-    scale_ = Function1<Type>::New("scale", coeffs);
+    amplitude_ = Function1<Type>::New("amplitude", coeffs);
+    frequency_ = readScalar(coeffs.lookup("frequency"));
+    start_ = coeffs.lookupOrDefault<scalar>("start", 0);
     level_ = Function1<Type>::New("level", coeffs);
+
+    integrable_ =
+        isA<Constant<Type>>(amplitude_())
+     && isA<Constant<Type>>(level_());
 }
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function1Types::Sine<Type>::Sine
@@ -55,11 +60,11 @@ template<class Type>
 Foam::Function1Types::Sine<Type>::Sine(const Sine<Type>& se)
 :
     Function1<Type>(se),
-    t0_(se.t0_),
     amplitude_(se.amplitude_, false),
-    frequency_(se.frequency_, false),
-    scale_(se.scale_, false),
-    level_(se.level_, false)
+    frequency_(se.frequency_),
+    start_(se.start_),
+    level_(se.level_, false),
+    integrable_(se.integrable_)
 {}
 
 
@@ -79,10 +84,9 @@ void Foam::Function1Types::Sine<Type>::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    writeEntry(os, "t0", t0_);
     amplitude_->writeData(os);
-    frequency_->writeData(os);
-    scale_->writeData(os);
+    writeEntry(os, "frequency", frequency_);
+    writeEntry(os, "start", start_);
     level_->writeData(os);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }

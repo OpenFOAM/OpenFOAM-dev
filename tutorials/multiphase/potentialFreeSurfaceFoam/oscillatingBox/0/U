@@ -49,10 +49,9 @@ boundaryField
                 value           sine;
                 valueCoeffs
                 {
-                    t0              0;
-                    amplitude       constant 0.025;
-                    frequency       constant 1;
-                    scale           constant (0 1 0);
+                    amplitude       constant (0 0.025 0);
+                    frequency       1;
+                    start           0;
                     level           constant (0 0 0);
                 }
             }

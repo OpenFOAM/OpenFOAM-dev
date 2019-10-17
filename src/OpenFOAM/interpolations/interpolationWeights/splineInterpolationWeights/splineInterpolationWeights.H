@@ -55,10 +55,12 @@ class splineInterpolationWeights
         //- Cached index in samples from previous invocation
         mutable label index_;
 
+
 public:
 
     //- Runtime type information
     TypeName("spline");
+
 
     // Constructors
 

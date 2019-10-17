@@ -25,19 +25,24 @@ License
 
 #include "Square.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 void Foam::Function1Types::Square<Type>::read(const dictionary& coeffs)
 {
-    t0_ = coeffs.lookupOrDefault<scalar>("t0", 0);
-    markSpace_ = coeffs.lookupOrDefault<scalar>("markSpace", 1);
-    amplitude_ = Function1<scalar>::New("amplitude", coeffs);
-    frequency_ = Function1<scalar>::New("frequency", coeffs);
-    scale_ = Function1<Type>::New("scale", coeffs);
+    amplitude_ = Function1<Type>::New("amplitude", coeffs);
+    frequency_ = readScalar(coeffs.lookup("frequency"));
+    start_ = coeffs.lookupOrDefault<scalar>("start", 0);
     level_ = Function1<Type>::New("level", coeffs);
+    markSpace_ = coeffs.lookupOrDefault<scalar>("markSpace", 1);
+
+    integrable_ =
+        isA<Constant<Type>>(amplitude_())
+     && isA<Constant<Type>>(level_());
 }
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function1Types::Square<Type>::Square
@@ -56,12 +61,12 @@ template<class Type>
 Foam::Function1Types::Square<Type>::Square(const Square<Type>& se)
 :
     Function1<Type>(se),
-    t0_(se.t0_),
-    markSpace_(se.markSpace_),
     amplitude_(se.amplitude_, false),
-    frequency_(se.frequency_, false),
-    scale_(se.scale_, false),
-    level_(se.level_, false)
+    frequency_(se.frequency_),
+    start_(se.start_),
+    level_(se.level_, false),
+    markSpace_(se.markSpace_),
+    integrable_(se.integrable_)
 {}
 
 
@@ -81,12 +86,11 @@ void Foam::Function1Types::Square<Type>::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    writeEntry(os, "t0", t0_);
-    writeEntry(os, "markSpace", markSpace_);
     amplitude_->writeData(os);
-    frequency_->writeData(os);
-    scale_->writeData(os);
+    writeEntry(os, "frequency", frequency_);
+    writeEntry(os, "start", start_);
     level_->writeData(os);
+    writeEntry(os, "markSpace", markSpace_);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

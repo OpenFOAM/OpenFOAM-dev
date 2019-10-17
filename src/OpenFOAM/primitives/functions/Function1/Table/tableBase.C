@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,36 +23,32 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Scale.H"
+#include "tableBase.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<class Type>
-inline Type Foam::Function1Types::Scale<Type>::value(const scalar x) const
+namespace Foam
 {
-    const scalar sx = xScale_->value(x)*x;
-    return scale_->value(sx)*value_->value(sx);
+    template<>
+    const char*
+        NamedEnum<Function1Types::tableBase::boundsHandling, 4>::names[] =
+        {"error", "warn", "clamp", "repeat"};
 }
 
+const Foam::NamedEnum<Foam::Function1Types::tableBase::boundsHandling, 4>
+    Foam::Function1Types::tableBase::boundsHandlingNames_;
 
-template<class Type>
-inline Type Foam::Function1Types::Scale<Type>::integrate
-(
-    const scalar x1,
-    const scalar x2
-) const
-{
-    if (!integrable_)
-    {
-        FatalErrorInFunction
-            << "Integration is not defined for " << type() << " functions "
-            << "unless all scaling is constant"
-            << exit(FatalError);
-    }
 
-    const scalar sx = xScale_->value(NaN);
-    return scale_->value(NaN)/sx*value_->integrate(sx*x1, sx*x2);
-}
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::Function1Types::tableBase::tableBase()
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::Function1Types::tableBase::~tableBase()
+{}
 
 
 // ************************************************************************* //

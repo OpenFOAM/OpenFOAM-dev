@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,23 @@ inline Foam::scalar Foam::Function1Types::quarterCosineRamp::value
     const scalar t
 ) const
 {
-    return 1 - cos(0.5*constant::mathematical::pi*linearRamp(t));
+    return 1 - cos(constant::mathematical::piByTwo*linearRamp(t));
+}
+
+
+inline Foam::scalar Foam::Function1Types::quarterCosineRamp::integrate
+(
+    const scalar t1,
+    const scalar t2
+) const
+{
+    using namespace constant::mathematical;
+
+    const scalar l1 = linearRamp(t1), l2 = linearRamp(t2);
+
+    return
+        (l2 - l1 - (sin(piByTwo*l2) - sin(piByTwo*l1))/piByTwo)/dLinearRampDt()
+      + (t2 - min(t2, end()));
 }
 
 

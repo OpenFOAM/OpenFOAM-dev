@@ -60,11 +60,6 @@ const Foam::word& Foam::Function1<Type>::name() const
 
 
 template<class Type>
-void Foam::Function1<Type>::convertTimeBase(const Time&)
-{}
-
-
-template<class Type>
 Type Foam::Function1<Type>::value(const scalar x) const
 {
     FatalErrorInFunction

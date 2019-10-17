@@ -35,6 +35,7 @@ SourceFiles
 #ifndef TableBase_H
 #define TableBase_H
 
+#include "tableBase.H"
 #include "Function1.H"
 #include "Tuple2.H"
 
@@ -55,22 +56,9 @@ namespace Function1Types
 template<class Type>
 class TableBase
 :
+    public tableBase,
     public Function1<Type>
 {
-public:
-
-    // Public data types
-
-        //- Enumeration for handling out-of-bound values
-        enum boundsHandling
-        {
-            ERROR,          //!< Exit with a FatalError
-            WARN,           //!< Issue warning and clamp value (default)
-            CLAMP,          //!< Clamp value to the start/end value
-            REPEAT          //!< Treat as a repeating list
-        };
-
-
 protected:
 
     // Protected data
@@ -79,7 +67,7 @@ protected:
         const word name_;
 
         //- Enumeration for handling out-of-bound values
-        const boundsHandling boundsHandling_;
+        const tableBase::boundsHandling boundsHandling_;
 
         //- Interpolation type
         const word interpolationScheme_;
@@ -93,16 +81,25 @@ protected:
         //- Interpolator method
         mutable autoPtr<interpolationWeights> interpolatorPtr_;
 
-        //- Cached indices and weights
-        mutable labelList currentIndices_;
+        //- Cached indices
+        mutable labelList indices_;
 
-        mutable scalarField currentWeights_;
+        //- Cached weights
+        mutable scalarField weights_;
 
 
     // Protected Member Functions
 
         //- Return (demand driven) interpolator
         const interpolationWeights& interpolator() const;
+
+        //- Check the table for size and consistency
+        void check() const;
+
+        //- Bound the argument to the table. Errors or warns, or shifts the
+        //  value if the table repeats. Does not clamp to the ends of the table
+        //  as the interpolator already performs that function.
+        scalar bound(const scalar x) const;
 
 
 private:
@@ -127,27 +124,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the out-of-bounds handling as a word
-        word boundsHandlingToWord(const boundsHandling& bound) const;
-
-        //- Return the out-of-bounds handling as an enumeration
-        boundsHandling wordToBoundsHandling(const word& bound) const;
-
-        //- Set the out-of-bounds handling from enum, return previous setting
-        boundsHandling outOfBounds(const boundsHandling& bound);
-
-        //- Check the table for size and consistency
-        void check() const;
-
-        //- Check minimum table bounds
-        bool checkMinBounds(const scalar x, scalar& xDash) const;
-
-        //- Check maximum table bounds
-        bool checkMaxBounds(const scalar x, scalar& xDash) const;
-
-        //- Convert time
-        virtual void convertTimeBase(const Time& t);
 
         //- Return Table value
         virtual Type value(const scalar x) const;

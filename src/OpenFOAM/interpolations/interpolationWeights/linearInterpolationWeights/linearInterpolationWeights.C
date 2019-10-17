@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,32 +44,6 @@ addToRunTimeSelectionTable
 );
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::Pair<Foam::scalar> linearInterpolationWeights::integrationWeights
-(
-    const label i,
-    const scalar t
-) const
-{
-    // t is in range samples_[i] .. samples_[i+1]
-
-    scalar s = (t-samples_[i])/(samples_[i+1]-samples_[i]);
-
-    if (s < -small || s > 1+small)
-    {
-        FatalErrorInFunction
-            << "Value " << t << " outside range " << samples_[i]
-            << " .. " << samples_[i+1]
-            << exit(FatalError);
-    }
-
-    scalar d = samples_[i+1]-t;
-
-    return Pair<scalar>(d*0.5*(1-s), d*0.5*(1+s));
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 linearInterpolationWeights::linearInterpolationWeights
@@ -91,157 +65,174 @@ bool linearInterpolationWeights::valueWeights
     scalarField& weights
 ) const
 {
-    bool indexChanged = false;
-
-    // Check if current timeIndex is still valid
+    // Check if current index is still valid
+    bool changed = false;
     if
     (
-        index_ >= 0
-     && index_ < samples_.size()
-     && (
-            samples_[index_] <= t
-         && (index_ == samples_.size()-1 || t <= samples_[index_+1])
+        (
+            index_ == -1
+         && t <= samples_.first()
+        )
+     || (
+            index_ >= 0
+         && index_ < samples_.size() - 1
+         && t >= samples_[index_]
+         && t <= samples_[index_ + 1]
+        )
+     || (
+            index_ == samples_.size() - 1
+         && t >= samples_.last()
         )
     )
     {
-        // index_ still at correct slot
+        // The index is still in the correct slot
     }
     else
     {
-        // search for correct index
+        // The index is no longer in the correct slot, so search for a new one
         index_ = findLower(samples_, t);
-        indexChanged = true;
+        changed = true;
     }
 
+    // Calculate the number of indices and weights and resize the result
+    const label n = index_ == -1 || index_ == samples_.size() - 1 ? 1 : 2;
+    indices.resize(n);
+    weights.resize(n);
 
+    // Compute the value
     if (index_ == -1)
     {
-        // Use first element only
-        indices.setSize(1);
-        weights.setSize(1);
+        // Use the first value
         indices[0] = 0;
-        weights[0] = 1.0;
+        weights[0] = 1;
     }
-    else if (index_ == samples_.size()-1)
+    else if (index_ == samples_.size() - 1)
     {
-        // Use last element only
-        indices.setSize(1);
-        weights.setSize(1);
-        indices[0] = samples_.size()-1;
-        weights[0] = 1.0;
+        // Use the last value
+        indices[0] = samples_.size() - 1;
+        weights[0] = 1;
     }
     else
     {
-        // Interpolate
-        indices.setSize(2);
-        weights.setSize(2);
-
+        // Interpolate within the interval
+        const scalar f =
+            (t - samples_[index_])/(samples_[index_ + 1] - samples_[index_]);
         indices[0] = index_;
-        indices[1] = index_+1;
-
-        scalar t0 = samples_[indices[0]];
-        scalar t1 = samples_[indices[1]];
-        scalar deltaT = t1-t0;
-
-        weights[0] = (t1-t)/deltaT;
-        weights[1] = 1.0-weights[0];
+        weights[0] = 1 - f;
+        indices[1] = index_ + 1;
+        weights[1] = f;
     }
 
-    return indexChanged;
+    return changed;
 }
 
 
 bool linearInterpolationWeights::integrationWeights
 (
-    const scalar t1,
-    const scalar t2,
+    scalar t1,
+    scalar t2,
     labelList& indices,
     scalarField& weights
 ) const
 {
-    if (t2 < t1-vSmall)
+    // If the arguments are in descending order, then swap them and set the
+    // weights' sign negative
+    label sign = +1;
+    if (t1 > t2)
     {
-        FatalErrorInFunction
-            << "Integration should be in positive direction."
-            <<  " t1:" << t1 << " t2:" << t2
-            << exit(FatalError);
+        Swap(t1, t2);
+        sign = -1;
     }
 
-    // Currently no fancy logic on cached index like in value
+    //- Search for lower indices
+    //  Note: currently there is no caching of this search like in valueWeights
+    const label i1 = findLower(samples_, t1);
+    const label i2 = findLower(samples_, t2);
+    const label iClip1 = min(max(i1, 0), samples_.size() - 2);
+    const label iClip2 = min(max(i2, 0), samples_.size() - 2);
+    const label n = max(i2 - i1 + (i1 == iClip1) + (i2 == iClip2), 1);
 
-    //- Find lower or equal index
-    label i1 = findLower(samples_, t1, 0, lessEqOp<scalar>());
-    //- Find lower index
-    label i2 = findLower(samples_, t2);
-
-    // For now just fail if any outside table
-    if (i1 == -1 || i2 == samples_.size()-1)
+    // Check if anything changed
+    bool changed = false;
+    if (indices.size() != n)
     {
-        FatalErrorInFunction
-            << "Integrating outside table " << samples_[0] << ".."
-            << samples_.last() << " not implemented."
-            << " t1:" << t1 << " t2:" << t2 << exit(FatalError);
-    }
-
-    label nIndices = i2-i1+2;
-
-
-    // Determine if indices already correct
-    bool anyChanged = false;
-
-    if (nIndices != indices.size())
-    {
-        anyChanged = true;
+        changed = true;
     }
     else
     {
-        // Closer check
-
-        label index = i1;
-        forAll(indices, i)
+        forAll(indices, indexi)
         {
-            if (indices[i] != index)
+            if (indices[indexi] == indexi + max(i1, 0))
             {
-                anyChanged = true;
+                changed = true;
                 break;
             }
-            index++;
         }
     }
 
-    indices.setSize(nIndices);
-    weights.setSize(nIndices);
-    weights = 0.0;
+    // Resize the result arrays
+    indices.resize(n);
+    indices = -1;
+    weights.resize(n);
+    weights = 0;
 
-    // Sum from i1+1 to i2+1
-    for (label i = i1+1; i <= i2; i++)
+    // Add out of bounds interval below the table
+    if (i1 == -1)
     {
-        scalar d = samples_[i+1]-samples_[i];
-        indices[i-i1] = i;
-        weights[i-i1] += 0.5*d;
-        indices[i+1-i1] = i+1;
-        weights[i+1-i1] += 0.5*d;
+        indices[0] = 0;
+        weights[0] += sign*(samples_[0] - t1);
+    }
+    if (i2 == -1)
+    {
+        indices[0] = 0;
+        weights[0] -= sign*(samples_[0] - t2);
     }
 
-    // Add from i1 to t1
+    // Add partial interval from t1 to i1 + 1
+    if (i1 == iClip1)
     {
-        Pair<scalar> i1Tot1 = integrationWeights(i1, t1);
+        const scalar f = (t1 - samples_[i1])/(samples_[i1 + 1] - samples_[i1]);
+        const scalar d = samples_[i1 + 1] - t1;
         indices[0] = i1;
-        weights[0] += i1Tot1.first();
-        indices[1] = i1+1;
-        weights[1] += i1Tot1.second();
+        weights[0] += sign*(1 - f)*d/2;
+        indices[1] = i1 + 1;
+        weights[1] += sign*(1 + f)*d/2;
     }
 
-    // Subtract from t2 to i2+1
+    // Sum whole intervals from i1 + 1 to i2
+    if (i1 != i2) for (label i = i1 + 1; i <= iClip2; i ++)
     {
-        Pair<scalar> wghts = integrationWeights(i2, t2);
-        indices[i2-i1] = i2;
-        weights[i2-i1] += -wghts.first();
-        indices[i2-i1+1] = i2+1;
-        weights[i2-i1+1] += -wghts.second();
+        const scalar d = samples_[i + 1] - samples_[i];
+        indices[i - iClip1] = i;
+        weights[i - iClip1] += sign*d/2;
+        indices[i - iClip1 + 1] = i + 1;
+        weights[i - iClip1 + 1] += sign*d/2;
     }
 
-    return anyChanged;
+    // Subtract partial interval from t2 to i2 + 1
+    if (i2 == iClip2)
+    {
+        const scalar f = (t2 - samples_[i2])/(samples_[i2 + 1] - samples_[i2]);
+        const scalar d = samples_[i2 + 1] - t2;
+        indices[n - 2] = i2;
+        weights[n - 2] -= sign*(1 - f)*d/2;
+        indices[n - 1] = i2 + 1;
+        weights[n - 1] -= sign*(1 + f)*d/2;
+    }
+
+    // Add out of bounds interval above the table
+    if (i1 == samples_.size() - 1)
+    {
+        indices[n - 1] = samples_.size() - 1;
+        weights[n - 1] -= sign*(t1 - samples_.last());
+    }
+    if (i2 == samples_.size() - 1)
+    {
+        indices[n - 1] = samples_.size() - 1;
+        weights[n - 1] += sign*(t2 - samples_.last());
+    }
+
+    return changed;
 }
 
 

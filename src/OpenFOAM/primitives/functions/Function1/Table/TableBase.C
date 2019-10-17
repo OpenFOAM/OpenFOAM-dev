@@ -53,138 +53,6 @@ Foam::Function1Types::TableBase<Type>::interpolator() const
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::Function1Types::TableBase<Type>::TableBase
-(
-    const word& name,
-    const dictionary& dict
-)
-:
-    Function1<Type>(name),
-    name_(name),
-    boundsHandling_
-    (
-        wordToBoundsHandling
-        (
-            dict.lookupOrDefault<word>("outOfBounds", "clamp")
-        )
-    ),
-    interpolationScheme_
-    (
-        dict.lookupOrDefault<word>("interpolationScheme", "linear")
-    ),
-    table_()
-{}
-
-
-template<class Type>
-Foam::Function1Types::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
-:
-    Function1<Type>(tbl),
-    name_(tbl.name_),
-    boundsHandling_(tbl.boundsHandling_),
-    interpolationScheme_(tbl.interpolationScheme_),
-    table_(tbl.table_),
-    tableSamplesPtr_(tbl.tableSamplesPtr_),
-    interpolatorPtr_(tbl.interpolatorPtr_)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::Function1Types::TableBase<Type>::~TableBase()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::word Foam::Function1Types::TableBase<Type>::boundsHandlingToWord
-(
-     const boundsHandling& bound
-) const
-{
-    word enumName("warn");
-
-    switch (bound)
-    {
-        case ERROR:
-        {
-            enumName = "error";
-            break;
-        }
-        case WARN:
-        {
-            enumName = "warn";
-            break;
-        }
-        case CLAMP:
-        {
-            enumName = "clamp";
-            break;
-        }
-        case REPEAT:
-        {
-            enumName = "repeat";
-            break;
-        }
-    }
-
-    return enumName;
-}
-
-
-template<class Type>
-typename Foam::Function1Types::TableBase<Type>::boundsHandling
-Foam::Function1Types::TableBase<Type>::wordToBoundsHandling
-(
-    const word& bound
-) const
-{
-    if (bound == "error")
-    {
-        return ERROR;
-    }
-    else if (bound == "warn")
-    {
-        return WARN;
-    }
-    else if (bound == "clamp")
-    {
-        return CLAMP;
-    }
-    else if (bound == "repeat")
-    {
-        return REPEAT;
-    }
-    else
-    {
-        WarningInFunction
-            << "bad outOfBounds specifier " << bound << " using 'warn'"
-            << endl;
-
-        return WARN;
-    }
-}
-
-
-template<class Type>
-typename Foam::Function1Types::TableBase<Type>::boundsHandling
-Foam::Function1Types::TableBase<Type>::outOfBounds
-(
-    const boundsHandling& bound
-)
-{
-    boundsHandling prev = boundsHandling_;
-    boundsHandling_ = bound;
-
-    return prev;
-}
-
-
 template<class Type>
 void Foam::Function1Types::TableBase<Type>::check() const
 {
@@ -215,146 +83,114 @@ void Foam::Function1Types::TableBase<Type>::check() const
 
 
 template<class Type>
-bool Foam::Function1Types::TableBase<Type>::checkMinBounds
-(
-    const scalar x,
-    scalar& xDash
-) const
+Foam::scalar Foam::Function1Types::TableBase<Type>::bound(const scalar x) const
 {
-    if (x < table_[0].first())
+    const bool under = x < table_.first().first();
+    const bool over = x > table_.last().first();
+
+    auto errorMessage = [&]()
+    {
+        return "value (" + name(x) + ") " + (under ? "under" : "over") + "flow";
+    };
+
+    if (under || over)
     {
         switch (boundsHandling_)
         {
-            case ERROR:
+            case tableBase::boundsHandling::error:
             {
                 FatalErrorInFunction
-                    << "value (" << x << ") underflow"
-                    << exit(FatalError);
+                    << errorMessage() << nl << exit(FatalError);
                 break;
             }
-            case WARN:
+            case tableBase::boundsHandling::warn:
             {
                 WarningInFunction
-                    << "value (" << x << ") underflow" << nl
-                    << endl;
-
-                // fall-through to 'CLAMP'
-                [[fallthrough]];
-            }
-            case CLAMP:
-            {
-                xDash = table_[0].first();
-                return true;
+                    << errorMessage() << nl << endl;
                 break;
             }
-            case REPEAT:
+            case tableBase::boundsHandling::clamp:
             {
-                // adjust x to >= minX
-                scalar span = table_.last().first() - table_[0].first();
-                xDash = fmod(x - table_[0].first(), span) + table_[0].first();
                 break;
+            }
+            case tableBase::boundsHandling::repeat:
+            {
+                const scalar t0 = table_.first().first();
+                const scalar t1 = table_.last().first();
+                const scalar dt = t1 - t0;
+                const label n = floor((x - t0)/dt);
+                return x - n*dt;
             }
         }
     }
-    else
-    {
-        xDash = x;
-    }
 
-    return false;
+    return x;
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
 template<class Type>
-bool Foam::Function1Types::TableBase<Type>::checkMaxBounds
+Foam::Function1Types::TableBase<Type>::TableBase
 (
-    const scalar x,
-    scalar& xDash
-) const
-{
-    if (x > table_.last().first())
-    {
-        switch (boundsHandling_)
-        {
-            case ERROR:
-            {
-                FatalErrorInFunction
-                    << "value (" << x << ") overflow"
-                    << exit(FatalError);
-                break;
-            }
-            case WARN:
-            {
-                WarningInFunction
-                    << "value (" << x << ") overflow" << nl
-                    << endl;
-
-                // fall-through to 'CLAMP'
-                [[fallthrough]];
-            }
-            case CLAMP:
-            {
-                xDash = table_.last().first();
-                return true;
-                break;
-            }
-            case REPEAT:
-            {
-                // adjust x to >= minX
-                scalar span = table_.last().first() - table_[0].first();
-                xDash = fmod(x - table_[0].first(), span) + table_[0].first();
-                break;
-            }
-        }
-    }
-    else
-    {
-        xDash = x;
-    }
-
-    return false;
-}
+    const word& name,
+    const dictionary& dict
+)
+:
+    tableBase(),
+    Function1<Type>(name),
+    name_(name),
+    boundsHandling_
+    (
+        dict.found("outOfBounds")
+      ? tableBase::boundsHandlingNames_.read(dict.lookup("outOfBounds"))
+      : tableBase::boundsHandling::warn
+    ),
+    interpolationScheme_
+    (
+        dict.lookupOrDefault<word>("interpolationScheme", "linear")
+    ),
+    table_()
+{}
 
 
 template<class Type>
-void Foam::Function1Types::TableBase<Type>::convertTimeBase(const Time& t)
-{
-    forAll(table_, i)
-    {
-        scalar value = table_[i].first();
-        table_[i].first() = t.userTimeToTime(value);
-    }
+Foam::Function1Types::TableBase<Type>::TableBase(const TableBase<Type>& tbl)
+:
+    tableBase(),
+    Function1<Type>(tbl),
+    name_(tbl.name_),
+    boundsHandling_(tbl.boundsHandling_),
+    interpolationScheme_(tbl.interpolationScheme_),
+    table_(tbl.table_),
+    tableSamplesPtr_(tbl.tableSamplesPtr_),
+    interpolatorPtr_(tbl.interpolatorPtr_)
+{}
 
-    tableSamplesPtr_.clear();
-    interpolatorPtr_.clear();
-}
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::Function1Types::TableBase<Type>::~TableBase()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
 Type Foam::Function1Types::TableBase<Type>::value(const scalar x) const
 {
-    scalar xDash = x;
+    const scalar bx = bound(x);
 
-    if (checkMinBounds(x, xDash))
+    Type y = Zero;
+
+    interpolator().valueWeights(bx, indices_, weights_);
+    forAll(indices_, i)
     {
-        return table_[0].second();
+        y += weights_[i]*table_[indices_[i]].second();
     }
 
-    if (checkMaxBounds(xDash, xDash))
-    {
-        return table_.last().second();
-    }
-
-    // Use interpolator
-    interpolator().valueWeights(xDash, currentIndices_, currentWeights_);
-
-    Type t = currentWeights_[0]*table_[currentIndices_[0]].second();
-    for (label i = 1; i < currentIndices_.size(); i++)
-    {
-        t += currentWeights_[i]*table_[currentIndices_[i]].second();
-    }
-
-    return t;
+    return y;
 }
 
 
@@ -365,16 +201,38 @@ Type Foam::Function1Types::TableBase<Type>::integrate
     const scalar x2
 ) const
 {
-    // Use interpolator
-    interpolator().integrationWeights(x1, x2, currentIndices_, currentWeights_);
+    const scalar bx1 = bound(x1), bx2 = bound(x2);
 
-    Type sum = currentWeights_[0]*table_[currentIndices_[0]].second();
-    for (label i = 1; i < currentIndices_.size(); i++)
+    Type sumY = Zero;
+
+    interpolator().integrationWeights(bx1, bx2, indices_, weights_);
+    forAll(indices_, i)
     {
-       sum += currentWeights_[i]*table_[currentIndices_[i]].second();
+       sumY += weights_[i]*table_[indices_[i]].second();
     }
 
-    return sum;
+    if (boundsHandling_ == tableBase::boundsHandling::repeat)
+    {
+        const scalar t0 = table_.first().first();
+        const scalar t1 = table_.last().first();
+        const scalar dt = t1 - t0;
+        const label n = floor((x2 - t0)/dt) - floor((x1 - t0)/dt);
+
+        if (n != 0)
+        {
+            Type sumY01 = Zero;
+
+            interpolator().integrationWeights(t0, t1, indices_, weights_);
+
+            forAll(indices_, i)
+            {
+                sumY01 += weights_[i]*table_[indices_[i]].second();
+            }
+            sumY += n*sumY01;
+        }
+    }
+
+    return sumY;
 }
 
 
@@ -411,9 +269,14 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1Types::TableBase<Type>::y() const
 template<class Type>
 void Foam::Function1Types::TableBase<Type>::writeEntries(Ostream& os) const
 {
-    if (boundsHandling_ != CLAMP)
+    if (boundsHandling_ != tableBase::boundsHandling::clamp)
     {
-        writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
+        writeEntry
+        (
+            os,
+            "outOfBounds",
+            tableBase::boundsHandlingNames_[boundsHandling_]
+        );
     }
     if (interpolationScheme_ != "linear")
     {

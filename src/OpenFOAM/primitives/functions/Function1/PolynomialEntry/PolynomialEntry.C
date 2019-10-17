@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,21 +127,6 @@ Foam::Function1Types::Polynomial<Type>::~Polynomial()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function1Types::Polynomial<Type>::convertTimeBase(const Time& t)
-{
-    forAll(coeffs_, i)
-    {
-        Type value = coeffs_[i].first();
-        for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
-        {
-            setComponent(coeffs_[i].first(), cmpt) =
-                t.userTimeToTime(component(value, cmpt));
-        }
-    }
-}
-
 
 template<class Type>
 Type Foam::Function1Types::Polynomial<Type>::value(const scalar x) const

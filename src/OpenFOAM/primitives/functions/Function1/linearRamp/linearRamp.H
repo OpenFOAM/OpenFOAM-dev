@@ -82,6 +82,13 @@ public:
         //- Return value for time t
         virtual inline scalar value(const scalar t) const;
 
+        //- Return the integral between times t1 and t2
+        virtual inline scalar integrate
+        (
+            const scalar t1,
+            const scalar t2
+        ) const;
+
 
     // Member Operators
 

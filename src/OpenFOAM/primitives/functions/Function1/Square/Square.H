@@ -28,23 +28,21 @@ Description
     Templated square-wave function with support for an offset level.
 
         \f[
-            a square(f (t - t_0)) s + l
+            a square(f (x - x_0) ) + l
         \f]
 
     where
 
-    \f$ square(t) \f$ is the square-wave function in range \f$ [-1, 1] \f$
-    with a mark/space ratio of \f$ r \f$
+    \f$square(x)\f$ is the square-wave function in range \f$[-1, 1]\f$ with a
+    mark/space ratio of \f$r\f$
 
     \vartable
-        symbol  | Description       | Data type         | Default
-        a       | Amplitude         | Function1<scalar> |
-        f       | Frequency [1/s]   | Function1<scalar> |
-        s       | Type scale factor | Function1<Type>   |
-        l       | Type offset level | Function1<Type>   |
-        t_0     | Start time [s]    | scalar            | 0
-        r       | mark/space ratio  | scalar            | 1
-        t       | Time [s]          | scalar
+        Symbol  | Description      | Data type       | Default
+        a       | Amplitude        | Function1<Type> |
+        f       | Frequency        | scalar          |
+        x_0     | Phase            | scalar          | 0
+        l       | Offset level     | Function1<Type> |
+        r       | Mark/space ratio | scalar          | 1
     \endvartable
 
     Example for a scalar:
@@ -52,10 +50,11 @@ Description
         <entryName> square;
         <entryName>Coeffs
         {
-            frequency 10;
             amplitude 0.1;
-            scale     2e-6;
+            frequency 10;
+            start     0;
             level     2e-6;
+            markSpace 0.5;
         }
     \endverbatim
 
@@ -64,10 +63,11 @@ Description
         <entryName> square;
         <entryName>Coeffs
         {
-            frequency 10;
             amplitude 1;
-            scale     (1 0.1 0);
+            frequency 10;
+            start     0;
             level     (10 1 0);
+            markSpace 0.5;
         }
     \endverbatim
 
@@ -99,23 +99,25 @@ class Square
 {
     // Private Data
 
-        //- Start-time for the square function
-        scalar t0_;
-
-        //- Mark/space ratio of the square function
-        scalar markSpace_;
-
         //- Scalar amplitude of the square function
-        autoPtr<Function1<scalar>> amplitude_;
+        autoPtr<Function1<Type>> amplitude_;
 
         //- Frequency of the square function
-        autoPtr<Function1<scalar>> frequency_;
+        scalar frequency_;
 
-        //- Scaling factor of the square function
-        autoPtr<Function1<Type>> scale_;
+        //- Argument offset
+        scalar start_;
 
         //- Level to which the square function is added
         autoPtr<Function1<Type>> level_;
+
+        //- Mark/space ratio of the square function; the fraction of one period
+        //  in which the function value is at the higher of the two possible
+        //  values.
+        scalar markSpace_;
+
+        //- Is this function integrable?
+        bool integrable_;
 
 
     // Private Member Functions
@@ -149,8 +151,11 @@ public:
 
     // Member Functions
 
-        //- Return value for time t
-        virtual inline Type value(const scalar t) const;
+        //- Return value
+        virtual inline Type value(const scalar x) const;
+
+        //- Integrate between two values
+        virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;

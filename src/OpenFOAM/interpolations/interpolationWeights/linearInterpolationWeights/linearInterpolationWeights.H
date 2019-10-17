@@ -54,20 +54,12 @@ class linearInterpolationWeights
         //- Cached index in samples from previous invocation
         mutable label index_;
 
-    // Private Member Functions
-
-        //- Get weights of i and i+1 to calculate integration from t to
-        //  samples_[i+1]
-        Pair<scalar> integrationWeights
-        (
-            const label i,
-            const scalar t
-        ) const;
 
 public:
 
     //- Runtime type information
     TypeName("linear");
+
 
     // Constructors
 
@@ -98,8 +90,8 @@ public:
         //  from samples. Returns true if indices changed.
         virtual bool integrationWeights
         (
-            const scalar t1,
-            const scalar t2,
+            scalar t1,
+            scalar t2,
             labelList& indices,
             scalarField& weights
         ) const;

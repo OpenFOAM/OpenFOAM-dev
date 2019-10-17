@@ -183,6 +183,9 @@ public:
             //- Convert the real-time (s) into user-time (CA deg)
             virtual scalar timeToUserTime(const scalar t) const;
 
+            //- Ratio between real-time and user-time
+            virtual scalar timeToUserTimeRatio() const;
+
             //- Read the control dictionary and set the write controls etc.
             virtual void readDict();
 

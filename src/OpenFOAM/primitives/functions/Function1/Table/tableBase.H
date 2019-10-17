@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::quarterSineRamp
-
-Description
-    Quarter-sine ramp function starting from 0 and increasing to 1 from \c start
-    over the \c duration and remaining at 1 thereafter.
-
-See also
-    Foam::Function1Types::ramp
+    Foam::tableBase
 
 SourceFiles
-    quarterSineRamp.C
+    tableBase.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef quarterSineRamp_H
-#define quarterSineRamp_H
+#ifndef tableBase_H
+#define tableBase_H
 
-#include "ramp.H"
+#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,62 +42,43 @@ namespace Function1Types
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class quarterSineRamp Declaration
+                         Class tableBase Declaration
 \*---------------------------------------------------------------------------*/
 
-class quarterSineRamp
-:
-    public ramp
+class tableBase
 {
-
 public:
 
-    // Runtime type information
-    TypeName("quarterSineRamp");
+    // Public data types
+
+        //- Enumeration for handling out-of-bound values
+        enum class boundsHandling
+        {
+            error,  // Exit with a FatalError
+            warn,   // Issue warning and clamp value (default)
+            clamp,  // Clamp value to the start/end value
+            repeat  // Treat as a repeating list
+        };
+
+        //- Enumeration names for handling out-of-bound values
+        static const NamedEnum<boundsHandling, 4> boundsHandlingNames_;
 
 
     // Constructors
 
-        //- Construct from entry name and dictionary
-        quarterSineRamp
-        (
-            const word& entryName,
-            const dictionary& dict
-        );
+        //- Construct null
+        tableBase();
 
 
     //- Destructor
-    virtual ~quarterSineRamp();
-
-
-    // Member Functions
-
-        //- Return value for time t
-        virtual inline scalar value(const scalar t) const;
-
-        //- Return the integral between times t1 and t2
-        virtual inline scalar integrate
-        (
-            const scalar t1,
-            const scalar t2
-        ) const;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const quarterSineRamp&) = delete;
+    virtual ~tableBase();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // namespace Function1Types
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "quarterSineRampI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

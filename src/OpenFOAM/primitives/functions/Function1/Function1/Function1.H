@@ -125,12 +125,6 @@ public:
             const word& name() const;
 
 
-        // Manipulation
-
-            //- Convert time
-            virtual void convertTimeBase(const Time& t);
-
-
         // Evaluation
 
             //- Return value as a function of (scalar) independent variable

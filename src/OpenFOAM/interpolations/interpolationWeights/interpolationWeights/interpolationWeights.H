@@ -55,10 +55,13 @@ class objectRegistry;
 
 class interpolationWeights
 {
-
 protected:
 
+    // Protected Member Data
+
+        //- Cached samples
         const scalarField& samples_;
+
 
 public:
 
@@ -124,7 +127,7 @@ public:
             scalarField& weights
         ) const = 0;
 
-        //- Helper: weighted sum
+        //- Weighted sum helper method
         template<class ListType1, class ListType2>
         static typename outerProduct
         <

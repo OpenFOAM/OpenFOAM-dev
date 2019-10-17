@@ -101,12 +101,6 @@ public:
 
     // Member Functions
 
-        // Manipulation
-
-            //- Convert time
-            virtual void convertTimeBase(const Time& t);
-
-
         // Evaluation
 
             //- Return Polynomial value

@@ -83,6 +83,9 @@ public:
             //- Convert the real-time (s) into user-time (e.g. CA deg)
             virtual scalar timeToUserTime(const scalar t) const;
 
+            //- Ratio between real-time and user-time
+            virtual scalar timeToUserTimeRatio() const;
+
             //- Return current time value
             inline scalar timeOutputValue() const;
 

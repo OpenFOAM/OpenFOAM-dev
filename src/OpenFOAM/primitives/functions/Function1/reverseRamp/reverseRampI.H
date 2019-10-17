@@ -36,4 +36,14 @@ inline Foam::scalar Foam::Function1Types::reverseRamp::value
 }
 
 
+inline Foam::scalar Foam::Function1Types::reverseRamp::integrate
+(
+    const scalar t1,
+    const scalar t2
+) const
+{
+    return (t2 - t1) - ramp_->integrate(t1, t2);
+}
+
+
 // ************************************************************************* //

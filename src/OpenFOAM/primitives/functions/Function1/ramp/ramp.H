@@ -93,11 +93,24 @@ protected:
         //- Duration of the ramp function
         scalar duration_;
 
-        //- Simple linear ramp function
-        //  which form the basis of many more complex ramp functions
+        //- Return the end-time of the ramp function
+        inline scalar end() const
+        {
+            return start_ + duration_;
+        }
+
+        //- Simple linear ramp function which form the basis of many more
+        //  complex ramp functions
         inline scalar linearRamp(const scalar t) const
         {
             return max(min((t - start_)/duration_, 1), 0);
+        }
+
+        //- The gradient of the linear ramp within the bounds of the ramp
+        //  duration
+        inline scalar dLinearRampDt() const
+        {
+            return 1/duration_;
         }
 
 

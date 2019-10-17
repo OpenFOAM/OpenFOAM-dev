@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,114 +29,61 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
 #include "Function1.H"
-#include "IOdictionary.H"
-#include "linearInterpolationWeights.H"
-#include "splineInterpolationWeights.H"
+#include "IFstream.H"
+#include "OFstream.H"
+#include "ListOps.H"
+#include "argList.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createMesh.H"
+    argList::validArgs.append("dictionary");
+    argList args(argc, argv);
+    const word dictName(args[1]);
+    Info<< "Reading " << dictName << nl << endl;
+    const dictionary dict = IFstream(dictName)();
 
-{
-    scalarField samples(4);
-    samples[0] = 0;
-    samples[1] = 1;
-    samples[2] = 2;
-    samples[3] = 3;
-    scalarField values(4);
-    values = 1.0;
-    // values[0] = 0.0;
-    // values[1] = 1.0;
+    Info<< "Constructing the function\n" << endl;
+    const autoPtr<Function1<scalar>> functionPtr =
+        Function1<scalar>::New("function", dict);
+    const Function1<scalar>& function = functionPtr();
 
-    linearInterpolationWeights interpolator
-    // splineInterpolationWeights interpolator
+    const scalar x0 = readScalar(dict.lookup("x0"));
+    const scalar x1 = readScalar(dict.lookup("x1"));
+    const label nX = readLabel(dict.lookup("nX"));
+    const scalar dx = (x1 - x0)/(nX - 1);
+    const scalarField xs
     (
-        samples
-    );
-    labelList indices;
-    scalarField weights;
-
-    interpolator.integrationWeights(1.1, 1.2, indices, weights);
-    Pout<< "indices:" << indices << endl;
-    Pout<< "weights:" << weights << endl;
-
-    scalar baseSum = interpolator.weightedSum
-    (
-        weights,
-        UIndirectList<scalar>(values, indices)
-    );
-    Pout<< "baseSum=" << baseSum << nl << nl << endl;
-
-
-//    interpolator.integrationWeights(-0.01, 0, indices, weights);
-//    scalar partialSum = interpolator.weightedSum
-//    (
-//        weights,
-//        UIndirectList<scalar>(values, indices)
-//    );
-//    Pout<< "partialSum=" << partialSum << nl << nl << endl;
-//
-//
-//    interpolator.integrationWeights(-0.01, 1, indices, weights);
-//    // Pout<< "samples:" << samples << endl;
-//    // Pout<< "indices:" << indices << endl;
-//    // Pout<< "weights:" << weights << endl;
-//    scalar sum = interpolator.weightedSum
-//    (
-//        weights,
-//        UIndirectList<scalar>(values, indices)
-//    );
-//    Pout<< "integrand=" << sum << nl << nl << endl;
-
-
-    return 1;
-}
-
-    IOdictionary function1Properties
-    (
-        IOobject
-        (
-            "function1Properties",
-            runTime.constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
+        x0 + dx*List<scalar>(identity(nX))
     );
 
-    autoPtr<Function1<scalar>> function1
-    (
-        Function1<scalar>::New
-        (
-            "function1",
-            function1Properties
-        )
-    );
+    Info<< "Calculating values\n" << endl;
+    const scalarField ys(function.value(xs));
+    const scalarField integralYs(function.integrate(scalarField(nX, x0), xs));
+    scalarField trapezoidIntegralYs(nX, 0);
+    for (label i = 1; i < nX; ++ i)
+    {
+        trapezoidIntegralYs[i] =
+            trapezoidIntegralYs[i-1] + (ys[i] + ys[i-1])/2*dx;
+    }
 
-    scalar x0 = readScalar(function1Properties.lookup("x0"));
-    scalar x1 = readScalar(function1Properties.lookup("x1"));
+    OFstream dataFile(dictName + ".dat");
+    Info<< "Writing to " << dataFile.name() << "\n" << endl;
+    dataFile<< "# x y integralY trapezoidIntegralY" << endl;
+    forAll(xs, i)
+    {
+        dataFile
+            << xs[i] << ' '
+            << ys[i] << ' '
+            << integralYs[i] << ' '
+            << trapezoidIntegralYs[i] << endl;
+    }
 
-    Info<< "Data entry type: " << function1().type() << nl << endl;
-
-    Info<< "Inputs" << nl
-        << "    x0 = " << x0 << nl
-        << "    x1 = " << x1 << nl
-        << endl;
-
-    Info<< "Interpolation" << nl
-        << "    f(x0) = " << function1().value(x0) << nl
-        << "    f(x1) = " << function1().value(x1) << nl
-        << endl;
-
-    Info<< "Integration" << nl
-        << "    int(f(x)) lim(x0->x1) = " << function1().integrate(x0, x1) << nl
-        << endl;
+    Info<< "End\n" << endl;
 
     return 0;
 }
