@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ void Foam::sixDoFSolvers::symplectic::solve
     scalar deltaT0
 )
 {
-    // First simplectic step:
+    // First symplectic step:
     //     Half-step for linear and angular velocities
     //     Update position and orientation
 
@@ -83,7 +83,7 @@ void Foam::sixDoFSolvers::symplectic::solve
     // Update the linear acceleration and torque
     updateAcceleration(fGlobal, tauGlobal);
 
-    // Second simplectic step:
+    // Second symplectic step:
     //     Complete update of linear and angular velocities
 
     v() += tConstraints() & aDamp()*0.5*deltaT*a();

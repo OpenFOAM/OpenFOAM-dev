@@ -25,7 +25,7 @@ Class
     Foam::blockVertices::projectVertex
 
 Description
-    Projects the vertex onto the selected surfacees of the
+    Projects the vertex onto the selected surfaces of the
     geometry provided as a searchableSurfaces object.
 
 SourceFiles

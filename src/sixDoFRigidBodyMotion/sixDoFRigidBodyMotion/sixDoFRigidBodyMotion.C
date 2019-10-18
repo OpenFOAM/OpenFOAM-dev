@@ -357,7 +357,7 @@ Foam::tmp<Foam::pointField> Foam::sixDoFRigidBodyMotion::transform
     const scalarField& scale
 ) const
 {
-    // Calculate the transformation septerion from the initial state
+    // Calculate the transformation septernion from the initial state
     septernion s
     (
         centreOfRotation() - initialCentreOfRotation(),

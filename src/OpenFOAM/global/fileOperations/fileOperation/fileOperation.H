@@ -312,7 +312,7 @@ public:
             // ) const = 0;
 
 
-        // (reg)IOobject functinality
+        // (reg)IOobject functionality
 
             //- Generate disk file name for object. Opposite of filePath.
             //  Optional wanted typeName.
@@ -494,7 +494,7 @@ public:
             virtual void flush() const;
 
             //- Generate path (like io.path) from root+casename with any
-            //  'processorXXX' replaced by procDir (usually 'processsors')
+            //  'processorXXX' replaced by procDir (usually 'processors')
             fileName processorsCasePath
             (
                 const IOobject&,
@@ -502,7 +502,7 @@ public:
             ) const;
 
             //- Generate path (like io.path) with provided instance and any
-            //  'processorXXX' replaced by procDir (usually 'processsors')
+            //  'processorXXX' replaced by procDir (usually 'processors')
             fileName processorsPath
             (
                 const IOobject&,

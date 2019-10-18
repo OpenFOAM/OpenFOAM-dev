@@ -1,6 +1,6 @@
 Info<< "Total cylinder mass: " << fvc::domainIntegrate(rho).value() << endl;
 //Info<< "Total fuel mass: "
-//    << fvc::domainIntegrate(rho*compostion.ft()).value() << endl;
+//    << fvc::domainIntegrate(rho*composition.ft()).value() << endl;
 
 OFstream logSummaryFile
 (

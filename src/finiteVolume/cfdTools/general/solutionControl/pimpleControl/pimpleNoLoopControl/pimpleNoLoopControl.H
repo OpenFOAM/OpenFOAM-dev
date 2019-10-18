@@ -72,8 +72,8 @@ protected:
         //  than PISO mode
         bool simpleRho_;
 
-        //- Flag to control whether turblence is solved just on the final pimple
-        //  iteration, or on every pimple iteration
+        //- Flag to control whether turbulence is solved just on the final
+        //  pimple iteration, or on every pimple iteration
         bool turbOnFinalIterOnly_;
 
 

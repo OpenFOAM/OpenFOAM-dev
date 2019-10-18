@@ -403,7 +403,8 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
     // Predetermine mesh edges
     // ~~~~~~~~~~~~~~~~~~~~~~~
 
-    // Precalulate (mesh) master point/edge (only relevant for shared pts/edges)
+    // Precalculate (mesh) master point/edge
+    // (only relevant for shared pts/edges)
     const PackedBoolList isMeshMasterPoint(syncTools::getMasterPoints(mesh()));
     const PackedBoolList isMeshMasterEdge(syncTools::getMasterEdges(mesh()));
     // Precalculate meshEdge per pp edge
@@ -416,7 +417,7 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
         )
     );
 
-    // Precalulate (patch) master point/edge
+    // Precalculate (patch) master point/edge
     const PackedBoolList isPatchMasterPoint
     (
         meshRefinement::getMasterPoints
@@ -1757,7 +1758,7 @@ void Foam::medialAxisMeshMover::calculateDisplacement
     );
 
 
-    // Precalulate master points/edge (only relevant for shared points/edges)
+    // Precalculate master points/edge (only relevant for shared points/edges)
     const PackedBoolList isMeshMasterPoint(syncTools::getMasterPoints(mesh()));
     const PackedBoolList isMeshMasterEdge(syncTools::getMasterEdges(mesh()));
     // Precalculate meshEdge per pp edge
@@ -1770,7 +1771,7 @@ void Foam::medialAxisMeshMover::calculateDisplacement
         )
     );
 
-    // Precalulate (patch) master point/edge
+    // Precalculate (patch) master point/edge
     const PackedBoolList isPatchMasterPoint
     (
         meshRefinement::getMasterPoints
@@ -1935,7 +1936,7 @@ void Foam::medialAxisMeshMover::calculateDisplacement
         patchDisp
     );
 
-    // Update thickess for changed extrusion
+    // Update thickness for changed extrusion
     forAll(thickness, patchPointi)
     {
         if (extrudeStatus[patchPointi] == snappyLayerDriver::NOEXTRUDE)

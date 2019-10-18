@@ -75,10 +75,10 @@ class nonRandomTwoLiquid
         //- Name of species 2
         word species2Name_;
 
-        //- Indiex of species 1 within this thermo
+        //- Index of species 1 within this thermo
         label species1Index_;
 
-        //- Indiex of species 2 within this thermo
+        //- Index of species 2 within this thermo
         label species2Index_;
 
         //- Non-randomness constant parameter for species 1

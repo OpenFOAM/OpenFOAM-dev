@@ -62,7 +62,7 @@ class mappedConvectiveHeatTransfer
         volScalarField htcConvPrimary_;
 
         //- Heat transfer coefficient - film region [W/m^2/K]
-        //  Assumes that the primary regtion to film region boundaries are
+        //  Assumes that the primary region to film region boundaries are
         //  described as mappedPushed types
         volScalarField htcConvFilm_;
 

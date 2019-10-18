@@ -92,7 +92,7 @@ private:
     );
 
     //- Perform a search in the subtree starting from the subtree node y
-    //  This search continue to use the hyperplan to walk the tree
+    //  This search continues to use the hyperplane to walk the tree
     //  If covering EOA is found return true and x points to the chemPoint
     bool inSubTree
     (

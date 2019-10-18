@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -624,7 +624,7 @@ Body:
 
 where boundaryType is truncated to 4 characters from one of the following:
 INLET
-PRESSSURE
+PRESSURE
 OUTLET
 BAFFLE
 etc,

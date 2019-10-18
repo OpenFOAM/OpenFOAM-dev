@@ -27,7 +27,7 @@ Class
 Description
     A messy mesh class which supports the possibility of creating a shapeMesh
     for regular Samm meshes (no arbitrary interfaces or collapsed SAMM cells).
-    If any of these special feateres exist, the mesh is created as polyMesh
+    If any of these special features exist, the mesh is created as polyMesh
 
 SourceFiles
     sammMesh.C

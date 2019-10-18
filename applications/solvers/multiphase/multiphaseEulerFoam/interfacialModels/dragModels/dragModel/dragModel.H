@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ public:
         // ********************************** NB! *****************************
         // for numerical reasons alpha1 and alpha2 has been
         // extracted from the dragFunction K,
-        // so you MUST divide K by alpha1*alpha2 when implemnting the drag
+        // so you MUST divide K by alpha1*alpha2 when implementing the drag
         // function
         // ********************************** NB! *****************************
         virtual tmp<volScalarField> K(const volScalarField& Ur) const = 0;

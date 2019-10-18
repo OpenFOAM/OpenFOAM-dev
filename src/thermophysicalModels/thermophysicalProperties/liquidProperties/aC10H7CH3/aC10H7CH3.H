@@ -90,7 +90,7 @@ public:
         //- Construct null
         aC10H7CH3();
 
-        //- Constrcut from components
+        //- Construct from components
         aC10H7CH3
         (
             const liquidProperties& l,

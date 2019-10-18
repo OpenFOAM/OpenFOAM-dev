@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     partitioningModel.C
-    newpartitioningModel.C
+    newPartitioningModel.C
 
 \*---------------------------------------------------------------------------*/
 

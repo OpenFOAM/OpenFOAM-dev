@@ -446,7 +446,7 @@ void Foam::chemkinReader::addReaction
 
 
     // Calculate the unit conversion factor for the A coefficient
-    // for the change from mol/cm^3 to kmol/m^3 concentraction units
+    // for the change from mol/cm^3 to kmol/m^3 concentration units
     const scalar concFactor = 0.001;
     scalar sumExp = 0.0;
     forAll(lhs, i)

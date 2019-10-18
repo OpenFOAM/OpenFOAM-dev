@@ -103,7 +103,7 @@ private:
         //- Target to source cell addressing
         labelListList tgtToSrcCellAddr_;
 
-        //- Source to target cell interplation weights
+        //- Source to target cell interpolation weights
         scalarListList srcToTgtCellWght_;
 
         //- Target to source cell interpolation weights
@@ -239,7 +239,7 @@ private:
                 List<labelList>& procLocalFaceIDs
             ) const;
 
-            //- Collect pieces of tgt mesh from other procssors and restructure
+            //- Collect pieces of tgt mesh from other processors and restructure
             void distributeAndMergeCells
             (
                 const mapDistribute& map,

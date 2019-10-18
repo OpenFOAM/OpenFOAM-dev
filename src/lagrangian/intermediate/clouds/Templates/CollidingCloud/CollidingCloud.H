@@ -25,7 +25,7 @@ Class
     Foam::CollidingCloud
 
 Description
-    Adds coolisions to kinematic clouds
+    Adds collisions to kinematic clouds
 
 SourceFiles
     CollidingCloudI.H

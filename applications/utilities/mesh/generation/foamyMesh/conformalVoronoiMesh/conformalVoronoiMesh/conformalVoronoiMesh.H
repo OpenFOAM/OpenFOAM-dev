@@ -456,7 +456,7 @@ private:
 
         //- Return false if the line is entirely outside the current processor
         //  domain, true is either point is inside, or the processor domain
-        //  bounadry is intersected (i.e. the points are box outside but the
+        //  boundary is intersected (i.e. the points are box outside but the
         //  line cuts.  The points will be moved onto the box where they
         //  intersect.
         bool clipLineToProc

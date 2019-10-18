@@ -29,7 +29,7 @@ Description
 
     - Adds to reacting cloud
       - multiphase composition
-      - devolatilisatsion
+      - devolatilisation
       - surface reactions
 
 SourceFiles

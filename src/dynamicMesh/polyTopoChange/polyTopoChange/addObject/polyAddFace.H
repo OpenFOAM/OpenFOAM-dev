@@ -247,7 +247,7 @@ public:
             return owner_;
         }
 
-        //- Return neighour cell
+        //- Return neighbour cell
         label neighbour() const
         {
             return neighbour_;

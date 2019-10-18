@@ -25,7 +25,7 @@ Class
     Foam::calculatedFvPatchField
 
 Description
-    This boundary condition is not designed to be evaluated; it is assmued
+    This boundary condition is not designed to be evaluated; it is assumed
     that the value is assigned via field assignment, and not via a call to
     e.g. \c updateCoeffs or \c evaluate.
 

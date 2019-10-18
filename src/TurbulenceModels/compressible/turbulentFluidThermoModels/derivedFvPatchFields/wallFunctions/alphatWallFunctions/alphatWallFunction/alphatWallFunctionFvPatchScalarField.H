@@ -38,8 +38,8 @@ Description
     where
 
     \vartable
-        \alpha_t| turblence thermal diffusivity
-        \mu_t   | turblence viscosity
+        \alpha_t| turbulence thermal diffusivity
+        \mu_t   | turbulence viscosity
         Pr_t    | turblent Prandtl number
     \endvartable
 

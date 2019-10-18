@@ -185,7 +185,7 @@ class vtkPVblockMesh
         //- Selected curved edges
         boolList edgeStatus_;
 
-        //- First instance and size of bleckMesh blocks
+        //- First instance and size of blockMesh blocks
         //  used to index into blockStatus_
         arrayRange arrayRangeBlocks_;
 

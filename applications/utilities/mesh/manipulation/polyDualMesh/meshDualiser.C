@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1142,7 +1142,7 @@ void Foam::meshDualiser::setRefinement
         );
     }
     // Detect whether different dual cells on either side of a face. This
-    // would neccesitate having a dual face built from the face and thus a
+    // would necessitate having a dual face built from the face and thus a
     // dual point at the face centre.
     for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
@@ -1189,7 +1189,7 @@ void Foam::meshDualiser::setRefinement
     }
 
     // Detect whether different dual cells on either side of an edge. This
-    // would neccesitate having a dual face built perpendicular to the edge
+    // would necessitate having a dual face built perpendicular to the edge
     // and thus a dual point at the mid of the edge.
     // Note: not really true - the face can be built without the edge centre!
     const labelListList& edgeCells = mesh_.edgeCells();

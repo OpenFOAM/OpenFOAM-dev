@@ -128,7 +128,7 @@ private:
 
     // Static data
 
-        //- Relative peturbation tolerance. Determines when point is
+        //- Relative perturbation tolerance. Determines when point is
         //  considered to be close to face/edge of bb of node.
         //  The tolerance is relative to the bounding box of the smallest
         //  node.

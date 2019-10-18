@@ -30,7 +30,7 @@ Description
     quite restrictive as it also has to support an equivalent stationary model,
     which does not store motion fields or a turbulence model.
 
-    Possible future extensions include separating the turbulent fuctionality
+    Possible future extensions include separating the turbulent functionality
     into another layer.
 
 See also

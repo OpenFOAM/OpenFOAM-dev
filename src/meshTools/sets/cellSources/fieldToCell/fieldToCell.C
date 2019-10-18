@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,7 +159,7 @@ void Foam::fieldToCell::applyToSet
         false
     );
 
-    // Note: should check for volScalarField but that introduces depencendy
+    // Note: should check for volScalarField but that introduces dependency
     //       on volMesh so just use another type with processor-local scope
     if (!fieldObject.typeHeaderOk<labelIOList>(false))
     {

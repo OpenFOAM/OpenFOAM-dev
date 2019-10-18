@@ -47,7 +47,7 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of clases
+// Forward declaration of classes
 
 template<class ParcelType>
 class MPPICParcel;

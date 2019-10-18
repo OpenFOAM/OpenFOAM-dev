@@ -28,7 +28,7 @@ Description
     Thermo parcel surface film model.
 
     Responsible for:
-    - injecting parcelss from the film model into the cloud, e.g. for dripping
+    - injecting parcels from the film model into the cloud, e.g. for dripping
     - parcel interaction with the film, e.g absorb, bounce, splash
 
     Splash model references:

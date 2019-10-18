@@ -68,7 +68,7 @@ Description
     randomiseInitialGrid yes;
 
     // Perturbation fraction, 1 = cell-size.
-    randomPurturbation   0.1;
+    randomPerturbation   0.1;
 
     // Number of relaxation iterations.
     nIterations      5;

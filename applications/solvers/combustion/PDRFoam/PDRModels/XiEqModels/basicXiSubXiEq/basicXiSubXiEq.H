@@ -25,7 +25,7 @@ Class
     Foam::XiEqModels::basicSubGrid
 
 Description
-    Basic sub-grid obstacle flame-wrinking enhancement factor model.
+    Basic sub-grid obstacle flame-wrinkling enhancement factor model.
     Details supplied by J Puttock 2/7/06.
 
     <b> Sub-grid flame area generation </b>
@@ -119,7 +119,7 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking XiEq
+        //- Return the flame-wrinkling XiEq
         virtual tmp<volScalarField> XiEq() const;
 
         //- Update properties from given dictionary

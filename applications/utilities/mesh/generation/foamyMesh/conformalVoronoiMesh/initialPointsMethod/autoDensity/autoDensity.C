@@ -636,7 +636,7 @@ bool Foam::autoDensity::fillBox
         }
 
         // Using the sampledPoints as the first test locations as they are
-        // randomly shuffled, but unfiormly sampling space and have wellInside
+        // randomly shuffled, but uniformly sampling space and have wellInside
         // and size data already
 
         maxDensity = 1/pow3(max(minCellSize, small));

@@ -67,7 +67,7 @@ class rotatingMotion
         //- Axis vector
         const vector axis_;
 
-        //- Angular velocty (rad/sec)
+        //- Angular velocity (rad/sec)
         autoPtr<Function1<scalar>> omega_;
 
 

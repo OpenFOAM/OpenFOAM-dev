@@ -38,7 +38,7 @@ Description
         <magSfN> <valueN> <qDotN> <htcN>
     \endverbatim
 
-    and received as the constituent pieces of the `mixed' condition, i.e.
+    and received as the constitutent pieces of the `mixed' condition, i.e.
 
     \verbatim
         # Patch: <patch name>

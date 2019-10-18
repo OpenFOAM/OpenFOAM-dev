@@ -1119,7 +1119,7 @@ Foam::label Foam::fileOperation::splitProcessorPath
 
     if (f.size() && f[0] == 's')
     {
-        // "processsorsNNN"
+        // "processorsNNN"
 
         f = f.substr(1);
 

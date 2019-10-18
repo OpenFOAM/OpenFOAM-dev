@@ -55,7 +55,7 @@ class adaptiveSolver
         //- Cache for dydx at the initial time
         mutable scalarField dydx0_;
 
-        //- Temprorary for the test-step solution
+        //- Temporary for the test-step solution
         mutable scalarField yTemp_;
 
 

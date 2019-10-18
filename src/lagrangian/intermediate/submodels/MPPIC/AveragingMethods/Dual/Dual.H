@@ -31,12 +31,12 @@ Description
     computational cells. Summation is done in the cells, and also in the
     tetrahedrons surrounding each point. The latter forms a type of dual mesh.
     The interpolation is weighted by proximity to the cell centre or point, as
-    calculated by the barycentric coordinate within the tethrahedron.
+    calculated by the barycentric coordinate within the tetrahedron.
 
-    Values are interpolated linearly across the tethrahedron. Gradients are
+    Values are interpolated linearly across the tetrahedron. Gradients are
     calculated directly from the point values using a first order finite
     element basis. The computed gradient is assumed constant over the
-    tethrahedron.
+    tetrahedron.
 
 SourceFiles
     Dual.C

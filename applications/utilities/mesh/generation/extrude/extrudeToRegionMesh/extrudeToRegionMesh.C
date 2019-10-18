@@ -709,7 +709,7 @@ void countExtrudePatches
             }
         }
     }
-    // Synchronise decistion. Actual numbers are not important, just make
+    // Synchronise decision. Actual numbers are not important, just make
     // sure that they're > 0 on all processors.
     Pstream::listCombineGather(zoneSidePatch, plusEqOp<label>());
     Pstream::listCombineScatter(zoneSidePatch);
@@ -2381,7 +2381,7 @@ int main(int argc, char *argv[])
             meshMod
         );
 
-        // Enforce actual point posititions according to extrudeModel (model)
+        // Enforce actual point positions according to extrudeModel (model)
         // (extruder.setRefinement only does fixed expansionRatio)
         // The regionPoints and nLayers are looped in the same way as in
         // createShellMesh

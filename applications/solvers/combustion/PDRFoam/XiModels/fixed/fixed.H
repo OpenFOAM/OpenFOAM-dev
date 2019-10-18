@@ -83,7 +83,7 @@ public:
 
     // Member Functions
 
-        //- Correct the flame-wrinking Xi
+        //- Correct the flame-wrinkling Xi
         virtual void correct()
         {}
 

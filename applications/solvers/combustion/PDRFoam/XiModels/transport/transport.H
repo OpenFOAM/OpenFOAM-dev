@@ -107,13 +107,13 @@ public:
             fields.add(Xi_);
         }
 
-        //- Correct the flame-wrinking Xi
+        //- Correct the flame-wrinkling Xi
         virtual void correct()
         {
             NotImplemented;
         }
 
-        //- Correct the flame-wrinking Xi using the given convection scheme
+        //- Correct the flame-wrinkling Xi using the given convection scheme
         virtual void correct(const fv::convectionScheme<scalar>& mvConvection);
 
         //- Update properties from given dictionary

@@ -26,7 +26,7 @@ Class
 
 Description
     A sampledSurface defined by a plane which 'cuts' the mesh using the
-    cuttingPlane alorithm.  The plane is triangulated by default.
+    cuttingPlane algorithm.  The plane is triangulated by default.
 
 Note
     Does not actually cut until update() called.

@@ -25,7 +25,7 @@ Class
     Foam::regionCoupledBase
 
 Description
-    Base class with common functinality for regionCoupled polyPatch.
+    Base class with common functionality for regionCoupled polyPatch.
     It includes AMI.
 
 

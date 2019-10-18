@@ -54,7 +54,7 @@ Description
         epsGrow = ||B.(dR - dRl)||,
     with dR = Rphiq - Rphi, dRl = A.dphi and B the diagonal scale factor
     matrix.
-    If epsGrow <= tolerance, the EOA is too conservative and a GROW is perforned
+    If epsGrow <= tolerance, the EOA is too conservative and a GROW is performed
     otherwise, the newly computed mapping is associated to the initial
     composition and added to the tree.
 
@@ -87,9 +87,9 @@ Description
     And L' = UD'V^T, with D' the diagonal matrix with the modified di'.
 
   Grow the EOA :
-    More details about the minimum-volume ellipsoid covering an ellispoid E and
+    More details about the minimum-volume ellipsoid covering an ellipsoid E and
     a point p are found in [3]. Here is the main steps to obtain the modified
-    matrix L' describind the new ellipsoid.
+    matrix L' describing the new ellipsoid.
         1) calculate the point p' in the transformed space :
             p' = L^T.(p-phi)
         2) compute the rank-one decomposition:
@@ -408,9 +408,9 @@ public:
             bool inEOA(const scalarField& phiq);
 
             //- More details about the minimum-volume ellipsoid covering an
-            //  ellispoid E and a point p are found in [1].
+            //  ellipsoid E and a point p are found in [1].
             //  Here is the main steps to obtain the
-            //  modified matrix L' describind the new ellipsoid.
+            //  modified matrix L' describing the new ellipsoid.
             //  1) calculate the point p' in the transformed space :
             //  p' = L^T.(p-phi)
             //  2) compute the rank-one decomposition:
@@ -426,7 +426,7 @@ public:
             //- If phiq is not in the EOA, then the mapping is computed.
             //  But as the EOA is a conservative approximation of the region of
             //  accuracy surrounding the point phi, we could expand it by
-            //  comparing thecomputed results with the one obtained by linear
+            //  comparing the computed results with the one obtained by linear
             //  interpolation.  The error eps is calculated:
             //  eps = ||B.(dR - dRl)||,
             //  with dR = Rphiq - Rphi, dRl = A.dphi and B the diagonal scale

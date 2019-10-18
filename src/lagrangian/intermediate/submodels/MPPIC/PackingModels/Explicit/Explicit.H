@@ -30,7 +30,7 @@ Description
     The inter-particle stress is calculated using current particle locations.
     This force is then applied only to the particles that are moving towards
     regions of close pack. The resulting velocity change is limited using an
-    abtracted correction velocity limiter.
+    abstracted correction velocity limiter.
 
     Reference:
     \verbatim

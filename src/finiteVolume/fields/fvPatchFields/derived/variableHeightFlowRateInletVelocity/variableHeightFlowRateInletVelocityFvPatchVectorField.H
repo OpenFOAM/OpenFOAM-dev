@@ -26,7 +26,7 @@ Class
 
 Description
     This boundary condition provides a velocity boundary condition for
-    multphase flow based on a user-specified volumetric flow rate.
+    multiphase flow based on a user-specified volumetric flow rate.
 
     The flow rate is made proportional to the phase fraction alpha at each
     face of the patch and alpha is ensured to be bound between 0 and 1.

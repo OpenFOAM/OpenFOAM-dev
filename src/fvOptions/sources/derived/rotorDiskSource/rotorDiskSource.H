@@ -75,7 +75,7 @@ Usage
 
     Where:
     Valid options for the \c geometryMode entry include:
-    - auto          : determine rototor co-ord system from cells
+    - auto          : determine rotor co-ord system from cells
     - specified     : specified co-ord system
 
     Valid options for the \c inletFlowType entry include:
@@ -170,7 +170,7 @@ protected:
         //- Inlet flow type
         inletFlowType inletFlow_;
 
-        //- Inlet velocity for specified iinflow
+        //- Inlet velocity for specified inflow
         vector inletVelocity_;
 
         //- Tip effect [0-1]

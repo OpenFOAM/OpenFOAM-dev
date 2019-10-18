@@ -37,7 +37,7 @@ Description
     CA = sum_i=1->Nr (max (0, -vAi wi)) -> consumption of species A
 
     where i is the reaction index, Nr the number of reactions, vAi is the net
-    stoechiometric coefficient of species A in the ith reaction (vAi = v''-v')
+    stoichiometric coefficient of species A in the ith reaction (vAi = v''-v')
     , wi is the progress variable of reaction i and dBi equals 1 if reaction i
     involves B and O otherwise.
     rAB show the error introduced to the production rates of A when B and all

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,7 +238,7 @@ Foam::MGridGenGAMGAgglomeration::MGridGenGAMGAgglomeration
 
             const labelField& agglom = finalAgglomPtr();
 
-            // Global nubmering
+            // Global numbering
             const globalIndex globalNumbering(nCoarseCells);
 
             labelField globalAgglom(addr.size());

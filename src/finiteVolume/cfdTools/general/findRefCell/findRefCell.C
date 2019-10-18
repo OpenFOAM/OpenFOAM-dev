@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ bool Foam::setRefCell
             label sumHasRef = returnReduce<label>(hasRef, sumOp<label>());
 
             // If reference cell no found use octree search
-            // with cell tet-decompositoin
+            // with cell tet-decomposition
             if (sumHasRef != 1)
             {
                 refCelli = field.mesh().findCell(refPointi);

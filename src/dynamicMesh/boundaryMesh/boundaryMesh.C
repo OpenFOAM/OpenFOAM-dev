@@ -848,7 +848,7 @@ void Foam::boundaryMesh::writeTriSurface(const fileName& fName) const
 
 // Get index in this (boundaryMesh) of face nearest to each boundary face in
 // pMesh.
-// Origininally all triangles/faces of boundaryMesh would be bunged into
+// Originally all triangles/faces of boundaryMesh would be bunged into
 // one big octree. Problem was that faces on top of each other, differing
 // only in sign of normal, could not be found separately. It would always
 // find only one. We could detect that it was probably finding the wrong one

@@ -26,7 +26,7 @@ Class
 
 Description
     Base class for inter region heat exchange. The derived classes must
-    provide the heat transfer coeffisine (htc) which is used as follows
+    provide the heat transfer coefficient (htc) which is used as follows
     in the energy equation.
 
      \f[

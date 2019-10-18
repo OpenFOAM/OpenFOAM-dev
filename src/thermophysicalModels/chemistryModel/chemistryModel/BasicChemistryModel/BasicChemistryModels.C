@@ -275,7 +275,7 @@ namespace Foam
     );
 
 
-    // Chemistry moldels based on sensibleInternalEnergy
+    // Chemistry models based on sensibleInternalEnergy
     makeChemistryModelType
     (
         StandardChemistryModel,

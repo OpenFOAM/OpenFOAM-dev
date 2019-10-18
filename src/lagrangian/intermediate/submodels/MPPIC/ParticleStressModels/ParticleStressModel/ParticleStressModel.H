@@ -117,7 +117,7 @@ public:
             const Field<scalar>& uRms
         ) const = 0;
 
-        //- Collision stress derivaive w.r.t. the volume fraction
+        //- Collision stress derivative w.r.t. the volume fraction
         virtual tmp<Field<scalar>> dTaudTheta
         (
             const Field<scalar>& alpha,

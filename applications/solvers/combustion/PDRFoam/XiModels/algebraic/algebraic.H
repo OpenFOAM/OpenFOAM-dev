@@ -98,7 +98,7 @@ public:
         //- Return the flame diffusivity
         virtual tmp<volScalarField> Db() const;
 
-        //- Correct the flame-wrinking Xi
+        //- Correct the flame-wrinkling Xi
         virtual void correct();
 
         //- Update properties from given dictionary

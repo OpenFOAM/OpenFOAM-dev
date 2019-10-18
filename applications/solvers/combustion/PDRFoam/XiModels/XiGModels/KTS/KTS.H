@@ -25,7 +25,7 @@ Class
     Foam::XiGModels::KTS
 
 Description
-    Simple Kolmogorov time-scale (KTS) model for the flame-wrinling generation
+    Simple Kolmogorov time-scale (KTS) model for the flame-wrinkling generation
     rate.
 
 SourceFiles
@@ -85,7 +85,7 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking generation rate
+        //- Return the flame-wrinkling generation rate
         virtual tmp<volScalarField> G() const;
 
         //- Update properties from given dictionary

@@ -255,7 +255,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
     }
     else if (type == "uniformFollow")
     {
-        // Reads name of name of patch. Then get average point dislacement on
+        // Reads name of name of patch. Then get average point displacement on
         // patch. That becomes the value of fld.
         const word patchName(dict.lookup("patch"));
         label patchID = mesh().boundaryMesh().findPatchID(patchName);

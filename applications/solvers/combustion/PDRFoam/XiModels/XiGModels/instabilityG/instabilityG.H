@@ -25,7 +25,7 @@ Class
     Foam::XiGModels::instabilityG
 
 Description
-    Flame-surface instabilityG flame-wrinking generation rate coefficient model
+    Flame-surface instabilityG flame-wrinkling generation rate coefficient model
     used in \link XiModel.H \endlink.
 
     See Technical Report SH/RE/01R for details on the PDR modelling.
@@ -57,7 +57,7 @@ class instabilityG
 {
     // Private Data
 
-        //- Flame instabilityG wrinling generation rate coefficient
+        //- Flame instabilityG wrinkling generation rate coefficient
         dimensionedScalar GIn_;
 
         //- InstabilityG length-scale
@@ -94,7 +94,7 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking generation rate
+        //- Return the flame-wrinkling generation rate
         virtual tmp<volScalarField> G() const;
 
         //- Return the flame diffusivity

@@ -81,7 +81,7 @@ protected:
         //- Axis of rotation, a direction vector which passes through the origin
         vector axis_;
 
-        //- SRF model coeficients dictionary
+        //- SRF model coefficients dictionary
         dictionary SRFModelCoeffs_;
 
         //- Angular velocity of the frame (rad/s)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ Foam::vector Foam::eigenVector
     scalar sd0, sd1, sd2;
     scalar magSd0, magSd1, magSd2;
 
-    // Sub-determinants for a unique eivenvalue
+    // Sub-determinants for a unique eigenvalue
     sd0 = A.yy()*A.zz() - A.yz()*A.zy();
     sd1 = A.zz()*A.xx() - A.zx()*A.xz();
     sd2 = A.xx()*A.yy() - A.xy()*A.yx();

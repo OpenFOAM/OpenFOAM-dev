@@ -28,7 +28,7 @@ Description
     Mass-based Rosin-Rammler distributionModel.
 
     Corrected form of the Rosin-Rammler distribution taking into account the
-    varying number of particels per parces for for fixed-mass parcels.  This
+    varying number of particles per parcel for for fixed-mass parcels.  This
     distribution should be used when
     \verbatim
         parcelBasisType mass;

@@ -321,7 +321,8 @@ public:
 
         // Derivative term used for Jacobian
 
-            //- Derivative of B (acooding to Niemeyer et al.) w.r.t. temperature
+            //- Derivative of B (according to Niemeyer et al.)
+            //  w.r.t. temperature
             inline scalar dKcdTbyKc(const scalar p, const scalar T) const;
 
             //- Derivative of cp w.r.t. temperature

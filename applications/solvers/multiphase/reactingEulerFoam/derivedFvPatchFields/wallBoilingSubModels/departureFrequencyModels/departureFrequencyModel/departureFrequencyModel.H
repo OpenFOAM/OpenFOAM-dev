@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     departureFrequencyModel.C
-    newdepartureFrequencyModel.C
+    newDepartureFrequencyModel.C
 
 \*---------------------------------------------------------------------------*/
 

@@ -30,7 +30,6 @@ Description
 
 SourceFiles
     sinteringModel.C
-    newsinteringModel.C
 
 \*---------------------------------------------------------------------------*/
 

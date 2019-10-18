@@ -153,10 +153,10 @@ public:
             //- Return true if all convergence checks are satisfied
             virtual bool criteriaSatisfied() const = 0;
 
-            //- Flag to indicate whether convergance has been reached
+            //- Flag to indicate whether convergence has been reached
             bool converged();
 
-            //- End the run if convergance has been reached
+            //- End the run if convergence has been reached
             bool endIfConverged(Time& time);
 
 

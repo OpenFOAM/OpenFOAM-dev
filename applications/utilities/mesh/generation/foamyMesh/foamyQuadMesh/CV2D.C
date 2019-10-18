@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -773,7 +773,7 @@ void Foam::CV2D::newPoints()
                 if (!is_infinite(ec)) break;
             } while (++ec != ecStart);
 
-            // Store the start-end of the first non-infinte edge
+            // Store the start-end of the first non-infinite edge
             point2D de0 = toPoint2D(circumcenter(ec->first));
 
             // Keep track of the maximum edge length^2

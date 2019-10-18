@@ -35,8 +35,8 @@ Description
     where
 
     \vartable
-        epsilon | turblence dissipation field
-        G       | turblence generation field
+        epsilon | turbulence dissipation field
+        G       | turbulence generation field
     \endvartable
 
     The model switches between laminar and turbulent functions based on the

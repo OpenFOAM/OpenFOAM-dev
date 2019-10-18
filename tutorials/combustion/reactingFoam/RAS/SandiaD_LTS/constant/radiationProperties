@@ -34,7 +34,7 @@ greyMeanCombustionCoeffs
     CO2
     {
         Tcommon         200;   // Common Temp
-        invTemp         true;   // Is the polynomio using inverse temperature.
+        invTemp         true;   // Is the polynomial using inverse temperature.
         Tlow            200;   // Low Temp
         Thigh           2500;  // High Temp
 

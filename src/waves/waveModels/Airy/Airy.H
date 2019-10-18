@@ -90,7 +90,7 @@ protected:
             const scalarField& x
         ) const;
 
-        //- Return whether shallow and intermdiate effects are to be omitted
+        //- Return whether shallow and intermediate effects are to be omitted
         bool deep() const;
 
         //- Return the non-dimensionalised i-th harmonic of the velocity

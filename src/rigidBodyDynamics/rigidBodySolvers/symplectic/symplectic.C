@@ -67,7 +67,7 @@ void Foam::RBD::rigidBodySolvers::symplectic::solve
     const Field<spatialVector>& fx
 )
 {
-    // First simplectic step:
+    // First symplectic step:
     //     Half-step for linear and angular velocities
     //     Update position and orientation
     qDot() = qDot0() + 0.5*deltaT0()*qDdot();
@@ -87,7 +87,7 @@ void Foam::RBD::rigidBodySolvers::symplectic::solve
     // and restraint forces
     model_.forwardDynamics(state(), rtau, rfx);
 
-    // Second simplectic step:
+    // Second symplectic step:
     //     Complete update of linear and angular velocities
     qDot() += 0.5*deltaT()*qDdot();
 }

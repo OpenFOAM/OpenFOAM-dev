@@ -118,7 +118,7 @@ surfaceConformation
 
     // Maximum allowable protrusion through the surface before
     // conformation points are added - fraction of the local target
-    // cell size. These small protusions are (hopefully) done by mesh filtering
+    // cell size. These small protrusions are (hopefully) done by mesh filtering
     // instead.
     maxSurfaceProtrusionCoeff   0.1;
 

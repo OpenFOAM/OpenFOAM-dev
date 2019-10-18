@@ -90,7 +90,7 @@ public:
         //- Construct null
         C6H6();
 
-        //- Comstruct from components
+        //- Construct from components
         C6H6
         (
             const liquidProperties& l,

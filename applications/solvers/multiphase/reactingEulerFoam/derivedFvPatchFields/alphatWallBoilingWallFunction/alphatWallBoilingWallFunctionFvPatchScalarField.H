@@ -26,7 +26,7 @@ Class
 
 Description
     A thermal wall function for simulation of subcooled nucleate wall boiling
-    with runtime selctable submodels for:
+    with runtime selectable submodels for:
       - wall heat flux partitioning model
       - nucleation site density
       - bubble departure frequency
@@ -86,7 +86,7 @@ Usage
         departureFreqModel|                    | yes         |
     \endtable
 
-    NOTE: Runtime selectabale submodels may require model specific entries
+    NOTE: Runtime selectable submodels may require model specific entries
 
     Example usage:
     \verbatim

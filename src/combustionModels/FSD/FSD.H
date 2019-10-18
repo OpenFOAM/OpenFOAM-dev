@@ -38,7 +38,7 @@ Description
     pc is considered from the IFC solution.
     omegaFuelBar is calculated solving a relaxation equation which tends to
     omegaEq. This omegaEq is obtained from the flamelet solution for
-    different strain rates and fit using a expential distribution.
+    different strain rates and fit using a exponential distribution.
 
     The spacial distribution of the consumption speed (omega) is obtained also
     from a strained flamelet solution and it is assumed to have a gaussian
@@ -93,7 +93,7 @@ class FSD
         //- Fuel mass concentration on the fuel stream
         dimensionedScalar YFuelFuelStream_;
 
-        //- Oxygen mass concentration on the oxydizer stream
+        //- Oxygen mass concentration on the oxidizer stream
         dimensionedScalar YO2OxiStream_;
 
         //- Similarity constant for the sub-grid ft fluctuations

@@ -346,7 +346,7 @@ public:
         };
 
         //- Return physical processor number (i.e. processor number in
-        //  worldComm) given communicator and procssor
+        //  worldComm) given communicator and processor
         static int baseProcNo(const label myComm, const int procID);
 
         //- Return processor number in communicator (given physical processor

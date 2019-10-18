@@ -71,13 +71,13 @@ class linearTsub
         //- Reference diameter for low subcooling temperature
         dimensionedScalar d2_;
 
-        //- Subcooling temperature where low subcooling diamter is reached
+        //- Subcooling temperature where low subcooling diameter is reached
         dimensionedScalar Tsub2_;
 
         //- Reference diameter for high subcooling temperature
         dimensionedScalar d1_;
 
-        //- Subcooling temperature where high subcooling diamter is reached
+        //- Subcooling temperature where high subcooling diameter is reached
         dimensionedScalar Tsub1_;
 
         //- Diameter field

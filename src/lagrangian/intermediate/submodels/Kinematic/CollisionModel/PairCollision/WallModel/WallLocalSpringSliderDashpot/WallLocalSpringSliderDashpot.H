@@ -89,7 +89,7 @@ class WallLocalSpringSliderDashpot
         //      parcelEquivD = cbrt(volumeFactor*nParticles)*p.d()
         //  + When volumeFactor = 1, the particles are compressed
         //    together so that the equivalent volume of the parcel is
-        //    the sum of the constituent particles
+        //    the sum of the constitutent particles
         //  + When volumeFactor = 3*sqrt(2)/pi, the particles are
         //    close packed, but uncompressed.
         //  + When volumeFactor > 3*sqrt(2)/pi, the particles loosely

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -449,7 +449,7 @@ void Foam::tetDecomposer::setRefinement
                 label nextFp = f.fcIndex(fp);
 
 
-                // Triangle triI consisiting of f[fp0], f[fp], f[nextFp]
+                // Triangle triI consisting of f[fp0], f[fp], f[nextFp]
 
 
                 // 1. Front triangle (decomposition of face itself)

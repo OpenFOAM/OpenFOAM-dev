@@ -88,7 +88,7 @@ public:
         //- Construct null
         iC3H8O();
 
-        //- Constrcut from components
+        //- Construct from components
         iC3H8O
         (
             const liquidProperties& l,

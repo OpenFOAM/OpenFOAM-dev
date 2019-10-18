@@ -146,7 +146,7 @@ protected:
         //- Abscissa type
         coordinateType coordinateType_;
 
-        //- List of volume-averaged number concentations
+        //- List of volume-averaged number concentrations
         scalarField N_;
 
         //- List of volume-averaged surface areas
@@ -167,7 +167,7 @@ protected:
         //- Highest moment order
         label maxOrder_;
 
-        //- Bins (respresentative volume/area/diameter)
+        //- Bins (representative volume/area/diameter)
         pointField bins_;
 
         //- Bin component used according to chosen coordinate type

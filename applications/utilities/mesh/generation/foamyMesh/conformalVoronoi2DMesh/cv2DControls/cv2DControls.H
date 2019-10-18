@@ -69,8 +69,8 @@ public:
 
         // Controls
 
-            //- Minimum cell size below which protusions through the surface are
-            //  not split
+            //- Minimum cell size below which protrusions through the surface
+            //  are not split
             scalar minCellSize_;
 
             //- Square of minCellSize
@@ -114,14 +114,14 @@ public:
             //- Square of span
             scalar span2_;
 
-            //- Minimum edge-length of the cell size below which protusions
+            //- Minimum edge-length of the cell size below which protrusions
             //  through the surface are not split
             scalar minEdgeLen_;
 
             //- Square of minEdgeLen
             scalar minEdgeLen2_;
 
-            //- Maximum notch size below which protusions into the surface are
+            //- Maximum notch size below which protrusions into the surface are
             //  not filled
             scalar maxNotchLen_;
 

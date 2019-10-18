@@ -76,7 +76,7 @@ protected:
 
     // Protected Member Functions
 
-        //- Return the nomalized scalar error
+        //- Return the normalized scalar error
         scalar normalizeError
         (
             const scalarField& y0,
