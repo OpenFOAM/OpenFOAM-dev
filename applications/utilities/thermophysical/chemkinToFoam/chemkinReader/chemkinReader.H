@@ -232,7 +232,7 @@ private:
         void checkCoeffs
         (
             const scalarList& reactionCoeffs,
-            const char* reationRateName,
+            const char* reactionRateName,
             const label nCoeffs
         ) const;
 

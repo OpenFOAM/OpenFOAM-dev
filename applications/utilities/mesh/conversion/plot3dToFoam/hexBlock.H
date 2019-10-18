@@ -149,7 +149,7 @@ public:
         void readPoints
         (
             const bool readBlank,
-            const scalar twoDThicknes,
+            const scalar twoDThickness,
             Istream&
         );
 };

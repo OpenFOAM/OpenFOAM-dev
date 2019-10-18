@@ -414,7 +414,7 @@ void Foam::snappyLayerDriver::handleFeatureAngle
 
             forAll(eFaces, i)
             {
-                nomalsCombine()
+                normalsCombine()
                 (
                     edgeNormal[meshEdgeI],
                     pp.faceNormals()[eFaces[i]]
@@ -426,7 +426,7 @@ void Foam::snappyLayerDriver::handleFeatureAngle
         (
             mesh,
             edgeNormal,
-            nomalsCombine(),
+            normalsCombine(),
             point::max          // null value
         );
 
@@ -970,7 +970,7 @@ void Foam::snappyLayerDriver::determineSidePatches
     // Sometimes edges-to-be-extruded are on more than 2 processors.
     // Work out which 2 hold the faces to be extruded and thus which procpatch
     // the side-face should be in. As an additional complication this might
-    // mean that 2 procesors that were only edge-connected now suddenly need
+    // mean that 2 processors that were only edge-connected now suddenly need
     // to become face-connected i.e. have a processor patch between them.
 
     fvMesh& mesh = meshRefiner_.mesh();
@@ -2738,7 +2738,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                     faceRealThickness
                 );
 
-                // Convert patchReal to relavtive thickness
+                // Convert patchReal to relative thickness
                 scalarField pfld(patchReal.size(), 0.0);
                 forAll(patchReal, i)
                 {

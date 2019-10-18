@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ hexBlock::hexBlock(const label nx, const label ny, const label nz)
 void hexBlock::readPoints
 (
     const bool readBlank,
-    const scalar twoDThicknes,
+    const scalar twoDThickness,
     Istream& is
 )
 {
@@ -120,7 +120,7 @@ void hexBlock::readPoints
 
     label nPoints = points_.size();
 
-    if (twoDThicknes > 0)
+    if (twoDThickness > 0)
     {
         nPoints /= 2;
     }
@@ -137,7 +137,7 @@ void hexBlock::readPoints
         is  >> points_[i].y();
     }
 
-    if (twoDThicknes > 0)
+    if (twoDThickness > 0)
     {
         Info<< "Extruding " << nPoints << " points in z direction..." << endl;
         // Duplicate points
@@ -148,7 +148,7 @@ void hexBlock::readPoints
         for (label i=0; i < nPoints; i++)
         {
             points_[i].z() = 0;
-            points_[i+nPoints].z() = twoDThicknes;
+            points_[i+nPoints].z() = twoDThickness;
         }
     }
     else

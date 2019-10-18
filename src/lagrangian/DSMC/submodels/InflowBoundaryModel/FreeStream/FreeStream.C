@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -246,7 +246,7 @@ void Foam::FreeStream<CloudType>::inflow()
             // Cumulative triangle area fractions
             List<scalar> cTriAFracs(faceTets.size(), 0.0);
 
-            scalar previousCummulativeSum = 0.0;
+            scalar previousCumulativeSum = 0.0;
 
             forAll(faceTets, triI)
             {
@@ -254,9 +254,9 @@ void Foam::FreeStream<CloudType>::inflow()
 
                 cTriAFracs[triI] =
                     faceTetIs.faceTri(mesh).mag()/fA
-                  + previousCummulativeSum;
+                  + previousCumulativeSum;
 
-                previousCummulativeSum = cTriAFracs[triI];
+                previousCumulativeSum = cTriAFracs[triI];
             }
 
             // Force the last area fraction value to 1.0 to avoid any

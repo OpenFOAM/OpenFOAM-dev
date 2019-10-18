@@ -5642,7 +5642,7 @@ void Foam::hexRef8::setUnrefinement
         if (facesToRemove.size() != splitFaces.size())
         {
             FatalErrorInFunction
-                << "Ininitial set of split points to unrefine does not"
+                << "Initial set of split points to unrefine does not"
                 << " seem to be consistent or not mid points of refined cells"
                 << abort(FatalError);
         }
@@ -5685,7 +5685,7 @@ void Foam::hexRef8::setUnrefinement
                 if (region == -1)
                 {
                     FatalErrorInFunction
-                        << "Ininitial set of split points to unrefine does not"
+                        << "Initial set of split points to unrefine does not"
                         << " seem to be consistent or not mid points"
                         << " of refined cells" << nl
                         << "cell:" << celli << " on splitPoint " << pointi

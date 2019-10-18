@@ -22,7 +22,7 @@ main()
 
     cerr << "deallocated ints\n";
 
-    cerr << "alloacting doubles\n";
+    cerr << "allocating doubles\n";
 
     double* doubles = new double[500000];
 

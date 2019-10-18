@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
     if (nElemAttr != 0)
     {
         WarningInFunction
-            << "Element attributes (third elemenent in .ele header)"
+            << "Element attributes (third element in .ele header)"
             << " not used" << endl;
     }
 

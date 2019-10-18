@@ -165,7 +165,7 @@ Foam::cylindrical::cylindrical(const dictionary& dict)
 {
     FatalErrorInFunction
         << " cylindrical can not be constructed from dictionary "
-        << " use the construtctor : "
+        << " use the constructor : "
            "("
            "    const dictionary&, const objectRegistry&"
            ")"

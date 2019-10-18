@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -306,7 +306,7 @@ void Foam::hierarchGeomDecomp::findBinary
         if (returnReduce(hasNotChanged, andOp<bool>()))
         {
             WarningInFunction
-                << "unable to find desired deomposition split, making do!"
+                << "unable to find desired decomposition split, making do!"
                 << endl;
             break;
         }

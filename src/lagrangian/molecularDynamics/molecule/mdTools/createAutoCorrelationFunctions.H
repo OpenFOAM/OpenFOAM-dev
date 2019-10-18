@@ -45,7 +45,7 @@ const dictionary& autocorrelationFunctionDict
 
 //- Velocity autocorrelation function
 
-Info << tab << "velocty" << endl;
+Info << tab << "velocity" << endl;
 
 const dictionary& velocityACFDict
 (

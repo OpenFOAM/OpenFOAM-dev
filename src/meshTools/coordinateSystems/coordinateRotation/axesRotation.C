@@ -87,7 +87,7 @@ void Foam::axesRotation::calcTransform
         default:
         {
             FatalErrorInFunction
-                << "Unhandled axes specifictation" << endl
+                << "Unhandled axes specification" << endl
                 << abort(FatalError);
 
             Rtr = Zero;

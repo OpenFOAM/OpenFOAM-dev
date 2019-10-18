@@ -75,7 +75,7 @@ private:
     // Private classes
 
         //- Combine operator class to combine normal with other normal.
-        class nomalsCombine
+        class normalsCombine
         {
         public:
 

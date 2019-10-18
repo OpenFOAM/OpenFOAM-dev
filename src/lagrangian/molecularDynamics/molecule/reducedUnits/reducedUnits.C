@@ -42,7 +42,7 @@ void Foam::reducedUnits::calcRefValues()
     )
     {
         FatalErrorInFunction
-            << "One of more referencence values too small for floating point "
+            << "One of more reference values too small for floating point "
             << "calculation: "
             << "refTime_ = " << refTime_
             << ", refLength = " << refTemp_

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::topoSetSource::addToUsageTable Foam::rotatedBoxToCell::usage_
     rotatedBoxToCell::typeName,
     "\n    Usage: rotatedBoxToCell (originx originy originz)"
     " (ix iy iz) (jx jy jz) (kx ky kz)\n\n"
-    "    Select all cells with cellCentre within parallelopiped\n\n"
+    "    Select all cells with cellCentre within parallelepiped\n\n"
 );
 
 
