@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
             rho = fluid.rho();
             #include "zonePhaseVolumes.H"
 
-            //#include "TEqns.H"
+            #include "TEqns.H"
             #include "UEqns.H"
 
             // --- Pressure corrector loop
