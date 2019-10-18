@@ -21,7 +21,7 @@ solvers
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-08;
+        tolerance       1e-8;
         relTol          0.01;
     }
 
@@ -29,14 +29,15 @@ solvers
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-07;
+        tolerance       1e-7;
         relTol          0.1;
     }
 }
 
 SIMPLE
 {
-    nNonOrthogonalCorrectors 2;
+    nNonOrthogonalCorrectors 1;
+
     pRefCell        0;
     pRefValue       0;
 
@@ -46,8 +47,7 @@ SIMPLE
         U               1e-4;
         e               1e-3;
 
-        // possibly check turbulence fields
-        "(k|epsilon|omega)" 1e-3;
+        "(k|epsilon)" 1e-3;
     }
 }
 
@@ -57,10 +57,11 @@ relaxationFactors
     {
         p_rgh           0.7;
     }
+
     equations
     {
         U               0.2;
-        e               0.5;
+        e               0.2;
         "(k|epsilon)"   0.7;
     }
 }
