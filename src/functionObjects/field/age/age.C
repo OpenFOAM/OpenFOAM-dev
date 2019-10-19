@@ -243,9 +243,7 @@ bool Foam::functionObjects::age::execute()
     Info<< "Min/max age:" << min(age).value()
         << ' ' << max(age).value() << endl;
 
-    store(tage);
-
-    return true;
+    return store(tage);
 }
 
 
