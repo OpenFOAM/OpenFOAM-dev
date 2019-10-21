@@ -52,7 +52,6 @@ SourceFiles
 namespace Foam
 {
 
-class phasePair;
 class phaseModel;
 
 namespace dragModels

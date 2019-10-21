@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,13 +63,13 @@ Foam::dragModels::WenYu::~WenYu()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::WenYu::CdRe() const
 {
-    volScalarField alpha2
+    const volScalarField alpha2
     (
-        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
     );
 
-    volScalarField Res(alpha2*pair_.Re());
-    volScalarField CdsRes
+    const volScalarField Res(alpha2*pair_.Re());
+    const volScalarField CdsRes
     (
         neg(Res - 1000)*24*(1.0 + 0.15*pow(Res, 0.687))
       + pos0(Res - 1000)*0.44*max(Res, residualRe_)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,31 +63,31 @@ Foam::dragModels::Beetstra::~Beetstra()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::Beetstra::CdRe() const
 {
-    volScalarField alpha1
+    const volScalarField alpha1
     (
         max(pair_.dispersed(), pair_.continuous().residualAlpha())
     );
 
-    volScalarField alpha2
+    const volScalarField alpha2
     (
-        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
     );
 
-    volScalarField Res(alpha2*pair_.Re());
+    const volScalarField Res(alpha2*pair_.Re());
 
-    volScalarField ResLim
+    const volScalarField ResLim
     (
         "ReLim",
         max(Res, residualRe_)
     );
 
-    volScalarField F0
+    const volScalarField F0
     (
         "F0",
         10*alpha1/sqr(alpha2) + sqr(alpha2)*(1 + 1.5*sqrt(alpha1))
     );
 
-    volScalarField F1
+    const volScalarField F1
     (
         "F1",
         0.413*Res/(24*sqr(alpha2))*(1.0/alpha2

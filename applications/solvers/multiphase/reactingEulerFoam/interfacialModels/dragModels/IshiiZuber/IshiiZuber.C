@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ Foam::dragModels::IshiiZuber::CdRe() const
     const volScalarField ReM(Re*muc/muMix);
     const volScalarField CdRe
     (
-        pos0(1000 - ReM)*24*(scalar(1) + 0.1*pow(ReM, 0.75))
+        pos0(1000 - ReM)*24*(1 + 0.1*pow(ReM, 0.75))
       + neg(1000 - ReM)*0.44*ReM
     );
 

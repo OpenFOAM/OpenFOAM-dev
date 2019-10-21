@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,9 +62,9 @@ Foam::dragModels::Gibilaro::~Gibilaro()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::Gibilaro::CdRe() const
 {
-    volScalarField alpha2
+    const volScalarField alpha2
     (
-        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
     );
 
     return

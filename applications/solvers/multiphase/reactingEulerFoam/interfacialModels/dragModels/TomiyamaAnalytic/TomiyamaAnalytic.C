@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,13 +66,13 @@ Foam::dragModels::TomiyamaAnalytic::~TomiyamaAnalytic()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::TomiyamaAnalytic::CdRe() const
 {
-    volScalarField Eo(max(pair_.Eo(), residualEo_));
-    volScalarField E(max(pair_.E(), residualE_));
+    const volScalarField Eo(max(pair_.Eo(), residualEo_));
+    const volScalarField E(max(pair_.E(), residualE_));
 
-    volScalarField OmEsq(max(scalar(1) - sqr(E), sqr(residualE_)));
-    volScalarField rtOmEsq(sqrt(OmEsq));
+    const volScalarField OmEsq(max(1 - sqr(E), sqr(residualE_)));
+    const volScalarField rtOmEsq(sqrt(OmEsq));
 
-    volScalarField F(max(asin(rtOmEsq) - E*rtOmEsq, residualE_)/OmEsq);
+    const volScalarField F(max(asin(rtOmEsq) - E*rtOmEsq, residualE_)/OmEsq);
 
     return
         (8.0/3.0)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,11 +70,7 @@ Foam::aspectRatioModels::TomiyamaAspectRatio::E() const
 {
     return
         VakhrushevEfremov::E()
-       *max
-       (
-           scalar(1) - 0.35*yWall()/pair_.dispersed().d(),
-           scalar(0.65)
-       );
+       *max(1 - 0.35*yWall()/pair_.dispersed().d(), scalar(0.65));
 }
 
 
