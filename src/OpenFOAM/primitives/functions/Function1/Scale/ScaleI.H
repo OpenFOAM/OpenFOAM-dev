@@ -42,16 +42,25 @@ inline Type Foam::Function1Types::Scale<Type>::integrate
     const scalar x2
 ) const
 {
-    if (!integrable_)
+    if (integrableScale_)
     {
-        FatalErrorInFunction
-            << "Integration is not defined for " << type() << " functions "
-            << "unless all scaling is constant"
-            << exit(FatalError);
+        const scalar sx = xScale_->value(NaN);
+        return scale_->value(NaN)*value_->integrate(sx*x1, sx*x2)/sx;
     }
 
-    const scalar sx = xScale_->value(NaN);
-    return scale_->value(NaN)/sx*value_->integrate(sx*x1, sx*x2);
+    if (integrableValue_)
+    {
+        const scalar sx = xScale_->value(NaN);
+        return scale_->integrate(sx*x1, sx*x2)/sx*value_->value(NaN);
+    }
+
+    FatalErrorInFunction
+        << "Integration is not defined for " << type() << " functions "
+        << "unless x-scaling is constant and either scaling is constant or "
+        << "the value is constant"
+        << exit(FatalError);
+
+    return Zero;
 }
 
 

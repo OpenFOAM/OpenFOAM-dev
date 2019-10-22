@@ -37,9 +37,13 @@ void Foam::Function1Types::Scale<Type>::read(const dictionary& coeffs)
       : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1));
     value_ = Function1<Type>::New("value", coeffs);
 
-    integrable_ =
+    integrableScale_ =
         isA<Constant<scalar>>(xScale_())
      && isA<Constant<scalar>>(scale_());
+
+    integrableValue_ =
+        isA<Constant<scalar>>(xScale_())
+     && isA<Constant<Type>>(value_());
 }
 
 
@@ -65,7 +69,8 @@ Foam::Function1Types::Scale<Type>::Scale(const Scale<Type>& se)
     scale_(se.scale_, false),
     xScale_(se.xScale_, false),
     value_(se.value_, false),
-    integrable_(se.integrable_)
+    integrableScale_(se.integrableScale_),
+    integrableValue_(se.integrableValue_)
 {}
 
 

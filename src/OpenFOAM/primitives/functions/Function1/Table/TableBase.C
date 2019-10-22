@@ -144,7 +144,7 @@ Foam::Function1Types::TableBase<Type>::TableBase
     (
         dict.found("outOfBounds")
       ? tableBase::boundsHandlingNames_.read(dict.lookup("outOfBounds"))
-      : tableBase::boundsHandling::warn
+      : tableBase::boundsHandling::clamp
     ),
     interpolationScheme_
     (

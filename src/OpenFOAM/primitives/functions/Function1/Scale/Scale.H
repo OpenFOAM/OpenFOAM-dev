@@ -149,7 +149,10 @@ class Scale
         autoPtr<Function1<Type>> value_;
 
         //- Is this function integrable?
-        bool integrable_;
+        bool integrableScale_;
+
+        //- Is this function integrable?
+        bool integrableValue_;
 
 
     // Private Member Functions
