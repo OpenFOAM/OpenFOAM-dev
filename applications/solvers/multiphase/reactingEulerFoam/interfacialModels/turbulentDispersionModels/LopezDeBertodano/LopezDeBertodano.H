@@ -28,17 +28,9 @@ Description
     Lopez de Bertodano (1992) turbulent dispersion model.
 
     \verbatim
-        Lopez, D. B. M. (1993).
+        Lopez, D. B. M. (1992).
         Turbulent bubbly two-phase flow in a triangular duct.
         PhD Thesis, Rensselaer Polytechnic Institution.
-    \endverbatim
-
-    \verbatim
-        Burns, A. D., Frank, T., Hamill, I., & Shi, J. M. (2004, May).
-        The Favre averaged drag model for turbulent dispersion in Eulerian
-        multi-phase flows.
-        In 5th international conference on multiphase flow,
-        ICMF (Vol. 4, pp. 1-17).
     \endverbatim
 
 SourceFiles

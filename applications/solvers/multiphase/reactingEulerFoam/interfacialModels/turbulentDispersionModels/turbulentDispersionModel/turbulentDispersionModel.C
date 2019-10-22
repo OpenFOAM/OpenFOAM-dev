@@ -82,7 +82,17 @@ Foam::turbulentDispersionModel::continuousTurbulence() const
 Foam::tmp<Foam::volVectorField>
 Foam::turbulentDispersionModel::F() const
 {
-    return D()*fvc::grad(pair_.dispersed());
+    return
+        D()
+       *fvc::grad
+        (
+            pair_.dispersed()
+           /max
+            (
+                pair_.dispersed() + pair_.continuous(),
+                pair_.dispersed().residualAlpha()
+            )
+        );
 }
 
 
@@ -90,8 +100,19 @@ Foam::tmp<Foam::surfaceScalarField>
 Foam::turbulentDispersionModel::Ff() const
 {
     return
-        fvc::interpolate(D())*fvc::snGrad(pair_.dispersed())
-       *pair_.phase1().mesh().magSf();
+    pair_.phase1().mesh().magSf()
+   *(
+        fvc::interpolate(D())
+       *fvc::snGrad
+        (
+            pair_.dispersed()
+           /max
+            (
+                pair_.dispersed() + pair_.continuous(),
+                pair_.dispersed().residualAlpha()
+            )
+        )
+    );
 }
 
 

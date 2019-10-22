@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,17 +56,7 @@ Foam::turbulentDispersionModels::Burns::Burns
 )
 :
     turbulentDispersionModel(dict, pair),
-    sigma_("sigma", dimless, dict),
-    residualAlpha_
-    (
-        "residualAlpha",
-        dimless,
-        dict.lookupOrDefault<scalar>
-        (
-            "residualAlpha",
-            pair_.dispersed().residualAlpha().value()
-        )
-    )
+    sigma_("sigma", dimless, dict)
 {}
 
 
@@ -89,19 +79,14 @@ Foam::turbulentDispersionModels::Burns::D() const
         );
 
     return
-        0.75
-       *drag.CdRe()
-       *pair_.continuous().nu()
+        drag.Ki()
        *continuousTurbulence().nut()
-       /(
-            sigma_
-           *sqr(pair_.dispersed().d())
-        )
-       *pair_.continuous().rho()
+       /sigma_
        *pair_.dispersed()
-       *(
-           1.0/max(pair_.dispersed(), residualAlpha_)
-         + 1.0/max(pair_.continuous(), residualAlpha_)
+       *sqr(pair_.dispersed() + pair_.continuous())
+       /(
+            max(pair_.dispersed(), pair_.dispersed().residualAlpha())
+           *max(pair_.continuous(), pair_.continuous().residualAlpha())
         );
 }
 

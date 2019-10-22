@@ -619,17 +619,33 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFs
             fvc::interpolate(rAUs[pair.phase2().index()]*D)
         );
 
-        const surfaceScalarField snGradAlpha1
+        const surfaceScalarField snGradAlpha1By12
         (
-            fvc::snGrad(pair.phase1())*this->mesh_.magSf()
+            fvc::snGrad
+            (
+                pair.phase1()
+               /max
+                (
+                    pair.phase1() + pair.phase2(),
+                    pair.phase1().residualAlpha()
+                )
+            )*this->mesh_.magSf()
         );
-        const surfaceScalarField snGradAlpha2
+        const surfaceScalarField snGradAlpha2By12
         (
-            fvc::snGrad(pair.phase2())*this->mesh_.magSf()
+            fvc::snGrad
+            (
+                pair.phase2()
+               /max
+                (
+                    pair.phase1() + pair.phase2(),
+                    pair.phase2().residualAlpha()
+                )
+            )*this->mesh_.magSf()
         );
 
-        addField(pair.phase1(), "phiF", DByA1f*snGradAlpha1, phiFs);
-        addField(pair.phase2(), "phiF", DByA2f*snGradAlpha2, phiFs);
+        addField(pair.phase1(), "phiF", DByA1f*snGradAlpha1By12, phiFs);
+        addField(pair.phase2(), "phiF", DByA2f*snGradAlpha2By12, phiFs);
     }
 
     if (this->fillFields_)
@@ -745,7 +761,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
         addField(phase, "phiFf", pPrimeByAf*snGradAlpha1, phiFfs);
     }
 
-    // Add the turbulent dispersion force and phase pressure
+    // Add the turbulent dispersion force
     forAllConstIter
     (
         turbulentDispersionModelTable,
@@ -756,8 +772,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
         const surfaceScalarField Ff(turbulentDispersionModelIter()->Ff());
         const phasePair&
             pair(this->phasePairs_[turbulentDispersionModelIter.key()]);
-
-        const volScalarField D(turbulentDispersionModelIter()->D());
 
         addField
         (
