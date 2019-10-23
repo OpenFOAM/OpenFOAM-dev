@@ -128,6 +128,14 @@ inline bool Foam::word::valid(char c)
 }
 
 
+inline Foam::word Foam::word::capitalise() const
+{
+    word w(*this);
+    w[0] = toupper(w[0]);
+    return w;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 inline void Foam::word::operator=(const word& q)

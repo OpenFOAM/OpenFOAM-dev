@@ -112,6 +112,9 @@ public:
         //- Is this character valid for a word
         inline static bool valid(char);
 
+        //- Return the word with the first letter capitalised
+        inline word capitalise() const;
+
 
     // Member Operators
 

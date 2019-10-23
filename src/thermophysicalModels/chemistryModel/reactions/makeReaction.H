@@ -67,7 +67,7 @@ namespace Foam
     const word ReactionType##Thermo##ReactionRate::typeName                    \
     (                                                                          \
         ReactionType::typeName_()                                              \
-      + ReactionRate::type()                                                   \
+      + ReactionRate::type().capitalise()                                      \
       + Reaction##Thermo::typeName_()                                          \
     );
 

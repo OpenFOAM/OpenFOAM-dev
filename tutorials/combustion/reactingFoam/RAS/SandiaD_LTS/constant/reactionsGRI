@@ -2,7 +2,7 @@ reactions
 {
     un-named-reaction-0
     {
-        type            reversiblethirdBodyArrheniusReaction;
+        type            reversibleThirdBodyArrheniusReaction;
         reaction        "2O = O2";
         A               1.2e+11;
         beta            -1;
@@ -51,7 +51,7 @@ reactions
     }
     un-named-reaction-1
     {
-        type            reversiblethirdBodyArrheniusReaction;
+        type            reversibleThirdBodyArrheniusReaction;
         reaction        "O + H = OH";
         A               5e+11;
         beta            -1;
@@ -396,7 +396,7 @@ reactions
     }
     un-named-reaction-32
     {
-        type            reversiblethirdBodyArrheniusReaction;
+        type            reversibleThirdBodyArrheniusReaction;
         reaction        "H + O2 = HO2";
         A               2.8e+12;
         beta            -0.86;
@@ -485,7 +485,7 @@ reactions
     }
     un-named-reaction-38
     {
-        type            reversiblethirdBodyArrheniusReaction;
+        type            reversibleThirdBodyArrheniusReaction;
         reaction        "2H = H2";
         A               1e+12;
         beta            -1;
@@ -558,7 +558,7 @@ reactions
     }
     un-named-reaction-42
     {
-        type            reversiblethirdBodyArrheniusReaction;
+        type            reversibleThirdBodyArrheniusReaction;
         reaction        "H + OH = H2O";
         A               2.2e+16;
         beta            -2;
@@ -2731,7 +2731,7 @@ reactions
     }
     un-named-reaction-166
     {
-        type            reversiblethirdBodyArrheniusReaction;
+        type            reversibleThirdBodyArrheniusReaction;
         reaction        "HCO = H + CO";
         A               1.87e+14;
         beta            -1;
