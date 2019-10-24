@@ -177,15 +177,7 @@ void Foam::twoPhaseSystem::solve
     tmp<surfaceScalarField> alphaDbyA;
     if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
     {
-        surfaceScalarField DbyA
-        (
-            DByAf(phase1_, rAUs, rAUfs) + DByAf(phase2_, rAUs, rAUfs)
-        );
-
-        // surfaceScalarField DbyA
-        // (
-        //     *DByAfs()[phase1_.name()] + *DByAfs()[phase2_.name()]
-        // );
+        surfaceScalarField DbyA(this->DByAfs(rAUs, rAUfs)[phase1_.index()]);
 
         alphaDbyA =
             fvc::interpolate(max(alpha1, scalar(0)))

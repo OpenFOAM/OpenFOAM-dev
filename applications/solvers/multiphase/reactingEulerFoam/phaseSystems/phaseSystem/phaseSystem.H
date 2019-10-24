@@ -476,9 +476,8 @@ public:
 
             //- Return the phase diffusivity
             //  divided by the momentum central coefficient
-            virtual tmp<surfaceScalarField> DByAf
+            virtual PtrList<surfaceScalarField> DByAfs
             (
-                const phaseModel& phase,
                 const PtrList<volScalarField>& rAUs,
                 const PtrList<surfaceScalarField>& rAUfs
             ) const = 0;
