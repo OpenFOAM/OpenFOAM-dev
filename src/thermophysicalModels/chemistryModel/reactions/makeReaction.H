@@ -60,7 +60,7 @@ namespace Foam
 #define makeReactionName(Thermo, ReactionType, ReactionRate)                   \
     typedef Reaction<Thermo> Reaction##Thermo;                                 \
                                                                                \
-    typedef ReactionType<Reaction, Thermo, ReactionRate>                       \
+    typedef ReactionType<Thermo, ReactionRate>                                 \
         ReactionType##Thermo##ReactionRate;                                    \
                                                                                \
     template<>                                                                 \
@@ -68,7 +68,6 @@ namespace Foam
     (                                                                          \
         ReactionType::typeName_()                                              \
       + ReactionRate::type().capitalise()                                      \
-      + Reaction##Thermo::typeName_()                                          \
     );
 
 

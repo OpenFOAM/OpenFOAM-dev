@@ -27,7 +27,7 @@ reactions
 {
     methaneReaction
     {
-        type     irreversibleArrheniusReaction;
+        type     irreversibleArrhenius;
         reaction "CH4^0.2 + 2O2^1.3 = CO2 + 2H2O";
         A        2.11873e+11;
         beta     0;

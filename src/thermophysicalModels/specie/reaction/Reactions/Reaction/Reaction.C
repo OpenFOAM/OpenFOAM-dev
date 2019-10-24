@@ -164,8 +164,20 @@ Foam::Reaction<ReactionThermo>::New
 {
     const word& reactionTypeName = dict.lookup("type");
 
-    typename dictionaryConstructorTable::iterator cstrIter
-        = dictionaryConstructorTablePtr_->find(reactionTypeName);
+    typename dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(reactionTypeName);
+
+    // Backwards compatibility check. Reaction names used to have "Reaction"
+    // (Reaction<ReactionThermo>::typeName_()) appended. This was removed as it
+    // is unnecessary given the context in which the reaction is specified. If
+    // this reaction name was not found, search also for the old name.
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        cstrIter = dictionaryConstructorTablePtr_->find
+        (
+            reactionTypeName.removeTrailing(typeName_())
+        );
+    }
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
@@ -200,40 +212,56 @@ Foam::Reaction<ReactionThermo>::New
     {
         return New(species, thermoDatabase, dict);
     }
-    else
+
+    const word& reactionTypeName = dict.lookup("type");
+
+    typename objectRegistryConstructorTable::iterator cstrIter =
+        objectRegistryConstructorTablePtr_->find(reactionTypeName);
+
+    // Backwards compatibility check. See above.
+    if (cstrIter == objectRegistryConstructorTablePtr_->end())
     {
-        const word& reactionTypeName = dict.lookup("type");
+        cstrIter = objectRegistryConstructorTablePtr_->find
+        (
+            reactionTypeName.removeTrailing(typeName_())
+        );
+    }
 
-        typename objectRegistryConstructorTable::iterator cstrIter
-            = objectRegistryConstructorTablePtr_->find(reactionTypeName);
+    if (cstrIter == objectRegistryConstructorTablePtr_->end())
+    {
+        typename dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(reactionTypeName);
 
-        if (cstrIter == objectRegistryConstructorTablePtr_->end())
+        // Backwards compatibility check. See above.
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            typename dictionaryConstructorTable::iterator cstrIter
-                = dictionaryConstructorTablePtr_->find(reactionTypeName);
-
-            if (cstrIter == dictionaryConstructorTablePtr_->end())
-            {
-                FatalErrorInFunction
-                    << "Unknown reaction type "
-                    << reactionTypeName << nl << nl
-                    << "Valid reaction types are :" << nl
-                    << dictionaryConstructorTablePtr_->sortedToc()
-                    << objectRegistryConstructorTablePtr_->sortedToc()
-                    << exit(FatalError);
-            }
-
-            return autoPtr<Reaction<ReactionThermo>>
+            cstrIter = dictionaryConstructorTablePtr_->find
             (
-                cstrIter()(species, thermoDatabase, dict)
+                reactionTypeName.removeTrailing(typeName_())
             );
+        }
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown reaction type "
+                << reactionTypeName << nl << nl
+                << "Valid reaction types are :" << nl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << objectRegistryConstructorTablePtr_->sortedToc()
+                << exit(FatalError);
         }
 
         return autoPtr<Reaction<ReactionThermo>>
         (
-            cstrIter()(species, thermoDatabase, ob, dict)
+            cstrIter()(species, thermoDatabase, dict)
         );
     }
+
+    return autoPtr<Reaction<ReactionThermo>>
+    (
+        cstrIter()(species, thermoDatabase, ob, dict)
+    );
 }
 
 
