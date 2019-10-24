@@ -31,11 +31,13 @@ License
 
 namespace Foam
 {
+namespace TableReaders
+{
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
-label TableReaders::Csv<label>::readValue(const List<string>& split) const
+label Csv<label>::readValue(const List<string>& split) const
 {
     if (componentColumns_[0] >= split.size())
     {
@@ -50,7 +52,7 @@ label TableReaders::Csv<label>::readValue(const List<string>& split) const
 
 
 template<>
-scalar TableReaders::Csv<scalar>::readValue(const List<string>& split) const
+scalar Csv<scalar>::readValue(const List<string>& split) const
 {
     if (componentColumns_[0] >= split.size())
     {
@@ -65,7 +67,7 @@ scalar TableReaders::Csv<scalar>::readValue(const List<string>& split) const
 
 
 template<class Type>
-Type TableReaders::Csv<Type>::readValue(const List<string>& split) const
+Type Csv<Type>::readValue(const List<string>& split) const
 {
     Type result;
 
@@ -90,6 +92,7 @@ Type TableReaders::Csv<Type>::readValue(const List<string>& split) const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace TableReaders
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
