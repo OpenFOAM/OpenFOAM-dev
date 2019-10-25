@@ -82,7 +82,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        EulerImplicit(typename ChemistryModel::reactionThermo& thermo);
+        EulerImplicit(const typename ChemistryModel::reactionThermo& thermo);
 
 
     //- Destructor

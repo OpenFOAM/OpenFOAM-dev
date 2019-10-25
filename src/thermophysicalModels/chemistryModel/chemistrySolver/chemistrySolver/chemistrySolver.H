@@ -58,7 +58,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        chemistrySolver(typename ChemistryModel::reactionThermo& thermo);
+        chemistrySolver(const typename ChemistryModel::reactionThermo& thermo);
 
 
     //- Destructor

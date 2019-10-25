@@ -31,7 +31,7 @@ License
 template<class ChemistryModel>
 Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
 (
-    typename ChemistryModel::reactionThermo& thermo
+    const typename ChemistryModel::reactionThermo& thermo
 )
 {
     IOdictionary chemistryDict

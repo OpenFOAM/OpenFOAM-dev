@@ -141,7 +141,7 @@ template<class ReactionThermo, class ThermoType>
 singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
 (
     const word& modelType,
-    ReactionThermo& thermo,
+    const ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )

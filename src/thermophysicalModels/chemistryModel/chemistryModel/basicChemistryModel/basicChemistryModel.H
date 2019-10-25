@@ -97,7 +97,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        basicChemistryModel(basicThermo& thermo);
+        basicChemistryModel(const basicThermo& thermo);
 
         //- Construct as copy (not implemented)
         basicChemistryModel(const basicChemistryModel&);
@@ -109,7 +109,7 @@ public:
         template<class ChemistryModel>
         static autoPtr<ChemistryModel> New
         (
-            typename ChemistryModel::reactionThermo& thermo
+            const typename ChemistryModel::reactionThermo& thermo
         );
 
 

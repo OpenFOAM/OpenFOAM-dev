@@ -28,7 +28,10 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ChemistryModel>
-Foam::ode<ChemistryModel>::ode(typename ChemistryModel::reactionThermo& thermo)
+Foam::ode<ChemistryModel>::ode
+(
+    const typename ChemistryModel::reactionThermo& thermo
+)
 :
     chemistrySolver<ChemistryModel>(thermo),
     coeffsDict_(this->subDict("odeCoeffs")),

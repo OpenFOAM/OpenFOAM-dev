@@ -56,7 +56,7 @@ class combustionModel
         //- Construct the base IO object
         IOobject createIOobject
         (
-            basicThermo& thermo,
+            const basicThermo& thermo,
             const word& combustionProperties
         ) const;
 
@@ -93,7 +93,7 @@ public:
         combustionModel
         (
             const word& modelType,
-            basicThermo& thermo,
+            const basicThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties=combustionPropertiesName
         );
@@ -108,7 +108,7 @@ public:
         template<class CombustionModel>
         static autoPtr<CombustionModel> New
         (
-            typename CombustionModel::reactionThermo& thermo,
+            const typename CombustionModel::reactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );

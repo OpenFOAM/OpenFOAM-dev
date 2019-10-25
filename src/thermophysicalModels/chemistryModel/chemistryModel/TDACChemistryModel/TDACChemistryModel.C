@@ -33,7 +33,7 @@ License
 template<class ReactionThermo, class ThermoType>
 Foam::TDACChemistryModel<ReactionThermo, ThermoType>::TDACChemistryModel
 (
-    ReactionThermo& thermo
+    const ReactionThermo& thermo
 )
 :
     StandardChemistryModel<ReactionThermo, ThermoType>(thermo),
@@ -67,7 +67,7 @@ Foam::TDACChemistryModel<ReactionThermo, ThermoType>::TDACChemistryModel
         scalar(0)
     )
 {
-    basicSpecieMixture& composition = this->thermo().composition();
+    const basicSpecieMixture& composition = this->thermo().composition();
 
     const HashTable<List<specieElement>>& specComp =
         dynamicCast<const multiComponentMixture<ThermoType>&>(this->thermo())
@@ -103,7 +103,6 @@ Foam::TDACChemistryModel<ReactionThermo, ThermoType>::TDACChemistryModel
             if (!header.typeHeaderOk<volScalarField>(true))
             {
                 composition.setInactive(i);
-                this->Y()[i].writeOpt() = IOobject::NO_WRITE;
             }
         }
     }
@@ -550,7 +549,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
 
     label nAdditionalEqn = (tabulation_->variableTimeStep() ? 1 : 0);
 
-    basicSpecieMixture& composition = this->thermo().composition();
+    const basicSpecieMixture& composition = this->thermo().composition();
 
     // CPU time analysis
     const clockTime clockTime_= clockTime();
@@ -813,14 +812,6 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
             {
                 composition.setActive(i);
             }
-        }
-    }
-
-    forAll(this->Y(), i)
-    {
-        if (composition.active(i))
-        {
-            this->Y()[i].writeOpt() = IOobject::AUTO_WRITE;
         }
     }
 

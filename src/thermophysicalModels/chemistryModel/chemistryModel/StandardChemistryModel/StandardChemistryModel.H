@@ -77,7 +77,7 @@ protected:
     // Protected data
 
         //- Reference to the field of specie mass fractions
-        PtrList<volScalarField>& Y_;
+        const PtrList<volScalarField>& Y_;
 
         //- Thermodynamic data of the species
         const PtrList<ThermoType>& specieThermo_;
@@ -120,7 +120,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        StandardChemistryModel(ReactionThermo& thermo);
+        StandardChemistryModel(const ReactionThermo& thermo);
 
         //- Disallow default bitwise copy construction
         StandardChemistryModel(const StandardChemistryModel&);

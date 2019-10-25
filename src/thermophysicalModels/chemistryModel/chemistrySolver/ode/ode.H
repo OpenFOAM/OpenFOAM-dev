@@ -71,7 +71,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        ode(typename ChemistryModel::reactionThermo& thermo);
+        ode(const typename ChemistryModel::reactionThermo& thermo);
 
 
     //- Destructor

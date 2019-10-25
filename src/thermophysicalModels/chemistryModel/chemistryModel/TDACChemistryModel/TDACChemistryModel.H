@@ -147,7 +147,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        TDACChemistryModel(ReactionThermo& thermo);
+        TDACChemistryModel(const ReactionThermo& thermo);
 
         //- Disallow default bitwise copy construction
         TDACChemistryModel(const TDACChemistryModel&);
@@ -168,7 +168,7 @@ public:
         //- Create and return a TDAC log file of the given name
         inline autoPtr<OFstream> logFile(const word& name) const;
 
-        inline PtrList<volScalarField>& Y();
+        inline const PtrList<volScalarField>& Y();
 
         //- dc/dt = omega, rate of change in concentration, for each species
         virtual void omega

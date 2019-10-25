@@ -62,7 +62,10 @@ public:
     // Constructors
 
         //- Construct from thermo
-        noChemistrySolver(typename ChemistryModel::reactionThermo& thermo);
+        noChemistrySolver
+        (
+            const typename ChemistryModel::reactionThermo& thermo
+        );
 
 
     //- Destructor

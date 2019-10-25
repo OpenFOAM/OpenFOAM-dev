@@ -161,7 +161,7 @@ public:
         EDC
         (
             const word& modelType,
-            ReactionThermo& type,
+            const ReactionThermo& type,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );

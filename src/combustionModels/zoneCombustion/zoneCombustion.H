@@ -86,7 +86,7 @@ public:
         zoneCombustion
         (
             const word& modelType,
-            ReactionThermo& thermo,
+            const ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
@@ -100,9 +100,6 @@ public:
 
 
     // Member Functions
-
-        //- Return access to the thermo package
-        virtual ReactionThermo& thermo();
 
         //- Return const access to the thermo package
         virtual const ReactionThermo& thermo() const;

@@ -33,7 +33,7 @@ License
 template<class ReactionThermo, class ThermoType>
 Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
 (
-    ReactionThermo& thermo
+    const ReactionThermo& thermo
 )
 :
     BasicChemistryModel<ReactionThermo>(thermo),
@@ -85,7 +85,7 @@ Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                thermo.p().mesh(),
+                thermo.T().mesh(),
                 dimensionedScalar(dimMass/dimVolume/dimTime, 0)
             )
         );

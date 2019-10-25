@@ -31,7 +31,7 @@ License
 template<class ChemistryModel>
 Foam::noChemistrySolver<ChemistryModel>::noChemistrySolver
 (
-    typename ChemistryModel::reactionThermo& thermo
+    const typename ChemistryModel::reactionThermo& thermo
 )
 :
     chemistrySolver<ChemistryModel>(thermo)

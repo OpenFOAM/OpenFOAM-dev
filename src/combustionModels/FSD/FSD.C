@@ -40,7 +40,7 @@ template<class ReactionThermo, class ThermoType>
 FSD<ReactionThermo, ThermoType>::FSD
 (
     const word& modelType,
-    ReactionThermo& thermo,
+    const ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )

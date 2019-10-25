@@ -37,7 +37,7 @@ template<class ReactionThermo, class ThermoType>
 diffusion<ReactionThermo, ThermoType>::diffusion
 (
     const word& modelType,
-    ReactionThermo& thermo,
+    const ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )

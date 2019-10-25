@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 template<class ReactionThermo>
 Foam::BasicChemistryModel<ReactionThermo>::BasicChemistryModel
 (
-    ReactionThermo& thermo
+    const ReactionThermo& thermo
 )
 :
     basicChemistryModel(thermo),
@@ -42,7 +42,7 @@ Foam::BasicChemistryModel<ReactionThermo>::BasicChemistryModel
 
 template<class ReactionThermo>
 Foam::autoPtr<Foam::BasicChemistryModel<ReactionThermo>>
-Foam::BasicChemistryModel<ReactionThermo>::New(ReactionThermo& thermo)
+Foam::BasicChemistryModel<ReactionThermo>::New(const ReactionThermo& thermo)
 {
     return basicChemistryModel::New<BasicChemistryModel<ReactionThermo>>
     (
