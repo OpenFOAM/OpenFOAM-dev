@@ -2,7 +2,7 @@ reactions
 {
     waterGasShift
     {
-        type        reversibleArrheniusReaction;
+        type        reversibleArrhenius;
 
         reaction    "CO^0.93 + H2O^0.24 = CO2^0.69 + H2^1";
 

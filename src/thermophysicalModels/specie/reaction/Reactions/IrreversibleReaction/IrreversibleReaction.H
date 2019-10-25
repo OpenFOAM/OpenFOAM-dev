@@ -46,15 +46,10 @@ namespace Foam
                     Class IrreversibleReaction Declaration
 \*---------------------------------------------------------------------------*/
 
-template
-<
-    template<class> class ReactionType,
-    class ReactionThermo,
-    class ReactionRate
->
+template<class ReactionThermo, class ReactionRate>
 class IrreversibleReaction
 :
-    public ReactionType<ReactionThermo>
+    public Reaction<ReactionThermo>
 {
     // Private Data
 
@@ -72,19 +67,14 @@ public:
         //- Construct from components
         IrreversibleReaction
         (
-            const ReactionType<ReactionThermo>& reaction,
+            const Reaction<ReactionThermo>& reaction,
             const ReactionRate& reactionRate
         );
 
         //- Construct as copy given new speciesTable
         IrreversibleReaction
         (
-            const IrreversibleReaction
-            <
-                ReactionType,
-                ReactionThermo,
-                ReactionRate
-            >&,
+            const IrreversibleReaction<ReactionThermo, ReactionRate>&,
             const speciesTable& species
         );
 
@@ -110,12 +100,7 @@ public:
         {
             return autoPtr<Reaction<ReactionThermo>>
             (
-                new IrreversibleReaction
-                <
-                    ReactionType,
-                    ReactionThermo,
-                    ReactionRate
-                >(*this)
+                new IrreversibleReaction<ReactionThermo, ReactionRate>(*this)
             );
         }
 
@@ -127,12 +112,7 @@ public:
         {
             return autoPtr<Reaction<ReactionThermo>>
             (
-                new IrreversibleReaction
-                <
-                    ReactionType,
-                    ReactionThermo,
-                    ReactionRate
-                >
+                new IrreversibleReaction<ReactionThermo, ReactionRate>
                 (
                     *this,
                     species
@@ -240,12 +220,7 @@ public:
         //- Disallow default bitwise assignment
         void operator=
         (
-            const IrreversibleReaction
-            <
-                ReactionType,
-                ReactionThermo,
-                ReactionRate
-            >&
+            const IrreversibleReaction<ReactionThermo, ReactionRate>&
         ) = delete;
 };
 

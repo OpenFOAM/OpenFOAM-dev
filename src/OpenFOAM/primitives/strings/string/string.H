@@ -206,6 +206,12 @@ public:
         //- Return string with trailing character removed
         string removeTrailing(const char) const;
 
+        //- Remove trailing string returning true if string changed
+        bool removeTrailing(const string&);
+
+        //- Return string with trailing string removed
+        string removeTrailing(const string&) const;
+
 
     // Member Operators
 

@@ -172,8 +172,7 @@ void Foam::chemkinReader::addReactionType
         {
             reactions_.append
             (
-                new IrreversibleReaction
-                <Reaction, gasHThermoPhysics, ReactionRateType>
+                new IrreversibleReaction<gasHThermoPhysics, ReactionRateType>
                 (
                     ReactionProxy<gasHThermoPhysics>
                     (
@@ -192,8 +191,7 @@ void Foam::chemkinReader::addReactionType
         {
             reactions_.append
             (
-                new ReversibleReaction
-                <Reaction, gasHThermoPhysics, ReactionRateType>
+                new ReversibleReaction<gasHThermoPhysics, ReactionRateType>
                 (
                     ReactionProxy<gasHThermoPhysics>
                     (
@@ -481,7 +479,10 @@ void Foam::chemkinReader::addReaction
                 reactions_.append
                 (
                     new NonEquilibriumReversibleReaction
-                        <Reaction, gasHThermoPhysics, ArrheniusReactionRate>
+                    <
+                        gasHThermoPhysics,
+                        ArrheniusReactionRate
+                    >
                     (
                         ReactionProxy<gasHThermoPhysics>
                         (
@@ -534,7 +535,6 @@ void Foam::chemkinReader::addReaction
                 (
                     new NonEquilibriumReversibleReaction
                     <
-                        Reaction,
                         gasHThermoPhysics,
                         thirdBodyArrheniusReactionRate
                     >
@@ -640,7 +640,6 @@ void Foam::chemkinReader::addReaction
                 (
                     new NonEquilibriumReversibleReaction
                     <
-                        Reaction,
                         gasHThermoPhysics,
                         LandauTellerReactionRate
                     >

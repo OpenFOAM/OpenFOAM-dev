@@ -47,15 +47,10 @@ namespace Foam
              Class NonEquilibriumReversibleReaction Declaration
 \*---------------------------------------------------------------------------*/
 
-template
-<
-    template<class> class ReactionType,
-    class ReactionThermo,
-    class ReactionRate
->
+template<class ReactionThermo, class ReactionRate>
 class NonEquilibriumReversibleReaction
 :
-    public ReactionType<ReactionThermo>
+    public Reaction<ReactionThermo>
 {
     // Private Data
 
@@ -74,7 +69,7 @@ public:
         //- Construct from components
         NonEquilibriumReversibleReaction
         (
-            const ReactionType<ReactionThermo>& reaction,
+            const Reaction<ReactionThermo>& reaction,
             const ReactionRate& forwardReactionRate,
             const ReactionRate& reverseReactionRate
         );
@@ -83,7 +78,10 @@ public:
         NonEquilibriumReversibleReaction
         (
             const NonEquilibriumReversibleReaction
-                <ReactionType, ReactionThermo, ReactionRate>&,
+            <
+                ReactionThermo,
+                ReactionRate
+            >&,
             const speciesTable& species
         );
 
@@ -105,26 +103,35 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<ReactionType<ReactionThermo>> clone() const
+        virtual autoPtr<Reaction<ReactionThermo>> clone() const
         {
-            return autoPtr<ReactionType<ReactionThermo>>
+            return autoPtr<Reaction<ReactionThermo>>
             (
                 new NonEquilibriumReversibleReaction
-                    <ReactionType, ReactionThermo, ReactionRate>(*this)
+                <
+                    ReactionThermo,
+                    ReactionRate
+                >(*this)
             );
         }
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<ReactionType<ReactionThermo>> clone
+        virtual autoPtr<Reaction<ReactionThermo>> clone
         (
             const speciesTable& species
         ) const
         {
-            return autoPtr<ReactionType<ReactionThermo>>
+            return autoPtr<Reaction<ReactionThermo>>
             (
                 new NonEquilibriumReversibleReaction
-                    <ReactionType, ReactionThermo, ReactionRate>
-                    (*this, species)
+                <
+                    ReactionThermo,
+                    ReactionRate
+                >
+                (
+                    *this,
+                    species
+                )
             );
         }
 
@@ -229,7 +236,6 @@ public:
         (
             const NonEquilibriumReversibleReaction
             <
-                ReactionType,
                 ReactionThermo,
                 ReactionRate
             >&

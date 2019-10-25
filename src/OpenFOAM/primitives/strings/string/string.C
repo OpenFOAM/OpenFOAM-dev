@@ -103,35 +103,33 @@ bool Foam::string::removeRepeated(const char character)
 {
     bool changed = false;
 
-    if (character && find(character) != npos)
+    string::size_type n = 0;
+    iterator iter2 = begin();
+
+    char cPrev = operator[](0) + 1;
+
+    for
+    (
+        string::const_iterator iter1 = iter2;
+        iter1 != end();
+        ++ iter1
+    )
     {
-        string::size_type nChar=0;
-        iterator iter2 = begin();
+        char c = *iter1;
 
-        char prev = 0;
-
-        for
-        (
-            string::const_iterator iter1 = iter2;
-            iter1 != end();
-            iter1++
-        )
+        if (c == cPrev && c == character)
         {
-            char c = *iter1;
-
-            if (prev == c && c == character)
-            {
-                changed = true;
-            }
-            else
-            {
-                *iter2 = prev = c;
-                ++iter2;
-                ++nChar;
-            }
+            changed = true;
         }
-        resize(nChar);
+        else
+        {
+            *iter2 = cPrev = c;
+            ++ iter2;
+            ++ n;
+        }
     }
+
+    resize(n);
 
     return changed;
 }
@@ -149,10 +147,10 @@ bool Foam::string::removeTrailing(const char character)
 {
     bool changed = false;
 
-    string::size_type nChar = size();
-    if (character && nChar > 1 && operator[](nChar-1) == character)
+    string::size_type n = size();
+    if (n >= 1 && operator[](n - 1) == character)
     {
-        resize(nChar-1);
+        resize(n - 1);
         changed = true;
     }
 
@@ -162,9 +160,32 @@ bool Foam::string::removeTrailing(const char character)
 
 Foam::string Foam::string::removeTrailing(const char character) const
 {
-    string str(*this);
-    str.removeTrailing(character);
-    return str;
+    string result(*this);
+    result.removeTrailing(character);
+    return result;
+}
+
+
+bool Foam::string::removeTrailing(const string& str)
+{
+    bool changed = false;
+
+    string::size_type n = size(), nStr = str.size();
+    if (n >= str.size() && operator()(n - nStr, nStr) == str)
+    {
+        resize(n - nStr);
+        changed = true;
+    }
+
+    return changed;
+}
+
+
+Foam::string Foam::string::removeTrailing(const string& str) const
+{
+    string result(*this);
+    result.removeTrailing(str);
+    return result;
 }
 
 
