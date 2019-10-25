@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -247,12 +247,12 @@ template<class BasicPsiThermo, class MixtureType>
 Foam::tmp<Foam::scalarField>
 Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
 (
-    const scalarField& p,
     const scalarField& Tu,
     const labelList& cells
 ) const
 {
     tmp<scalarField> theu(new scalarField(Tu.size()));
+    const scalarField& p = this->p();
     scalarField& heu = theu.ref();
 
     forAll(Tu, celli)
@@ -268,12 +268,12 @@ template<class BasicPsiThermo, class MixtureType>
 Foam::tmp<Foam::scalarField>
 Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
 (
-    const scalarField& p,
     const scalarField& Tu,
     const label patchi
 ) const
 {
     tmp<scalarField> theu(new scalarField(Tu.size()));
+    const scalarField& p = this->p().boundaryField()[patchi];
     scalarField& heu = theu.ref();
 
     forAll(Tu, facei)

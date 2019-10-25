@@ -172,8 +172,6 @@ Foam::basicThermo::basicThermo
 
     phaseName_(phaseName),
 
-    p_(lookupOrConstruct(mesh, "p")),
-
     T_
     (
         IOobject
@@ -226,8 +224,6 @@ Foam::basicThermo::basicThermo
     ),
 
     phaseName_(phaseName),
-
-    p_(lookupOrConstruct(mesh, "p")),
 
     T_
     (
@@ -467,18 +463,6 @@ Foam::wordList Foam::basicThermo::splitThermoName
     }
 
     return cmpts;
-}
-
-
-Foam::volScalarField& Foam::basicThermo::p()
-{
-    return p_;
-}
-
-
-const Foam::volScalarField& Foam::basicThermo::p() const
-{
-    return p_;
 }
 
 

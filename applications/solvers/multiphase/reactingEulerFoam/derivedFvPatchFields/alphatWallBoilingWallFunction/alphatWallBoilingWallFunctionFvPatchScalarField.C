@@ -428,8 +428,8 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const scalarField L
             (
                 vapor.thermo().he().member() == "e"
-              ? vapor.thermo().he(pw, Tsatc, patchi) + pw/rhoVaporw - hw
-              : vapor.thermo().he(pw, Tsatc, patchi) - hw
+              ? vapor.thermo().he(Tsatc, patchi) + pw/rhoVaporw - hw
+              : vapor.thermo().he(Tsatc, patchi) - hw
             );
 
             // Liquid phase fraction at the wall

@@ -129,8 +129,7 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
     const vectorField& Uc = turbModel.U();
     const vectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField& Tw = turbModel.transport().T().boundaryField()[patchi];
-    const scalarField& pw = turbModel.transport().p().boundaryField()[patchi];
-    const scalarField Cpw(turbModel.transport().Cp(pw, Tw, patchi));
+    const scalarField Cpw(turbModel.transport().Cp(Tw, patchi));
 
     const scalarField kappaw(Cpw*alphaEffw);
     const scalarField Pr(muw*Cpw/kappaw);

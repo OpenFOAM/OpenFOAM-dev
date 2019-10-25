@@ -243,7 +243,6 @@ public:
             //- Heat capacity at constant pressure for patch [J/kg/K]
             virtual tmp<scalarField> Cp
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const = 0;
@@ -254,7 +253,6 @@ public:
             //- Heat capacity at constant volume for patch [J/kg/K]
             virtual tmp<scalarField> Cv
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const = 0;

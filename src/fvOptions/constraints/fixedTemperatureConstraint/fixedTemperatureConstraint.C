@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,7 @@ void Foam::fv::fixedTemperatureConstraint::constrain
         {
             const scalar t = mesh_.time().value();
             scalarField Tuni(cells_.size(), Tuniform_->value(t));
-            eqn.setValues(cells_, thermo.he(thermo.p(), Tuni, cells_));
+            eqn.setValues(cells_, thermo.he(Tuni, cells_));
 
             break;
         }
@@ -133,7 +133,7 @@ void Foam::fv::fixedTemperatureConstraint::constrain
                 mesh().lookupObject<volScalarField>(TName_);
 
             scalarField Tlkp(T, cells_);
-            eqn.setValues(cells_, thermo.he(thermo.p(), Tlkp, cells_));
+            eqn.setValues(cells_, thermo.he(Tlkp, cells_));
 
             break;
         }

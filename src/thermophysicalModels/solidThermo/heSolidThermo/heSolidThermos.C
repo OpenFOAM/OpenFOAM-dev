@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeSolidThermo.H"
-#include "solidThermo.H"
+#include "makeHeSolidThermo.H"
+#include "solidPressureThermo.H"
 #include "heSolidThermo.H"
 
 #include "specie.H"
@@ -52,7 +52,7 @@ namespace Foam
 
 makeSolidThermo
 (
-    solidThermo,
+    solidPressureThermo,
     heSolidThermo,
     pureMixture,
     constIsoSolidTransport,
@@ -64,7 +64,7 @@ makeSolidThermo
 
 makeSolidThermo
 (
-    solidThermo,
+    solidPressureThermo,
     heSolidThermo,
     pureMixture,
     constAnIsoSolidTransport,
@@ -76,7 +76,7 @@ makeSolidThermo
 
 makeSolidThermo
 (
-    solidThermo,
+    solidPressureThermo,
     heSolidThermo,
     pureMixture,
     exponentialSolidTransport,
@@ -88,7 +88,7 @@ makeSolidThermo
 
 makeSolidThermoPhysicsType
 (
-    solidThermo,
+    solidPressureThermo,
     heSolidThermo,
     pureMixture,
     hTransportThermoPoly8SolidThermoPhysics

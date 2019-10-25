@@ -33,7 +33,7 @@ template<class BasicThermo, class MixtureType>
 void Foam::heThermo<BasicThermo, MixtureType>::init()
 {
     scalarField& heCells = he_.primitiveFieldRef();
-    const scalarField& pCells = this->p_;
+    const scalarField& pCells = this->p();
     const scalarField& TCells = this->T_;
 
     forAll(heCells, celli)
@@ -48,7 +48,6 @@ void Foam::heThermo<BasicThermo, MixtureType>::init()
     {
         heBf[patchi] == he
         (
-            this->p_.boundaryField()[patchi],
             this->T_.boundaryField()[patchi],
             patchi
         );
@@ -74,14 +73,14 @@ Foam::heThermo<BasicThermo, MixtureType>::volScalarFieldProperty
         volScalarField::New
         (
             IOobject::groupName(psiName, this->group()),
-            this->p_.mesh(),
+            this->T_.mesh(),
             psiDim
         )
     );
 
     volScalarField& psi = tPsi.ref();
 
-    forAll(this->p_, celli)
+    forAll(this->T_, celli)
     {
         psi[celli] = (this->cellMixture(celli).*psiMethod)(args[celli] ...);
     }
@@ -92,7 +91,7 @@ Foam::heThermo<BasicThermo, MixtureType>::volScalarFieldProperty
     {
         fvPatchScalarField& pPsi = psiBf[patchi];
 
-        forAll(this->p_.boundaryField()[patchi], facei)
+        forAll(this->T_.boundaryField()[patchi], facei)
         {
             pPsi[facei] =
                 (this->patchFaceMixture(patchi, facei).*psiMethod)
@@ -144,11 +143,11 @@ Foam::heThermo<BasicThermo, MixtureType>::patchFieldProperty
 {
     tmp<scalarField> tPsi
     (
-        new scalarField(this->p_.boundaryField()[patchi].size())
+        new scalarField(this->T_.boundaryField()[patchi].size())
     );
     scalarField& psi = tPsi.ref();
 
-    forAll(this->p_.boundaryField()[patchi], facei)
+    forAll(this->T_.boundaryField()[patchi], facei)
     {
         psi[facei] =
             (this->patchFaceMixture(patchi, facei).*psiMethod)(args[facei] ...);
@@ -281,7 +280,6 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<BasicThermo, MixtureType>::he
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::he
 (
-    const scalarField& p,
     const scalarField& T,
     const labelList& cells
 ) const
@@ -290,7 +288,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::he
     (
         &MixtureType::thermoType::HE,
         cells,
-        p,
+        UIndirectList<scalar>(this->p(), cells),
         T
     );
 }
@@ -299,7 +297,6 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::he
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::he
 (
-    const scalarField& p,
     const scalarField& T,
     const label patchi
 ) const
@@ -308,7 +305,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::he
     (
         &MixtureType::thermoType::HE,
         patchi,
-        p,
+        this->p().boundaryField()[patchi],
         T
     );
 }
@@ -323,7 +320,7 @@ Foam::heThermo<BasicThermo, MixtureType>::ha() const
         "ha",
         dimEnergy/dimMass,
         &MixtureType::thermoType::Ha,
-        this->p_,
+        this->p(),
         this->T_
     );
 }
@@ -350,7 +347,6 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<BasicThermo, MixtureType>::ha
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::ha
 (
-    const scalarField& p,
     const scalarField& T,
     const labelList& cells
 ) const
@@ -359,7 +355,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::ha
     (
         &MixtureType::thermoType::Ha,
         cells,
-        p,
+        UIndirectList<scalar>(this->p(), cells),
         T
     );
 }
@@ -368,7 +364,6 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::ha
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::ha
 (
-    const scalarField& p,
     const scalarField& T,
     const label patchi
 ) const
@@ -377,7 +372,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::ha
     (
         &MixtureType::thermoType::Ha,
         patchi,
-        p,
+        this->p().boundaryField()[patchi],
         T
     );
 }
@@ -399,7 +394,6 @@ Foam::heThermo<BasicThermo, MixtureType>::hc() const
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::Cp
 (
-    const scalarField& p,
     const scalarField& T,
     const label patchi
 ) const
@@ -408,7 +402,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::Cp
     (
         &MixtureType::thermoType::Cp,
         patchi,
-        p,
+        this->p().boundaryField()[patchi],
         T
     );
 }
@@ -423,7 +417,7 @@ Foam::heThermo<BasicThermo, MixtureType>::Cp() const
         "Cp",
         dimEnergy/dimMass/dimTemperature,
         &MixtureType::thermoType::Cp,
-        this->p_,
+        this->p(),
         this->T_
     );
 }
@@ -433,7 +427,6 @@ template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField>
 Foam::heThermo<BasicThermo, MixtureType>::Cv
 (
-    const scalarField& p,
     const scalarField& T,
     const label patchi
 ) const
@@ -442,7 +435,7 @@ Foam::heThermo<BasicThermo, MixtureType>::Cv
     (
         &MixtureType::thermoType::Cv,
         patchi,
-        p,
+        this->p().boundaryField()[patchi],
         T
     );
 }
@@ -457,7 +450,7 @@ Foam::heThermo<BasicThermo, MixtureType>::Cv() const
         "Cv",
         dimEnergy/dimMass/dimTemperature,
         &MixtureType::thermoType::Cv,
-        this->p_,
+        this->p(),
         this->T_
     );
 }
@@ -466,7 +459,6 @@ Foam::heThermo<BasicThermo, MixtureType>::Cv() const
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::gamma
 (
-    const scalarField& p,
     const scalarField& T,
     const label patchi
 ) const
@@ -475,7 +467,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::gamma
     (
         &MixtureType::thermoType::gamma,
         patchi,
-        p,
+        this->p().boundaryField()[patchi],
         T
     );
 }
@@ -490,7 +482,7 @@ Foam::heThermo<BasicThermo, MixtureType>::gamma() const
         "gamma",
         dimless,
         &MixtureType::thermoType::gamma,
-        this->p_,
+        this->p(),
         this->T_
     );
 }
@@ -499,7 +491,6 @@ Foam::heThermo<BasicThermo, MixtureType>::gamma() const
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::Cpv
 (
-    const scalarField& p,
     const scalarField& T,
     const label patchi
 ) const
@@ -508,7 +499,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::Cpv
     (
         &MixtureType::thermoType::Cpv,
         patchi,
-        p,
+        this->p().boundaryField()[patchi],
         T
     );
 }
@@ -523,7 +514,7 @@ Foam::heThermo<BasicThermo, MixtureType>::Cpv() const
         "Cpv",
         dimEnergy/dimMass/dimTemperature,
         &MixtureType::thermoType::Cpv,
-        this->p_,
+        this->p(),
         this->T_
     );
 }
@@ -532,7 +523,6 @@ Foam::heThermo<BasicThermo, MixtureType>::Cpv() const
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::CpByCpv
 (
-    const scalarField& p,
     const scalarField& T,
     const label patchi
 ) const
@@ -541,7 +531,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::CpByCpv
     (
         &MixtureType::thermoType::CpByCpv,
         patchi,
-        p,
+        this->p().boundaryField()[patchi],
         T
     );
 }
@@ -556,7 +546,7 @@ Foam::heThermo<BasicThermo, MixtureType>::CpByCpv() const
         "CpByCpv",
         dimless,
         &MixtureType::thermoType::CpByCpv,
-        this->p_,
+        this->p(),
         this->T_
     );
 }
@@ -566,7 +556,6 @@ template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::THE
 (
     const scalarField& h,
-    const scalarField& p,
     const scalarField& T0,
     const labelList& cells
 ) const
@@ -576,7 +565,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::THE
         &MixtureType::thermoType::THE,
         cells,
         h,
-        p,
+        UIndirectList<scalar>(this->p(), cells),
         T0
     );
 }
@@ -586,7 +575,6 @@ template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::THE
 (
     const scalarField& h,
-    const scalarField& p,
     const scalarField& T0,
     const label patchi
 ) const
@@ -596,7 +584,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::THE
         &MixtureType::thermoType::THE,
         patchi,
         h,
-        p,
+        this->p().boundaryField()[patchi],
         T0
     );
 }
@@ -650,7 +638,6 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::kappa
     return
         Cp
         (
-            this->p_.boundaryField()[patchi],
             this->T_.boundaryField()[patchi],
             patchi
         )*this->alpha_.boundaryField()[patchi];
@@ -676,7 +663,6 @@ Foam::heThermo<BasicThermo, MixtureType>::alphahe(const label patchi) const
     return
         this->CpByCpv
         (
-            this->p_.boundaryField()[patchi],
             this->T_.boundaryField()[patchi],
             patchi
         )
@@ -710,7 +696,6 @@ Foam::heThermo<BasicThermo, MixtureType>::kappaEff
     return
         Cp
         (
-            this->p_.boundaryField()[patchi],
             this->T_.boundaryField()[patchi],
             patchi
         )
@@ -744,7 +729,6 @@ Foam::heThermo<BasicThermo, MixtureType>::alphaEff
     return
         this->CpByCpv
         (
-            this->p_.boundaryField()[patchi],
             this->T_.boundaryField()[patchi],
             patchi
         )

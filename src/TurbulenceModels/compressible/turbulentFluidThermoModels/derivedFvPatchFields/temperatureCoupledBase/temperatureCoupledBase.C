@@ -108,8 +108,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
                     alphaAniName_
                 );
 
-            const scalarField& pp = thermo.p().boundaryField()[patchi];
-            const symmTensorField kappa(alphaAni*thermo.Cp(pp, Tp, patchi));
+            const symmTensorField kappa(alphaAni*thermo.Cp(Tp, patchi));
             const vectorField n(patch_.nf());
 
             return n & kappa & n;

@@ -108,7 +108,7 @@ public:
         static autoPtr<solidThermo> New
         (
             const fvMesh&,
-            const word& phaseName=word::null
+            const word& phaseName = word::null
         );
 
         //- Return a pointer to a new solidThermo created from
@@ -117,7 +117,7 @@ public:
         (
             const fvMesh&,
             const dictionary&,
-            const word& phaseName=word::null
+            const word& phaseName = word::null
         );
 
 
@@ -126,6 +126,16 @@ public:
 
 
     // Member Functions
+
+        // Access to thermodynamic state variables
+
+            //- Pressure [Pa]
+            //  Non-const access allowed for transport equations
+            virtual volScalarField& p() = 0;
+
+            //- Pressure [Pa]
+            virtual const volScalarField& p() const = 0;
+
 
         // Fields derived from thermodynamic state variables
 

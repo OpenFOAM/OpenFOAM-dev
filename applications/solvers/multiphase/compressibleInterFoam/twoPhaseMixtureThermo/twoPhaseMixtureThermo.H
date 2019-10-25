@@ -153,7 +153,6 @@ public:
             //- Enthalpy/Internal energy for cell-set [J/kg]
             virtual tmp<scalarField> he
             (
-                const scalarField& p,
                 const scalarField& T,
                 const labelList& cells
             ) const;
@@ -161,7 +160,6 @@ public:
             //- Enthalpy/Internal energy for patch [J/kg]
             virtual tmp<scalarField> he
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const;
@@ -180,7 +178,6 @@ public:
             //- Absolute enthalpy for cell-set [J/kg]
             virtual tmp<scalarField> ha
             (
-                const scalarField& p,
                 const scalarField& T,
                 const labelList& cells
             ) const;
@@ -188,7 +185,6 @@ public:
             //- Absolute enthalpy for patch [J/kg]
             virtual tmp<scalarField> ha
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const;
@@ -200,7 +196,6 @@ public:
             virtual tmp<scalarField> THE
             (
                 const scalarField& h,
-                const scalarField& p,
                 const scalarField& T0,      // starting temperature
                 const labelList& cells
             ) const;
@@ -209,7 +204,6 @@ public:
             virtual tmp<scalarField> THE
             (
                 const scalarField& h,
-                const scalarField& p,
                 const scalarField& T0,      // starting temperature
                 const label patchi
             ) const;
@@ -223,7 +217,6 @@ public:
             //- Heat capacity at constant pressure for patch [J/kg/K]
             virtual tmp<scalarField> Cp
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const;
@@ -234,7 +227,6 @@ public:
             //- Heat capacity at constant volume for patch [J/kg/K]
             virtual tmp<scalarField> Cv
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const;
@@ -245,7 +237,6 @@ public:
             //- Gamma = Cp/Cv for patch []
             virtual tmp<scalarField> gamma
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const;
@@ -256,7 +247,6 @@ public:
             //- Heat capacity at constant pressure/volume for patch [J/kg/K]
             virtual tmp<scalarField> Cpv
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const;
@@ -267,7 +257,6 @@ public:
             //- Heat capacity ratio for patch []
             virtual tmp<scalarField> CpByCpv
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const;

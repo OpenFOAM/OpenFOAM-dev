@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,41 +23,60 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "thermalBaffle.H"
-#include "zeroGradientFvPatchFields.H"
+#include "solidPressureThermo.H"
+#include "fvMesh.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace thermalBaffleModels
-{
+    defineTypeNameAndDebug(solidPressureThermo, 0);
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline tmp<scalarField> thermalBaffle::he
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::solidPressureThermo::solidPressureThermo
 (
-    const scalarField& p,
-    const scalarField& T,
-    const label patchi
-) const
+    const fvMesh& mesh,
+    const word& phaseName
+)
+:
+    solidThermo(mesh, phaseName),
+    p_(lookupOrConstruct(mesh, "p"))
+{}
+
+
+Foam::solidPressureThermo::solidPressureThermo
+(
+    const fvMesh& mesh,
+    const dictionary& dict,
+    const word& phaseName
+)
+:
+    solidThermo(mesh, dict, phaseName),
+    p_(lookupOrConstruct(mesh, "p"))
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::solidPressureThermo::~solidPressureThermo()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::volScalarField& Foam::solidPressureThermo::p() const
 {
-    return thermo_->he(T, patchi);
+    return p_;
 }
 
 
-inline tmp<volScalarField> thermalBaffle::he() const
+Foam::volScalarField& Foam::solidPressureThermo::p()
 {
-    return thermo_->he();
+    return p_;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace thermalBaffleModels
-} // End namespace regionModels
-} // End namespace Foam
 
 // ************************************************************************* //

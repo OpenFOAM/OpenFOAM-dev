@@ -65,7 +65,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::composition
     const objectRegistry& db
 )
 {
-    const word& name = basicThermo::dictName;
+    const word& name = fluidThermo::dictName;
 
     if (db.foundObject<psiReactionThermo>(name))
     {
@@ -239,8 +239,8 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::phiY() const
             {
                 const basicSpecieMixture& mixture = composition(db());
                 const scalar Wi(mixture.Wi(mixture.species()[YName]));
-                const basicThermo& thermo =
-                    db().lookupObject<basicThermo>(basicThermo::dictName);
+                const fluidThermo& thermo =
+                    db().lookupObject<fluidThermo>(fluidThermo::dictName);
 
                 psic *= thermo.W(patch().index())/Wi;
 

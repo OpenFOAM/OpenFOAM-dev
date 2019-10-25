@@ -108,7 +108,6 @@ void Foam::energyJumpAMIFvPatchScalarField::updateCoeffs()
         const basicThermo& thermo = basicThermo::lookupThermo(*this);
         label patchID = patch().index();
 
-        const scalarField& pp = thermo.p().boundaryField()[patchID];
         const fixedJumpAMIFvPatchScalarField& TbPatch =
             refCast<const fixedJumpAMIFvPatchScalarField>
             (
@@ -123,7 +122,7 @@ void Foam::energyJumpAMIFvPatchScalarField::updateCoeffs()
 
         const labelUList& faceCells = this->patch().faceCells();
 
-        jump_ = thermo.he(pp, Tbp.jump(), faceCells);
+        jump_ = thermo.he(Tbp.jump(), faceCells);
     }
 
     fixedJumpAMIFvPatchField<scalar>::updateCoeffs();

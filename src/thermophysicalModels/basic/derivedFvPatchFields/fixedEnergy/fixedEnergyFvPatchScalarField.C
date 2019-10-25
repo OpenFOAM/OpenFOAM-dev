@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,11 +100,10 @@ void Foam::fixedEnergyFvPatchScalarField::updateCoeffs()
     const basicThermo& thermo = basicThermo::lookupThermo(*this);
     const label patchi = patch().index();
 
-    const scalarField& pw = thermo.p().boundaryField()[patchi];
     fvPatchScalarField& Tw =
         const_cast<fvPatchScalarField&>(thermo.T().boundaryField()[patchi]);
     Tw.evaluate();
-    operator==(thermo.he(pw, Tw, patchi));
+    operator==(thermo.he(Tw, patchi));
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }

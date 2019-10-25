@@ -100,17 +100,16 @@ void Foam::gradientEnergyFvPatchScalarField::updateCoeffs()
     const basicThermo& thermo = basicThermo::lookupThermo(*this);
     const label patchi = patch().index();
 
-    const scalarField& pw = thermo.p().boundaryField()[patchi];
     fvPatchScalarField& Tw =
         const_cast<fvPatchScalarField&>(thermo.T().boundaryField()[patchi]);
 
     Tw.evaluate();
 
-    gradient() = thermo.Cpv(pw, Tw, patchi)*Tw.snGrad()
+    gradient() = thermo.Cpv(Tw, patchi)*Tw.snGrad()
       + patch().deltaCoeffs()*
         (
-            thermo.he(pw, Tw, patchi)
-          - thermo.he(pw, Tw, patch().faceCells())
+            thermo.he(Tw, patchi)
+          - thermo.he(Tw, patch().faceCells())
         );
 
     fixedGradientFvPatchScalarField::updateCoeffs();
