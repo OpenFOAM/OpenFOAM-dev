@@ -81,7 +81,11 @@ private:
 
         void calcAlphas();
 
-        void solveAlphas();
+        void solveAlphas
+        (
+            const PtrList<volScalarField>& rAUs,
+            const PtrList<surfaceScalarField>& rAUfs
+        );
 
         tmp<surfaceVectorField> nHatfv
         (

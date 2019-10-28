@@ -963,6 +963,26 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::DByAfs
             );
 
             addField(phase, "DByAf", pPrimeByAf, DByAfs);
+
+            forAll(this->phaseModels_, phasej)
+            {
+                if (phasej != phasei)
+                {
+                    const phaseModel& phase2 = this->phaseModels_[phasej];
+
+                    addField
+                    (
+                        phase2,
+                        "DByAf",
+                        fvc::interpolate
+                        (
+                            phase2
+                           /max(1 - phase, phase2.residualAlpha())
+                        )*pPrimeByAf,
+                        DByAfs
+                    );
+                }
+            }
         }
 
         // Add the turbulent dispersion
@@ -1017,6 +1037,26 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::DByAfs
             );
 
             addField(phase, "DByAf", pPrimeByAf, DByAfs);
+
+            forAll(this->phaseModels_, phasej)
+            {
+                if (phasej != phasei)
+                {
+                    const phaseModel& phase2 = this->phaseModels_[phasej];
+
+                    addField
+                    (
+                        phase2,
+                        "DByAf",
+                        fvc::interpolate
+                        (
+                            phase2
+                           /max(1 - phase, phase2.residualAlpha())
+                        )*pPrimeByAf,
+                        DByAfs
+                    );
+                }
+            }
         }
 
         // Add the turbulent dispersion

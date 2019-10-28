@@ -68,7 +68,11 @@ void Foam::multiphaseSystem::calcAlphas()
 }
 
 
-void Foam::multiphaseSystem::solveAlphas()
+void Foam::multiphaseSystem::solveAlphas
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {
     forAll(phases(), phasei)
     {
@@ -124,6 +128,15 @@ void Foam::multiphaseSystem::solveAlphas()
             )
         );
     }
+
+    PtrList<surfaceScalarField> DbyAs;
+    if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
+    {
+        DbyAs = this->DByAfs(rAUs, rAUfs);
+    }
+
+    PtrList<surfaceScalarField> alphaDbyAs(phases().size());
+
     forAll(movingPhases(), movingPhasei)
     {
         phaseModel& phase = movingPhases()[movingPhasei];
@@ -135,7 +148,7 @@ void Foam::multiphaseSystem::solveAlphas()
             new surfaceScalarField
             (
                 IOobject::groupName("alphaPhiCorr", phase.name()),
-                fvc::flux(phi_, phase, "div(phi," + alpha.name() + ')')
+                fvc::flux(phi_, alpha, "div(phi," + alpha.name() + ')')
             )
         );
 
@@ -162,7 +175,7 @@ void Foam::multiphaseSystem::solveAlphas()
                     (mag(phi_) + mag(phir))/mesh_.magSf()
                 );
 
-                phir += min(cAlpha()*phic, max(phic))*nHatf(phase, phase2);
+                phir += min(cAlpha()*phic, max(phic))*nHatf(alpha, alpha2);
             }
 
             word phirScheme
@@ -172,10 +185,25 @@ void Foam::multiphaseSystem::solveAlphas()
 
             alphaPhiCorr += fvc::flux
             (
-                -fvc::flux(-phir, phase2, phirScheme),
-                phase,
+                -fvc::flux(-phir, alpha2, phirScheme),
+                alpha,
                 phirScheme
             );
+        }
+
+        if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
+        {
+            alphaDbyAs.set
+            (
+                phase.index(),
+                fvc::interpolate(max(alpha, scalar(0)))
+               *fvc::interpolate(max(1 - alpha, scalar(0)))
+               *DbyAs[phase.index()]
+            );
+
+            alphaPhiCorr +=
+                alphaDbyAs[phase.index()]
+               *fvc::snGrad(alpha, "bounded")*mesh_.magSf();
         }
 
         phase.correctInflowOutflow(alphaPhiCorr);
@@ -183,7 +211,7 @@ void Foam::multiphaseSystem::solveAlphas()
         MULES::limit
         (
             geometricOneField(),
-            phase,
+            alpha,
             phi_,
             alphaPhiCorr,
             zeroField(),
@@ -291,6 +319,20 @@ void Foam::multiphaseSystem::solveAlphas()
         );
 
         phase.alphaPhiRef() = alphaPhi;
+
+        if (alphaDbyAs.set(phase.index()))
+        {
+            fvScalarMatrix alphaEqn
+            (
+                fvm::ddt(alpha) - fvc::ddt(alpha)
+              - fvm::laplacian(alphaDbyAs[phase.index()], alpha, "bounded")
+            );
+
+            alphaEqn.relax();
+            alphaEqn.solve();
+
+            phase.alphaPhiRef() += alphaEqn.flux();
+        }
     }
 
     // Report the phase fractions and the phase fraction sum
@@ -673,7 +715,7 @@ void Foam::multiphaseSystem::solve
             !(++alphaSubCycle).end();
         )
         {
-            solveAlphas();
+            solveAlphas(rAUs, rAUfs);
 
             forAll(phases(), phasei)
             {
@@ -691,7 +733,7 @@ void Foam::multiphaseSystem::solve
     }
     else
     {
-        solveAlphas();
+        solveAlphas(rAUs, rAUfs);
     }
 
     forAll(phases(), phasei)

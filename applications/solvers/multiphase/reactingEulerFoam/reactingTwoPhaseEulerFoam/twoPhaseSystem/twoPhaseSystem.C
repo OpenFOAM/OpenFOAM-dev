@@ -174,19 +174,6 @@ void Foam::twoPhaseSystem::solve
 
     surfaceScalarField phir("phir", phi1 - phi2);
 
-    tmp<surfaceScalarField> alphaDbyA;
-    if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
-    {
-        surfaceScalarField DbyA(this->DByAfs(rAUs, rAUfs)[phase1_.index()]);
-
-        alphaDbyA =
-            fvc::interpolate(max(alpha1, scalar(0)))
-           *fvc::interpolate(max(alpha2, scalar(0)))
-           *DbyA;
-
-        phir += DbyA*fvc::snGrad(alpha1, "bounded")*mesh_.magSf();
-    }
-
     for (int acorr=0; acorr<nAlphaCorr; acorr++)
     {
         volScalarField::Internal Sp
@@ -247,6 +234,23 @@ void Foam::twoPhaseSystem::solve
                 alpharScheme
             )
         );
+
+        tmp<surfaceScalarField> alphaDbyA;
+        if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
+        {
+            const surfaceScalarField DbyA
+            (
+                this->DByAfs(rAUs, rAUfs)[phase1_.index()]
+            );
+
+            alphaDbyA =
+                fvc::interpolate(max(alpha1, scalar(0)))
+               *fvc::interpolate(max(alpha2, scalar(0)))
+               *DbyA;
+
+            alphaPhi1 +=
+                alphaDbyA()*fvc::snGrad(alpha1, "bounded")*mesh_.magSf();
+        }
 
         phase1_.correctInflowOutflow(alphaPhi1);
 
