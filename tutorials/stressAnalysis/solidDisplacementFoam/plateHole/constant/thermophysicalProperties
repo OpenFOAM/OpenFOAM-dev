@@ -11,7 +11,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      mechanicalProperties;
+    object      thermalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -33,7 +33,26 @@ E
     value       2e+11;
 }
 
+Cp
+{
+    type        uniform;
+    value       434;
+}
+
+kappa
+{
+    type        uniform;
+    value       60.5;
+}
+
+alphav
+{
+    type        uniform;
+    value       1.1e-05;
+}
+
 planeStress     yes;
+thermalStress   no;
 
 
 // ************************************************************************* //

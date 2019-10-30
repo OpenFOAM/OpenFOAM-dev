@@ -1,4 +1,4 @@
-#include "readMechanicalProperties.H"
+#include "readThermophysicalProperties.H"
 
 Info<< "Reading displacement field D\n" << endl;
 volVectorField D

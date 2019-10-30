@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tractionDisplacementFvPatchVectorField.H"
-#include "volFields.H"
+#include "solidDisplacementThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -138,59 +138,50 @@ void Foam::tractionDisplacementFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const dictionary& mechanicalProperties =
-        db().lookupObject<IOdictionary>("mechanicalProperties");
+    const label patchi = patch().index();
 
-    const dictionary& thermalProperties =
-        db().lookupObject<IOdictionary>("thermalProperties");
+    const solidDisplacementThermo& thermo =
+        db().lookupObject<solidDisplacementThermo>
+        (
+            solidDisplacementThermo::dictName
+        );
 
+    const scalarField& E = thermo.E(patchi);
+    const scalarField& nu = thermo.nu(patchi);
 
-    const fvPatchField<scalar>& rho =
-        patch().lookupPatchField<volScalarField, scalar>("rho");
+    const scalarField mu(E/(2.0*(1.0 + nu)));
+    const scalarField lambda
+    (
+        thermo.planeStress()
+      ? nu*E/((1 + nu)*(1 - nu))
+      : nu*E/((1 + nu)*(1 - 2*nu))
+    );
+    const scalarField threeK
+    (
+        thermo.planeStress()
+      ? E/(1 - nu)
+      : E/(1 - 2*nu)
+    );
 
-    const fvPatchField<scalar>& rhoE =
-        patch().lookupPatchField<volScalarField, scalar>("E");
+    const scalarField twoMuLambda(2*mu + lambda);
 
-    const fvPatchField<scalar>& nu =
-        patch().lookupPatchField<volScalarField, scalar>("nu");
-
-    scalarField E(rhoE/rho);
-    scalarField mu(E/(2.0*(1.0 + nu)));
-    scalarField lambda(nu*E/((1.0 + nu)*(1.0 - 2.0*nu)));
-    scalarField threeK(E/(1.0 - 2.0*nu));
-
-    Switch planeStress(mechanicalProperties.lookup("planeStress"));
-
-    if (planeStress)
-    {
-        lambda = nu*E/((1.0 + nu)*(1.0 - nu));
-        threeK = E/(1.0 - nu);
-    }
-
-    scalarField twoMuLambda(2*mu + lambda);
-
-    vectorField n(patch().nf());
+    const vectorField n(patch().nf());
 
     const fvPatchField<symmTensor>& sigmaD =
         patch().lookupPatchField<volSymmTensorField, symmTensor>("sigmaD");
 
     gradient() =
     (
-        (traction_ - pressure_*n)/rho
+        (traction_ - pressure_*n)
       + twoMuLambda*fvPatchField<vector>::snGrad() - (n & sigmaD)
     )/twoMuLambda;
 
-    Switch thermalStress(thermalProperties.lookup("thermalStress"));
-
-    if (thermalStress)
+    if (thermo.thermalStress())
     {
-        const fvPatchField<scalar>&  threeKalpha=
-            patch().lookupPatchField<volScalarField, scalar>("threeKalpha");
+        const scalarField& alphav = thermo.alphav(patchi);
 
-        const fvPatchField<scalar>& T =
-            patch().lookupPatchField<volScalarField, scalar>("T");
-
-        gradient() += n*threeKalpha*T/twoMuLambda;
+        gradient() +=
+            n*threeK*alphav*thermo.T().boundaryField()[patchi]/twoMuLambda;
     }
 
     fixedGradientFvPatchVectorField::updateCoeffs();

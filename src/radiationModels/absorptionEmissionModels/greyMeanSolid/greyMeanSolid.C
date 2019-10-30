@@ -96,7 +96,7 @@ Foam::radiationModels::absorptionEmissionModels::greyMeanSolid::greyMeanSolid
 :
     absorptionEmissionModel(dict, mesh),
     coeffsDict_((dict.optionalSubDict(typeName + "Coeffs"))),
-    thermo_(mesh.lookupObject<solidThermo>(basicThermo::dictName)),
+    thermo_(mesh.lookupObject<solidPressureThermo>(basicThermo::dictName)),
     speciesNames_(0),
     mixture_(dynamic_cast<const basicSpecieMixture&>(thermo_)),
     solidData_(mixture_.Y().size())

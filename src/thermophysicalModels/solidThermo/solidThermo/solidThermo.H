@@ -56,7 +56,6 @@ protected:
     // Protected data
 
         //- Density field [kg/m^3]
-        //  Named 'thermo:rho' to avoid (potential) conflict with solver density
         volScalarField rho_;
 
 
@@ -126,16 +125,6 @@ public:
 
 
     // Member Functions
-
-        // Access to thermodynamic state variables
-
-            //- Pressure [Pa]
-            //  Non-const access allowed for transport equations
-            virtual volScalarField& p() = 0;
-
-            //- Pressure [Pa]
-            virtual const volScalarField& p() const = 0;
-
 
         // Fields derived from thermodynamic state variables
 

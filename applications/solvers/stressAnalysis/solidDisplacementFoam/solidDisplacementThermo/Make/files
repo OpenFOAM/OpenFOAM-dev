@@ -1,0 +1,3 @@
+solidDisplacementThermo.C
+
+LIB = $(FOAM_LIBBIN)/libsolidDisplacementThermo

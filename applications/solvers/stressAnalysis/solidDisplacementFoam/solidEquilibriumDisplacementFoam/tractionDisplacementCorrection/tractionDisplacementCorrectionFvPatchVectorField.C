@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tractionDisplacementCorrectionFvPatchVectorField.H"
+#include "solidDisplacementThermo.H"
 #include "addToRunTimeSelectionTable.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -145,32 +145,26 @@ void tractionDisplacementCorrectionFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const dictionary& mechanicalProperties = db().lookupObject<IOdictionary>
+    const label patchi = patch().index();
+
+    const solidDisplacementThermo& thermo =
+        db().lookupObject<solidDisplacementThermo>
+        (
+            solidDisplacementThermo::dictName
+        );
+
+    const scalarField& E = thermo.E(patchi);
+    const scalarField& nu = thermo.nu(patchi);
+
+    const scalarField mu(E/(2.0*(1.0 + nu)));
+    const scalarField lambda
     (
-        "mechanicalProperties"
+        thermo.planeStress()
+      ? nu*E/((1 + nu)*(1 - nu))
+      : nu*E/((1 + nu)*(1 - 2*nu))
     );
 
-    const fvPatchField<scalar>& rho =
-        patch().lookupPatchField<volScalarField, scalar>("rho");
-
-    const fvPatchField<scalar>& rhoE =
-        patch().lookupPatchField<volScalarField, scalar>("E");
-
-    const fvPatchField<scalar>& nu =
-        patch().lookupPatchField<volScalarField, scalar>("nu");
-
-    scalarField E(rhoE/rho);
-    scalarField mu(E/(2.0*(1.0 + nu)));
-    scalarField lambda(nu*E/((1.0 + nu)*(1.0 - 2.0*nu)));
-
-    Switch planeStress(mechanicalProperties.lookup("planeStress"));
-
-    if (planeStress)
-    {
-        lambda = nu*E/((1.0 + nu)*(1.0 - nu));
-    }
-
-    vectorField n(patch().nf());
+    const vectorField n(patch().nf());
 
     const fvPatchField<symmTensor>& sigmaD =
         patch().lookupPatchField<volSymmTensorField, symmTensor>("sigmaD");
@@ -180,7 +174,7 @@ void tractionDisplacementCorrectionFvPatchVectorField::updateCoeffs()
 
     gradient() =
     (
-        (traction_ + pressure_*n)/rho - (n & (sigmaD + sigmaExp))
+        (traction_ + pressure_*n) - (n & (sigmaD + sigmaExp))
     )/(2.0*mu + lambda);
 
     fixedGradientFvPatchVectorField::updateCoeffs();

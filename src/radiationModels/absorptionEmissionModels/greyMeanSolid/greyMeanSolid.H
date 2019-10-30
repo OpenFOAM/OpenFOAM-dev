@@ -49,7 +49,7 @@ SourceFiles
 #define greyMeanSolid_H
 
 #include "absorptionEmissionModel.H"
-#include "solidThermo.H"
+#include "solidPressureThermo.H"
 #include "basicSpecieMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -85,7 +85,7 @@ private:
         dictionary coeffsDict_;
 
         //- SLG thermo package
-        const solidThermo& thermo_;
+        const solidPressureThermo& thermo_;
 
         //- Hash table of species names
         HashTable<label> speciesNames_;
