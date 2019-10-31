@@ -16,15 +16,15 @@ FoamFile
 
 surfaces
 (
-    "vessel.stl"
-    "oilInlet.stl"
-    "stirrer.stl"
-    "outlet.stl"
-    "shaft.stl"
-    "shaftRotating.stl"
+    "mixerVessel-vessel.stl"
+    "mixerVessel-oilInlet.stl"
+    "mixerVessel-stirrer.stl"
+    "mixerVessel-outlet.stl"
+    "mixerVessel-shaft.stl"
+    "mixerVessel-shaftRotating.stl"
+    "mixerVessel-baffles.stl"
+    "mixerVessel-sparger.stl"
     "rotating.stl"
-    "baffles.stl"
-    "sparger.stl"
 );
 
 // Identify a feature when angle between faces < includedAngle

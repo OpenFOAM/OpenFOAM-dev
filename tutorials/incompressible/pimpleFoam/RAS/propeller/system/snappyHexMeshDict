@@ -31,7 +31,7 @@ geometry
     innerCylinder
     {
         type        triSurfaceMesh;
-        file        "innerCylinder.obj";
+        file        "propeller-innerCylinder.obj";
         regions
         {
             innerCylinder
@@ -43,7 +43,7 @@ geometry
     middleCylinder
     {
         type        triSurfaceMesh;
-        file        "middleCylinder.obj";
+        file        "propeller-middleCylinder.obj";
         regions
         {
             middleCylinder
@@ -55,7 +55,7 @@ geometry
     outerCylinder
     {
         type        triSurfaceMesh;
-        file        "outerCylinder.obj";
+        file        "propeller-outerCylinder.obj";
         regions
         {
             outerCylinderWall
@@ -139,11 +139,11 @@ castellatedMeshControls
     features
     (
         {
-            file        "innerCylinder.eMesh";
+            file        "propeller-innerCylinder.eMesh";
             level       4;
         }
         {
-            file        "outerCylinder.eMesh";
+            file        "propeller-outerCylinder.eMesh";
             level       0;
         }
         {

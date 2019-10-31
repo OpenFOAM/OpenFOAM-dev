@@ -16,8 +16,8 @@ FoamFile
 
 surfaces
 (
-    "innerCylinder.obj"
-    "outerCylinder.obj"
+    "propeller-innerCylinder.obj"
+    "propeller-outerCylinder.obj"
     "propeller.obj"
 );
 

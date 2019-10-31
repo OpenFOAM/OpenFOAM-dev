@@ -34,9 +34,9 @@ spargerInlet.stl
 
     regions
     {
-        gasInlet
+        oilInlet
         {
-            name gasInlet;
+            name oilInlet;
         }
 
         sparger

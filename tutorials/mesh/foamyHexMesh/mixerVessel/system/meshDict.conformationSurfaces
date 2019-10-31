@@ -23,7 +23,7 @@ geometryToConformTo
 
         regions
         {
-            gasInlet
+            oilInlet
             {
                 patchInfo
                 {
