@@ -98,13 +98,13 @@ Foam::scalar checkUniformTimeStep(const scalarField& t)
     {
         for (label i = 1; i < t.size(); i++)
         {
-            scalar dT = t[i] - t[i-1];
+            const scalar dT = t[i] - t[i-1];
             if (deltaT < 0)
             {
                 deltaT = dT;
             }
 
-            if (mag(deltaT - dT) > small)
+            if (mag(deltaT - dT) > rootSmall)
             {
                 FatalErrorInFunction
                     << "Unable to process data with a variable time step"
