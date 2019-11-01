@@ -74,14 +74,7 @@ Foam::pimpleControl::~pimpleControl()
 
 bool Foam::pimpleControl::read()
 {
-    if (!pimpleNoLoopControl::read() || !pimpleLoop::read())
-    {
-        return false;
-    }
-
-    nCorrPimple_ = dict().lookupOrDefault<label>("nOuterCorrectors", 1);
-
-    return true;
+    return pimpleNoLoopControl::read() && pimpleLoop::read();
 }
 
 
