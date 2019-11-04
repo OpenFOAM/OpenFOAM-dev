@@ -4,7 +4,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-./Allmesh
+# Mesh if necessary
+if ! cloneMesh ../../../incompressible/pimpleFoam/RAS/propeller .
+then
+    ./Allmesh
+fi
 
 runApplication decomposePar
 

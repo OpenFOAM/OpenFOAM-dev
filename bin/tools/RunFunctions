@@ -154,17 +154,45 @@ compileApplication()
 
 cloneCase()
 {
-    if [ -d $2 ]
+    from=$1
+    to=$2
+
+    if [ ! -d $from ]
     then
-        echo "Case already cloned: remove case directory $2 to clone"
+        echo "Case $from does not exist"
+        return 1
+    elif [ -d $to ]
+    then
+        echo "Case already cloned: remove case directory $to to clone"
+        return 1
     else
-        echo "Cloning $2 case from $1"
-        mkdir $2
-        cpfiles="0 system constant"
-        for f in $cpfiles
+        echo "Cloning $to case from $from"
+        mkdir -p $to
+        for f in 0 system constant
         do
-            cp -r $1/$f $2
+            cp -r $from/$f $to
         done
+        return 0
+    fi
+}
+
+cloneMesh()
+{
+    from=$1/constant/polyMesh
+    to=$2/constant/polyMesh
+
+    if [ ! -d $from ]
+    then
+        echo "Mesh $from does not exist"
+        return 1
+    elif [ -d $to ]
+    then
+        echo "Mesh already cloned: remove mesh directory $to to clone"
+        return 1
+    else
+        echo "Cloning $to mesh from $from"
+        cp -pr $from $to
+        return 0
     fi
 }
 
