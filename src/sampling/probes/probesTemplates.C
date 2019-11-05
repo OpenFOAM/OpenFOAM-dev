@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,14 +73,16 @@ void Foam::probes::sampleAndWrite
 
     if (Pstream::master())
     {
-        unsigned int w = IOstream::defaultPrecision() + 7;
+        const unsigned int w = IOstream::defaultPrecision() + 7;
         OFstream& os = *probeFilePtrs_[vField.name()];
 
         os  << setw(w) << vField.time().timeToUserTime(vField.time().value());
 
         forAll(values, probei)
         {
-            os  << ' ' << setw(w) << values[probei];
+            OStringStream buf;
+            buf << values[probei];
+            os  << ' ' << setw(w) << buf.str().c_str();
         }
         os  << endl;
     }
@@ -97,14 +99,16 @@ void Foam::probes::sampleAndWrite
 
     if (Pstream::master())
     {
-        unsigned int w = IOstream::defaultPrecision() + 7;
+        const unsigned int w = IOstream::defaultPrecision() + 7;
         OFstream& os = *probeFilePtrs_[sField.name()];
 
-        os  << setw(w) << sField.time().timeToUserTime(sField.time().value());
+        os  << sField.time().timeToUserTime(sField.time().value());
 
         forAll(values, probei)
         {
-            os  << ' ' << setw(w) << values[probei];
+            OStringStream buf;
+            buf << values[probei];
+            os  << ' ' << setw(w) << buf.str().c_str();
         }
         os  << endl;
     }
