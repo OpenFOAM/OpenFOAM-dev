@@ -23,7 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "zeroGradientFvPatchFields.H"
 #include "gradientEnergyFvPatchScalarField.H"
+#include "gradientEnergyCalculatedTemperatureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
@@ -100,17 +102,43 @@ void Foam::gradientEnergyFvPatchScalarField::updateCoeffs()
     const basicThermo& thermo = basicThermo::lookupThermo(*this);
     const label patchi = patch().index();
 
-    fvPatchScalarField& Tw =
+    fvPatchScalarField& Tp =
         const_cast<fvPatchScalarField&>(thermo.T().boundaryField()[patchi]);
 
-    Tw.evaluate();
+    Tp.evaluate();
 
-    gradient() = thermo.Cpv(Tw, patchi)*Tw.snGrad()
-      + patch().deltaCoeffs()*
-        (
-            thermo.he(Tw, patchi)
-          - thermo.he(Tw, patch().faceCells())
-        );
+    if
+    (
+        isA<zeroGradientFvPatchScalarField>(Tp)
+     || isA<fixedGradientFvPatchScalarField>(Tp)
+    )
+    {
+        gradient() =
+            thermo.Cpv(Tp, patchi)*Tp.snGrad()
+          + patch().deltaCoeffs()*
+            (
+                thermo.he(Tp, patchi)
+              - thermo.he(Tp, patch().faceCells())
+            );
+    }
+    else if (isA<gradientEnergyCalculatedTemperatureFvPatchScalarField>(Tp))
+    {
+        gradientEnergyCalculatedTemperatureFvPatchScalarField& Tg =
+            refCast<gradientEnergyCalculatedTemperatureFvPatchScalarField>(Tp);
+
+        gradient() = Tg.heGradient();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Temperature boundary condition not recognised."
+            << "A " << typeName << " condition for energy must be used with a "
+            << zeroGradientFvPatchScalarField::typeName << ", "
+            << fixedGradientFvPatchScalarField::typeName << " or "
+            << gradientEnergyCalculatedTemperatureFvPatchScalarField::typeName
+            << " condition for temperature."
+            << exit(FatalError);
+    }
 
     fixedGradientFvPatchScalarField::updateCoeffs();
 }

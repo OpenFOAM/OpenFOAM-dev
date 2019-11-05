@@ -32,9 +32,19 @@ boundaryField
         inletValue      $internalField;
         value           $internalField;
     }
-    "(wall|membrane).*"
+    wall
     {
         type            zeroGradient;
+    }
+    membraneSleeve
+    {
+        type            specieTransferTemperature;
+        value           $internalField;
+    }
+    membranePipe
+    {
+        type            specieTransferTemperature;
+        value           $internalField;
     }
 }
 

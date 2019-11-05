@@ -185,6 +185,8 @@ checkPattern() # scope, pattern, include, exclude, files...
     exclude="$1"
     shift
 
+    shopt -s extglob
+
     # Loop files, accumulating errors
     for file in "$@"
     do
@@ -223,7 +225,7 @@ checkTabs() # scope, files...
     shift
     pattern="-e $'\t'"
     include="*"
-    exclude="*[Mm]akefile* | wmake/rules/* | bin/tools/gtagsrc | *.f* | *.v[cf]proj | *.pdf | *.png | *.html | *.gif | *.css | *.gz"
+    exclude="@(*[Mm]akefile*|wmake/rules/*|bin/tools/gtagsrc|*.html|*.css|*.pdf|*.png|*.gz)"
 
     errorMessages="$(checkPattern "$scope" "$pattern" "$include" "$exclude" "$@")"
     errorCount=$?
@@ -243,7 +245,7 @@ checkLineEnds() # scope, files...
     shift
     pattern="-e \"[ ]+$\" --or -e $'\r'"
     include="*"
-    exclude="*.md"
+    exclude="@(*.md|*.pdf|*.png|*.gz)"
 
     errorMessages="$(checkPattern "$scope" "$pattern" "$include" "$exclude" "$@")"
     errorCount=$?

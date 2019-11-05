@@ -4,6 +4,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
+# Copy aerofoil surface from resources directory
+cp $FOAM_TUTORIALS/resources/geometry/NACA0012.obj.gz constant/geometry/
+
 application="$(getApplication)"
 
 runApplication blockMesh

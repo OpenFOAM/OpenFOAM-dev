@@ -32,7 +32,7 @@ boundaryField
         type            nutkWallFunction;
         value           uniform 0;
     }
-    gasInlet
+    oilInlet
     {
         type            fixedValue;
         value           uniform 0;

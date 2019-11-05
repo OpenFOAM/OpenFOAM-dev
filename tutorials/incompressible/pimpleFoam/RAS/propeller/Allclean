@@ -4,8 +4,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial clean functions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-# Remove surface
-rm -f constant/triSurface/propeller.obj.gz > /dev/null 2>&1
+# Remove surfaces
+rm -f constant/triSurface/propeller*.obj.gz > /dev/null 2>&1
 
 cleanCase
 

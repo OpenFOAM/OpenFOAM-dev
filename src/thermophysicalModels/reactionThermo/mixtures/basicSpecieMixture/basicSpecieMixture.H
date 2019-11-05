@@ -132,6 +132,14 @@ public:
             ) const = 0;
 
             //- Enthalpy/Internal energy [J/kg]
+            virtual tmp<scalarField> HE
+            (
+                const label speciei,
+                const scalarField& p,
+                const scalarField& T
+            ) const = 0;
+
+            //- Enthalpy/Internal energy [J/kg]
             virtual tmp<volScalarField> HE
             (
                 const label speciei,

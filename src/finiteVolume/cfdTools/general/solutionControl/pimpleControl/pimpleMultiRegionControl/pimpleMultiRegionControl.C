@@ -155,22 +155,17 @@ bool Foam::pimpleMultiRegionControl::read()
 {
     forAll(pimpleControls_, i)
     {
-        if (!pimpleControls_[i].read())
-        {
-            return false;
-        }
+        pimpleControls_[i].read();
     }
     forAll(solidControls_, i)
     {
-        if (!solidControls_[i].read())
-        {
-            return false;
-        }
+        solidControls_[i].read();
     }
 
-    const dictionary& solutionDict = dict();
-
-    nCorrPimple_ = solutionDict.lookupOrDefault<label>("nOuterCorrectors", 1);
+    if (!pimpleLoop::read())
+    {
+        return false;
+    }
 
     return true;
 }

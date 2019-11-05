@@ -42,12 +42,12 @@ boundaryField
     }
     membraneSleeve
     {
-        type            semiPermeableBaffleVelocity;
+        type            specieTransferVelocity;
         value           $internalField;
     }
     membranePipe
     {
-        type            semiPermeableBaffleVelocity;
+        type            specieTransferVelocity;
         value           $internalField;
     }
 }

@@ -2,15 +2,19 @@
 
 cd ${0%/*} || exit 1    # Run from this directory
 
-cp rawSurfaces/*.stl .
+cp rawSurfaces/rotating*.stl .
 
+for file in rawSurfaces/mixerVessel-*.stl.gz
+do
+    cp $file ${file##*/mixerVessel-}
+done
 
 # Vessel surface
 surfaceAdd outlet.stl vessel.stl vessel.stl
 
 # Sparger
 surfaceCheck sparger.stl
-surfaceAdd gasInlet.stl sparger_0.obj spargerInlet.stl
+surfaceAdd oilInlet.stl sparger_0.obj spargerInlet.stl
 surfaceConvert sparger_1.obj spargerShaft.stl
 surfaceOrient -inside spargerInlet.stl spargerInlet.stl "(0 0.1 1)"
 surfaceOrient -inside spargerShaft.stl spargerShaft.stl "(0 0.1 -0.1)"
