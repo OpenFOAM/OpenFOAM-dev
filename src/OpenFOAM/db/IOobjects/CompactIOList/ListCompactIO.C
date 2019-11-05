@@ -131,6 +131,16 @@ Foam::ListCompactIO<T, BaseType>::ListCompactIO(Istream& is)
 
 
 template<class T, class BaseType>
+Foam::ListCompactIO<T, BaseType>::ListCompactIO
+(
+    const ListCompactIO<T, BaseType>& l
+)
+:
+    List<T>(l)
+{}
+
+
+template<class T, class BaseType>
 Foam::ListCompactIO<T, BaseType>::ListCompactIO(ListCompactIO<T, BaseType>&& l)
 :
     List<T>(move(l))

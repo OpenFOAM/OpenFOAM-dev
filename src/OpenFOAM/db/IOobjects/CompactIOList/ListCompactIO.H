@@ -110,6 +110,9 @@ public:
         //- Construct from Istream
         ListCompactIO(Istream&);
 
+        //- Copy constructor
+        ListCompactIO(const ListCompactIO<T, BaseType>&);
+
         //- Move constructor
         ListCompactIO(ListCompactIO<T, BaseType>&&);
 
