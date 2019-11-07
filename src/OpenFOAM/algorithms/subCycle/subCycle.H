@@ -57,7 +57,7 @@ class subCycleField
         GeometricField& gf0_;
 
         //- Copy of the "real" old-time value of the field
-        GeometricField gf_0_;
+        tmp<GeometricField> gf_0_;
 
 
 public:
@@ -68,23 +68,35 @@ public:
     // Constructors
 
         //- Construct from field and number of sub-cycles
-        subCycleField(GeometricField& gf)
+        subCycleField
+        (
+            GeometricField& gf,
+            const label nSubCycles
+        )
         :
             gf_(gf),
-            gf0_(gf.oldTime()),
-            gf_0_(gf0_.name() + "_", gf0_)
-        {}
+            gf0_(gf.oldTime())
+        {
+            if (nSubCycles > 1)
+            {
+                gf_0_ = GeometricField::New(gf0_.name() + "_", gf0_);
+            }
+        }
 
 
     //- Destructor
     ~subCycleField()
     {
-        // Reset the old-time field
-        gf0_ = gf_0_;
+        if (gf_0_.valid())
+        {
+            // Reset the old-time field
+            gf0_ = gf_0_;
 
-        // Correct the time index of the field to correspond to the global time
-        gf_.timeIndex() = time().timeIndex();
-        gf0_.timeIndex() = time().timeIndex();
+            // Correct the time index of the field
+            // to correspond to the global time
+            gf_.timeIndex() = time().timeIndex();
+            gf0_.timeIndex() = time().timeIndex();
+        }
     }
 
     //- Access to time
@@ -136,25 +148,33 @@ public:
     // Constructors
 
         //- Construct from field list and number of sub-cycles
-        subCycleFields(List<GeometricField*>& gfPtrs)
+        subCycleFields
+        (
+            List<GeometricField*>& gfPtrs,
+            const label nSubCycles
+        )
         :
             gfPtrs_(gfPtrs),
-            gf0Ptrs_(gfPtrs.size()),
-            gf_0Ptrs_(gfPtrs.size())
+            gf0Ptrs_(gfPtrs.size())
         {
-            forAll(gfPtrs_, i)
+            if (nSubCycles > 1)
             {
-                gf0Ptrs_[i] = &gfPtrs_[i]->oldTime();
+                gf_0Ptrs_.setSize(gfPtrs.size());
 
-                gf_0Ptrs_.set
-                (
-                    i,
-                    new volScalarField
+                forAll(gfPtrs_, i)
+                {
+                    gf0Ptrs_[i] = &gfPtrs_[i]->oldTime();
+
+                    gf_0Ptrs_.set
                     (
-                        gf0Ptrs_[i]->name() + "_",
-                        *gf0Ptrs_[i]
-                    )
-                );
+                        i,
+                        new volScalarField
+                        (
+                            gf0Ptrs_[i]->name() + "_",
+                            *gf0Ptrs_[i]
+                        )
+                    );
+                }
             }
         }
 
@@ -162,15 +182,18 @@ public:
     //- Destructor
     ~subCycleFields()
     {
-        forAll(gfPtrs_, i)
+        if (gf_0Ptrs_.size())
         {
-            // Reset the old-time fields
-            *gf0Ptrs_[i] = gf_0Ptrs_[i];
+            forAll(gfPtrs_, i)
+            {
+                // Reset the old-time fields
+                *gf0Ptrs_[i] = gf_0Ptrs_[i];
 
-            // Correct the time index of the fields
-            // to correspond to the global time
-            gfPtrs_[i]->timeIndex() = time().timeIndex();
-            gf0Ptrs_[i]->timeIndex() = time().timeIndex();
+                // Correct the time index of the fields
+                // to correspond to the global time
+                gfPtrs_[i]->timeIndex() = time().timeIndex();
+                gf0Ptrs_[i]->timeIndex() = time().timeIndex();
+            }
         }
     }
 
@@ -223,11 +246,15 @@ public:
             const label nSubCycles
         )
         :
-            SubCycleField<GeometricField>(gf),
+            SubCycleField<GeometricField>(gf, nSubCycles),
             subCycleTime(const_cast<Time&>(this->time()), nSubCycles)
         {
-            // Update the field time index to correspond to the sub-cycle time
-            this->updateTimeIndex();
+            if (nSubCycles > 1)
+            {
+                // Update the field time index to correspond
+                // to the sub-cycle time
+                this->updateTimeIndex();
+            }
         }
 
         //- Disallow default bitwise copy construction
