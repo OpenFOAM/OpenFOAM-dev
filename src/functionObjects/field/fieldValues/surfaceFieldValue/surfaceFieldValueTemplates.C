@@ -153,7 +153,6 @@ processSameTypeValues
         {
             if (weightField.size())
             {
-                Info << weightField << endl;
                 result = sum(weightField*values);
             }
             else
