@@ -153,6 +153,7 @@ processSameTypeValues
         {
             if (weightField.size())
             {
+                Info << weightField << endl;
                 result = sum(weightField*values);
             }
             else
@@ -197,7 +198,9 @@ processSameTypeValues
         {
             if (weightField.size())
             {
-                result = sum(weightField*values)/max(sum(weightField), vSmall);
+                result =
+                    sum(weightField*values)
+                   /stabilise(sum(weightField), vSmall);
             }
             else
             {
@@ -220,7 +223,7 @@ processSameTypeValues
             {
                 result =
                     sum(weightField*magSf*values)
-                   /max(sum(magSf*weightField), vSmall);
+                   /stabilise(sum(magSf*weightField), vSmall);
             }
             else
             {
