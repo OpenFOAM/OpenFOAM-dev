@@ -200,7 +200,6 @@ void Foam::Time::readDict()
 
                 if (writeInfoHeader)
                 {
-
                     Info<< "    ";
                     objects[i]->writeData(Info);
                     Info<< endl;

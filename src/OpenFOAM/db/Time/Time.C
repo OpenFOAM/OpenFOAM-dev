@@ -356,8 +356,8 @@ Foam::Time::Time
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
-    sigWriteNow_(true, *this),
-    sigStopAtWriteNow_(true, *this),
+    sigWriteNow_(writeInfoHeader, *this),
+    sigStopAtWriteNow_(writeInfoHeader, *this),
 
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
@@ -433,8 +433,8 @@ Foam::Time::Time
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
-    sigWriteNow_(true, *this),
-    sigStopAtWriteNow_(true, *this),
+    sigWriteNow_(writeInfoHeader, *this),
+    sigStopAtWriteNow_(writeInfoHeader, *this),
 
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
@@ -517,8 +517,8 @@ Foam::Time::Time
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
-    sigWriteNow_(true, *this),
-    sigStopAtWriteNow_(true, *this),
+    sigWriteNow_(writeInfoHeader, *this),
+    sigStopAtWriteNow_(writeInfoHeader, *this),
 
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
