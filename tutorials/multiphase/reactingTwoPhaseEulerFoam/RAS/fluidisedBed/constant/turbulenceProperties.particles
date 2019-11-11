@@ -36,16 +36,16 @@ RAS
         viscosityModel          Gidaspow;
         conductivityModel       Gidaspow;
         granularPressureModel   Lun;
-        frictionalStressModel   JohnsonJackson;
+        frictionalStressModel   JohnsonJacksonSchaeffer;
         radialModel             SinclairJackson;
 
-        JohnsonJacksonCoeffs
+        JohnsonJacksonSchaefferCoeffs
         {
             Fr                      0.05;
             eta                     2;
             p                       5;
             phi                     28.5;
-            alphaDeltaMin           0.05;
+            alphaDeltaMin           0.01;
         }
     }
 

@@ -9,41 +9,33 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    object      U.air;
+    class       dictionary;
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+numberOfSubdomains  4;
 
-internalField   uniform (0 0.25 0);
+/*
+    Main methods are:
+    1) Geometric: "simple"; "hierarchical", with ordered sorting, e.g. xyz, yxz
+    2) Scotch: "scotch", when running in serial; "ptscotch", running in parallel
+*/
 
-boundaryField
+method              hierarchical;
+
+simpleCoeffs
 {
-    inlet
-    {
-        type            interstitialInletVelocity;
-        inletVelocity   uniform (0 0.25 0);
-        alpha           alpha.air;
-        value           $internalField;
-    }
-
-    outlet
-    {
-        type            pressureInletOutletVelocity;
-        phi             phi.air;
-        value           $internalField;
-    }
-
-    walls
-    {
-        type            noSlip;
-    }
-
-    frontAndBackPlanes
-    {
-        type            empty;
-    }
+    n               (1 4 1); // total must match numberOfSubdomains
+    delta           0.001;
 }
+
+hierarchicalCoeffs
+{
+    n               (1 4 1); // total must match numberOfSubdomains
+    delta           0.001;
+    order           xyz;
+}
+
 
 // ************************************************************************* //

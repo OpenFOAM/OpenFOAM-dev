@@ -328,7 +328,6 @@ void Foam::multiphaseSystem::solveAlphas
               - fvm::laplacian(alphaDbyAs[phase.index()], alpha, "bounded")
             );
 
-            alphaEqn.relax();
             alphaEqn.solve();
 
             phase.alphaPhiRef() += alphaEqn.flux();
