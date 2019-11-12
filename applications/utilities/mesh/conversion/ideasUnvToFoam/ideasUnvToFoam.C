@@ -667,6 +667,11 @@ int main(int argc, char *argv[])
         "dump",
         "dump boundary faces as boundaryFaces.obj (for debugging)"
     );
+    argList::addOption
+    (
+        "region",
+        "specify the mesh region"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -680,7 +685,6 @@ int main(int argc, char *argv[])
             << "Cannot open file " << ideasName
             << exit(FatalError);
     }
-
 
     // Switch on additional debug info
     const bool verbose = false; // true;
@@ -1161,14 +1165,20 @@ int main(int argc, char *argv[])
 
     Info<< endl;
 
+    // Set regions path if set
+    word regionName = polyMesh::defaultRegion;
 
+    if (args.optionFound("region"))
+    {
+        regionName = args.option("region");
+    }
 
     // Construct mesh
     polyMesh mesh
     (
         IOobject
         (
-            polyMesh::defaultRegion,
+            regionName,
             runTime.constant(),
             runTime
         ),
