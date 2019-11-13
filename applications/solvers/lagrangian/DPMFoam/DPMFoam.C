@@ -133,9 +133,10 @@ int main(int argc, char *argv[])
             zeroGradientFvPatchVectorField::typeName
         );
 
-        cloudVolSUSu.primitiveFieldRef() = -cloudSU.source()/mesh.V();
+        cloudVolSUSu.primitiveFieldRef() =
+            (cloudSU.diag()*Uc() - cloudSU.source())/mesh.V();
         cloudVolSUSu.correctBoundaryConditions();
-        cloudSU.source() = Zero;
+        cloudSU.source() = cloudSU.diag()*Uc();
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
