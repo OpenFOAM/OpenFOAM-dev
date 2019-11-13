@@ -96,10 +96,10 @@ void Foam::blockFaces::projectFace::calcLambdas
         {
             const label ij = index(n, labelPair(i, j));
             const label iMin1j = index(n, labelPair(i-1, j));
-            lambdaI[ij] = lambdaI[iMin1j] + mag(points[ij]-points[iMin1j]);
+            lambdaI[ij] = lambdaI[iMin1j] + mag(points[ij] - points[iMin1j]);
 
             const label ijMin1 = index(n, labelPair(i, j-1));
-            lambdaJ[ij] = lambdaJ[ijMin1] + mag(points[ij]-points[ijMin1]);
+            lambdaJ[ij] = lambdaJ[ijMin1] + mag(points[ij] - points[ijMin1]);
         }
     }
 
@@ -206,10 +206,9 @@ void Foam::blockFaces::projectFace::project
 
     // Residual tolerance
     const scalar relTol = 0.1;
+    const scalar absTol = 1e-4;
 
     scalar initialResidual = 0;
-    scalar iResidual = 0;
-    scalar jResidual = 0;
 
     for (label iter = 0; iter < maxIter;  iter++)
     {
@@ -237,26 +236,6 @@ void Foam::blockFaces::projectFace::project
             }
         }
 
-        if (debug)
-        {
-            Pout<< "Iter:" << iter << " initialResidual:" << initialResidual
-                << " iResidual + jResidual:" << iResidual + jResidual << endl;
-        }
-
-
-        if
-        (
-            iter > 0
-         && (
-                initialResidual < small
-             || (iResidual + jResidual)/initialResidual < relTol
-            )
-        )
-        {
-            break;
-        }
-
-
         // Predict along i
         vectorField residual(points.size(), vector::zero);
 
@@ -274,7 +253,7 @@ void Foam::blockFaces::projectFace::project
                 const label iMin1j = index(n, labelPair(i-1, j));
                 projLambdas[i] =
                     projLambdas[i-1]
-                   +mag(points[ij]-points[iMin1j]);
+                  + mag(points[ij] - points[iMin1j]);
             }
             projLambdas /= projLambdas.last();
 
@@ -293,7 +272,7 @@ void Foam::blockFaces::projectFace::project
                         index(n, labelPair(indices[indexi], j));
                     predicted += weights[indexi]*points[ptIndex];
                 }
-                residual[ij] = predicted-points[ij];
+                residual[ij] = predicted - points[ij];
             }
         }
 
@@ -306,7 +285,7 @@ void Foam::blockFaces::projectFace::project
             }
         }
 
-        iResidual = sum(mag(residual));
+        scalar scalarResidual = sum(mag(residual));
 
         // Update points before doing j. Note: is this needed? Complicates
         // residual checking.
@@ -346,7 +325,7 @@ void Foam::blockFaces::projectFace::project
                         index(n, labelPair(i, indices[indexi]));
                     predicted += weights[indexi]*points[ptIndex];
                 }
-                residual[ij] = predicted-points[ij];
+                residual[ij] = predicted - points[ij];
             }
         }
 
@@ -359,11 +338,25 @@ void Foam::blockFaces::projectFace::project
             }
         }
 
-        jResidual = sum(mag(residual));
+        scalarResidual += sum(mag(residual));
 
-        if (iter == 0)
+        if (debug)
         {
-            initialResidual = iResidual + jResidual;
+            Pout<< "Iter:" << iter << " initialResidual:" << initialResidual
+                << " scalarResidual:" << scalarResidual << endl;
+        }
+
+        if (scalarResidual < absTol*lambdaI.size())
+        {
+            break;
+        }
+        else if (iter == 0)
+        {
+            initialResidual = scalarResidual;
+        }
+        else if (scalarResidual/initialResidual < relTol)
+        {
+            break;
         }
 
         points += residual;
