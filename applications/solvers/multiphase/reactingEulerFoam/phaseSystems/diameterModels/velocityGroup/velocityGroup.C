@@ -129,6 +129,8 @@ void Foam::diameterModels::velocityGroup::scale()
     forAll(sizeGroups_, i)
     {
         sizeGroups_[i] /= f_;
+
+        sizeGroups_[i].correctBoundaryConditions();
     };
 }
 
