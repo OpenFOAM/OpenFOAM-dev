@@ -324,25 +324,6 @@ void Foam::Function1s::TableBase<Type, Function1Type>::writeEntries
 
 
 template<class Type, class Function1Type>
-void Foam::Function1s::TableBase<Type, Function1Type>::writeCoeffDict
-(
-    Ostream& os
-) const
-{
-    OStringStream oss;
-    writeEntries(oss);
-
-    if (oss.str().size())
-    {
-        os  << indent << word(this->name() + "Coeffs") << nl;
-        os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-        writeEntries(os);
-        os  << decrIndent << indent << token::END_BLOCK << endl;
-    }
-}
-
-
-template<class Type, class Function1Type>
 void Foam::Function1s::TableBase<Type, Function1Type>::writeData
 (
     Ostream& os
@@ -350,7 +331,11 @@ void Foam::Function1s::TableBase<Type, Function1Type>::writeData
 {
     Function1<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;
-    writeCoeffDict(os);
+
+    os  << indent << word(this->name() + "Coeffs") << nl;
+    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
+    writeEntries(os);
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 

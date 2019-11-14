@@ -143,9 +143,6 @@ public:
         //- Write entries only in dictionary format
         virtual void writeEntries(Ostream& os) const;
 
-        //- Write the coeff dict in dictionary format
-        virtual void writeCoeffDict(Ostream& os) const;
-
         //- Write all table data in dictionary format
         virtual void writeData(Ostream& os) const;
 

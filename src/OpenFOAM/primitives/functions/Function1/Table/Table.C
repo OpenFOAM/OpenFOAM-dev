@@ -36,9 +36,24 @@ Foam::Function1s::Table<Type>::Table
 :
     TableBase<Type, Table<Type>>(entryName, dict)
 {
-    Istream& is(dict.lookup(entryName));
-    word entryType(is);
-    is  >> this->table_;
+    if (!dict.found(entryName))
+    {
+        dict.lookup("values") >> this->table_;
+    }
+    else
+    {
+        Istream& is(dict.lookup(entryName));
+        word entryType(is);
+        if (is.eof())
+        {
+            dict.lookup("values") >> this->table_;
+        }
+        else
+        {
+            is  >> this->table_;
+        }
+    }
+
     TableBase<Type, Table<Type>>::check();
 }
 
@@ -79,11 +94,12 @@ Foam::Function1s::Table<Type>::~Table()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Table<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Table<Type>::writeEntries(Ostream& os) const
 {
-    Function1<Type>::writeData(os);
-    os  << nl << indent << this->table_ << token::END_STATEMENT << nl;
-    TableBase<Type, Table<Type>>::writeCoeffDict(os);
+    TableBase<Type, Table<Type>>::writeEntries(os);
+
+    os  << indent << "values" << this->table_
+        << token::END_STATEMENT << endl;
 }
 
 

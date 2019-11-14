@@ -96,8 +96,8 @@ public:
 
     // Member Functions
 
-        //- Write all table data in dictionary format
-        virtual void writeData(Ostream& os) const;
+        //- Write entries only in dictionary format
+        virtual void writeEntries(Ostream& os) const;
 
 
     // Member Operators

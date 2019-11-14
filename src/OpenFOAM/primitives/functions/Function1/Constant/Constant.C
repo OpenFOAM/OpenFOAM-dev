@@ -49,9 +49,23 @@ Foam::Function1s::Constant<Type>::Constant
     FieldFunction1<Type, Constant<Type>>(entryName),
     value_(Zero)
 {
-    Istream& is(dict.lookup(entryName));
-    word entryType(is);
-    is  >> value_;
+    if (!dict.found(entryName))
+    {
+        dict.lookup("value") >> value_;
+    }
+    else
+    {
+        Istream& is(dict.lookup(entryName));
+        word entryType(is);
+        if (is.eof())
+        {
+            dict.lookup("value") >> value_;
+        }
+        else
+        {
+            is  >> value_;
+        }
+    }
 }
 
 

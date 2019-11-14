@@ -77,6 +77,7 @@ template<class Type>
 void Foam::Function1s::TableFile<Type>::writeEntries(Ostream& os) const
 {
     TableBase<Type, TableFile<Type>>::writeEntries(os);
+
     writeEntry(os, "file", fName_);
     writeEntry(os, "format", reader_->type());
     reader_->write(os);
