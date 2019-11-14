@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,15 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Namespace
-    Foam::constant::universal
+    Foam::constant::standard
 
 Description
-    Universal constants
+    Standard constants
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef universalConstants_H
-#define universalConstants_H
+#ifndef standardConstants_H
+#define standardConstants_H
 
 #include "dimensionedScalar.H"
 
@@ -40,20 +40,17 @@ namespace Foam
 {
 namespace constant
 {
-namespace universal
+namespace standard
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    //- Group name for universal constants
+    //- Group name for standard constants
     extern const char* const group;
-
-    //- Reduced Planck constant: default SI units: [J/s]
-    extern const dimensionedScalar& hr;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace universal
+} // End namespace standard
 } // End namespace constant
 } // End namespace Foam
 

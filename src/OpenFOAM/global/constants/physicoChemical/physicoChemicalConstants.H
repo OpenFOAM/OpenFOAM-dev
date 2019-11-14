@@ -49,22 +49,22 @@ namespace physicoChemical
     extern const char* const group;
 
     //- Universal gas constant: default SI units: [J/mol/K]
-    extern const dimensionedScalar R;
+    extern const dimensionedScalar& R;
 
     //- Faraday constant: default SI units: [C/mol]
-    extern const dimensionedScalar F;
+    extern const dimensionedScalar& F;
 
     //- Stefan-Boltzmann constant: default SI units: [W/m^2/K^4]
-    extern const dimensionedScalar sigma;
+    extern const dimensionedScalar& sigma;
 
     //- Wien displacement law constant: default SI units: [m K]
-    extern const dimensionedScalar b;
+    extern const dimensionedScalar& b;
 
     //- First radiation constant: default SI units: [W/m^2]
-    extern const dimensionedScalar c1;
+    extern const dimensionedScalar& c1;
 
     //- Second radiation constant: default SI units: [m K]
-    extern const dimensionedScalar c2;
+    extern const dimensionedScalar& c2;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
