@@ -1286,9 +1286,8 @@ void Foam::diameterModels::populationBalanceModel::solve()
             if (updateSources())
             {
                 sources();
+                dmdt();
             }
-
-            dmdt();
 
             maxInitialResidual = 0;
 

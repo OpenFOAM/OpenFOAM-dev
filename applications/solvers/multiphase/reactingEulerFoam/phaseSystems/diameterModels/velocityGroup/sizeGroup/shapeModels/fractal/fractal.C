@@ -241,6 +241,8 @@ void Foam::diameterModels::shapeModels::fractal::correct()
             6.0/popBal.sizeGroups().first().dSph()
         );
 
+    kappa_.correctBoundaryConditions();
+
     // Update the collisional diameter
     dColl_ = dColl();
 }

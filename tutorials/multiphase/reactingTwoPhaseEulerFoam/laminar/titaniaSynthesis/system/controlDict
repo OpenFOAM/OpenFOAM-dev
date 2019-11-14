@@ -74,6 +74,12 @@ functions
         normalize           yes;
         geometric           yes;
     }
+
+    #includeFunc writeObjects                         \
+    (                                                 \
+        d.particles,                                  \
+        phaseTransfer:dmidtf.TiO2.particlesAndVapor   \
+    )
 }
 
 

@@ -23,6 +23,7 @@ ddtSchemes
 gradSchemes
 {
     default     Gauss linear;
+    limited     cellLimited Gauss linear 1;
 }
 
 divSchemes
@@ -41,7 +42,7 @@ divSchemes
     "div\(alphaPhi.*,p\)"                   Gauss limitedLinear 1;
 
     "div\(alphaRhoPhi.*,f.*\)"              Gauss upwind;
-    "div\(fAlphaRhoPhi.*,kappa.*\)"         Gauss limitedLinear 1;
+    "div\(fAlphaRhoPhi.*,kappa.*\)"         Gauss linearUpwind limited;
 
     "div\(\(\(\(alpha.*\*thermo:rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
 }
