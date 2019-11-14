@@ -26,6 +26,7 @@ License
 #include "IOobject.H"
 #include "Time.H"
 #include "IFstream.H"
+#include "registerNamedEnum.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,11 +35,7 @@ namespace Foam
     defineTypeNameAndDebug(IOobject, 0);
 
     template<>
-    const char* NamedEnum
-    <
-        IOobject::fileCheckTypes,
-        4
-    >::names[] =
+    const char* NamedEnum<IOobject::fileCheckTypes, 4>::names[] =
     {
         "timeStamp",
         "timeStampMaster",
@@ -46,7 +43,6 @@ namespace Foam
         "inotifyMaster"
     };
 }
-
 
 const Foam::NamedEnum<Foam::IOobject::fileCheckTypes, 4>
     Foam::IOobject::fileCheckTypesNames;
@@ -63,41 +59,13 @@ Foam::IOobject::fileCheckTypes Foam::IOobject::fileModificationChecking
     )
 );
 
-namespace Foam
-{
-    // Register re-reader
-    class addfileModificationCheckingToOpt
-    :
-        public ::Foam::simpleRegIOobject
-    {
-    public:
-
-        addfileModificationCheckingToOpt(const char* name)
-        :
-            ::Foam::simpleRegIOobject(Foam::debug::addOptimisationObject, name)
-        {}
-
-        virtual ~addfileModificationCheckingToOpt()
-        {}
-
-        virtual void readData(Foam::Istream& is)
-        {
-            IOobject::fileModificationChecking =
-                IOobject::fileCheckTypesNames.read(is);
-        }
-
-        virtual void writeData(Foam::Ostream& os) const
-        {
-            os <<  IOobject::fileCheckTypesNames
-                [IOobject::fileModificationChecking];
-        }
-    };
-
-    addfileModificationCheckingToOpt addfileModificationCheckingToOpt_
-    (
-        "fileModificationChecking"
-    );
-}
+// Register re-reader
+registerOptNamedEnum
+(
+    "fileModificationChecking",
+    Foam::IOobject::fileCheckTypesNames,
+    Foam::IOobject::fileModificationChecking
+);
 
 
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
