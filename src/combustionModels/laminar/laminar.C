@@ -110,6 +110,10 @@ void Foam::combustionModels::laminar<ReactionThermo>::correct()
             this->chemistryPtr_->solve(this->mesh().time().deltaTValue());
         }
     }
+    else
+    {
+        this->chemistryPtr_->calculate();
+    }
 }
 
 
