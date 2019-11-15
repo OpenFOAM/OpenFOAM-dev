@@ -540,7 +540,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
         functionsPtr.reset(new functionObjectList(runTime));
     }
 
-    functionsPtr->start();
+    functionsPtr->read();
 
     return functionsPtr;
 }
