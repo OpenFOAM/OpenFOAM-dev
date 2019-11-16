@@ -51,44 +51,6 @@ namespace Foam
 
 dictionary& dimensionedConstants();
 
-dimensionedScalar dimensionedConstant(const word& group, const word& varName);
-
-template<class T>
-T dimensionedConstant
-(
-    const word& group,
-    const word& varName,
-    const T& defaultValue
-)
-{
-    dictionary& dict = dimensionedConstants();
-
-    const word unitSet(dict.lookup("unitSet"));
-
-    dictionary& unitDict(dict.subDict(unitSet + "Coeffs"));
-
-    if (unitDict.found(group))
-    {
-        dictionary& groupDict = unitDict.subDict(group);
-        if (groupDict.found(varName))
-        {
-            return pTraits<T>(groupDict.lookup(varName));
-        }
-        else
-        {
-            groupDict.add(varName, defaultValue);
-            return defaultValue;
-        }
-    }
-    else
-    {
-        unitDict.add(group, dictionary::null);
-        unitDict.subDict(group).add(varName, defaultValue);
-
-        return defaultValue;
-    }
-}
-
 
 class registerDimensionedConstant
 :
@@ -97,20 +59,24 @@ class registerDimensionedConstant
 {
     const word& group_;
 
+    //- Lookup the dimensionedConstant from the registry
+    void lookup();
+
+
 public:
 
     registerDimensionedConstant
     (
         const word& group,
-        const char* name
+        const char* name,
+        const dimensionSet& dimensions
     )
     :
         simpleRegIOobject(debug::addDimensionedConstantObject, name),
+        dimensionedScalar(name, dimensions, 0),
         group_(group)
     {
-        dimensionedScalar ds(dimensionedConstant(group, name));
-        dimensions().reset(ds.dimensions());
-        dimensionedScalar::operator=(ds);
+        lookup();
     }
 
     virtual ~registerDimensionedConstant()
@@ -118,7 +84,7 @@ public:
 
     virtual void readData(Istream& is)
     {
-        dimensionedScalar::operator=(dimensionedConstant(group_, name()));
+        lookup();
     }
 
     virtual void writeData(Ostream& os) const
@@ -129,11 +95,12 @@ public:
 
 
 //- Defined and register a dimensioned constant
-#define defineDimensionedConstant(Group, Name)                                 \
+#define defineDimensionedConstant(Group, Name, Dimensions)                     \
     registerDimensionedConstant register##Name##DimensionedConstant_           \
     (                                                                          \
         Group::group,                                                          \
-        #Name                                                                  \
+        #Name,                                                                 \
+        Dimensions                                                             \
     );                                                                         \
     const Foam::dimensionedScalar& Group::Name                                 \
     (                                                                          \
@@ -149,6 +116,10 @@ class registerDimensionedConstantWithDefault
     const word& group_;
     const dimensionedScalar default_;
 
+    //- Lookup the dimensionedConstant from the registry
+    void lookup();
+
+
 public:
 
     registerDimensionedConstantWithDefault
@@ -159,12 +130,11 @@ public:
     )
     :
         simpleRegIOobject(debug::addDimensionedConstantObject, name),
+        dimensionedScalar(name, value),
         group_(group),
         default_(name, value)
     {
-        dimensionedScalar ds(dimensionedConstant(group, name, value));
-        dimensions().reset(ds.dimensions());
-        dimensionedScalar::operator=(ds);
+        lookup();
     }
 
     virtual ~registerDimensionedConstantWithDefault()
@@ -172,15 +142,7 @@ public:
 
     virtual void readData(Istream& is)
     {
-        dimensionedScalar::operator=
-        (
-            dimensionedConstant
-            (
-                group_,
-                name(),
-                dimensionedScalar(name(), default_)
-            )
-        );
+        lookup();
     }
 
     virtual void writeData(Ostream& os) const

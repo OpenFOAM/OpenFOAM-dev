@@ -45,19 +45,26 @@ namespace Foam
 namespace constant
 {
 
-defineDimensionedConstant(universal, c);
-defineDimensionedConstant(universal, G);
-defineDimensionedConstant(universal, h);
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defineDimensionedConstant(universal, c, dimensionSet(0, 1, -1, 0, 0));
+defineDimensionedConstant(universal, G, dimensionSet(-1, 3, -2, 0, 0));
+defineDimensionedConstant(universal, h, dimensionSet(1, 2, -1, 0, 0));
 
 // Electromagnetic
-defineDimensionedConstant(electromagnetic, e);
+defineDimensionedConstant
+(
+    electromagnetic,
+    e,
+    dimensionSet(0, 0, 1, 0, 0, 1, 0)
+);
 
 // Atomic
-defineDimensionedConstant(atomic, me);
-defineDimensionedConstant(atomic, mp);
+defineDimensionedConstant(atomic, me, dimensionSet(1, 0, 0, 0, 0));
+defineDimensionedConstant(atomic, mp, dimensionSet(1, 0, 0, 0, 0));
 
 // Physico-chemical
-defineDimensionedConstant(physicoChemical, mu);
+defineDimensionedConstant(physicoChemical, mu, dimensionSet(1, 0, 0, 0, 0));
 
 // Note: cannot use dimless etc since not guaranteed to be constructed
 defineDimensionedConstantWithDefault
@@ -71,12 +78,11 @@ defineDimensionedConstantWithDefault
     )
 );
 
-defineDimensionedConstant(physicoChemical, k);
+defineDimensionedConstant(physicoChemical, k, dimensionSet(1, 2, -2, -1, 0));
 
 // Standard
-defineDimensionedConstant(standard, Pstd);
-defineDimensionedConstant(standard, Tstd);
-
+defineDimensionedConstant(standard, Pstd, dimensionSet(1, -1, -2, 0, 0));
+defineDimensionedConstant(standard, Tstd, dimensionSet(0, 0, 0, 1, 0));
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

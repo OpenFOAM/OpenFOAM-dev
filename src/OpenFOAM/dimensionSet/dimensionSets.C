@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,9 +124,8 @@ const HashTable<dimensionedScalar>& unitSet()
         {
             if (iter().keyword() != "writeUnits")
             {
-                dimensionedScalar dt;
-                dt.read(iter().stream(), unitDict);
-                bool ok = unitSetPtr_->insert(iter().keyword(), dt);
+                dimensionedScalar dt(iter().keyword(), iter().stream());
+                const bool ok = unitSetPtr_->insert(iter().keyword(), dt);
                 if (!ok)
                 {
                     FatalIOErrorInFunction(dict)
