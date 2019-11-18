@@ -97,12 +97,12 @@ public:
     // Constructors
 
         //- Construct from all units and set of units to use for inversion
-        //  (writing)
         dimensionSets
         (
             const HashTable<dimensionedScalar>&,
             const wordList& unitNames
         );
+
 
     // Member Functions
 
@@ -120,7 +120,6 @@ public:
 
         //- (if valid) obtain set of coefficients of unitNames
         void coefficients(scalarField&) const;
-
 };
 
 

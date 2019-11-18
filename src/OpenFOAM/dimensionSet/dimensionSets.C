@@ -47,13 +47,16 @@ dimensionSets* writeUnitSetPtr_(nullptr);
 //   deallocate demand-driven data
 class addDimensionSetsToDebug
 :
-    public ::Foam::simpleRegIOobject
+    public simpleRegIOobject
 {
+
 public:
+
     addDimensionSetsToDebug(const char* name)
     :
-        ::Foam::simpleRegIOobject(Foam::debug::addDimensionSetObject, name)
+        simpleRegIOobject(debug::addDimensionSetObject, name)
     {}
+
     virtual ~addDimensionSetsToDebug()
     {
         deleteDemandDrivenData(dimensionSystemsPtr_);
@@ -61,18 +64,21 @@ public:
         deleteDemandDrivenData(writeUnitSetPtr_);
 
     }
-    virtual void readData(Foam::Istream& is)
+
+    virtual void readData(Istream& is)
     {
         deleteDemandDrivenData(dimensionSystemsPtr_);
         deleteDemandDrivenData(unitSetPtr_);
         deleteDemandDrivenData(writeUnitSetPtr_);
         dimensionSystemsPtr_ = new dictionary(is);
     }
-    virtual void writeData(Foam::Ostream& os) const
+
+    virtual void writeData(Ostream& os) const
     {
         os << dimensionSystems();
     }
 };
+
 addDimensionSetsToDebug addDimensionSetsToDebug_("DimensionSets");
 
 
@@ -136,7 +142,7 @@ const HashTable<dimensionedScalar>& unitSet()
             }
         }
 
-        wordList writeUnitNames
+        const wordList writeUnitNames
         (
             unitDict.lookupOrDefault<wordList>
             (
@@ -155,6 +161,7 @@ const HashTable<dimensionedScalar>& unitSet()
                 << exit(FatalIOError);
         }
     }
+
     return *unitSetPtr_;
 }
 
@@ -243,6 +250,7 @@ Foam::dimensionSets::dimensionSets
                 row[columnI] = dSet.dimensions()[rowI];
             }
         }
+
         conversionPivots_.setSize(conversion_.m());
         LUDecompose(conversion_, conversionPivots_);
     }
