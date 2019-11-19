@@ -8,7 +8,6 @@ $(BCs)/thermalBaffle1D/thermalBaffle1DFvPatchScalarFields.C
 $(BCs)/totalFlowRateAdvectiveDiffusive/totalFlowRateAdvectiveDiffusiveFvPatchScalarField.C
 $(BCs)/turbulentTemperatureRadCoupledMixed/turbulentTemperatureRadCoupledMixedFvPatchScalarField.C
 $(BCs)/externalWallHeatFluxTemperature/externalWallHeatFluxTemperatureFvPatchScalarField.C
-$(BCs)/wallHeatTransfer/wallHeatTransferFvPatchScalarField.C
 $(BCs)/externalCoupledTemperatureMixed/externalCoupledTemperatureMixedFvPatchScalarField.C
 $(BCs)/convectiveHeatTransfer/convectiveHeatTransferFvPatchScalarField.C
 
