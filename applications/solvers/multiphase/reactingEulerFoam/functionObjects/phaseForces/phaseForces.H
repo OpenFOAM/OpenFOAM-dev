@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::phaseForces
 
 Description
-    This function object calculates and outputs the blended interfacial forces
+    This functionObject calculates and outputs the blended interfacial forces
     acting on a given phase, i.e. drag, virtual mass, lift, wall-lubrication and
     turbulent dispersion. Note that it works only in run-time processing mode
     and in combination with the reactingEulerFoam solvers.
@@ -40,13 +40,10 @@ Description
     phaseForces.water
     {
         type            phaseForces;
+
         libs ("libreactingEulerFoamFunctionObjects.so");
-        writeControl    writeTime;
-        writeInterval   1;
 
-        ...
-
-        phaseName       water;
+        phase           water;
     }
     \endverbatim
 
@@ -54,7 +51,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         type         | type name: phaseForces  | yes         |
-        phaseName    | Name of evaluated phase | yes         |
+        phase        | Name of evaluated phase | yes         |
     \endtable
 
 See also

@@ -89,10 +89,10 @@ Foam::functionObjects::phaseForces::phaseForces
     (
         phaseSystem::phasePairTable,
         fluid_.phasePairs(),
-        iter
+        pairIter
     )
     {
-        const phasePair& pair = iter();
+        const phasePair& pair = pairIter();
 
         if (pair.contains(phase_) && !pair.ordered())
         {
@@ -229,11 +229,11 @@ bool Foam::functionObjects::phaseForces::execute()
     (
         HashPtrTable<volVectorField>,
         forceFields_,
-        iter
+        forceFieldIter
     )
     {
-        const word& type = iter.key();
-        volVectorField& force = *iter();
+        const word& type = forceFieldIter.key();
+        volVectorField& force = *forceFieldIter();
 
         force = Zero;
 
@@ -241,21 +241,29 @@ bool Foam::functionObjects::phaseForces::execute()
         (
             phaseSystem::phasePairTable,
             fluid_.phasePairs(),
-            iter2
+            pairIter
         )
         {
-            const phasePair& pair = iter2();
+            const phasePair& pair = pairIter();
 
             if (pair.contains(phase_) && !pair.ordered())
             {
-                if (type == "dragModel")
+                if
+                (
+                    type == dragModel::typeName
+                 && fluid_.foundBlendedSubModel<dragModel>(pair)
+                )
                 {
                     force +=
                         fluid_.lookupBlendedSubModel<dragModel>(pair).K()
                        *(pair.otherPhase(phase_).U() - phase_.U());
                 }
 
-                if (type == "virtualMassModel")
+                if
+                (
+                    type == virtualMassModel::typeName
+                 && fluid_.foundBlendedSubModel<virtualMassModel>(pair)
+                )
                 {
                     force +=
                         fluid_.lookupBlendedSubModel<virtualMassModel>(pair).K()
@@ -265,17 +273,29 @@ bool Foam::functionObjects::phaseForces::execute()
                         );
                 }
 
-                if (type == "liftModel")
+                if
+                (
+                    type == liftModel::typeName
+                 && fluid_.foundBlendedSubModel<liftModel>(pair)
+                )
                 {
                     force += nonDragForce<liftModel>(pair);
                 }
 
-                if (type == "wallLubricationModel")
+                if
+                (
+                    type == wallLubricationModel::typeName
+                 && fluid_.foundBlendedSubModel<wallLubricationModel>(pair)
+                )
                 {
                     force += nonDragForce<wallLubricationModel>(pair);
                 }
 
-                if (type == "turbulentDispersionModel")
+                if
+                (
+                    type == turbulentDispersionModel::typeName
+                 && fluid_.foundBlendedSubModel<turbulentDispersionModel>(pair)
+                )
                 {
                     force += nonDragForce<turbulentDispersionModel>(pair);
                 }
@@ -293,10 +313,10 @@ bool Foam::functionObjects::phaseForces::write()
     (
         HashPtrTable<volVectorField>,
         forceFields_,
-        iter
+        forceFieldIter
     )
     {
-        writeObject(iter()->name());
+        writeObject(forceFieldIter()->name());
     }
 
     return true;
