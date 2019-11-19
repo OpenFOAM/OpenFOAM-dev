@@ -81,9 +81,6 @@ Usage
       - \par -includes
         List the \c #include and \c #includeIfPresent files to standard output
 
-      - \par -disableFunctionEntries
-        Do not expand macros or directives (#include etc)
-
     Example usage:
       - Change simulation to run for one timestep only:
         \verbatim
@@ -391,11 +388,6 @@ int main(int argc, char *argv[])
         "Read the specified dictionary file, expand the macros etc. and write "
         "the resulting dictionary to standard output"
     );
-    argList::addBoolOption
-    (
-        "disableFunctionEntries",
-        "Disable expansion of dictionary directives - #include, #codeStream etc"
-    );
 
     argList args(argc, argv);
 
@@ -406,10 +398,9 @@ int main(int argc, char *argv[])
         functionEntries::includeEntry::log = true;
     }
 
-    if (args.optionFound("disableFunctionEntries"))
-    {
-        entry::disableFunctionEntries = true;
-    }
+    // Do not expand functionEntries except during dictionary expansion
+    // with the -expand option
+    entry::disableFunctionEntries = true;
 
     const fileName dictPath(args[1]);
 
@@ -481,6 +472,8 @@ int main(int argc, char *argv[])
     }
     else if (args.optionFound("expand"))
     {
+        entry::disableFunctionEntries = false;
+
         IOobject::writeBanner(Info)
             <<"//\n// " << dictPath << "\n//\n";
         dict.dictionary::write(Info, false);
