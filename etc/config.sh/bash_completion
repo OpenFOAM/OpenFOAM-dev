@@ -1458,7 +1458,7 @@ _foamDictionary_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-add -diff -disableFunctionEntries -doc -entry -expand -help -includes -keywords -remove -set -srcDoc -value"
+    opts="-add -diff -doc -entry -expand -help -includes -keywords -remove -set -srcDoc -value"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
