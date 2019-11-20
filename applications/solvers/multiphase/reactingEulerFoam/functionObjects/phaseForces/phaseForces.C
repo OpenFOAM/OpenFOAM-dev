@@ -225,6 +225,7 @@ bool Foam::functionObjects::phaseForces::read(const dictionary& dict)
 
 bool Foam::functionObjects::phaseForces::execute()
 {
+    // Zero the force fields
     forAllConstIter
     (
         HashPtrTable<volVectorField>,
@@ -232,73 +233,51 @@ bool Foam::functionObjects::phaseForces::execute()
         forceFieldIter
     )
     {
-        const word& type = forceFieldIter.key();
-        volVectorField& force = *forceFieldIter();
+        *forceFieldIter() = Zero;
+    }
 
-        force = Zero;
+    // Add the forces from all the interfaces which contain this phase
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        fluid_.phasePairs(),
+        pairIter
+    )
+    {
+        const phasePair& pair = pairIter();
 
-        forAllConstIter
-        (
-            phaseSystem::phasePairTable,
-            fluid_.phasePairs(),
-            pairIter
-        )
+        if (pair.contains(phase_) && !pair.ordered())
         {
-            const phasePair& pair = pairIter();
-
-            if (pair.contains(phase_) && !pair.ordered())
+            if (fluid_.foundBlendedSubModel<dragModel>(pair))
             {
-                if
-                (
-                    type == dragModel::typeName
-                 && fluid_.foundBlendedSubModel<dragModel>(pair)
-                )
-                {
-                    force +=
-                        fluid_.lookupBlendedSubModel<dragModel>(pair).K()
-                       *(pair.otherPhase(phase_).U() - phase_.U());
-                }
+                *forceFields_[dragModel::typeName] +=
+                    fluid_.lookupBlendedSubModel<dragModel>(pair).K()
+                   *(pair.otherPhase(phase_).U() - phase_.U());
+            }
 
-                if
-                (
-                    type == virtualMassModel::typeName
-                 && fluid_.foundBlendedSubModel<virtualMassModel>(pair)
-                )
-                {
-                    force +=
-                        fluid_.lookupBlendedSubModel<virtualMassModel>(pair).K()
-                       *(
-                            pair.otherPhase(phase_).DUDt()
-                          - phase_.DUDt()
-                        );
-                }
+            if (fluid_.foundBlendedSubModel<virtualMassModel>(pair))
+            {
+                *forceFields_[virtualMassModel::typeName] +=
+                    fluid_.lookupBlendedSubModel<virtualMassModel>(pair).K()
+                   *(pair.otherPhase(phase_).DUDt() - phase_.DUDt());
+            }
 
-                if
-                (
-                    type == liftModel::typeName
-                 && fluid_.foundBlendedSubModel<liftModel>(pair)
-                )
-                {
-                    force += nonDragForce<liftModel>(pair);
-                }
+            if (fluid_.foundBlendedSubModel<liftModel>(pair))
+            {
+                *forceFields_[liftModel::typeName] +=
+                    nonDragForce<liftModel>(pair);
+            }
 
-                if
-                (
-                    type == wallLubricationModel::typeName
-                 && fluid_.foundBlendedSubModel<wallLubricationModel>(pair)
-                )
-                {
-                    force += nonDragForce<wallLubricationModel>(pair);
-                }
+            if (fluid_.foundBlendedSubModel<wallLubricationModel>(pair))
+            {
+                *forceFields_[wallLubricationModel::typeName] +=
+                    nonDragForce<wallLubricationModel>(pair);
+            }
 
-                if
-                (
-                    type == turbulentDispersionModel::typeName
-                 && fluid_.foundBlendedSubModel<turbulentDispersionModel>(pair)
-                )
-                {
-                    force += nonDragForce<turbulentDispersionModel>(pair);
-                }
+            if (fluid_.foundBlendedSubModel<turbulentDispersionModel>(pair))
+            {
+                *forceFields_[turbulentDispersionModel::typeName] +=
+                    nonDragForce<turbulentDispersionModel>(pair);
             }
         }
     }
