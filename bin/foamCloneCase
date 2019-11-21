@@ -29,7 +29,6 @@
 #     Create a new case directory that includes time, system and constant
 #     directories from a source case.
 #     The time directory is the first time directory by default
-#     - requires foamListTimes v2.3.x and newer
 #
 #------------------------------------------------------------------------------
 usage() {
@@ -37,11 +36,13 @@ usage() {
 
 Usage: ${0##*/} [OPTION] <source case> <target name>
 options:
-  -help          print the usage
-  -latestTime    clone the latest time directory
-  -no-orig       do not copy 0.orig directory
-  -no-scripts    do not copy shell scripts
-  -template      search for source case directory in template directory paths
+  -add <file1...N> copy 1 or more additional files/directories from source case
+  -help            print the usage
+  -latestTime      clone the latest time directory
+  -no-orig         do not copy 0.orig directory
+  -no-scripts      do not copy shell scripts
+  -processor       copies processor* directories of a decomposed case
+  -template        search for source case directory in template directory paths
 
 Create a new <targetCase> case directory that includes time, system and constant
 directories, and shell scripts, of <sourceCase> directory.
@@ -65,6 +66,26 @@ cpIfPresent() {
     [ -e "$1" ] && echo "$1 to ... ${1##*/}" && cp -r "$1" "$2"
 }
 
+isCaseValid() {
+    foamListTimes -case "$1" >/dev/null 2>&1
+}
+
+isDecomposed() {
+    foamListTimes -withZero -case "$1" -processor >/dev/null 2>&1
+}
+
+listProcessorDirs() {
+    # Match both uncollated and collated directory name formats
+    cd "$1" && find . -regex "./processors?[0-9]*" -type d
+}
+
+mkProcessorDirs() {
+    for _d in $(listProcessorDirs "$1")
+    do
+        mkdir "$2/$_d"
+    done
+}
+
 ver=$WM_PROJECT_VERSION
 tmp_dir=templates
 TEMPLATE_DIRS="
@@ -83,20 +104,33 @@ templateDir() {
     exit 1
 }
 
-time_option="head -1"
+time_opt="head -1"
+proc_opt=""
 no_orig=""
 no_scripts=""
 template=""
+add=""
 
-# parse options
+# Parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
+    -a | -add)
+        shift 1
+        while [ "$#" -gt 2 ]
+        do
+            case "$1" in
+            -*) break ;;
+            *) add="$add $1" ; shift 1 ;;
+            esac
+        done
+        [ "$add" ] || error "'-add' option requires 1 or more arguments"
+        ;;
     -h | -help)
         usage && exit 0
         ;;
     -l | -latestTime)
-        time_option="tail -1"
+        time_opt="tail -1"
         shift 1
         ;;
     -no-orig)
@@ -105,6 +139,10 @@ do
         ;;
     -no-scripts)
         no_scripts="true"
+        shift 1
+        ;;
+    -p | -processor)
+        proc_opt="-processor"
         shift 1
         ;;
     -template)
@@ -122,33 +160,70 @@ done
 
 [ $# -eq 2 ] || error "Incorrect arguments specified"
 
+# Set srcDir
 srcDir="$1"
 [ -z "$template" ] || \
     srcDir="$(templateDir "$1")" || \
     error "'$1' not found in template directories"
+shift
 
-foamListTimes -case "$srcDir" >/dev/null 2>&1 || \
-    error "'$srcDir' is not a valid case directory"
+# Check validity of case and options
+isCaseValid "$srcDir" || error "'$srcDir' is not a valid case directory"
+isDecomposed "$srcDir"|| \
+    error "'-processor' option requires source case to be decomposed"
 
-tgtDir=$2
+# Set additional files with -add option
+[ "$add" ] && \
+    for f in $add
+    do
+        [ -e "$srcDir/$f" ] || \
+            echo "Warning: additional file/directory '$f' does not exist"
+    done
 
+# Set tgtDir
+tgtDir="$1"
 [ -e "$tgtDir" ] && \
     error "'$tgtDir' file/directory already exists, delete and re-run"
-
 echo "Making $tgtDir case directory"
 mkdir "$tgtDir"
 
-echo "Copying directories from $srcDir to $tgtDir:"
+# Copy system, constant and (optionally) processor*/constant
+echo "Copying directories/files from $srcDir to $tgtDir:"
 cpIfPresent "$srcDir/system" "$tgtDir"
 cpIfPresent "$srcDir/constant" "$tgtDir"
 
-time_dir="$(foamListTimes -withZero -case "$srcDir" | $time_option)"
-[ -n "${time_dir}" ] && \
-cpIfPresent "$srcDir/${time_dir}" "$tgtDir"
+[ "${proc_opt#-*}" ] && \
+    echo "$srcDir/processor*/constant to ... processor*/constant" && \
+    for p in $(listProcessorDirs "$srcDir")
+    do
+        mkdir "$tgtDir/$p"
+        cpIfPresent "$srcDir/$p/constant" "$tgtDir/$p" > /dev/null
+    done
 
-[ "${time_dir}" = "0" -o -z "${time_dir}" ] && [ -z "$no_orig" ] && \
-cpIfPresent "$srcDir/0.orig" "$tgtDir"
+# Copy serial <time> dir and (optionally) processor*/<time>
+time_dir="$(foamListTimes -withZero $proc_opt -case "$srcDir" | $time_opt)"
 
+[ -n "$time_dir" ] && \
+    cpIfPresent "$srcDir/${time_dir}" "$tgtDir"
+
+[ "${proc_opt#-*}" ] && \
+    echo "$srcDir/processor*/$time_dir to ... processor*/$time_dir" && \
+    for p in $(listProcessorDirs "$srcDir")
+    do
+        cpIfPresent "$srcDir/$p/$time_dir" "$tgtDir/$p" > /dev/null
+    done
+
+# Copy 0.orig if required
+[ "$time_dir" = "0" ] 2> /dev/null || \
+    [ -z "${time_dir}" ] && \
+        [ -z "$no_orig" ] && \
+        cpIfPresent "$srcDir/0.orig" "$tgtDir"
+
+# Copy additional files/directories
+[ "$add" ] && \
+    for a in $add ; do cpIfPresent "$srcDir/$a" "$tgtDir" ; done
+
+# Copy scripts if required
 [ "$no_scripts" ] || \
     scripts="$(find "$srcDir" -maxdepth 1 -type f -exec file {} \; | \
                grep "shell script" | \
