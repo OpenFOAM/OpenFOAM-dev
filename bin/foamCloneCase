@@ -71,7 +71,7 @@ isCaseValid() {
 }
 
 isDecomposed() {
-    foamListTimes -withZero -case pitzDaily -processor >/dev/null 2>&1
+    foamListTimes -withZero -case "$1" -processor >/dev/null 2>&1
 }
 
 listProcessorDirs() {
@@ -142,8 +142,6 @@ do
         shift 1
         ;;
     -p | -processor)
-        isDecomposed || \
-            error "'-processor' option requires source case to be decomposed"
         proc_opt="-processor"
         shift 1
         ;;
@@ -168,7 +166,11 @@ srcDir="$1"
     srcDir="$(templateDir "$1")" || \
     error "'$1' not found in template directories"
 shift
+
+# Check validity of case and options
 isCaseValid "$srcDir" || error "'$srcDir' is not a valid case directory"
+isDecomposed "$srcDir"|| \
+    error "'-processor' option requires source case to be decomposed"
 
 # Set additional files with -add option
 [ "$add" ] && \
