@@ -205,7 +205,7 @@ time_dir="$(foamListTimes -withZero $proc_opt -case "$srcDir" | $time_opt)"
     cpIfPresent "$srcDir/${time_dir}" "$tgtDir"
 
 [ "${proc_opt#-*}" ] && \
-    echo "$srcDir/processor*/$time_dir to ... processor*/$time_dir"
+    echo "$srcDir/processor*/$time_dir to ... processor*/$time_dir" && \
     for p in $(listProcessorDirs "$srcDir")
     do
         cpIfPresent "$srcDir/$p/$time_dir" "$tgtDir/$p" > /dev/null
