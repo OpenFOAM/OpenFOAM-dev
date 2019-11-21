@@ -647,8 +647,8 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
         // (it will either expand the current data or add a new stored point).
         else
         {
-            // Store total time waiting to attribute to add or grow
-            scalar timeTmp = clockTime_.timeIncrement();
+            // Reset the time
+            clockTime_.timeIncrement();
 
             if (reduced)
             {
@@ -656,9 +656,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
                 mechRed_->reduceMechanism(pi, Ti, c, celli);
                 nActiveSpecies += mechRed_->NsSimp();
                 nAvg++;
-                scalar timeIncr = clockTime_.timeIncrement();
-                reduceMechCpuTime_ += timeIncr;
-                timeTmp += timeIncr;
+                reduceMechCpuTime_ += clockTime_.timeIncrement();
             }
 
             // Calculate the chemical source terms
@@ -695,9 +693,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
             }
 
             {
-                scalar timeIncr = clockTime_.timeIncrement();
-                solveChemistryCpuTime_ += timeIncr;
-                timeTmp += timeIncr;
+                solveChemistryCpuTime_ += clockTime_.timeIncrement();
             }
 
             // If tabulation is used, we add the information computed here to
@@ -724,12 +720,12 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
                 if (growOrAdd)
                 {
                     this->setTabulationResultsAdd(celli);
-                    addNewLeafCpuTime_ += clockTime_.timeIncrement() + timeTmp;
+                    addNewLeafCpuTime_ += clockTime_.timeIncrement();
                 }
                 else
                 {
                     this->setTabulationResultsGrow(celli);
-                    growCpuTime_ += clockTime_.timeIncrement() + timeTmp;
+                    growCpuTime_ += clockTime_.timeIncrement();
                 }
             }
 
