@@ -1,5 +1,7 @@
 thermophysicalFunctions/thermophysicalFunction/thermophysicalFunction.C
 
+thermophysicalFunctions/noneFunc/noneFunc.C
+
 NSRDSfunctions = thermophysicalFunctions/NSRDSfunctions
 $(NSRDSfunctions)/NSRDSfunc0/NSRDSfunc0.C
 $(NSRDSfunctions)/NSRDSfunc1/NSRDSfunc1.C
@@ -20,6 +22,7 @@ thermophysicalProperties/thermophysicalProperties.C
 liquidProperties/liquidProperties/liquidProperties.C
 liquidProperties/liquidMixtureProperties/liquidMixtureProperties.C
 
+liquidProperties/liquid/liquid.C
 liquidProperties/H2O/H2O.C
 liquidProperties/C7H16/C7H16.C
 liquidProperties/C12H26/C12H26.C

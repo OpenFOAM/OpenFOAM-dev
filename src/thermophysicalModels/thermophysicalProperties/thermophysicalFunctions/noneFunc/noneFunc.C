@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,58 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "thermophysicalFunction.H"
 #include "noneFunc.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(thermophysicalFunction, 0);
-    defineRunTimeSelectionTable(thermophysicalFunction, dictionary);
+    defineTypeNameAndDebug(noneFunc, 0);
+    addToRunTimeSelectionTable(thermophysicalFunction, noneFunc, dictionary);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
-(
-    const dictionary& dict,
-    const word& name
-)
+Foam::noneFunc::noneFunc(const dictionary& dict)
+:
+    dictName_(dict.name())
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::scalar Foam::noneFunc::f(scalar p, scalar T) const
 {
-    if (debug)
-    {
-        InfoInFunction
-            << "Constructing thermophysicalFunction"
-            << endl;
-    }
+    FatalErrorInFunction
+        << "Required Function " << nl
+        << "    " << dictName_ << nl
+        << "    is not defined."
+        << exit(FatalError);
 
-    if (dict.isDict(name))
-    {
-        const dictionary& funcDict(dict.subDict(name));
-        const word thermophysicalFunctionType(funcDict.lookup("type"));
+    return 0;
+}
 
-        dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(thermophysicalFunctionType);
+void Foam::noneFunc::writeData(Ostream& os) const
+{}
 
-        if (cstrIter == dictionaryConstructorTablePtr_->end())
-        {
-            FatalErrorInFunction
-                << "Unknown thermophysicalFunction type "
-                << thermophysicalFunctionType
-                << nl << nl
-                << "Valid thermophysicalFunction types are :" << endl
-                << dictionaryConstructorTablePtr_->sortedToc()
-                << abort(FatalError);
-        }
 
-        return autoPtr<thermophysicalFunction>(cstrIter()(funcDict));
-    }
-    else
-    {
-        return autoPtr<thermophysicalFunction>(new noneFunc(dict.name()/name));
-    }
+// * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const noneFunc& f)
+{
+    return os;
 }
 
 

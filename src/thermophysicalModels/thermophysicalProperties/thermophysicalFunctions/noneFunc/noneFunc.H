@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,88 +22,66 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermophysicalFunction
+    Foam::noneFunc
 
 Description
-    Abstract base class for thermo-physical functions
+    Undefined function which returns an error when called.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef thermophysicalFunction_H
-#define thermophysicalFunction_H
+#ifndef noneFunc_H
+#define noneFunc_H
 
-#include "scalar.H"
-#include "IOstreams.H"
-#include "typeInfo.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
-#include "dictionary.H"
+#include "thermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+class noneFunc;
+Ostream& operator<<(Ostream& os, const noneFunc& f);
+
+
 /*---------------------------------------------------------------------------*\
-                    Class thermophysicalFunction Declaration
+                           Class noneFunc Declaration
 \*---------------------------------------------------------------------------*/
 
-class thermophysicalFunction
+class noneFunc
+:
+    public thermophysicalFunction
 {
+    // Private member data
+
+        //- Name of dictionary from which this function is instantiated
+        fileName dictName_;
+
 
 public:
 
     //- Runtime type information
-    TypeName("thermophysicalFunction");
-
-
-    // Declare run-time constructor selection tables
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            thermophysicalFunction,
-            dictionary,
-            (const dictionary& dict),
-            (dict)
-        );
+    TypeName("none");
 
 
     // Constructors
 
-        //- Construct null
-        thermophysicalFunction()
-        {}
-
-        //- Return pointer to new thermophysicalFunction created from dict
-        static autoPtr<thermophysicalFunction> New
-        (
-            const dictionary& dict,
-            const word& name
-        );
-
-
-    //- Destructor
-    virtual ~thermophysicalFunction()
-    {}
+        //- Construct from dictionary
+        noneFunc(const dictionary& dict);
 
 
     // Member Functions
 
         //- Evaluate the function and return the result
-        virtual scalar f(scalar p, scalar T) const = 0;
+        scalar f(scalar p, scalar T) const;
 
         //- Write the function coefficients
-        virtual void writeData(Ostream& os) const = 0;
+        void writeData(Ostream& os) const;
 
 
     // Ostream Operator
 
-        friend Ostream& operator<<(Ostream& os, const thermophysicalFunction& f)
-        {
-            f.writeData(os);
-            return os;
-        }
+        friend Ostream& operator<<(Ostream& os, const noneFunc& f);
 };
 
 
