@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermophysicalFunction.H"
-#include "noneFunc.H"
+#include "noneThermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,7 +73,10 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
     }
     else
     {
-        return autoPtr<thermophysicalFunction>(new noneFunc(dict.name()/name));
+        return autoPtr<thermophysicalFunction>
+        (
+            new thermophysicalFunctions::none(dict.name()/name)
+        );
     }
 }
 

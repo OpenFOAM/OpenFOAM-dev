@@ -95,19 +95,19 @@ Foam::C2H5OH::C2H5OH()
 Foam::C2H5OH::C2H5OH
 (
     const liquidProperties& l,
-    const NSRDSfunc5& density,
-    const NSRDSfunc1& vapourPressure,
-    const NSRDSfunc6& heatOfVapourisation,
-    const NSRDSfunc0& heatCapacity,
-    const NSRDSfunc0& enthalpy,
-    const NSRDSfunc7& idealGasHeatCapacity,
-    const NSRDSfunc4& secondVirialCoeff,
-    const NSRDSfunc1& dynamicViscosity,
-    const NSRDSfunc2& vapourDynamicViscosity,
-    const NSRDSfunc0& thermalConductivity,
-    const NSRDSfunc2& vapourThermalConductivity,
-    const NSRDSfunc0& surfaceTension,
-    const APIdiffCoefFunc& vapourDiffusivity
+    const thermophysicalFunctions::NSRDS5& density,
+    const thermophysicalFunctions::NSRDS1& vapourPressure,
+    const thermophysicalFunctions::NSRDS6& heatOfVapourisation,
+    const thermophysicalFunctions::NSRDS0& heatCapacity,
+    const thermophysicalFunctions::NSRDS0& enthalpy,
+    const thermophysicalFunctions::NSRDS7& idealGasHeatCapacity,
+    const thermophysicalFunctions::NSRDS4& secondVirialCoeff,
+    const thermophysicalFunctions::NSRDS1& dynamicViscosity,
+    const thermophysicalFunctions::NSRDS2& vapourDynamicViscosity,
+    const thermophysicalFunctions::NSRDS0& thermalConductivity,
+    const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
+    const thermophysicalFunctions::NSRDS0& surfaceTension,
+    const thermophysicalFunctions::APIdiffCoef& vapourDiffusivity
 )
 :
     liquidProperties(l),

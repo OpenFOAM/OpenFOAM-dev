@@ -36,16 +36,16 @@ SourceFiles
 #define aC10H7CH3_H
 
 #include "liquidProperties.H"
-#include "NSRDSfunc0.H"
-#include "NSRDSfunc1.H"
-#include "NSRDSfunc2.H"
-#include "NSRDSfunc3.H"
-#include "NSRDSfunc4.H"
-#include "NSRDSfunc5.H"
-#include "NSRDSfunc6.H"
-#include "NSRDSfunc7.H"
-#include "NSRDSfunc14.H"
-#include "APIdiffCoefFunc.H"
+#include "NSRDS0ThermophysicalFunction.H"
+#include "NSRDS1ThermophysicalFunction.H"
+#include "NSRDS2ThermophysicalFunction.H"
+#include "NSRDS3ThermophysicalFunction.H"
+#include "NSRDS4ThermophysicalFunction.H"
+#include "NSRDS5ThermophysicalFunction.H"
+#include "NSRDS6ThermophysicalFunction.H"
+#include "NSRDS7ThermophysicalFunction.H"
+#include "NSRDS14ThermophysicalFunction.H"
+#include "APIdiffCoefThermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,19 +62,19 @@ class aC10H7CH3
 {
     // Private Data
 
-        NSRDSfunc5 rho_;
-        NSRDSfunc1 pv_;
-        NSRDSfunc6 hl_;
-        NSRDSfunc0 Cp_;
-        NSRDSfunc0 h_;
-        NSRDSfunc7 Cpg_;
-        NSRDSfunc4 B_;
-        NSRDSfunc1 mu_;
-        NSRDSfunc2 mug_;
-        NSRDSfunc0 kappa_;
-        NSRDSfunc2 kappag_;
-        NSRDSfunc6 sigma_;
-        APIdiffCoefFunc D_;
+        thermophysicalFunctions::NSRDS5 rho_;
+        thermophysicalFunctions::NSRDS1 pv_;
+        thermophysicalFunctions::NSRDS6 hl_;
+        thermophysicalFunctions::NSRDS0 Cp_;
+        thermophysicalFunctions::NSRDS0 h_;
+        thermophysicalFunctions::NSRDS7 Cpg_;
+        thermophysicalFunctions::NSRDS4 B_;
+        thermophysicalFunctions::NSRDS1 mu_;
+        thermophysicalFunctions::NSRDS2 mug_;
+        thermophysicalFunctions::NSRDS0 kappa_;
+        thermophysicalFunctions::NSRDS2 kappag_;
+        thermophysicalFunctions::NSRDS6 sigma_;
+        thermophysicalFunctions::APIdiffCoef D_;
 
 
 public:
@@ -94,19 +94,19 @@ public:
         aC10H7CH3
         (
             const liquidProperties& l,
-            const NSRDSfunc5& density,
-            const NSRDSfunc1& vapourPressure,
-            const NSRDSfunc6& heatOfVapourisation,
-            const NSRDSfunc0& heatCapacity,
-            const NSRDSfunc0& enthalpy,
-            const NSRDSfunc7& idealGasHeatCapacity,
-            const NSRDSfunc4& secondVirialCoeff,
-            const NSRDSfunc1& dynamicViscosity,
-            const NSRDSfunc2& vapourDynamicViscosity,
-            const NSRDSfunc0& thermalConductivity,
-            const NSRDSfunc2& vapourThermalConductivity,
-            const NSRDSfunc6& surfaceTension,
-            const APIdiffCoefFunc& vapourDiffusivity
+            const thermophysicalFunctions::NSRDS5& density,
+            const thermophysicalFunctions::NSRDS1& vapourPressure,
+            const thermophysicalFunctions::NSRDS6& heatOfVapourisation,
+            const thermophysicalFunctions::NSRDS0& heatCapacity,
+            const thermophysicalFunctions::NSRDS0& enthalpy,
+            const thermophysicalFunctions::NSRDS7& idealGasHeatCapacity,
+            const thermophysicalFunctions::NSRDS4& secondVirialCoeff,
+            const thermophysicalFunctions::NSRDS1& dynamicViscosity,
+            const thermophysicalFunctions::NSRDS2& vapourDynamicViscosity,
+            const thermophysicalFunctions::NSRDS0& thermalConductivity,
+            const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
+            const thermophysicalFunctions::NSRDS6& surfaceTension,
+            const thermophysicalFunctions::APIdiffCoef& vapourDiffusivity
         );
 
         //- Construct from dictionary
