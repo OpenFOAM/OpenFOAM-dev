@@ -135,13 +135,4 @@ void Foam::Ar::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const Ar& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

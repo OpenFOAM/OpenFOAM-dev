@@ -66,13 +66,4 @@ void Foam::CaCO3::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const CaCO3& s)
-{
-    s.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

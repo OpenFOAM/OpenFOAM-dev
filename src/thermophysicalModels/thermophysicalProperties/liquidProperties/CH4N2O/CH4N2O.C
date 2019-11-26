@@ -127,13 +127,4 @@ void Foam::CH4N2O::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const CH4N2O& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

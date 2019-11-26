@@ -135,13 +135,4 @@ void Foam::C12H26::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const C12H26& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

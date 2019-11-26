@@ -46,6 +46,10 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+class thermophysicalProperties;
+Ostream& operator<<(Ostream& os, const thermophysicalProperties& l);
+
 /*---------------------------------------------------------------------------*\
                     Class thermophysicalProperties Declaration
 \*---------------------------------------------------------------------------*/
@@ -179,9 +183,6 @@ public:
             const thermophysicalProperties& l
         );
 };
-
-
-Ostream& operator<<(Ostream& os, const thermophysicalProperties& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

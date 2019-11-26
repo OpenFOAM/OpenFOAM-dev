@@ -87,22 +87,9 @@ Foam::scalar Foam::thermophysicalFunctions::table::f(scalar p, scalar T) const
 
 void Foam::thermophysicalFunctions::table::write(Ostream& os) const
 {
-    os  << Tlow_ << token::SPACE
-        << Thigh_ << token::SPACE
-        << values_ << token::SPACE;
-}
-
-
-// * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::thermophysicalFunctions::operator<<
-(
-    Ostream& os,
-    const table& f
-)
-{
-    f.write(os);
-    return os;
+    writeEntry(os, "Tlow", Tlow_);
+    writeEntry(os, "Thigh", Thigh_);
+    writeEntry(os, "values", values_);
 }
 
 

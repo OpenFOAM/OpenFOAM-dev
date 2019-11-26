@@ -163,13 +163,4 @@ void Foam::IDEA::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const IDEA& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

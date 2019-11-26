@@ -135,13 +135,4 @@ void Foam::aC10H7CH3::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const aC10H7CH3& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

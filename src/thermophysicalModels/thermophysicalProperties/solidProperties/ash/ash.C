@@ -66,13 +66,4 @@ void Foam::ash::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const ash& s)
-{
-    s.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

@@ -110,15 +110,6 @@ public:
 
         //- Write the function coefficients
         virtual void write(Ostream& os) const;
-
-
-    // Ostream Operator
-
-        friend Ostream& operator<<(Ostream& os, const NSRDS2& f)
-        {
-            f.write(os);
-            return os;
-        }
 };
 
 

@@ -42,6 +42,10 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+class liquidProperties;
+Ostream& operator<<(Ostream& os, const liquidProperties& l);
+
 /*---------------------------------------------------------------------------*\
                     Class liquidProperties Declaration
 \*---------------------------------------------------------------------------*/
@@ -300,9 +304,6 @@ public:
         //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const liquidProperties& l);
 };
-
-
-Ostream& operator<<(Ostream& os, const liquidProperties& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

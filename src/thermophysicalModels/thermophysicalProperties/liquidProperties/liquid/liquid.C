@@ -76,13 +76,4 @@ void Foam::liquid::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const liquid& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

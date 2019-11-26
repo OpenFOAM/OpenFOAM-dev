@@ -168,13 +168,7 @@ public:
 
         //- Write the function coefficients
         void write(Ostream& os) const;
-
-        //- Ostream Operator
-        friend Ostream& operator<<(Ostream& os, const MB& l);
 };
-
-
-Ostream& operator<<(Ostream& os, const MB& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

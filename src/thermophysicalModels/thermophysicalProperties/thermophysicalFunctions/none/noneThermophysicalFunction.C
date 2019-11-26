@@ -63,16 +63,4 @@ void Foam::thermophysicalFunctions::none::write(Ostream& os) const
 {}
 
 
-// * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::thermophysicalFunctions::operator<<
-(
-    Ostream& os,
-    const none& f
-)
-{
-    return os;
-}
-
-
 // ************************************************************************* //

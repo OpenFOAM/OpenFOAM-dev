@@ -45,6 +45,10 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+class solidProperties;
+Ostream& operator<<(Ostream&, const solidProperties&);
+
 /*---------------------------------------------------------------------------*\
                      Class solidProperties Declaration
 \*---------------------------------------------------------------------------*/
@@ -166,9 +170,6 @@ public:
         //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const solidProperties& s);
 };
-
-
-Ostream& operator<<(Ostream&, const solidProperties&);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

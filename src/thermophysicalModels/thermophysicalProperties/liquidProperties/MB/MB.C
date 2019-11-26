@@ -127,13 +127,4 @@ void Foam::MB::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const MB& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

@@ -60,20 +60,7 @@ Foam::scalar Foam::thermophysicalFunctions::constant::f
 
 void Foam::thermophysicalFunctions::constant::write(Ostream& os) const
 {
-    os  << value_ << token::SPACE;
-}
-
-
-// * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::thermophysicalFunctions::operator<<
-(
-    Ostream& os,
-    const constant& f
-)
-{
-    f.write(os);
-    return os;
+    writeEntry(os, "value", value_);
 }
 
 

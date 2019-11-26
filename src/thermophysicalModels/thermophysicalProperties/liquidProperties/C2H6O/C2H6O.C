@@ -144,13 +144,4 @@ void Foam::C2H6O::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const C2H6O& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //

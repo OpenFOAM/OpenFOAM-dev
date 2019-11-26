@@ -70,11 +70,6 @@ namespace Foam
 namespace thermophysicalFunctions
 {
 
-// Forward declaration of friend functions and operators
-class table;
-Ostream& operator<<(Ostream& os, const table& f);
-
-
 /*---------------------------------------------------------------------------*\
                            Class table Declaration
 \*---------------------------------------------------------------------------*/
@@ -120,11 +115,6 @@ public:
 
         //- Write the function coefficients
         void write(Ostream& os) const;
-
-
-    // Ostream Operator
-
-        friend Ostream& operator<<(Ostream& os, const table& f);
 };
 
 

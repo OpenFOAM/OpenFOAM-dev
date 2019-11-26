@@ -75,14 +75,8 @@ public:
     // I-O
 
         //- Write the function coefficients
-        void write(Ostream& os) const;
-
-        //- Ostream Operator
-        friend Ostream& operator<<(Ostream& os, const ash& s);
+        virtual void write(Ostream& os) const;
 };
-
-
-Ostream& operator<<(Ostream& os, const ash& s);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

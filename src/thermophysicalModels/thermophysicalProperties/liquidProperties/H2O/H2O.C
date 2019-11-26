@@ -150,13 +150,4 @@ void Foam::H2O::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const H2O& l)
-{
-    l.write(os);
-    return os;
-}
-
-
 // ************************************************************************* //
