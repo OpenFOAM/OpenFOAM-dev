@@ -94,4 +94,13 @@ void Foam::thermophysicalFunction::write(Ostream& os, const word& name) const
 }
 
 
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const thermophysicalFunction& f)
+{
+    f.write(os);
+    return os;
+}
+
+
 // ************************************************************************* //

@@ -44,6 +44,10 @@ Description
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+class thermophysicalFunction;
+Ostream& operator<<(Ostream& os, const thermophysicalFunction& l);
+
 /*---------------------------------------------------------------------------*\
                     Class thermophysicalFunction Declaration
 \*---------------------------------------------------------------------------*/
@@ -102,11 +106,11 @@ public:
 
     // Ostream Operator
 
-        friend Ostream& operator<<(Ostream& os, const thermophysicalFunction& f)
-        {
-            f.write(os);
-            return os;
-        }
+        friend Ostream& operator<<
+        (
+            Ostream& os,
+            const thermophysicalFunction& f
+        );
 };
 
 
