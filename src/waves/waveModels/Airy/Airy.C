@@ -80,7 +80,9 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::vi
     const scalarField z(xz.component(1));
 
     const scalarField phi(angle(t, x));
-    const scalarField kz(k()*z);
+
+    const scalar kzGreat = log(i*great);
+    const scalarField kz(min(max(k()*z, - kzGreat), kzGreat));
 
     if (deep())
     {
