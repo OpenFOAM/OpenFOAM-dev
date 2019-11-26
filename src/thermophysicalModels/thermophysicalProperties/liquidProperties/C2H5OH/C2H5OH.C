@@ -137,9 +137,9 @@ Foam::C2H5OH::C2H5OH(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::C2H5OH::writeData(Ostream& os) const
+void Foam::C2H5OH::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -147,7 +147,7 @@ void Foam::C2H5OH::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const C2H5OH& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

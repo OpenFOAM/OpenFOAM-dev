@@ -129,9 +129,9 @@ Foam::Ar::Ar(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Ar::writeData(Ostream& os) const
+void Foam::Ar::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -139,7 +139,7 @@ void Foam::Ar::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const Ar& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

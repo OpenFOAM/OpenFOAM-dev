@@ -137,9 +137,9 @@ Foam::C6H14::C6H14(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::C6H14::writeData(Ostream& os) const
+void Foam::C6H14::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -147,7 +147,7 @@ void Foam::C6H14::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const C6H14& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

@@ -81,4 +81,17 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 }
 
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::thermophysicalFunction::write(Ostream& os, const word& name) const
+{
+    os << nl;
+    writeKeyword(os, name)
+        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
+    write(os);
+    os << decrIndent << indent << token::END_BLOCK << endl;
+}
+
+
 // ************************************************************************* //

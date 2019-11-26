@@ -115,22 +115,17 @@ public:
                 );
         }
 
+        using thermophysicalFunction::write;
+
         //- Write the function coefficients
-        void writeData(Ostream& os) const
-        {
-            os  << Tc_ << token::SPACE
-                << a_ << token::SPACE
-                << b_ << token::SPACE
-                << c_ << token::SPACE
-                << d_;
-        }
+        virtual void write(Ostream& os) const;
 
 
     // Ostream Operator
 
         friend Ostream& operator<<(Ostream& os, const NSRDS14& f)
         {
-            f.writeData(os);
+            f.write(os);
             return os;
         }
 };

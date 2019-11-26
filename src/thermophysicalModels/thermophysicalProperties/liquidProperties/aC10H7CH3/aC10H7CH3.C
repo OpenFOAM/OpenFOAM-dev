@@ -129,9 +129,9 @@ Foam::aC10H7CH3::aC10H7CH3(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::aC10H7CH3::writeData(Ostream& os) const
+void Foam::aC10H7CH3::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -139,7 +139,7 @@ void Foam::aC10H7CH3::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const aC10H7CH3& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

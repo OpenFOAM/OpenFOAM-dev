@@ -170,10 +170,7 @@ public:
         void readIfPresent(const dictionary& dict);
 
         //- Write the function coefficients
-        virtual void writeData(Ostream& os) const = 0;
-
-        //- Write dictionary to Ostream
-        void write(Ostream& os) const;
+        virtual void write(Ostream& os) const = 0;
 
         //- Ostream Operator
         friend Ostream& operator<<

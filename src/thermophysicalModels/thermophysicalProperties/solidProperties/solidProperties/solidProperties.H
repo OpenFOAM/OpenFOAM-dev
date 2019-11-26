@@ -161,7 +161,7 @@ public:
         void readIfPresent(const dictionary& dict);
 
         //- Write the solidProperties properties
-        virtual void writeData(Ostream& os) const;
+        virtual void write(Ostream& os) const;
 
         //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const solidProperties& s);

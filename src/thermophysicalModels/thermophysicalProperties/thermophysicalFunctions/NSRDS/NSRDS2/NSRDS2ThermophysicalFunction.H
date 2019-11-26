@@ -106,21 +106,17 @@ public:
             return a_*pow(T, b_)/(1.0 + c_/T + d_/sqr(T));
         }
 
+        using thermophysicalFunction::write;
+
         //- Write the function coefficients
-        void writeData(Ostream& os) const
-        {
-            os  << a_ << token::SPACE
-                << b_ << token::SPACE
-                << c_ << token::SPACE
-                << d_;
-        }
+        virtual void write(Ostream& os) const;
 
 
     // Ostream Operator
 
         friend Ostream& operator<<(Ostream& os, const NSRDS2& f)
         {
-            f.writeData(os);
+            f.write(os);
             return os;
         }
 };

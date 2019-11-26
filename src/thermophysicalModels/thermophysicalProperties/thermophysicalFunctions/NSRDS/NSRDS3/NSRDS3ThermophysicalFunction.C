@@ -63,4 +63,15 @@ Foam::thermophysicalFunctions::NSRDS3::NSRDS3(const dictionary& dict)
 {}
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::thermophysicalFunctions::NSRDS3::write(Ostream& os) const
+{
+    writeEntry(os, "a", a_);
+    writeEntry(os, "b", b_);
+    writeEntry(os, "c", c_);
+    writeEntry(os, "d", d_);
+}
+
+
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ void Foam::solidProperties::readIfPresent(const dictionary& dict)
 }
 
 
-void Foam::solidProperties::writeData(Ostream& os) const
+void Foam::solidProperties::write(Ostream& os) const
 {
     os  << rho_ << token::SPACE
         << Cp_ << token::SPACE
@@ -95,7 +95,7 @@ void Foam::solidProperties::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const solidProperties& s)
 {
-    s.writeData(os);
+    s.write(os);
     return os;
 }
 

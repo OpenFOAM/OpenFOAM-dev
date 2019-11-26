@@ -94,14 +94,17 @@ public:
         virtual scalar f(scalar p, scalar T) const = 0;
 
         //- Write the function coefficients
-        virtual void writeData(Ostream& os) const = 0;
+        virtual void write(Ostream& os) const = 0;
+
+        //- Write the function coefficients within the property sub-dictionary
+        virtual void write(Ostream& os, const word& name) const;
 
 
     // Ostream Operator
 
         friend Ostream& operator<<(Ostream& os, const thermophysicalFunction& f)
         {
-            f.writeData(os);
+            f.write(os);
             return os;
         }
 };

@@ -208,39 +208,19 @@ void Foam::liquidProperties::readIfPresent(const dictionary &dict)
 }
 
 
-void Foam::liquidProperties::writeData(Ostream& os) const
-{
-    thermophysicalProperties::writeData(os);
-    os  << token::SPACE
-        << Tc_ << token::SPACE
-        << Pc_ << token::SPACE
-        << Vc_ << token::SPACE
-        << Zc_ << token::SPACE
-        << Tt_ << token::SPACE
-        << Pt_ << token::SPACE
-        << Tb_ << token::SPACE
-        << dipm_ << token::SPACE
-        << omega_<< token::SPACE
-        << delta_;
-}
-
-
 void Foam::liquidProperties::write(Ostream& os) const
 {
     thermophysicalProperties::write(os);
-
-    dictionary dict("liquidProperties");
-    dict.add("Tc", Tc_);
-    dict.add("Pc", Pc_);
-    dict.add("Vc", Vc_);
-    dict.add("Zc", Zc_);
-    dict.add("Tt", Tt_);
-    dict.add("Pt", Pt_);
-    dict.add("Tb", Tb_);
-    dict.add("dipm", dipm_);
-    dict.add("omega", omega_);
-    dict.add("delta", delta_);
-    os  << indent << dict.dictName() << dict;
+    writeEntry(os, "Tc", Tc_);
+    writeEntry(os, "Pc", Pc_);
+    writeEntry(os, "Vc", Vc_);
+    writeEntry(os, "Zc", Zc_);
+    writeEntry(os, "Tt", Tt_);
+    writeEntry(os, "Pt", Pt_);
+    writeEntry(os, "Tb", Tb_);
+    writeEntry(os, "dipm", dipm_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "delta", delta_);
 }
 
 
@@ -248,7 +228,7 @@ void Foam::liquidProperties::write(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const liquidProperties& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

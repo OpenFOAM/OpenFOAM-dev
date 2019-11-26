@@ -57,22 +57,22 @@ Foam::liquid::liquid(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::liquid::writeData(Ostream& os) const
+void Foam::liquid::write(Ostream& os) const
 {
-    liquidProperties::writeData(os); os << nl;
-    rho_->writeData(os); os << nl;
-    pv_->writeData(os); os << nl;
-    hl_->writeData(os); os << nl;
-    Cp_->writeData(os); os << nl;
-    h_->writeData(os); os << nl;
-    Cpg_->writeData(os); os << nl;
-    B_->writeData(os); os << nl;
-    mu_->writeData(os); os << nl;
-    mug_->writeData(os); os << nl;
-    kappa_->writeData(os); os << nl;
-    kappag_->writeData(os); os << nl;
-    sigma_->writeData(os); os << nl;
-    D_->writeData(os); os << endl;
+    liquidProperties::write(os); os << nl;
+    rho_->write(os); os << nl;
+    pv_->write(os); os << nl;
+    hl_->write(os); os << nl;
+    Cp_->write(os); os << nl;
+    h_->write(os); os << nl;
+    Cpg_->write(os); os << nl;
+    B_->write(os); os << nl;
+    mu_->write(os); os << nl;
+    mug_->write(os); os << nl;
+    kappa_->write(os); os << nl;
+    kappag_->write(os); os << nl;
+    sigma_->write(os); os << nl;
+    D_->write(os); os << endl;
 }
 
 
@@ -80,7 +80,7 @@ void Foam::liquid::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const liquid& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

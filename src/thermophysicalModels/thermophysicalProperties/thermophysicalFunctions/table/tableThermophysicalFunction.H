@@ -119,7 +119,7 @@ public:
         scalar f(scalar p, scalar T) const;
 
         //- Write the function coefficients
-        void writeData(Ostream& os) const;
+        void write(Ostream& os) const;
 
 
     // Ostream Operator

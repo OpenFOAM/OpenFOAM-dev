@@ -73,4 +73,15 @@ Foam::thermophysicalFunctions::APIdiffCoef::APIdiffCoef(const dictionary& dict)
 {}
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::thermophysicalFunctions::APIdiffCoef::write(Ostream& os) const
+{
+    writeEntry(os, "a", a_);
+    writeEntry(os, "b", b_);
+    writeEntry(os, "wf", wf_);
+    writeEntry(os, "wa", wa_);
+}
+
+
 // ************************************************************************* //

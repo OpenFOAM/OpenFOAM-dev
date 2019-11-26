@@ -121,9 +121,9 @@ Foam::MB::MB(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::MB::writeData(Ostream& os) const
+void Foam::MB::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -131,7 +131,7 @@ void Foam::MB::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const MB& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

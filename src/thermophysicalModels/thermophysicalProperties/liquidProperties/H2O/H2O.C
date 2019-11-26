@@ -96,7 +96,9 @@ Foam::H2O::H2O()
     kappag_(6.977e-05, 1.1243, 844.9, -148850),
     sigma_(647.13, 0.18548, 2.717, -3.554, 2.047, 0),
     D_(15.0, 15.0, 18.015, 28)
-{}
+{
+    Info << *this << endl;
+}
 
 
 Foam::H2O::H2O
@@ -144,9 +146,9 @@ Foam::H2O::H2O(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::H2O::writeData(Ostream& os) const
+void Foam::H2O::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -154,7 +156,7 @@ void Foam::H2O::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const H2O& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

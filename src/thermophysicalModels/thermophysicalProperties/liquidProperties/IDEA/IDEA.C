@@ -157,9 +157,9 @@ Foam::IDEA::IDEA(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::IDEA::writeData(Ostream& os) const
+void Foam::IDEA::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -167,7 +167,7 @@ void Foam::IDEA::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const IDEA& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

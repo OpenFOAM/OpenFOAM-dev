@@ -137,9 +137,9 @@ Foam::C9H20::C9H20(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::C9H20::writeData(Ostream& os) const
+void Foam::C9H20::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -147,7 +147,7 @@ void Foam::C9H20::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const C9H20& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

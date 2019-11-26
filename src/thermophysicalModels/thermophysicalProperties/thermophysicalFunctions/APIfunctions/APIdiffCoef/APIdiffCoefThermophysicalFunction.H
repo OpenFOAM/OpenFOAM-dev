@@ -102,21 +102,17 @@ public:
             return 3.6059e-3*(pow(1.8*T, 1.75))*alphaBinary/(p*beta_);
         }
 
+        using thermophysicalFunction::write;
+
         //- Write the function coefficients
-        void writeData(Ostream& os) const
-        {
-            os  << a_ << token::SPACE
-                << b_ << token::SPACE
-                << wf_ << token::SPACE
-                << wa_;
-        }
+        virtual void write(Ostream& os) const;
 
 
     // Ostream Operator
 
         friend Ostream& operator<<(Ostream& os, const APIdiffCoef& f)
         {
-            f.writeData(os);
+            f.write(os);
             return os;
         }
 };

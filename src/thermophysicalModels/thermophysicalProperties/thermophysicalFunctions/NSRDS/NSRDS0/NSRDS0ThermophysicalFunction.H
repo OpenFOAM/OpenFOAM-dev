@@ -108,23 +108,17 @@ public:
             return ((((f_*T + e_)*T + d_)*T + c_)*T + b_)*T + a_;
         }
 
+        using thermophysicalFunction::write;
+
         //- Write the function coefficients
-        void writeData(Ostream& os) const
-        {
-            os  << a_ << token::SPACE
-                << b_ << token::SPACE
-                << c_ << token::SPACE
-                << d_ << token::SPACE
-                << e_ << token::SPACE
-                << f_;
-        }
+        virtual void write(Ostream& os) const;
 
 
     // Ostream Operator
 
         friend Ostream& operator<<(Ostream& os, const NSRDS0& f)
         {
-            f.writeData(os);
+            f.write(os);
             return os;
         }
 };

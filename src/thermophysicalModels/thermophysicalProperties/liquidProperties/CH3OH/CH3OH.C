@@ -137,9 +137,9 @@ Foam::CH3OH::CH3OH(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::CH3OH::writeData(Ostream& os) const
+void Foam::CH3OH::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -147,7 +147,7 @@ void Foam::CH3OH::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const CH3OH& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

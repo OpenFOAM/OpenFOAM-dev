@@ -137,9 +137,9 @@ Foam::IC8H18::IC8H18(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::IC8H18::writeData(Ostream& os) const
+void Foam::IC8H18::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -147,7 +147,7 @@ void Foam::IC8H18::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const IC8H18& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

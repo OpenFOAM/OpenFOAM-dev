@@ -59,7 +59,7 @@ Foam::scalar Foam::thermophysicalFunctions::none::f(scalar p, scalar T) const
     return 0;
 }
 
-void Foam::thermophysicalFunctions::none::writeData(Ostream& os) const
+void Foam::thermophysicalFunctions::none::write(Ostream& os) const
 {}
 
 

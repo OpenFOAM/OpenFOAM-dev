@@ -137,9 +137,9 @@ Foam::N2::N2(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::N2::writeData(Ostream& os) const
+void Foam::N2::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
+    liquidProperties::write(*this, os);
 }
 
 
@@ -147,7 +147,7 @@ void Foam::N2::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const N2& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

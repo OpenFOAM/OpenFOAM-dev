@@ -291,14 +291,11 @@ public:
         inline void readIfPresent(Liquid& l, const dictionary& dict);
 
         //- Write the function coefficients
-        virtual void writeData(Ostream& os) const = 0;
-
-        //- Write dictionary to Ostream
-        void write(Ostream& os) const;
+        virtual void write(Ostream& os) const = 0;
 
         //- Write the data for each of the property functions
         template<class Liquid>
-        inline void writeData(const Liquid& l, Ostream& os) const;
+        inline void write(const Liquid& l, Ostream& os) const;
 
         //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const liquidProperties& l);
