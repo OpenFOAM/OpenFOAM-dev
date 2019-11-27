@@ -139,11 +139,8 @@ basicKinematicTypeCloud kinematicCloud
 scalar alphacMin
 (
     1.0
-  - readScalar
-    (
-        kinematicCloud.particleProperties().subDict("constantProperties")
-       .lookup("alphaMax")
-    )
+  - kinematicCloud.particleProperties().subDict("constantProperties")
+   .lookup<scalar>("alphaMax")
 );
 
 // Update alphac from the particle locations

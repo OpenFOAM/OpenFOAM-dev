@@ -48,9 +48,9 @@ Foam::springRenumber::springRenumber(const dictionary& renumberDict)
 :
     renumberMethod(renumberDict),
     dict_(renumberDict.optionalSubDict(typeName+"Coeffs")),
-    maxCo_(readScalar(dict_.lookup("maxCo"))),
+    maxCo_(dict_.lookup<scalar>("maxCo")),
     maxIter_(dict_.lookup<label>("maxIter")),
-    freezeFraction_(readScalar(dict_.lookup("freezeFraction")))
+    freezeFraction_(dict_.lookup<scalar>("freezeFraction"))
 {}
 
 

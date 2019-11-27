@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,11 @@ Foam::fv::variableHeatTransfer::variableHeatTransfer
 {
     if (master_)
     {
-        a_ = readScalar(coeffs_.lookup("a"));
-        b_ = readScalar(coeffs_.lookup("b"));
-        c_ = readScalar(coeffs_.lookup("c"));
-        ds_ = readScalar(coeffs_.lookup("ds"));
-        Pr_ = readScalar(coeffs_.lookup("Pr"));
+        a_ = coeffs_.lookup<scalar>("a");
+        b_ = coeffs_.lookup<scalar>("b");
+        c_ = coeffs_.lookup<scalar>("c");
+        ds_ = coeffs_.lookup<scalar>("ds");
+        Pr_ = coeffs_.lookup<scalar>("Pr");
         AoV_.reset
         (
             new volScalarField

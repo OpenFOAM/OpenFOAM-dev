@@ -65,9 +65,9 @@ supersonicFreestreamFvPatchVectorField
     pName_(dict.lookupOrDefault<word>("p", "p")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
     UInf_(dict.lookup("UInf")),
-    pInf_(readScalar(dict.lookup("pInf"))),
-    TInf_(readScalar(dict.lookup("TInf"))),
-    gamma_(readScalar(dict.lookup("gamma")))
+    pInf_(dict.lookup<scalar>("pInf")),
+    TInf_(dict.lookup<scalar>("TInf")),
+    gamma_(dict.lookup<scalar>("gamma"))
 {
     if (dict.found("value"))
     {

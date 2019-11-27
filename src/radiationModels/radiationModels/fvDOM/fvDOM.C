@@ -276,7 +276,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
     tolerance_
     (
         coeffs_.found("convergence")
-      ? readScalar(coeffs_.lookup("convergence"))
+      ? coeffs_.lookup<scalar>("convergence")
       : coeffs_.lookupOrDefault<scalar>("tolerance", 0)
     ),
     maxIter_(coeffs_.lookupOrDefault<label>("maxIter", 50)),
@@ -368,7 +368,7 @@ Foam::radiationModels::fvDOM::fvDOM
     tolerance_
     (
         coeffs_.found("convergence")
-      ? readScalar(coeffs_.lookup("convergence"))
+      ? coeffs_.lookup<scalar>("convergence")
       : coeffs_.lookupOrDefault<scalar>("tolerance", 0)
     ),
     maxIter_(coeffs_.lookupOrDefault<label>("maxIter", 50)),

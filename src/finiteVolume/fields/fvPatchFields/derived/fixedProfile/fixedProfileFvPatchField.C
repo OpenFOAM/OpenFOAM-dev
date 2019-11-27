@@ -66,7 +66,7 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF, dict, false),
     profile_(Function1<Type>::New("profile", dict)),
-    origin_(readScalar(dict.lookup("origin"))),
+    origin_(dict.lookup<scalar>("origin")),
     direction_(dict.lookup("direction"))
 {
     if (mag(direction_) == 0)

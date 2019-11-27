@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,8 @@ piecewiseLinearRamp::piecewiseLinearRamp
 )
 :
     faceAreaWeightModel(typeName, faceAreaWeightDict),
-    lAF_(readScalar(coeffDict().lookup("lowerAreaFraction"))),
-    uAF_(readScalar(coeffDict().lookup("upperAreaFraction")))
+    lAF_(coeffDict().lookup<scalar>("lowerAreaFraction")),
+    uAF_(coeffDict().lookup<scalar>("upperAreaFraction"))
 {}
 
 

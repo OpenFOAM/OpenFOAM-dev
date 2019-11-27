@@ -73,7 +73,7 @@ CONSTRUCT
 )
 :
     PARENT(p, iF),
-    scalarData_(readScalar(dict.lookup("scalarData"))),
+    scalarData_(dict.lookup<scalar>("scalarData")),
     data_(pTraits<TYPE>(dict.lookup("data"))),
     fieldData_("fieldData", dict, p.size()),
     timeVsData_(Function1<TYPE>::New("timeVsData", dict)),

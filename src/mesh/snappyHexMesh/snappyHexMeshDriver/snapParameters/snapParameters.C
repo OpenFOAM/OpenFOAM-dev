@@ -31,7 +31,7 @@ License
 Foam::snapParameters::snapParameters(const dictionary& dict)
 :
     nSmoothPatch_(dict.lookup<label>("nSmoothPatch")),
-    snapTol_(readScalar(dict.lookup("tolerance"))),
+    snapTol_(dict.lookup<scalar>("tolerance")),
     nSmoothDispl_(dict.lookup<label>("nSolveIter")),
     nSnap_(dict.lookup<label>("nRelaxIter")),
     nFeatureSnap_(dict.lookupOrDefault("nFeatureSnapIter", -1)),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::XiGModels::basicSubGrid::basicSubGrid
 )
 :
     XiGModel(XiGProperties, thermo, turbulence, Su),
-    k1(readScalar(XiGModelCoeffs_.lookup("k1"))),
+    k1(XiGModelCoeffs_.lookup<scalar>("k1")),
     XiGModel_(XiGModel::New(XiGModelCoeffs_, thermo, turbulence, Su))
 {}
 

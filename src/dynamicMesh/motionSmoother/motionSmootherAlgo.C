@@ -707,7 +707,7 @@ Foam::scalar Foam::motionSmootherAlgo::setErrorReduction
     const scalar errorReduction
 )
 {
-    scalar oldErrorReduction = readScalar(paramDict_.lookup("errorReduction"));
+    scalar oldErrorReduction = paramDict_.lookup<scalar>("errorReduction");
 
     paramDict_.remove("errorReduction");
     paramDict_.add("errorReduction", errorReduction);
@@ -870,7 +870,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
     }
 
     const scalar errorReduction =
-        readScalar(paramDict.lookup("errorReduction"));
+        paramDict.lookup<scalar>("errorReduction");
     const label nSmoothScale =
         paramDict.lookup<label>("nSmoothScale");
 

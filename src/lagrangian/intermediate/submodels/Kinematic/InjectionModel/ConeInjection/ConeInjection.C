@@ -141,10 +141,10 @@ Foam::ConeInjection<CloudType>::ConeInjection
     injectorCell_(-1),
     injectorTetFace_(-1),
     injectorTetPt_(-1),
-    duration_(readScalar(this->coeffDict().lookup("duration"))),
+    duration_(this->coeffDict().template lookup<scalar>("duration")),
     parcelsPerSecond_
     (
-        readScalar(this->coeffDict().lookup("parcelsPerSecond"))
+        this->coeffDict().template lookup<scalar>("parcelsPerSecond")
     ),
     flowRateProfile_
     (

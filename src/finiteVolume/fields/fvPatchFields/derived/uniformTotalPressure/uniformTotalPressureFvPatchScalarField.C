@@ -61,7 +61,7 @@ uniformTotalPressureFvPatchScalarField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "none")),
-    gamma_(psiName_ != "none" ? readScalar(dict.lookup("gamma")) : 1),
+    gamma_(psiName_ != "none" ? dict.lookup<scalar>("gamma") : 1),
     p0_(Function1<scalar>::New("p0", dict))
 {
     if (dict.found("value"))

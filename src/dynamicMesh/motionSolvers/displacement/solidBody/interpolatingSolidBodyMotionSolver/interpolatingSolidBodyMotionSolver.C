@@ -56,8 +56,8 @@ Foam::interpolatingSolidBodyMotionSolver::interpolatingSolidBodyMotionSolver
     patches_(wordReList(coeffDict().lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
     CofG_(coeffDict().lookup("CofG")),
-    di_(readScalar(coeffDict().lookup("innerDistance"))),
-    do_(readScalar(coeffDict().lookup("outerDistance"))),
+    di_(coeffDict().lookup<scalar>("innerDistance")),
+    do_(coeffDict().lookup<scalar>("outerDistance")),
     scale_
     (
         IOobject

@@ -64,7 +64,7 @@ Foam::diameterModels::sizeGroup::sizeGroup
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(name, dimless, readScalar(dict.lookup("value"))),
+        dimensionedScalar(name, dimless, dict.lookup<scalar>("value")),
         velocityGroup.f().boundaryField().types()
     ),
     dict_(dict),
@@ -72,7 +72,7 @@ Foam::diameterModels::sizeGroup::sizeGroup
     velocityGroup_(velocityGroup),
     dSph_("dSph", dimLength, dict),
     x_("x", pi/6.0*pow3(dSph_)),
-    value_(readScalar(dict.lookup("value")))
+    value_(dict.lookup<scalar>("value"))
 {
     // Adjust refValue at mixedFvPatchField boundaries
     forAll(this->boundaryField(), patchi)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,9 @@ Foam::ParticleStressModels::HarrisCrighton::HarrisCrighton
 )
 :
     ParticleStressModel(dict),
-    pSolid_(readScalar(dict.lookup("pSolid"))),
-    beta_(readScalar(dict.lookup("beta"))),
-    eps_(readScalar(dict.lookup("eps")))
+    pSolid_(dict.template lookup<scalar>("pSolid")),
+    beta_(dict.template lookup<scalar>("beta")),
+    eps_(dict.template lookup<scalar>("eps"))
 {}
 
 

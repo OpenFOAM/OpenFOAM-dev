@@ -120,12 +120,13 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
 
     if (this->coeffsDict_.found("phiTol"))
     {
-        phiTol_ = readScalar(this->coeffsDict_.lookup("phiTol"));
+        phiTol_ = this->coeffsDict_.template lookup<scalar>("phiTol");
     }
 
     if (this->coeffsDict_.found("NOxThreshold"))
     {
-        NOxThreshold_ = readScalar(this->coeffsDict_.lookup("NOxThreshold"));
+        NOxThreshold_ =
+            this->coeffsDict_.template lookup<scalar>("NOxThreshold");
     }
     const List<List<specieElement>>& specieComposition =
         chemistry.specieComp();
@@ -227,7 +228,7 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
 
         forAll(fuelSpecies_, i)
         {
-            fuelSpeciesProp_[i] = readScalar(fuelDict.lookup(fuelSpecies_[i]));
+            fuelSpeciesProp_[i] = fuelDict.lookup<scalar>(fuelSpecies_[i]);
             for (label j=0; j<this->nSpecie_; j++)
             {
                 if (this->chemistry_.Y()[j].member() == fuelSpecies_[i])

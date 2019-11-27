@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,10 @@ Foam::LISAAtomization<CloudType>::LISAAtomization
 )
 :
     AtomizationModel<CloudType>(dict, owner, typeName),
-    Cl_(readScalar(this->coeffDict().lookup("Cl"))),
-    cTau_(readScalar(this->coeffDict().lookup("cTau"))),
-    Q_(readScalar(this->coeffDict().lookup("Q"))),
-    lisaExp_(readScalar(this->coeffDict().lookup("lisaExp"))),
+    Cl_(this->coeffDict().template lookup<scalar>("Cl")),
+    cTau_(this->coeffDict().template lookup<scalar>("cTau")),
+    Q_(this->coeffDict().template lookup<scalar>("Q")),
+    lisaExp_(this->coeffDict().template lookup<scalar>("lisaExp")),
     injectorDirection_(this->coeffDict().lookup("injectorDirection")),
     SMDCalcMethod_(this->coeffDict().lookup("SMDCalculationMethod"))
 {

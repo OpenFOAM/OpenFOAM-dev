@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ void Foam::solution::read(const dictionary& dict)
             forAll(entryNames, i)
             {
                 const word& e = entryNames[i];
-                scalar value = readScalar(relaxDict.lookup(e));
+                scalar value = relaxDict.lookup<scalar>(e);
 
                 if (e(0, 1) == "p")
                 {
@@ -277,7 +277,7 @@ Foam::scalar Foam::solution::fieldRelaxationFactor(const word& name) const
 
     if (fieldRelaxDict_.found(name))
     {
-        return readScalar(fieldRelaxDict_.lookup(name));
+        return fieldRelaxDict_.lookup<scalar>(name);
     }
     else if (fieldRelaxDefault_ > small)
     {
@@ -306,7 +306,7 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
 
     if (eqnRelaxDict_.found(name))
     {
-        return readScalar(eqnRelaxDict_.lookup(name));
+        return eqnRelaxDict_.lookup<scalar>(name);
     }
     else if (eqnRelaxDefault_ > small)
     {

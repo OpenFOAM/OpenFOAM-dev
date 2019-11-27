@@ -74,7 +74,7 @@ Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
     UName_(dict.lookupOrDefault<word>("U", "U")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
-    gamma_(readScalar(dict.lookup("gamma"))),
+    gamma_(dict.lookup<scalar>("gamma")),
     T0_("T0", dict, p.size())
 {
     if (dict.found("value"))

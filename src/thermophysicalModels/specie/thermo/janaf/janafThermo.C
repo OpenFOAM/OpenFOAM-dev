@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,9 +60,9 @@ template<class EquationOfState>
 Foam::janafThermo<EquationOfState>::janafThermo(const dictionary& dict)
 :
     EquationOfState(dict),
-    Tlow_(readScalar(dict.subDict("thermodynamics").lookup("Tlow"))),
-    Thigh_(readScalar(dict.subDict("thermodynamics").lookup("Thigh"))),
-    Tcommon_(readScalar(dict.subDict("thermodynamics").lookup("Tcommon"))),
+    Tlow_(dict.subDict("thermodynamics").lookup<scalar>("Tlow")),
+    Thigh_(dict.subDict("thermodynamics").lookup<scalar>("Thigh")),
+    Tcommon_(dict.subDict("thermodynamics").lookup<scalar>("Tcommon")),
     highCpCoeffs_(dict.subDict("thermodynamics").lookup("highCpCoeffs")),
     lowCpCoeffs_(dict.subDict("thermodynamics").lookup("lowCpCoeffs"))
 {

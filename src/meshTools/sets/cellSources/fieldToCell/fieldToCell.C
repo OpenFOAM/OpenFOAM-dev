@@ -116,8 +116,8 @@ Foam::fieldToCell::fieldToCell
 :
     topoSetSource(mesh),
     fieldName_(dict.lookup("field")),
-    min_(readScalar(dict.lookup("min"))),
-    max_(readScalar(dict.lookup("max")))
+    min_(dict.lookup<scalar>("min")),
+    max_(dict.lookup<scalar>("max"))
 {}
 
 

@@ -45,7 +45,7 @@ void Foam::solidDisplacementThermo::readProperty(volScalarField& prop) const
         (
             prop.name(),
             prop.dimensions(),
-            readScalar(propDict.lookup("value"))
+            propDict.lookup<scalar>("value")
         );
     }
     else if (propType == "field")

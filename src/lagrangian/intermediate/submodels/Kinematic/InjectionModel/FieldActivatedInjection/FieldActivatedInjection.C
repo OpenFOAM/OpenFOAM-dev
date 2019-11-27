@@ -40,7 +40,7 @@ Foam::FieldActivatedInjection<CloudType>::FieldActivatedInjection
 )
 :
     InjectionModel<CloudType>(dict, owner, modelName, typeName),
-    factor_(readScalar(this->coeffDict().lookup("factor"))),
+    factor_(this->coeffDict().template lookup<scalar>("factor")),
     referenceField_
     (
         owner.db().objectRegistry::template lookupObject<volScalarField>

@@ -73,7 +73,7 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
     }
     else
     {
-        scalar defaultEff = readScalar(dict.lookup("defaultEfficiency"));
+        scalar defaultEff = dict.lookup<scalar>("defaultEfficiency");
         scalarList::operator=(defaultEff);
     }
 }

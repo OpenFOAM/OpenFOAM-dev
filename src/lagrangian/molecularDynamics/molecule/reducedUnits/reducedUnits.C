@@ -135,11 +135,11 @@ void Foam::reducedUnits::setRefValues
     const IOdictionary& reducedUnitsDict
 )
 {
-    refLength_ = readScalar(reducedUnitsDict.lookup("refLength"));
+    refLength_ = reducedUnitsDict.template lookup<scalar>("refLength");
 
-    refTime_ = readScalar(reducedUnitsDict.lookup("refTime"));
+    refTime_ = reducedUnitsDict.template lookup<scalar>("refTime");
 
-    refMass_  = readScalar(reducedUnitsDict.lookup("refMass"));
+    refMass_  = reducedUnitsDict.template lookup<scalar>("refMass");
 
     calcRefValues();
 }

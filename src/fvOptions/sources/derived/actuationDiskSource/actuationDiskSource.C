@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,9 +89,9 @@ Foam::fv::actuationDiskSource::actuationDiskSource
 :
     cellSetOption(name, modelType, dict, mesh),
     diskDir_(coeffs_.lookup("diskDir")),
-    Cp_(readScalar(coeffs_.lookup("Cp"))),
-    Ct_(readScalar(coeffs_.lookup("Ct"))),
-    diskArea_(readScalar(coeffs_.lookup("diskArea"))),
+    Cp_(coeffs_.lookup<scalar>("Cp")),
+    Ct_(coeffs_.lookup<scalar>("Ct")),
+    diskArea_(coeffs_.lookup<scalar>("diskArea")),
     upstreamPoint_(coeffs_.lookup("upstreamPoint")),
     upstreamCellId_(-1)
 {

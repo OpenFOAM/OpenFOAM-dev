@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,8 @@ lennardJones::lennardJones
 :
     pairPotential(name, pairPotentialProperties),
     lennardJonesCoeffs_(pairPotentialProperties.subDict(typeName + "Coeffs")),
-    sigma_(readScalar(lennardJonesCoeffs_.lookup("sigma"))),
-    epsilon_(readScalar(lennardJonesCoeffs_.lookup("epsilon")))
+    sigma_(lennardJonesCoeffs_.template lookup<scalar>("sigma")),
+    epsilon_(lennardJonesCoeffs_.template lookup<scalar>("epsilon"))
 {
     setLookupTables();
 }

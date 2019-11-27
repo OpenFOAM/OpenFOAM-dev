@@ -115,8 +115,8 @@ Foam::waveModels::Airy::Airy
 )
 :
     waveModel(db, dict),
-    length_(readScalar(dict.lookup("length"))),
-    phase_(readScalar(dict.lookup("phase"))),
+    length_(dict.lookup<scalar>("length")),
+    phase_(dict.lookup<scalar>("phase")),
     depth_(dict.lookupOrDefault<scalar>("depth", log(2*great)/k()))
 {}
 

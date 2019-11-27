@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
         Function1<scalar>::New("function", dict);
     const Function1<scalar>& function = functionPtr();
 
-    const scalar x0 = readScalar(dict.lookup("x0"));
-    const scalar x1 = readScalar(dict.lookup("x1"));
+    const scalar x0 = dict.lookup<scalar>("x0");
+    const scalar x1 = dict.lookup<scalar>("x1");
     const label nX = dict.lookup<label>("nX");
     const scalar dx = (x1 - x0)/(nX - 1);
     const scalarField xs

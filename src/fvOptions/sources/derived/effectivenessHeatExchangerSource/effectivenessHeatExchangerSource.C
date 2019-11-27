@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,9 +152,9 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    secondaryMassFlowRate_(readScalar(coeffs_.lookup("secondaryMassFlowRate"))),
-    secondaryInletT_(readScalar(coeffs_.lookup("secondaryInletT"))),
-    primaryInletT_(readScalar(coeffs_.lookup("primaryInletT"))),
+    secondaryMassFlowRate_(coeffs_.lookup<scalar>("secondaryMassFlowRate")),
+    secondaryInletT_(coeffs_.lookup<scalar>("secondaryInletT")),
+    primaryInletT_(coeffs_.lookup<scalar>("primaryInletT")),
     eTable_(),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     TName_(coeffs_.lookupOrDefault<word>("T", "T")),

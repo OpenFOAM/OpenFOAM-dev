@@ -43,9 +43,9 @@ Foam::dynamicInkJetFvMesh::dynamicInkJetFvMesh(const IOobject& io)
 :
     dynamicFvMesh(io),
     dynamicMeshCoeffs_(dynamicMeshDict().optionalSubDict(typeName + "Coeffs")),
-    amplitude_(readScalar(dynamicMeshCoeffs_.lookup("amplitude"))),
-    frequency_(readScalar(dynamicMeshCoeffs_.lookup("frequency"))),
-    refPlaneX_(readScalar(dynamicMeshCoeffs_.lookup("refPlaneX"))),
+    amplitude_(dynamicMeshCoeffs_.lookup<scalar>("amplitude")),
+    frequency_(dynamicMeshCoeffs_.lookup<scalar>("frequency")),
+    refPlaneX_(dynamicMeshCoeffs_.lookup<scalar>("refPlaneX")),
     stationaryPoints_
     (
         IOobject

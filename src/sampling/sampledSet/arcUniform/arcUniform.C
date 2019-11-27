@@ -129,8 +129,8 @@ Foam::sampledSets::arcUniform::arcUniform
     centre_(dict.lookup("centre")),
     normal_(normalised(dict.lookup<vector>("normal"))),
     radial_(dict.lookup<vector>("radial")),
-    startAngle_(readScalar(dict.lookup("startAngle"))),
-    endAngle_(readScalar(dict.lookup("endAngle"))),
+    startAngle_(dict.lookup<scalar>("startAngle")),
+    endAngle_(dict.lookup<scalar>("endAngle")),
     nPoints_(dict.lookup<scalar>("nPoints"))
 {
     genSamples();

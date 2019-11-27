@@ -31,7 +31,7 @@ template<class Type>
 void Foam::Function1s::Sine<Type>::read(const dictionary& coeffs)
 {
     amplitude_ = Function1<Type>::New("amplitude", coeffs);
-    frequency_ = readScalar(coeffs.lookup("frequency"));
+    frequency_ = coeffs.lookup<scalar>("frequency");
     start_ = coeffs.lookupOrDefault<scalar>("start", 0);
     level_ = Function1<Type>::New("level", coeffs);
 

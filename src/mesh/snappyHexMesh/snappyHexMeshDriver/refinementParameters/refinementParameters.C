@@ -40,7 +40,7 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
         dict.lookupOrDefault
         (
             "planarAngle",
-            readScalar(dict.lookup("resolveFeatureAngle"))
+            dict.lookup<scalar>("resolveFeatureAngle")
         )
     ),
     nBufferLayers_(dict.lookup<label>("nCellsBetweenLevels")),
@@ -56,7 +56,7 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
         dict.lookupOrDefault<Switch>("handleSnapProblems", true)
     )
 {
-    scalar featAngle(readScalar(dict.lookup("resolveFeatureAngle")));
+    scalar featAngle(dict.lookup<scalar>("resolveFeatureAngle"));
 
     if (featAngle < 0 || featAngle > 180)
     {

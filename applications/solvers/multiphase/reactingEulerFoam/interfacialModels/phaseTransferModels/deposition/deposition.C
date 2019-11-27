@@ -51,7 +51,7 @@ Foam::phaseTransferModels::deposition::deposition
     phaseTransferModel(dict, pair),
     dropletName_(dict.lookup("droplet")),
     surfaceName_(dict.lookup("surface")),
-    efficiency_(readScalar(dict.lookup("efficiency")))
+    efficiency_(dict.lookup<scalar>("efficiency"))
 {}
 
 

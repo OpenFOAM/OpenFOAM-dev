@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,10 +61,10 @@ Foam::pairPotential::pairPotential
 :
     name_(name),
     pairPotentialProperties_(pairPotentialProperties),
-    rCut_(readScalar(pairPotentialProperties_.lookup("rCut"))),
+    rCut_(pairPotentialProperties_.template lookup<scalar>("rCut")),
     rCutSqr_(rCut_*rCut_),
-    rMin_(readScalar(pairPotentialProperties_.lookup("rMin"))),
-    dr_(readScalar(pairPotentialProperties_.lookup("dr"))),
+    rMin_(pairPotentialProperties_.template lookup<scalar>("rMin")),
+    dr_(pairPotentialProperties_.template lookup<scalar>("dr")),
     forceLookup_(0),
     energyLookup_(0),
     esfPtr_(nullptr),

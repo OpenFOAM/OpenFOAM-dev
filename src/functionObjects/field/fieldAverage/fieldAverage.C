@@ -266,7 +266,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
                 dictionary fieldDict(propsDict.subDict(fieldName));
 
                 totalIter_[fieldi] = fieldDict.lookup<label>("totalIter");
-                totalTime_[fieldi] = readScalar(fieldDict.lookup("totalTime"));
+                totalTime_[fieldi] = fieldDict.lookup<scalar>("totalTime");
 
                 Log << "        " << fieldName
                     << " iters = " << totalIter_[fieldi]

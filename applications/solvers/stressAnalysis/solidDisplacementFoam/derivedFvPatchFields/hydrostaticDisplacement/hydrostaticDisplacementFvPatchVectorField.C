@@ -52,8 +52,8 @@ hydrostaticDisplacementFvPatchVectorField
 )
 :
     tractionDisplacementFvPatchVectorField(p, iF),
-    rhoLiquid_(readScalar(dict.lookup("rhoLiquid"))),
-    liquidSurfacePressure_(readScalar(dict.lookup("liquidSurfacePressure"))),
+    rhoLiquid_(dict.lookup<scalar>("rhoLiquid")),
+    liquidSurfacePressure_(dict.lookup<scalar>("liquidSurfacePressure")),
     liquidSurfacePoint_(dict.lookup("liquidSurfacePoint"))
 {}
 

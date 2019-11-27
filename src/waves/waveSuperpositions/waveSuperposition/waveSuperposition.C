@@ -234,7 +234,7 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
             wavei,
             waveModel::New(waveDict.dictName(), db, waveDict)
         );
-        waveAngles_[wavei] = readScalar(waveDict.lookup("angle"));
+        waveAngles_[wavei] = waveDict.lookup<scalar>("angle");
     }
 }
 

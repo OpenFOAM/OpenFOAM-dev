@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,8 @@ Foam::cylinderAnnulusToCell::cylinderAnnulusToCell
     topoSetSource(mesh),
     p1_(dict.lookup("p1")),
     p2_(dict.lookup("p2")),
-    outerRadius_(readScalar(dict.lookup("outerRadius"))),
-    innerRadius_(readScalar(dict.lookup("innerRadius")))
+    outerRadius_(dict.lookup<scalar>("outerRadius")),
+    innerRadius_(dict.lookup<scalar>("innerRadius"))
 {}
 
 

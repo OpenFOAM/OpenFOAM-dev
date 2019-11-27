@@ -209,14 +209,8 @@ void Foam::movingConeTopoFvMesh::addZonesAndModifiers()
             nMods,
             topoChanger_,
             "rightExtrusionFaces",
-            readScalar
-            (
-                motionDict_.subDict("right").lookup("minThickness")
-            ),
-            readScalar
-            (
-                motionDict_.subDict("right").lookup("maxThickness")
-            )
+            motionDict_.subDict("right").lookup<scalar>("minThickness"),
+            motionDict_.subDict("right").lookup<scalar>("maxThickness")
         );
     nMods++;
 
@@ -226,14 +220,8 @@ void Foam::movingConeTopoFvMesh::addZonesAndModifiers()
         nMods,
         topoChanger_,
         "leftExtrusionFaces",
-        readScalar
-        (
-            motionDict_.subDict("left").lookup("minThickness")
-        ),
-        readScalar
-        (
-            motionDict_.subDict("left").lookup("maxThickness")
-        )
+        motionDict_.subDict("left").lookup<scalar>("minThickness"),
+        motionDict_.subDict("left").lookup<scalar>("maxThickness")
     );
     nMods++;
     tm.setSize(nMods);
@@ -252,14 +240,14 @@ Foam::movingConeTopoFvMesh::movingConeTopoFvMesh(const IOobject& io)
     topoChangerFvMesh(io),
     motionDict_(dynamicMeshDict().optionalSubDict(typeName + "Coeffs")),
     motionVelAmplitude_(motionDict_.lookup("motionVelAmplitude")),
-    motionVelPeriod_(readScalar(motionDict_.lookup("motionVelPeriod"))),
+    motionVelPeriod_(motionDict_.lookup<scalar>("motionVelPeriod")),
     curMotionVel_
     (
         motionVelAmplitude_*sin(time().value()*pi/motionVelPeriod_)
     ),
-    leftEdge_(readScalar(motionDict_.lookup("leftEdge"))),
-    curLeft_(readScalar(motionDict_.lookup("leftObstacleEdge"))),
-    curRight_(readScalar(motionDict_.lookup("rightObstacleEdge")))
+    leftEdge_(motionDict_.lookup<scalar>("leftEdge")),
+    curLeft_(motionDict_.lookup<scalar>("leftObstacleEdge")),
+    curRight_(motionDict_.lookup<scalar>("rightObstacleEdge"))
 {
     Pout<< "Initial time:" << time().value()
         << " Initial curMotionVel_:" << curMotionVel_

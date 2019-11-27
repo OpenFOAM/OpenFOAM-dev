@@ -1,3 +1,3 @@
 nCorr = stressControl.lookupOrDefault<int>("nCorrectors", 1);
-convergenceTolerance = readScalar(stressControl.lookup("D"));
+convergenceTolerance = stressControl.lookup<scalar>("D");
 stressControl.lookup("compactNormalStress") >> compactNormalStress;

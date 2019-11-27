@@ -61,8 +61,8 @@ phaseHydrostaticPressureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF),
     phaseFraction_(dict.lookupOrDefault<word>("phaseFraction", "alpha")),
-    rho_(readScalar(dict.lookup("rho"))),
-    pRefValue_(readScalar(dict.lookup("pRefValue"))),
+    rho_(dict.lookup<scalar>("rho")),
+    pRefValue_(dict.lookup<scalar>("pRefValue")),
     pRefPoint_(dict.lookup("pRefPoint"))
 {
     this->refValue() = pRefValue_;

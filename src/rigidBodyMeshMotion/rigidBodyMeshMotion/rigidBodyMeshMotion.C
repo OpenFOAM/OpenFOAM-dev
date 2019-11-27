@@ -62,8 +62,8 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
     bodyID_(bodyID),
     patches_(wordReList(dict.lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
-    di_(readScalar(dict.lookup("innerDistance"))),
-    do_(readScalar(dict.lookup("outerDistance"))),
+    di_(dict.lookup<scalar>("innerDistance")),
+    do_(dict.lookup<scalar>("outerDistance")),
     weight_
     (
         IOobject
@@ -121,7 +121,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 {
     if (rhoName_ == "rhoInf")
     {
-        rhoInf_ = readScalar(coeffDict().lookup("rhoInf"));
+        rhoInf_ = coeffDict().lookup<scalar>("rhoInf");
     }
 
     if (coeffDict().found("ramp"))

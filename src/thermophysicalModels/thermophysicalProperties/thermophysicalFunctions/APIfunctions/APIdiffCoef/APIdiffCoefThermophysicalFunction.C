@@ -64,10 +64,10 @@ Foam::thermophysicalFunctions::APIdiffCoef::APIdiffCoef
 
 Foam::thermophysicalFunctions::APIdiffCoef::APIdiffCoef(const dictionary& dict)
 :
-    a_(readScalar(dict.lookup("a"))),
-    b_(readScalar(dict.lookup("b"))),
-    wf_(readScalar(dict.lookup("wf"))),
-    wa_(readScalar(dict.lookup("wa"))),
+    a_(dict.lookup<scalar>("a")),
+    b_(dict.lookup<scalar>("b")),
+    wf_(dict.lookup<scalar>("wf")),
+    wa_(dict.lookup<scalar>("wa")),
     alpha_(sqrt(1/wf_ + 1/wa_)),
     beta_(sqr((cbrt(a_) + cbrt(b_))))
 {}

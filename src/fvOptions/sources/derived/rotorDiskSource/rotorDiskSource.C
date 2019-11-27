@@ -89,7 +89,7 @@ void Foam::fv::rotorDiskSource::checkData()
                 {
                     scalar UIn
                     (
-                        readScalar(coeffs_.lookup("inletNormalVelocity"))
+                        coeffs_.lookup<scalar>("inletNormalVelocity")
                     );
                     inletVelocity_ = -coordSys_.R().e3()*UIn;
                     break;
@@ -590,7 +590,7 @@ bool Foam::fv::rotorDiskSource::read(const dictionary& dict)
         applied_.setSize(fieldNames_.size(), false);
 
         // Read co-ordinate system/geometry invariant properties
-        scalar rpm(readScalar(coeffs_.lookup("rpm")));
+        scalar rpm(coeffs_.lookup<scalar>("rpm"));
         omega_ = rpm/60.0*mathematical::twoPi;
 
         coeffs_.lookup("nBlades") >> nBlades_;

@@ -99,11 +99,11 @@ activePressureForceBaffleVelocityFvPatchVectorField
     initWallSf_(0),
     initCyclicSf_(0),
     nbrCyclicSf_(0),
-    openFraction_(readScalar(dict.lookup("openFraction"))),
-    openingTime_(readScalar(dict.lookup("openingTime"))),
-    maxOpenFractionDelta_(readScalar(dict.lookup("maxOpenFractionDelta"))),
+    openFraction_(dict.lookup<scalar>("openFraction")),
+    openingTime_(dict.lookup<scalar>("openingTime")),
+    maxOpenFractionDelta_(dict.lookup<scalar>("maxOpenFractionDelta")),
     curTimeIndex_(-1),
-    minThresholdValue_(readScalar(dict.lookup("minThresholdValue"))),
+    minThresholdValue_(dict.lookup<scalar>("minThresholdValue")),
     fBased_(readBool(dict.lookup("forceBased"))),
     baffleActivated_(0)
 {

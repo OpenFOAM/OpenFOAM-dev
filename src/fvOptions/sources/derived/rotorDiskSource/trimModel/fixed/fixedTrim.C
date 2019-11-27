@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,9 +67,9 @@ void Foam::fixedTrim::read(const dictionary& dict)
 {
     trimModel::read(dict);
 
-    scalar theta0 = degToRad(readScalar(coeffs_.lookup("theta0")));
-    scalar theta1c = degToRad(readScalar(coeffs_.lookup("theta1c")));
-    scalar theta1s = degToRad(readScalar(coeffs_.lookup("theta1s")));
+    scalar theta0 = degToRad(coeffs_.lookup<scalar>("theta0"));
+    scalar theta1c = degToRad(coeffs_.lookup<scalar>("theta1c"));
+    scalar theta1s = degToRad(coeffs_.lookup<scalar>("theta1s"));
 
     const List<point>& x = rotor_.x();
     forAll(thetag_, i)

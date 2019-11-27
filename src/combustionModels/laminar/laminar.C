@@ -92,7 +92,7 @@ void Foam::combustionModels::laminar<ReactionThermo>::correct()
             {
                 const scalar maxIntegrationTime
                 (
-                    readScalar(this->coeffs().lookup("maxIntegrationTime"))
+                    this->coeffs().template lookup<scalar>("maxIntegrationTime")
                 );
 
                 this->chemistryPtr_->solve

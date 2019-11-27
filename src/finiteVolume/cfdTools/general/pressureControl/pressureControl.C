@@ -58,9 +58,9 @@ Foam::pressureControl::pressureControl
 
     if (dict.found("pMax") && dict.found("pMin"))
     {
-        pMax_.value() = readScalar(dict.lookup("pMax"));
+        pMax_.value() = dict.lookup<scalar>("pMax");
         limitMaxP_ = true;
-        pMin_.value() = readScalar(dict.lookup("pMin"));
+        pMin_.value() = dict.lookup<scalar>("pMin");
         limitMinP_ = true;
     }
     else
@@ -99,7 +99,7 @@ Foam::pressureControl::pressureControl
 
         if (dict.found("pMax"))
         {
-            pMax_.value() = readScalar(dict.lookup("pMax"));
+            pMax_.value() = dict.lookup<scalar>("pMax");
             limitMaxP_ = true;
         }
         else if (dict.found("pMaxFactor"))
@@ -114,7 +114,7 @@ Foam::pressureControl::pressureControl
                     << exit(FatalIOError);
             }
 
-            const scalar pMaxFactor(readScalar(dict.lookup("pMaxFactor")));
+            const scalar pMaxFactor(dict.lookup<scalar>("pMaxFactor"));
             pMax_.value() = pMaxFactor*pMax;
             limitMaxP_ = true;
         }
@@ -156,7 +156,7 @@ Foam::pressureControl::pressureControl
 
         if (dict.found("pMin"))
         {
-            pMin_.value() = readScalar(dict.lookup("pMin"));
+            pMin_.value() = dict.lookup<scalar>("pMin");
             limitMinP_ = true;
         }
         else if (dict.found("pMinFactor"))
@@ -171,7 +171,7 @@ Foam::pressureControl::pressureControl
                     << exit(FatalIOError);
             }
 
-            const scalar pMinFactor(readScalar(dict.lookup("pMinFactor")));
+            const scalar pMinFactor(dict.lookup<scalar>("pMinFactor"));
             pMin_.value() = pMinFactor*pMin;
             limitMinP_ = true;
         }

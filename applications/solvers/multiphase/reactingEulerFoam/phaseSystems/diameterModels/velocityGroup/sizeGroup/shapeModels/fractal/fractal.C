@@ -136,7 +136,7 @@ Foam::diameterModels::shapeModels::fractal::fractal
                     kappa_.boundaryFieldRef()[patchi]
                 );
 
-            kappa.refValue() = readScalar(sizeGroup_.dict().lookup("kappa"));
+            kappa.refValue() = sizeGroup_.dict().lookup<scalar>("kappa");
         }
     }
 

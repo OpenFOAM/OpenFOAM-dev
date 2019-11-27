@@ -287,7 +287,6 @@ DebugSwitches
     SpalartAllmarasIDDES    0;
     SphereDrag          0;
     StandardWallInteraction 0;
-    StaticHashTable     0;
     StochasticDispersionRAS 0;
     SuperBee            0;
     SuperBeeV           0;

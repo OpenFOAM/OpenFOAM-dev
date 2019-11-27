@@ -56,8 +56,8 @@ Foam::fv::limitTemperature::limitTemperature
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    Tmin_(readScalar(coeffs_.lookup("min"))),
-    Tmax_(readScalar(coeffs_.lookup("max"))),
+    Tmin_(coeffs_.lookup<scalar>("min")),
+    Tmax_(coeffs_.lookup<scalar>("max")),
     phase_(coeffs_.lookupOrDefault<word>("phase", word::null))
 {
     // Set the field name to that of the energy field from which the temperature

@@ -64,11 +64,11 @@ Foam::thermophysicalFunctions::NSRDS14::NSRDS14
 
 Foam::thermophysicalFunctions::NSRDS14::NSRDS14(const dictionary& dict)
 :
-    Tc_(readScalar(dict.lookup("Tc"))),
-    a_(readScalar(dict.lookup("a"))),
-    b_(readScalar(dict.lookup("b"))),
-    c_(readScalar(dict.lookup("c"))),
-    d_(readScalar(dict.lookup("d")))
+    Tc_(dict.lookup<scalar>("Tc")),
+    a_(dict.lookup<scalar>("a")),
+    b_(dict.lookup<scalar>("b")),
+    c_(dict.lookup<scalar>("c")),
+    d_(dict.lookup<scalar>("d"))
 {}
 
 

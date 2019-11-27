@@ -85,13 +85,13 @@ bool Foam::singleRegionConvergenceControl::readResidualControls()
         {
             residualData rd;
             rd.name = fName.c_str();
-            rd.absTol = readScalar(residualDict.lookup(fName));
+            rd.absTol = residualDict.lookup<scalar>(fName);
             data.append(rd);
         }
         else
         {
             residualData& rd = data[fieldi];
-            rd.absTol = readScalar(residualDict.lookup(fName));
+            rd.absTol = residualDict.lookup<scalar>(fName);
         }
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ Foam::fv::solidificationMeltingSource::Cp() const
         {
             if (CpName_ == "CpRef")
             {
-                scalar CpRef = readScalar(coeffs_.lookup("CpRef"));
+                scalar CpRef = coeffs_.lookup<scalar>("CpRef");
 
                 return volScalarField::New
                 (
@@ -195,20 +195,20 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
 )
 :
     cellSetOption(sourceName, modelType, dict, mesh),
-    Tsol_(readScalar(coeffs_.lookup("Tsol"))),
+    Tsol_(coeffs_.lookup<scalar>("Tsol")),
     Tliq_(coeffs_.lookupOrDefault("Tliq", Tsol_)),
     alpha1e_(coeffs_.lookupOrDefault("alpha1e", 0.0)),
-    L_(readScalar(coeffs_.lookup("L"))),
+    L_(coeffs_.lookup<scalar>("L")),
     relax_(coeffs_.lookupOrDefault("relax", 0.9)),
     mode_(thermoModeTypeNames_.read(coeffs_.lookup("thermoMode"))),
-    rhoRef_(readScalar(coeffs_.lookup("rhoRef"))),
+    rhoRef_(coeffs_.lookup<scalar>("rhoRef")),
     TName_(coeffs_.lookupOrDefault<word>("T", "T")),
     CpName_(coeffs_.lookupOrDefault<word>("Cp", "Cp")),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     phiName_(coeffs_.lookupOrDefault<word>("phi", "phi")),
     Cu_(coeffs_.lookupOrDefault<scalar>("Cu", 100000)),
     q_(coeffs_.lookupOrDefault("q", 0.001)),
-    beta_(readScalar(coeffs_.lookup("beta"))),
+    beta_(coeffs_.lookup<scalar>("beta")),
     alpha1_
     (
         IOobject

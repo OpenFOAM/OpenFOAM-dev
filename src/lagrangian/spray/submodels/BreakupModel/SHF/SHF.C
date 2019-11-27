@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,35 +35,35 @@ Foam::SHF<CloudType>::SHF
 )
 :
     BreakupModel<CloudType>(dict, owner, typeName),
-    weCorrCoeff_(readScalar(this->coeffDict().lookup("weCorrCoeff"))),
-    weBuCrit_(readScalar(this->coeffDict().lookup("weBuCrit"))),
-    weBuBag_(readScalar(this->coeffDict().lookup("weBuBag"))),
-    weBuMM_(readScalar(this->coeffDict().lookup("weBuMM"))),
-    ohnCoeffCrit_(readScalar(this->coeffDict().lookup("ohnCoeffCrit"))),
-    ohnCoeffBag_(readScalar(this->coeffDict().lookup("ohnCoeffBag"))),
-    ohnCoeffMM_(readScalar(this->coeffDict().lookup("ohnCoeffMM"))),
-    ohnExpCrit_(readScalar(this->coeffDict().lookup("ohnExpCrit"))),
-    ohnExpBag_(readScalar(this->coeffDict().lookup("ohnExpBag"))),
-    ohnExpMM_(readScalar(this->coeffDict().lookup("ohnExpMM"))),
-    cInit_(readScalar(this->coeffDict().lookup("Cinit"))),
-    c1_(readScalar(this->coeffDict().lookup("C1"))),
-    c2_(readScalar(this->coeffDict().lookup("C2"))),
-    c3_(readScalar(this->coeffDict().lookup("C3"))),
-    cExp1_(readScalar(this->coeffDict().lookup("Cexp1"))),
-    cExp2_(readScalar(this->coeffDict().lookup("Cexp2"))),
-    cExp3_(readScalar(this->coeffDict().lookup("Cexp3"))),
-    weConst_(readScalar(this->coeffDict().lookup("Weconst"))),
-    weCrit1_(readScalar(this->coeffDict().lookup("Wecrit1"))),
-    weCrit2_(readScalar(this->coeffDict().lookup("Wecrit2"))),
-    coeffD_(readScalar(this->coeffDict().lookup("CoeffD"))),
-    onExpD_(readScalar(this->coeffDict().lookup("OnExpD"))),
-    weExpD_(readScalar(this->coeffDict().lookup("WeExpD"))),
-    mu_(readScalar(this->coeffDict().lookup("mu"))),
-    sigma_(readScalar(this->coeffDict().lookup("sigma"))),
-    d32Coeff_(readScalar(this->coeffDict().lookup("d32Coeff"))),
-    cDmaxBM_(readScalar(this->coeffDict().lookup("cDmaxBM"))),
-    cDmaxS_(readScalar(this->coeffDict().lookup("cDmaxS"))),
-    corePerc_(readScalar(this->coeffDict().lookup("corePerc")))
+    weCorrCoeff_(this->coeffDict().template lookup<scalar>("weCorrCoeff")),
+    weBuCrit_(this->coeffDict().template lookup<scalar>("weBuCrit")),
+    weBuBag_(this->coeffDict().template lookup<scalar>("weBuBag")),
+    weBuMM_(this->coeffDict().template lookup<scalar>("weBuMM")),
+    ohnCoeffCrit_(this->coeffDict().template lookup<scalar>("ohnCoeffCrit")),
+    ohnCoeffBag_(this->coeffDict().template lookup<scalar>("ohnCoeffBag")),
+    ohnCoeffMM_(this->coeffDict().template lookup<scalar>("ohnCoeffMM")),
+    ohnExpCrit_(this->coeffDict().template lookup<scalar>("ohnExpCrit")),
+    ohnExpBag_(this->coeffDict().template lookup<scalar>("ohnExpBag")),
+    ohnExpMM_(this->coeffDict().template lookup<scalar>("ohnExpMM")),
+    cInit_(this->coeffDict().template lookup<scalar>("Cinit")),
+    c1_(this->coeffDict().template lookup<scalar>("C1")),
+    c2_(this->coeffDict().template lookup<scalar>("C2")),
+    c3_(this->coeffDict().template lookup<scalar>("C3")),
+    cExp1_(this->coeffDict().template lookup<scalar>("Cexp1")),
+    cExp2_(this->coeffDict().template lookup<scalar>("Cexp2")),
+    cExp3_(this->coeffDict().template lookup<scalar>("Cexp3")),
+    weConst_(this->coeffDict().template lookup<scalar>("Weconst")),
+    weCrit1_(this->coeffDict().template lookup<scalar>("Wecrit1")),
+    weCrit2_(this->coeffDict().template lookup<scalar>("Wecrit2")),
+    coeffD_(this->coeffDict().template lookup<scalar>("CoeffD")),
+    onExpD_(this->coeffDict().template lookup<scalar>("OnExpD")),
+    weExpD_(this->coeffDict().template lookup<scalar>("WeExpD")),
+    mu_(this->coeffDict().template lookup<scalar>("mu")),
+    sigma_(this->coeffDict().template lookup<scalar>("sigma")),
+    d32Coeff_(this->coeffDict().template lookup<scalar>("d32Coeff")),
+    cDmaxBM_(this->coeffDict().template lookup<scalar>("cDmaxBM")),
+    cDmaxS_(this->coeffDict().template lookup<scalar>("cDmaxS")),
+    corePerc_(this->coeffDict().template lookup<scalar>("corePerc"))
 {}
 
 

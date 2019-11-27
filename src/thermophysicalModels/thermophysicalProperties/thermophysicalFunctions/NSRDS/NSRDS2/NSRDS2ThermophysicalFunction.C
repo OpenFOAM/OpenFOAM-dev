@@ -56,10 +56,10 @@ Foam::thermophysicalFunctions::NSRDS2::NSRDS2
 
 Foam::thermophysicalFunctions::NSRDS2::NSRDS2(const dictionary& dict)
 :
-    a_(readScalar(dict.lookup("a"))),
-    b_(readScalar(dict.lookup("b"))),
-    c_(readScalar(dict.lookup("c"))),
-    d_(readScalar(dict.lookup("d")))
+    a_(dict.lookup<scalar>("a")),
+    b_(dict.lookup<scalar>("b")),
+    c_(dict.lookup<scalar>("c")),
+    d_(dict.lookup<scalar>("d"))
 {}
 
 

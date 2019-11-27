@@ -308,7 +308,7 @@ Foam::sampledSurfaces::distanceSurface::distanceSurface
             dict
         )
     ),
-    distance_(readScalar(dict.lookup("distance"))),
+    distance_(dict.lookup<scalar>("distance")),
     signed_(readBool(dict.lookup("signed"))),
     filter_
     (

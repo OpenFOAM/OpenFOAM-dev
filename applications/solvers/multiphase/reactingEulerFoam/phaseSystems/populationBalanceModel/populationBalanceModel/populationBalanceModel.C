@@ -1265,7 +1265,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
     {
         const label nCorr = this->nCorr();
         const scalar tolerance =
-            readScalar(solutionControls.lookup("tolerance"));
+            solutionControls.lookup<scalar>("tolerance");
 
         if (nCorr > 0)
         {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -360,7 +360,7 @@ int main(int argc, char *argv[])
     bool selectCut(readBool(refineDict.lookup("selectCut")));
     bool selectInside(readBool(refineDict.lookup("selectInside")));
     bool selectOutside(readBool(refineDict.lookup("selectOutside")));
-    scalar nearDist(readScalar(refineDict.lookup("nearDistance")));
+    scalar nearDist(refineDict.lookup<scalar>("nearDistance"));
 
 
     if (useSurface)

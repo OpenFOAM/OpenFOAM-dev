@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ Foam::ParticleErosion<CloudType>::ParticleErosion
     CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
     QPtr_(nullptr),
     patchIDs_(),
-    p_(readScalar(this->coeffDict().lookup("p"))),
+    p_(this->coeffDict().template lookup<scalar>("p")),
     psi_(this->coeffDict().template lookupOrDefault<scalar>("psi", 2.0)),
     K_(this->coeffDict().template lookupOrDefault<scalar>("K", 2.0))
 {

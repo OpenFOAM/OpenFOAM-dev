@@ -48,7 +48,7 @@ infinitelyFastChemistry<ReactionThermo, ThermoType>::infinitelyFastChemistry
         turb,
         combustionProperties
     ),
-    C_(readScalar(this->coeffs().lookup("C")))
+    C_(this->coeffs().template lookup<scalar>("C"))
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,9 @@ Foam::ParticleStressModels::exponential::exponential
 )
 :
     ParticleStressModel(dict),
-    preExp_(readScalar(dict.lookup("preExp"))),
-    expMax_(readScalar(dict.lookup("expMax"))),
-    g0_(readScalar(dict.lookup("g0")))
+    preExp_(dict.template lookup<scalar>("preExp")),
+    expMax_(dict.template lookup<scalar>("expMax")),
+    g0_(dict.template lookup<scalar>("g0"))
 {}
 
 

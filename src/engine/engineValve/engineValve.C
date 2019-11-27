@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,12 +156,12 @@ Foam::engineValve::engineValve
     liftProfile_("theta", "lift", name_, dict.lookup("liftProfile")),
     liftProfileStart_(min(liftProfile_.x())),
     liftProfileEnd_(max(liftProfile_.x())),
-    minLift_(readScalar(dict.lookup("minLift"))),
-    minTopLayer_(readScalar(dict.lookup("minTopLayer"))),
-    maxTopLayer_(readScalar(dict.lookup("maxTopLayer"))),
-    minBottomLayer_(readScalar(dict.lookup("minBottomLayer"))),
-    maxBottomLayer_(readScalar(dict.lookup("maxBottomLayer"))),
-    diameter_(readScalar(dict.lookup("diameter")))
+    minLift_(dict.lookup<scalar>("minLift")),
+    minTopLayer_(dict.lookup<scalar>("minTopLayer")),
+    maxTopLayer_(dict.lookup<scalar>("maxTopLayer")),
+    minBottomLayer_(dict.lookup<scalar>("minBottomLayer")),
+    maxBottomLayer_(dict.lookup<scalar>("maxBottomLayer")),
+    diameter_(dict.lookup<scalar>("diameter"))
 {}
 
 

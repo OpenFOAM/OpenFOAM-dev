@@ -60,7 +60,7 @@ Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "none")),
-    gamma_(psiName_ != "none" ? readScalar(dict.lookup("gamma")) : 1),
+    gamma_(psiName_ != "none" ? dict.lookup<scalar>("gamma") : 1),
     p0_("p0", dict, p.size())
 {
     if (dict.found("value"))

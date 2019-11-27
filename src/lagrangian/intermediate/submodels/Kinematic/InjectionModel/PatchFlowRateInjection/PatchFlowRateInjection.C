@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     patchInjectionBase(owner.mesh(), this->coeffDict().lookup("patchName")),
     phiName_(this->coeffDict().template lookupOrDefault<word>("phi", "phi")),
     rhoName_(this->coeffDict().template lookupOrDefault<word>("rho", "rho")),
-    duration_(readScalar(this->coeffDict().lookup("duration"))),
+    duration_(this->coeffDict().template lookup<scalar>("duration")),
     concentration_
     (
         TimeFunction1<scalar>
@@ -55,7 +55,7 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     ),
     parcelConcentration_
     (
-        readScalar(this->coeffDict().lookup("parcelConcentration"))
+        this->coeffDict().template lookup<scalar>("parcelConcentration")
     ),
     sizeDistribution_
     (

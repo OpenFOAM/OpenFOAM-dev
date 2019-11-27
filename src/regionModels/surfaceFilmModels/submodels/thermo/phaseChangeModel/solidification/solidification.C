@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ solidification::solidification
 )
 :
     phaseChangeModel(typeName, film, dict),
-    T0_(readScalar(coeffDict_.lookup("T0"))),
+    T0_(coeffDict_.lookup<scalar>("T0")),
     maxSolidificationFrac_
     (
         coeffDict_.lookupOrDefault("maxSolidificationFrac", 0.2)

@@ -89,7 +89,7 @@ waxSolventEvaporation::waxSolventEvaporation
             film.regionMesh().time().constant(),
             film.regionMesh()
         ),
-        readScalar(coeffDict_.lookup("Wwax"))
+        coeffDict_.lookup<scalar>("Wwax")
     ),
     Wsolvent_
     (
@@ -99,7 +99,7 @@ waxSolventEvaporation::waxSolventEvaporation
             film.regionMesh().time().constant(),
             film.regionMesh()
         ),
-        readScalar(coeffDict_.lookup("Wsolvent"))
+        coeffDict_.lookup<scalar>("Wsolvent")
     ),
     Ysolvent0_
     (
@@ -124,8 +124,8 @@ waxSolventEvaporation::waxSolventEvaporation
         ),
         film.regionMesh()
     ),
-    deltaMin_(readScalar(coeffDict_.lookup("deltaMin"))),
-    L_(readScalar(coeffDict_.lookup("L"))),
+    deltaMin_(coeffDict_.lookup<scalar>("deltaMin")),
+    L_(coeffDict_.lookup<scalar>("L")),
     TbFactor_(coeffDict_.lookupOrDefault<scalar>("TbFactor", 1.1)),
     YInfZero_(coeffDict_.lookupOrDefault<Switch>("YInfZero", false)),
     activityCoeff_

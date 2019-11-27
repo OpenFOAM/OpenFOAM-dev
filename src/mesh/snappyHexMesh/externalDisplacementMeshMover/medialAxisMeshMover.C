@@ -358,10 +358,8 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
     // ~~~~~~~~~~~~~~~~~~~~~
 
     //- Smooth surface normals
-    const label nSmoothSurfaceNormals = readLabel
-    (
-        coeffDict.lookup("nSmoothSurfaceNormals")
-    );
+    const label nSmoothSurfaceNormals =
+        coeffDict.lookup<label>("nSmoothSurfaceNormals");
 
     //- When is medial axis
     word angleKey = "minMedialAxisAngle";
@@ -372,25 +370,23 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
     }
     scalar minMedialAxisAngleCos = Foam::cos
     (
-        degToRad(readScalar(coeffDict.lookup(angleKey)))
+        degToRad(coeffDict.lookup<scalar>(angleKey))
     );
 
     //- Feature angle when to stop adding layers
-    const scalar featureAngle = readScalar(coeffDict.lookup("featureAngle"));
+    const scalar featureAngle = coeffDict.lookup<scalar>("featureAngle");
 
     //- When to slip along wall
     const scalar slipFeatureAngle =
     (
         coeffDict.found("slipFeatureAngle")
-      ? readScalar(coeffDict.lookup("slipFeatureAngle"))
+      ? coeffDict.lookup<scalar>("slipFeatureAngle")
       : 0.5*featureAngle
     );
 
     //- Smooth internal normals
-    const label nSmoothNormals = readLabel
-    (
-        coeffDict.lookup("nSmoothNormals")
-    );
+    const label nSmoothNormals =
+        coeffDict.lookup<label>("nSmoothNormals");
 
     //- Number of edges walking out
     const label nMedialAxisIter = coeffDict.lookupOrDefault<label>
@@ -1723,13 +1719,11 @@ void Foam::medialAxisMeshMover::calculateDisplacement
     );
 
     //- Layer thickness too big
-    const scalar maxThicknessToMedialRatio  = readScalar
-    (
-        coeffDict.lookup("maxThicknessToMedialRatio")
-    );
+    const scalar maxThicknessToMedialRatio  =
+        coeffDict.lookup<scalar>("maxThicknessToMedialRatio");
 
     //- Feature angle when to stop adding layers
-    const scalar featureAngle = readScalar(coeffDict.lookup("featureAngle"));
+    const scalar featureAngle = coeffDict.lookup<scalar>("featureAngle");
 
     //- Stop layer growth where mesh wraps around sharp edge
     const scalar minCosLayerTermination = Foam::cos
@@ -1738,10 +1732,8 @@ void Foam::medialAxisMeshMover::calculateDisplacement
     );
 
     //- Smoothing wanted patch thickness
-    const label nSmoothPatchThickness = readLabel
-    (
-        coeffDict.lookup("nSmoothThickness")
-    );
+    const label nSmoothPatchThickness =
+        coeffDict.lookup<label>("nSmoothThickness");
 
     //- Number of edges walking out
     const label nMedialAxisIter = coeffDict.lookupOrDefault<label>

@@ -51,9 +51,9 @@ int main(int argc, char *argv[])
 
     // Read the model, time controls and plot outlines from the dictionary
     rigidBodyMotion motion(dict);
-    const scalar deltaT(readScalar(dict.lookup("deltaT")));
+    const scalar deltaT(dict.lookup<scalar>("deltaT"));
     const label nIter(dict.lookupOrDefault<label>("nIter", 1));
-    const scalar endTime(readScalar(dict.lookup("endTime")));
+    const scalar endTime(dict.lookup<scalar>("endTime"));
     const dictionary& bodiesDict = dict.subDict("bodies");
     List<vectorField> outlines;
     labelList outlineBodyIDs;

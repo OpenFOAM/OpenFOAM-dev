@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -508,7 +508,7 @@ void Foam::moleculeCloud::initialiseMolecules
 
                 const scalar temperature
                 (
-                    readScalar(zoneDict.lookup("temperature"))
+                    zoneDict.template lookup<scalar>("temperature")
                 );
 
                 const vector bulkVelocity(zoneDict.lookup("bulkVelocity"));
@@ -540,10 +540,8 @@ void Foam::moleculeCloud::initialiseMolecules
 
                 if (zoneDict.found("numberDensity"))
                 {
-                    scalar numberDensity = readScalar
-                    (
-                        zoneDict.lookup("numberDensity")
-                    );
+                    scalar numberDensity =
+                        zoneDict.lookup<scalar>("numberDensity");
 
                     if (numberDensity < vSmall)
                     {
@@ -573,10 +571,7 @@ void Foam::moleculeCloud::initialiseMolecules
                         unitCellMass += cP.mass();
                     }
 
-                    scalar massDensity = readScalar
-                    (
-                        zoneDict.lookup("massDensity")
-                    );
+                    scalar massDensity = zoneDict.lookup<scalar>("massDensity");
 
                     if (massDensity < vSmall)
                     {

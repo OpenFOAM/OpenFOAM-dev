@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::fv::PhaseLimitStabilization<Type>::PhaseLimitStabilization
     option(name, modelType, dict, mesh),
     fieldName_(coeffs_.lookup("field")),
     rateName_(coeffs_.lookup("rate")),
-    residualAlpha_(readScalar(coeffs_.lookup("residualAlpha")))
+    residualAlpha_(coeffs_.lookup<scalar>("residualAlpha"))
 {
     fieldNames_.setSize(1, fieldName_);
     applied_.setSize(1, false);

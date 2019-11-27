@@ -289,7 +289,7 @@ Foam::mixerFvMesh::mixerFvMesh
             motionDict_.subDict("coordinateSystem")
         )
     ),
-    rpm_(readScalar(motionDict_.lookup("rpm"))),
+    rpm_(motionDict_.lookup<scalar>("rpm")),
     movingPointsMaskPtr_(nullptr)
 {
     addZonesAndModifiers();

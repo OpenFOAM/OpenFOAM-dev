@@ -52,8 +52,8 @@ Foam::wallBoilingModels::partitioningModels::
 linear::linear(const dictionary& dict)
 :
     partitioningModel(),
-    alphaLiquid1_(readScalar(dict.lookup("alphaLiquid1"))),
-    alphaLiquid0_(readScalar(dict.lookup("alphaLiquid0")))
+    alphaLiquid1_(dict.lookup<scalar>("alphaLiquid1")),
+    alphaLiquid0_(dict.lookup<scalar>("alphaLiquid0"))
 {}
 
 

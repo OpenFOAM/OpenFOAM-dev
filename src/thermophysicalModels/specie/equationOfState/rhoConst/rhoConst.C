@@ -32,7 +32,7 @@ template<class Specie>
 Foam::rhoConst<Specie>::rhoConst(const dictionary& dict)
 :
     Specie(dict),
-    rho_(readScalar(dict.subDict("equationOfState").lookup("rho")))
+    rho_(dict.subDict("equationOfState").lookup<scalar>("rho"))
 {}
 
 

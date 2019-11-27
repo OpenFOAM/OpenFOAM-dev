@@ -55,16 +55,16 @@ Foam::solidProperties::solidProperties
 
 Foam::solidProperties::solidProperties(const dictionary& dict)
 :
-    rho_(readScalar(dict.lookup("rho"))),
-    Cp_(readScalar(dict.lookup("Cp"))),
+    rho_(dict.lookup<scalar>("rho")),
+    Cp_(dict.lookup<scalar>("Cp")),
     kappa_
     (
         dict.found("K")
-      ? readScalar(dict.lookup("K"))
-      : readScalar(dict.lookup("kappa"))
+      ? dict.lookup<scalar>("K")
+      : dict.lookup<scalar>("kappa")
     ),
-    Hf_(readScalar(dict.lookup("Hf"))),
-    emissivity_(readScalar(dict.lookup("emissivity")))
+    Hf_(dict.lookup<scalar>("Hf")),
+    emissivity_(dict.lookup<scalar>("emissivity"))
 {}
 
 

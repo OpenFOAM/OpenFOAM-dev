@@ -242,7 +242,7 @@ void Foam::Time::readDict()
 
     if (!deltaTchanged_)
     {
-        deltaT_ = readScalar(controlDict_.lookup("deltaT"));
+        deltaT_ = controlDict_.lookup<scalar>("deltaT");
     }
 
     if (controlDict_.found("writeControl"))
@@ -376,7 +376,7 @@ void Foam::Time::readDict()
     {
         IOstream::defaultPrecision
         (
-            readUint(controlDict_.lookup("writePrecision"))
+            controlDict_.lookup<uint>("writePrecision")
         );
 
         Sout.precision(IOstream::defaultPrecision());

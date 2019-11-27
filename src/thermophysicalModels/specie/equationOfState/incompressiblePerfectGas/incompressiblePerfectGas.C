@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
 )
 :
     Specie(dict),
-    pRef_(readScalar(dict.subDict("equationOfState").lookup("pRef")))
+    pRef_(dict.subDict("equationOfState").lookup<scalar>("pRef"))
 {}
 
 

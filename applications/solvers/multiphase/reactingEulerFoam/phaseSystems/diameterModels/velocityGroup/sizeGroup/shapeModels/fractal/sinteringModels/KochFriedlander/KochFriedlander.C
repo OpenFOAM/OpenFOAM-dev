@@ -56,10 +56,10 @@ KochFriedlander
 :
     sinteringModel(dict, fractalShape),
     dict_(dict.subDict(type() + "Coeffs")),
-    Cs_(readScalar(dict_.lookup("Cs"))),
-    n_(readScalar(dict_.lookup("n"))),
-    m_(readScalar(dict_.lookup("m"))),
-    Ta_(readScalar(dict_.lookup("Ta")))
+    Cs_(dict_.lookup<scalar>("Cs")),
+    n_(dict_.lookup<scalar>("n")),
+    m_(dict_.lookup<scalar>("m")),
+    Ta_(dict_.lookup<scalar>("Ta"))
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,8 @@ template<class Specie>
 Foam::linear<Specie>::linear(const dictionary& dict)
 :
     Specie(dict),
-    psi_(readScalar(dict.subDict("equationOfState").lookup("psi"))),
-    rho0_(readScalar(dict.subDict("equationOfState").lookup("rho0")))
+    psi_(dict.subDict("equationOfState").lookup<scalar>("psi")),
+    rho0_(dict.subDict("equationOfState").lookup<scalar>("rho0"))
 {}
 
 

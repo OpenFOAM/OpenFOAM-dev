@@ -814,14 +814,14 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
     ),
     decomposerPtr_(decompositionMethod::New(decomposeDict_)),
     mergeDist_(1e-6*mesh_.bounds().mag()),
-    spanScale_(readScalar(coeffsDict.lookup("spanScale"))),
+    spanScale_(coeffsDict.lookup<scalar>("spanScale")),
     minCellSizeLimit_
     (
         coeffsDict.lookupOrDefault<scalar>("minCellSizeLimit", 0.0)
     ),
     minLevels_(coeffsDict.lookup<label>("minLevels")),
     volRes_(coeffsDict.lookup<label>("sampleResolution")),
-    maxCellWeightCoeff_(readScalar(coeffsDict.lookup("maxCellWeightCoeff")))
+    maxCellWeightCoeff_(coeffsDict.lookup<scalar>("maxCellWeightCoeff"))
 {
     if (!Pstream::parRun())
     {

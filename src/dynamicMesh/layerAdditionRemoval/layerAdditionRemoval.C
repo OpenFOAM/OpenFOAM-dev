@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,8 +168,8 @@ Foam::layerAdditionRemoval::layerAdditionRemoval
 :
     polyMeshModifier(name, index, ptc, Switch(dict.lookup("active"))),
     faceZoneID_(dict.lookup("faceZoneName"), ptc.mesh().faceZones()),
-    minLayerThickness_(readScalar(dict.lookup("minLayerThickness"))),
-    maxLayerThickness_(readScalar(dict.lookup("maxLayerThickness"))),
+    minLayerThickness_(dict.lookup<scalar>("minLayerThickness")),
+    maxLayerThickness_(dict.lookup<scalar>("maxLayerThickness")),
     thicknessFromVolume_
     (
         dict.lookupOrDefault<Switch>("thicknessFromVolume", true)

@@ -191,10 +191,7 @@ Foam::refinementSurfaces::refinementSurfaces
                             regionAngle[surfI].insert
                             (
                                 regionI,
-                                readScalar
-                                (
-                                    regionDict.lookup("perpendicularAngle")
-                                )
+                                regionDict.lookup<scalar>("perpendicularAngle")
                             );
                         }
 

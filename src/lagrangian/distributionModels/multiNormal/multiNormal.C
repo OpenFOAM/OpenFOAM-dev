@@ -46,8 +46,8 @@ Foam::distributionModels::multiNormal::multiNormal
 )
 :
     distributionModel(typeName, dict, rndGen),
-    minValue_(readScalar(distributionModelDict_.lookup("minValue"))),
-    maxValue_(readScalar(distributionModelDict_.lookup("maxValue"))),
+    minValue_(distributionModelDict_.template lookup<scalar>("minValue")),
+    maxValue_(distributionModelDict_.template lookup<scalar>("maxValue")),
     range_(maxValue_ - minValue_),
     expectation_(distributionModelDict_.lookup("expectation")),
     variance_(distributionModelDict_.lookup("variance")),

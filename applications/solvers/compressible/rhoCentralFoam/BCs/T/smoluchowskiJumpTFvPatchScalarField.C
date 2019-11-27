@@ -84,7 +84,7 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
     muName_(dict.lookupOrDefault<word>("mu", "thermo:mu")),
-    accommodationCoeff_(readScalar(dict.lookup("accommodationCoeff"))),
+    accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
     Twall_("Twall", dict, p.size()),
     gamma_(dict.lookupOrDefault<scalar>("gamma", 1.4))
 {

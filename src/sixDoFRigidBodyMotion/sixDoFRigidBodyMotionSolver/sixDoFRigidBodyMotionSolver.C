@@ -83,8 +83,8 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
     ),
     patches_(wordReList(coeffDict().lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
-    di_(readScalar(coeffDict().lookup("innerDistance"))),
-    do_(readScalar(coeffDict().lookup("outerDistance"))),
+    di_(coeffDict().lookup<scalar>("innerDistance")),
+    do_(coeffDict().lookup<scalar>("outerDistance")),
     test_(coeffDict().lookupOrDefault<Switch>("test", false)),
     rhoInf_(1.0),
     rhoName_(coeffDict().lookupOrDefault<word>("rho", "rho")),
@@ -106,7 +106,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
 {
     if (rhoName_ == "rhoInf")
     {
-        rhoInf_ = readScalar(coeffDict().lookup("rhoInf"));
+        rhoInf_ = coeffDict().lookup<scalar>("rhoInf");
     }
 
     // Calculate scaling factor everywhere

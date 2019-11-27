@@ -193,14 +193,8 @@ void Foam::linearValveLayersFvMesh::addZonesAndModifiers()
             1,
             topoChanger_,
             "valveLayerZone",
-            readScalar
-            (
-                motionDict_.subDict("layer").lookup("minThickness")
-            ),
-            readScalar
-            (
-                motionDict_.subDict("layer").lookup("maxThickness")
-            )
+            motionDict_.subDict("layer").lookup<scalar>("minThickness"),
+            motionDict_.subDict("layer").lookup<scalar>("maxThickness")
         );
 
 

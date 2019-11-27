@@ -247,7 +247,7 @@ Foam::sampledSurfaces::isoSurface::isoSurface
     (
         dict.found("isoValues")
       ? scalarField(dict.lookup("isoValues"))
-      : scalarField(1, readScalar(dict.lookup("isoValue")))
+      : scalarField(1, dict.lookup<scalar>("isoValue"))
     ),
     filter_
     (

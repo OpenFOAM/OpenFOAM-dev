@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::fv::limitVelocity::limitVelocity
 :
     cellSetOption(name, modelType, dict, mesh),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
-    max_(readScalar(coeffs_.lookup("max")))
+    max_(coeffs_.lookup<scalar>("max"))
 {
     fieldNames_.setSize(1, UName_);
     applied_.setSize(1, false);

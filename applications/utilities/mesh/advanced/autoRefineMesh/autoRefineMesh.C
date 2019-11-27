@@ -688,10 +688,10 @@ int main(int argc, char *argv[])
     bool selectOutside(readBool(refineDict.lookup("selectOutside")));
     bool selectHanging(readBool(refineDict.lookup("selectHanging")));
 
-    scalar minEdgeLen(readScalar(refineDict.lookup("minEdgeLen")));
-    scalar maxEdgeLen(readScalar(refineDict.lookup("maxEdgeLen")));
-    scalar curvature(readScalar(refineDict.lookup("curvature")));
-    scalar curvDist(readScalar(refineDict.lookup("curvatureDistance")));
+    scalar minEdgeLen(refineDict.lookup<scalar>("minEdgeLen"));
+    scalar maxEdgeLen(refineDict.lookup<scalar>("maxEdgeLen"));
+    scalar curvature(refineDict.lookup<scalar>("curvature"));
+    scalar curvDist(refineDict.lookup<scalar>("curvatureDistance"));
     pointField outsidePts(refineDict.lookup("outsidePoints"));
     label refinementLimit(refineDict.lookup<label>("splitLevel"));
     bool writeMesh(readBool(refineDict.lookup("writeMesh")));

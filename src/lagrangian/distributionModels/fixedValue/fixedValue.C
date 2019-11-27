@@ -46,7 +46,7 @@ Foam::distributionModels::fixedValue::fixedValue
 )
 :
     distributionModel(typeName, dict, rndGen),
-    value_(readScalar(distributionModelDict_.lookup("value")))
+    value_(distributionModelDict_.template lookup<scalar>("value"))
 {
     info();
 }

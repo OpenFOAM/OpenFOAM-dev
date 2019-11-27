@@ -98,8 +98,8 @@ Foam::waveModels::solitary::solitary
 )
 :
     waveModel(db, dict),
-    offset_(readScalar(dict.lookup("offset"))),
-    depth_(readScalar(dict.lookup("depth")))
+    offset_(dict.lookup<scalar>("offset")),
+    depth_(dict.lookup<scalar>("depth"))
 {}
 
 

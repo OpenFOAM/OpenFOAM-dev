@@ -70,7 +70,7 @@ turbulentIntensityKineticEnergyInletFvPatchScalarField
 )
 :
     inletOutletFvPatchScalarField(p, iF),
-    intensity_(readScalar(dict.lookup("intensity"))),
+    intensity_(dict.lookup<scalar>("intensity")),
     UName_(dict.lookupOrDefault<word>("U", "U"))
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");

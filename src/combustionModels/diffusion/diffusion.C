@@ -49,7 +49,7 @@ diffusion<ReactionThermo, ThermoType>::diffusion
         turb,
         combustionProperties
     ),
-    C_(readScalar(this->coeffs().lookup("C"))),
+    C_(this->coeffs().template lookup<scalar>("C")),
     oxidantName_(this->coeffs().template lookupOrDefault<word>("oxidant", "O2"))
 {}
 

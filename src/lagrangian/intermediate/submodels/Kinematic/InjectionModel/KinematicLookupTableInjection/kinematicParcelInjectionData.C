@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,9 +51,9 @@ Foam::kinematicParcelInjectionData::kinematicParcelInjectionData
 :
     x_(dict.lookup("x")),
     U_(dict.lookup("U")),
-    d_(readScalar(dict.lookup("d"))),
-    rho_(readScalar(dict.lookup("rho"))),
-    mDot_(readScalar(dict.lookup("mDot")))
+    d_(dict.template lookup<scalar>("d")),
+    rho_(dict.template lookup<scalar>("rho")),
+    mDot_(dict.template lookup<scalar>("mDot"))
 {}
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

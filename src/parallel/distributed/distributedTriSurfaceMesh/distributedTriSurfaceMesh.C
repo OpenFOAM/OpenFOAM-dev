@@ -85,7 +85,7 @@ bool Foam::distributedTriSurfaceMesh::read()
     distType_ = distributionTypeNames_.read(dict_.lookup("distributionType"));
 
     // Merge distance
-    mergeDist_ = readScalar(dict_.lookup("mergeDistance"));
+    mergeDist_ = dict_.lookup<scalar>("mergeDistance");
 
     return true;
 }

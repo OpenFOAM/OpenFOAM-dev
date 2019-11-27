@@ -73,8 +73,8 @@ int main(int argc, char *argv[])
     dictionary properties(propertiesFile);
 
 
-    scalar p(readScalar(properties.lookup("P")));
-    scalar T0(readScalar(properties.lookup("T0")));
+    scalar p(properties.lookup<scalar>("P"));
+    scalar T0(properties.lookup<scalar>("T0"));
     mixture rMix(properties.lookup("reactants"));
     mixture pMix(properties.lookup("products"));
 

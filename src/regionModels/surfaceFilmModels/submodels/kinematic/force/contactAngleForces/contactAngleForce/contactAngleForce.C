@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void contactAngleForce::initialise()
     if (zeroForcePatches.size())
     {
         const polyBoundaryMesh& pbm = filmModel_.regionMesh().boundaryMesh();
-        scalar dLim = readScalar(coeffDict_.lookup("zeroForceDistance"));
+        scalar dLim = coeffDict_.lookup<scalar>("zeroForceDistance");
 
         Info<< "        Assigning zero contact force within " << dLim
             << " of patches:" << endl;
@@ -100,7 +100,7 @@ contactAngleForce::contactAngleForce
 )
 :
     force(typeName, film, dict),
-    Ccf_(readScalar(coeffDict_.lookup("Ccf"))),
+    Ccf_(coeffDict_.lookup<scalar>("Ccf")),
     mask_
     (
         IOobject

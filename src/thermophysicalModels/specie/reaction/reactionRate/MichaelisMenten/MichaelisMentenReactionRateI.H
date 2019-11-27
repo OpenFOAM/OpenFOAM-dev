@@ -32,8 +32,8 @@ inline Foam::MichaelisMentenReactionRate::MichaelisMentenReactionRate
 )
 :
     species_(st),
-    Vmax_(readScalar(dict.lookup("Vmax"))),
-    Km_(readScalar(dict.lookup("Km"))),
+    Vmax_(dict.lookup<scalar>("Vmax")),
+    Km_(dict.lookup<scalar>("Km")),
     s_(st[dict.lookup("S")])
 {
     beta_.append(Tuple2<label, scalar>(s_, 1.0));

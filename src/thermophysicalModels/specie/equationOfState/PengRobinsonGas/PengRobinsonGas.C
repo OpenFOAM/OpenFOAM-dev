@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,11 +35,11 @@ Foam::PengRobinsonGas<Specie>::PengRobinsonGas
 )
 :
     Specie(dict),
-    Tc_(readScalar(dict.subDict("equationOfState").lookup("Tc"))),
-    Vc_(readScalar(dict.subDict("equationOfState").lookup("Vc"))),
+    Tc_(dict.subDict("equationOfState").lookup<scalar>("Tc")),
+    Vc_(dict.subDict("equationOfState").lookup<scalar>("Vc")),
     Zc_(1.0),
-    Pc_(readScalar(dict.subDict("equationOfState").lookup("Pc"))),
-    omega_(readScalar(dict.subDict("equationOfState").lookup("omega")))
+    Pc_(dict.subDict("equationOfState").lookup<scalar>("Pc")),
+    omega_(dict.subDict("equationOfState").lookup<scalar>("omega"))
 {
     Zc_ = Pc_*Vc_/(RR*Tc_);
 }

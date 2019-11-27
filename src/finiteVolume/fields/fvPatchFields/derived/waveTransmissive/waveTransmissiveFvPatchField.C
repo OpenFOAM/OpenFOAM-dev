@@ -71,7 +71,7 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 :
     advectiveFvPatchField<Type>(p, iF, dict),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
-    gamma_(readScalar(dict.lookup("gamma")))
+    gamma_(dict.lookup<scalar>("gamma"))
 {}
 
 

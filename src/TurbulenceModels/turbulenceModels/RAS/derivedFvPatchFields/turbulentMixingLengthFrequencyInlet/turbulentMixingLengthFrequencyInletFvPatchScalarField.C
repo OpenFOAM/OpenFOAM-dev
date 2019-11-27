@@ -76,7 +76,7 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
 )
 :
     inletOutletFvPatchScalarField(p, iF),
-    mixingLength_(readScalar(dict.lookup("mixingLength"))),
+    mixingLength_(dict.lookup<scalar>("mixingLength")),
     kName_(dict.lookupOrDefault<word>("k", "k"))
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");

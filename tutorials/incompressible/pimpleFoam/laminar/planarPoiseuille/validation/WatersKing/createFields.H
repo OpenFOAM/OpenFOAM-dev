@@ -32,8 +32,8 @@ IOdictionary turbulenceProperties
 );
 const dictionary& MaxwellCoeffs =
     turbulenceProperties.subDict("laminar").subDict("MaxwellCoeffs");
-const scalar nu1 = readScalar(MaxwellCoeffs.lookup("nuM"));
-const scalar lambda = readScalar(MaxwellCoeffs.lookup("lambda"));
+const scalar nu1 = MaxwellCoeffs.lookup<scalar>("nuM");
+const scalar lambda = MaxwellCoeffs.lookup<scalar>("lambda");
 
 const scalar rho = 1;
 

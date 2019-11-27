@@ -112,7 +112,7 @@ Foam::layerParameters::layerParameters
     minThickness_
     (
         boundaryMesh.size(),
-        readScalar(dict.lookup("minThickness"))
+        dict.lookup<scalar>("minThickness")
     ),
     mergeFaces_
     (
@@ -125,7 +125,7 @@ Foam::layerParameters::layerParameters
         )
       : mergeFace::ifOnMeshedPatch
     ),
-    featureAngle_(readScalar(dict.lookup("featureAngle"))),
+    featureAngle_(dict.lookup<scalar>("featureAngle")),
     concaveAngle_
     (
         dict.lookupOrDefault("concaveAngle", defaultConcaveAngle)
@@ -133,7 +133,7 @@ Foam::layerParameters::layerParameters
     nGrow_(dict.lookup<label>("nGrow")),
     maxFaceThicknessRatio_
     (
-        readScalar(dict.lookup("maxFaceThicknessRatio"))
+        dict.lookup<scalar>("maxFaceThicknessRatio")
     ),
     nBufferCellsNoExtrude_
     (
@@ -161,7 +161,7 @@ Foam::layerParameters::layerParameters
         firstLayerThickness_ = scalarField
         (
             boundaryMesh.size(),
-            readScalar(dict.lookup("firstLayerThickness"))
+            dict.lookup<scalar>("firstLayerThickness")
         );
         nSpec++;
     }
@@ -171,7 +171,7 @@ Foam::layerParameters::layerParameters
         finalLayerThickness_ = scalarField
         (
             boundaryMesh.size(),
-            readScalar(dict.lookup("finalLayerThickness"))
+            dict.lookup<scalar>("finalLayerThickness")
         );
         nSpec++;
     }
@@ -181,7 +181,7 @@ Foam::layerParameters::layerParameters
         thickness_ = scalarField
         (
             boundaryMesh.size(),
-            readScalar(dict.lookup("thickness"))
+            dict.lookup<scalar>("thickness")
         );
         nSpec++;
     }
@@ -191,7 +191,7 @@ Foam::layerParameters::layerParameters
         expansionRatio_ = scalarField
         (
             boundaryMesh.size(),
-            readScalar(dict.lookup("expansionRatio"))
+            dict.lookup<scalar>("expansionRatio")
         );
         nSpec++;
     }

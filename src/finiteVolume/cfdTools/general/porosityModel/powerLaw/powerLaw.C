@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,8 @@ Foam::porosityModels::powerLaw::powerLaw
 )
 :
     porosityModel(name, modelType, mesh, dict, cellZoneName),
-    C0_(readScalar(coeffs_.lookup("C0"))),
-    C1_(readScalar(coeffs_.lookup("C1"))),
+    C0_(coeffs_.lookup<scalar>("C0")),
+    C1_(coeffs_.lookup<scalar>("C1")),
     rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho"))
 {}
 

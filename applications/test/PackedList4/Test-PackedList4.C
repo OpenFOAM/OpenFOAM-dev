@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
     Info<< "\ntest Istream constructor\n";
 
     list4.printInfo(Info, true);
-    Info<< list4 << " indices: " << list4.used()() <<endl;
+    Info<< list4 << " indices: " << list4.used() <<endl;
 
     Info<< "\nassign from labelList\n";
     list4 = labelList
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
     );
 
     list4.printInfo(Info, true);
-    Info<< list4 << " indices: " << list4.used()() <<endl;
+    Info<< list4 << " indices: " << list4.used() <<endl;
 
     Info<< "\nassign from indices\n";
     list4.read
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
 
 
     list4.printInfo(Info, true);
-    Info<< list4 << " indices: " << list4.used()() <<endl;
+    Info<< list4 << " indices: " << list4.used() <<endl;
 
     List<bool> boolLst(list4.size());
     forAll(list4, i)

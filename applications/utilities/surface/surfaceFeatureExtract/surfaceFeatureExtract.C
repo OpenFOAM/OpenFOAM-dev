@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
                 surfaceDict.subDict("extractFromSurfaceCoeffs");
 
             includedAngle =
-                readScalar(extractFromSurfaceDict.lookup("includedAngle"));
+                extractFromSurfaceDict.lookup<scalar>("includedAngle");
 
             const Switch geometricTestOnly =
                 extractFromSurfaceDict.lookupOrDefault<Switch>
@@ -592,7 +592,7 @@ int main(int argc, char *argv[])
                 << "edges to the surface" << endl;
 
             const scalar searchDistance =
-                readScalar(surfaceDict.lookup("maxFeatureProximity"));
+                surfaceDict.lookup<scalar>("maxFeatureProximity");
 
             scalarField featureProximity(surf.size(), searchDistance);
 

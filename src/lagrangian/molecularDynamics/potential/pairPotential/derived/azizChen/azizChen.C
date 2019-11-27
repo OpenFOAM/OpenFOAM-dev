@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,15 +55,15 @@ azizChen::azizChen
 :
     pairPotential(name, azizChen),
     azizChenCoeffs_(azizChen.subDict(typeName + "Coeffs")),
-    epsilon_(readScalar(azizChenCoeffs_.lookup("epsilon"))),
-    rm_(readScalar(azizChenCoeffs_.lookup("rm"))),
-    A_(readScalar(azizChenCoeffs_.lookup("A"))),
-    alpha_(readScalar(azizChenCoeffs_.lookup("alpha"))),
-    C6_(readScalar(azizChenCoeffs_.lookup("C6"))),
-    C8_(readScalar(azizChenCoeffs_.lookup("C8"))),
-    C10_(readScalar(azizChenCoeffs_.lookup("C10"))),
-    D_(readScalar(azizChenCoeffs_.lookup("D"))),
-    gamma_(readScalar(azizChenCoeffs_.lookup("gamma")))
+    epsilon_(azizChenCoeffs_.template lookup<scalar>("epsilon")),
+    rm_(azizChenCoeffs_.template lookup<scalar>("rm")),
+    A_(azizChenCoeffs_.template lookup<scalar>("A")),
+    alpha_(azizChenCoeffs_.template lookup<scalar>("alpha")),
+    C6_(azizChenCoeffs_.template lookup<scalar>("C6")),
+    C8_(azizChenCoeffs_.template lookup<scalar>("C8")),
+    C10_(azizChenCoeffs_.template lookup<scalar>("C10")),
+    D_(azizChenCoeffs_.template lookup<scalar>("D")),
+    gamma_(azizChenCoeffs_.template lookup<scalar>("gamma"))
 {
     setLookupTables();
 }

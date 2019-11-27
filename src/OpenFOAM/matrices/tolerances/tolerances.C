@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,13 +93,13 @@ bool Foam::tolerances::relax(const word& name) const
 
 Foam::scalar Foam::tolerances::relaxationFactor(const word& name) const
 {
-    return readScalar(relaxationFactors_.lookup(name));
+    return relaxationFactors_.lookup<scalar>(name);
 }
 
 
 Foam::scalar Foam::tolerances::solverTolerance(const word& name) const
 {
-    return readScalar(solverTolerances_.lookup(name));
+    return solverTolerances_.lookup<scalar>(name);
 }
 
 
@@ -111,7 +111,7 @@ bool Foam::tolerances::solverRelativeTolerances() const
 
 Foam::scalar Foam::tolerances::solverRelativeTolerance(const word& name) const
 {
-    return readScalar(solverRelativeTolerances_.lookup(name));
+    return solverRelativeTolerances_.lookup<scalar>(name);
 }
 
 

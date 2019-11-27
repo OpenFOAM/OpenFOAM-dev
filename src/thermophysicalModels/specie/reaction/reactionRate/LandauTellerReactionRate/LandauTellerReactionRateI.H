@@ -48,11 +48,11 @@ inline Foam::LandauTellerReactionRate::LandauTellerReactionRate
     const dictionary& dict
 )
 :
-    A_(readScalar(dict.lookup("A"))),
-    beta_(readScalar(dict.lookup("beta"))),
-    Ta_(readScalar(dict.lookup("Ta"))),
-    B_(readScalar(dict.lookup("B"))),
-    C_(readScalar(dict.lookup("C")))
+    A_(dict.lookup<scalar>("A")),
+    beta_(dict.lookup<scalar>("beta")),
+    Ta_(dict.lookup<scalar>("Ta")),
+    B_(dict.lookup<scalar>("B")),
+    C_(dict.lookup<scalar>("C"))
 {}
 
 

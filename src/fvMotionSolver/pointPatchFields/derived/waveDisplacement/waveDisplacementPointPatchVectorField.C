@@ -56,7 +56,7 @@ waveDisplacementPointPatchVectorField
 :
     fixedValuePointPatchField<vector>(p, iF, dict),
     amplitude_(dict.lookup("amplitude")),
-    omega_(readScalar(dict.lookup("omega"))),
+    omega_(dict.lookup<scalar>("omega")),
     waveNumber_(dict.lookupOrDefault<vector>("waveNumber", Zero)),
     startRamp_
     (

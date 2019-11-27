@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -231,14 +231,14 @@ void Foam::targetCoeffTrim::read(const dictionary& dict)
         ext = "Coeff";
     }
 
-    target_[0] = readScalar(targetDict.lookup("thrust" + ext));
-    target_[1] = readScalar(targetDict.lookup("pitch" + ext));
-    target_[2] = readScalar(targetDict.lookup("roll" + ext));
+    target_[0] = targetDict.lookup<scalar>("thrust" + ext);
+    target_[1] = targetDict.lookup<scalar>("pitch" + ext);
+    target_[2] = targetDict.lookup<scalar>("roll" + ext);
 
     const dictionary& pitchAngleDict(coeffs_.subDict("pitchAngles"));
-    theta_[0] = degToRad(readScalar(pitchAngleDict.lookup("theta0Ini")));
-    theta_[1] = degToRad(readScalar(pitchAngleDict.lookup("theta1cIni")));
-    theta_[2] = degToRad(readScalar(pitchAngleDict.lookup("theta1sIni")));
+    theta_[0] = degToRad(pitchAngleDict.lookup<scalar>("theta0Ini"));
+    theta_[1] = degToRad(pitchAngleDict.lookup<scalar>("theta1cIni"));
+    theta_[2] = degToRad(pitchAngleDict.lookup<scalar>("theta1sIni"));
 
     coeffs_.lookup("calcFrequency") >> calcFrequency_;
 
@@ -251,7 +251,7 @@ void Foam::targetCoeffTrim::read(const dictionary& dict)
         dTheta_ = degToRad(dTheta_);
     }
 
-    alpha_ = readScalar(coeffs_.lookup("alpha"));
+    alpha_ = coeffs_.lookup<scalar>("alpha");
 }
 
 

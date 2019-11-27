@@ -151,7 +151,7 @@ Foam::shortEdgeFilter2D::shortEdgeFilter2D
     const dictionary& dict
 )
 :
-    shortEdgeFilterFactor_(readScalar(dict.lookup("shortEdgeFilterFactor"))),
+    shortEdgeFilterFactor_(dict.lookup<scalar>("shortEdgeFilterFactor")),
     edgeAttachedToBoundaryFactor_
     (
         dict.lookupOrDefault<scalar>("edgeAttachedToBoundaryFactor", 2.0)

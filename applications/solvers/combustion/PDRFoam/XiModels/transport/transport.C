@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::XiModels::transport::transport
 )
 :
     XiModel(XiProperties, thermo, turbulence, Su, rho, b, phi),
-    XiShapeCoef(readScalar(XiModelCoeffs_.lookup("XiShapeCoef"))),
+    XiShapeCoef(XiModelCoeffs_.lookup<scalar>("XiShapeCoef")),
     XiEqModel_(XiEqModel::New(XiProperties, thermo, turbulence, Su)),
     XiGModel_(XiGModel::New(XiProperties, thermo, turbulence, Su))
 {}

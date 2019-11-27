@@ -309,7 +309,7 @@ void Foam::multiphaseMixture::solve()
 
     const dictionary& alphaControls = mesh_.solverDict("alpha");
     label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
-    scalar cAlpha(readScalar(alphaControls.lookup("cAlpha")));
+    scalar cAlpha(alphaControls.lookup<scalar>("cAlpha"));
 
     if (nAlphaSubCycles > 1)
     {

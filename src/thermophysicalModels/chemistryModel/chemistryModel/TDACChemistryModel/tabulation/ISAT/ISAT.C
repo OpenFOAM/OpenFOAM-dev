@@ -81,7 +81,7 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
     {
         dictionary scaleDict(this->coeffsDict_.subDict("scaleFactor"));
         label Ysize = this->chemistry_.Y().size();
-        scalar otherScaleFactor = readScalar(scaleDict.lookup("otherSpecies"));
+        scalar otherScaleFactor = scaleDict.lookup<scalar>("otherSpecies");
         for (label i=0; i<Ysize; i++)
         {
             if (!scaleDict.found(this->chemistry_.Y()[i].member()))
@@ -91,17 +91,14 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
             else
             {
                 scaleFactor_[i] =
-                    readScalar
-                    (
-                        scaleDict.lookup(this->chemistry_.Y()[i].member())
-                    );
+                    scaleDict.lookup<scalar>(this->chemistry_.Y()[i].member());
             }
         }
-        scaleFactor_[Ysize] = readScalar(scaleDict.lookup("Temperature"));
-        scaleFactor_[Ysize + 1] = readScalar(scaleDict.lookup("Pressure"));
+        scaleFactor_[Ysize] = scaleDict.lookup<scalar>("Temperature");
+        scaleFactor_[Ysize + 1] = scaleDict.lookup<scalar>("Pressure");
         if (this->variableTimeStep())
         {
-            scaleFactor_[Ysize + 2] = readScalar(scaleDict.lookup("deltaT"));
+            scaleFactor_[Ysize + 2] = scaleDict.lookup<scalar>("deltaT");
         }
     }
 

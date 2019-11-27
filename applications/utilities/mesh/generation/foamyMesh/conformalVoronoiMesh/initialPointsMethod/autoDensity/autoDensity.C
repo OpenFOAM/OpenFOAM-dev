@@ -885,7 +885,7 @@ autoDensity::autoDensity
         detailsDict().lookupOrDefault<scalar>("minCellSizeLimit", 0.0)
     ),
     minLevels_(detailsDict().lookup<label>("minLevels")),
-    maxSizeRatio_(readScalar(detailsDict().lookup("maxSizeRatio"))),
+    maxSizeRatio_(detailsDict().lookup<scalar>("maxSizeRatio")),
     volRes_(detailsDict().lookup<label>("sampleResolution")),
     surfRes_
     (

@@ -108,7 +108,7 @@ bool Foam::setRefCell
                 << " or " << refPointName << nl << exit(FatalIOError);
         }
 
-        refValue = readScalar(dict.lookup(refValueName));
+        refValue = dict.lookup<scalar>(refValueName);
 
         return true;
     }

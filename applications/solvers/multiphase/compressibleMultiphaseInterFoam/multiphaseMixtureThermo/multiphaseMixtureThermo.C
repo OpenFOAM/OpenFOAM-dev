@@ -892,7 +892,7 @@ void Foam::multiphaseMixtureThermo::solve()
 
     const dictionary& alphaControls = mesh_.solverDict("alpha");
     label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
-    scalar cAlpha(readScalar(alphaControls.lookup("cAlpha")));
+    scalar cAlpha(alphaControls.lookup<scalar>("cAlpha"));
 
     volScalarField& alpha = phases_.first();
 

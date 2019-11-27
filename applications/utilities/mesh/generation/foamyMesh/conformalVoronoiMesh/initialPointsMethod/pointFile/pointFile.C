@@ -63,7 +63,7 @@ pointFile::pointFile
     randomiseInitialGrid_(detailsDict().lookup("randomiseInitialGrid")),
     randomPerturbationCoeff_
     (
-        readScalar(detailsDict().lookup("randomPerturbationCoeff"))
+        detailsDict().lookup<scalar>("randomPerturbationCoeff")
     )
 {
     Info<< "    Inside/Outside check is " << insideOutsideCheck_.asText()

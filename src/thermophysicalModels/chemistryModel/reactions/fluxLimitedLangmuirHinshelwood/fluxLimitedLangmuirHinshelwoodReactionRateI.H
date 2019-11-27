@@ -77,7 +77,7 @@ fluxLimitedLangmuirHinshelwoodReactionRate
     Av_
     (
         limited_ && AvUniform_
-      ? readScalar(dict.lookup("Av"))
+      ? dict.lookup<scalar>("Av")
       : 0
     ),
     AvName_

@@ -44,7 +44,7 @@ Foam::thermophysicalProperties::thermophysicalProperties(scalar W)
 
 Foam::thermophysicalProperties::thermophysicalProperties(const dictionary& dict)
 :
-    W_(readScalar(dict.lookup("W")))
+    W_(dict.lookup<scalar>("W"))
 {}
 
 

@@ -66,22 +66,22 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    gamma_(readScalar(dict.lookup("gamma"))),
-    R_(readScalar(dict.lookup("R"))),
-    supplyMassFlowRate_(readScalar(dict.lookup("supplyMassFlowRate"))),
+    gamma_(dict.lookup<scalar>("gamma")),
+    R_(dict.lookup<scalar>("R")),
+    supplyMassFlowRate_(dict.lookup<scalar>("supplyMassFlowRate")),
     supplyTotalTemperature_
     (
-        readScalar(dict.lookup("supplyTotalTemperature"))
+        dict.lookup<scalar>("supplyTotalTemperature")
     ),
-    plenumVolume_(readScalar(dict.lookup("plenumVolume"))),
-    plenumDensity_(readScalar(dict.lookup("plenumDensity"))),
-    plenumTemperature_(readScalar(dict.lookup("plenumTemperature"))),
+    plenumVolume_(dict.lookup<scalar>("plenumVolume")),
+    plenumDensity_(dict.lookup<scalar>("plenumDensity")),
+    plenumTemperature_(dict.lookup<scalar>("plenumTemperature")),
     rho_(1.0),
     hasRho_(false),
-    inletAreaRatio_(readScalar(dict.lookup("inletAreaRatio"))),
+    inletAreaRatio_(dict.lookup<scalar>("inletAreaRatio")),
     inletDischargeCoefficient_
     (
-        readScalar(dict.lookup("inletDischargeCoefficient"))
+        dict.lookup<scalar>("inletDischargeCoefficient")
     ),
     timeScale_(dict.lookupOrDefault<scalar>("timeScale", 0.0)),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
@@ -89,7 +89,7 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
 {
     if (dict.found("rho"))
     {
-        rho_ = readScalar(dict.lookup("rho"));
+        rho_ = dict.lookup<scalar>("rho");
         hasRho_ = true;
     }
 }

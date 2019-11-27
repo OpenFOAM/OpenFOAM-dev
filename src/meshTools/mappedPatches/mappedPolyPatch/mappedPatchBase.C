@@ -1090,7 +1090,7 @@ Foam::mappedPatchBase::mappedPatchBase
 
             case NORMAL:
             {
-                distance_ = readScalar(dict.lookup("distance"));
+                distance_ = dict.lookup<scalar>("distance");
             }
             break;
         }

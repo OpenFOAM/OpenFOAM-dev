@@ -51,8 +51,8 @@ mixtureFraction
         mesh_
     ),
     coeffsDict_(dict.subOrEmptyDict(modelType + "Coeffs")),
-    nuSoot_(readScalar(coeffsDict_.lookup("nuSoot"))),
-    Wsoot_(readScalar(coeffsDict_.lookup("Wsoot"))),
+    nuSoot_(coeffsDict_.lookup<scalar>("nuSoot")),
+    Wsoot_(coeffsDict_.lookup<scalar>("Wsoot")),
     sootMax_(-1),
     mappingFieldName_
     (

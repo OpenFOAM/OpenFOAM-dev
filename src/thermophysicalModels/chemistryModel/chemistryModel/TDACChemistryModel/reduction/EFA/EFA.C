@@ -77,7 +77,7 @@ Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::EFA
     }
     if (this->coeffsDict_.found("sortPart"))
     {
-        sortPart_ = readScalar(this->coeffsDict_.lookup("sortPart"));
+        sortPart_ = this->coeffsDict_.template lookup<scalar>("sortPart");
     }
 }
 

@@ -1,1 +1,1 @@
-scalar accFac(readScalar(stressControl.lookup("accelerationFactor")));
+scalar accFac(stressControl.lookup<scalar>("accelerationFactor"));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::scalar Foam::sutherlandTransport<Thermo>::readCoeff
     const dictionary& dict
 )
 {
-    return readScalar(dict.subDict("transport").lookup(coeffName));
+    return dict.subDict("transport").lookup<scalar>(coeffName);
 }
 
 

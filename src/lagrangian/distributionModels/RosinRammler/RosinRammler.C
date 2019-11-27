@@ -46,10 +46,10 @@ Foam::distributionModels::RosinRammler::RosinRammler
 )
 :
     distributionModel(typeName, dict, rndGen),
-    minValue_(readScalar(distributionModelDict_.lookup("minValue"))),
-    maxValue_(readScalar(distributionModelDict_.lookup("maxValue"))),
-    d_(readScalar(distributionModelDict_.lookup("d"))),
-    n_(readScalar(distributionModelDict_.lookup("n")))
+    minValue_(distributionModelDict_.template lookup<scalar>("minValue")),
+    maxValue_(distributionModelDict_.template lookup<scalar>("maxValue")),
+    d_(distributionModelDict_.template lookup<scalar>("d")),
+    n_(distributionModelDict_.template lookup<scalar>("n"))
 {
     check();
     info();

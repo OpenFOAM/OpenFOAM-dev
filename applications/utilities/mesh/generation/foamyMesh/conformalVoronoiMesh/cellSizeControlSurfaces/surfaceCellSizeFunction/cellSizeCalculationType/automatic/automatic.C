@@ -117,15 +117,15 @@ Foam::automatic::automatic
     internalClosenessFile_(coeffsDict_.lookup("internalClosenessFile")),
     internalClosenessCellSizeCoeff_
     (
-        readScalar(coeffsDict_.lookup("internalClosenessCellSizeCoeff"))
+        coeffsDict_.lookup<scalar>("internalClosenessCellSizeCoeff")
     ),
     curvatureCellSizeCoeff_
     (
-        readScalar(coeffsDict_.lookup("curvatureCellSizeCoeff"))
+        coeffsDict_.lookup<scalar>("curvatureCellSizeCoeff")
     ),
     maximumCellSize_
     (
-        readScalar(coeffsDict_.lookup("maximumCellSizeCoeff"))*defaultCellSize
+        coeffsDict_.lookup<scalar>("maximumCellSizeCoeff")*defaultCellSize
     )
 {}
 

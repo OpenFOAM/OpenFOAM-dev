@@ -38,7 +38,7 @@ Foam::EulerImplicit<ChemistryModel>::EulerImplicit
 :
     chemistrySolver<ChemistryModel>(thermo),
     coeffsDict_(this->subDict("EulerImplicitCoeffs")),
-    cTauChem_(readScalar(coeffsDict_.lookup("cTauChem"))),
+    cTauChem_(coeffsDict_.lookup<scalar>("cTauChem")),
     eqRateLimiter_(coeffsDict_.lookup("equilibriumRateLimiter")),
     cTp_(this->nEqns())
 {}

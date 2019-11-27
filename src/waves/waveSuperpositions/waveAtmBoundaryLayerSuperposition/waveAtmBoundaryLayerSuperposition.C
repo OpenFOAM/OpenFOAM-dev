@@ -51,9 +51,9 @@ Foam::waveAtmBoundaryLayerSuperposition::waveAtmBoundaryLayerSuperposition
 :
     waveSuperposition(db),
     UGasRef_(lookup("UGasRef")),
-    hRef_(readScalar(lookup("hRef"))),
-    hWaveMin_(readScalar(lookup("hWaveMin"))),
-    hWaveMax_(readScalar(lookup("hWaveMax")))
+    hRef_(lookup<scalar>("hRef")),
+    hWaveMin_(lookup<scalar>("hWaveMin")),
+    hWaveMax_(lookup<scalar>("hWaveMax"))
 {}
 
 

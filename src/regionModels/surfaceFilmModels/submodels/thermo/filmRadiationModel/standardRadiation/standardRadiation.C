@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,8 +85,8 @@ standardRadiation::standardRadiation
         dimensionedScalar(dimMass/pow3(dimTime), 0),
         zeroGradientFvPatchScalarField::typeName
     ),
-    beta_(readScalar(coeffDict_.lookup("beta"))),
-    kappaBar_(readScalar(coeffDict_.lookup("kappaBar")))
+    beta_(coeffDict_.lookup<scalar>("beta")),
+    kappaBar_(coeffDict_.lookup<scalar>("kappaBar"))
 {}
 
 

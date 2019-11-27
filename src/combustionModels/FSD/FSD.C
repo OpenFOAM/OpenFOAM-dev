@@ -76,12 +76,12 @@ FSD<ReactionThermo, ThermoType>::FSD
     ),
     YFuelFuelStream_(dimensionedScalar(dimless, 1.0)),
     YO2OxiStream_(dimensionedScalar(dimless, 0.23)),
-    Cv_(readScalar(this->coeffs().lookup("Cv"))),
+    Cv_(this->coeffs().template lookup<scalar>("Cv")),
     C_(5.0),
     ftMin_(0.0),
     ftMax_(1.0),
     ftDim_(300),
-    ftVarMin_(readScalar(this->coeffs().lookup("ftVarMin")))
+    ftVarMin_(this->coeffs().template lookup<scalar>("ftVarMin"))
 {}
 
 

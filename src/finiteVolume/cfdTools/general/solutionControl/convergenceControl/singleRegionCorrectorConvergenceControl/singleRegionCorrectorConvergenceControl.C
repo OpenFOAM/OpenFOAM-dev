@@ -94,16 +94,16 @@ bool Foam::singleRegionCorrectorConvergenceControl::readCorrResidualControls()
             corrResidualData rd;
             const dictionary& fieldDict(iter().dict());
             rd.name = fName.c_str();
-            rd.absTol = readScalar(fieldDict.lookup("tolerance"));
-            rd.relTol = readScalar(fieldDict.lookup("relTol"));
+            rd.absTol = fieldDict.lookup<scalar>("tolerance");
+            rd.relTol = fieldDict.lookup<scalar>("relTol");
             data.append(rd);
         }
         else
         {
             corrResidualData& rd = data[fieldi];
             const dictionary& fieldDict(iter().dict());
-            rd.absTol = readScalar(fieldDict.lookup("tolerance"));
-            rd.relTol = readScalar(fieldDict.lookup("relTol"));
+            rd.absTol = fieldDict.lookup<scalar>("tolerance");
+            rd.relTol = fieldDict.lookup<scalar>("relTol");
         }
     }
 

@@ -51,7 +51,7 @@ constantAlphaContactAngleFvPatchScalarField
 )
 :
     alphaContactAngleFvPatchScalarField(p, iF, dict),
-    theta0_(readScalar(dict.lookup("theta0")))
+    theta0_(dict.lookup<scalar>("theta0"))
 {
     evaluate();
 }

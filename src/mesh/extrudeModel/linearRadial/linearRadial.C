@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ addToRunTimeSelectionTable(extrudeModel, linearRadial, dictionary);
 linearRadial::linearRadial(const dictionary& dict)
 :
     extrudeModel(typeName, dict),
-    R_(readScalar(coeffDict_.lookup("R"))),
+    R_(coeffDict_.lookup<scalar>("R")),
     Rsurface_(coeffDict_.lookupOrDefault<scalar>("Rsurface", -1))
 {}
 

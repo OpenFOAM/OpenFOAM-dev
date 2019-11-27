@@ -88,10 +88,8 @@ Foam::FreeStream<CloudType>::FreeStream
 
     forAll(molecules, i)
     {
-        numberDensities_[i] = readScalar
-        (
-            numberDensitiesDict.lookup(molecules[i])
-        );
+        numberDensities_[i] =
+            numberDensitiesDict.lookup<scalar>(molecules[i]);
 
         moleculeTypeIds_[i] = findIndex(cloud.typeIdList(), molecules[i]);
 

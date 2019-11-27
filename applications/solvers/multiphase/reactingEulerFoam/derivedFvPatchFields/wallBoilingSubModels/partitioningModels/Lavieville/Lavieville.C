@@ -52,7 +52,7 @@ Foam::wallBoilingModels::partitioningModels::
 Lavieville::Lavieville(const dictionary& dict)
 :
     partitioningModel(),
-    alphaCrit_(readScalar(dict.lookup("alphaCrit")))
+    alphaCrit_(dict.lookup<scalar>("alphaCrit"))
 {}
 
 

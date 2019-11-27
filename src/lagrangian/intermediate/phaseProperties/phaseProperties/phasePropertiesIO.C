@@ -54,7 +54,7 @@ Foam::phaseProperties::phaseProperties(Istream& is)
         forAllConstIter(IDLList<entry>, phaseInfo, iter)
         {
             names_[cmptI] = iter().keyword();
-            Y_[cmptI] = readScalar(phaseInfo.lookup(names_[cmptI]));
+            Y_[cmptI] = phaseInfo.template lookup<scalar>(names_[cmptI]);
             cmptI++;
         }
 
@@ -89,7 +89,7 @@ Foam::Istream& Foam::operator>>(Istream& is, phaseProperties& pp)
         forAllConstIter(IDLList<entry>, phaseInfo, iter)
         {
             pp.names_[cmptI] = iter().keyword();
-            pp.Y_[cmptI] = readScalar(phaseInfo.lookup(pp.names_[cmptI]));
+            pp.Y_[cmptI] = phaseInfo.template lookup<scalar>(pp.names_[cmptI]);
             cmptI++;
         }
 

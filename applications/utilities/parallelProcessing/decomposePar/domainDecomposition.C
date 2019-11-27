@@ -96,14 +96,11 @@ Foam::domainDecomposition::domainDecomposition
     ),
     nProcs_
     (
-        readInt
+        decompositionModel::New
         (
-            decompositionModel::New
-            (
-                *this,
-                dictFile
-            ).lookup("numberOfSubdomains")
-        )
+            *this,
+            dictFile
+        ).lookup<int>("numberOfSubdomains")
     ),
     distributed_(false),
     cellToProc_(nCells()),

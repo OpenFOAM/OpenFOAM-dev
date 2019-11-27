@@ -85,7 +85,7 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
     muName_(dict.lookupOrDefault<word>("mu", "thermo:mu")),
     tauMCName_(dict.lookupOrDefault<word>("tauMC", "tauMC")),
-    accommodationCoeff_(readScalar(dict.lookup("accommodationCoeff"))),
+    accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
     Uwall_("Uwall", dict, p.size()),
     thermalCreep_(dict.lookupOrDefault("thermalCreep", true)),
     curvature_(dict.lookupOrDefault("curvature", true))

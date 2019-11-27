@@ -61,7 +61,7 @@ KocamustafaogullariIshiiDepartureDiameter
 )
 :
     departureDiameterModel(),
-    phi_(readScalar(dict.lookup("phi")))
+    phi_(dict.lookup<scalar>("phi"))
 {}
 
 

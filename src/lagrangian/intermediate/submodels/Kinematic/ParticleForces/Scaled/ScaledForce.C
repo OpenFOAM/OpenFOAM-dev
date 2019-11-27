@@ -61,7 +61,7 @@ Foam::ScaledForce<CloudType>::ScaledForce
             dict.lookup<word>("forceType")
         )
     ),
-    factor_(readScalar(this->coeffs().lookup("factor")))
+    factor_(this->coeffs().template lookup<scalar>("factor"))
 {}
 
 

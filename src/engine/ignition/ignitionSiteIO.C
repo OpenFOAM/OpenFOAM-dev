@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,22 +39,22 @@ Foam::ignitionSite::ignitionSite
     mesh_(mesh),
     ignitionSiteDict_(is),
     location_(ignitionSiteDict_.lookup("location")),
-    diameter_(readScalar(ignitionSiteDict_.lookup("diameter"))),
+    diameter_(ignitionSiteDict_.lookup<scalar>("diameter")),
     time_
     (
         db_.userTimeToTime
         (
-            readScalar(ignitionSiteDict_.lookup("start"))
+            ignitionSiteDict_.lookup<scalar>("start")
         )
     ),
     duration_
     (
         db_.userTimeToTime
         (
-            readScalar(ignitionSiteDict_.lookup("duration"))
+            ignitionSiteDict_.lookup<scalar>("duration")
         )
     ),
-    strength_(readScalar(ignitionSiteDict_.lookup("strength"))),
+    strength_(ignitionSiteDict_.lookup<scalar>("strength")),
     timeIndex_(db_.timeIndex())
 {
     // Check state of Istream
@@ -75,22 +75,22 @@ Foam::ignitionSite::ignitionSite
     mesh_(mesh),
     ignitionSiteDict_(is),
     location_(ignitionSiteDict_.lookup("location")),
-    diameter_(readScalar(ignitionSiteDict_.lookup("diameter"))),
+    diameter_(ignitionSiteDict_.lookup<scalar>("diameter")),
     time_
     (
         db_.userTimeToTime
         (
-            edb.userTimeToTime(readScalar(ignitionSiteDict_.lookup("start")))
+            edb.userTimeToTime(ignitionSiteDict_.lookup<scalar>("start"))
         )
     ),
     duration_
     (
         db_.userTimeToTime
         (
-            edb.userTimeToTime(readScalar(ignitionSiteDict_.lookup("duration")))
+            edb.userTimeToTime(ignitionSiteDict_.lookup<scalar>("duration"))
         )
     ),
-    strength_(readScalar(ignitionSiteDict_.lookup("strength"))),
+    strength_(ignitionSiteDict_.lookup<scalar>("strength")),
     timeIndex_(db_.timeIndex())
 {
     // Check state of Istream

@@ -36,7 +36,7 @@ Foam::COxidationHurtMitchell<CloudType>::COxidationHurtMitchell
 )
 :
     SurfaceReactionModel<CloudType>(dict, owner, typeName),
-    Sb_(readScalar(this->coeffDict().lookup("Sb"))),
+    Sb_(this->coeffDict().template lookup<scalar>("Sb")),
     CsLocalId_(-1),
     ashLocalId_(-1),
     O2GlobalId_(owner.composition().carrierId("O2")),

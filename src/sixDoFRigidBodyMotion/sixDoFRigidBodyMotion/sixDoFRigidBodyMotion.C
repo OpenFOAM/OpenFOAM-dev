@@ -126,7 +126,7 @@ Foam::sixDoFRigidBodyMotion::sixDoFRigidBodyMotion
             dict.lookupOrDefault("orientation", tensor::I)
         )
     ),
-    mass_(readScalar(dict.lookup("mass"))),
+    mass_(dict.lookup<scalar>("mass")),
     momentOfInertia_(dict.lookup("momentOfInertia")),
     aRelax_(dict.lookupOrDefault<scalar>("accelerationRelaxation", 1.0)),
     aDamp_(dict.lookupOrDefault<scalar>("accelerationDamping", 1.0)),

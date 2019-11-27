@@ -133,7 +133,7 @@ Foam::sampledSets::circleRandom::circleRandom
     sampledSet(name, mesh, searchEngine, dict),
     centre_(dict.lookup("centre")),
     normal_(normalised(dict.lookup<vector>("normal"))),
-    radius_(readScalar(dict.lookup("radius"))),
+    radius_(dict.lookup<scalar>("radius")),
     nPoints_(dict.lookup<label>("nPoints"))
 {
     genSamples();

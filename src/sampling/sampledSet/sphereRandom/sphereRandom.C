@@ -131,7 +131,7 @@ Foam::sampledSets::sphereRandom::sphereRandom
 :
     sampledSet(name, mesh, searchEngine, dict),
     centre_(dict.lookup("centre")),
-    radius_(readScalar(dict.lookup("radius"))),
+    radius_(dict.lookup<scalar>("radius")),
     nPoints_(dict.lookup<label>("nPoints"))
 {
     genSamples();

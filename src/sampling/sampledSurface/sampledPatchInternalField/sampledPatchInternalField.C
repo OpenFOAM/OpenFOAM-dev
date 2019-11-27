@@ -64,7 +64,7 @@ Foam::sampledSurfaces::patchInternalField::patchInternalField
     {
         case mappedPatchBase::NORMAL:
         {
-            const scalar distance = readScalar(dict.lookup("distance"));
+            const scalar distance = dict.lookup<scalar>("distance");
             forAll(patchIDs(), i)
             {
                 mappers_.set

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,7 @@ public:
     (
         const scalar x,
         const scalarField& y,
+        const label li,
         scalarField& dydx
     ) const
     {
@@ -66,6 +67,7 @@ public:
     (
         const scalar x,
         const scalarField& y,
+        const label li,
         scalarField& dfdx,
         scalarSquareMatrix& dfdy
     ) const
@@ -125,7 +127,7 @@ int main(int argc, char *argv[])
 
     // Print the evolution of the solution and the time-step
     scalarField dyStart(ode.nEqns());
-    ode.derivatives(xStart, yStart, dyStart);
+    ode.derivatives(xStart, yStart, 0, dyStart);
 
     Info<< setw(10) << "relTol" << setw(12) << "dxEst";
     Info<< setw(13) << "dxDid" << setw(14) << "dxNext" << endl;
@@ -142,7 +144,7 @@ int main(int argc, char *argv[])
         scalar dxNext = dxEst;
 
         odeSolver->relTol() = relTol;
-        odeSolver->solve(x, y, dxNext);
+        odeSolver->solve(x, y, 0, dxNext);
 
         Info<< scientific << setw(13) << relTol;
         Info<< fixed << setw(11) << dxEst;
@@ -165,7 +167,7 @@ int main(int argc, char *argv[])
     scalar dxEst = 0.5;
 
     odeSolver->relTol() = 1e-4;
-    odeSolver->solve(x, xEnd, y, dxEst);
+    odeSolver->solve(x, xEnd, y, 0, dxEst);
 
     Info<< nl << "Analytical: y(2.0) = " << yEnd << endl;
     Info      << "Numerical:  y(2.0) = " << y << ", dxEst = " << dxEst << endl;

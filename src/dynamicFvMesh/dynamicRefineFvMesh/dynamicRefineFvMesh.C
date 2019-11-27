@@ -1234,9 +1234,9 @@ bool Foam::dynamicRefineFvMesh::update()
         const volScalarField& vFld = lookupObject<volScalarField>(fieldName);
 
         const scalar lowerRefineLevel =
-            readScalar(refineDict.lookup("lowerRefineLevel"));
+            refineDict.lookup<scalar>("lowerRefineLevel");
         const scalar upperRefineLevel =
-            readScalar(refineDict.lookup("upperRefineLevel"));
+            refineDict.lookup<scalar>("upperRefineLevel");
         const scalar unrefineLevel = refineDict.lookupOrDefault<scalar>
         (
             "unrefineLevel",
