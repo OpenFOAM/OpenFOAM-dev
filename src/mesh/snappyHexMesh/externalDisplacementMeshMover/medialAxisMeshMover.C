@@ -2048,7 +2048,7 @@ bool Foam::medialAxisMeshMover::shrinkMesh
 )
 {
     //- Number of attempts shrinking the mesh
-    const label nSnap  = readLabel(meshQualityDict.lookup("nRelaxIter"));
+    const label nSnap  = meshQualityDict.lookup<label>("nRelaxIter");
 
 
 

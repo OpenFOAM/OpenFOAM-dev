@@ -95,7 +95,7 @@ activePressureForceBaffleVelocityFvPatchVectorField
     pName_(dict.lookupOrDefault<word>("p", "p")),
     cyclicPatchName_(dict.lookup("cyclicPatch")),
     cyclicPatchLabel_(p.patch().boundaryMesh().findPatchID(cyclicPatchName_)),
-    orientation_(readLabel(dict.lookup("orientation"))),
+    orientation_(dict.lookup<label>("orientation")),
     initWallSf_(0),
     initCyclicSf_(0),
     nbrCyclicSf_(0),

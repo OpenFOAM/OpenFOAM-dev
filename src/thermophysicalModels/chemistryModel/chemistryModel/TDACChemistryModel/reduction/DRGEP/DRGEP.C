@@ -63,7 +63,7 @@ Foam::chemistryReductionMethods::DRGEP<CompType, ThermoType>::DRGEP
 
     if (this->coeffsDict_.found("NGroupBased"))
     {
-        NGroupBased_ = readLabel(this->coeffsDict_.lookup("NGroupBased"));
+        NGroupBased_ = this->coeffsDict_.template lookup<label>("NGroupBased");
     }
 
     const List<List<specieElement>>& specieComposition =

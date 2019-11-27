@@ -43,8 +43,8 @@ namespace thermophysicalFunctions
 Foam::thermophysicalFunctions::table::table(const dictionary& dict)
 :
     dictName_(dict.name()),
-    Tlow_(dict.lookupType<scalar>("Tlow")),
-    Thigh_(dict.lookupType<scalar>("Thigh")),
+    Tlow_(dict.lookup<scalar>("Tlow")),
+    Thigh_(dict.lookup<scalar>("Thigh")),
     values_(dict.lookup("values"))
 {
     if (values_.size() < 2)

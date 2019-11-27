@@ -218,7 +218,7 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
 
         if (this->coeffsDict_.found("nbCLarge"))
         {
-            nbCLarge_ = readLabel(fuelDict.lookup("nbCLarge"));
+            nbCLarge_ = fuelDict.lookup<label>("nbCLarge");
         }
 
         fuelSpeciesID_.setSize(fuelSpecies_.size());

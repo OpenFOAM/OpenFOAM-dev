@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -506,8 +506,8 @@ Foam::surfaceFeatures::surfaceFeatures
     surf_(surf),
     featurePoints_(featInfoDict.lookup("featurePoints")),
     featureEdges_(featInfoDict.lookup("featureEdges")),
-    externalStart_(readLabel(featInfoDict.lookup("externalStart"))),
-    internalStart_(readLabel(featInfoDict.lookup("internalStart")))
+    externalStart_(featInfoDict.lookup<label>("externalStart")),
+    internalStart_(featInfoDict.lookup<label>("internalStart"))
 {}
 
 
@@ -529,8 +529,8 @@ Foam::surfaceFeatures::surfaceFeatures
 
     featureEdges_ = labelList(featInfoDict.lookup("featureEdges"));
     featurePoints_ = labelList(featInfoDict.lookup("featurePoints"));
-    externalStart_ = readLabel(featInfoDict.lookup("externalStart"));
-    internalStart_ = readLabel(featInfoDict.lookup("internalStart"));
+    externalStart_ = featInfoDict.lookup<label>("externalStart");
+    internalStart_ = featInfoDict.lookup<label>("internalStart");
 }
 
 

@@ -42,7 +42,7 @@ namespace thermophysicalFunctions
 
 Foam::thermophysicalFunctions::constant::constant(const dictionary& dict)
 :
-    value_(dict.lookupType<scalar>("value"))
+    value_(dict.lookup<scalar>("value"))
 {}
 
 

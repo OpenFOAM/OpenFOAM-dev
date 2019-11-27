@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -872,7 +872,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
     const scalar errorReduction =
         readScalar(paramDict.lookup("errorReduction"));
     const label nSmoothScale =
-        readLabel(paramDict.lookup("nSmoothScale"));
+        paramDict.lookup<label>("nSmoothScale");
 
 
     // Note: displacement_ should already be synced already from setDisplacement

@@ -109,8 +109,8 @@ Foam::processorPolyPatch::processorPolyPatch
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
-    myProcNo_(readLabel(dict.lookup("myProcNo"))),
-    neighbProcNo_(readLabel(dict.lookup("neighbProcNo"))),
+    myProcNo_(dict.lookup<label>("myProcNo")),
+    neighbProcNo_(dict.lookup<label>("neighbProcNo")),
     neighbFaceCentres_(),
     neighbFaceAreas_(),
     neighbFaceCellCentres_()

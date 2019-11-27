@@ -254,7 +254,7 @@ void Foam::rigidBodyMeshMotion::solve()
 
     if (test_)
     {
-        label nIter(readLabel(coeffDict().lookup("nIter")));
+        label nIter(coeffDict().lookup<label>("nIter"));
 
         for (label i=0; i<nIter; i++)
         {

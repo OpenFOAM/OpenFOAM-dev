@@ -48,7 +48,7 @@ bool Foam::setRefCell
         {
             if (Pstream::master())
             {
-                refCelli = readLabel(dict.lookup(refCellName));
+                refCelli = dict.lookup<label>(refCellName);
 
                 if (refCelli < 0 || refCelli >= field.mesh().nCells())
                 {

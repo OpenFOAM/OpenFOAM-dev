@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -361,8 +361,8 @@ void Foam::twoPhaseSystem::solve()
         alpha1.name()
     );
 
-    label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
-    label nAlphaCorr(readLabel(alphaControls.lookup("nAlphaCorr")));
+    label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
+    label nAlphaCorr(alphaControls.lookup<label>("nAlphaCorr"));
 
     word alphaScheme("div(phi," + alpha1.name() + ')');
     word alpharScheme("div(phir," + alpha1.name() + ')');

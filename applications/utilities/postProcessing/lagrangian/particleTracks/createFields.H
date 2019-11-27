@@ -11,8 +11,8 @@ IOdictionary propsDict
 
 const word cloudName(propsDict.lookup("cloudName"));
 
-label sampleFrequency(readLabel(propsDict.lookup("sampleFrequency")));
+label sampleFrequency(propsDict.lookup<label>("sampleFrequency"));
 
-label maxPositions(readLabel(propsDict.lookup("maxPositions")));
+label maxPositions(propsDict.lookup<label>("maxPositions"));
 
 word setFormat(propsDict.lookupOrDefault<word>("setFormat", "vtk"));

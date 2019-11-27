@@ -215,8 +215,8 @@ template<class Type>
 Foam::TableReaders::Csv<Type>::Csv(const dictionary& dict)
 :
     TableReader<Type>(dict),
-    nHeaderLine_(readLabel(dict.lookup("nHeaderLine"))),
-    refColumn_(readLabel(dict.lookup("refColumn"))),
+    nHeaderLine_(dict.lookup<label>("nHeaderLine")),
+    refColumn_(dict.lookup<label>("refColumn")),
     componentColumns_(dict.lookup("componentColumns")),
     separator_(dict.lookupOrDefault<string>("separator", string(","))[0]),
     mergeSeparators_(readBool(dict.lookup("mergeSeparators")))

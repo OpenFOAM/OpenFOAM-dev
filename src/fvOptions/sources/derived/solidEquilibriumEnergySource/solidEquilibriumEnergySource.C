@@ -102,7 +102,7 @@ Foam::fv::solidEquilibriumEnergySource::solidEquilibriumEnergySource
 )
 :
     option(name, modelType, dict, mesh),
-    phaseName_(dict.lookupType<word>("phase"))
+    phaseName_(dict.lookup<word>("phase"))
 {
     read(dict);
     alpha();
@@ -169,7 +169,7 @@ bool Foam::fv::solidEquilibriumEnergySource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        fieldNames_ = wordList(1, coeffs_.lookupType<word>("field"));
+        fieldNames_ = wordList(1, coeffs_.lookup<word>("field"));
 
         applied_.setSize(fieldNames_.size(), false);
 

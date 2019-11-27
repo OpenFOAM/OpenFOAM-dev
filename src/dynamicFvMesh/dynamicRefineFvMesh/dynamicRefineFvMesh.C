@@ -1183,7 +1183,7 @@ bool Foam::dynamicRefineFvMesh::update()
         dynamicMeshDict().optionalSubDict(typeName + "Coeffs")
     );
 
-    label refineInterval = readLabel(refineDict.lookup("refineInterval"));
+    label refineInterval = refineDict.lookup<label>("refineInterval");
 
     bool hasChanged = false;
 
@@ -1207,7 +1207,7 @@ bool Foam::dynamicRefineFvMesh::update()
 
     if (time().timeIndex() > 0 && time().timeIndex() % refineInterval == 0)
     {
-        label maxCells = readLabel(refineDict.lookup("maxCells"));
+        label maxCells = refineDict.lookup<label>("maxCells");
 
         if (maxCells <= 0)
         {
@@ -1218,7 +1218,7 @@ bool Foam::dynamicRefineFvMesh::update()
                 << exit(FatalError);
         }
 
-        label maxRefinement = readLabel(refineDict.lookup("maxRefinement"));
+        label maxRefinement = refineDict.lookup<label>("maxRefinement");
 
         if (maxRefinement <= 0)
         {
@@ -1243,7 +1243,7 @@ bool Foam::dynamicRefineFvMesh::update()
             great
         );
         const label nBufferLayers =
-            readLabel(refineDict.lookup("nBufferLayers"));
+            refineDict.lookup<label>("nBufferLayers");
 
         // Cells marked for refinement or otherwise protected from unrefinement.
         PackedBoolList refineCell(nCells());

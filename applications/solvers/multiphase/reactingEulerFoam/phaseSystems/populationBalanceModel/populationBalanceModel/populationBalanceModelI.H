@@ -27,7 +27,7 @@ License
 
 inline Foam::label Foam::diameterModels::populationBalanceModel::nCorr() const
 {
-    return mesh_.solverDict(name_).lookupType<label>("nCorr");
+    return mesh_.solverDict(name_).lookup<label>("nCorr");
 }
 
 

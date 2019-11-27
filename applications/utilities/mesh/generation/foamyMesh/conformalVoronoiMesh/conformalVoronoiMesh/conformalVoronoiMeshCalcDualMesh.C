@@ -754,7 +754,7 @@ Foam::conformalVoronoiMesh::createPolyMeshFromPoints
 
     forAll(patches, p)
     {
-        label totalPatchSize = readLabel(patchDicts[p].lookup("nFaces"));
+        label totalPatchSize = patchDicts[p].lookup<label>("nFaces");
 
         if
         (
@@ -1741,7 +1741,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
             procNeighbours[patchi] =
             (
                 patchDicts[patchi].found("neighbProcNo")
-              ? readLabel(patchDicts[patchi].lookup("neighbProcNo"))
+              ? patchDicts[patchi].lookup<label>("neighbProcNo")
               : -1
             );
         }
@@ -2368,7 +2368,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
                 const label neighbour =
                 (
                     patchDicts[nbI].found("neighbProcNo")
-                  ? readLabel(patchDicts[nbI].lookup("neighbProcNo"))
+                  ? patchDicts[nbI].lookup<label>("neighbProcNo")
                   : -1
                 );
 

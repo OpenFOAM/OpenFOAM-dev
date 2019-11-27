@@ -223,7 +223,7 @@ Foam::procFacesGAMGProcAgglomeration::procFacesGAMGProcAgglomeration
 )
 :
     GAMGProcAgglomeration(agglom, controlDict),
-    nAgglomeratingCells_(readLabel(controlDict.lookup("nAgglomeratingCells")))
+    nAgglomeratingCells_(controlDict.lookup<label>("nAgglomeratingCells"))
 {}
 
 

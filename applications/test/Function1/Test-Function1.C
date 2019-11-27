@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     const scalar x0 = readScalar(dict.lookup("x0"));
     const scalar x1 = readScalar(dict.lookup("x1"));
-    const label nX = readLabel(dict.lookup("nX"));
+    const label nX = dict.lookup<label>("nX");
     const scalar dx = (x1 - x0)/(nX - 1);
     const scalarField xs
     (

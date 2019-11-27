@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -432,7 +432,7 @@ int main(int argc, char *argv[])
         // Get requested numberOfSubdomains. Note: have no mesh yet so
         // cannot use decompositionModel::New
         const label nDomains =
-            readLabel(IOdictionary(dictIO).lookup("numberOfSubdomains"));
+            IOdictionary(dictIO).lookup<label>("numberOfSubdomains");
 
         // Give file handler a chance to determine the output directory
         const_cast<fileOperation&>(fileHandler()).setNProcs(nDomains);

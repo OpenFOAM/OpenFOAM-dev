@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,8 +45,8 @@ Foam::IOerror::IOerror(const dictionary& errDict)
 :
     error(errDict),
     ioFileName_(errDict.lookup("ioFileName")),
-    ioStartLineNumber_(readLabel(errDict.lookup("ioStartLineNumber"))),
-    ioEndLineNumber_(readLabel(errDict.lookup("ioEndLineNumber")))
+    ioStartLineNumber_(errDict.lookup<label>("ioStartLineNumber")),
+    ioEndLineNumber_(errDict.lookup<label>("ioEndLineNumber"))
 {}
 
 

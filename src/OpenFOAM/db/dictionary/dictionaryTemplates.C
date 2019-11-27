@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
-T Foam::dictionary::lookupType
+T Foam::dictionary::lookup
 (
     const word& keyword,
     bool recursive,

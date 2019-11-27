@@ -73,7 +73,7 @@ Foam::cv2DControls::cv2DControls
 
     maxBoundaryConformingIter_
     (
-        readLabel(conformationControl_.lookup("maxBoundaryConformingIter"))
+        conformationControl_.lookup<label>("maxBoundaryConformingIter")
     ),
 
     span_

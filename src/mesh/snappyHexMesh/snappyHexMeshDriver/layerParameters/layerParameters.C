@@ -119,7 +119,7 @@ Foam::layerParameters::layerParameters
         boundaryMesh.size(),
         dict.found("mergeFaces")
       ? (
-            dict.lookupType<bool>("mergeFaces")
+            dict.lookup<bool>("mergeFaces")
           ? mergeFace::yes
           : mergeFace::no
         )
@@ -130,16 +130,16 @@ Foam::layerParameters::layerParameters
     (
         dict.lookupOrDefault("concaveAngle", defaultConcaveAngle)
     ),
-    nGrow_(readLabel(dict.lookup("nGrow"))),
+    nGrow_(dict.lookup<label>("nGrow")),
     maxFaceThicknessRatio_
     (
         readScalar(dict.lookup("maxFaceThicknessRatio"))
     ),
     nBufferCellsNoExtrude_
     (
-        readLabel(dict.lookup("nBufferCellsNoExtrude"))
+        dict.lookup<label>("nBufferCellsNoExtrude")
     ),
-    nLayerIter_(readLabel(dict.lookup("nLayerIter"))),
+    nLayerIter_(dict.lookup<label>("nLayerIter")),
     nRelaxedIter_(labelMax),
     additionalReporting_(dict.lookupOrDefault("additionalReporting", false)),
     meshShrinker_
@@ -290,7 +290,7 @@ Foam::layerParameters::layerParameters
                     const label patchi = patchiter.key();
 
                     numLayers_[patchi] =
-                        readLabel(layerDict.lookup("nSurfaceLayers"));
+                        layerDict.lookup<label>("nSurfaceLayers");
 
                     switch (layerSpec_)
                     {
@@ -376,7 +376,7 @@ Foam::layerParameters::layerParameters
                     if (layerDict.found("mergeFaces"))
                     {
                         mergeFaces_[patchi] =
-                            layerDict.lookupType<bool>("mergeFaces")
+                            layerDict.lookup<bool>("mergeFaces")
                           ? mergeFace::yes
                           : mergeFace::no;
                     }

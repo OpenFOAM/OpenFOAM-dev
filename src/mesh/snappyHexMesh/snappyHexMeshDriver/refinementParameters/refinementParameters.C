@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,9 +32,9 @@ License
 
 Foam::refinementParameters::refinementParameters(const dictionary& dict)
 :
-    maxGlobalCells_(readLabel(dict.lookup("maxGlobalCells"))),
-    maxLocalCells_(readLabel(dict.lookup("maxLocalCells"))),
-    minRefineCells_(readLabel(dict.lookup("minRefinementCells"))),
+    maxGlobalCells_(dict.lookup<label>("maxGlobalCells")),
+    maxLocalCells_(dict.lookup<label>("maxLocalCells")),
+    minRefineCells_(dict.lookup<label>("minRefinementCells")),
     planarAngle_
     (
         dict.lookupOrDefault
@@ -43,7 +43,7 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
             readScalar(dict.lookup("resolveFeatureAngle"))
         )
     ),
-    nBufferLayers_(readLabel(dict.lookup("nCellsBetweenLevels"))),
+    nBufferLayers_(dict.lookup<label>("nCellsBetweenLevels")),
     keepPoints_(pointField(1, dict.lookup("locationInMesh"))),
     allowFreeStandingZoneFaces_(dict.lookup("allowFreeStandingZoneFaces")),
     useTopologicalSnapDetection_

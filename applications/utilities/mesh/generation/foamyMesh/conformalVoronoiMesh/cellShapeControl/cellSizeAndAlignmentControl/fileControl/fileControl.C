@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ Foam::fileControl::fileControl
     pointsFile_(controlFunctionDict.lookup("pointsFile")),
     sizesFile_(controlFunctionDict.lookup("sizesFile")),
     alignmentsFile_(controlFunctionDict.lookup("alignmentsFile")),
-    maxPriority_(readLabel(controlFunctionDict.lookup("priority")))
+    maxPriority_(controlFunctionDict.lookup<label>("priority"))
 {
     Info<< indent << "Loading " << name << " from file:" << nl
         << indent << "    priority   : " << maxPriority_ << nl

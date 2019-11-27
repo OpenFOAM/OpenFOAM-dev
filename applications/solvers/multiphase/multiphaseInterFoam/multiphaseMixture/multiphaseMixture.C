@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,7 +308,7 @@ void Foam::multiphaseMixture::solve()
     volScalarField& alpha = phases_.first();
 
     const dictionary& alphaControls = mesh_.solverDict("alpha");
-    label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
+    label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
     scalar cAlpha(readScalar(alphaControls.lookup("cAlpha")));
 
     if (nAlphaSubCycles > 1)

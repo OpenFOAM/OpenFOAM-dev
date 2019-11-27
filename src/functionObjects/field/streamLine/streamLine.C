@@ -346,7 +346,7 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
     if (!dict.found("direction") && dict.found("trackForward"))
     {
         trackDirection_ =
-            dict.lookupType<bool>("trackForward")
+            dict.lookup<bool>("trackForward")
           ? trackDirection::forward
           : trackDirection::backward;
     }

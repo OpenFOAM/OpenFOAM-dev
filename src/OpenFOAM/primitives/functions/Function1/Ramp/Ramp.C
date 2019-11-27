@@ -31,7 +31,7 @@ template <class Function1Type>
 void Foam::Function1s::Ramp<Function1Type>::read(const dictionary& coeffs)
 {
     start_ = coeffs.lookupOrDefault<scalar>("start", 0);
-    duration_ = coeffs.lookupType<scalar>("duration");
+    duration_ = coeffs.lookup<scalar>("duration");
 }
 
 

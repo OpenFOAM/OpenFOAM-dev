@@ -199,7 +199,7 @@ Foam::fv::volumeFractionSource::volumeFractionSource
 )
 :
     option(name, modelType, dict, mesh),
-    phaseName_(dict.lookupType<word>("phase")),
+    phaseName_(dict.lookup<word>("phase")),
     phiName_("phi"),
     rhoName_("rho"),
     UName_("U")

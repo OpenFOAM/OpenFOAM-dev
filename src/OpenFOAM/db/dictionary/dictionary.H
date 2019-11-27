@@ -380,7 +380,7 @@ public:
             //  If recursive, search parent dictionaries.
             //  If patternMatch, use regular expressions.
             template<class T>
-            T lookupType
+            T lookup
             (
                 const word&,
                 bool recursive=false,

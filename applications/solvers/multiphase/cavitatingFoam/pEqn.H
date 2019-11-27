@@ -69,7 +69,7 @@
     // Remove the swirl component of velocity for "wedge" cases
     if (pimple.dict().found("removeSwirl"))
     {
-        label swirlCmpt(readLabel(pimple.dict().lookup("removeSwirl")));
+        label swirlCmpt(pimple.dict().lookup<label>("removeSwirl"));
 
         Info<< "Removing swirl component-" << swirlCmpt << " of U" << endl;
         U.field().replace(swirlCmpt, 0.0);

@@ -60,7 +60,7 @@ Foam::wordList Foam::functionObjects::forces::createFileNames
     if (dict.found("binData"))
     {
         const dictionary& binDict(dict.subDict("binData"));
-        label nb = readLabel(binDict.lookup("nBin"));
+        label nb = binDict.lookup<label>("nBin");
         if (nb > 0)
         {
             // Name for file(fileID::binsFile=1)

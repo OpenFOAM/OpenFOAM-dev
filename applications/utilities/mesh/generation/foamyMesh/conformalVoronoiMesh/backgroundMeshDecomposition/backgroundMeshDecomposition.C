@@ -819,8 +819,8 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
     (
         coeffsDict.lookupOrDefault<scalar>("minCellSizeLimit", 0.0)
     ),
-    minLevels_(readLabel(coeffsDict.lookup("minLevels"))),
-    volRes_(readLabel(coeffsDict.lookup("sampleResolution"))),
+    minLevels_(coeffsDict.lookup<label>("minLevels")),
+    volRes_(coeffsDict.lookup<label>("sampleResolution")),
     maxCellWeightCoeff_(readScalar(coeffsDict.lookup("maxCellWeightCoeff")))
 {
     if (!Pstream::parRun())

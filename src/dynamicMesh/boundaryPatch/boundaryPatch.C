@@ -52,8 +52,8 @@ Foam::boundaryPatch::boundaryPatch
 )
 :
     patchIdentifier(name, dict, index),
-    size_(readLabel(dict.lookup("nFaces"))),
-    start_(readLabel(dict.lookup("startFace")))
+    size_(dict.lookup<label>("nFaces")),
+    start_(dict.lookup<label>("startFace"))
 {}
 
 

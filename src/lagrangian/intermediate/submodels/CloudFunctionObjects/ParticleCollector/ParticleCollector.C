@@ -158,7 +158,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
     vector origin(this->coeffDict().lookup("origin"));
 
     this->coeffDict().lookup("radius") >> radius_;
-    nSector_ = readLabel(this->coeffDict().lookup("nSector"));
+    nSector_ = this->coeffDict().template lookup<label>("nSector");
 
     label nS = nSector_;
 

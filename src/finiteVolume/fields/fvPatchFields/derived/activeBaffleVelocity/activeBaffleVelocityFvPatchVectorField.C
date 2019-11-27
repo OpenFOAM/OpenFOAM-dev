@@ -89,7 +89,7 @@ activeBaffleVelocityFvPatchVectorField
     pName_(dict.lookupOrDefault<word>("p", "p")),
     cyclicPatchName_(dict.lookup("cyclicPatch")),
     cyclicPatchLabel_(p.patch().boundaryMesh().findPatchID(cyclicPatchName_)),
-    orientation_(readLabel(dict.lookup("orientation"))),
+    orientation_(dict.lookup<label>("orientation")),
     initWallSf_(p.Sf()),
     initCyclicSf_(p.boundaryMesh()[cyclicPatchLabel_].Sf()),
     nbrCyclicSf_

@@ -352,7 +352,7 @@ void Foam::vtkPVFoam::updateInfoPatches
             {
                 const dictionary& patchDict = patchEntries[patchi].dict();
 
-                sizes[patchi] = readLabel(patchDict.lookup("nFaces"));
+                sizes[patchi] = patchDict.lookup<label>("nFaces");
                 names[patchi] = patchEntries[patchi].keyword();
             }
 

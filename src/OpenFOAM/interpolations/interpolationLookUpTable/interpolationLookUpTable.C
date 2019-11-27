@@ -158,7 +158,7 @@ void Foam::interpolationLookUpTable<Type>::dimensionTable()
 
     forAll(entries_,i)
     {
-        dim_[i] = readLabel(entries_[i].lookup("N"));
+        dim_[i] = entries_[i].template lookup<label>("N");
         max_[i] = readScalar(entries_[i].lookup("max"));
         min_[i] = readScalar(entries_[i].lookup("min"));
         delta_[i] = (max_[i] - min_[i])/dim_[i];

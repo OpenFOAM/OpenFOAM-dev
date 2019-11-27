@@ -59,7 +59,7 @@ Foam::decompositionMethod::decompositionMethod
     decompositionDict_(decompositionDict),
     nProcessors_
     (
-        readLabel(decompositionDict.lookup("numberOfSubdomains"))
+        decompositionDict.lookup<label>("numberOfSubdomains")
     )
 {
     // Read any constraints
