@@ -54,9 +54,6 @@ class heThermo
 {
     // Private Member Functions
 
-        //- Initialize heThermo
-        void init();
-
         //- Return a volScalarField of the given property
         template<class Method, class ... Args>
         tmp<volScalarField> volScalarFieldProperty

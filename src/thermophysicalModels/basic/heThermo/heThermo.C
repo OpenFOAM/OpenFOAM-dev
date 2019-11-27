@@ -30,34 +30,6 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class BasicThermo, class MixtureType>
-void Foam::heThermo<BasicThermo, MixtureType>::init()
-{
-    scalarField& heCells = he_.primitiveFieldRef();
-    const scalarField& pCells = this->p();
-    const scalarField& TCells = this->T_;
-
-    forAll(heCells, celli)
-    {
-        heCells[celli] =
-            this->cellMixture(celli).HE(pCells[celli], TCells[celli]);
-    }
-
-    volScalarField::Boundary& heBf = he_.boundaryFieldRef();
-
-    forAll(heBf, patchi)
-    {
-        heBf[patchi] == he
-        (
-            this->T_.boundaryField()[patchi],
-            patchi
-        );
-    }
-
-    this->heBoundaryCorrection(he_);
-}
-
-
-template<class BasicThermo, class MixtureType>
 template<class Method, class ... Args>
 Foam::tmp<Foam::volScalarField>
 Foam::heThermo<BasicThermo, MixtureType>::volScalarFieldProperty
@@ -206,13 +178,12 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        mesh,
-        dimEnergy/dimMass,
+        he(this->p(), this->T_),
         this->heBoundaryTypes(),
         this->heBoundaryBaseTypes()
     )
 {
-    init();
+    heBoundaryCorrection(he_);
 }
 
 
@@ -240,13 +211,12 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        mesh,
-        dimEnergy/dimMass,
+        he(this->p(), this->T_),
         this->heBoundaryTypes(),
         this->heBoundaryBaseTypes()
     )
 {
-    init();
+    heBoundaryCorrection(he_);
 }
 
 
