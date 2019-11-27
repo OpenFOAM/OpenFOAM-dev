@@ -39,7 +39,6 @@ Description
         type        fieldMinMax;
         libs        ("libfieldFunctionObjects.so");
         ...
-        write       yes;
         log         yes;
         location    yes;
         mode        magnitude;
@@ -55,7 +54,6 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         type         | type name: fieldMinMax  | yes         |
-        write        | write min/max data to file |  no      | yes
         log          | write min/max data to standard output | no | no
         location     | write location of the min/max value | no | yes
         mode         | calculation mode: magnitude or component | no | magnitude

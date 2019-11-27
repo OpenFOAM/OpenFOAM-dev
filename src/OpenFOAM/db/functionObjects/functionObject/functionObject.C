@@ -126,9 +126,10 @@ const Foam::word& Foam::functionObject::name() const
 
 bool Foam::functionObject::read(const dictionary& dict)
 {
+    log = dict.lookupOrDefault<Switch>("log", postProcess);
+
     if (!postProcess)
     {
-        log = dict.lookupOrDefault<Switch>("log", true);
         executeAtStart_ = dict.lookupOrDefault<Switch>("executeAtStart", true);
     }
 
