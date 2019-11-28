@@ -51,21 +51,19 @@ class heheuPsiThermo
 :
     public heThermo<BasicPsiThermo, MixtureType>
 {
-    // Private Member Functions
+    // Private Data
 
+        //- Unburnt temperature
         volScalarField Tu_;
+
+        //- Unburnt energy
         volScalarField heu_;
 
 
     // Private Member Functions
 
+        //- Calculate the thermo variables
         void calculate();
-
-        //- Construct as copy (not implemented)
-        heheuPsiThermo
-        (
-            const heheuPsiThermo<BasicPsiThermo, MixtureType>&
-        );
 
 
 public:
@@ -83,6 +81,12 @@ public:
             const word& phaseName
         );
 
+        //- Disallow default bitwise copy construction
+        heheuPsiThermo
+        (
+            const heheuPsiThermo<BasicPsiThermo, MixtureType>&
+        ) = delete;
+
 
     //- Destructor
     virtual ~heheuPsiThermo();
@@ -92,6 +96,7 @@ public:
 
         //- Update properties
         virtual void correct();
+
 
         // Access to thermodynamic state variables.
 

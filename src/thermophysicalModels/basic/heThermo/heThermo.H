@@ -52,37 +52,6 @@ class heThermo
     public BasicThermo,
     public MixtureType
 {
-    // Private Member Functions
-
-        //- Return a volScalarField of the given property
-        template<class Method, class ... Args>
-        tmp<volScalarField> volScalarFieldProperty
-        (
-            const word& psiName,
-            const dimensionSet& psiDim,
-            Method psiMethod,
-            const Args& ... args
-        ) const;
-
-        //- Return a scalarField of the given property on a cell set
-        template<class Method, class ... Args>
-        tmp<scalarField> cellSetProperty
-        (
-            Method psiMethod,
-            const labelList& cells,
-            const Args& ... args
-        ) const;
-
-        //- Return a scalarField of the given property on a patch
-        template<class Method, class ... Args>
-        tmp<scalarField> patchFieldProperty
-        (
-            Method psiMethod,
-            const label patchi,
-            const Args& ... args
-        ) const;
-
-
 protected:
 
     // Protected data
@@ -93,10 +62,46 @@ protected:
 
     // Protected Member Functions
 
-        // Enthalpy/Internal energy
+        //- Return a volScalarField of the given property
+        template
+        <
+            class CellMixture,
+            class PatchFaceMixture,
+            class Method,
+            class ... Args
+        >
+        tmp<volScalarField> volScalarFieldProperty
+        (
+            const word& psiName,
+            const dimensionSet& psiDim,
+            CellMixture cellMixture,
+            PatchFaceMixture patchFaceMixture,
+            Method psiMethod,
+            const Args& ... args
+        ) const;
 
-            //- Correct the enthalpy/internal energy field boundaries
-            void heBoundaryCorrection(volScalarField& he);
+        //- Return a scalarField of the given property on a cell set
+        template<class CellMixture, class Method, class ... Args>
+        tmp<scalarField> cellSetProperty
+        (
+            CellMixture cellMixture,
+            Method psiMethod,
+            const labelList& cells,
+            const Args& ... args
+        ) const;
+
+        //- Return a scalarField of the given property on a patch
+        template<class PatchFaceMixture, class Method, class ... Args>
+        tmp<scalarField> patchFieldProperty
+        (
+            PatchFaceMixture patchFaceMixture,
+            Method psiMethod,
+            const label patchi,
+            const Args& ... args
+        ) const;
+
+        //- Correct the enthalpy/internal energy field boundaries
+        void heBoundaryCorrection(volScalarField& he);
 
 
 public:
