@@ -4,57 +4,43 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-setControlDict()
-{
-    sed \
-    -e "s/\(deltaT[ \t]*\) 5e-06;/\1 1e-05;/g" \
-    -e "s/\(endTime[ \t]*\) 0.005;/\1 0.015;/g" \
-    -e "s/\(writeInterval[ \t]*\) 10;/\1 50;/g" \
-    -i system/controlDict
-}
-
-setCombustionProperties()
-{
-    sed \
-    -e "s/\(laminarFlameSpeedCorrelation[ \t]*\) Gulders;/\1 RaviPetersen;/g" \
-    -e "s/\(fuel[ \t]*\) Propane;/\1 HydrogenInAir;/g" \
-    -i constant/combustionProperties
-}
-
-# Do moriyoshiHomogeneous
-( cd moriyoshiHomogeneous && foamRunTutorials )
-
-# Clone case for second phase
-cloneCase moriyoshiHomogeneous moriyoshiHomogeneousPart2
-
-# Modify and execute
+# Clone the propane case and set it up for hydrogen
+cloneCase moriyoshiHomogeneous moriyoshiHomogeneousHydrogen
 (
-    cd moriyoshiHomogeneousPart2 || exit
+    cd moriyoshiHomogeneousHydrogen || exit 1
 
-    # The following 2 command lines are a generic implementation of the
-    # following command:
-    #     cp -r ../moriyoshiHomogeneous/0.005 .
+    mv constant/thermophysicalProperties \
+        constant/thermophysicalProperties.propane
+    mv constant/thermophysicalProperties.hydrogen \
+        constant/thermophysicalProperties
 
-    lastTimeStep=$(foamListTimes -case ../moriyoshiHomogeneous -latestTime)
-    cp -r ../moriyoshiHomogeneous/$lastTimeStep .
-
-    setControlDict
-    runApplication $(getApplication)
+    mv constant/combustionPropertiesInclude \
+        constant/combustionPropertiesInclude.propane
+    mv constant/combustionPropertiesInclude.hydrogen \
+        constant/combustionPropertiesInclude
 )
 
-# Clone case for hydrogen
-cloneCase moriyoshiHomogeneous moriyoshiHomogeneousHydrogen
-
-# Modify and execute
+# Run the propane case
 (
-    cd moriyoshiHomogeneousHydrogen || exit
+    cd moriyoshiHomogeneous || exit 1
 
-    setCombustionProperties
-    mv constant/thermophysicalProperties \
-       constant/thermophysicalProperties.propane
-    mv constant/thermophysicalProperties.hydrogen \
-       constant/thermophysicalProperties
-    runApplication $(getApplication)
+    foamRunTutorials
+
+    if ! isTest $@
+    then
+        foamDictionary system/controlDict -entry deltaT -set 1e-05
+        foamDictionary system/controlDict -entry endTime -set 0.015
+        foamDictionary system/controlDict -entry writeInterval -set 50
+
+        runApplication -a XiFoam
+    fi
+)
+
+# Run the hydrogen case
+(
+    cd moriyoshiHomogeneousHydrogen || exit 1
+
+    foamRunTutorials
 )
 
 #------------------------------------------------------------------------------
