@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,6 +66,7 @@ Foam::functionObjects::scale::scale
     fieldExpression(name, runTime, dict),
     scale_(0)
 {
+    setResultName(typeName);
     read(dict);
 }
 
@@ -81,12 +82,6 @@ Foam::functionObjects::scale::~scale()
 bool Foam::functionObjects::scale::read(const dictionary& dict)
 {
     fieldExpression::read(dict);
-
-    if (resultName_.empty())
-    {
-        resultName_ = "scale(" + fieldName_ + ")";
-    }
-
     dict.lookup("scale") >> scale_;
 
     return true;

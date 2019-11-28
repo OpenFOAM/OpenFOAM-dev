@@ -99,6 +99,7 @@ Foam::functionObjects::log::log
     clipValue_(0),
     checkDimensions_(true)
 {
+    setResultName(typeName);
     read(dict);
 }
 

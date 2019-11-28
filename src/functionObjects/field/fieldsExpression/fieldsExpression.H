@@ -70,8 +70,8 @@ protected:
 
         void setResultName
         (
-            const word& typeName,
-            const wordList& defaultArg = wordList::null()
+            const word& functionName,
+            const wordList& defaultFieldNames = wordList::null()
         );
 
         //- Call 'calcFieldType' for the given functionObject
