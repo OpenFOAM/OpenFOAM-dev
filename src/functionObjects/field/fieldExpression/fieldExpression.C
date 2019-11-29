@@ -37,28 +37,6 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-void Foam::functionObjects::fieldExpression::setResultName
-(
-    const word& functionName,
-    const word& defaultFieldName
-)
-{
-    if (resultName_.empty())
-    {
-        if (defaultFieldName.empty() || fieldName_ != defaultFieldName)
-        {
-            resultName_ = functionName + '(' + fieldName_ + ')';
-        }
-        else
-        {
-            resultName_ = functionName;
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::fieldExpression::fieldExpression
@@ -66,16 +44,21 @@ Foam::functionObjects::fieldExpression::fieldExpression
     const word& name,
     const Time& runTime,
     const dictionary& dict,
-    const word& fieldName,
-    const word& resultName
+    const word& functionName,
+    const word& defaultFieldName
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fieldName_(fieldName),
-    resultName_(resultName)
-{
-    read(dict);
-}
+    fieldName_(dict.lookupOrDefault("field", defaultFieldName)),
+    resultName_
+    (
+        dict.found("result")
+      ? dict.lookup("result")
+      : (defaultFieldName.empty() || fieldName_ != defaultFieldName)
+        ? word(functionName + '(' + fieldName_ + ')')
+        : functionName
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -88,18 +71,6 @@ Foam::functionObjects::fieldExpression::~fieldExpression()
 
 bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
 {
-    fvMeshFunctionObject::read(dict);
-
-    if (fieldName_.empty() || dict.found("field"))
-    {
-        dict.lookup("field") >> fieldName_;
-    }
-
-    if (dict.found("result"))
-    {
-        dict.lookup("result") >> resultName_;
-    }
-
     return true;
 }
 

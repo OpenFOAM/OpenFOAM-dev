@@ -94,12 +94,11 @@ Foam::functionObjects::log::log
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict),
+    fieldExpression(name, runTime, dict, typeName),
     clip_(false),
     clipValue_(0),
     checkDimensions_(true)
 {
-    setResultName(typeName);
     read(dict);
 }
 
@@ -114,13 +113,6 @@ Foam::functionObjects::log::~log()
 
 bool Foam::functionObjects::log::read(const dictionary& dict)
 {
-    fieldExpression::read(dict);
-
-    if (resultName_.empty())
-    {
-        resultName_ = "log(" + fieldName_ + ")";
-    }
-
     if (dict.found("clip"))
     {
         clip_ = true;

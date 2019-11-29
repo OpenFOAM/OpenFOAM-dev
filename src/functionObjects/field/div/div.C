@@ -62,10 +62,8 @@ Foam::functionObjects::div::div
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict)
-{
-    setResultName(typeName);
-}
+    fieldExpression(name, runTime, dict, typeName)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

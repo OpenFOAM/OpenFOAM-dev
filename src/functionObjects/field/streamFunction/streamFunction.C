@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -434,10 +434,8 @@ Foam::functionObjects::streamFunction::streamFunction
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict, "phi")
+    fieldExpression(name, runTime, dict, typeName, "phi")
 {
-    setResultName("streamFunction", "phi");
-
     label nD = mesh_.nGeometricD();
 
     if (nD != 2)

@@ -63,9 +63,8 @@ Foam::functionObjects::randomise::randomise
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict)
+    fieldExpression(name, runTime, dict, typeName)
 {
-    setResultName(typeName);
     read(dict);
 }
 
@@ -80,8 +79,6 @@ Foam::functionObjects::randomise::~randomise()
 
 bool Foam::functionObjects::randomise::read(const dictionary& dict)
 {
-    fieldExpression::read(dict);
-
     dict.lookup("magPerturbation") >> magPerturbation_;
 
     return true;

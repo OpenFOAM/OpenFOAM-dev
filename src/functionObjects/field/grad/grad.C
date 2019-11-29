@@ -60,11 +60,8 @@ Foam::functionObjects::grad::grad
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict)
-{
-    setResultName(typeName);
-    read(dict);
-}
+    fieldExpression(name, runTime, dict, typeName)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

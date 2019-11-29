@@ -63,10 +63,9 @@ Foam::functionObjects::scale::scale
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict),
+    fieldExpression(name, runTime, dict, typeName),
     scale_(0)
 {
-    setResultName(typeName);
     read(dict);
 }
 
@@ -81,7 +80,6 @@ Foam::functionObjects::scale::~scale()
 
 bool Foam::functionObjects::scale::read(const dictionary& dict)
 {
-    fieldExpression::read(dict);
     dict.lookup("scale") >> scale_;
 
     return true;

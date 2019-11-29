@@ -189,7 +189,7 @@ Foam::functionObjects::pressure::pressure
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict, "p"),
+    fieldExpression(name, runTime, dict, typeName, "p"),
     UName_("U"),
     rhoName_("rho"),
     calcTotal_(false),
