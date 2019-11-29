@@ -60,7 +60,7 @@ protected:
     // Protected member data
 
         //- Name of field to process
-        word fieldName_;
+        const word fieldName_;
 
         //- Name of result field
         word resultName_;

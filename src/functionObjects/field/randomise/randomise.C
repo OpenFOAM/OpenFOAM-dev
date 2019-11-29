@@ -63,7 +63,7 @@ Foam::functionObjects::randomise::randomise
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict, typeName)
+    fieldExpression(name, runTime, dict, fieldName_ + "Random", fieldName_)
 {
     read(dict);
 }

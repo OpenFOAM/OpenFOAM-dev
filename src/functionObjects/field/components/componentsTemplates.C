@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,10 +41,8 @@ bool Foam::functionObjects::components::calcFieldComponents()
 
     for (direction i=0; i<Type::nComponents; i++)
     {
-        resultName_ = fieldName_ + word(Type::componentNames[i]);
-        resultNames_[i] = resultName_;
-
-        stored = stored && store(resultName_, field.component(i));
+        resultNames_[i] = fieldName_ + word(Type::componentNames[i]);
+        stored = stored && store(resultNames_[i], field.component(i));
     }
 
     return stored;
