@@ -169,7 +169,7 @@ shift
 
 # Check validity of case and options
 isCaseValid "$srcDir" || error "'$srcDir' is not a valid case directory"
-isDecomposed "$srcDir"|| \
+[ "${proc_opt#-*}" ] && ! isDecomposed "$srcDir" && \
     error "'-processor' option requires source case to be decomposed"
 
 # Set additional files with -add option
