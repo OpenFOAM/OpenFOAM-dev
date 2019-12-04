@@ -41,6 +41,20 @@ inline Foam::word Foam::IOobject::groupName(Name name, const word& group)
 }
 
 
+template<class Name>
+inline Foam::word Foam::IOobject::modelName(Name name, const word& model)
+{
+    if (model != word::null)
+    {
+        return name + (':' + model);
+    }
+    else
+    {
+        return name;
+    }
+}
+
+
 inline Foam::word Foam::IOobject::modelName(const char* name) const
 {
     return type() + ':' + name;
