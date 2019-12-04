@@ -195,31 +195,6 @@ public:
         static void list();
 
         //- Search for functionObject dictionary file for given region
-        //  and the user/group/shipped directories.
-        //  The search scheme allows for version-specific and
-        //  version-independent files using the following hierarchy:
-        //  - \b user settings:
-        //    - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
-        //    - ~/.OpenFOAM/caseDicts/postProcessing
-        //  - \b group (site) settings (when $WM_PROJECT_SITE is set):
-        //    - $WM_PROJECT_SITE/\<VERSION\>/etc/caseDicts/postProcessing
-        //    - $WM_PROJECT_SITE/etc/caseDicts/postProcessing
-        //  - \b group (site) settings (when $WM_PROJECT_SITE is not set):
-        //    - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/
-        //          caseDicts/postProcessing
-        //    - $WM_PROJECT_INST_DIR/site/etc/caseDicts/postProcessing
-        //  - \b other (shipped) settings:
-        //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
-        //
-        //  \return The path of the functionObject dictionary file if found
-        //  otherwise null
-        static fileName findRegionDict
-        (
-            const word& funcPath,
-            const word& region = word::null
-        );
-
-        //- Search for functionObject dictionary file for given region
         //  and if not present also search the case directory as well as the
         //  user/group/shipped directories.
         //  The search scheme allows for version-specific and

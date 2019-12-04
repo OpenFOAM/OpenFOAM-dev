@@ -119,30 +119,49 @@ void Foam::functionObjectList::list()
 }
 
 
-Foam::fileName Foam::functionObjectList::findRegionDict
+Foam::fileName Foam::functionObjectList::findDict
 (
     const word& funcName,
     const word& region
 )
 {
     // First check if there is a functionObject dictionary file in the
-    // case system directory
-    fileName dictFile
-    (
-        stringOps::expand("$FOAM_CASE")/"system"/region/funcName
-    );
+    // region system directory
+    {
+        const fileName dictFile
+        (
+            stringOps::expand("$FOAM_CASE")/"system"/region/funcName
+        );
 
-    if (isFile(dictFile))
-    {
-        return dictFile;
+        if (isFile(dictFile))
+        {
+            return dictFile;
+        }
     }
-    else
+
+    // Next, if the region is specified, check if there is a functionObject
+    // dictionary file in the global system directory
+    if (region != word::null)
     {
-        fileNameList etcDirs(findEtcDirs(functionObjectDictPath));
+        const fileName dictFile
+        (
+            stringOps::expand("$FOAM_CASE")/"system"/funcName
+        );
+
+        if (isFile(dictFile))
+        {
+            return dictFile;
+        }
+    }
+
+    // Finally, check etc directories
+    {
+        const fileNameList etcDirs(findEtcDirs(functionObjectDictPath));
 
         forAll(etcDirs, i)
         {
-            dictFile = search(funcName, etcDirs[i]);
+            const fileName dictFile(search(funcName, etcDirs[i]));
+
             if (!dictFile.empty())
             {
                 return dictFile;
@@ -151,32 +170,6 @@ Foam::fileName Foam::functionObjectList::findRegionDict
     }
 
     return fileName::null;
-}
-
-
-Foam::fileName Foam::functionObjectList::findDict
-(
-    const word& funcName,
-    const word& region
-)
-{
-    if (region == word::null)
-    {
-        return findRegionDict(funcName);
-    }
-    else
-    {
-        fileName dictFile(findRegionDict(funcName, region));
-
-        if (dictFile != fileName::null)
-        {
-            return dictFile;
-        }
-        else
-        {
-            return findRegionDict(funcName);
-        }
-    }
 }
 
 
