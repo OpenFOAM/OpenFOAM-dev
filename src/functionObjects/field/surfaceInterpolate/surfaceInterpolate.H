@@ -42,17 +42,16 @@ Description
         type        surfaceInterpolate;
         libs        ("libfieldFunctionObjects.so");
         ...
-        fields      ((p pNear)(U UNear));
+        fields      ((p pInterp)(U UInterp));
     }
     \endverbatim
 
 Usage
     \table
-        Property | Description               | Required    | Default value
-        type     | type name: nearWallFields | yes         |
+        Property | Description                   | Required    | Default value
+        type     | type name: surfaceInterpolate | yes         |
         fields   | list of fields with corresponding output field names | yes |
     \endtable
-
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
