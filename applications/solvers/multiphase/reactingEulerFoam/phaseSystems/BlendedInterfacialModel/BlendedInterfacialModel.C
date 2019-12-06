@@ -264,7 +264,7 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
 
     if (model2In1_.valid())
     {
-        addToXs(f2, (model1In2_().*method)(args ...));
+        addToXs(f2, (model2In1_().*method)(args ...));
     }
 
     if
