@@ -15,8 +15,7 @@ if (runTime.writeTime())
 
     if (thermo.thermalStress())
     {
-        const volScalarField& T = Tptr();
-        sigma = sigma - I*(rho*threeKalpha*T);
+        sigma = sigma - I*(rho*threeKalpha*thermo.T());
     }
 
     volScalarField sigmaEq

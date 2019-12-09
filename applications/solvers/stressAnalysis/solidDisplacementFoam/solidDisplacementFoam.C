@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         {
             if (thermo.thermalStress())
             {
-                volScalarField& T = Tptr();
+                volScalarField& T = thermo.T();
                 fvScalarMatrix TEqn
                 (
                     fvm::ddt(rho, Cp, T)
@@ -96,8 +96,7 @@ int main(int argc, char *argv[])
 
                 if (thermo.thermalStress())
                 {
-                    const volScalarField& T = Tptr();
-                    DEqn += fvc::grad(threeKalpha*T);
+                    DEqn += fvc::grad(threeKalpha*thermo.T());
                 }
 
                 fvOptions.constrain(DEqn);

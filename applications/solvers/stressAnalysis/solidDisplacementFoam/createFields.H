@@ -14,30 +14,6 @@ volVectorField D
     mesh
 );
 
-
-autoPtr<volScalarField> Tptr(nullptr);
-
-if (thermo.thermalStress())
-{
-    Info<< "Reading field T\n" << endl;
-    Tptr.reset
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "T",
-                runTime.timeName(),
-                mesh,
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            ),
-            mesh
-        )
-    );
-}
-
-
 Info<< "Calculating stress field sigmaD\n" << endl;
 volSymmTensorField sigmaD
 (
