@@ -50,7 +50,7 @@ Description
         <entryName> square;
         <entryName>Coeffs
         {
-            amplitude 0.1;
+            amplitude 2e-7;
             frequency 10;
             start     0;
             level     2e-6;
@@ -63,7 +63,7 @@ Description
         <entryName> square;
         <entryName>Coeffs
         {
-            amplitude 1;
+            amplitude (1 0.1 0);
             frequency 10;
             start     0;
             level     (10 1 0);
