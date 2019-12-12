@@ -114,7 +114,6 @@ void thixotropicViscosity::correct
     const volScalarField alphaRho = film.alpha()*film.rho();
     const surfaceScalarField& phiU = film.phiU();
     const volScalarField& coverage = film.coverage();
-    const Time& runTime = this->film().regionMesh().time();
 
     // Shear rate
     const volScalarField gDot
@@ -123,20 +122,12 @@ void thixotropicViscosity::correct
         coverage*mag(U - Uw)/(delta + film.deltaSmall())
     );
 
-    if (debug && runTime.writeTime())
-    {
-        gDot.write();
-    }
-
     const dimensionedScalar alphaRho0
     (
         "alphaRho0",
         alphaRho.dimensions(),
         rootVSmall
     );
-
-    const dimensionedScalar c0("c0", dimless/dimTime, rootVSmall);
-    const volScalarField coeff("coeff", -c_*pow(gDot, d_) + c0);
 
     fvScalarMatrix lambdaEqn
     (
@@ -145,7 +136,7 @@ void thixotropicViscosity::correct
       - fvm::Sp(fvc::div(phiU), lambda_)
       ==
         a_*pow((1 - lambda_), b_)
-      + fvm::SuSp(coeff, lambda_)
+      - fvm::Sp(c_*pow(gDot, d_), lambda_)
 
         // Include the effect of the impinging droplets added with lambda = 0
       - fvm::Sp
