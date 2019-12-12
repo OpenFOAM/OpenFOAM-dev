@@ -111,7 +111,7 @@ void thixotropicViscosity::correct
     const volVectorField& U = film.U();
     const volVectorField& Uw = film.Uw();
     const volScalarField& delta = film.delta();
-    const volScalarField deltaRho = delta*film.rho();
+    const volScalarField alphaRho = film.alpha()*film.rho();
     const surfaceScalarField& phiU = film.phiU();
     const volScalarField& coverage = film.coverage();
     const Time& runTime = this->film().regionMesh().time();
@@ -128,10 +128,10 @@ void thixotropicViscosity::correct
         gDot.write();
     }
 
-    const dimensionedScalar deltaRho0
+    const dimensionedScalar alphaRho0
     (
-        "deltaRho0",
-        deltaRho.dimensions(),
+        "alphaRho0",
+        alphaRho.dimensions(),
         rootVSmall
     );
 
@@ -154,7 +154,7 @@ void thixotropicViscosity::correct
             (
                -film.rhoSp(),
                 dimensionedScalar(film.rhoSp().dimensions(), 0)
-            )/(deltaRho() + deltaRho0),
+            )/(alphaRho() + alphaRho0),
             lambda_
         )
     );
