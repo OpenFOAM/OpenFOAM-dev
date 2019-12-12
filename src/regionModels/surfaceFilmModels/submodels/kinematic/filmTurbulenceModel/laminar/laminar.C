@@ -126,11 +126,12 @@ tmp<fvVectorMatrix> laminar::Su(volVectorField& U) const
     volScalarField::Internal Cw
     (
         "Cw",
-        mu/((1.0/3.0)*VbyA*(delta + film.deltaSmall()))
+        min
+        (
+            mu/((1.0/3.0)*VbyA*(delta + film.deltaSmall())),
+            film.rho()()/film.time().deltaT()
+        )
     );
-
-    // This hack needs to be fixed
-    Cw.field() = min(Cw.field(), 5000/VbyA.field());
 
     return
     (
