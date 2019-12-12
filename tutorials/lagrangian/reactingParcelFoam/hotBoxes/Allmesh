@@ -4,8 +4,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-rm -rf 0
-
 # Create the underlying block mesh
 runApplication blockMesh
 
@@ -20,10 +18,6 @@ runApplication ./patchifyObstacles
 
 # Create the wall film region via extrusion
 runApplication extrudeToRegionMesh -overwrite
-
-# Copy the system settings over to the wall film region
-rm -rf system/wallFilmRegion
-cp -r system/wallFilmRegion.orig system/wallFilmRegion
 
 paraFoam -touch
 paraFoam -touch -region wallFilmRegion

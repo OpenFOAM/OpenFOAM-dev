@@ -9,41 +9,29 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "system/wallFilmRegion";
-    object      fvSchemes;
+    class       volScalarField;
+    location    "0/wallFilm";
+    object      delta;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
+dimensions      [0 1 0 0 0 0 0];
+
+internalField   uniform 0.00013;
+
+boundaryField
 {
-    default         Euler;
-}
+    #includeEtc "caseDicts/setConstraintTypes"
 
-gradSchemes
-{
-    default         Gauss linear;
-}
+    walls_top
+    {
+        type            zeroGradient;
+    }
 
-divSchemes
-{
-    default         none;
-
-    div(phid,alpha) Gauss upwind;
-    div(phi,U)      Gauss upwind;
-    div(phi,h)      Gauss upwind;
-
-    div(nHat)       Gauss linear;
-}
-
-laplacianSchemes
-{
-    default         Gauss linear uncorrected;
-}
-
-snGradSchemes
-{
-    default         uncorrected;
+    region0_to_wallFilm_walls
+    {
+        type            zeroGradient;
+    }
 }
 
 

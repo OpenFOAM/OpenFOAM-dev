@@ -72,9 +72,9 @@ void constantHeatTransfer::correct()
 {}
 
 
-tmp<volScalarField> constantHeatTransfer::h() const
+tmp<volScalarField::Internal> constantHeatTransfer::h() const
 {
-    return volScalarField::New
+    return volScalarField::Internal::New
     (
         "htc",
         filmModel_.regionMesh(),

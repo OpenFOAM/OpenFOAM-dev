@@ -120,7 +120,7 @@ public:
             virtual const volScalarField& delta() const = 0;
 
             //- Return the film coverage, 1 = covered, 0 = uncovered / []
-            virtual const volScalarField& alpha() const = 0;
+            virtual const volScalarField& coverage() const = 0;
 
             //- Return the film velocity [m/s]
             virtual const volVectorField& U() const = 0;
@@ -133,24 +133,6 @@ public:
 
             //- Return the film density [kg/m^3]
             virtual const volScalarField& rho() const = 0;
-
-            //- Return the film mean temperature [K]
-            virtual const volScalarField& T() const = 0;
-
-            //- Return the film surface temperature [K]
-            virtual const volScalarField& Ts() const = 0;
-
-            //- Return the film wall temperature [K]
-            virtual const volScalarField& Tw() const = 0;
-
-            //- Return the film surface temperature [J/kg]
-            virtual const volScalarField& hs() const = 0;
-
-            //- Return the film specific heat capacity [J/kg/K]
-            virtual const volScalarField& Cp() const = 0;
-
-            //- Return the film thermal conductivity [W/m/K]
-            virtual const volScalarField& kappa() const = 0;
 
             //- Return the film surface tension [N/m]
             virtual const volScalarField& sigma() const = 0;

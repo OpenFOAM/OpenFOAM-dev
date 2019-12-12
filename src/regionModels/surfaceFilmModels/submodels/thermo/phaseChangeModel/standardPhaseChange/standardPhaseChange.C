@@ -112,7 +112,7 @@ void standardPhaseChange::correctModel
     const scalarField& delta = film.delta();
     const scalarField& pInf = film.pPrimary();
     const scalarField& T = film.T();
-    const scalarField& hs = film.hs();
+    const scalarField& h = film.h();
     const scalarField& rho = film.rho();
     const scalarField& rhoInf = film.rhoPrimary();
     const scalarField& muInf = film.muPrimary();
@@ -193,8 +193,8 @@ void standardPhaseChange::correctModel
 
             // Heat is assumed to be removed by heat-transfer to the wall
             // so the energy remains unchanged by the phase-change.
-            dEnergy[celli] += dm*hs[celli];
-            // dEnergy[celli] += dm*(hs[celli] + hVap);
+            dEnergy[celli] += dm*h[celli];
+            // dEnergy[celli] += dm*(h[celli] + hVap);
         }
     }
 }

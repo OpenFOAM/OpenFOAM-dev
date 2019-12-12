@@ -115,7 +115,7 @@ public:
             virtual void correct() = 0;
 
             //- Return the radiation sensible enthalpy source
-            virtual tmp<volScalarField> Shs() = 0;
+            virtual tmp<volScalarField::Internal> Shs() = 0;
 
 
     // Member Operators

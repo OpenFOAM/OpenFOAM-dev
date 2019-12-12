@@ -72,10 +72,10 @@ protected:
         dimensionedScalar maxSolidificationRate_;
 
         //- Accumulated solid mass [kg]
-        volScalarField mass_;
+        volScalarField::Internal mass_;
 
         //- Accumulated solid thickness [m]
-        volScalarField thickness_;
+        volScalarField::Internal thickness_;
 
 
 public:

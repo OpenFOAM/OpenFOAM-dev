@@ -10,40 +10,43 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0/region0_to_"(region0_to.*)"Region_masterRegion";
-    object      deltaf;
+    location    "0/wallFilmRegion";
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 0 0 0 0 0];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 0.0;
+internalField   uniform  300;
 
 boundaryField
 {
-    // cyclic boundaries between film patches
-    "(cube[0-9][0-9]_side[0-9]_to_cube[0-9][0-9]_side[0-9])"
-    {
-        type            nonuniformTransformCyclic;
-    }
-
-    // top film surface
-    "(.*top)"
+    wallFilmFaces_top
     {
         type            zeroGradient;
     }
 
-    // mapped boundaries
-    "(region0_to.*)"
+    region0_to_wallFilmRegion_wallFilmFaces
     {
         type            zeroGradient;
     }
 
-    // floor sides
-    walls
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 300;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    sides
     {
         type            zeroGradient;
     }
 }
+
 
 // ************************************************************************* //

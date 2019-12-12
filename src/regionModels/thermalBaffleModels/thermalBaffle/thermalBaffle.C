@@ -66,10 +66,7 @@ bool thermalBaffle::read(const dictionary& dict)
 
 void thermalBaffle::solveEnergy()
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
+    DebugInFunction << endl;
 
     const polyBoundaryMesh& rbm = regionMesh().boundaryMesh();
 

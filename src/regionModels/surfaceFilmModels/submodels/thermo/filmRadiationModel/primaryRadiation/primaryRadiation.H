@@ -58,8 +58,8 @@ class primaryRadiation
 {
     // Private Data
 
-        //- Incident radiative flux mapped from  the primary region / [kg/s^3]
-        volScalarField qinPrimary_;
+        //- Incident radiative flux mapped from the primary region [kg/s^3]
+        volScalarField::Internal qinFilm_;
 
 
 public:
@@ -94,7 +94,7 @@ public:
 
             //- Return the radiation sensible enthalpy source
             //  Also updates qrNet
-            virtual tmp<volScalarField> Shs();
+            virtual tmp<volScalarField::Internal> Shs();
 
 
     // Member Operators

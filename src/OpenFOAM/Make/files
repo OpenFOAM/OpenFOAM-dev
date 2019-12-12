@@ -473,7 +473,6 @@ $(constraintPolyPatches)/cyclic/cyclicPolyPatch.C
 $(constraintPolyPatches)/cyclicSlip/cyclicSlipPolyPatch.C
 $(constraintPolyPatches)/oldCyclic/oldCyclicPolyPatch.C
 $(constraintPolyPatches)/empty/emptyPolyPatch.C
-$(constraintPolyPatches)/nonuniformTransformCyclic/nonuniformTransformCyclicPolyPatch.C
 $(constraintPolyPatches)/processorCyclic/processorCyclicPolyPatch.C
 $(constraintPolyPatches)/processor/processorPolyPatch.C
 $(constraintPolyPatches)/symmetryPlane/symmetryPlanePolyPatch.C
@@ -595,7 +594,6 @@ constraintPointPatches = $(pointPatches)/constraint
 $(constraintPointPatches)/cyclic/cyclicPointPatch.C
 $(constraintPointPatches)/cyclicSlip/cyclicSlipPointPatch.C
 $(constraintPointPatches)/empty/emptyPointPatch.C
-$(constraintPointPatches)/nonuniformTransformCyclic/nonuniformTransformCyclicPointPatch.C
 $(constraintPointPatches)/processor/processorPointPatch.C
 $(constraintPointPatches)/processorCyclic/processorCyclicPointPatch.C
 $(constraintPointPatches)/symmetryPlane/symmetryPlanePointPatch.C
@@ -670,7 +668,6 @@ constraintPointPatchFields = $(pointPatchFields)/constraint
 $(constraintPointPatchFields)/cyclic/cyclicPointPatchFields.C
 $(constraintPointPatchFields)/cyclicSlip/cyclicSlipPointPatchFields.C
 $(constraintPointPatchFields)/empty/emptyPointPatchFields.C
-$(constraintPointPatchFields)/nonuniformTransformCyclic/nonuniformTransformCyclicPointPatchFields.C
 $(constraintPointPatchFields)/processor/processorPointPatchFields.C
 $(constraintPointPatchFields)/processorCyclic/processorCyclicPointPatchFields.C
 $(constraintPointPatchFields)/symmetryPlane/symmetryPlanePointPatchFields.C

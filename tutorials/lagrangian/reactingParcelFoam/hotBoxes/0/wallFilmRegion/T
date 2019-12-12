@@ -9,34 +9,37 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    location    "0";
-    object      U;
+    class       volScalarField;
+    location    "0/wallFilmRegion";
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform (0 0 0);
+internalField   uniform  300;
 
 boundaryField
 {
-    walls
+    // top film surface
+    "(.*top)"
     {
-        type            uniformFixedValue;
-        uniformValue    (0 0 0);
+        type            zeroGradient;
     }
 
+    // mapped boundaries
     "(region0_to.*)"
     {
-        type            mapped;
-        uniformValue    constant (0 0 0);
-        value           uniform (0 0 0);
-        field           Usf;
-        average         (0 0 0);
-        setAverage      no;
+//        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 350.0;
+    }
+
+    // floor sides
+    walls
+    {
+        type            zeroGradient;
     }
 }
-
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ thixotropicViscosity::thixotropicViscosity
     (
         IOobject
         (
-            typeName + ":lambda",
+            IOobject::modelName("lambda", typeName),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::MUST_READ,
@@ -111,16 +111,16 @@ void thixotropicViscosity::correct
     const volVectorField& U = film.U();
     const volVectorField& Uw = film.Uw();
     const volScalarField& delta = film.delta();
-    const volScalarField& deltaRho = film.deltaRho();
-    const surfaceScalarField& phi = film.phi();
-    const volScalarField& alpha = film.alpha();
+    const volScalarField deltaRho = delta*film.rho();
+    const surfaceScalarField& phiU = film.phiU();
+    const volScalarField& coverage = film.coverage();
     const Time& runTime = this->film().regionMesh().time();
 
     // Shear rate
     const volScalarField gDot
     (
         "gDot",
-        alpha*mag(U - Uw)/(delta + film.deltaSmall())
+        coverage*mag(U - Uw)/(delta + film.deltaSmall())
     );
 
     if (debug && runTime.writeTime())
@@ -134,8 +134,6 @@ void thixotropicViscosity::correct
         deltaRho.dimensions(),
         rootVSmall
     );
-
-    const surfaceScalarField phiU(phi/fvc::interpolate(deltaRho + deltaRho0));
 
     const dimensionedScalar c0("c0", dimless/dimTime, rootVSmall);
     const volScalarField coeff("coeff", -c_*pow(gDot, d_) + c0);
@@ -156,7 +154,7 @@ void thixotropicViscosity::correct
             (
                -film.rhoSp(),
                 dimensionedScalar(film.rhoSp().dimensions(), 0)
-            )/(deltaRho + deltaRho0),
+            )/(deltaRho() + deltaRho0),
             lambda_
         )
     );

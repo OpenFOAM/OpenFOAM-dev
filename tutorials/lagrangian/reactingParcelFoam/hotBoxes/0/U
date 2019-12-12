@@ -10,8 +10,8 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volVectorField;
-    location    "0/wallFilmRegion";
-    object      Uf;
+    location    "0";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -21,24 +21,20 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    wallFilmFaces_top
+    walls
     {
-        type            slip;
+        type            uniformFixedValue;
+        uniformValue    (0 0 0);
     }
 
-    region0_to_wallFilmRegion_wallFilmFaces
+    "(region0_to.*)"
     {
-        type            noSlip;
-    }
-
-    sides
-    {
-        type            noSlip;
-    }
-
-    frontAndBack
-    {
-        type            slip;
+        type            mapped;
+        uniformValue    constant (0 0 0);
+        value           uniform (0 0 0);
+        field           Us;
+        average         (0 0 0);
+        setAverage      no;
     }
 }
 

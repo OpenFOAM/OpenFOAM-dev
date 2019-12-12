@@ -17,7 +17,7 @@ FoamFile
 
 application     reactingParcelFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
@@ -33,7 +33,7 @@ writeInterval   0.02;
 
 purgeWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
 writePrecision  10;
 
@@ -47,7 +47,7 @@ runTimeModifiable yes;
 
 adjustTimeStep  yes;
 
-maxCo           0.3;
+maxCo           0.1;
 
 maxDeltaT       1e-03;
 

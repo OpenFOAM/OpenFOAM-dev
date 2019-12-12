@@ -85,7 +85,7 @@ waxSolventEvaporation::waxSolventEvaporation
     (
         IOobject
         (
-            typeName + ":Wwax",
+            IOobject::modelName("Wwax", typeName),
             film.regionMesh().time().constant(),
             film.regionMesh()
         ),
@@ -95,7 +95,7 @@ waxSolventEvaporation::waxSolventEvaporation
     (
         IOobject
         (
-            typeName + ":Wsolvent",
+            IOobject::modelName("Wsolvent", typeName),
             film.regionMesh().time().constant(),
             film.regionMesh()
         ),
@@ -105,7 +105,7 @@ waxSolventEvaporation::waxSolventEvaporation
     (
         IOobject
         (
-            typeName + ":Ysolvent0",
+            IOobject::modelName("Ysolvent0", typeName),
             film.regionMesh().time().constant(),
             film.regionMesh(),
             IOobject::MUST_READ,
@@ -116,7 +116,7 @@ waxSolventEvaporation::waxSolventEvaporation
     (
         IOobject
         (
-            typeName + ":Ysolvent",
+            IOobject::modelName("Ysolvent", typeName),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::MUST_READ,
@@ -155,8 +155,9 @@ void waxSolventEvaporation::correctModel
 {
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
+    const volScalarField& alpha = film.alpha();
     const volScalarField& delta = film.delta();
-    const volScalarField& deltaRho = film.deltaRho();
+    const volScalarField& rho = film.rho();
     const surfaceScalarField& phi = film.phi();
 
     // Set local thermo properties
@@ -167,11 +168,12 @@ void waxSolventEvaporation::correctModel
     // Retrieve fields from film model
     const scalarField& pInf = film.pPrimary();
     const scalarField& T = film.T();
-    const scalarField& hs = film.hs();
-    const scalarField& rho = film.rho();
+    const scalarField& h = film.h();
     const scalarField& rhoInf = film.rhoPrimary();
     const scalarField& muInf = film.muPrimary();
+    const scalarField& V = film.regionMesh().V();
     const scalarField& magSf = film.magSf();
+    const scalarField& VbyA = film.VbyA();
     const vectorField dU(film.UPrimary() - film.Us());
     const scalarField limMass
     (
@@ -188,7 +190,7 @@ void waxSolventEvaporation::correctModel
     (
         IOobject
         (
-            typeName + ":evapRateCoeff",
+            IOobject::modelName("evapRateCoeff", typeName),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
@@ -196,14 +198,14 @@ void waxSolventEvaporation::correctModel
             false
         ),
         film.regionMesh(),
-        dimensionedScalar(dimDensity*dimVelocity, 0)
+        dimensionedScalar(dimDensity/dimTime, 0)
     );
 
     volScalarField::Internal evapRateInf
     (
         IOobject
         (
-            typeName + ":evapRateInf",
+            IOobject::modelName("evapRateInf", typeName),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
@@ -211,7 +213,7 @@ void waxSolventEvaporation::correctModel
             false
         ),
         film.regionMesh(),
-        dimensionedScalar(dimDensity*dimVelocity, 0)
+        dimensionedScalar(evapRateCoeff.dimensions(), 0)
     );
 
     bool filmPresent = false;
@@ -283,15 +285,16 @@ void waxSolventEvaporation::correctModel
             // Sherwood number
             const scalar Sh = this->Sh(Re, Sc);
 
-            // Mass transfer coefficient [m/s]
-            evapRateCoeff[celli] = rhoInfc*Sh*Dab/(L_ + rootVSmall);
+            // Mass transfer coefficient [kg/m^3 s]
+            evapRateCoeff[celli] =
+                rhoInfc*Sh*Dab/(VbyA[celli]*(L_ + rootVSmall));
 
             // Solvent mass transfer
             const scalar dm
             (
                 max
                 (
-                    dt*magSf[celli]
+                    dt*V[celli]
                    *evapRateCoeff[celli]*(YsCoeff*Ysolvent - YInf[celli]),
                     0
                 )
@@ -309,10 +312,10 @@ void waxSolventEvaporation::correctModel
         }
     }
 
-    const dimensionedScalar deltaRho0Bydt
+    const dimensionedScalar rho0Bydt
     (
-        "deltaRho0",
-        deltaRho.dimensions()/dimTime,
+        "rho0Bydt",
+        dimDensity/dimTime,
         rootVSmall/dt
     );
 
@@ -320,7 +323,7 @@ void waxSolventEvaporation::correctModel
     (
         max
         (
-           -film.rhoSp()(),
+           -film.rhoSp(),
             dimensionedScalar(film.rhoSp().dimensions(), 0)
         )
     );
@@ -330,10 +333,10 @@ void waxSolventEvaporation::correctModel
         // Solve for the solvent mass fraction
         fvScalarMatrix YsolventEqn
         (
-            fvm::ddt(deltaRho, Ysolvent_)
-          + fvm::div(phi, Ysolvent_)
+            fvm::ddt(alpha, rho, Ysolvent_) + fvm::div(phi, Ysolvent_)
+          - fvm::Sp(film.continuityErr(), Ysolvent_)
          ==
-            deltaRho0Bydt*Ysolvent_()
+            rho0Bydt*Ysolvent_()
 
           + evapRateInf
 
@@ -343,9 +346,9 @@ void waxSolventEvaporation::correctModel
 
           - fvm::Sp
             (
-                deltaRho0Bydt
+                rho0Bydt
               + evapRateCoeff
-              + film.rhoSp()()
+              + film.rhoSp()
               + impingementRate,
                 Ysolvent_
             )
@@ -359,17 +362,17 @@ void waxSolventEvaporation::correctModel
 
         scalarField dm
         (
-            dt*magSf*rhoInf*(evapRateCoeff*Ysolvent_ + evapRateInf)
+            dt*V*rhoInf*(evapRateCoeff*Ysolvent_ + evapRateInf)
         );
 
         dMass += dm;
 
         // Heat is assumed to be removed by heat-transfer to the wall
         // so the energy remains unchanged by the phase-change.
-        dEnergy += dm*hs;
+        dEnergy += dm*h;
 
         // Latent heat [J/kg]
-        // dEnergy += dm*(hs[celli] + hVap);
+        // dEnergy += dm*(h[celli] + hVap);
     }
 }
 

@@ -70,7 +70,7 @@ class thermoSingleLayer
     // Private Member Functions
 
         //- Return boundary types for sensible enthalpy field
-        wordList hsBoundaryTypes();
+        wordList hBoundaryTypes();
 
 
 protected:
@@ -101,7 +101,7 @@ protected:
                 volScalarField Tw_;
 
                 //- Sensible enthalpy [J/kg]
-                volScalarField hs_;
+                volScalarField h_;
 
 
             // Transfer fields - to the primary region
@@ -135,14 +135,14 @@ protected:
             // pushed into the patch internal field
 
                 //- Energy [J/m2/s]
-                volScalarField hsSp_;
+                volScalarField::Internal hSp_;
 
 
             // Primary region - registered to the primary region mesh
             // Internal use only - not read-in
 
                 //- Energy [J/m2/s]
-                volScalarField hsSpPrimary_;
+                volScalarField hSpPrimary_;
 
 
         // Fields mapped from primary region - registered to the film region
@@ -192,7 +192,7 @@ protected:
         virtual void correctThermoFields();
 
         //- Correct sensible enthalpy for mapped temperature fields
-        virtual void correctHsForMappedT();
+        virtual void correctHforMappedT();
 
         //- Correct the film surface and wall temperatures
         virtual void updateSurfaceTemperatures();
@@ -207,13 +207,13 @@ protected:
         virtual void transferPrimaryRegionSourceFields();
 
         //- Correct film coverage field
-        virtual void correctAlpha();
+        virtual void correctCoverage();
 
         //- Update the film sub-models
         virtual void updateSubmodels();
 
         //- Return the wall/surface heat transfer term for the enthalpy equation
-        virtual tmp<fvScalarMatrix> q(volScalarField& hs) const;
+        virtual tmp<fvScalarMatrix> q(volScalarField& h) const;
 
 
         // Equations
@@ -274,21 +274,21 @@ public:
                 virtual const volScalarField& Tw() const;
 
                 //- Return the film sensible enthalpy [J/kg]
-                virtual const volScalarField& hs() const;
+                virtual const volScalarField& h() const;
 
 
             // Helper functions
 
                 //- Return sensible enthalpy as a function of temperature
                 //  for a patch
-                inline tmp<scalarField> hs
+                inline tmp<scalarField> h
                 (
                     const scalarField& T,
                     const label patchi
                 ) const;
 
                 //- Return sensible enthalpy as a function of temperature
-                inline tmp<volScalarField> hs
+                inline tmp<volScalarField> h
                 (
                     const volScalarField& T
                 ) const;
@@ -296,7 +296,7 @@ public:
                 //- Return temperature as a function of sensible enthalpy
                 inline tmp<volScalarField> T
                 (
-                    const volScalarField& hs
+                    const volScalarField& h
                 ) const;
 
 
@@ -319,13 +319,13 @@ public:
             // Film region
 
                 //- Energy [J/m2/s]
-                inline const volScalarField& hsSp() const;
+                inline const volScalarField::Internal& hSp() const;
 
 
             // Primary region
 
                 //- Energy [J/m2/s]
-                inline const volScalarField& hsSpPrimary() const;
+                inline const volScalarField& hSpPrimary() const;
 
 
         // Fields mapped from the primary region
@@ -351,15 +351,6 @@ public:
 
             //- Return const access to the radiation model
             inline const filmRadiationModel& radiation() const;
-
-
-        // Derived fields (calculated on-the-fly)
-
-            //- Return the convective heat energy from film to wall
-            inline tmp<scalarField> Qconvw(const label patchi) const;
-
-            //- Return the convective heat energy from primary region to film
-            inline tmp<scalarField> Qconvp(const label patchi) const;
 
 
         // Evolution

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ThermoSurfaceFilm.H"
+#include "thermoSingleLayer.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
 #include "Pstream.H"
@@ -618,10 +619,16 @@ void Foam::ThermoSurfaceFilm<CloudType>::cacheFilmFields
         filmModel
     );
 
-    TFilmPatch_ = filmModel.Ts().boundaryField()[filmPatchi];
+    const regionModels::surfaceFilmModels::thermoSingleLayer& thermalFilmModel =
+        refCast<const regionModels::surfaceFilmModels::thermoSingleLayer>
+        (
+            filmModel
+        );
+
+    TFilmPatch_ = thermalFilmModel.Ts().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, TFilmPatch_);
 
-    CpFilmPatch_ = filmModel.Cp().boundaryField()[filmPatchi];
+    CpFilmPatch_ = thermalFilmModel.Cp().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, CpFilmPatch_);
 }
 

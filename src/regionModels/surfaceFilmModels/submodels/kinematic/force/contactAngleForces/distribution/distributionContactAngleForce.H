@@ -68,6 +68,12 @@ class distributionContactAngleForce
         //- Parcel size PDF model
         const autoPtr<distributionModel> distribution_;
 
+        //- Cached contact angle field
+        mutable volScalarField theta_;
+
+        //- Current time index (used for updating)
+        mutable label curTimeIndex_;
+
 
 protected:
 

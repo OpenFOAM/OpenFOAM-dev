@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ tmp<fvVectorMatrix> forceList::correct(volVectorField& U)
 {
     tmp<fvVectorMatrix> tResult
     (
-        new fvVectorMatrix(U, dimForce/dimArea*dimVolume)
+        new fvVectorMatrix(U, dimForce)
     );
     fvVectorMatrix& result = tResult.ref();
 

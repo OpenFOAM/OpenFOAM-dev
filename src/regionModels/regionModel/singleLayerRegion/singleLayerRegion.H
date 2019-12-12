@@ -52,38 +52,24 @@ class singleLayerRegion
 :
     public regionModel
 {
-    // Private Member Functions
-
-        //- Construct region mesh and fields
-        void constructMeshObjects();
-
-        //- Initialise the region
-        void initialise();
-
-
-protected:
-
-    // Protected data
+    // Private member data
 
         // Region addressing
 
             //- Patch normal vectors
-            autoPtr<volVectorField> nHatPtr_;
+            volVectorField nHat_;
 
-            //- Face area magnitudes / [m^2]
-            autoPtr<volScalarField> magSfPtr_;
+            //- Cell cross-sectional area magnitude [m^2]
+            volScalarField::Internal magSf_;
+
+            //- Cell layer volume/area [m]
+            volScalarField VbyA_;
 
 
         // Addressing
 
             //- List of patch IDs opposite to internally coupled patches
             labelList passivePatchIDs_;
-
-
-    // Protected member functions
-
-        //- Read control parameters from dictionary
-        virtual bool read();
 
 
 public:
@@ -93,9 +79,6 @@ public:
 
 
     // Constructors
-
-        //- Construct null
-        singleLayerRegion(const fvMesh& mesh, const word& regionType);
 
         //- Construct from mesh, region type and name
         singleLayerRegion
@@ -121,17 +104,20 @@ public:
             // Region geometry
 
                 //- Return the patch normal vectors
-                virtual const volVectorField& nHat() const;
+                const volVectorField& nHat() const;
 
-                //- Return the face area magnitudes / [m^2]
-                virtual const volScalarField& magSf() const;
+                //- Return the face area magnitudes [m^2]
+                const volScalarField::Internal& magSf() const;
+
+                //- Return the cell layer volume/area [m]
+                const volScalarField& VbyA() const;
 
 
             // Addressing
 
                 //- Return the list of patch IDs opposite to internally
                 //  coupled patches
-                virtual const labelList& passivePatchIDs() const;
+                const labelList& passivePatchIDs() const;
 
 
         // Patch type information
@@ -141,11 +127,6 @@ public:
             //  Mapping region prescribed by underlying mapped poly patch
             template<class Type>
             wordList mappedFieldAndInternalPatchTypes() const;
-
-            //- Return boundary types for pushed mapped field patches
-            //  Mapping region prescribed by underlying mapped poly patch
-            template<class Type>
-            wordList mappedPushedFieldPatchTypes() const;
 
 
     // Member Operators

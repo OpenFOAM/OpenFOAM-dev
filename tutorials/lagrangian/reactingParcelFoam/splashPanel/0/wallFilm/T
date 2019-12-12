@@ -9,15 +9,15 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
+    class       volScalarField;
     location    "0/wallFilm";
-    object      Uf;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform (0 0 0);
+internalField   uniform  300;
 
 boundaryField
 {
@@ -25,12 +25,12 @@ boundaryField
 
     walls_top
     {
-        type            slip;
+        type            zeroGradient;
     }
 
     region0_to_wallFilm_walls
     {
-        type            noSlip;
+        type            zeroGradient;
     }
 }
 

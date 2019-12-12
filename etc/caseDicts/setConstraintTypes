@@ -37,11 +37,6 @@ empty
     type  empty;
 }
 
-nonuniformTransformCyclic
-{
-    type  nonuniformTransformCyclic;
-}
-
 cyclicRepeatAMI
 {
     type  cyclicRepeatAMI;

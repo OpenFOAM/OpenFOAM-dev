@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,17 @@ distributionContactAngleForce::distributionContactAngleForce
             coeffDict_.subDict("distribution"),
             rndGen_
         )
-    )
+    ),
+    theta_
+    (
+        volScalarField::New
+        (
+            IOobject::modelName("theta", typeName),
+            filmModel_.regionMesh(),
+            dimensionedScalar(dimless, 0)
+        )
+    ),
+    curTimeIndex_(-1)
 {}
 
 
@@ -72,39 +82,34 @@ distributionContactAngleForce::~distributionContactAngleForce()
 
 tmp<volScalarField> distributionContactAngleForce::theta() const
 {
-    tmp<volScalarField> ttheta
-    (
-        volScalarField::New
-        (
-            typeName + ":theta",
-            filmModel_.regionMesh(),
-            dimensionedScalar(dimless, 0)
-        )
-    );
-
-    volScalarField& theta = ttheta.ref();
-    volScalarField::Internal& thetai = theta.ref();
-
-    forAll(thetai, celli)
+    if (curTimeIndex_ != filmModel_.time().timeIndex())
     {
-        thetai[celli] = distribution_->sample();
-    }
+        volScalarField::Internal& thetai = theta_;
 
-    forAll(theta.boundaryField(), patchi)
-    {
-        if (!filmModel_.isCoupledPatch(patchi))
+        forAll(thetai, celli)
         {
-            fvPatchField<scalar>& thetaf = theta.boundaryFieldRef()[patchi];
+            thetai[celli] = distribution_->sample();
+        }
 
-            forAll(thetaf, facei)
+        forAll(theta_.boundaryField(), patchi)
+        {
+            if (!filmModel_.isCoupledPatch(patchi))
             {
-                thetaf[facei] = distribution_->sample();
+                scalarField& thetap = theta_.boundaryFieldRef()[patchi];
+
+                forAll(thetap, facei)
+                {
+                    thetap[facei] = distribution_->sample();
+                }
             }
         }
+
+        curTimeIndex_ = filmModel_.time().timeIndex();
     }
 
-    return ttheta;
+    return theta_;
 }
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

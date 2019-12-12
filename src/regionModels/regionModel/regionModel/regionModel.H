@@ -30,17 +30,15 @@ Description
 SourceFiles
     regionModelI.H
     regionModel.C
+    regionModelTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef regionModel_H
 #define regionModel_H
 
-#include "IOdictionary.H"
-#include "Switch.H"
-#include "labelList.H"
-#include "volFields.H"
-#include "mappedPatchBase.H"
+#include "fvMesh.H"
+#include "AMIInterpolation.H"
 #include "regionModelFunctionObjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -291,14 +289,6 @@ public:
                 List<Type>& regionField
             ) const;
 
-            //- Convert a primary region field to the local region
-            template<class Type>
-            void toRegion
-            (
-                const label regionPatchi,
-                List<Type>& primaryFieldField
-            ) const;
-
             //- Convert a local region field to the primary region with op
             template<class Type, class CombineOp>
             void toPrimary
@@ -308,13 +298,34 @@ public:
                 const CombineOp& cop
             ) const;
 
-            //- Convert a primary region field to the local region with op
-            template<class Type, class CombineOp>
+            //- Convert a primary region field to the local region
+            template<class Type>
             void toRegion
             (
                 const label regionPatchi,
-                List<Type>& primaryFieldField,
-                const CombineOp& cop
+                List<Type>& primaryFieldField
+            ) const;
+
+            //- Return a primary patch field mapped the region internal field
+            template<class Type>
+            void toRegion
+            (
+                Field<Type>& regionField,
+                const label regionPatchi,
+                const fvPatchField<Type>& primaryPatchField
+            ) const;
+
+            //- Return a primary patch field mapped the local region
+            template<class Type>
+            void toRegion
+            (
+                Field<Type>& rf,
+                const typename GeometricField
+                <
+                    Type,
+                    fvPatchField,
+                    volMesh
+                >::Boundary& pBf
             ) const;
 
 

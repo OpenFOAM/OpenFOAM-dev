@@ -108,7 +108,7 @@ public:
 
             //- Return the radiation sensible enthalpy source
             //  Also updates qrNet
-            virtual tmp<volScalarField> Shs();
+            virtual tmp<volScalarField::Internal> Shs();
 
 
     // Member Operators

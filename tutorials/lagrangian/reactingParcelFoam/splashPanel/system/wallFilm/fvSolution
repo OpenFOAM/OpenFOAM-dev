@@ -17,14 +17,15 @@ FoamFile
 
 solvers
 {
-    "(Uf|hf|deltaf\*rhof)"
+    "alpha.*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-10;
         relTol          0;
     }
-    deltaf
+
+    "(U|h).*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
@@ -33,25 +34,20 @@ solvers
     }
 }
 
-
-PISO
+PIMPLE
 {
     momentumPredictor yes;
     nCorr           1;
     nNonOrthCorr    0;
 }
 
-
 relaxationFactors
 {
-    fields
-    {
-        ".*"            1;
-    }
     equations
     {
-        ".*"            1;
+        ".*"        1;
     }
 }
+
 
 // ************************************************************************* //

@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantRadiation.H"
-#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,7 +59,7 @@ constantRadiation::constantRadiation
     (
         IOobject
         (
-            typeName + ":qrConst",
+            IOobject::modelName("qrConst", typeName),
             film.time().timeName(),
             film.regionMesh(),
             IOobject::MUST_READ,
@@ -72,7 +71,7 @@ constantRadiation::constantRadiation
     (
         IOobject
         (
-            typeName + ":mask",
+            IOobject::modelName("mask", typeName),
             film.time().timeName(),
             film.regionMesh(),
             IOobject::READ_IF_PRESENT,
@@ -101,30 +100,27 @@ void constantRadiation::correct()
 {}
 
 
-tmp<volScalarField> constantRadiation::Shs()
+tmp<volScalarField::Internal> constantRadiation::Shs()
 {
-    tmp<volScalarField> tShs
-    (
-        volScalarField::New
-        (
-            typeName + ":Shs",
-            film().regionMesh(),
-            dimensionedScalar(dimMass/pow3(dimTime), 0)
-        )
-    );
-
     const scalar time = film().time().value();
 
     if ((time >= timeStart_) && (time <= timeStart_ + duration_))
     {
-        scalarField& Shs = tShs.ref();
-        const scalarField& qr = qrConst_;
-        const scalarField& alpha = filmModel_.alpha();
-
-        Shs = mask_*qr*alpha*absorptivity_;
+        return volScalarField::Internal::New
+        (
+            IOobject::modelName("Shs", typeName),
+            mask_*qrConst_*filmModel_.coverage()*absorptivity_
+        );
     }
-
-    return tShs;
+    else
+    {
+        return volScalarField::Internal::New
+        (
+            IOobject::modelName("Shs", typeName),
+            film().regionMesh(),
+            dimensionedScalar(dimMass/pow3(dimTime), 0)
+        );
+    }
 }
 
 

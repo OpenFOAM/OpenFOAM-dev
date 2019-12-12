@@ -10,25 +10,39 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0/wallFilm";
-    object      deltaf;
+    location    "0/wallFilmRegion";
+    object      delta;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 1 0 0 0 0 0];
 
-internalField   uniform 0.00013;
+internalField   uniform 0;
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    walls_top
+    wallFilmFaces_top
     {
         type            zeroGradient;
     }
 
-    region0_to_wallFilm_walls
+    region0_to_wallFilmRegion_wallFilmFaces
+    {
+        type            zeroGradient;
+    }
+
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 1e-3;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    sides
     {
         type            zeroGradient;
     }

@@ -75,29 +75,27 @@ solidification::solidification
     (
         IOobject
         (
-            typeName + ":mass",
+            IOobject::modelName("mass", typeName),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar(dimMass, 0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar(dimMass, 0)
     ),
     thickness_
     (
         IOobject
         (
-            typeName + ":thickness",
+            IOobject::modelName("thickness", typeName),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar(dimLength, 0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar(dimLength, 0)
     )
 {}
 
@@ -121,8 +119,8 @@ void solidification::correctModel
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
     const scalarField& T = film.T();
-    const scalarField& hs = film.hs();
-    const scalarField& alpha = film.alpha();
+    const scalarField& h = film.h();
+    const scalarField& coverage = film.coverage();
 
     const scalar rateLimiter = min
     (
@@ -133,9 +131,9 @@ void solidification::correctModel
         ).value()
     );
 
-    forAll(alpha, celli)
+    forAll(coverage, celli)
     {
-        if (alpha[celli] > 0.5)
+        if (coverage[celli] > 0.5)
         {
             if (T[celli] < T0_)
             {
@@ -146,7 +144,7 @@ void solidification::correctModel
 
                 // Heat is assumed to be removed by heat-transfer to the wall
                 // so the energy remains unchanged by the phase-change.
-                dEnergy[celli] += dm*hs[celli];
+                dEnergy[celli] += dm*h[celli];
             }
         }
     }

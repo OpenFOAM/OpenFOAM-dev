@@ -116,7 +116,7 @@ public:
             virtual void correct() = 0;
 
             //- Return the heat transfer coefficient [W/m^2/K]
-            virtual tmp<volScalarField> h() const = 0;
+            virtual tmp<volScalarField::Internal> h() const = 0;
 
 
     // Member Operators

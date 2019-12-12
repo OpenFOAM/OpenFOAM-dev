@@ -74,7 +74,7 @@ tmp<volVectorField> laminar::Us() const
     (
         volVectorField::New
         (
-            typeName + ":Us",
+            IOobject::modelName("Us", typeName),
             filmModel_.regionMesh(),
             dimensionedVector(dimVelocity, Zero),
             extrapolatedCalculatedFvPatchVectorField::typeName
@@ -95,7 +95,7 @@ tmp<volScalarField> laminar::mut() const
     (
         volScalarField::New
         (
-            typeName + ":mut",
+            IOobject::modelName("mut", typeName),
             filmModel_.regionMesh(),
             dimensionedScalar(dimMass/dimLength/dimTime, 0)
         )
@@ -114,16 +114,23 @@ tmp<fvVectorMatrix> laminar::Su(volVectorField& U) const
         static_cast<const kinematicSingleLayer&>(filmModel_);
 
     // local references to film fields
-    const volScalarField& mu = film.mu();
-    const volVectorField& Uw = film.Uw();
-    const volScalarField& delta = film.delta();
-    const volVectorField& Up = film.UPrimary();
-    const volScalarField& rhop = film.rhoPrimary();
+    const volScalarField::Internal& mu = film.mu();
+    const volVectorField::Internal& Uw = film.Uw();
+    const volScalarField::Internal& delta = film.delta();
+    const volVectorField::Internal& Up = film.UPrimary();
+    const volScalarField::Internal& rhop = film.rhoPrimary();
+    const volScalarField::Internal& VbyA = film.VbyA();
 
-    // employ simple coeff-based model
-    volScalarField Cs("Cs", Cf_*rhop*mag(Up - U));
-    volScalarField Cw("Cw", mu/((1.0/3.0)*(delta + film.deltaSmall())));
-    Cw.min(5000.0);
+    // Employ simple coeff-based model
+    volScalarField::Internal Cs("Cs", Cf_*rhop*mag(Up - U)/VbyA);
+    volScalarField::Internal Cw
+    (
+        "Cw",
+        mu/((1.0/3.0)*VbyA*(delta + film.deltaSmall()))
+    );
+
+    // This hack needs to be fixed
+    Cw.field() = min(Cw.field(), 5000/VbyA.field());
 
     return
     (

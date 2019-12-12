@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "singleLayerRegion.H"
 #include "zeroGradientFvPatchFields.H"
 #include "mappedFixedInternalValueFvPatchFields.H"
-#include "mappedFixedPushedInternalValueFvPatchFields.H"
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
@@ -42,25 +41,6 @@ Foam::regionModels::singleLayerRegion::mappedFieldAndInternalPatchTypes() const
     {
         const label patchi = intCoupledPatchIDs_[i];
         bTypes[patchi] = mappedFixedInternalValueFvPatchField<Type>::typeName;
-    }
-
-    return bTypes;
-}
-
-
-template<class Type>
-Foam::wordList
-Foam::regionModels::singleLayerRegion::mappedPushedFieldPatchTypes() const
-{
-    wordList bTypes(regionMesh().boundaryMesh().size());
-
-    bTypes = zeroGradientFvPatchField<Type>::typeName;
-
-    forAll(intCoupledPatchIDs_, i)
-    {
-        const label patchi = intCoupledPatchIDs_[i];
-        bTypes[patchi] =
-            mappedFixedPushedInternalValueFvPatchField<Type>::typeName;
     }
 
     return bTypes;

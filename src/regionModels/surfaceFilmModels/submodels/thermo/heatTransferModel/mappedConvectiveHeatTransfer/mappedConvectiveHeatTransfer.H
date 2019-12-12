@@ -62,9 +62,7 @@ class mappedConvectiveHeatTransfer
         volScalarField htcConvPrimary_;
 
         //- Heat transfer coefficient - film region [W/m^2/K]
-        //  Assumes that the primary region to film region boundaries are
-        //  described as mappedPushed types
-        volScalarField htcConvFilm_;
+        volScalarField::Internal htcConvFilm_;
 
 
 public:
@@ -101,7 +99,7 @@ public:
             virtual void correct();
 
             //- Return the heat transfer coefficient [W/m^2/K]
-            virtual tmp<volScalarField> h() const;
+            virtual tmp<volScalarField::Internal> h() const;
 
 
     // Member Operators
