@@ -44,7 +44,7 @@ void Foam::ensightPart::writeField
 
         if (perNode)
         {
-            writeKeyword(os, "coordinates");
+            os.writeKeyword("coordinates");
             for
             (
                 direction cmpt=0;
@@ -63,7 +63,7 @@ void Foam::ensightPart::writeField
 
                 if (idList.size())
                 {
-                    writeKeyword(os, elementTypes()[elemI]);
+                    os.writeKeyword(elementTypes()[elemI]);
 
                     for
                     (

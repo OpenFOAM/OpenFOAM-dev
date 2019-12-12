@@ -307,7 +307,7 @@ void Foam::ensightPartCells::writeConnectivity
     const labelUList& pointMap
 ) const
 {
-    writeKeyword(os, key);
+    os.writeKeyword(key);
     os.write(idList.size());
     os.newline();
 

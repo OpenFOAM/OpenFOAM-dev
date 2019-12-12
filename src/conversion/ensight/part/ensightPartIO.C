@@ -179,7 +179,7 @@ void Foam::ensightPart::writeGeometry
         writeHeader(os, true);
 
         // write points
-        writeKeyword(os, "coordinates");
+        os.writeKeyword("coordinates");
         os.write(ptList.nPoints);
         os.newline();
 
@@ -226,7 +226,7 @@ void Foam::ensightPart::writeScalarField
 
         if (perNode)
         {
-            writeKeyword(os, "coordinates");
+            os.writeKeyword("coordinates");
             writeFieldList(os, field, labelUList::null());
         }
         else
@@ -237,7 +237,7 @@ void Foam::ensightPart::writeScalarField
 
                 if (idList.size())
                 {
-                    writeKeyword(os, elementTypes()[elemI]);
+                    os.writeKeyword(elementTypes()[elemI]);
                     writeFieldList(os, field, idList);
                 }
             }
@@ -261,7 +261,7 @@ void Foam::ensightPart::writeVectorField
 
         if (perNode)
         {
-            writeKeyword(os, "coordinates");
+            os.writeKeyword("coordinates");
             writeFieldList(os, field0, labelUList::null());
             writeFieldList(os, field1, labelUList::null());
             writeFieldList(os, field2, labelUList::null());
@@ -274,7 +274,7 @@ void Foam::ensightPart::writeVectorField
 
                 if (idList.size())
                 {
-                    writeKeyword(os, elementTypes()[elemI]);
+                    os.writeKeyword(elementTypes()[elemI]);
                     writeFieldList(os, field0, idList);
                     writeFieldList(os, field1, idList);
                     writeFieldList(os, field2, idList);
