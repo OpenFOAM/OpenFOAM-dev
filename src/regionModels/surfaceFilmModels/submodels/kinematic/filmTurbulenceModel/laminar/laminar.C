@@ -115,6 +115,7 @@ tmp<fvVectorMatrix> laminar::Su(volVectorField& U) const
 
     // local references to film fields
     const volScalarField::Internal& mu = film.mu();
+    const volScalarField::Internal& rho = film.rho();
     const volVectorField::Internal& Uw = film.Uw();
     const volScalarField::Internal& delta = film.delta();
     const volVectorField::Internal& Up = film.UPrimary();
@@ -126,11 +127,7 @@ tmp<fvVectorMatrix> laminar::Su(volVectorField& U) const
     volScalarField::Internal Cw
     (
         "Cw",
-        min
-        (
-            mu/((1.0/3.0)*VbyA*(delta + film.deltaSmall())),
-            film.rho()()/film.time().deltaT()
-        )
+        mu/((1.0/3.0)*VbyA*delta + mu*film.time().deltaT()/rho)
     );
 
     return
