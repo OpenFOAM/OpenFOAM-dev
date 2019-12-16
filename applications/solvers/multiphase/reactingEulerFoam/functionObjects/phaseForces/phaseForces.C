@@ -55,11 +55,11 @@ Foam::functionObjects::phaseForces::nonDragForce(const phasePair& pair) const
 
     if (&pair.phase1() == &phase_)
     {
-        return model.template F<vector>();
+        return -model.template F<vector>();
     }
     else
     {
-        return -model.template F<vector>();
+        return model.template F<vector>();
     }
 }
 
