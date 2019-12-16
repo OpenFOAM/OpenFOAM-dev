@@ -173,10 +173,11 @@ tmp<volScalarField> kinematicSingleLayer::pu()
 
 tmp<volScalarField> kinematicSingleLayer::pp()
 {
+     // Hydrostatic effect
     return volScalarField::New
     (
         IOobject::modelName("pp", typeName),
-       -rho_*gNormClipped() // Hydrostatic effect only
+        -rho_*gNormClipped()*VbyA()
     );
 }
 
@@ -331,9 +332,9 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
                             fvc::snGrad(pu, "snGrad(p)")
 
                           + fvc::interpolate(alpha_)
-                           *fvc::snGrad(pp*VbyA(), "snGrad(p)")
+                           *fvc::snGrad(pp, "snGrad(p)")
 
-                          + fvc::interpolate(pp*VbyA())
+                          + fvc::interpolate(pp)
                            *fvc::snGrad(alpha_)
                         )
                       - fvc::flux(rho_*gTan())
@@ -367,7 +368,7 @@ void kinematicSingleLayer::solveAlpha
     const surfaceScalarField alphaf(fvc::interpolate(alpha_));
     const surfaceScalarField rhof(fvc::interpolate(rho_));
     const surfaceScalarField alpharAUf(fvc::interpolate(alpha_*rAU));
-    const surfaceScalarField ppf(fvc::interpolate(pp*VbyA()));
+    const surfaceScalarField ppf(fvc::interpolate(pp));
 
     const surfaceScalarField phiu
     (
@@ -377,9 +378,9 @@ void kinematicSingleLayer::solveAlpha
             (
                 (
                     fvc::snGrad(pu, "snGrad(p)")
-                  + alphaf*fvc::snGrad(pp*VbyA(), "snGrad(p)")
+                  + alphaf*fvc::snGrad(pp, "snGrad(p)")
                 )*regionMesh().magSf()
-              - fvc::flux(rho_*gTan()),
+              - rhof*(g_ & regionMesh().Sf()),
                 0
             )
         )
