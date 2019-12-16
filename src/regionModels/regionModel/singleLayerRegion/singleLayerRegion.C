@@ -78,7 +78,7 @@ Foam::regionModels::singleLayerRegion::singleLayerRegion
     (
         IOobject
         (
-            "d",
+            "VbyA",
             time_.timeName(),
             regionMesh()
         ),
