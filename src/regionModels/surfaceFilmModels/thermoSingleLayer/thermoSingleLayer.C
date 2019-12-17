@@ -631,16 +631,13 @@ void thermoSingleLayer::evolveRegion()
     // Predict delta_ from continuity with updated source
     predictDelta();
 
-    // Implicit pressure source coefficient - constant
-    const volScalarField pp(this->pp());
-
     while (pimple_.loop())
     {
-        // Explicit pressure source contribution - varies with delta
-        const volScalarField pu(this->pu());
+        // Explicit momentum source
+        const volScalarField Su(this->Su());
 
         // Solve for momentum for U_
-        const fvVectorMatrix UEqn(solveMomentum(pu, pp));
+        const fvVectorMatrix UEqn(solveMomentum(Su));
 
         // Solve energy for h_ - also updates thermo
         solveEnergy();
@@ -648,7 +645,7 @@ void thermoSingleLayer::evolveRegion()
         // Film thickness correction loop
         while (pimple_.correct())
         {
-            solveAlpha(pu, pp, UEqn);
+            solveAlpha(UEqn, Su);
         }
     }
 

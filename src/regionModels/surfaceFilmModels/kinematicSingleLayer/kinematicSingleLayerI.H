@@ -231,32 +231,6 @@ inline tmp<volScalarField::Internal> kinematicSingleLayer::deltaMass() const
 }
 
 
-inline tmp<volScalarField> kinematicSingleLayer::gNorm() const
-{
-    return volScalarField::New("gNorm", g_ & nHat());
-}
-
-
-inline tmp<volScalarField> kinematicSingleLayer::gNormClipped() const
-{
-    tmp<volScalarField> tgNormClipped
-    (
-        volScalarField::New("gNormClipped", g_ & nHat())
-    );
-
-    volScalarField& gNormClipped = tgNormClipped.ref();
-    gNormClipped.min(0.0);
-
-    return tgNormClipped;
-}
-
-
-inline tmp<volVectorField> kinematicSingleLayer::gTan() const
-{
-    return volVectorField::New("gTan", g_ - nHat()*gNorm());
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace surfaceFilmModels

@@ -231,11 +231,11 @@ protected:
         //- Transfer source fields from the primary region to the film region
         virtual void transferPrimaryRegionSourceFields();
 
-        //- Explicit pressure source contribution
-        virtual tmp<volScalarField> pu();
+        //- Hydrostatic pressure
+        tmp<volScalarField> ph() const;
 
-        //- Implicit pressure source coefficient
-        virtual tmp<volScalarField> pp();
+        //- Explicit momentum source
+        virtual tmp<volScalarField> Su();
 
         //- Correct film coverage field
         virtual void correctCoverage();
@@ -270,16 +270,14 @@ protected:
             //- Solve for film velocity
             virtual tmp<fvVectorMatrix> solveMomentum
             (
-                const volScalarField& pu,
-                const volScalarField& pp
+                const volScalarField& pu
             );
 
             //- Solve for film volume fraction and thickness
             virtual void solveAlpha
             (
-                const volScalarField& pu,
-                const volScalarField& pp,
-                const fvVectorMatrix& UEqn
+                const fvVectorMatrix& UEqn,
+                const volScalarField& Su
             );
 
 
@@ -460,16 +458,6 @@ public:
 
             //- Return the change in film mass due to sources/sinks
             inline tmp<volScalarField::Internal> deltaMass() const;
-
-            //- Return the gravity normal-to-patch component contribution
-            inline tmp<volScalarField> gNorm() const;
-
-            //- Return the gravity normal-to-patch component contribution
-            //  Clipped so that only non-zero if g & nHat_ < 0
-            inline tmp<volScalarField> gNormClipped() const;
-
-            //- Return the gravity tangential component contributions
-            inline tmp<volVectorField> gTan() const;
 
 
         // Evolution

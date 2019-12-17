@@ -91,8 +91,7 @@ void drippingInjection::correct
     const scalar pi = constant::mathematical::pi;
 
     // calculate available dripping mass
-    tmp<volScalarField> tgNorm(film.gNorm());
-    const scalarField& gNorm = tgNorm();
+    const scalarField gNorm(film.g() & film.nHat()());
     const scalarField& magSf = film.magSf();
 
     const scalarField& delta = film.delta();
