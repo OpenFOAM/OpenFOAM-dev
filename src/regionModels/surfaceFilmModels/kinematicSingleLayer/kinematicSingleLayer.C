@@ -145,7 +145,7 @@ void kinematicSingleLayer::transferPrimaryRegionSourceFields()
 }
 
 
-tmp<volScalarField> kinematicSingleLayer::Su()
+tmp<volScalarField> kinematicSingleLayer::pe()
 {
     tmp<volScalarField> tpSp
     (
@@ -163,10 +163,11 @@ tmp<volScalarField> kinematicSingleLayer::Su()
 
     return volScalarField::New
     (
-        IOobject::modelName("Su", typeName),
+        IOobject::modelName("pe", typeName),
         pPrimary_                      // Pressure (mapped from primary region)
       - tpSp                           // Accumulated particle impingement
-      - fvc::laplacian(sigma_, delta_) // Surface tension
+      - fvc::laplacian(sigma_, delta_) // Capillary pressure
+        // - fvc::div(sigma_*fvc::grad(delta_)) // Capillary pressure
     );
 }
 
@@ -274,7 +275,7 @@ void kinematicSingleLayer::updateSurfaceVelocities()
 
 tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
 (
-    const volScalarField& pu
+    const volScalarField& pe
 )
 {
     DebugInFunction << endl;
@@ -317,7 +318,7 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
                     fvc::interpolate(alpha_)
                    *(
                         (
-                            fvc::snGrad(pu, "snGrad(p)")
+                            fvc::snGrad(pe, "snGrad(p)")
                           + fvc::interpolate(ph())*fvc::snGrad(alpha_)
                         )*regionMesh().magSf()
                       - fvc::interpolate(rho_)*(g_ & regionMesh().Sf())
@@ -339,7 +340,7 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
 void kinematicSingleLayer::solveAlpha
 (
     const fvVectorMatrix& UEqn,
-    const volScalarField& pu
+    const volScalarField& pe
 )
 {
     DebugInFunction << endl;
@@ -358,7 +359,7 @@ void kinematicSingleLayer::solveAlpha
         (
             constrainFilmField
             (
-                fvc::snGrad(pu, "snGrad(p)")*regionMesh().magSf()
+                fvc::snGrad(pe, "snGrad(p)")*regionMesh().magSf()
               - rhof*(g_ & regionMesh().Sf()),
                 0
             )
@@ -921,16 +922,16 @@ void kinematicSingleLayer::evolveRegion()
 
     while (pimple_.loop())
     {
-        // Explicit pressure source contribution - varies with delta
-        const volScalarField Su(this->Su());
+        // External pressure
+        const volScalarField pe(this->pe());
 
         // Solve for momentum
-        const fvVectorMatrix UEqn(solveMomentum(Su));
+        const fvVectorMatrix UEqn(solveMomentum(pe));
 
         // Film thickness correction loop
         while (pimple_.correct())
         {
-            solveAlpha(UEqn, Su);
+            solveAlpha(UEqn, pe);
         }
     }
 

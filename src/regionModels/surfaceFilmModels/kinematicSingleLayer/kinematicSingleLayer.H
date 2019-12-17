@@ -234,8 +234,8 @@ protected:
         //- Hydrostatic pressure
         tmp<volScalarField> ph() const;
 
-        //- Explicit momentum source
-        virtual tmp<volScalarField> Su();
+        //- Explicit pressure
+        tmp<volScalarField> pe();
 
         //- Correct film coverage field
         virtual void correctCoverage();
@@ -270,7 +270,7 @@ protected:
             //- Solve for film velocity
             virtual tmp<fvVectorMatrix> solveMomentum
             (
-                const volScalarField& pu
+                const volScalarField& Su
             );
 
             //- Solve for film volume fraction and thickness

@@ -633,11 +633,11 @@ void thermoSingleLayer::evolveRegion()
 
     while (pimple_.loop())
     {
-        // Explicit momentum source
-        const volScalarField Su(this->Su());
+        // External pressure
+        const volScalarField pe(this->pe());
 
         // Solve for momentum for U_
-        const fvVectorMatrix UEqn(solveMomentum(Su));
+        const fvVectorMatrix UEqn(solveMomentum(pe));
 
         // Solve energy for h_ - also updates thermo
         solveEnergy();
@@ -645,7 +645,7 @@ void thermoSingleLayer::evolveRegion()
         // Film thickness correction loop
         while (pimple_.correct())
         {
-            solveAlpha(UEqn, Su);
+            solveAlpha(UEqn, pe);
         }
     }
 
