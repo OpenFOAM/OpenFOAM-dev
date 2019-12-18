@@ -145,6 +145,12 @@ void kinematicSingleLayer::transferPrimaryRegionSourceFields()
 }
 
 
+tmp<volScalarField> kinematicSingleLayer::pc()
+{
+    return -fvc::laplacian(sigma_, delta_);
+}
+
+
 tmp<volScalarField> kinematicSingleLayer::pe()
 {
     tmp<volScalarField> tpSp
@@ -166,13 +172,11 @@ tmp<volScalarField> kinematicSingleLayer::pe()
         IOobject::modelName("pe", typeName),
         pPrimary_                      // Pressure (mapped from primary region)
       - tpSp                           // Accumulated particle impingement
-      - fvc::laplacian(sigma_, delta_) // Capillary pressure
-        // - fvc::div(sigma_*fvc::grad(delta_)) // Capillary pressure
     );
 }
 
 
-tmp<volScalarField> kinematicSingleLayer::ph() const
+tmp<volScalarField> kinematicSingleLayer::rhog() const
 {
     return -rho_*min(nHat() & g_, dimensionedScalar(g_.dimensions(), 0))*VbyA();
 }
@@ -318,8 +322,8 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
                     fvc::interpolate(alpha_)
                    *(
                         (
-                            fvc::snGrad(pe, "snGrad(p)")
-                          + fvc::interpolate(ph())*fvc::snGrad(alpha_)
+                            fvc::snGrad(pe + pc(), "snGrad(p)")
+                          + fvc::interpolate(rhog())*fvc::snGrad(alpha_)
                         )*regionMesh().magSf()
                       - fvc::interpolate(rho_)*(g_ & regionMesh().Sf())
                     ), 0
@@ -351,7 +355,7 @@ void kinematicSingleLayer::solveAlpha
     const surfaceScalarField alphaf(fvc::interpolate(alpha_));
     const surfaceScalarField rhof(fvc::interpolate(rho_));
     const surfaceScalarField alpharAUf(fvc::interpolate(alpha_*rAU));
-    const surfaceScalarField phf(fvc::interpolate(ph()));
+    const surfaceScalarField rhogf(fvc::interpolate(rhog()));
 
     const surfaceScalarField phiu
     (
@@ -359,7 +363,7 @@ void kinematicSingleLayer::solveAlpha
         (
             constrainFilmField
             (
-                fvc::snGrad(pe, "snGrad(p)")*regionMesh().magSf()
+                fvc::snGrad(pe + pc(), "snGrad(p)")*regionMesh().magSf()
               - rhof*(g_ & regionMesh().Sf()),
                 0
             )
@@ -372,10 +376,10 @@ void kinematicSingleLayer::solveAlpha
         constrainFilmField(rhof*(fvc::flux(HbyA) - alpharAUf*phiu), 0)
     );
 
-    const surfaceScalarField ddrhorAUphf
+    const surfaceScalarField ddrhorAUrhogf
     (
         "alphaCoeff",
-        alphaf*rhof*alpharAUf*phf
+        alphaf*rhof*alpharAUf*rhogf
     );
 
     regionMesh().setFluxRequired(alpha_.name());
@@ -387,7 +391,7 @@ void kinematicSingleLayer::solveAlpha
         (
             fvm::ddt(rho_, alpha_)
           + fvm::div(phid, alpha_)
-          - fvm::laplacian(ddrhorAUphf, alpha_)
+          - fvm::laplacian(ddrhorAUrhogf, alpha_)
          ==
            -rhoSp_
         );
@@ -402,7 +406,7 @@ void kinematicSingleLayer::solveAlpha
             (
                 constrainFilmField
                 (
-                    phf*fvc::snGrad(alpha_)*regionMesh().magSf(),
+                    rhogf*fvc::snGrad(alpha_)*regionMesh().magSf(),
                     0
                 )
             );

@@ -231,8 +231,11 @@ protected:
         //- Transfer source fields from the primary region to the film region
         virtual void transferPrimaryRegionSourceFields();
 
-        //- Hydrostatic pressure
-        tmp<volScalarField> ph() const;
+        //- Hydrostatic pressure coefficient
+        tmp<volScalarField> rhog() const;
+
+        //- Capillary pressure
+        tmp<volScalarField> pc();
 
         //- Explicit pressure
         tmp<volScalarField> pe();
